@@ -491,9 +491,7 @@
 /obj/structure/closet/crate/chest/neu_fancy,
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /obj/item/coin/gold/pile,
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "ch" = (
 /obj/structure/fluff/railing/border{
@@ -809,11 +807,6 @@
 /obj/structure/fluff/railing/border,
 /turf/open/floor/herringbone,
 /area/outdoors/exposed/rmh_dwarf_keep)
-"dD" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-6"
-	},
-/area/under/town/basement/keep)
 "dE" = (
 /obj/machinery/light/fueled/candle/floorcandle/alt/pink,
 /obj/machinery/light/fueled/candle/floorcandle/pink{
@@ -1123,9 +1116,7 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4
 	},
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "eY" = (
 /obj/effect/decal/cleanable/blood/old,
@@ -2310,9 +2301,7 @@
 	dir = 4
 	},
 /obj/machinery/light/fueled/wallfire/candle,
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "jX" = (
 /obj/effect/spawner/map_spawner/loot/valuable_jewelry_spawner,
@@ -3261,9 +3250,7 @@
 /obj/machinery/light/fueled/wallfire/candle{
 	pixel_y = -32
 	},
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "og" = (
 /turf/closed/wall/mineral/decostone/end{
@@ -3336,9 +3323,7 @@
 /turf/open/floor/concrete,
 /area/indoors/cave/rmh_dwarf_keep/grand)
 "ow" = (
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "ox" = (
 /obj/structure/fluff/statue/small,
@@ -3358,9 +3343,7 @@
 "oI" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/r,
 /obj/item/coin/gold/pile,
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "oK" = (
 /turf/open/floor/naturalstone,
@@ -3388,9 +3371,7 @@
 /obj/machinery/light/fueled/wallfire/candle{
 	pixel_y = -32
 	},
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "oS" = (
 /obj/item/natural/wood/plank,
@@ -3539,11 +3520,6 @@
 /obj/effect/decal/remains/human,
 /turf/open/floor/concrete,
 /area/indoors/cave/rmh_dwarf_keep/grand)
-"pE" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-3"
-	},
-/area/under/rmh_bedrock)
 "pF" = (
 /obj/structure/bookcase/random/archive,
 /obj/structure/bookcase/random/archive,
@@ -3687,11 +3663,6 @@
 /obj/item/ore/copper,
 /turf/open/floor/tile/brownbrick,
 /area/indoors/cave/rmh_dwarf_keep/smelters)
-"qn" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-8"
-	},
-/area/under/town/basement/keep)
 "qo" = (
 /obj/machinery/light/fueled/campfire/densefire,
 /turf/open/floor/naturalstone,
@@ -4332,9 +4303,7 @@
 "ta" = (
 /obj/structure/closet/crate/chest/neu_fancy,
 /obj/item/coin/gold/pile,
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "te" = (
 /obj/structure/bars/tough,
@@ -4423,9 +4392,7 @@
 /obj/structure/table/wood{
 	icon_state = "tablewood1"
 	},
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "ty" = (
 /obj/structure/fermentation_keg/beer,
@@ -5408,11 +5375,6 @@
 	},
 /turf/open/floor/metal,
 /area/indoors/cave/rmh_dwarf_keep/treasury)
-"xB" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-1"
-	},
-/area/under/town/basement/keep)
 "xC" = (
 /turf/closed/wall/mineral/stonebrick,
 /area/under/rmh_bedrock)
@@ -5436,9 +5398,7 @@
 	pixel_x = 20;
 	pixel_y = 8
 	},
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "xG" = (
 /obj/structure/chair/bench{
@@ -5554,9 +5514,7 @@
 	pixel_y = 8;
 	pixel_x = -20
 	},
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "yl" = (
 /obj/structure/composter/full,
@@ -5714,9 +5672,7 @@
 /area/indoors/town/manor)
 "yR" = (
 /obj/machinery/light/fueled/wallfire/candle,
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "yT" = (
 /turf/closed/mineral/bedrock/cold{
@@ -5856,13 +5812,6 @@
 	},
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
-"zB" = (
-/obj/structure/chair/stool,
-/obj/structure/chair/stool,
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
-/area/under/town/basement/keep)
 "zE" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/decal/remains/human,
@@ -6080,17 +6029,13 @@
 	},
 /area/indoors/town/manor)
 "AJ" = (
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "AK" = (
 /obj/structure/fluff/walldeco/painting{
 	pixel_y = -32
 	},
-/turf/open/floor/tile{
-	icon_state = "glyph3"
-	},
+/turf/open/floor/greenstone/glyph3,
 /area/indoors/town/vault)
 "AL" = (
 /obj/structure/closet/crate/chest/neu_iron,
@@ -6239,9 +6184,7 @@
 /obj/machinery/light/fueled/wallfire/candle/blue{
 	pixel_y = -32
 	},
-/turf/open/floor/tile{
-	icon_state = "glyph2"
-	},
+/turf/open/floor/greenstone/glyph2,
 /area/indoors/town/vault)
 "Bt" = (
 /obj/structure/fluff/railing/border{
@@ -6278,9 +6221,7 @@
 /area/indoors/town/manor)
 "By" = (
 /obj/structure/chair/stool,
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "BA" = (
 /obj/structure/closet/crate/coffin/vampire,
@@ -6686,9 +6627,7 @@
 /turf/open/floor/herringbone,
 /area/indoors/town/rmh/magician/pass)
 "Dw" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-10"
-	},
+/turf/closed/wall/mineral/pipe,
 /area/under/town/basement/keep)
 "Dx" = (
 /obj/structure/fluff/railing/border{
@@ -6707,9 +6646,7 @@
 /obj/item/candle/gold/lit{
 	pixel_y = 10
 	},
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "DA" = (
 /obj/effect/decal/cleanable/blood/old,
@@ -7218,9 +7155,6 @@
 /turf/open/floor/blocks,
 /area/indoors/cave/rmh_dwarf_keep/smelters)
 "Gd" = (
-/obj/structure/stairs{
-	dir = 4
-	},
 /obj/structure/stairs{
 	dir = 4
 	},
@@ -7796,9 +7730,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/indoors/town/manor)
 "Iq" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-1"
-	},
+/turf/closed/wall/mineral/pipe,
 /area/under/rmh_bedrock)
 "Is" = (
 /obj/item/natural/rock,
@@ -7878,9 +7810,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
 "IJ" = (
-/turf/open/floor/tile{
-	icon_state = "glyph5"
-	},
+/turf/open/floor/greenstone/glyph5,
 /area/indoors/town/vault)
 "IK" = (
 /obj/structure/fluff/walldeco/customflag{
@@ -8045,14 +7975,6 @@
 "Jm" = (
 /turf/open/floor/cobblerock,
 /area/indoors/cave/rmh_cave/cold)
-"Jp" = (
-/obj/structure/door/fancy,
-/obj/structure/door/fancy{
-	lockid = "mansionvampire"
-	},
-/obj/effect/mapping_helpers/access/locker,
-/turf/open/floor/concrete,
-/area/indoors/town/manor)
 "Jq" = (
 /obj/item/coin/gold/pile,
 /turf/open/floor/tile,
@@ -8626,15 +8548,6 @@
 /obj/effect/spawner/map_spawner/loot/valuable_jewelry_spawner,
 /turf/open/floor/church,
 /area/indoors/cave/rmh_dwarf_keep/throne)
-"LT" = (
-/obj/structure/stairs{
-	dir = 4
-	},
-/obj/structure/stairs{
-	dir = 4
-	},
-/turf/open/floor/ruinedwood,
-/area/indoors/town/manor)
 "LU" = (
 /turf/closed/mineral/bedrock/cold{
 	name = "solid rock"
@@ -8679,7 +8592,6 @@
 /turf/open/floor/carpet/red,
 /area/indoors/town/manor)
 "Mf" = (
-/obj/structure/door/fancy,
 /obj/structure/door/fancy{
 	name = "Cellar"
 	},
@@ -9606,7 +9518,6 @@
 /turf/closed/wall/mineral/stonebrick,
 /area/indoors/town/manor)
 "Qk" = (
-/obj/structure/door/fancy,
 /obj/structure/door/fancy{
 	lockid = "mansionvampire"
 	},
@@ -9860,9 +9771,7 @@
 /obj/structure/fluff/walldeco/painting/seraphina{
 	pixel_y = -32
 	},
-/turf/open/floor/tile{
-	icon_state = "glyph1"
-	},
+/turf/open/floor/greenstone/glyph1,
 /area/indoors/town/vault)
 "Rt" = (
 /obj/effect/decal/cleanable/blood/gibs/core,
@@ -9978,18 +9887,14 @@
 /turf/open/floor/churchmarble,
 /area/indoors/cave/rmh_dwarf_keep/throne)
 "RW" = (
-/turf/open/floor/tile{
-	icon_state = "glyph4"
-	},
+/turf/open/floor/greenstone/glyph4,
 /area/indoors/town/vault)
 "RX" = (
 /obj/structure/table/wood{
 	icon_state = "tablewood1"
 	},
 /obj/item/candle/candlestick/gold/lit,
-/turf/open/floor/tile{
-	icon_state = "bfloorz"
-	},
+/turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
 "RY" = (
 /obj/effect/wisp/prestidigitation{
@@ -10095,9 +10000,7 @@
 "Sz" = (
 /obj/structure/bed/wool,
 /obj/item/bedsheet/pelt,
-/turf/open/floor/ruinedwood{
-	icon_state = "weird1"
-	},
+/turf/open/floor/ruinedwood/spiral,
 /area/under/town/basement/keep)
 "SA" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
@@ -10129,11 +10032,6 @@
 /obj/effect/landmark/quest_spawner/medium,
 /turf/open/floor/naturalstone,
 /area/indoors/cave/rmh_cave/cold)
-"SJ" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-3"
-	},
-/area/indoors/town/bath)
 "SK" = (
 /turf/closed/wall/mineral/wooddark/vertical,
 /area/indoors/town/manor)
@@ -10376,9 +10274,7 @@
 /area/indoors/cave/rmh_dwarf_keep/grand)
 "TO" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "TP" = (
 /obj/item/gem/red,
@@ -10389,9 +10285,7 @@
 /obj/item/gem/blue,
 /obj/structure/closet/crate/chest/neu_fancy,
 /obj/machinery/light/fueled/wallfire/candle/blue/r,
-/turf/open/floor/tile{
-	icon_state = "linoleum"
-	},
+/turf/open/floor/tile/checker,
 /area/indoors/town/vault)
 "TQ" = (
 /obj/machinery/light/fueled/hearth{
@@ -10729,11 +10623,6 @@
 	},
 /turf/open/floor/tile/tilerg,
 /area/indoors/town/manor)
-"Vk" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-3"
-	},
-/area/under/town/basement/keep)
 "Vl" = (
 /obj/structure/bars/pipe{
 	pixel_y = 9;
@@ -10767,11 +10656,6 @@
 	},
 /turf/open/floor/hexstone,
 /area/indoors/cave/rmh_dwarf_keep/treasury)
-"Vt" = (
-/obj/structure/window/harem1,
-/obj/structure/window/harem1,
-/turf/open/floor/concrete,
-/area/indoors/town/manor)
 "Vu" = (
 /turf/open/floor/dark_ice{
 	base_icon_state = "blackice"
@@ -11082,9 +10966,7 @@
 /turf/open/floor/woodturned,
 /area/indoors/town/manor)
 "WH" = (
-/turf/open/floor/tile{
-	icon_state = "glyph6"
-	},
+/turf/open/floor/greenstone/glyph6,
 /area/indoors/town/vault)
 "WJ" = (
 /obj/structure/rack,
@@ -11695,11 +11577,6 @@
 	},
 /obj/item/candle/yellow,
 /turf/open/floor/carpet,
-/area/under/town/basement/keep)
-"Zf" = (
-/turf/closed/wall/mineral/pipe{
-	icon_state = "pipe-4"
-	},
 /area/under/town/basement/keep)
 "Zg" = (
 /obj/structure/rack/shelf/biggest,
@@ -14787,7 +14664,7 @@ MS
 MS
 ow
 ow
-zB
+By
 MS
 bH
 bH
@@ -15151,8 +15028,8 @@ bH
 bH
 bH
 MS
-SJ
-SJ
+wU
+wU
 HO
 rv
 TB
@@ -15160,7 +15037,7 @@ MR
 TB
 rv
 YP
-SJ
+wU
 wU
 kO
 Ls
@@ -16327,8 +16204,8 @@ Jb
 js
 Jb
 js
-dD
-pE
+Dw
+Iq
 Iq
 bH
 bH
@@ -16456,7 +16333,7 @@ CH
 MS
 MS
 MS
-qn
+Dw
 MS
 MS
 bH
@@ -17230,7 +17107,7 @@ CH
 MS
 MS
 MS
-Zf
+Dw
 MS
 MS
 RH
@@ -17360,8 +17237,8 @@ xy
 Jb
 xy
 Dw
-Vk
-xB
+Dw
+Dw
 NQ
 sf
 rm
@@ -51912,7 +51789,7 @@ zn
 zn
 zn
 Kd
-Vt
+vx
 FR
 ug
 RN
@@ -81731,7 +81608,7 @@ aw
 AC
 mA
 de
-Jp
+Jl
 de
 mA
 mA
@@ -84446,7 +84323,7 @@ nX
 BD
 oB
 CN
-LT
+CN
 mT
 Kn
 mA

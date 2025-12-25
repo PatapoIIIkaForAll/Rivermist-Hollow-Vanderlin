@@ -41,6 +41,7 @@
 		H.adjust_skillrank(/datum/skill/craft/cooking, 1, TRUE)
 
 /datum/outfit/mercenary/grenzelhoft
+	name = "Grenzelhoft (Mercenary)"
 	neck = /obj/item/clothing/neck/chaincoif
 	pants = /obj/item/clothing/pants/grenzelpants
 	shoes = /obj/item/clothing/shoes/rare/grenzelhoft

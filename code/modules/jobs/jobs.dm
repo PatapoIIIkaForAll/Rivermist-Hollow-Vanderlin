@@ -1,5 +1,5 @@
 GLOBAL_LIST_INIT(noble_positions, list(
-	/datum/job/lord::title,
+	/datum/job/roguetown/village/townmaster::title,
 	/datum/job/consort::title,
 	/datum/job/hand::title,
 	/datum/job/prince::title,
@@ -70,6 +70,7 @@ GLOBAL_LIST_INIT(peasant_positions, list(
 	/datum/job/butcher::title,
 	/datum/job/cook::title,
 	/datum/job/carpenter::title,
+	/datum/job/mason::title,
 	/datum/job/jester::title,
 	/datum/job/hunter::title,
 	/datum/job/fisher::title,

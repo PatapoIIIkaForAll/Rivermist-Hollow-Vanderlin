@@ -73,6 +73,10 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	set name = "Assume direct control"
 	set desc = ""
 
+	src.release_direct_controle()
+	src.saved_ai_by_direct_control = M.ai_controller
+	src.saved_ai_mob_ref = M
+
 	if(M.ckey)
 		if(alert("This mob is being controlled by [M.key]. Are you sure you wish to assume control of it? [M.key] will be made a ghost.",,"Yes","No") != "Yes")
 			return
