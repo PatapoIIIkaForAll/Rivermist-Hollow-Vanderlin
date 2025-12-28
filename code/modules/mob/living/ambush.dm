@@ -14,7 +14,7 @@
 		return FALSE
 	return ambushable && !HAS_TRAIT(src, TRAIT_NOAMBUSH)
 
-/mob/living/proc/consider_ambush()
+/mob/living/proc/consider_ambush(always = FALSE)
 	if(!always)
 		if(world.time > last_client_interact + 0.3 SECONDS)
 			return

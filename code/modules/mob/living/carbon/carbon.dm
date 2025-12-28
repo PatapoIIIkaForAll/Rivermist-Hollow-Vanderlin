@@ -362,6 +362,20 @@
 		ExtinguishMob(TRUE)
 	return
 
+/mob/living/carbon/resist_leash()
+	if(!has_status_effect(/datum/status_effect/leash_pet))
+		return
+	to_chat(src, span_notice("I reach for the hook on my collar..."))
+	var/deleash = 5 SECONDS
+	if(handcuffed)
+		deleash = 20 SECONDS
+	if(do_after(src, deleash, target = src))
+		if(QDELETED(src))
+			return
+		to_chat(src, "<span class='warning'>[src] has removed their leash!</span>")
+		remove_status_effect(/datum/status_effect/leash_pet)
+	return
+
 /mob/living/carbon/resist_restraints()
 	var/obj/item/I = null
 	var/type = 0

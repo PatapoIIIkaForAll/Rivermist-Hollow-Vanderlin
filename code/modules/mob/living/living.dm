@@ -1166,7 +1166,10 @@
 		if(on_fire)
 			resist_fire() //stop, drop, and roll
 		else if(last_special <= world.time)
-			resist_restraints() //trying to remove cuffs.
+			if(has_status_effect(/datum/status_effect/leash_pet))
+				resist_leash() //trying to remove a leash.
+			else
+				resist_restraints() //trying to remove cuffs.
 
 /mob/living/carbon/human/verb/ic_pray()
 	set name = "Prayer"
@@ -1635,6 +1638,9 @@
 /mob/living/proc/resist_buckle()
 	buckled.user_unbuckle_mob(src,src)
 	return TRUE
+
+/mob/living/proc/resist_leash()
+	return
 
 /mob/living/proc/resist_fire()
 	return

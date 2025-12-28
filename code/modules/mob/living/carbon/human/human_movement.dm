@@ -42,6 +42,11 @@
 				var/obj/item/clothing/C = wear_armor
 				C.step_action()
 
+		if(wear_neck)
+			if(body_position != LYING_DOWN)
+				var/obj/item/clothing/N = wear_neck
+				N.step_action()
+
 		if(wear_shirt)
 			if(body_position != LYING_DOWN)
 				var/obj/item/clothing/C = wear_shirt

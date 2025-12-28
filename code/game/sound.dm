@@ -396,6 +396,12 @@
 							'sound/items/jinglebell (3).ogg',\
 							'sound/items/jinglebell (4).ogg',\
 							)
+			if(SFX_COLLARJINGLE)
+				soundin = pick('sound/items/jinglebell (1).ogg',\
+							'sound/items/jinglebell (2).ogg',\
+							'sound/items/jinglebell (3).ogg',\
+							'sound/items/jinglebell (4).ogg',\
+							)
 			if(SFX_INQUIS_BOOT_STEP)
 				soundin = pick('sound/foley/footsteps/armor/inquisitorboot (1).ogg',\
 							'sound/foley/footsteps/armor/inquisitorboot (2).ogg',\

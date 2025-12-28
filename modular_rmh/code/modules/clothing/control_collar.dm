@@ -34,6 +34,7 @@ GLOBAL_LIST_INIT(generated_slave_phrases, list()) //retarded dev made GLOB right
 	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_CHOP, BCLASS_BLUNT, BCLASS_TWIST)
 	blocksound = PLATEHIT
 	flags_1 = HEAR_1
+	leashable = TRUE
 
 	var/pleasure_phrase
 	var/submission_phrase

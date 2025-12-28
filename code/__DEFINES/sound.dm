@@ -78,6 +78,7 @@
 #define SFX_PLATE_STEP	"plate_step"
 #define SFX_PLATE_COAT_STEP	"plate_coat_step"
 #define SFX_JINGLE_BELLS	"jingle_bells"
+#define SFX_COLLARJINGLE "collar_jingle"
 #define SFX_INQUIS_BOOT_STEP	"inquis_boot_step"
 #define SFX_POWER_ARMOR_STEP	"power_armor_step"
 #define SFX_WATCH_BOOT_STEP	"watch_boot_step"

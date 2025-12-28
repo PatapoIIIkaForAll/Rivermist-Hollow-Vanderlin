@@ -60,6 +60,12 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	var/slot_flags = 0		//This is used to determine on which slots an item can fit.
 	var/obj/item/master = null
 
+	// Leash/collar helpers
+	var/leashable = FALSE
+	var/bellsound = FALSE
+	var/bell = FALSE
+	var/trait_source
+
 	var/max_heat_protection_temperature //Set this variable to determine up to which temperature (IN Celcius) the item protects against heat damage. Keep at null to disable protection. Only protects areas set by heat_protection flags
 	var/min_cold_protection_temperature //Set this variable to determine down to which temperature (IN Celcius) the item protects against cold damage. 0 is NOT an acceptable number due to if(varname) tests!! Keep at null to disable protection. Only protects areas set by cold_protection flags
 

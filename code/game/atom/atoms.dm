@@ -480,6 +480,11 @@
 	else
 		. = list()
 
+	if(istype(src, /mob/living))
+		var/mob/living/L = src
+		if(L.has_status_effect(/datum/status_effect/leash_pet))
+			. += "<A href='?src=[REF(src)];'><span class='warning'>A leash is hooked to a collar!</span></A>"
+
 	if(desc)
 		. += "<span class='info'>[desc]</span>"
 
