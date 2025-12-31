@@ -5,7 +5,7 @@
 	gender = NEUTER
 	icon = 'icons/roguetown/mob/accessories.dmi'
 	use_static = TRUE
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/rakshari
 	name = ""
@@ -24,51 +24,51 @@
 /datum/sprite_accessory/accessories/nothing
 	name = "Nothing"
 	icon_state = "nothing"
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/earrings/sil
 	name = "Earrings"
 	icon_state = "earrings_sil"
 	gender = FEMALE
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/earrings
 	name = "Earrings (G)"
 	icon_state = "earrings"
 	gender = FEMALE
 	relevant_layers = list(BODY_FRONT_LAYER)
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/earrings/em
 	name = "Earrings (E)"
 	icon_state = "earrings_em"
 	gender = FEMALE
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/choker
 	name = "Neckband"
 	icon_state = "choker"
 	gender = FEMALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/chokere
 	name = "Neckband (E)"
 	icon_state = "chokere"
 	gender = FEMALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/eyepierce
 	name = "Pierced Brow (L)"
 	icon_state = "eyepierce"
 	gender = FEMALE
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 	relevant_layers = list(BODY_FRONT_LAYER)
 
 /datum/sprite_accessory/accessories/eyepierce/alt
 	name = "Pierced Brow (R)"
 	icon_state = "eyepiercealt"
 	gender = FEMALE
-	specuse = list(SPEC_ID_HUMEN, SPEC_ID_DWARF, SPEC_ID_ELF)
+	specuse = ALL_RACES_LIST
 
 /datum/sprite_accessory/accessories/rakshari
 	abstract_type = /datum/sprite_accessory/accessories/rakshari
