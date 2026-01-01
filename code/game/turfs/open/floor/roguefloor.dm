@@ -1,5 +1,6 @@
 /*	..................   Wooden Floors   ................... */
 /turf/open/floor/ruinedwood
+	icon = 'icons/turf/constructed/wood.dmi'
 	icon_state = "wooden_floor"
 	footstep = FOOTSTEP_WOOD
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -81,6 +82,7 @@
 	icon_state = "tavern"
 
 /turf/open/floor/twig
+	icon = 'icons/turf/constructed/wood.dmi'
 	icon_state = "twig"
 	footstep = FOOTSTEP_GRASS
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -149,6 +151,7 @@
 
 /turf/open/floor/rooftop
 	name = "roof"
+	icon = 'icons/turf/constructed/roof.dmi'
 	icon_state = MAP_SWITCH("roof", "roof-arw")
 	footstep = FOOTSTEP_WOOD
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -177,6 +180,7 @@
 /turf/open/floor/grass
 	name = "grass"
 	desc = "Grass, sodden in mud and bogwater."
+	icon = 'icons/turf/natural/grasses.dmi'
 	icon_state = "grass"
 	footstep = FOOTSTEP_GRASS
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -199,13 +203,19 @@
 	. = ..()
 	ChangeTurf(/turf/open/floor/dirt, flags = CHANGETURF_INHERIT_AIR)
 
+/turf/open/floor/grass/healthy
+	name = "healthy grass"
+	desc = "Grass, somehow greener on this side."
+	icon_state = "grass_healthy"
+	neighborlay = "grass_healthyedge"
+
 /turf/open/floor/grass/mixyel
 	icon_state = "grass_yelmix"
 	neighborlay = "grass_yelmixedge"
 
 /turf/open/floor/grass/red
 	name = "red grass"
-	desc = "Grass, ripe with Dendor's blood."
+	desc = "Grass, ripe with Dendor's bloody marrow."
 	icon_state = "grass_red"
 	neighborlay = "grass_rededge"
 
@@ -230,11 +240,13 @@
 /turf/open/floor/grass/eora
 	icon_state = "hellgrass"
 	neighborlay = "hellgrass"
+
 /*	..................   Snow   ................... */
 
 /turf/open/floor/snow
 	name = "snow"
 	desc = "A gentle blanket of snow."
+	icon = 'icons/turf/natural/snow.dmi'
 	icon_state = "snow"
 	footstep = FOOTSTEP_GRASS
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -267,6 +279,7 @@
 /turf/open/floor/dirt
 	name = "dirt"
 	desc = "The dirt is pocked with the scars of countless wars."
+	icon = 'icons/turf/natural/soils.dmi'
 	icon_state = "dirt"
 	footstep = FOOTSTEP_GRASS
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -362,6 +375,7 @@
 	if(!muddy)
 		water_level = max(water_level-100,0)
 		muddy = TRUE
+		icon = 'icons/turf/natural/soils.dmi'
 		icon_state = "mud[rand (1,3)]"
 		name = "mud"
 		slowdown = 2
@@ -393,6 +407,7 @@
 /turf/open/floor/underworld/road
 	name = "ash"
 	desc = "Smells like burnt wood."
+	icon = 'icons/turf/natural/ash.dmi'
 	icon_state = "ash"
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -407,6 +422,7 @@
 /turf/open/floor/underworld/arena
 	name = "sandy ash"
 	desc = "This has been pranced upon by countless skeletal fighters."
+	icon = 'icons/turf/natural/ash.dmi'
 	icon_state = "ash3"
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -441,6 +457,7 @@
 /turf/open/floor/volcanic
 	name = "dirt"
 	desc = "The dirt is pocked with the scars of tectonic movement."
+	icon = 'icons/turf/natural/soils.dmi'
 	icon_state = "lavafloor"
 	footstep = FOOTSTEP_SAND
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -459,6 +476,7 @@
 /turf/open/floor/hay
 	name = "hay"
 	desc = "A light covering of hay strewn across the ground."
+	icon = 'icons/turf/constructed/misc.dmi'
 	icon_state = "hay"
 	footstep = FOOTSTEP_GRASS
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
@@ -468,6 +486,7 @@
 
 /*	..................   Stone Block Floors   ................... */
 /turf/open/floor/blocks
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "blocks"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -486,6 +505,7 @@
 	ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 
 /turf/open/floor/blocks/stonered
+	icon = 'icons/turf/constructed/tile.dmi'
 	icon_state = "stoneredlarge"
 
 /turf/open/floor/blocks/stonered/tiny
@@ -494,10 +514,16 @@
 /turf/open/floor/blocks/green
 	icon_state = "greenblocks"
 
+/turf/open/floor/blocks/carved
+	icon = 'icons/turf/constructed/tile.dmi'
+	icon_state = "carvedstone"
+
 /turf/open/floor/blocks/bluestone
+	icon = 'icons/turf/constructed/tile.dmi'
 	icon_state = "bluestone2"
 
 /turf/open/floor/blocks/newstone
+	icon = 'icons/turf/constructed/tile.dmi'
 	icon_state = "newstone2"
 
 /turf/open/floor/blocks/newstone/alt
@@ -507,6 +533,7 @@
 	icon_state = "snowblocks"
 
 /turf/open/floor/blocks/paving
+	icon = 'icons/turf/constructed/tile.dmi'
 	icon_state = "paving"
 
 /turf/open/floor/blocks/paving/vert
@@ -551,6 +578,7 @@
 	icon_state = "glyph6"
 
 /turf/open/floor/hexstone
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "hexstone"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -573,6 +601,7 @@
 /*	..................   Church Floors   ................... */
 
 /turf/open/floor/churchmarble
+	icon = 'icons/turf/constructed/church.dmi'
 	icon_state = "church_marble"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -595,6 +624,7 @@
 	ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 
 /turf/open/floor/church
+	icon = 'icons/turf/constructed/church.dmi'
 	icon_state = "church"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -614,11 +644,9 @@
 	. = ..()
 	dir = pick(GLOB.cardinals)
 
-/turf/open/floor/church/purple
-	icon_state = "church_purple"
-
 /turf/open/floor/churchbrick
-	icon_state = "church_brick"
+	icon = 'icons/turf/constructed/church.dmi'
+	icon_state = "church_marble"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
 	clawfootstep = FOOTSTEP_HARD_CLAW
@@ -638,6 +666,7 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/open/floor/churchrough
+	icon = 'icons/turf/constructed/church.dmi'
 	icon_state = "church_rough"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -657,11 +686,70 @@
 	. = ..()
 	dir = pick(GLOB.cardinals)
 
+// Church Variants
+// Purple
+/turf/open/floor/church/purple
+	icon_state = "church-purple"
+
+/turf/open/floor/churchmarble/purple
+	icon_state = "church-purple_marble"
+
 /turf/open/floor/churchrough/purple
-	icon_state = "church_rough_purple"
+	icon_state = "church-purple_rough"
+
+// Violet - old purple
+/turf/open/floor/church/violet
+	icon_state = "church-violet"
+
+/turf/open/floor/churchmarble/violet
+	icon_state = "church-violet_marble"
+
+/turf/open/floor/churchrough/violet
+	icon_state = "church-violet_rough"
+
+// Rust - Maroon, good for inhumen.
+/turf/open/floor/church/rust
+	icon_state = "church-rust"
+
+/turf/open/floor/churchmarble/rust
+	icon_state = "church-rust_marble"
+
+/turf/open/floor/churchrough/rust
+	icon_state = "church-rust_rough"
+
+// Pale - Sandy, use in Deshret maybe
+/turf/open/floor/church/pale
+	icon_state = "church-pale"
+
+/turf/open/floor/churchmarble/pale
+	icon_state = "church-pale_marble"
+
+/turf/open/floor/churchrough/pale
+	icon_state = "church-pale_rough"
+
+// Gold - Astratan theme?
+/turf/open/floor/church/gold
+	icon_state = "church-gold"
+
+/turf/open/floor/churchmarble/gold
+	icon_state = "church-gold_marble"
+
+/turf/open/floor/churchrough/gold
+	icon_state = "church-gold_marble"
+
+// Green - Dendor shrines.
+/turf/open/floor/church/green
+	icon_state = "church-green"
+
+/turf/open/floor/churchmarble/green
+	icon_state = "church-green_marble"
+
+/turf/open/floor/churchrough/green
+	icon_state = "church-green_rough"
 
 //
 /turf/open/floor/herringbone
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "herringbone"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -684,6 +772,7 @@
 
 /*	..................   Cobblestone   ................... */
 /turf/open/floor/cobble
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "cobblestone1"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -730,6 +819,7 @@
 	icon_state = "snowcobble[rand(1,3)]"
 
 /turf/open/floor/cobblerock
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "cobblerock"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -757,7 +847,7 @@
 /obj/effect/decal/cobbleedge
 	name = ""
 	desc = ""
-	icon = 'icons/turf/floors.dmi'
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "cobblestone_edges"
 	mouse_opacity = 0
 
@@ -782,6 +872,7 @@
 
 /*	..................   Miscellany   ................... */
 /turf/open/floor/tile
+	icon = 'icons/turf/constructed/tile.dmi'
 	icon_state = "chess"
 	landsound = 'sound/foley/jumpland/tileland.ogg'
 	footstep = FOOTSTEP_FLOOR
@@ -826,6 +917,9 @@
 /turf/open/floor/tile/bath
 	icon_state = "bathtile"
 
+/turf/open/floor/tile/bath/pool
+	icon_state = "bathtile_pool"
+
 /turf/open/floor/tile/bfloorz
 	icon_state = "bfloorz"
 
@@ -839,6 +933,7 @@
 	icon_state = "tile"
 
 /turf/open/floor/concrete
+	icon = 'icons/turf/constructed/stone.dmi'
 	icon_state = "concretefloor1"
 	landsound = 'sound/foley/jumpland/stoneland.ogg'
 	footstep = FOOTSTEP_STONE
@@ -861,6 +956,7 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/open/floor/metal
+	icon = 'icons/turf/constructed/metal.dmi'
 	icon_state = "plating1"
 	landsound = 'sound/foley/jumpland/metalland.ogg'
 	footstep = FOOTSTEP_PLATING
@@ -891,7 +987,6 @@
 	icon_state = "barograteopen"
 
 /turf/open/floor/carpet/lord
-	icon = 'icons/turf/floors.dmi'
 	icon_state = ""
 
 /turf/open/floor/carpet/lord/Initialize()
@@ -914,11 +1009,17 @@
 /turf/open/floor/carpet/lord/right
 	icon_state = "carpet_r"
 
+/turf/open/floor/carpet/lord/corner
+	icon_state = "carpet_corner"
+
+/turf/open/floor/carpet/lord/corrner_inner
+	icon_state = "carpet_cornerin"
+
 /turf/open/floor/carpet/green
-	icon = 'icons/turf/floors.dmi'
 	icon_state = "carpet_inn"
 
 /turf/open/floor/naturalstone
+	icon = 'icons/turf/natural/stones.dmi'
 	icon_state = "digstone"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -927,6 +1028,7 @@
 	landsound = 'sound/foley/jumpland/grassland.ogg'
 
 /turf/open/floor/plank
+	icon = 'icons/turf/constructed/misc.dmi'
 	icon_state = "plank"
 	footstep = FOOTSTEP_WOOD
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -1018,45 +1120,62 @@
 	icon_state = "path_abyss"
 
 /turf/open/floor/sand
-	name = "sand"
-	desc = "Warm sand that, sadly, have been mixed with dirt."
-	icon_state = "sand-1"
-	icon = 'icons/delver/desert_objects.dmi'
+	name = "gravelly sand"
+	desc = "Dark grey gravel which has been ground smooth by water over aeons."
+	icon_state = "gravel"
+	icon = 'icons/turf/natural/soils.dmi'
 	layer = MID_TURF_LAYER
 	footstep = FOOTSTEP_SAND
-	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_DIRT_ROAD
 	barefootstep = FOOTSTEP_SOFT_BAREFOOT
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	landsound = 'sound/foley/jumpland/grassland.ogg'
 	slowdown = 0
 	var/randomized = TRUE
 	var/blood_sand = FALSE
+	smoothing_flags = SMOOTH_EDGE
+	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_DIRT_ROAD
+	neighborlay = "graveledge"
 
 /turf/open/floor/sand/Initialize()
+	. = ..()
+	dir = pick(GLOB.cardinals)
+
+/turf/open/floor/sand/sandstone
+	name = "sandstone gravel"
+	desc = "Chunky sandstone, disintegrated naturally over time into a less-than-comfortable cobble."
+	icon_state = "sandgravel"
+
+/turf/open/floor/sand/desert
+	icon = 'icons/delver/desert_objects.dmi'
+	icon_state = "sand-1"
+	name = "sand"
+	desc = "Warm sand that, sadly, have been mixed with dirt."
+
+/turf/open/floor/sand/desert/Initialize()
 	. = ..()
 	if(randomized)
 		var/random_num = rand(1, 12)
 		icon_state = "sand-[random_num]"
 
-/turf/open/floor/sand/proc/make_bloodied()
+/turf/open/floor/sand/desert/proc/make_bloodied()
 	if(blood_sand)
 		return
 	blood_sand = TRUE
 	icon_state = "bloody"
 
 	for(var/direction in list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
-		var/turf/open/floor/sand/adjacent_turf = get_step(src, direction)
+		var/turf/open/floor/sand/desert/adjacent_turf = get_step(src, direction)
 		if(istype(adjacent_turf))
 			var/dir_name = dir_to_name(direction)
 			adjacent_turf.set_bloody_direction(dir_name)
 
-/turf/open/floor/sand/proc/set_bloody_direction(direction_name)
+/turf/open/floor/sand/desert/proc/set_bloody_direction(direction_name)
 	if(blood_sand)
 		return
 	blood_sand = TRUE
 	icon_state = "bloody-[direction_name]"
 
-/turf/open/floor/sand/proc/dir_to_name(direction)
+/turf/open/floor/sand/desert/proc/dir_to_name(direction)
 	switch(direction)
 		if(NORTH)
 			return "n"
@@ -1075,7 +1194,6 @@
 		if(SOUTHWEST)
 			return "sw"
 	return "n" // fallback
-
 
 /turf/open/floor/sand/bloodied
 	icon_state = "bloody"
