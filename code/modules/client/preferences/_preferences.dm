@@ -1404,7 +1404,11 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
 					to_chat(user, "<span class='notice'>Keep in mind that the photo will be downsized to 325x325 pixels, so the more square the photo, the better it will look.</span>")
 					var/new_headshot_link = input(user, "Input the headshot link (https, hosts: gyazo, lensdump, imgbox, catbox):", "Headshot", headshot_link) as text|null
-					if(!new_headshot_link)
+					if(new_headshot_link == null)
+						return
+					if(new_headshot_link == "")
+						headshot_link = null
+						ShowChoices(user)
 						return
 					var/is_valid_link = is_valid_headshot_link(user, new_headshot_link, FALSE)
 					if(!is_valid_link)
