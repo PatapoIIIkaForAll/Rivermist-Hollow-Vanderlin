@@ -33,7 +33,7 @@
 
 /datum/job/advclass/pilgrimminer/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
-	if(spawned.dna?.species.id == SPEC_ID_DWARF)
+	if(spawned.dna?.species.id == SPEC_ID_DWARF || spawned.dna?.species.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'
 
 /datum/outfit/pilgrim/miner
@@ -56,7 +56,7 @@
 	head = pick(/obj/item/clothing/head/armingcap, /obj/item/clothing/head/headband/colored/red, /obj/item/clothing/head/roguehood/colored/random)
 	shirt = pick(/obj/item/clothing/shirt/undershirt/colored/random, /obj/item/clothing/shirt/shortshirt/colored/random)
 
-	if(equipped_human.dna.species.id == SPEC_ID_DWARF)
+	if(equipped_human.dna.species.id == SPEC_ID_DWARF || equipped_human.dna.species.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm
 	else
 		beltr = /obj/item/flashlight/flare/torch/lantern

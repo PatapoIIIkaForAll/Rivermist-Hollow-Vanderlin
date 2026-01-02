@@ -1,35 +1,35 @@
-/mob/living/carbon/human/species/halfling
-	race = /datum/species/halfling
+/mob/living/carbon/human/species/gnome
+	race = /datum/species/gnome
 
-/datum/species/halfling
-	name = "Halfling"
-	id = SPEC_ID_HALFLING
-	desc = "Halflings are a cheerful and resilient people, valuing comfort, community, and simple pleasures. \
+/datum/species/gnome
+	name = "Gnome"
+	id = SPEC_ID_GNOME
+	desc = "Gnomes are curious and inventive folk, driven by an insatiable desire to learn and create. \
 	n\n\
-	Though they prefer peaceful lives, halflings are far from helpless, often displaying remarkable courage when faced with danger. \
+	Found throughout Faerûn, they favor hidden settlements where clever craftsmanship, illusion magic, and experimentation flourish. \
 	n\n\
-	In Faerûn, halflings are known for their good fortune and ability to endure hardship with a smile. \
+	Despite their small stature, gnomes possess sharp intellects and quick wits. \
 	n\n\
-	heir loyalty to friends and family runs deep, and they believe that perseverance and kindness are strengths greater than physical might. \
+	They approach life with humor and optimism, believing that curiosity and cleverness can overcome challenges far larger than themselves. \
 	n\n\
-	(-1 STR, 1+ END, +1 SPD, +2 LCK).\
+	(+1 INT, +2 LCK).\
 	\n\n\
-	Proficiencies: Sneaking(4), Stealing(3), Lockpicking(3), Knives(2), Farming(3), Cooking(3), Fishing(2)."
+	Proficiencies: Engineering(4), Crafting(3), Alchemy(3), Crossbows(2), Reading(4), Mathematics(4), Arcane(3)."
 
 	default_color = "FFFFFF"
-	native_language = "Halfling"
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP, TRAIT_LIGHT_STEP, TRAIT_COIN_ILLITERATE, TRAIT_LUCKY_COOK)
 	inherent_skills = list(
-		/datum/skill/misc/sneaking = 4,
-		/datum/skill/misc/stealing = 3,
-		/datum/skill/misc/lockpicking = 3,
+		/datum/skill/craft/engineering = 4,
+		/datum/skill/craft/crafting = 3,
+		/datum/skill/craft/alchemy = 3,
 
-		/datum/skill/combat/knives = 2,
+		/datum/skill/combat/crossbows = 2,
 
-		/datum/skill/labor/farming = 3,
-		/datum/skill/craft/cooking = 3,
-		/datum/skill/labor/fishing = 2,
+		/datum/skill/misc/reading = 4,
+		/datum/skill/labor/mathematics = 4,
+
+		/datum/skill/magic/arcane = 3,
 	)
 
 	use_skintones = TRUE
@@ -43,6 +43,20 @@
 	swap_male_clothes = TRUE
 	custom_clothes = TRUE
 	custom_id = SPEC_ID_DWARF
+
+	organs = list(
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart,
+		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes/,
+		ORGAN_SLOT_EARS = /obj/item/organ/ears/elf,
+		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,
+		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
+		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
+		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
+		ORGAN_SLOT_ANUS = /obj/item/organ/genitals/filling_organ/anus,
+	)
 
 	// Both from female dwarf
 	offset_features_m = list(
@@ -103,12 +117,13 @@
 
 	// Gets 2 SPD if they aren't wearing shoes
 	// Gets 0 / 1 END if they eat enough
-	specstats_m = list(STATKEY_STR = -1, STATKEY_PER = 0, STATKEY_CON = 0, STATKEY_END = 1, STATKEY_SPD = 1, STATKEY_LCK = 2)
-	specstats_f = list(STATKEY_STR = -1, STATKEY_PER = 0, STATKEY_CON = 0, STATKEY_END = 1, STATKEY_SPD = 1, STATKEY_LCK = 2)
+	specstats_m = list(STATKEY_STR = 0, STATKEY_PER = 0, STATKEY_INT = 1, STATKEY_CON = 0, STATKEY_END = 0, STATKEY_SPD = 0, STATKEY_LCK = 2)
+	specstats_f = list(STATKEY_STR = 0, STATKEY_PER = 0, STATKEY_INT = 1, STATKEY_CON = 0, STATKEY_END = 0, STATKEY_SPD = 0, STATKEY_LCK = 2)
 
 	enflamed_icon = "widefire"
 
 	customizers = list(
+		/datum/customizer/organ/ears/elf,
 		/datum/customizer/organ/eyes/humanoid,
 		/datum/customizer/bodypart_feature/hair/head/humanoid,
 		/datum/customizer/bodypart_feature/hair/facial/humanoid,
@@ -163,16 +178,13 @@
 
 	nutrition_mod = 2
 
-/datum/species/halfling/check_roundstart_eligible()
+/datum/species/gnome/check_roundstart_eligible()
 	return TRUE
 
-/datum/species/halfling/after_creation(mob/living/carbon/C)
+/datum/species/gnome/after_creation(mob/living/carbon/C)
 	..()
-	C.dna.species.accent_language = C.dna.species.get_accent(native_language, 1)
-	C.grant_language(/datum/language/halfling)
-	to_chat(C, span_info("I can speak Halfspeak with ,p before my speech."))
 
-/datum/species/halfling/get_skin_list()
+/datum/species/gnome/get_skin_list()
 	return sortList(list(
 		"Pale"         = SKIN_TONE_PALE,
 		"White 1"      = SKIN_TONE_WHITE1,
@@ -194,30 +206,28 @@
 		"Black 3"      = SKIN_TONE_BLACK3,
 	))
 
-/datum/species/halfling/on_species_gain(mob/living/carbon/C, datum/species/old_species, datum/preferences/pref_load)
+/datum/species/gnome/on_species_gain(mob/living/carbon/C, datum/species/old_species, datum/preferences/pref_load)
 	. = ..()
 
 	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	C.grant_language(/datum/language/common)
-	C.grant_language(/datum/language/halfling)
 
 	RegisterSignal(C, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(handle_equip))
 
 	if(!C.shoes)
 		C.apply_status_effect(/datum/status_effect/buff/free_feet)
 
-/datum/species/halfling/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
+/datum/species/gnome/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
 	. = ..()
 	if(QDELETED(C))
 		return
 	C.remove_language(/datum/language/common)
-	C.remove_language(/datum/language/halfling)
 	UnregisterSignal(C, COMSIG_MOB_SAY)
 	UnregisterSignal(C, COMSIG_MOB_EQUIPPED_ITEM)
 	C.remove_status_effect(/datum/status_effect/buff/free_feet)
 	C.remove_status_effect(/datum/status_effect/buff/stuffed)
 
-/datum/species/halfling/proc/handle_equip(mob/living/carbon/source, obj/item/equipping, slot)
+/datum/species/gnome/proc/handle_equip(mob/living/carbon/source, obj/item/equipping, slot)
 	if(QDELETED(source) || !istype(source))
 		return
 
@@ -227,7 +237,7 @@
 	else if(!source.shoes)
 		source.apply_status_effect(/datum/status_effect/buff/free_feet)
 
-/datum/species/halfling/handle_digestion(mob/living/carbon/human/H)
+/datum/species/gnome/handle_digestion(mob/living/carbon/human/H)
 	. = ..()
 	if(H.stat == DEAD || HAS_TRAIT(H, TRAIT_NOHUNGER))
 		return

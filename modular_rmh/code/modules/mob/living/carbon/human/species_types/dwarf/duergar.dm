@@ -1,44 +1,39 @@
-	/*==============*
-	*				*
-	*	  Dwarf		*
-	*				*
-	*===============*/
+/mob/living/carbon/human/species/dwarf/duergar
+	race = /datum/species/dwarf/duergar
 
-//	( + Poison Resistance )
-
-/mob/living/carbon/human/species/dwarf/mountain
-	race = /datum/species/dwarf/mountain
-
-/datum/species/dwarf/mountain
-	name = "Dwarf"
-	id = SPEC_ID_DWARF
-	desc = "Dwarves are a stout and enduring people, known throughout Faerûn for their craftsmanship, resilience, and unyielding traditions.\
+/datum/species/dwarf/duergar
+	name = "Duergar"
+	id = SPEC_ID_DUERGAR
+	desc = "Duergar, also known as gray dwarves, dwell in the Underdark beneath Faerûn.\
 	\n\n\
-	Most dwarves trace their ancestry to ancient mountain halls carved deep into stone, where clan, honor, and history are held sacred. \
+	ong ago enslaved by mind flayers, they emerged hardened, bitter, and deeply suspicious of all outsiders. \
 	\n\n\
-	Slow to trust but steadfast once bonds are formed, dwarves possess long memories—both for friendship and for grudges.\
+	Their society values discipline, self-reliance, and survival above all else.\
 	\n\n\
-	Their lives are shaped by stone and steel, and many see perseverance itself as the highest virtue. \
+	Unlike their surface kin, duergar suppress emotion and sentiment, viewing them as weaknesses. \
 	n\n\
-	(+1 STR, 2+ CON, +1 END, Poison Resistance, Dwarvish Language).\
+	Though often cruel and merciless, their harsh nature is forged from generations of oppression rather than inherent malice. \
+	n\n\
+	(+1 STR, 2+ CON, +1 END, -1 LCK, Poison Resistance, Darkvision, Sunlight Sensitivity, Dwarvish Language).\
 	\n\n\
-	Proficiencies: Axemaces(4), Shields(4), Blacksmithing(4), Armorsmithing(4), Weaponsmithing(3), Mining(4), Masonry(3), Athletics(3)."
+	Proficiencies: Axemaces(4), Polearms(3), Sneaking(3), Blacksmithing(3), Smelting(3), Mining(4), Arcane(2).\
+	\n\n\
+	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
-	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, YOUNGBEARD, STUBBLE, OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP, TRAIT_POISON_RESILIENCE)
 	inherent_skills = list(
 		/datum/skill/combat/axesmaces = 4,
-		/datum/skill/combat/shields = 4,
+		/datum/skill/combat/polearms = 3,
 
-		/datum/skill/craft/blacksmithing = 4,
-		/datum/skill/craft/armorsmithing = 4,
-		/datum/skill/craft/weaponsmithing = 3,
+		/datum/skill/misc/sneaking = 3,
+
+		/datum/skill/craft/blacksmithing = 3,
+		/datum/skill/craft/smelting = 3,
 
 		/datum/skill/labor/mining = 4,
-		/datum/skill/craft/masonry = 3,
 
-		/datum/skill/misc/athletics = 3,
+		/datum/skill/magic/arcane = 2,
 	)
 
 	possible_ages = NORMAL_AGES_LIST
@@ -51,10 +46,25 @@
 
 	hairyness = "t3"
 
+	organs = list(
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart,
+		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes/night_vision,
+		ORGAN_SLOT_EARS = /obj/item/organ/ears,
+		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,
+		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
+		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
+		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
+		ORGAN_SLOT_ANUS = /obj/item/organ/genitals/filling_organ/anus,
+	)
+
 	soundpack_m = /datum/voicepack/male/dwarf
 	soundpack_f = /datum/voicepack/female/dwarf
 
 	custom_clothes = TRUE
+	custom_id = SPEC_ID_DWARF
 
 	offset_features_m = list(
 		OFFSET_RING = list(0,0),\
@@ -112,8 +122,8 @@
 		OFFSET_BELLY = list(0,-4),\
 	)
 
-	specstats_m = list(STATKEY_STR = 1, STATKEY_PER = 0, STATKEY_INT = 0, STATKEY_CON = 2, STATKEY_END = 1, STATKEY_SPD = 0, STATKEY_LCK = 0)
-	specstats_f = list(STATKEY_STR = 1, STATKEY_PER = 0, STATKEY_INT = 0, STATKEY_CON = 2, STATKEY_END = 1, STATKEY_SPD = 0, STATKEY_LCK = 0)
+	specstats_m = list(STATKEY_STR = 1, STATKEY_PER = 0, STATKEY_INT = 0, STATKEY_CON = 2, STATKEY_END = 1, STATKEY_SPD = 0, STATKEY_LCK = -1)
+	specstats_f = list(STATKEY_STR = 1, STATKEY_PER = 0, STATKEY_INT = 0, STATKEY_CON = 2, STATKEY_END = 1, STATKEY_SPD = 0, STATKEY_LCK = -1)
 
 	enflamed_icon = "widefire"
 
@@ -166,65 +176,57 @@
 		/datum/body_marking/eyeliner,
 	)
 
-/datum/species/dwarf/mountain/check_roundstart_eligible()
+/datum/species/dwarf/duergar/check_roundstart_eligible()
 	return TRUE
 
-/datum/species/dwarf/mountain/get_span_language(datum/language/message_language)
+/datum/species/dwarf/duergar/get_span_language(datum/language/message_language)
 	if(!message_language)
 		return
 	if(message_language.type == /datum/language/dwarvish)
 		return list(SPAN_DWARF)
 	return message_language.spans
 
-/datum/species/dwarf/mountain/get_skin_list()
+/datum/species/dwarf/duergar/get_skin_list()
 	return sortList(list(
-		"Pale"         = SKIN_TONE_PALE,
-		"White 1"      = SKIN_TONE_WHITE1,
-		"White 2"      = SKIN_TONE_WHITE2,
-		"White 3"      = SKIN_TONE_WHITE3,
-		"White 4"      = SKIN_TONE_WHITE4,
-		"Tan"          = SKIN_TONE_TAN,
-		"Mediterranean 1" = SKIN_TONE_MEDIT1,
-		"Mediterranean 2" = SKIN_TONE_MEDIT2,
-		"Latin"        = SKIN_TONE_LATIN,
-		"Middle-east 1" = SKIN_TONE_MID_EAST1,
-		"Middle-east 2" = SKIN_TONE_MID_EAST2,
-		"Native American 1" = SKIN_TONE_NATIVE1,
-		"Native American 2" = SKIN_TONE_NATIVE2,
-		"Polynesian"   = SKIN_TONE_POLYNESIAN,
-		"Melanesian"   = SKIN_TONE_MELANESIAN,
-		"Black 1"      = SKIN_TONE_BLACK1,
-		"Black 2"      = SKIN_TONE_BLACK2,
-		"Black 3"      = SKIN_TONE_BLACK3,
+		"Pale Blue"       = SKIN_TONE_DROW_PALE_BLUE,       // #9796a9
+		"Pale Purple"     = SKIN_TONE_DROW_PALE_PURPLE,     // #897489
+		"Pale Grey"       = SKIN_TONE_DROW_PALE_GREY,       // #938f9c
+		"Deep Grey"       = SKIN_TONE_DROW_DEEP_GREY,       // #737373
+		"Grey-Purple"     = SKIN_TONE_DROW_GREY_PURPLE,     // #6a616d
+		"Grey-Blue"       = SKIN_TONE_DROW_GREY_BLUE,       // #5f5f70
+		"Black-Blue"      = SKIN_TONE_DROW_BLACK_BLUE,      // #2F2F38
+		"Very Pale"       = SKIN_TONE_DROW_VERY_PALE,       // #fff0e9
+		"Light Purple"    = SKIN_TONE_DROW_LIGHT_PURPLE,    // #a191a1
+		"Mid Purple"      = SKIN_TONE_DROW_MID_PURPLE,      // #897489
+		"Dark Purple"     = SKIN_TONE_DROW_DARK_PURPLE,     // #5f5f70
+		"Depth Grey-Blue" = SKIN_TONE_DROW_DEPTH_GREY_BLUE, // #5f5f70
+		"Pink"            = SKIN_TONE_DROW_PINK,            // #897489
+		"Very Pale"		  = SKIN_COLOR_DROW_PALE,	       // #fff0e9
 
 	))
 
-/datum/species/dwarf/mountain/get_possible_names(gender = MALE)
+/datum/species/dwarf/duergar/get_possible_names(gender = MALE)
 	var/static/list/male_names = world.file2list('strings/rt/names/dwarf/dwarmm.txt')
 	var/static/list/female_names = world.file2list('strings/rt/names/dwarf/dwarmf.txt')
 	return (gender == FEMALE) ? female_names : male_names
 
-/datum/species/dwarf/mountain/get_possible_surnames(gender = MALE)
+/datum/species/dwarf/duergar/get_possible_surnames(gender = MALE)
 	var/static/list/last_names = world.file2list('strings/rt/names/dwarf/dwarmlast.txt')
 	return last_names
 
-/*------------------\
-| Poison Resistance |
-\------------------*/
+/datum/species/dwarf/duergar/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+	. = ..()
 
-/*
-To make this work poison on_mob_life needs to have the dwarf modifier in it. Relevant when adding new ones.
-The more specialized/expensive poison the less effect the resistance.
+	spawn(5)
+		if(!C || QDELETED(C))
+			return
 
-For common natural poisons (berrypoison) = effect reduced by 2/3, half nausea
-For manufactured poisones = effect reduced by half or so
+		if(!C.GetComponent(/datum/component/darkling))
+			C.AddComponent(/datum/component/darkling)
 
-Note: Its not meant to protect against every dangerous/bad reagent, its supposed to be just poisons, making it meaningful against most common reagent hazards but not full protection.
+/datum/species/dwarf/duergar/on_species_loss(mob/living/carbon/human/C)
+	. = ..()
 
-/datum/reagent/toxin/whateverpoison/on_mob_life(mob/living/carbon/M)
-	if(isdwarf(M))
-		M.adjustToxLoss(2, 0)
-	else
-		M.adjustToxLoss(5, 0)
-
-*/
+	var/datum/component/darkling/D = C.GetComponent(/datum/component/darkling)
+	if(D)
+		qdel(D)

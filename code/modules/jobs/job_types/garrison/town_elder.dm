@@ -14,7 +14,6 @@
 
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD, AGE_IMMORTAL)
 	allowed_races = RACES_PLAYER_NONHERETICAL
-	blacklisted_species = list(SPEC_ID_HALFLING)
 	cmode_music = "sound/music/cmode/towner/CombatElder.ogg"
 	advclass_cat_rolls = list(CTAG_TOWN_ELDER = 20)
 	give_bank_account = 50

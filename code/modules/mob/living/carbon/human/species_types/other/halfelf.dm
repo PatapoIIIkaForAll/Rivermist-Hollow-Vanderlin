@@ -20,12 +20,24 @@
 	\n\n\
 	Their adaptability and charm make them well-suited to social roles, though many struggle with identity and acceptance. \
 	\n\n\
-	(+2 Fortune, +1 To Two Stats Of Choice, Allure, Elvish Language)."
+	(+2 LCK, +1 To Two Stats Of Choice, Allure, Elvish Language).\
+	\n\n\
+	Proficiencies: Swords(2), Bows(2), Arcane(2), Reading(2), Music(2), Sneaking(2)."
 
 
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP, TRAIT_ALLURE)
+	inherent_skills = list(
+		/datum/skill/combat/swords = 2,
+		/datum/skill/combat/bows = 2,
+
+		/datum/skill/magic/arcane = 2,
+
+		/datum/skill/misc/reading = 3,
+		/datum/skill/misc/music = 2,
+		/datum/skill/misc/sneaking = 2,
+	)
 
 	use_skintones = TRUE
 	possible_ages = NORMAL_AGES_LIST_CHILD

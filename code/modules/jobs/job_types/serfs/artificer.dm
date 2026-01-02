@@ -76,6 +76,6 @@
 
 /datum/outfit/artificer/pre_equip(mob/living/carbon/human/equipped_human, visuals_only)
 	. = ..()
-	if(equipped_human.dna.species.id == SPEC_ID_DWARF)
+	if(equipped_human.dna.species.id == SPEC_ID_DWARF || equipped_human.dna.species.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm
 		equipped_human.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'

@@ -68,7 +68,7 @@
 	I.grant_inspiration(spawned, bard_tier = BARD_T3)
 	spawned.clamped_adjust_skillrank(/datum/skill/misc/music, 4, 4, TRUE) //Due to Harpy's innate music skill giving them legendary
 
-	if(spawned.dna?.species?.id == SPEC_ID_DWARF)
+	if(spawned.dna?.species?.id == SPEC_ID_DWARF || spawned.dna?.species?.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'
 
 /datum/outfit/bard

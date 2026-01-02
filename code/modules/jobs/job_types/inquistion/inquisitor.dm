@@ -9,6 +9,7 @@
 	allowed_races = list(\
 		SPEC_ID_HUMEN,\
 		SPEC_ID_DWARF,\
+		SPEC_ID_DUERGAR,\
 	)
 	tutorial = "This is the week. All your lessons have led to this moment. Your students follow you with eager steps and breathless anticipation. You’re to observe their hunt, and see if they can banish the evils haunting Psydonia, and rise up to become true inquisitors. A guide to them, a monster to others. You are the thing that goes bump in the night."
 	cmode_music = 'sound/music/cmode/church/CombatInquisitor.ogg'

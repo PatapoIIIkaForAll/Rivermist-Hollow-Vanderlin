@@ -11,17 +11,6 @@
 #define SKIN_COLOR_SHATTERHORN "D6D5E2" //Pale white
 #define SKIN_COLOR_SPIRITCRUSHER "9D4D62" //Pinkish-red
 
-//DWARF SKIN TONES
-#define SKIN_COLOR_PLATINUM "ffe0d1"//White - Pale
-#define SKIN_COLOR_AURUM "fcccb3" //White - Tan
-#define SKIN_COLOR_QUICKSILVER "edc6b3" //White - Tan
-#define SKIN_COLOR_BRASS "e2b9a3" //White 4
-#define SKIN_COLOR_IRON "d9a284" //Middle-eastern
-#define SKIN_COLOR_MALACHITE "c69b83" //Middle-eastern
-#define SKIN_COLOR_OBSIDIAN "3b2e27" //Black
-#define SKIN_COLOR_BRIMSTONE "271f1a" //Black 2
-#define SKIN_COLOR_CERARGYRITE "74708b" //Blue
-
 //DROW AND DUERGAR TONES
 #define SKIN_TONE_DROW_PALE_BLUE       "9796a9" // Pale Blue
 #define SKIN_TONE_DROW_PALE_PURPLE     "897489" // Pale Purple
@@ -38,7 +27,7 @@
 #define SKIN_TONE_DROW_PINK            "897489" // Pink
 #define SKIN_COLOR_DROW_PALE			"#fff0e9" // Very Pale
 
-//HUMAN AND ELF SKIN TONES
+//HUMAN, DWARF, ELF AND HALFLING SKIN TONES
 #define SKIN_TONE_PALE        "fff0e9" // Pale
 #define SKIN_TONE_WHITE1      "ffe0d1" // White 1
 #define SKIN_TONE_WHITE2      "fcccb3" // White 2

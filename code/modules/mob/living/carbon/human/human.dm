@@ -72,7 +72,7 @@
 						update_body()
 						record_round_statistic(STATS_BEARDS_SHAVED)
 						if(dna?.species)
-							if(dna.species.id == SPEC_ID_DWARF)
+							if(dna.species.id == SPEC_ID_DWARF || dna.species.id == SPEC_ID_DUERGAR)
 								var/mob/living/carbon/V = src
 								V.add_stress(/datum/stress_event/dwarfshaved)
 					else

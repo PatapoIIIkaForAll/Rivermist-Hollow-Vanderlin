@@ -43,7 +43,7 @@
 	desc = "The Langobards are a cult of personality that are tasked by the Dwarven Kings to issue judgement, \
 			justice and order around the realms for dwarvenkind. This helmet is a respected symbol of authority."
 	icon_state = "dwarfhead"
-	allowed_race = list(SPEC_ID_DWARF)
+	allowed_race = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	flags_inv = HIDEEARS
 	clothing_flags = CANT_SLEEP_IN
 	body_parts_covered = HEAD_EXCEPT_MOUTH

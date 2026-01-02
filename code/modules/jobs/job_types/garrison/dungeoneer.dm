@@ -14,7 +14,6 @@
 	spawn_positions = 1
 
 	allowed_races = RACES_PLAYER_NONEXOTIC
-	blacklisted_species = list(SPEC_ID_HALFLING)
 
 	outfit = /datum/outfit/dungeoneer
 	give_bank_account = 50

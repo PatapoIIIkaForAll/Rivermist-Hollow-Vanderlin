@@ -48,7 +48,7 @@
 	. = ..()
 	spawned.clamped_adjust_skillrank(/datum/skill/misc/music, 4, 4, TRUE)
 
-	if(spawned.dna?.species?.id == SPEC_ID_DWARF)
+	if(spawned.dna?.species?.id == SPEC_ID_DWARF || spawned.dna?.species?.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'
 
 	var/datum/inspiration/I = new /datum/inspiration(spawned)

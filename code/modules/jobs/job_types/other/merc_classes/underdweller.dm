@@ -3,6 +3,7 @@
 	tutorial = "A member of the Underdwellers, you've taken many of the deadliest contracts known to man in literal underground circles. Drow or Dwarf, you've put your differences aside for coin and adventure."
 	allowed_races = list(\
 		SPEC_ID_DWARF,\
+		SPEC_ID_DUERGAR,\
 		SPEC_ID_DROW,\
 		SPEC_ID_HALF_DROW,\
 		SPEC_ID_KOBOLD,\
@@ -43,7 +44,7 @@
 	spawned.merctype = 3
 
 	// Species-specific adjustments
-	if(spawned.dna?.species?.id == SPEC_ID_DWARF)
+	if(spawned.dna?.species?.id == SPEC_ID_DWARF || spawned.dna?.species?.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/adventurer/CombatOutlander2.ogg'
 
 		// Dwarf-specific skill adjustments
@@ -77,7 +78,7 @@
 	shirt = shirt_type
 
 	// Species-specific equipment (visual equipment)
-	if(equipped_human.dna?.species?.id == SPEC_ID_DWARF)
+	if(equipped_human.dna?.species?.id == SPEC_ID_DWARF || equipped_human.dna?.species?.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm
 		beltl = /obj/item/weapon/pick/paxe // Dorfs get a pick as their primary weapon and axes/maces to use it
 		backr = /obj/item/weapon/shield/wood

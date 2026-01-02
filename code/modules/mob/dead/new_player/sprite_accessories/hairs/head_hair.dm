@@ -129,7 +129,7 @@
 	name = "Boss"
 	icon_state = "boss" // original name bodicker
 	gender = MALE
-	specuse = list(SPEC_ID_DWARF)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	under_layer = TRUE
 
 /datum/sprite_accessory/hair/head/bowlcut
@@ -200,7 +200,7 @@
 	name = "Fancy"
 	icon_state = "fancy_elf"
 	gender = MALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 /datum/sprite_accessory/hair/head/forester
 	name = "Forester"
@@ -286,7 +286,7 @@
 	name = "Miner"
 	icon_state = "miner"
 	gender = MALE
-	specuse = list(SPEC_ID_DWARF)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 
 /datum/sprite_accessory/hair/head/nobility_human
 	name = "Nobility"
@@ -348,7 +348,7 @@
 	name = "Sonne"
 	icon_state = "son_elf"
 	gender = MALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 /datum/sprite_accessory/hair/head/squire_human
 	name = "Squired"
@@ -414,7 +414,7 @@
 	name = "Woodsman"
 	icon_state = "woodsman_elf"
 	gender = MALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 /datum/sprite_accessory/hair/head/zaladin
 	name = "Zaladin"
@@ -516,13 +516,13 @@
 	name = "Fancy"
 	icon_state = "fancy_elf_f"
 	gender = FEMALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 /datum/sprite_accessory/hair/head/felfhair_fatherless
 	name = "Fatherless"
 	icon_state = "fatherless_elf_f"
 	gender = FEMALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 /datum/sprite_accessory/hair/head/grumpy_f
 	name = "Grumpy"
@@ -534,13 +534,13 @@
 	name = "Gnomish"
 	icon_state = "gnomish_f" // original name bun_grandma
 	gender = FEMALE
-	specuse = list(SPEC_ID_DWARF)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 
 /datum/sprite_accessory/hair/head/hearth_f
 	name = "Hearth"
 	icon_state = "hearth_f" // original name ponytail_fox
 	gender = FEMALE
-	specuse = list(SPEC_ID_DWARF)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 
 /datum/sprite_accessory/hair/head/homely
 	name = "Homely"
@@ -576,7 +576,7 @@
 	name = "Majestiq"
 	icon_state = "majestic_dwarf"
 	gender = FEMALE
-	specuse = list(SPEC_ID_DWARF)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 
 /datum/sprite_accessory/hair/head/majestic_f
 	name = "Majestic"
@@ -594,7 +594,7 @@
 	name = "Mysterious"
 	icon_state = "mysterious_elf" // modified hime_long
 	gender = FEMALE
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 /datum/sprite_accessory/hair/head/mystery
 	name = "Mystery"
@@ -851,7 +851,7 @@
 	name = "Majestie"
 	icon_state = "majestic_elf"
 	gender = NEUTER
-	specuse = list(SPEC_ID_ELF)
+	specuse = list(SPEC_ID_ELF, SPEC_ID_ELF_W)
 
 // Hairs below ported from Azure
 

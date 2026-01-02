@@ -9,7 +9,7 @@
 
 /datum/species/elf/wood
 	name = "Wood Elf"
-	id = SPEC_ID_ELF
+	id = SPEC_ID_ELF_W
 	desc = "Wood Elves, often called Wild Elves by outsiders, \
 	n\n\
 	live in Faerûn’s forests and wilderness, shunning large cities in favor of hidden settlements among the trees. \
@@ -18,11 +18,26 @@
 	n\n\
 	More reclusive than High Elves, Wood Elves rely on speed, stealth, and instinct rather than arcane mastery. \
 	n\n\
-	(+2 Perception, 1+ Endurance, +2 Speed, Elvish Language)."
+	(+2 PER, 1+ END, +2 SPD, Elvish Language).\
+	\n\n\
+	Proficiencies: Bows(4), Knives(3), Sneaking(4), Climbing(3), Swimming(2), Butchering(2), Fishing(2), Druidic(3)."
 
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP)
+	inherent_skills = list(
+		/datum/skill/combat/bows = 4,
+		/datum/skill/combat/knives = 3,
+
+		/datum/skill/misc/sneaking = 4,
+		/datum/skill/misc/climbing = 3,
+		/datum/skill/misc/swimming = 2,
+
+		/datum/skill/labor/butchering = 2,
+		/datum/skill/labor/fishing = 2,
+
+		/datum/skill/magic/druidic = 3,
+	)
 	use_skintones = 1
 	disliked_food = NONE
 	liked_food = NONE

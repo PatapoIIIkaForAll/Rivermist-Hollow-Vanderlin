@@ -13,7 +13,6 @@
 	murder, you've elected to taint it in self-defense. Find an employer, and make a use for yourself. Cut the middleman, \
 	avoid working with any guilds."
 	outfit = /datum/outfit/bodyguard
-	blacklisted_species = list(SPEC_ID_HALFLING)
 	exp_types_granted  = list(EXP_TYPE_COMBAT)
 
 	jobstats = list(

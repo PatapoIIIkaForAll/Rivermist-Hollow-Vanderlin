@@ -2,7 +2,7 @@
 	title = "Master Miner"
 	tutorial = "Hardy dwarves who dedicated their entire life to a singular purpose: \
 	the acquisition of ore, precious stones, and anything deep below the mines."
-	allowed_races = list(SPEC_ID_DWARF)
+	allowed_races = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	outfit = /datum/outfit/pilgrim/minermaster
 	total_positions = 1
 	roll_chance = 0

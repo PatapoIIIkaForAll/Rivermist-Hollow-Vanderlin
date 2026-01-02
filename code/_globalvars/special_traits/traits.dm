@@ -431,7 +431,7 @@
 	greet_text = span_notice("I've always been called a giant. I am valued for my stature, but, \
 	this world made for smaller folk has forced me to move cautiously.")
 	req_text = "Not a kobold or dwarf"
-	restricted_races = list(SPEC_ID_DWARF, SPEC_ID_KOBOLD)
+	restricted_races = list(SPEC_ID_DWARF, SPEC_ID_KOBOLD, SPEC_ID_DUERGAR)
 	weight = 50
 
 /datum/special_trait/backproblems/on_apply(mob/living/carbon/human/character)
@@ -446,7 +446,7 @@
 	name = "Clever little guy"
 	greet_text = span_notice("I am a clever little guy, nyehehehehe!")
 	req_text = "Not a kobold or dwarf"
-	restricted_races = list(SPEC_ID_DWARF, SPEC_ID_KOBOLD)
+	restricted_races = list(SPEC_ID_DWARF, SPEC_ID_KOBOLD, SPEC_ID_DUERGAR)
 	weight = 50
 
 /datum/special_trait/little/on_apply(mob/living/carbon/human/character)

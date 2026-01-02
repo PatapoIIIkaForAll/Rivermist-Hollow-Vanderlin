@@ -36,6 +36,5 @@
 
 /datum/job/advclass/mercenary
 	abstract_type = /datum/job/advclass/mercenary
-	blacklisted_species = list(SPEC_ID_HALFLING)
 	category_tags = list(CTAG_MERCENARY)
 	exp_types_granted = list(EXP_TYPE_MERCENARY, EXP_TYPE_COMBAT)

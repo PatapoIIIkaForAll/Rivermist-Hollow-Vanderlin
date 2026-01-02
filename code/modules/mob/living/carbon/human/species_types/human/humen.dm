@@ -20,12 +20,29 @@
 	\n\n\
 	While they lack the innate magic or longevity of other races, humans compensate with adaptability and determination, shaping much of Faerûn’s history through sheer will and population. \
 	\n\n\
-	(+1 To All Stats)."
+	(+1 To All Stats, +1 To One Stat Of Choice).\
+	\n\n\
+	Proficiencies: Swords(2), Polearms(2), Shields(2), Crafting(2), Carepntry(2), Cooking(2), Farming(2), Athletics(2), Reading(2), Riding(1)."
 
 
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP)
+	inherent_skills = list(
+		/datum/skill/combat/swords = 2,
+		/datum/skill/combat/polearms = 2,
+		/datum/skill/combat/shields = 2,
+
+		/datum/skill/craft/crafting = 2,
+		/datum/skill/craft/carpentry = 2,
+		/datum/skill/craft/cooking = 2,
+
+		/datum/skill/labor/farming = 2,
+
+		/datum/skill/misc/athletics = 2,
+		/datum/skill/misc/reading = 2,
+		/datum/skill/misc/riding = 1,
+	)
 
 	use_skintones = TRUE
 
@@ -163,3 +180,52 @@
 /datum/species/human/northern/get_possible_surnames(gender = MALE)
 	var/static/list/last_names = world.file2list('strings/rt/names/human/humnorlast.txt')
 	return last_names
+
+/datum/species/human/northern/on_species_gain(mob/living/carbon/human/C, datum/species/old_species)
+	. = ..()
+
+	spawn(10)
+		if(!C || !C.client)
+			return
+
+		var/list/choices = list(
+			"Strength"      = STATKEY_STR,
+			"Perception"   = STATKEY_PER,
+			"Intelligence" = STATKEY_INT,
+			"Constitution" = STATKEY_CON,
+			"Endurance"    = STATKEY_END,
+			"Speed"        = STATKEY_SPD,
+			"Fortune"      = STATKEY_LCK
+		)
+
+		var/choice = input(
+			C,
+			"Choose an attribute to gain +1:",
+			"Human Versatility"
+		) as null|anything in choices
+
+		if(!choice)
+			return
+
+		switch(choices[choice])
+			if(STATKEY_STR) C.base_strength++
+			if(STATKEY_PER) C.base_perception++
+			if(STATKEY_INT) C.base_intelligence++
+			if(STATKEY_CON) C.base_constitution++
+			if(STATKEY_END) C.base_endurance++
+			if(STATKEY_SPD) C.base_speed++
+			if(STATKEY_LCK) C.base_fortune++
+
+	spawn(5)
+		if(!C || QDELETED(C))
+			return
+
+		if(!C.GetComponent(/datum/component/darkling))
+			C.AddComponent(/datum/component/darkling)
+
+/datum/species/human/northern/on_species_loss(mob/living/carbon/human/C)
+	. = ..()
+
+	var/datum/component/darkling/D = C.GetComponent(/datum/component/darkling)
+	if(D)
+		qdel(D)

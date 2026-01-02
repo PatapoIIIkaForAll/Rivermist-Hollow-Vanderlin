@@ -4,8 +4,10 @@
 	allowed_races = list(\
 		SPEC_ID_HUMEN,\
 		SPEC_ID_ELF,\
+		SPEC_ID_ELF_W,\
 		SPEC_ID_HALF_ELF,\
 		SPEC_ID_DWARF,\
+		SPEC_ID_DUERGAR,\
 	)
 	outfit = /datum/outfit/mercenary/gallowglass
 	category_tags = list(CTAG_MERCENARY)

@@ -8,6 +8,7 @@
 		SPEC_ID_TIEFLING,
 		SPEC_ID_DROW,\
 		SPEC_ID_ELF,\
+		SPEC_ID_ELF_W,\
 		SPEC_ID_HALF_DROW,\
 	) // excluding harpies because their weak as hell, excluding rakshari, hollowkin, and kobolds because they have no lux, which is incredibly taboo in lakkarian society/culture, half orcs are excluded as well becausee theyll be too damn strong
 	total_positions = 2

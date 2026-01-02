@@ -1,7 +1,7 @@
 /datum/job/advclass/mercenary/housecarl
 	title = "Elvish Housecarl"
 	tutorial = "Once a mighty guard for your clan leader now freelancer looking to put bread on the table, you have ventured to distance lands for work. Either it be guarding the gold horde of the merchant or the life of the king, you and others like you have been sought out by many to protect their lives and property."
-	allowed_races = list(SPEC_ID_ELF, SPEC_ID_HALF_ELF)
+	allowed_races = list(SPEC_ID_ELF, SPEC_ID_ELF_W, SPEC_ID_HALF_ELF)
 	outfit = /datum/outfit/mercenary/housecarl
 	category_tags = list(CTAG_MERCENARY)
 	total_positions = 4

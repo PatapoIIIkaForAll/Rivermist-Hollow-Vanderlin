@@ -12,7 +12,6 @@
 	spawn_positions = 1
 	bypass_lastclass = TRUE
 	allowed_races = RACES_PLAYER_NONDISCRIMINATED
-	blacklisted_species = list(SPEC_ID_HALFLING)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD, AGE_IMMORTAL)
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/magician

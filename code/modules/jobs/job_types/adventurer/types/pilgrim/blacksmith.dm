@@ -55,7 +55,7 @@
 			)
 			spawned.adjust_skillrank(skillpicked, 1, TRUE)
 
-	if(spawned.dna?.species.id == SPEC_ID_DWARF)
+	if(spawned.dna?.species.id == SPEC_ID_DWARF || spawned.dna?.species.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'
 
 /datum/outfit/pilgrim/blacksmith
@@ -87,5 +87,5 @@
 		armor = /obj/item/clothing/shirt/dress/gen/colored/random
 		shoes = /obj/item/clothing/shoes/shortboots
 
-	if(equipped_human.dna.species.id == SPEC_ID_DWARF)
+	if(equipped_human.dna.species.id == SPEC_ID_DWARF || equipped_human.dna.species.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm

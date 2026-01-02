@@ -2,7 +2,7 @@
 	title = "Grandmaster Mason"
 	tutorial = "A Grandmaster mason, you built castles and entire cities with your own hands. \
 	There is nothing in this world that you can't build, your creed and hardwork has revealed all the secrets of the stone."
-	allowed_races = list(SPEC_ID_DWARF)
+	allowed_races = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	outfit = /datum/outfit/pilgrim/grandmastermason
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	total_positions = 1
@@ -55,5 +55,5 @@
 
 /datum/outfit/pilgrim/grandmastermason/pre_equip(mob/living/carbon/human/equipped_human, visuals_only)
 	. = ..()
-	if(equipped_human.dna.species.id == SPEC_ID_DWARF)
+	if(equipped_human.dna.species.id == SPEC_ID_DWARF || equipped_human.dna.species.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm

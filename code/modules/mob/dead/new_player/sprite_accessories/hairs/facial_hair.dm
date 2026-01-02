@@ -43,7 +43,7 @@
 	name = "Dignitary"
 	icon_state = "braided"
 	gender = MALE
-	specuse = list(SPEC_ID_DWARF)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 
 /datum/sprite_accessory/hair/facial/manly
 	name = "Drinker"

@@ -17,7 +17,9 @@
 	\n\n\
 	Though often mistrusted or feared, tieflings are no more evil than any other race, their struggles shaped by prejudice rather than destiny. \
 	\n\n\
-	(+1 Intelligence, +2 Fortune, Allure, Darkvision, Hellish Resistance, Infernal Language). \
+	(+1 INT, +2 LCK, Allure, Darkvision, Hellish Resistance, Infernal Language).\
+	\n\n\
+	Proficiencies: Arcane(3), Blood(2), Alchemy(2), Knives(2), Sneaking(2), Reading(2).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
@@ -26,6 +28,17 @@
 
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP, TRAIT_NOFIRE, TRAIT_ALLURE)
+	inherent_skills = list(
+		/datum/skill/magic/arcane = 3,
+		/datum/skill/magic/blood = 2,
+
+		/datum/skill/craft/alchemy = 2,
+
+		/datum/skill/combat/knives = 2,
+
+		/datum/skill/misc/sneaking = 2,
+		/datum/skill/misc/reading = 2,
+	)
 	use_skintones = TRUE
 
 	possible_ages = NORMAL_AGES_LIST_CHILD

@@ -31,7 +31,7 @@
 	name = "Undies Half"
 	icon_state = "male_half"
 	gender = MALE
-	specuse = list(SPEC_ID_HALFLING)
+	specuse = list(SPEC_ID_HALFLING, SPEC_ID_GNOME, SPEC_ID_GNOME_D)
 
 /datum/sprite_accessory/underwear/bikini
 	name = "Bikini"
@@ -68,7 +68,7 @@
 	name = "FemUndiesD"
 	icon_state = "female_dwarf"
 	gender = FEMALE
-	specuse = list(SPEC_ID_DWARF, SPEC_ID_HALFLING)
+	specuse = list(SPEC_ID_DWARF, SPEC_ID_HALFLING, SPEC_ID_DUERGAR, SPEC_ID_GNOME, SPEC_ID_GNOME_D)
 
 /datum/sprite_accessory/underwear/leotard
 	name = "Leotard"

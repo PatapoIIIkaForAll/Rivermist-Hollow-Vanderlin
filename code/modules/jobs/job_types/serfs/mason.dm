@@ -43,7 +43,7 @@
 
 /datum/job/mason/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
-	if(spawned.dna.species.id == SPEC_ID_DWARF)
+	if(spawned.dna.species.id == SPEC_ID_DWARF || spawned.dna.species.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'
 	if(prob(5))
 		spawned.adjust_skillrank(/datum/skill/craft/cooking, 1, TRUE)
@@ -68,7 +68,7 @@
 /datum/outfit/mason/pre_equip(mob/living/carbon/human/H)
 	..()
 	shirt = pick(/obj/item/clothing/shirt/undershirt/colored/random, /obj/item/clothing/shirt/tunic/colored/random)
-	if(H.dna.species.id == SPEC_ID_DWARF)
+	if(H.dna.species.id == SPEC_ID_DWARF || H.dna.species.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm
 	else
 		head = pick(/obj/item/clothing/head/hatfur, /obj/item/clothing/head/hatblu)

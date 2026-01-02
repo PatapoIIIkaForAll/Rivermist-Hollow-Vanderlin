@@ -5,6 +5,7 @@
 	allowed_races = list(\
 		SPEC_ID_HUMEN,\
 		SPEC_ID_DWARF,\
+		SPEC_ID_DUERGAR,\
 	)
 	outfit = /datum/outfit/pilgrim/masterblacksmith
 	total_positions = 1

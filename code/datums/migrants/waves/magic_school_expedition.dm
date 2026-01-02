@@ -13,7 +13,6 @@
 	outfit = /datum/outfit/magic_teacher
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD, AGE_IMMORTAL)
 	allowed_races = RACES_PLAYER_NONEXOTIC
-	blacklisted_species = list(SPEC_ID_HALFLING)
 	//allowed_patrons = list(/datum/patron/divine/noc)
 	exp_types_granted  = list(EXP_TYPE_MAGICK)
 	jobstats = list(

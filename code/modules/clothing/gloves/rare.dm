@@ -38,7 +38,7 @@
 	name = "dwarvish plate gauntlets"
 	desc = "Plated gauntlets of masterwork dwarven smithing, the pinnacle of protection for one's hands."
 	icon_state = "dwarfhand"
-	allowed_race = list(SPEC_ID_DWARF)
+	allowed_race = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	allowed_sex = list(MALE, FEMALE)
 	item_weight = 7 * STEEL_MULTIPLIER
 

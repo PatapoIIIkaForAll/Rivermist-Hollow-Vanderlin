@@ -47,7 +47,7 @@
 	name = "dwarvish plate"
 	desc = "Plate armor made out of the sturdiest, finest dwarvish metal armor. It's as heavy and durable as it gets."
 	icon_state = "dwarfchest"
-	allowed_race = list(SPEC_ID_DWARF)
+	allowed_race = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	item_weight = 12 * STEEL_MULTIPLIER
 	stand_speed_reduction = 1.2
 

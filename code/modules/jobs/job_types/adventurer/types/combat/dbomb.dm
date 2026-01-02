@@ -1,7 +1,7 @@
 /datum/job/advclass/combat/dbomb
 	title = "Dwarven Bombardier"
 	tutorial = "Tinkering Dwarves that like to blow things up."
-	allowed_races = list(SPEC_ID_DWARF)
+	allowed_races = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 	outfit = /datum/outfit/adventurer/dbomb
 	category_tags = list(CTAG_ADVENTURER)
 

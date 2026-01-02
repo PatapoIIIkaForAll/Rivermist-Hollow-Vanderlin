@@ -7,7 +7,6 @@
 	cmode_music = 'sound/music/cmode/antag/CombatRogueMage.ogg'
 	total_positions = 2
 
-	blacklisted_species = list(SPEC_ID_HALFLING)
 
 	magic_user = TRUE
 	spell_points = 12

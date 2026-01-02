@@ -6,6 +6,7 @@
 		SPEC_ID_ELF,\
 		SPEC_ID_HALF_ELF,\
 		SPEC_ID_DWARF,\
+		SPEC_ID_DUERGAR,\
 	)
 	outfit = /datum/outfit/mercenary/kern
 	category_tags = list(CTAG_MERCENARY)

@@ -4,6 +4,7 @@
 	allowed_races = list(\
 		SPEC_ID_HUMEN,\
 		SPEC_ID_ELF,\
+		SPEC_ID_ELF_W,\
 		SPEC_ID_HALF_ELF,\
 		SPEC_ID_TIEFLING,\
 		SPEC_ID_AASIMAR,\

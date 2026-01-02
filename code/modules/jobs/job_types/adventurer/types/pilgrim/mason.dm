@@ -34,7 +34,7 @@
 	spawned.adjust_skillrank(/datum/skill/labor/mining, rand(1,3), TRUE)
 	spawned.adjust_skillrank(/datum/skill/craft/carpentry, pick(1,2), TRUE)
 
-	if(spawned.dna?.species.id == SPEC_ID_DWARF)
+	if(spawned.dna?.species.id == SPEC_ID_DWARF || spawned.dna?.species.id == SPEC_ID_DUERGAR)
 		spawned.cmode_music = 'sound/music/cmode/combat_dwarf.ogg'
 
 /datum/outfit/pilgrim/mason
@@ -54,5 +54,5 @@
 	head = pick(/obj/item/clothing/head/hatfur, /obj/item/clothing/head/hatblu)
 	shirt = pick(/obj/item/clothing/shirt/undershirt/colored/random, /obj/item/clothing/shirt/tunic/colored/random)
 
-	if(equipped_human.dna.species.id == SPEC_ID_DWARF)
+	if(equipped_human.dna.species.id == SPEC_ID_DWARF || equipped_human.dna.species.id == SPEC_ID_DUERGAR)
 		head = /obj/item/clothing/head/helmet/leather/minershelm

@@ -4,7 +4,7 @@
 	migrant_job = /datum/job/migrant/dwarven_company/captain
 
 /datum/job/migrant/dwarven_company
-	allowed_races = list(SPEC_ID_DWARF)
+	allowed_races = list(SPEC_ID_DWARF, SPEC_ID_DUERGAR)
 
 /datum/job/migrant/dwarven_company/captain
 	title = "Dwarven Captain"
