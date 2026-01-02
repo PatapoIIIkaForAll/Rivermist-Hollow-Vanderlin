@@ -3810,6 +3810,7 @@
 #include "interface\menu.dm"
 #include "interface\stylesheet.dm"
 #include "interface\skin.dmf"
+#include "modular_rmh\code\flora_loot_update.dm"
 #include "modular_rmh\code\area\misc.dm"
 #include "modular_rmh\code\area\rmh_areas.dm"
 #include "modular_rmh\code\area\rmh_bogforest_areas.dm"
