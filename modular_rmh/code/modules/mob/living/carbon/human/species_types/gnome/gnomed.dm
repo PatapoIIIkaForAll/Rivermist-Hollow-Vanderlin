@@ -2,7 +2,7 @@
 	race = /datum/species/gnome/deep
 
 /datum/species/gnome/deep
-	name = "Gnome"
+	name = "Deep Gnome"
 	id = SPEC_ID_GNOME_D
 	desc = "Deep Gnomes, known as svirfneblin, inhabit the Underdark and survive through caution, secrecy, and ingenuity. \
 	n\n\

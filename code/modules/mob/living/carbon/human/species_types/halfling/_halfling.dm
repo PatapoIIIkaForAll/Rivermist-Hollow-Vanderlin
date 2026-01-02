@@ -10,7 +10,7 @@
 	n\n\
 	In Faerûn, halflings are known for their good fortune and ability to endure hardship with a smile. \
 	n\n\
-	heir loyalty to friends and family runs deep, and they believe that perseverance and kindness are strengths greater than physical might. \
+	Their loyalty to friends and family runs deep, and they believe that perseverance and kindness are strengths greater than physical might. \
 	n\n\
 	(-1 STR, 1+ END, +1 SPD, +2 LCK).\
 	\n\n\

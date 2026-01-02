@@ -92,7 +92,7 @@
 
 /datum/outfit/archivist/pre_equip(mob/living/carbon/human/equipped_human, visuals_only)
 	. = ..()
-	if(equipped_human.dna?.species?.id == SPEC_ID_DWARF)
+	if(equipped_human.dna?.species?.id == SPEC_ID_DWARF || equipped_human.dna?.species?.id == SPEC_ID_DUERGAR)
 		shirt = /obj/item/clothing/shirt/undershirt/puritan
 		armor = /obj/item/clothing/armor/leather/jacket/apothecary
 		pants = /obj/item/clothing/pants/tights/colored/black
