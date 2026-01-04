@@ -601,9 +601,9 @@
 		//datum/sprite_accessory/hair/head/azur/wavy,
 		//datum/sprite_accessory/hair/head/azur/wavy_medium,
 		//datum/sprite_accessory/hair/head/azur/charlotta,
-		/datum/sprite_accessory/hair/head/azur/rakshari/high_tail,
-		/datum/sprite_accessory/hair/head/azur/rakshari/doubleknot,
-		/datum/sprite_accessory/hair/head/azur/rakshari/fluffy_tail,
+		/datum/sprite_accessory/hair/head/rakshari/high_tail,
+		/datum/sprite_accessory/hair/head/rakshari/doubleknot,
+		/datum/sprite_accessory/hair/head/rakshari/fluffy_tail,
 
 		)
 
@@ -646,9 +646,9 @@
 /datum/customizer_choice/bodypart_feature/hair/head/humanoid/rakshari
 	sprite_accessories = list(
 		/datum/sprite_accessory/hair/head/bald,
-		/datum/sprite_accessory/hair/head/azur/rakshari/high_tail,
-		/datum/sprite_accessory/hair/head/azur/rakshari/doubleknot,
-		/datum/sprite_accessory/hair/head/azur/rakshari/fluffy_tail,
+		/datum/sprite_accessory/hair/head/rakshari/high_tail,
+		/datum/sprite_accessory/hair/head/rakshari/doubleknot,
+		/datum/sprite_accessory/hair/head/rakshari/fluffy_tail,
 	)
 
 // ===== FACIAL HAIR
