@@ -39,6 +39,14 @@ GLOBAL_LIST_INIT(loadout_items, subtypesof(/datum/loadout_item))
 	name = "Natural Wooden Cane"
 	item_path = /obj/item/weapon/mace/cane/natural
 
+/datum/loadout_item/keyring
+	name = "Key Ring"
+	item_path = /obj/item/storage/keyring
+
+/datum/loadout_item/soap
+	name = "Bar of Soap"
+	item_path = /obj/item/soap
+
 //HATS
 /datum/loadout_item/zalad
 	name = "Keffiyeh"
@@ -125,6 +133,14 @@ GLOBAL_LIST_INIT(loadout_items, subtypesof(/datum/loadout_item))
 /datum/loadout_item/vest
 	name = "Cloth Vest"
 	item_path = /obj/item/clothing/shirt/clothvest/colored/random
+
+/datum/loadout_item/wicker
+	name = "Wicker Cloak"
+	item_path = /obj/item/clothing/cloak/wickercloak
+
+/datum/loadout_item/shredded
+	name = "Shredded Cloak"
+	item_path = /obj/item/clothing/cloak/shredded
 
 //SHOES
 
@@ -256,3 +272,8 @@ GLOBAL_LIST_INIT(loadout_items, subtypesof(/datum/loadout_item))
 /datum/loadout_item/cowbell
 	name = "Cowbell"
 	item_path = /obj/item/catbell/cow
+//FACE
+
+/datum/loadout_item/ragmask
+	name = "Halfmask"
+	item_path = /obj/item/clothing/face/shepherd/rag
