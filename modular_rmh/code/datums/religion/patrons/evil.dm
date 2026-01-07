@@ -148,3 +148,29 @@
 	confess_lines = list(
 		"I open my soul to the Bliss, let my emotions nourish her!"
 	)
+
+/datum/patron/faerun/evil_gods/Loviatar
+	name = "Loviatar"
+	display_name = "Loviatar"
+	domain = "Pain, Discipline, Endurance, Control"
+	desc = "The Maiden of Pain, who teaches that suffering refines and reveals truth."
+	flaws = "Cruel, merciless, obsessed with control through suffering."
+	worshippers = "Torturers, tyrants, fanatical ascetics, cruel disciplinarians."
+	sins = "Mercy without purpose, weakness, refusing pain's lessons."
+	boons = "Resistance to pain, strength through suffering, dominance over the broken."
+	confess_lines = list(
+		"Loviatar, scour away my weakness and make me strong!"
+	)
+
+/datum/patron/faerun/evil_gods/Asmodeus
+	name = "Asmodeus"
+	display_name = "Asmodeus"
+	domain = "Tyranny, Contracts, Domination, Hell"
+	desc = "The Lord of the Nine Hells, master of tyranny through law and binding pacts."
+	flaws = "Utterly manipulative, incapable of mercy, enslaved by his own hierarchy."
+	worshippers = "Devils, warlocks, corrupt rulers, lawyers, secret cults."
+	sins = "Breaking contracts, disobedience, chaos without control."
+	boons = "Infernal authority, binding contracts, lawful domination over others."
+	confess_lines = list(
+		"Asmodeus, I accept the terms — grant me power to rule!"
+	)

@@ -23,6 +23,16 @@
 		/datum/action/cooldown/spell/undirected/list_target/convert_role/acolyte,
 		/datum/action/cooldown/spell/undirected/list_target/convert_role/churchling,
 		/datum/action/cooldown/spell/undirected/call_bird/priest,
+		/datum/action/cooldown/spell/undirected/touch/orison,
+		/datum/action/cooldown/spell/healing,
+		/datum/action/cooldown/spell/healing/greater,
+		/datum/action/cooldown/spell/attach_bodypart,
+		/datum/action/cooldown/spell/diagnose/holy,
+		/datum/action/cooldown/spell/cure_rot,
+		/datum/action/cooldown/spell/revive,
+		/datum/action/cooldown/spell/sacred_flame,
+		/datum/action/cooldown/spell/projectile/eora_curse,
+		/datum/action/cooldown/spell/status/guidance,
 	)
 
 	exp_type = list(EXP_TYPE_CHURCH)

@@ -172,3 +172,45 @@
 		"In pleasure I find truth, in freedom I find grace, and in joy I honor the Lady!"
 	)
 	profane_words = list()
+
+/datum/patron/faerun/good_gods/Torm
+	name = "Torm"
+	display_name = "Torm"
+	domain = "Duty, Loyalty, Law, Self-Sacrifice"
+	desc = "The True and the Loyal Fury, embodiment of unwavering duty and righteous obedience."
+	flaws = "Rigid, uncompromising, demands absolute adherence to oaths."
+	worshippers = "Paladins, knights, soldiers, lawful servants of just causes."
+	sins = "Breaking sworn oaths, cowardice in duty, betraying lawful authority."
+	boons = "Strength to endure hardship, protection while fulfilling vows, clarity of purpose."
+	confess_lines = list(
+		"Torm, grant me the strength to stand unbroken in my duty!"
+	)
+	profane_words = list()
+
+/datum/patron/faerun/good_gods/Milil
+	name = "Milil"
+	display_name = "Milil"
+	domain = "Song, Poetry, Eloquence, Memory"
+	desc = "The Lord of Song, who preserves truth and history through music and verse."
+	flaws = "Idealistic, detached from harsh realities, slow to condemn."
+	worshippers = "Bards, poets, heralds, historians, diplomats."
+	sins = "Silencing voices, destroying art, twisting history for gain."
+	boons = "Inspired performance, persuasive speech, perfect recall through art."
+	confess_lines = list(
+		"Milil, let my voice carry truth beyond my lifetime!"
+	)
+	profane_words = list()
+
+/datum/patron/faerun/good_gods/Deneir
+	name = "Deneir"
+	display_name = "Deneir"
+	domain = "Writing, Glyphs, Maps, Recorded Knowledge"
+	desc = "The First Scribe, keeper of all written knowledge and precise truth."
+	flaws = "Overly literal, slow to act, values records over living context."
+	worshippers = "Scribes, cartographers, archivists, wizards, monks."
+	sins = "Falsifying records, destroying knowledge, deliberate ignorance."
+	boons = "Perfect transcription, protected writings, clarity in runes and symbols."
+	confess_lines = list(
+		"Deneir, let my hand record truth without error!"
+	)
+	profane_words = list()
