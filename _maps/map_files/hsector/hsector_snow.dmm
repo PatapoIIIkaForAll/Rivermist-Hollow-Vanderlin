@@ -5718,13 +5718,9 @@
 	dir = 2;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
 	},
-/obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood,
 /area/indoors/town/rmh/tavern)
 "cQx" = (
@@ -14990,13 +14986,9 @@
 	dir = 2;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
 	},
-/obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood,
 /area/indoors/town/rmh/tavern)
 "hri" = (
@@ -28293,13 +28285,9 @@
 	dir = 2;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
 	},
-/obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood,
 /area/indoors/town/rmh/tavern)
 "nSI" = (
@@ -31860,9 +31848,7 @@
 /turf/open/floor/naturalstone,
 /area/under/cavewet)
 "pCu" = (
-/obj/structure/door/fancy{
-	lockid = "farm"
-	},
+/obj/structure/door/fancy,
 /obj/effect/mapping_helpers/access/locker,
 /obj/effect/mapping_helpers/access/keyset/town/soilson,
 /turf/open/floor/dirt/road/snowy,
@@ -31895,13 +31881,9 @@
 	dir = 8;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
 	},
-/obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood/turned,
 /area/indoors/town/rmh/tavern)
 "pDI" = (
@@ -32397,13 +32379,9 @@
 	dir = 4;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
 	},
-/obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood/spiralfade,
 /area/indoors/town/rmh/tavern)
 "pQp" = (
@@ -34653,6 +34631,14 @@
 /obj/structure/fluff/telescope,
 /turf/open/floor/churchmarble,
 /area/outdoors/rmh_air)
+"qSs" = (
+/obj/structure/lever/wall{
+	dir = 8;
+	pixel_x = -17;
+	redstone_id = "innshutter"
+	},
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
 "qSA" = (
 /obj/item/natural/bundle/stoneblock,
 /turf/open/floor/naturalstone,
@@ -44917,12 +44903,10 @@
 	dir = 2;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/door/window{
+	name = "Kitchen"
 	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
 /obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood,
 /area/indoors/town/rmh/tavern)
@@ -48959,13 +48943,9 @@
 	dir = 8;
 	color = "#3b3b3b"
 	},
-/obj/structure/door/weak/bolt/shutter{
-	plane = -7;
-	dir = 8;
-	lockids = list("tavern");
-	name = "tavern hatch"
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
 	},
-/obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/ruinedwood/turned,
 /area/indoors/town/rmh/tavern)
 "xIR" = (
@@ -151966,7 +151946,7 @@ nDq
 hBD
 rOC
 nDq
-nDq
+qSs
 tnr
 vsl
 mfo
