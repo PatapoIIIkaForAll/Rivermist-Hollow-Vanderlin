@@ -25,7 +25,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/border{
 	dir = 6
@@ -89,9 +90,6 @@
 /area/indoors/town/manor)
 "az" = (
 /obj/structure/throne,
-/obj/structure/fake_machine/titan{
-	pixel_y = 32
-	},
 /obj/effect/landmark/start/vampirelord,
 /turf/open/floor/carpet/lord/center,
 /area/indoors/town/manor)
@@ -312,7 +310,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/carpet/inn,
 /area/indoors/town/manor)
@@ -354,7 +353,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -488,11 +488,16 @@
 /turf/open/floor/tile,
 /area/under/town/basement/keep)
 "cg" = (
+/obj/item/gem/red,
+/obj/item/gem/red,
+/obj/item/gem/violet,
+/obj/item/gem/yellow,
+/obj/item/gem/green,
+/obj/item/gem/blue,
 /obj/structure/closet/crate/chest/neu_fancy,
-/obj/machinery/light/fueled/wallfire/candle/blue/l,
-/obj/item/coin/gold/pile,
+/obj/machinery/light/fueled/wallfire/candle/blue/r,
 /turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/area/under/rmh_bedrock)
 "ch" = (
 /obj/structure/fluff/railing/border{
 	dir = 9
@@ -554,7 +559,8 @@
 "cv" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/masonic,
 /area/indoors/town/manor)
@@ -602,11 +608,12 @@
 /turf/open/floor/wood,
 /area/indoors/town/manor)
 "cE" = (
-/obj/machinery/light/fueled/torchholder/c{
-	pixel_y = -32
+/obj/structure/lever/wall{
+	redstone_id = "vgate";
+	pixel_x = 32
 	},
-/turf/open/floor/tile/harem1,
-/area/under/town/basement/keep)
+/turf/open/floor/herringbone,
+/area/outdoors/exposed/rmh/manorgarri)
 "cG" = (
 /turf/open/floor/naturalstone,
 /area/indoors/cave/rmh_cave/to_underdark)
@@ -666,7 +673,8 @@
 "cW" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/masonic/single,
 /area/indoors/town/manor)
@@ -693,7 +701,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -885,14 +894,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
 "ea" = (
-/obj/item/coin/gold/pile,
-/turf/open/floor/tile,
-/area/indoors/town/vault)
+/turf/open/floor/greenstone/glyph6,
+/area/under/rmh_bedrock)
 "eb" = (
 /obj/effect/decal/remains/human,
 /turf/open/floor/herringbone,
@@ -913,6 +922,10 @@
 "ei" = (
 /obj/structure/door/fancy{
 	name = "Servant's Room"
+	},
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
 	},
 /turf/open/floor/concrete,
 /area/under/town/basement/keep)
@@ -1039,8 +1052,7 @@
 "eF" = (
 /obj/structure/door/viewport{
 	icon_state = "donjondir";
-	dir = 2;
-	lockid = "physician"
+	dir = 2
 	},
 /obj/effect/mapping_helpers/access/locker,
 /obj/effect/mapping_helpers/access/keyset/manor/lord{
@@ -1148,7 +1160,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -1355,7 +1368,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue{
 	pixel_y = -32
@@ -1371,7 +1385,8 @@
 "fY" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/carpet/lord/left,
 /area/indoors/town/manor)
@@ -1598,6 +1613,15 @@
 "gZ" = (
 /turf/open/floor/snow/rough,
 /area/outdoors/mountains/rmh_mountains)
+"hb" = (
+/obj/structure/door/viewport{
+	dir = 2;
+	name = "Vault Door"
+	},
+/obj/effect/mapping_helpers/access/keyset/manor/vault,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/under/rmh_bedrock)
 "hd" = (
 /obj/structure/stairs/stone{
 	dir = 8
@@ -1724,7 +1748,8 @@
 "hz" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/cave/rmh_dwarf_keep/throne)
@@ -1825,7 +1850,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/walldeco/painting{
 	pixel_x = 32
@@ -2054,7 +2080,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -2327,7 +2354,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -2346,7 +2374,8 @@
 "kd" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/masonic{
 	dir = 4
@@ -2452,12 +2481,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -2484,6 +2515,11 @@
 	},
 /turf/open/floor/tile/harem2,
 /area/indoors/town/bath)
+"kQ" = (
+/obj/machinery/light/fueled/wallfire/candle/blue/r,
+/obj/item/coin/gold/pile,
+/turf/open/floor/tile/checker,
+/area/under/rmh_bedrock)
 "kR" = (
 /turf/closed/wall/mineral/craftstone,
 /area/indoors/cave/rmh_dwarf_keep)
@@ -3029,12 +3065,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/vtable,
 /obj/structure/fluff/walldeco/xavo{
@@ -3082,7 +3120,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -3098,6 +3137,10 @@
 /area/indoors/town/manor)
 "nm" = (
 /obj/structure/door/window,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/indoors/town/bath)
 "nn" = (
@@ -3110,7 +3153,8 @@
 "no" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/statue/gargoyle,
 /turf/open/floor/concrete,
@@ -3300,7 +3344,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -3340,10 +3385,11 @@
 /turf/open/floor/dirt,
 /area/outdoors/mountains/rmh_mountains/frozen)
 "oI" = (
-/obj/machinery/light/fueled/wallfire/candle/blue/r,
-/obj/item/coin/gold/pile,
-/turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/obj/effect/landmark/hammer/dev_text{
+	name = "[BALANCE] Temporarily removed for DS, as it allowed vampires to escape into the estate of the lords of the Rivermist lands."
+	},
+/turf/open/floor/carpet/lord/center,
+/area/under/town/basement/keep)
 "oK" = (
 /turf/open/floor/naturalstone,
 /area/indoors/cave/rmh_cave/cold)
@@ -3402,7 +3448,8 @@
 	},
 /obj/effect/decal/cobbleedge{
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/town/manor)
@@ -3561,7 +3608,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/torchholder/c,
 /turf/open/floor/cobble,
@@ -3589,7 +3637,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -3600,12 +3649,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -3855,7 +3906,8 @@
 "rd" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/carpet/lord/left,
@@ -3909,9 +3961,11 @@
 /turf/closed/wall/mineral/decostone,
 /area/indoors/town/manor)
 "rq" = (
-/obj/item/statue/gold/loot,
-/turf/open/floor/tile,
-/area/indoors/town/vault)
+/obj/structure/fluff/walldeco/painting/seraphina{
+	pixel_y = -32
+	},
+/turf/open/floor/greenstone/glyph1,
+/area/under/rmh_bedrock)
 "rr" = (
 /obj/effect/decal/cleanable/debris/stone,
 /turf/open/floor/herringbone,
@@ -3931,7 +3985,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -4097,10 +4152,13 @@
 /obj/structure/door/viewport{
 	icon_state = "donjondir";
 	dir = 4;
-	lockid = "mansionvampire";
 	name = "Barracks"
 	},
 /obj/effect/mapping_helpers/access/locker,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/indoors/town/manor)
 "se" = (
@@ -4184,7 +4242,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/pillow{
 	dir = 2
@@ -4300,10 +4359,9 @@
 /turf/open/floor/tile/tilerg,
 /area/indoors/town/manor)
 "ta" = (
-/obj/structure/closet/crate/chest/neu_fancy,
-/obj/item/coin/gold/pile,
-/turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/obj/structure/fluff/statue/gargoyle,
+/turf/open/floor/concrete,
+/area/under/rmh_bedrock)
 "te" = (
 /obj/structure/bars/tough,
 /obj/structure/bars/pipe,
@@ -4738,7 +4796,6 @@
 /obj/structure/door/viewport{
 	icon_state = "donjondir";
 	dir = 1;
-	lockid = "mansionvampire";
 	name = "Barracks"
 	},
 /obj/effect/mapping_helpers/access/locker,
@@ -4799,7 +4856,8 @@
 "vk" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/tile/tilerg,
@@ -4818,7 +4876,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -4835,15 +4894,18 @@
 /turf/open/floor/carpet,
 /area/indoors/town/manor)
 "vq" = (
-/obj/structure/door/fancy{
-	lockid = "physician"
+/obj/structure/door/fancy,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
 	},
 /turf/open/floor/concrete,
 /area/indoors/town/manor)
 "vr" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/statue/gargoyle,
 /obj/machinery/light/fueled/wallfire/candle/blue{
@@ -4965,9 +5027,8 @@
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
 "vO" = (
-/obj/structure/table/wood{
-	dir = 10;
-	icon_state = "largetable"
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
 	},
 /obj/effect/decal/carpet{
 	dir = 4;
@@ -5072,7 +5133,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -5139,6 +5201,9 @@
 	},
 /turf/open/floor/ruinedwood/herringbone,
 /area/indoors/town/manor)
+"wz" = (
+/turf/open/floor/greenstone/glyph5,
+/area/under/rmh_bedrock)
 "wA" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/r,
 /turf/open/water/bath,
@@ -5257,7 +5322,8 @@
 "xe" = (
 /obj/effect/decal/cobbleedge{
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/blocks,
 /area/under/town/basement/keep)
@@ -5287,7 +5353,8 @@
 /obj/structure/fluff/globe,
 /obj/effect/decal/cobbleedge{
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/town/manor)
@@ -5391,13 +5458,9 @@
 /area/indoors/cave/rmh_dwarf_keep/smelters)
 "xF" = (
 /obj/structure/closet/crate/chest/neu_fancy,
-/obj/item/coin/silver/pile,
-/obj/structure/bars/pipe{
-	pixel_x = 20;
-	pixel_y = 8
-	},
+/obj/item/coin/gold/pile,
 /turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/area/under/rmh_bedrock)
 "xG" = (
 /obj/structure/chair/bench{
 	dir = 8
@@ -5508,12 +5571,9 @@
 /turf/open/floor/ruinedwood/herringbone,
 /area/indoors/town/manor)
 "yk" = (
-/obj/structure/bars/pipe{
-	pixel_y = 8;
-	pixel_x = -20
-	},
+/obj/machinery/light/fueled/wallfire/candle/blue/l,
 /turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/area/under/rmh_bedrock)
 "yl" = (
 /obj/structure/composter/full,
 /turf/open/floor/cobble/mossy,
@@ -5529,7 +5589,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/carpet/inn,
 /area/indoors/town/manor)
@@ -5580,9 +5641,8 @@
 /turf/open/floor/hexstone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
 "yz" = (
-/obj/structure/table/wood{
-	dir = 6;
-	icon_state = "largetable"
+/obj/structure/table/wood/large/corner_new{
+	dir = 6
 	},
 /obj/effect/decal/cobbleedge{
 	icon = 'icons/roguetown/misc/tables.dmi';
@@ -5616,12 +5676,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/fancy/royalblack,
 /turf/open/floor/tile/checkeralt,
@@ -5635,9 +5697,8 @@
 /turf/open/floor/hexstone,
 /area/indoors/cave/rmh_dwarf_keep/living)
 "yH" = (
-/obj/structure/table/wood{
-	dir = 4;
-	icon_state = "largetable"
+/obj/structure/table/wood/large/corner_new{
+	dir = 5
 	},
 /turf/open/floor/tile/harem1,
 /area/indoors/town/manor)
@@ -5654,9 +5715,11 @@
 /turf/open/floor/grass,
 /area/indoors/town/manor)
 "yN" = (
-/obj/item/coin/silver/pile,
-/turf/open/floor/tile,
-/area/indoors/town/vault)
+/obj/effect/landmark/hammer/dev_text{
+	name = "[BALANCE] Temporarily removed for DS, as it allowed vampires to escape into the estate of the lords of the Rivermist lands."
+	},
+/turf/open/floor/tile/harem1,
+/area/under/town/basement/keep)
 "yP" = (
 /obj/effect/spawner/map_spawner/hauntpile,
 /obj/effect/decal/cleanable/debris/wood,
@@ -5710,7 +5773,8 @@
 "zb" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/carpet/lord/right,
@@ -5718,9 +5782,9 @@
 "zc" = (
 /obj/structure/winch{
 	dir = 4;
-	gid = "gatemanor2";
+	gid = "thronegate";
 	pixel_x = -6;
-	redstone_id = "gatemanor3"
+	redstone_id = "thronegate"
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -5739,13 +5803,11 @@
 /turf/open/floor/cobble,
 /area/outdoors/mountains/rmh_mountains/frozen)
 "zl" = (
-/obj/structure/door/fancy{
-	lockid = "mansionvampire";
-	name = "Guest Room I"
+/obj/structure/fluff/walldeco/painting{
+	pixel_y = -32
 	},
-/obj/effect/mapping_helpers/access/locker,
-/turf/open/floor/concrete,
-/area/indoors/town/manor)
+/turf/open/floor/greenstone/glyph3,
+/area/under/rmh_bedrock)
 "zm" = (
 /obj/structure/bookcase/random/archive,
 /obj/structure/fluff/statue/small{
@@ -5837,7 +5899,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -6026,14 +6089,14 @@
 	},
 /area/indoors/town/manor)
 "AJ" = (
-/turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/obj/structure/door/fancy,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/indoors/town/manor)
 "AK" = (
-/obj/structure/fluff/walldeco/painting{
-	pixel_y = -32
-	},
-/turf/open/floor/greenstone/glyph3,
-/area/indoors/town/vault)
+/obj/item/coin/gold/pile,
+/turf/open/floor/tile,
+/area/under/rmh_bedrock)
 "AL" = (
 /obj/structure/closet/crate/chest/neu_iron,
 /obj/effect/spawner/map_spawner/loot/valuable_clutter_spawner,
@@ -6057,7 +6120,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/manor)
@@ -6113,12 +6177,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -6178,11 +6244,14 @@
 /turf/open/floor/wood,
 /area/under/town/basement/keep)
 "Bs" = (
-/obj/machinery/light/fueled/wallfire/candle/blue{
-	pixel_y = -32
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/item/coin/silver/pile,
+/obj/structure/bars/pipe{
+	pixel_x = 20;
+	pixel_y = 8
 	},
-/turf/open/floor/greenstone/glyph2,
-/area/indoors/town/vault)
+/turf/open/floor/tile/checker,
+/area/under/rmh_bedrock)
 "Bt" = (
 /obj/structure/fluff/railing/border{
 	dir = 5
@@ -6430,12 +6499,11 @@
 /turf/open/floor/snow,
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
 "Cx" = (
-/obj/effect/mapping_helpers/access/keyset/manor/lord{
-	accesses = list("mansionvampire");
-	name = "vampire"
+/obj/effect/landmark/hammer/dev_text{
+	name = "[BALANCE] Temporarily removed for DS, as it allowed vampires to escape into the estate of the lords of the Rivermist lands."
 	},
-/turf/open/floor/hexstone,
-/area/under/town/basement/keep)
+/turf/open/floor/tile,
+/area/under/rmh_bedrock)
 "Cy" = (
 /obj/structure/table/wood/cooling,
 /turf/open/floor/herringbone,
@@ -6548,6 +6616,10 @@
 	},
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
+"Da" = (
+/obj/item/statue/gold/loot,
+/turf/open/floor/tile,
+/area/under/rmh_bedrock)
 "Db" = (
 /turf/open/floor/wood,
 /area/under/town/basement/keep)
@@ -6686,14 +6758,12 @@
 /turf/open/floor/grass/cold,
 /area/outdoors/mountains/rmh_mountains)
 "DK" = (
-/obj/structure/table/wood{
-	dir = 8;
-	icon_state = "largetable"
+/obj/structure/table/wood/large/corner_new{
+	dir = 9
 	},
-/obj/structure/fluff/statue/pillar{
+/obj/structure/stripper_pole{
 	pixel_x = 16;
-	color = "#4dc6eb";
-	name = "pole"
+	pixel_y = -9
 	},
 /turf/open/floor/tile/harem1,
 /area/indoors/town/manor)
@@ -6791,7 +6861,8 @@
 "Eh" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/masonic{
 	dir = 8
@@ -6942,7 +7013,8 @@
 "ES" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/masonic{
 	dir = 1
@@ -7045,7 +7117,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/town/manor)
@@ -7297,12 +7370,9 @@
 /turf/open/floor/hexstone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
 "GK" = (
-/obj/structure/fake_machine/merchantvend{
-	pixel_x = 32;
-	density = 0
-	},
+/obj/machinery/light/fueled/firebowl/church/unholyfire,
 /turf/open/floor/herringbone,
-/area/under/town/basement/keep)
+/area/outdoors/exposed/rmh/manorgarri)
 "GL" = (
 /obj/structure/bars/pipe{
 	dir = 6;
@@ -7319,7 +7389,6 @@
 "GN" = (
 /obj/structure/table/wood,
 /obj/item/reagent_containers/glass/cup/golden,
-/obj/item/key/lord,
 /turf/open/floor/carpet/lord/left,
 /area/indoors/town/manor)
 "GO" = (
@@ -7435,7 +7504,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -7795,18 +7865,20 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
 "IJ" = (
-/turf/open/floor/greenstone/glyph5,
-/area/indoors/town/vault)
+/turf/closed/wall/mineral/craftstone,
+/area/under/rmh_bedrock)
 "IK" = (
 /obj/structure/fluff/walldeco/customflag{
 	pixel_y = 32
@@ -7869,12 +7941,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -7888,7 +7962,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/chair/wood/alt/fancy{
 	dir = 8
@@ -7961,10 +8036,12 @@
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/communal)
 "Jl" = (
-/obj/structure/door/fancy{
-	lockid = "mansionvampire"
-	},
+/obj/structure/door/fancy,
 /obj/effect/mapping_helpers/access/locker,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/indoors/town/manor)
 "Jm" = (
@@ -8035,6 +8112,10 @@
 /area/outdoors/exposed/rmh_dwarf_keep)
 "JF" = (
 /obj/structure/door/window,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/indoors/town/manor)
 "JG" = (
@@ -8050,6 +8131,15 @@
 /obj/structure/table/wood/treestump/burnt,
 /turf/open/floor/dirt,
 /area/outdoors/mountains/rmh_mountains)
+"JM" = (
+/obj/structure/flora/grass{
+	color = "#4dc6eb"
+	},
+/obj/effect/landmark/start/combatlate{
+	dir = 1
+	},
+/turf/open/floor/grass/cold,
+/area/outdoors/mountains/rmh_mountains/frozen/lowlands)
 "JN" = (
 /turf/open/water/cleanshallow,
 /area/indoors/cave/rmh_cave/cold)
@@ -8133,8 +8223,11 @@
 /turf/open/floor/concrete,
 /area/indoors/cave/rmh_dwarf_keep/grand)
 "Kj" = (
-/turf/open/floor/tile,
-/area/indoors/town/vault)
+/obj/effect/landmark/hammer/dev_text{
+	name = "[BALANCE] Temporarily removed for DS, as it allowed vampires to escape into the estate of the lords of the Rivermist lands."
+	},
+/turf/open/floor/herringbone,
+/area/under/town/basement/keep)
 "Kk" = (
 /obj/effect/decal/cleanable/debris/stone,
 /mob/living/simple_animal/hostile/retaliate/minotaur,
@@ -8381,8 +8474,7 @@
 "Ln" = (
 /obj/structure/door/viewport{
 	icon_state = "donjondir";
-	dir = 1;
-	lockid = "mansionvampire"
+	dir = 1
 	},
 /obj/effect/mapping_helpers/access/locker,
 /obj/effect/mapping_helpers/access/keyset/manor/lord{
@@ -8590,6 +8682,10 @@
 /obj/structure/door/fancy{
 	name = "Cellar"
 	},
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/under/town/basement/keep)
 "Mg" = (
@@ -8781,12 +8877,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -9004,7 +9102,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/checkeralt,
 /area/indoors/town/manor)
@@ -9069,7 +9168,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/cobble,
 /area/under/town/basement/keep)
@@ -9198,6 +9298,10 @@
 	name = "Barracks"
 	},
 /obj/effect/mapping_helpers/access/locker,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/hexstone,
 /area/under/town/basement/keep)
 "ON" = (
@@ -9445,6 +9549,10 @@
 /obj/structure/door/fancy{
 	name = "Baths"
 	},
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/under/town/basement/keep)
 "PU" = (
@@ -9513,9 +9621,7 @@
 /turf/closed/wall/mineral/stonebrick,
 /area/indoors/town/manor)
 "Qk" = (
-/obj/structure/door/fancy{
-	lockid = "mansionvampire"
-	},
+/obj/structure/door/fancy,
 /obj/effect/mapping_helpers/access/locker,
 /obj/effect/mapping_helpers/access/keyset/manor/lord{
 	accesses = list("mansionvampire");
@@ -9761,11 +9867,11 @@
 /turf/open/floor/herringbone,
 /area/outdoors/exposed/rmh/manorgarri)
 "Rs" = (
-/obj/structure/fluff/walldeco/painting/seraphina{
+/obj/machinery/light/fueled/wallfire/candle/blue{
 	pixel_y = -32
 	},
-/turf/open/floor/greenstone/glyph1,
-/area/indoors/town/vault)
+/turf/open/floor/greenstone/glyph2,
+/area/under/rmh_bedrock)
 "Rt" = (
 /obj/effect/decal/cleanable/blood/gibs/core,
 /obj/effect/decal/remains/human,
@@ -9859,6 +9965,9 @@
 "RP" = (
 /turf/open/floor/ruinedwood/spiral,
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
+"RQ" = (
+/turf/open/floor/tile/checker,
+/area/under/rmh_bedrock)
 "RR" = (
 /obj/structure/fluff/traveltile{
 	aportalgoesto = "mainmapvampire";
@@ -9880,8 +9989,8 @@
 /turf/open/floor/churchmarble,
 /area/indoors/cave/rmh_dwarf_keep/throne)
 "RW" = (
-/turf/open/floor/greenstone/glyph4,
-/area/indoors/town/vault)
+/turf/open/floor/tile,
+/area/under/rmh_bedrock)
 "RX" = (
 /obj/structure/table/wood{
 	icon_state = "tablewood1"
@@ -10141,14 +10250,11 @@
 /turf/open/floor/hexstone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
 "To" = (
-/obj/structure/door/viewport{
-	dir = 2;
-	name = "Vault Door"
-	},
-/obj/effect/mapping_helpers/access/keyset/manor/vault,
-/obj/effect/mapping_helpers/access/locker,
-/turf/open/floor/concrete,
-/area/under/town/basement/keep)
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/machinery/light/fueled/wallfire/candle/blue/l,
+/obj/item/coin/gold/pile,
+/turf/open/floor/tile/checker,
+/area/under/rmh_bedrock)
 "Tq" = (
 /turf/open/floor/dirt,
 /area/outdoors/exposed/rmh/manorgarri)
@@ -10264,20 +10370,16 @@
 /turf/open/floor/volcanic,
 /area/indoors/cave/rmh_dwarf_keep/grand)
 "TO" = (
-/obj/machinery/light/fueled/wallfire/candle/blue/l,
+/obj/structure/bars/pipe{
+	pixel_y = 8;
+	pixel_x = -20
+	},
 /turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/area/under/rmh_bedrock)
 "TP" = (
-/obj/item/gem/red,
-/obj/item/gem/red,
-/obj/item/gem/violet,
-/obj/item/gem/yellow,
-/obj/item/gem/green,
-/obj/item/gem/blue,
-/obj/structure/closet/crate/chest/neu_fancy,
-/obj/machinery/light/fueled/wallfire/candle/blue/r,
-/turf/open/floor/tile/checker,
-/area/indoors/town/vault)
+/obj/item/coin/silver/pile,
+/turf/open/floor/tile,
+/area/under/rmh_bedrock)
 "TQ" = (
 /obj/machinery/light/fueled/hearth{
 	pixel_y = 5
@@ -10430,7 +10532,8 @@
 "Uy" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/carpet/lord/right,
 /area/indoors/town/manor)
@@ -10454,7 +10557,8 @@
 "UD" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/carpet/lord/center,
 /area/indoors/town/manor)
@@ -10610,7 +10714,8 @@
 "Vj" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
-	icon_state = "borderfall"
+	icon_state = "borderfall";
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/tilerg,
 /area/indoors/town/manor)
@@ -10808,6 +10913,10 @@
 /obj/structure/door/fancy{
 	name = "Kitchen"
 	},
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/concrete,
 /area/indoors/town/manor)
 "Wf" = (
@@ -10921,7 +11030,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/border{
 	dir = 5;
@@ -10955,8 +11065,10 @@
 /turf/open/floor/woodturned,
 /area/indoors/town/manor)
 "WH" = (
-/turf/open/floor/greenstone/glyph6,
-/area/indoors/town/vault)
+/turf/closed/mineral/bedrock/cold{
+	name = "solid rock"
+	},
+/area/under/town/basement/keep)
 "WJ" = (
 /obj/structure/rack,
 /obj/item/weapon/mace/steel,
@@ -10974,7 +11086,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/manor)
@@ -11297,7 +11410,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/blocks,
 /area/under/town/basement/keep)
@@ -11456,7 +11570,8 @@
 /obj/structure/table/church/end/alt,
 /obj/effect/decal/cobbleedge{
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/town/manor)
@@ -11491,16 +11606,8 @@
 /turf/open/floor/snow,
 /area/outdoors/mountains/rmh_mountains/frozen)
 "YM" = (
-/obj/structure/door/fancy{
-	lockid = "mansionvampire"
-	},
-/obj/effect/mapping_helpers/access/locker,
-/obj/effect/mapping_helpers/access/keyset/manor/lord{
-	accesses = list("mansionvampire");
-	name = "vampire"
-	},
-/turf/open/floor/concrete,
-/area/indoors/town/manor)
+/turf/open/floor/greenstone/glyph4,
+/area/under/rmh_bedrock)
 "YP" = (
 /obj/structure/bars/pipe{
 	dir = 8;
@@ -11638,10 +11745,12 @@
 /turf/open/floor/ruinedwood/herringbone,
 /area/indoors/town/manor)
 "Zu" = (
-/obj/structure/door/stone{
-	lockid = "mansionvampire"
-	},
+/obj/structure/door/stone,
 /obj/effect/mapping_helpers/access/locker,
+/obj/effect/mapping_helpers/access/keyset/manor/lord{
+	accesses = list("mansionvampire");
+	name = "vampire"
+	},
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area/indoors/town/manor)
 "Zw" = (
@@ -15557,13 +15666,13 @@ yl
 QC
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+ta
+IJ
+IJ
+IJ
+Iq
+IJ
+IJ
 bH
 bH
 bH
@@ -15686,13 +15795,13 @@ hA
 QC
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+IJ
+IJ
+yk
+xF
+TO
+To
+IJ
 bH
 bH
 bH
@@ -15815,13 +15924,13 @@ QC
 QC
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+IJ
+TP
+AK
+RW
+YM
+rq
+IJ
 bH
 bH
 bH
@@ -15944,13 +16053,13 @@ bH
 bH
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+hb
+Cx
+RW
+RW
+wz
+Rs
+IJ
 bH
 bH
 bH
@@ -16073,13 +16182,13 @@ bH
 bH
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+IJ
+RW
+AK
+Da
+ea
+zl
+IJ
 bH
 bH
 bH
@@ -16202,13 +16311,13 @@ bH
 bH
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+IJ
+IJ
+cg
+RQ
+Bs
+kQ
+IJ
 bH
 bH
 bH
@@ -16331,13 +16440,13 @@ bH
 bH
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+ta
+IJ
+IJ
+IJ
+Iq
+IJ
+IJ
 bH
 bH
 bH
@@ -16448,12 +16557,12 @@ UH
 nU
 Jb
 MS
-MS
-TO
-ta
-yk
-cg
-MS
+WH
+WH
+WH
+WH
+WH
+WH
 bH
 bH
 bH
@@ -16575,14 +16684,14 @@ Jb
 nU
 UH
 nU
-cE
+Jb
 MS
-yN
-ea
-Kj
-RW
-Rs
-MS
+WH
+WH
+WH
+WH
+WH
+WH
 bH
 MS
 MS
@@ -16704,14 +16813,14 @@ Jb
 nU
 vg
 nU
-Jb
-To
-Kj
-Kj
-Kj
-IJ
-Bs
+yN
 MS
+WH
+WH
+WH
+WH
+WH
+WH
 bH
 MS
 xZ
@@ -16833,14 +16942,14 @@ Jb
 nU
 UH
 nU
-cE
+Jb
 MS
-Kj
-ea
-rq
 WH
-AK
-MS
+WH
+WH
+WH
+WH
+WH
 bH
 MS
 ep
@@ -16964,12 +17073,12 @@ UH
 nU
 Jb
 MS
-MS
-TP
-AJ
-xF
-oI
-MS
+WH
+WH
+WH
+WH
+WH
+WH
 bH
 MS
 JX
@@ -17465,7 +17574,7 @@ bH
 MS
 kO
 MI
-Cx
+UH
 UH
 UH
 UH
@@ -17602,12 +17711,12 @@ kX
 nU
 nU
 nU
-nU
+Kj
 nU
 nU
 nU
 kX
-GK
+nU
 kX
 nU
 UH
@@ -17726,16 +17835,16 @@ Mh
 OM
 Ep
 kO
-QC
-kO
-vF
-GP
-kO
-IC
-kO
-vF
-GP
-kO
+MS
+MS
+MS
+MS
+MS
+MS
+MS
+MS
+MS
+MS
 MS
 kO
 MS
@@ -17855,16 +17964,16 @@ nU
 UH
 nU
 MS
-QC
-MS
-fD
-nC
-vo
-pw
-UQ
-nC
-rM
-MS
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
 bH
 MS
 Zb
@@ -17984,16 +18093,16 @@ UH
 UH
 nU
 MS
-QC
-MS
-jS
-nC
-dG
-pw
-Wp
-nC
-dz
-MS
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
 bH
 MS
 xZ
@@ -18113,16 +18222,16 @@ nU
 UH
 nU
 MS
-QC
-MS
-VN
-jn
-TY
-hR
-ND
-sp
-HE
-MS
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
 bH
 MS
 XK
@@ -18242,16 +18351,16 @@ MS
 IN
 MS
 MS
-QC
-MS
-LC
-KD
-Tf
-Tf
-Tf
-Pw
-Ly
-MS
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
 bH
 MS
 ep
@@ -18372,15 +18481,15 @@ nU
 vH
 MS
 bH
-kO
-MS
-MS
-Mt
-IM
-Zg
-MS
-MS
-kO
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
 bH
 MS
 fk
@@ -18503,11 +18612,11 @@ MS
 bH
 bH
 bH
-kO
-MS
-MS
-MS
-kO
+bH
+bH
+bH
+bH
+bH
 bH
 bH
 bH
@@ -19536,16 +19645,16 @@ Vu
 Vu
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+QC
+kO
+vF
+GP
+kO
+IC
+kO
+vF
+GP
+kO
 bH
 bH
 bH
@@ -19665,16 +19774,16 @@ Vu
 Vu
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+QC
+MS
+fD
+nC
+vo
+oI
+UQ
+nC
+rM
+MS
 bH
 bH
 bH
@@ -19794,16 +19903,16 @@ Vu
 Vu
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+QC
+MS
+jS
+nC
+dG
+pw
+Wp
+nC
+dz
+MS
 bH
 bH
 bH
@@ -19923,16 +20032,16 @@ Vu
 Vu
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+QC
+MS
+VN
+jn
+TY
+hR
+ND
+sp
+HE
+MS
 bH
 bH
 bH
@@ -20052,16 +20161,16 @@ Vu
 Vu
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+QC
+MS
+LC
+KD
+Tf
+Tf
+Tf
+Pw
+Ly
+MS
 bH
 bH
 bH
@@ -20182,15 +20291,15 @@ Vu
 bH
 bH
 bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
+kO
+MS
+MS
+Mt
+IM
+Zg
+MS
+MS
+kO
 bH
 bH
 bH
@@ -20313,11 +20422,11 @@ bH
 bH
 bH
 bH
-bH
-bH
-bH
-bH
-bH
+kO
+MS
+MS
+MS
+kO
 bH
 bH
 bH
@@ -47051,7 +47160,7 @@ ga
 Rq
 ga
 ga
-ga
+GK
 ga
 Gk
 Dj
@@ -48857,7 +48966,7 @@ ga
 Rq
 ga
 ga
-ga
+GK
 ga
 ga
 Dj
@@ -49115,7 +49224,7 @@ cc
 Rf
 Rf
 ga
-ga
+cE
 ga
 Rf
 Dj
@@ -75585,7 +75694,7 @@ id
 QO
 Mq
 QO
-QO
+JM
 rX
 If
 id
@@ -80804,7 +80913,7 @@ mA
 mA
 mA
 BD
-YM
+Jl
 BD
 mA
 mA
@@ -80823,13 +80932,13 @@ mA
 ZL
 mA
 BD
-zl
+Jl
 BD
 mA
 ZL
 mA
 BD
-zl
+Jl
 BD
 mA
 ZL
@@ -81858,7 +81967,7 @@ aw
 aw
 aw
 aw
-YM
+Jl
 tz
 tz
 tz
@@ -83148,7 +83257,7 @@ aw
 aw
 aw
 aw
-YM
+Jl
 ia
 hD
 hD
@@ -84158,7 +84267,7 @@ mA
 mA
 mA
 de
-YM
+Jl
 de
 mA
 mA
@@ -84178,7 +84287,7 @@ zZ
 He
 He
 He
-Jl
+AJ
 He
 zZ
 yj

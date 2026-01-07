@@ -82,7 +82,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem1,
 /area/under/rmh_desert/hareml)
@@ -97,8 +98,10 @@
 	dir = 8;
 	color = "#3b3b3b"
 	},
-/turf/open/water/bath/pool{
-	dir = 9
+/obj/structure/hotspring,
+/turf/open/water/bath{
+	name = "Steamy Water";
+	desc = "Water for bathing, warmed from the thermal heated rocks below your feet"
 	},
 /area/under/town/rmh/basement)
 "at" = (
@@ -186,7 +189,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/ziqurat)
@@ -449,7 +453,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -494,13 +499,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner/south_west,
@@ -522,13 +528,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/structure/chair/bench/couch/right,
@@ -580,13 +587,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner/north_east,
@@ -640,8 +648,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/edge{
 	dir = 8;
@@ -662,8 +670,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/metal/barograte,
 /area/under/rmh_desert/pyramid)
@@ -694,7 +702,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/tile/harem,
@@ -763,7 +772,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/chair/bench/couch/middle{
 	pixel_y = -5;
@@ -887,8 +897,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -931,13 +941,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone_tile/six,
@@ -1042,8 +1053,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/statue/small{
 	pixel_y = 12
@@ -1185,8 +1196,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/curtain/magenta,
 /turf/open/floor/tile/brownbrick,
@@ -1234,13 +1245,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/sandstone_tile/six,
@@ -1271,8 +1283,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/spider/stickyweb,
 /turf/open/floor/sandstone_tile,
@@ -1376,13 +1388,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/machinery/light/fueled/wallfire/candle/r,
@@ -1461,8 +1474,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/gate{
 	gid = "pyramidgate2";
@@ -1491,7 +1504,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -1527,7 +1541,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/curtain/magenta,
 /turf/open/floor/tile/diamond/blue,
@@ -1601,13 +1616,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/sandstone_tile,
@@ -1623,12 +1639,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -1832,7 +1850,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/curtain/magenta,
 /turf/open/floor/tile/brownbrick,
@@ -1937,8 +1956,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/curtain/magenta,
 /turf/open/floor/tile/brownbrick,
@@ -1983,8 +2002,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -2232,7 +2251,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area/indoors/rmh_desert_phouse)
@@ -2241,7 +2261,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -2319,7 +2340,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -2345,7 +2367,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/rmh_desert_phouse)
@@ -2552,8 +2575,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/four,
 /area/indoors/rmh_desert_phouse)
@@ -2574,8 +2597,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/tile/harem,
@@ -2683,8 +2706,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/sandstone_tile,
@@ -2735,13 +2758,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone_tile,
@@ -2750,7 +2774,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/torchholder/hotspring{
 	pixel_y = -32
@@ -2993,13 +3018,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/structure/fluff/railing/corner{
@@ -3033,8 +3059,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/spider/stickyweb,
 /turf/open/floor/sandstone,
@@ -3201,7 +3227,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/torchholder/hotspring{
 	pixel_y = 32
@@ -3212,7 +3239,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem1,
 /area/under/rmh_desert/hareml)
@@ -3251,7 +3279,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area/indoors/rmh_desert_phouse)
@@ -3310,13 +3339,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/structure/closet/crate/chest/wicker,
@@ -3346,8 +3376,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/chair/bench/couch/left{
 	dir = 4;
@@ -3372,7 +3402,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/pyramid)
@@ -3490,8 +3521,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/ziqurat)
@@ -3628,7 +3659,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -3636,13 +3668,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner/south_west,
@@ -3743,8 +3776,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/five,
 /area/indoors/rmh_desert_phouse)
@@ -3887,7 +3920,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone_tile/two,
@@ -3945,8 +3979,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/item/reagent_containers/glass/carafe/water,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -4058,7 +4092,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/sandstone,
@@ -4143,7 +4178,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -4229,14 +4265,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -4387,13 +4423,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -4494,8 +4531,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/walldeco/bath/wallrope{
 	dir = 10;
@@ -4546,7 +4583,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/curtain/magenta,
 /turf/open/floor/tile/brownbrick,
@@ -4576,8 +4614,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -4592,7 +4630,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/closet/crate/crafted_closet/inn/south,
 /obj/item/storage/sack{
@@ -4723,8 +4762,14 @@
 /turf/open/water/cleanshallow/dirt,
 /area/outdoors/rmh_desert/oasis)
 "nD" = (
-/turf/open/water/bath/pool{
-	dir = 1
+/obj/structure/hotspring,
+/obj/structure/healing_spring{
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/turf/open/water/bath{
+	name = "Steamy Water";
+	desc = "Water for bathing, warmed from the thermal heated rocks below your feet"
 	},
 /area/under/town/rmh/basement)
 "nE" = (
@@ -4745,8 +4790,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/palacecasemates)
@@ -4766,7 +4811,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/tile/harem1,
@@ -4786,7 +4832,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone,
@@ -4896,7 +4943,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -4904,8 +4952,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -5209,7 +5257,11 @@
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/palacecellar)
 "oS" = (
-/turf/open/water/bath/pool,
+/obj/structure/hotspring,
+/turf/open/water/bath{
+	name = "Steamy Water";
+	desc = "Water for bathing, warmed from the thermal heated rocks below your feet"
+	},
 /area/under/town/rmh/basement)
 "oT" = (
 /obj/structure/rotation_piece/cog/large,
@@ -5471,14 +5523,15 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -5595,7 +5648,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/palacecasemates)
@@ -5785,8 +5839,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -5821,8 +5875,11 @@
 	dir = 4;
 	color = "#3b3b3b"
 	},
-/turf/open/water/bath/pool{
-	dir = 6
+/obj/structure/hotspring,
+/obj/effect/waterfall,
+/turf/open/water/bath{
+	name = "Steamy Water";
+	desc = "Water for bathing, warmed from the thermal heated rocks below your feet"
 	},
 /area/under/town/rmh/basement)
 "qS" = (
@@ -5852,7 +5909,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/sandstone,
@@ -6212,7 +6270,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -6271,8 +6330,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle/l,
 /turf/open/floor/tile/diamond,
@@ -6427,8 +6486,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /obj/machinery/light/fueled/wallfire/candle/weak/l,
@@ -6438,8 +6497,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/torchholder/hotspring{
 	pixel_x = 32
@@ -6527,7 +6586,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/ziqurat)
@@ -6785,14 +6845,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -6824,7 +6884,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -7093,7 +7154,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/counter/end/right,
 /obj/item/candle/candlestick/gold/lit{
@@ -7109,7 +7171,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/tile/diamond,
@@ -7134,8 +7197,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -7193,8 +7256,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/item/plate/shell{
 	pixel_y = 3
@@ -7221,7 +7284,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/counter/alt,
 /obj/item/reagent_containers/glass/carafe/silver/redwine{
@@ -7313,8 +7377,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/rmh_desert_phouse)
@@ -7510,13 +7574,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/sandstone_tile,
@@ -7633,7 +7698,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/sandstone_tile/three,
@@ -7657,7 +7723,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/chair/bench/couch/middle,
 /turf/open/floor/sandstone_tile/six,
@@ -7677,13 +7744,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /obj/structure/fluff/railing/corner/south_east,
@@ -7791,13 +7859,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner/south_west,
@@ -7868,7 +7937,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -8023,7 +8093,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/diamond,
 /area/indoors/rmh_desert_phouse)
@@ -8040,8 +8111,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/diamond,
 /area/indoors/rmh_desert_phouse)
@@ -8076,8 +8147,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/palacecasemates)
@@ -8114,8 +8185,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem1,
 /area/under/rmh_desert/hareml)
@@ -8216,13 +8287,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/structure/fluff/railing/corner{
@@ -8308,8 +8380,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/border,
 /turf/open/floor/tile/masonic/spiral,
@@ -8526,8 +8598,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/item/bin/trash{
 	name = "flower pot";
@@ -8863,6 +8935,10 @@
 "zX" = (
 /turf/open/floor/carpet/red,
 /area/indoors/rmh_desert_phouse)
+"zY" = (
+/obj/structure/stalagmite,
+/turf/open/floor/cobblerock,
+/area/under/cave)
 "zZ" = (
 /obj/structure/closet/crate/coffin,
 /turf/open/floor/tile/brownbrick,
@@ -8901,8 +8977,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/ziqurat)
@@ -9016,7 +9092,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/torchholder/hotspring{
 	pixel_y = 32
@@ -9162,7 +9239,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/six,
 /area/under/town/rmh/basement)
@@ -9368,8 +9446,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem1,
 /area/under/rmh_desert/hareml)
@@ -9433,8 +9511,11 @@
 	dir = 8;
 	color = "#3b3b3b"
 	},
-/turf/open/water/bath/pool{
-	dir = 10
+/obj/structure/hotspring,
+/obj/effect/waterfall,
+/turf/open/water/bath{
+	name = "Steamy Water";
+	desc = "Water for bathing, warmed from the thermal heated rocks below your feet"
 	},
 /area/under/town/rmh/basement)
 "BH" = (
@@ -9597,8 +9678,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/tile/diamond,
@@ -9710,8 +9791,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/pyramid)
@@ -9727,7 +9808,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/diamond,
 /area/indoors/rmh_desert_phouse)
@@ -9804,7 +9886,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/item/bin/trash{
 	name = "flower pot";
@@ -10064,8 +10147,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -10091,8 +10174,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/tile/harem1,
@@ -10386,15 +10469,18 @@
 	dir = 4;
 	color = "#3b3b3b"
 	},
-/turf/open/water/bath/pool{
-	dir = 5
+/obj/structure/hotspring,
+/turf/open/water/bath{
+	name = "Steamy Water";
+	desc = "Water for bathing, warmed from the thermal heated rocks below your feet"
 	},
 /area/under/town/rmh/basement)
 "EH" = (
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -10474,8 +10560,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -10659,7 +10745,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/flora/junglebush/large{
 	color = "#ba8d63";
@@ -10712,8 +10799,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/item/bin,
 /obj/structure/flora/junglebush/large{
@@ -10807,8 +10894,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -11039,7 +11126,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/tile/harem,
@@ -11068,7 +11156,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/counter/end/right,
 /obj/structure/mirror/fancy,
@@ -11139,8 +11228,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -11161,8 +11250,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -11173,8 +11262,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -11218,8 +11307,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -11227,8 +11316,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/statue/small{
 	pixel_y = 12
@@ -11280,8 +11369,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -11299,13 +11388,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /obj/structure/fluff/railing/corner/south_east,
@@ -11323,8 +11413,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area/indoors/rmh_desert_phouse)
@@ -11401,7 +11491,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/chair/bench/couch/right{
 	pixel_x = 5;
@@ -11551,7 +11642,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/diamond,
 /area/indoors/rmh_desert_phouse)
@@ -11586,8 +11678,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone_tile/six,
@@ -11814,8 +11906,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/fancy/black,
 /turf/open/floor/sandstone_tile/five,
@@ -12076,13 +12168,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner/north_east,
@@ -12123,7 +12216,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/sandstone,
@@ -12310,7 +12404,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/outdoors/rmh_desert/port)
@@ -12370,6 +12465,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/hexstone,
 /area/under/cave/mazedungeon)
+"KB" = (
+/obj/structure/stalagmite,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_desertcaves)
 "KC" = (
 /obj/structure/carpet/cyan,
 /turf/open/floor/carpet/purple,
@@ -12533,6 +12632,12 @@
 	},
 /turf/closed/wall/mineral/wood/window,
 /area/indoors/rmh_desert_phouse)
+"Lk" = (
+/obj/effect/landmark/start/combatlate{
+	dir = 1
+	},
+/turf/open/floor/sand/desertsand,
+/area/outdoors/rmh_desert/valley)
 "Lm" = (
 /obj/structure/carpet/red,
 /obj/structure/fluff/pillow/blue{
@@ -12594,8 +12699,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fake_machine/mail/r{
 	mailtag = "Tea Palace"
@@ -12735,7 +12840,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -12754,7 +12860,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/rmh_desert_phouse)
@@ -12833,7 +12940,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/indoors/rmh_desert_phouse)
@@ -12852,8 +12960,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone_tile,
@@ -13028,8 +13136,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/tile/harem1,
@@ -13038,7 +13146,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/spider/stickyweb,
 /turf/open/floor/sandstone,
@@ -13050,7 +13159,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/palacecasemates)
@@ -13072,14 +13182,15 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -13187,7 +13298,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/five,
 /area/indoors/rmh_desert_phouse)
@@ -13195,13 +13307,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -13235,8 +13348,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -13323,8 +13436,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -13430,8 +13543,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/harem,
 /area/outdoors/rmh_desert/port)
@@ -13671,12 +13784,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -13938,8 +14053,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/spider/stickyweb,
 /turf/open/floor/sandstone_tile,
@@ -13962,13 +14077,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -14073,7 +14189,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 11
@@ -14208,8 +14325,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/tile/diamond/blue,
 /area/outdoors/rmh_desert/port)
@@ -14294,8 +14411,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/six,
 /area/indoors/rmh_desert_phouse)
@@ -14315,8 +14432,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/border,
 /turf/open/floor/tile/masonic/spiral,
@@ -14343,7 +14460,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/five,
 /area/indoors/rmh_desert_phouse)
@@ -14477,14 +14595,15 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -14492,14 +14611,15 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner/south_west,
@@ -14509,7 +14629,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/six,
 /area/indoors/rmh_desert_phouse)
@@ -14772,13 +14893,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -14855,13 +14977,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -14900,8 +15023,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -14978,14 +15101,15 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -15412,7 +15536,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -15470,7 +15595,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/pyramid)
@@ -15642,8 +15768,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -15791,7 +15917,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/ruinedwood/herringbone_clear,
@@ -15896,8 +16023,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/pyramid)
@@ -16230,8 +16357,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/edge{
 	dir = 8;
@@ -16289,6 +16416,10 @@
 /obj/item/weapon/shovel/small,
 /turf/open/floor/cobble/mossy,
 /area/outdoors/rmh_desert/oasis)
+"WR" = (
+/obj/structure/stalagmite,
+/turf/open/floor/naturalstone,
+/area/under/cave)
 "WS" = (
 /turf/open/floor/rooftop{
 	dir = 1
@@ -16451,7 +16582,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/rack,
 /obj/item/weapon/shovel/small,
@@ -16492,13 +16624,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /obj/structure/fluff/railing/corner{
@@ -16510,13 +16643,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/sandstone_tile/six,
@@ -16540,13 +16674,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /obj/structure/fluff/railing/corner{
@@ -16728,8 +16863,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/sandstone_tile,
@@ -16822,14 +16957,15 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_west,
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
@@ -16858,8 +16994,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/sandstone_tile,
@@ -16868,7 +17004,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/counter/end,
 /obj/item/reagent_containers/glass/cup/glassware{
@@ -16885,7 +17022,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/counter/end,
 /obj/structure/mirror/fancy,
@@ -16906,8 +17044,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 4;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = 8
+	pixel_x = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/tile/diamond/blue,
@@ -16952,8 +17090,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/table/wood/fancy/red,
 /turf/open/floor/sandstone_tile/five,
@@ -17113,7 +17251,8 @@
 /obj/effect/decal/cobbleedge{
 	dir = 2;
 	icon_state = "borderfall";
-	pixel_y = -8
+	pixel_y = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /turf/open/floor/sandstone_tile/five,
 /area/indoors/rmh_desert_phouse)
@@ -17135,13 +17274,14 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 8
+	pixel_y = 8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
 	dir = 8;
 	icon_state = "borderfall";
-	pixel_y = 0;
-	pixel_x = -8
+	pixel_x = -8;
+	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/structure/fluff/railing/corner{
 	dir = 9
@@ -64170,7 +64310,7 @@ dE
 dE
 dE
 Tz
-Tz
+WR
 Tz
 Tz
 dE
@@ -65453,7 +65593,7 @@ dE
 dE
 Tz
 Tz
-Tz
+WR
 Tz
 dE
 dE
@@ -67246,7 +67386,7 @@ dE
 dE
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -69043,7 +69183,7 @@ dE
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 dE
 dE
@@ -70323,7 +70463,7 @@ dE
 dE
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -71859,7 +71999,7 @@ dE
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -72880,7 +73020,7 @@ Tz
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -73130,7 +73270,7 @@ Tz
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -73889,7 +74029,7 @@ Tz
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -74152,7 +74292,7 @@ Tz
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -74393,7 +74533,7 @@ Tz
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -74901,7 +75041,7 @@ dE
 dE
 Tz
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -112740,7 +112880,7 @@ Ba
 Ba
 Ba
 Ba
-Ba
+KB
 Ba
 Ba
 dE
@@ -113509,8 +113649,8 @@ dE
 dE
 dE
 dE
-Ba
-Ba
+KB
+KB
 Ba
 Ba
 Ba
@@ -114544,7 +114684,7 @@ dE
 dE
 Ba
 Ba
-Ba
+KB
 dE
 dE
 dE
@@ -118144,7 +118284,7 @@ dE
 dE
 dE
 dE
-Ba
+KB
 Ba
 Ba
 dE
@@ -120715,7 +120855,7 @@ dE
 dE
 dE
 Ba
-Ba
+KB
 Ba
 Ba
 dE
@@ -122771,7 +122911,7 @@ dE
 dE
 dE
 Ba
-Ba
+KB
 Ba
 dE
 dE
@@ -126368,7 +126508,7 @@ dE
 dE
 Ba
 Ba
-Ba
+KB
 dE
 dE
 dE
@@ -128420,7 +128560,7 @@ dE
 dE
 dE
 Ba
-Ba
+KB
 Ba
 Ba
 Ba
@@ -141461,7 +141601,7 @@ dE
 dE
 dE
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -142232,7 +142372,7 @@ dE
 Tz
 Tz
 Tz
-Tz
+WR
 Tz
 dE
 dE
@@ -142998,7 +143138,7 @@ dE
 dE
 dE
 Tz
-Tz
+WR
 Tz
 Tz
 Tz
@@ -144282,7 +144422,7 @@ dE
 dE
 dE
 Tz
-Tz
+WR
 Tz
 Tz
 dE
@@ -145054,7 +145194,7 @@ dE
 dE
 Tz
 Tz
-Tz
+WR
 Tz
 dE
 dE
@@ -145550,7 +145690,7 @@ kU
 kU
 kU
 kU
-kU
+Lk
 kU
 kU
 kU
@@ -146337,7 +146477,7 @@ dE
 dE
 dE
 Go
-Go
+zY
 Tz
 Go
 Go
@@ -147090,7 +147230,7 @@ kU
 kU
 kU
 kU
-kU
+Lk
 kU
 kU
 kU
