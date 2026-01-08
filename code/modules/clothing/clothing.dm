@@ -73,7 +73,6 @@
 	var/hoodtype
 	var/hoodtoggled = FALSE
 	var/adjustable = CANT_CADJUST
-
 	var/datum/wet/wet
 	var/wetable = TRUE
 	var/proper_drying = FALSE

@@ -33,8 +33,8 @@
 	var/obj/item/clothing/shoes = null //only used by humans.
 
 
-	var/obj/item/undies/underwear = null	//Underwear item
-	var/obj/item/legwears/legwear_socks = null	//legwear item
+	var/obj/item/clothing/undies/underwear = null	//Underwear item
+	var/obj/item/clothing/legwears/legwear_socks = null	//legwear item
 
 	var/datum/dna/dna = null//Carbon
 	var/datum/mind/last_mind = null //last mind to control this mob, for blood-based cloning

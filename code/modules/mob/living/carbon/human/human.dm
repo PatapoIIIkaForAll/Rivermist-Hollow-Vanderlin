@@ -137,12 +137,8 @@
 			src.visible_message(span_notice("[src] begins to take off [underwear][under_clothes ? " from under their clothes" : ""]..."))
 			var/delay = under_clothes ? 20 : 40
 			if(do_after(user, delay, target = src))
-				var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
-				chest.remove_bodypart_feature(underwear.undies_feature)
-				underwear.forceMove(get_turf(src))
+				src.dropItemToGround(underwear)
 				src.put_in_hands(underwear)
-				underwear = null
-				regenerate_icons()
 		if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
 			if(!legwear_socks)
 				return
@@ -150,12 +146,8 @@
 			src.visible_message(span_notice("[src] begins to take off [legwear_socks][under_clothes ? " from under their clothes" : ""]..."))
 			var/delay = under_clothes ? 25 : 50
 			if(do_after(user, delay, target = src))
-				var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
-				chest.remove_bodypart_feature(legwear_socks.legwears_feature)
-				legwear_socks.forceMove(get_turf(src))
+				src.dropItemToGround(legwear_socks)
 				src.put_in_hands(legwear_socks)
-				legwear_socks = null
-				regenerate_icons()
 		if(user.zone_selected == BODY_ZONE_CHEST)
 			if(!piercings_item)
 				return
@@ -275,7 +267,8 @@
 
 	dat += "<tr><td><hr></td></tr>"
 
-	//head
+//	dat += "<tr><td><B>HEAD</B></td></tr>"
+
 	if(obscured & ITEM_SLOT_HEAD)
 		dat += "<tr><td><font color=grey>Obscured</font></td></tr>"
 	else
@@ -379,6 +372,19 @@
 
 	dat += "<tr><td><hr></td></tr>"
 
+	//dat += "<tr><td><B>UNDERWEAR</B></td></tr>"
+
+	if(obscured & ITEM_SLOT_UNDERWEAR)
+		dat += "<tr><td><font color=grey>Obscured</font></td></tr>"
+	else
+		dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_UNDERWEAR]'>[(underwear && !(underwear.item_flags & ABSTRACT)) ? underwear : "<font color=grey>Underwear</font>"]</A></td></tr>"
+
+	if(obscured & ITEM_SLOT_SOCKS)
+		dat += "<tr><td><font color=grey>Obscured</font></td></tr>"
+	else
+		dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_SOCKS]'>[(legwear_socks && !(legwear_socks.item_flags & ABSTRACT)) ? legwear_socks : "<font color=grey>Socks</font>"]</A></td></tr>"
+
+	dat += "<tr><td><hr></td></tr>"
 	dat += {"</table>"}
 
 	var/datum/browser/popup = new(user, "mob[REF(src)]", "[src]", 220, 690)

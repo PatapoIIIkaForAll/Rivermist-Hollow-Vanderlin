@@ -18,6 +18,10 @@
 /datum/bodypart_feature/proc/bodypart_overlays(mutable_appearance/standing, obj/item/bodypart/bodypart)
 	return
 
+/// This proc is called when a feature is added
+/datum/bodypart_feature/proc/bodypart_feature_additem(mob/living/carbon/owner, obj/item/bodypart/bp)
+	return FALSE
+
 /datum/bodypart_feature/proc/get_bodypart_overlay(obj/item/bodypart/bodypart)
 	if(!accessory_type)
 		return
@@ -56,6 +60,8 @@
 	accessory_colors = accessory.get_default_colors(source_key_list)
 
 /obj/item/bodypart/proc/add_bodypart_feature(datum/bodypart_feature/feature)
+	if(feature.bodypart_feature_additem(owner, src))
+		return
 	if(feature.body_zone != body_zone)
 		return FALSE
 	if(!bodypart_features)
