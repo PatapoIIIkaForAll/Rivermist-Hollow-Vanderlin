@@ -209,9 +209,9 @@
 	smells_like = "sweetness"
 	output_reagents = list(/datum/reagent/consumable/aphrodisiac = 20)
 	required_essences = list(
-		/datum/thaumaturgical_essence/chaos = 2,
 		/datum/thaumaturgical_essence/life = 2,
-	)
+		/datum/thaumaturgical_essence/chaos = 2,
+		/datum/thaumaturgical_essence/energia = 1,)
 
 /obj/item/reagent_containers/glass/bottle/vial/aphrodisiac
 	list_reagents = list(/datum/reagent/consumable/aphrodisiac = 25)
@@ -267,10 +267,9 @@
 	smells_like = "bitterness"
 	output_reagents = list(/datum/reagent/sleep_potion = 20)
 	required_essences = list(
-		/datum/thaumaturgical_essence/air = 2,
-		/datum/thaumaturgical_essence/void = 2,
-		/datum/thaumaturgical_essence/earth = 2,
-	)
+		/datum/thaumaturgical_essence/void = 4,
+		/datum/thaumaturgical_essence/water = 3,
+		/datum/thaumaturgical_essence/frost = 2,)
 
 /obj/item/reagent_containers/glass/bottle/vial/sleep_potion
 	list_reagents = list(/datum/reagent/sleep_potion = 25)
@@ -409,10 +408,9 @@
     smells_like = "bitterness"
     output_reagents = list(/datum/reagent/destroy_clothes = 10)
     required_essences = list(
-        /datum/thaumaturgical_essence/chaos = 3,
-        /datum/thaumaturgical_essence/magic = 3,
-        /datum/thaumaturgical_essence/fire = 3,
-    )
+    	/datum/thaumaturgical_essence/fire = 6,
+		/datum/thaumaturgical_essence/chaos = 4,
+		/datum/thaumaturgical_essence/crystal = 2,)
 
 //Paralyze Potion
 /datum/reagent/paralyze_potion
@@ -464,7 +462,6 @@
     smells_like = "metallic"
     output_reagents = list(/datum/reagent/paralyze_potion = 10)
     required_essences = list(
-        /datum/thaumaturgical_essence/frost = 3,
-        /datum/thaumaturgical_essence/energia = 3,
-        /datum/thaumaturgical_essence/void = 3,
-    )
+    	/datum/thaumaturgical_essence/order = 4,
+		/datum/thaumaturgical_essence/frost = 3,
+		/datum/thaumaturgical_essence/void = 2,)
