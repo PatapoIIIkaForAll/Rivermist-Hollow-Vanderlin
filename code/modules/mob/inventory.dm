@@ -409,12 +409,15 @@
 		obscured |= ITEM_SLOT_GLOVES
 	if(hidden_slots & HIDEJUMPSUIT)
 		obscured |= ITEM_SLOT_PANTS
+		obscured |= ITEM_SLOT_SOCKS
 	if(hidden_slots & HIDESHOES)
 		obscured |= ITEM_SLOT_SHOES
 	if(hidden_slots & HIDEBELT)
 		obscured |= ITEM_SLOT_BELT_R
 		obscured |= ITEM_SLOT_BELT_L
 		obscured |= ITEM_SLOT_BELT
+	if(hidden_slots & HIDEUNDIESBOT)
+		obscured |= ITEM_SLOT_UNDERWEAR
 
 	return obscured
 

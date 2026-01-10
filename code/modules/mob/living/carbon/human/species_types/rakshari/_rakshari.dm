@@ -96,8 +96,6 @@
 		/datum/customizer/bodypart_feature/hair/facial/humanoid,
 		/datum/customizer/bodypart_feature/accessory/rakshari,
 		/datum/customizer/bodypart_feature/face_detail,
-		/datum/customizer/bodypart_feature/underwear,
-		/datum/customizer/bodypart_feature/legwear,
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/tail/rakshari,
 		/datum/customizer/organ/genitals/penis/anthro,

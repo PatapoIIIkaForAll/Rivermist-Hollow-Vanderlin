@@ -295,15 +295,9 @@
         return
 
     if(C.underwear)
-        var/obj/item/undies/U = C.underwear
-        if(U.undies_feature)
-            var/obj/item/bodypart/chest = C.get_bodypart(BODY_ZONE_CHEST)
-            if(chest)
-                chest.remove_bodypart_feature(U.undies_feature)
+        var/obj/item/clothing/undies/U = C.underwear
         C.dropItemToGround(U)
         qdel(U)
-        C.underwear = null
-        C.regenerate_icons()
         C.visible_message(
             span_danger("[C]'s underwear dissolves away!"),
             span_danger("Your underwear suddenly dissolves!")
@@ -351,15 +345,9 @@
                 qdel(C)
 
     if(H.underwear)
-        var/obj/item/undies/U = H.underwear
-        if(U.undies_feature)
-            var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
-            if(chest)
-                chest.remove_bodypart_feature(U.undies_feature)
+        var/obj/item/clothing/undies/U = H.underwear
         H.dropItemToGround(U)
         qdel(U)
-        H.underwear = null
-        H.regenerate_icons()
         H.visible_message(
             span_danger("[H]'s underwear dissolves away!"),
             span_danger("Your underwear suddenly dissolves!")
@@ -376,7 +364,6 @@
         return
 
     var/obj/item/clothing/C = O
-    var/obj/item/undies/U = O
     var/armor_class = 0
     if(istype(C, /obj/item/clothing) && C.armor_class)
         armor_class = C.armor_class
@@ -390,7 +377,6 @@
         else
             C.visible_message(span_danger("[C.name] sizzles and dissolves!"))
             qdel(C)
-    qdel(U)
     playsound(src, 'modular_rmh/sound/effects/dissolve.ogg', 100)
 
 /obj/item/reagent_containers/glass/bottle/vial/destroy_clothes

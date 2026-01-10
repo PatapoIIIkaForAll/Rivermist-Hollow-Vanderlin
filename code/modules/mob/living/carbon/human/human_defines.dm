@@ -145,6 +145,8 @@
 	/// Assoc list of culinary preferences of the mob
 	var/list/culinary_preferences = list()
 
+	var/list/smallclothes_preferences = list()
+
 	/// List of curses on this mob
 	var/list/curses = list()
 

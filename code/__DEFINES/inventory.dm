@@ -35,10 +35,12 @@
 #define ITEM_SLOT_LEGCUFFED 	(1<<17)
 #define ITEM_SLOT_BELT_L		(1<<18)
 #define ITEM_SLOT_BELT_R		(1<<19)
+#define ITEM_SLOT_UNDERWEAR		(1<<20)
+#define ITEM_SLOT_SOCKS			(1<<21)
 /// Inside of a character's backpack
-#define ITEM_SLOT_BACKPACK 		(1<<20)
+#define ITEM_SLOT_BACKPACK 		(1<<22)
 
-#define SLOTS_AMT			21 // Keep this up to date!
+#define SLOTS_AMT			23 // Keep this up to date!
 
 #define ITEM_SLOT_BACK			(ITEM_SLOT_BACK_L | ITEM_SLOT_BACK_R)
 #define ITEM_SLOT_HIP			(ITEM_SLOT_BELT_L | ITEM_SLOT_BELT_R)

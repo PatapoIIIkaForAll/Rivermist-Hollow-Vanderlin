@@ -297,6 +297,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		reset_culinary_preferences()
 
+/datum/preferences/proc/_load_smallclothes_preferences(S)
+	var/list/loaded_smallclothes_preferences
+	S["smallclothes_preferences"] >> loaded_smallclothes_preferences
+	if(loaded_smallclothes_preferences)
+		smallclothes_preferences = loaded_smallclothes_preferences
+		validate_smallclothes_preferences()
+	else
+		reset_smallclothes_preferences()
+
 /datum/preferences/proc/_load_appearence(S)
 	S["real_name"] >> real_name
 	S["gender"] >> gender
@@ -354,6 +363,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Character
 	_load_appearence(S)
+
+	_load_smallclothes_preferences(S)
 
 	var/patron_typepath
 	S["selected_patron"] >> patron_typepath
@@ -492,6 +503,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["loadout2"]		, loadout2)
 	WRITE_FILE(S["loadout3"]		, loadout3)
 	WRITE_FILE(S["culinary_preferences"], culinary_preferences)
+	WRITE_FILE(S["smallclothes_preferences"], smallclothes_preferences)
 	WRITE_FILE(S["family"]			, 	family)
 	WRITE_FILE(S["gender_choice"]			, 	gender_choice)
 	WRITE_FILE(S["setspouse"]			, 	setspouse)

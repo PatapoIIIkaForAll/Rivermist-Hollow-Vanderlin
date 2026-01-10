@@ -245,6 +245,8 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 	var/tmp/current_slot = 1
 	/// List storing ERP preference values
 	var/list/erp_preferences
+	/// List storing undie preference values
+	var/list/smallclothes_preferences = list()
 	/// Assoc list of culinary preferences, where the key is the type of the culinary preference, and value is food/drink typepath
 	var/list/culinary_preferences = list()
 	///this is our chat scale
@@ -466,6 +468,7 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 	dat += "<br><b>Accent:</b> <a href='?_src_=prefs;preference=selected_accent;task=input'>[selected_accent]</a>"
 	dat += "<br><b>Features:</b> <a href='?_src_=prefs;preference=customizers;task=menu'>Change</a>"
 	dat += "<br><b>Markings:</b> <a href='?_src_=prefs;preference=markings;task=menu'>Change</a>"
+	dat += "<br><b>Smallclothes:</b> <a href='?_src_=prefs;preference=underwear;task=menu'>Change</a>"
 	dat += "<br><b>ERP:</b> <a href='?_src_=prefs;preference=erp;task=menu'>Change</a>"
 	if(length(pref_species.descriptor_choices))
 		dat += "<br><b>Descriptors:</b> <a href='?_src_=prefs;preference=descriptors;task=menu'>Change</a>"
@@ -1099,6 +1102,9 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 	else if(href_list["preference"] == "markings")
 		ShowMarkings(user)
 		return
+	else if(href_list["preference"] == "underwear")
+		show_smallclothes_ui(user)
+		return
 	else if(href_list["preference"] == "descriptors")
 		show_descriptors_ui(user)
 		return
@@ -1241,6 +1247,10 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 			handle_body_markings_topic(user, href_list)
 			ShowChoices(user)
 			ShowMarkings(user)
+			return
+		if("change_smallclothes_preferences")
+			handle_undies_topic(user, href_list)
+			show_smallclothes_ui(user)
 			return
 		if("change_descriptor")
 			handle_descriptors_topic(user, href_list)
@@ -2102,6 +2112,9 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 
 	if(culinary_preferences)
 		apply_culinary_preferences(character)
+
+	if(smallclothes_preferences)
+		apply_smallclothes_preferences(character)
 
 	if(parent)
 		var/datum/role_bans/bans = get_role_bans_for_ckey(parent.ckey)

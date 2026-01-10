@@ -79,3 +79,9 @@
 
 /mob/proc/update_inv_mouth()
 	return
+
+/mob/proc/update_inv_undies()
+	return
+
+/mob/proc/update_inv_socks()
+	return

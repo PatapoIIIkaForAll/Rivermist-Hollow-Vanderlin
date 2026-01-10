@@ -161,6 +161,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	var/can_parry = FALSE
 	var/associated_skill
 
+	var/boob_sized = FALSE
 	var/list/possible_item_intents = list(/datum/intent/use)
 
 	// Used to center screen_loc when in hand
@@ -1089,6 +1090,10 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 		owner.update_inv_pants()
 	if(flags & ITEM_SLOT_CLOAK)
 		owner.update_inv_cloak()
+	if(flags & ITEM_SLOT_UNDERWEAR)
+		owner.update_inv_undies()
+	if(flags & ITEM_SLOT_SOCKS)
+		owner.update_inv_socks()
 	if(H)
 		if(flags & ITEM_SLOT_HEAD && H.head == src)
 			owner.update_inv_head()

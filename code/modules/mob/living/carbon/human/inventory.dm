@@ -42,6 +42,10 @@
 			return wear_armor
 		if(ITEM_SLOT_PANTS)
 			return wear_pants
+		if(ITEM_SLOT_UNDERWEAR)
+			return underwear
+		if(ITEM_SLOT_SOCKS)
+			return legwear_socks
 	return null
 
 /mob/living/carbon/human/get_slot_by_item(obj/item/looking_for)
@@ -257,6 +261,16 @@
 			if(backl && not_handled)
 				if(SEND_SIGNAL(backl, COMSIG_TRY_STORAGE_CAN_INSERT, equipping, src, TRUE))
 					not_handled = FALSE
+		if(ITEM_SLOT_UNDERWEAR)
+			if(underwear)
+				return
+			underwear = equipping
+			update_inv_undies()
+		if(ITEM_SLOT_SOCKS)
+			if(legwear_socks)
+				return
+			legwear_socks = equipping
+			update_inv_socks()
 		else
 			not_handled = TRUE
 
@@ -348,6 +362,14 @@
 		mouth = null
 		if(!QDELETED(src))
 			update_inv_mouth()
+	else if(I == underwear)
+		underwear = null
+		if(!QDELETED(src))
+			update_inv_undies()
+	else if(I == legwear_socks)
+		legwear_socks = null
+		if(!QDELETED(src))
+			update_inv_socks()
 	check_armor_class()
 	update_reflection()
 

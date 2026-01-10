@@ -1,8 +1,10 @@
-/obj/item/undies
+/obj/item/clothing/undies
 	name = "briefs"
 	desc = "An absolute necessity."
 	icon = 'modular_rmh/icons/obj/misc.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/mob/sprite_accessory/underwear.dmi'
 	icon_state = "briefs"
+	item_state = "briefs"
 	w_class = WEIGHT_CLASS_TINY
 	resistance_flags = FLAMMABLE
 	obj_flags = CAN_BE_HIT
@@ -11,108 +13,110 @@
 	max_integrity = 200
 	integrity_failure = 0.1
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
-	var/gendered
-	var/race
-	var/datum/bodypart_feature/underwear/undies_feature
+	var/gendered = TRUE
 	var/covers_breasts = FALSE
+	boob_sized = FALSE
 	sewrepair = TRUE
+	salvage_result = /obj/item/natural/cloth
 	grid_height = 32
 	grid_width = 32
-	var/sprite_acc = /datum/sprite_accessory/underwear/briefs
-	slot_flags = ITEM_SLOT_MOUTH
+	slot_flags = ITEM_SLOT_MOUTH | ITEM_SLOT_UNDERWEAR
 	muteinmouth = TRUE
 
-/obj/item/undies/attack(mob/M, mob/user, def_zone)
+/obj/item/clothing/undies/attack(mob/M, mob/user, def_zone)
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		if(!H.underwear)
 			if(!get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
 				return
-			if(!undies_feature)
-				var/datum/bodypart_feature/underwear/undies_new = new /datum/bodypart_feature/underwear()
-				undies_new.set_accessory_type(sprite_acc, color, H)
-				undies_feature = undies_new
 			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
 			if(do_after(user, 50, target = H))
-				var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
-				chest.add_bodypart_feature(undies_feature)
-				user.dropItemToGround(src)
-				forceMove(H)
-				H.underwear = src
-				undies_feature.accessory_colors = color
-				H.regenerate_icons()
+				H.equip_to_slot_if_possible(src, ITEM_SLOT_UNDERWEAR, disable_warning = TRUE)
 
-/obj/item/undies/Destroy()
-	undies_feature = null
-	return ..()
+/obj/item/clothing/undies/equipped(mob/living/carbon/user, slot)
+	. = ..()
+	if(user.mouth == src)
+		slot_flags = ITEM_SLOT_MOUTH
+		user.update_body()
+		user.update_body_parts()
 
-/obj/item/undies/bikini
+/obj/item/clothing/undies/dropped(mob/user)
+	. = ..()
+	slot_flags = ITEM_SLOT_MOUTH | ITEM_SLOT_UNDERWEAR
+
+/obj/item/clothing/undies/bikini
 	name = "bikini"
 	icon_state = "bikini"
+	item_state = "bikini"
 	covers_breasts = TRUE
-	sprite_acc = /datum/sprite_accessory/underwear/bikini
+	gendered = TRUE
+	boob_sized = TRUE
 
-/obj/item/undies/panties
+/obj/item/clothing/undies/panties
 	name = "panties"
 	icon_state = "panties"
-	sprite_acc = /datum/sprite_accessory/underwear/panties
+	item_state = "panties"
+	gendered = FALSE
 
-/obj/item/undies/leotard
+/obj/item/clothing/undies/leotard
 	name = "leotard"
 	icon_state = "leotard"
+	item_state = "leotard"
 	covers_breasts = TRUE
-	sprite_acc = /datum/sprite_accessory/underwear/leotard
+	gendered = TRUE
+	boob_sized = TRUE
 
-/obj/item/undies/athletic_leotard
+/obj/item/clothing/undies/athletic_leotard
 	name = "athletic leotard"
 	icon_state = "athletic_leotard"
+	item_state = "athletic_leotard"
 	covers_breasts = TRUE
-	sprite_acc = /datum/sprite_accessory/underwear/athletic_leotard
+	gendered = TRUE
 
-/obj/item/undies/braies
+/obj/item/clothing/undies/braies
 	name = "braies"
 	desc = "A pair of linen underpants; Psydonia's most common."
 	icon_state = "braies"
-	sprite_acc = /datum/sprite_accessory/underwear/braies
+	item_state = "braies"
 
 // Craft
-/*
+
 /datum/repeatable_crafting_recipe/sewing/undies
-	name = "briefs (1 fibers, 1 cloth)"
-	result = list(/obj/item/undies)
-	reqs = list(/obj/item/natural/cloth = 1,
+	name = "briefs"
+	output = /obj/item/clothing/undies
+	requirements = list(/obj/item/natural/cloth = 1,
 				/obj/item/natural/fibers = 1)
 	craftdiff = 2
 
 /datum/repeatable_crafting_recipe/sewing/bikini
-	name = "bikini (1 fibers, 2 cloth)"
-	result = list(/obj/item/undies/bikini)
-	reqs = list(/obj/item/natural/cloth = 2,
+	name = "bikini"
+	output = /obj/item/clothing/undies/bikini
+	requirements = list(/obj/item/natural/cloth = 2,
 				/obj/item/natural/fibers = 1)
 	craftdiff = 2
 
 /datum/repeatable_crafting_recipe/sewing/panties
-	name = "panties (1 cloth)"
-	result = list(/obj/item/undies/panties)
-	reqs = list(/obj/item/natural/cloth = 1)
+	name = "panties"
+	output = /obj/item/clothing/undies/panties
+	requirements = list(/obj/item/natural/cloth = 1)
 	craftdiff = 2
 
 /datum/repeatable_crafting_recipe/sewing/leotard
-	name = "leotard (1 fibers, 1 silk)"
-	result = list(/obj/item/undies/leotard)
-	reqs = list(/obj/item/natural/silk = 1,
+	name = "leotard"
+	output = /obj/item/clothing/undies/leotard
+	requirements = list(/obj/item/natural/silk = 1,
 				/obj/item/natural/fibers = 1)
-	craftdiff = 3
+	craftdiff = 2
 
 /datum/repeatable_crafting_recipe/sewing/athletic_leotard
-	name = "athletic leotard (1 fibers, 1 silk)"
-	result = list(/obj/item/undies/athletic_leotard)
-	reqs = list(/obj/item/natural/silk = 1,
+	name = "athletic leotard"
+	output = /obj/item/clothing/undies/athletic_leotard
+	requirements = list(/obj/item/natural/silk = 1,
 				/obj/item/natural/fibers = 1)
-	craftdiff = 3
+	craftdiff = 2
 
 /datum/repeatable_crafting_recipe/sewing/braies
-	name = "braies (1 cloth)"
-	result = list(/obj/item/undies/braies)
-	reqs = list(/obj/item/natural/cloth = 1)
-	craftdiff = 2*/
+	name = "braies"
+	output = /obj/item/clothing/undies/braies
+	requirements = list(/obj/item/natural/cloth = 1)
+	craftdiff = 2

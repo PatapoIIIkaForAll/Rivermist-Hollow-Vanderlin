@@ -283,6 +283,10 @@ GLOBAL_PROTECT(no_child_icons)
 	if(slot_flags & ITEM_SLOT_ARMOR)
 		update_inv_armor()
 	//RMH add
+	if(slot_flags & ITEM_SLOT_UNDERWEAR)
+		update_inv_undies()
+	if(slot_flags & ITEM_SLOT_SOCKS)
+		update_inv_socks()
 	update_reflection()
 
 //For legacy support.
@@ -306,6 +310,8 @@ GLOBAL_PROTECT(no_child_icons)
 		update_inv_pants()
 		update_inv_shirt()
 		update_inv_mouth()
+		update_inv_undies()
+		update_inv_socks()
 		update_transform()
 		//damage overlays
 		update_damage_overlays()
@@ -326,6 +332,8 @@ GLOBAL_PROTECT(no_child_icons)
 	update_inv_pants()
 	update_inv_shirt()
 	update_inv_mouth()
+	update_inv_undies()
+	update_inv_socks()
 
 /* --------------------------------------- */
 //vvvvvv UPDATE_INV PROCS vvvvvv
@@ -1220,6 +1228,79 @@ GLOBAL_PROTECT(no_child_icons)
 
 	apply_overlay(MOUTH_LAYER)
 
+
+/mob/living/carbon/human/update_inv_undies() //on case by case basis for now
+	remove_overlay(UNDERWEAR_LAYER)
+
+	if(underwear)
+		var/b_size = 0
+		var/datum/species/species = dna?.species
+		var/use_female_sprites = FALSE
+		if(species?.sexes)
+			if(gender == FEMALE && !species.swap_female_clothes || gender == MALE && species.swap_male_clothes)
+				use_female_sprites = FEMALE_SPRITES
+		var/list/offsets
+		if(use_female_sprites)
+			offsets = (age == AGE_CHILD) ? species.offset_features_child : species.offset_features_f
+		else
+			offsets = (age == AGE_CHILD) ? species.offset_features_child : species.offset_features_m
+
+		var/racecustom
+		if(species?.custom_clothes)
+			if(species.custom_id)
+				racecustom = species.custom_id
+			else
+				racecustom = species.id
+		if(underwear.covers_breasts)
+			var/obj/item/organ/genitals/filling_organ/breasts/boob = getorganslot(ORGAN_SLOT_BREASTS)
+			if(boob)
+				b_size = boob.organ_size
+		if(!underwear.gendered)
+			use_female_sprites = FALSE
+		var/mutable_appearance/underwear_overlay = underwear.build_worn_icon(age, UNDERWEAR_LAYER, coom = use_female_sprites, customi = racecustom, breast_size = b_size)
+
+		if(LAZYACCESS(offsets, OFFSET_UNDIES))
+			underwear_overlay.pixel_x += offsets[OFFSET_UNDIES][1]
+			underwear_overlay.pixel_y += offsets[OFFSET_UNDIES][2]
+		overlays_standing[UNDERWEAR_LAYER] = underwear_overlay
+
+	update_body_parts(redraw = TRUE)
+	update_body()
+
+	apply_overlay(UNDERWEAR_LAYER)
+
+/mob/living/carbon/human/update_inv_socks() //on case by case basis for now
+	remove_overlay(LEGWEAR_LAYER)
+
+	if(legwear_socks)
+		var/b_size
+		var/datum/species/species = dna?.species
+		var/use_female_sprites = FALSE
+		if(species?.sexes)
+			if(gender == FEMALE && !species.swap_female_clothes || gender == MALE && species.swap_male_clothes)
+				use_female_sprites = FEMALE_SPRITES
+		var/list/offsets
+		if(use_female_sprites)
+			offsets = (age == AGE_CHILD) ? species.offset_features_child : species.offset_features_f
+		else
+			offsets = (age == AGE_CHILD) ? species.offset_features_child : species.offset_features_m
+		var/racecustom
+		if(species?.custom_clothes)
+			if(species.custom_id)
+				racecustom = species.custom_id
+			else
+				racecustom = species.id
+		var/mutable_appearance/legwear_socks_overlay = legwear_socks.build_worn_icon(age, LEGWEAR_LAYER, coom = use_female_sprites, customi = racecustom, breast_size = b_size)
+
+		if(LAZYACCESS(offsets, OFFSET_PANTS))
+			legwear_socks_overlay.pixel_x += offsets[OFFSET_PANTS][1]
+			legwear_socks_overlay.pixel_y += offsets[OFFSET_PANTS][2]
+		overlays_standing[LEGWEAR_LAYER] = legwear_socks_overlay
+
+	update_body_parts(redraw = TRUE)
+	update_body()
+
+	apply_overlay(LEGWEAR_LAYER)
 //endrogue
 
 
@@ -1334,7 +1415,7 @@ generate/load female uniform sprites matching all previously decided variables
 
 
 */
-/obj/item/proc/build_worn_icon(age = AGE_ADULT, default_layer = 0, default_icon_file = null, isinhands = FALSE, femaleuniform = NO_FEMALE_UNIFORM, override_state = null, coom = FALSE, customi = null, sleeveindex)
+/obj/item/proc/build_worn_icon(age = AGE_ADULT, default_layer = 0, default_icon_file = null, isinhands = FALSE, femaleuniform = NO_FEMALE_UNIFORM, override_state = null, coom = FALSE, customi = null, sleeveindex, breast_size = 0)
 	var/t_state
 	var/sleevejazz = sleevetype
 	if(age == AGE_CHILD)
@@ -1349,6 +1430,8 @@ generate/load female uniform sprites matching all previously decided variables
 			sleevejazz += "_f"
 	else
 		t_state = icon_state
+	if(breast_size && boob_sized)
+		t_state += "_B[breast_size]"
 	if(customi)
 		t_state += "_[customi]"
 		if(sleevejazz)
