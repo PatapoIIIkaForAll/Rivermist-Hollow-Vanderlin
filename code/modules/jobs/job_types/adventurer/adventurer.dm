@@ -22,8 +22,8 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	outfit_female = null
 	job_reopens_slots_on_death = TRUE
 	same_job_respawn_delay = 15 MINUTES
-	advclass_cat_rolls = list(CTAG_ADVENTURER = 15)
-	is_foreigner = TRUE
+	advclass_cat_rolls = list(CTAG_ADVENTURER = 50)
+	is_foreigner = FALSE
 	can_have_apprentices = FALSE
 	scales = TRUE
 
