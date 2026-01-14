@@ -331,7 +331,7 @@
 	desc = "<span class='red'>I slept on the floor. It was uncomfortable.</span>"
 
 /datum/stress_event/sleepfloornoble
-	timer = 3 MINUTES
+	timer = 1 MINUTES
 	stress_change = 4
 	desc = "<span class='red'>I slept on the floor! What am I, an animal?!</span>"
 
@@ -404,17 +404,17 @@
 /datum/stress_event/noble_impoverished_food
 	stress_change = 3
 	desc = span_boldred("This is disgusting. How can anyone eat this?")
-	timer = 10 MINUTES
+	timer = 1 MINUTES
 
 /datum/stress_event/noble_desperate
 	stress_change = 6
 	desc = span_boldred("What level of desperation have I fallen to?")
-	timer = 60 MINUTES
+	timer = 5 MINUTES
 
 /datum/stress_event/noble_bland_food
 	stress_change = 2
 	desc = span_red("This fare is really beneath me. I deserve better than this...")
-	timer = 5 MINUTES
+	timer = 2 MINUTES
 
 /datum/stress_event/tortured/on_apply(mob/living/user)
 	. = ..()
@@ -424,32 +424,32 @@
 /datum/stress_event/noble_bad_manners
 	stress_change = 1
 	desc = span_red("I should've used a spoon...")
-	timer = 5 MINUTES
+	timer = 1 MINUTES
 
 /datum/stress_event/noble_ate_without_table
 	stress_change = 1
 	desc = span_red("Eating such a meal without a table? Churlish.")
-	timer = 5 MINUTES
+	timer = 2 MINUTES
 
 /datum/stress_event/noble_ate_without_plate
 	stress_change = 1
 	desc = span_red("To eat without a plate... how utterly uncivilized.")
-	timer = 5 MINUTES
+	timer = 2 MINUTES
 
 /datum/stress_event/noble_ate_with_just_a_fork
 	stress_change = 1
 	desc = span_red("Eating off a bare fork, this is hardly proper dining.")
-	timer = 5 MINUTES
+	timer = 2 MINUTES
 
 /datum/stress_event/noble_tarnished_cloth
 	stress_change = 1
 	desc = span_red("This is beneath me... a noble should dry their cloth in a proper place.")
-	timer = 5 MINUTES
+	timer = 2 MINUTES
 
 /datum/stress_event/noble_polishing_shoe
 	stress_change = 3
 	desc = span_red("This menial chore insults my station, i should not need to polish a pair of shoes.")
-	timer = 5 MINUTES
+	timer = 3 MINUTES
 
 /datum/stress_event/destroyed_past //gaffer destroying their trophies
 	stress_change = 4
