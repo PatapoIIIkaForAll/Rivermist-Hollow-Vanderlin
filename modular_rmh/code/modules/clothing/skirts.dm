@@ -2,24 +2,24 @@
 
 /obj/item/clothing/pants/trou/leather/skirt
 	name = "leather skirt"
-	icon = 'modular_whisper/icons/clothing/armor/pants.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/pants.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/pants.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/pants.dmi'
 	desc = "Short skirt made of fine leather."
 	icon_state = "leatherskirt"
 	genital_access = TRUE
 
 /obj/item/clothing/pants/trou/leather/advanced/skirt
 	name = "hardened leather skirt"
-	icon = 'modular_whisper/icons/clothing/armor/pants.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/pants.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/pants.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/pants.dmi'
 	icon_state = "hlskirt"
 	item_state = "hlskirt"
 	genital_access = TRUE
 
 /obj/item/clothing/pants/chainlegs/iron/studdedskirt
 	name = "studded leather skirt"
-	icon = 'modular_whisper/icons/armor/pants.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/armor/onmob/pants.dmi'
+	icon = 'modular_rmh/icons/armor/pants.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/armor/onmob/pants.dmi'
 	armor = ARMOR_LEATHER_GOOD
 	desc = "Short studded skirt made of fine leather and iron."
 	icon_state = "studdedskirt"
@@ -27,8 +27,8 @@
 
 /obj/item/clothing/pants/chainlegs/iron/skirt
 	name = "iron chain skirt"
-	icon = 'modular_whisper/icons/clothing/armor/pants.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/pants.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/pants.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/pants.dmi'
 	icon_state = "chain_skirt"
 	item_state = "chain_skirt"
 	color = "#9EA48E"
@@ -36,16 +36,16 @@
 
 /obj/item/clothing/pants/chainlegs/skirt
 	name = "chain skirt"
-	icon = 'modular_whisper/icons/clothing/armor/pants.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/pants.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/pants.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/pants.dmi'
 	icon_state = "chain_skirt"
 	item_state = "chain_skirt"
 	genital_access = TRUE
 
 /obj/item/clothing/pants/platelegs/skirt
 	name = "plated skirt"
-	icon = 'modular_whisper/icons/clothing/armor/pants.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/pants.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/pants.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/pants.dmi'
 	icon_state = "plate_skirt"
 	item_state = "plate_skirt"
 	genital_access = TRUE

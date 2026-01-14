@@ -3,9 +3,9 @@
 /obj/item/clothing/armor/leather/bikini
 	name = "leather bikini"
 	desc = "Flexible cowhide armor. Lightweight, better than nothing. Now in tasteful bikini shape."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "leatherkini"
 	item_state = "leatherkini"
 	allowed_sex = list(FEMALE)
@@ -22,9 +22,9 @@
 /obj/item/clothing/armor/leather/studded/bikini
 	name = "studded leather bikini"
 	desc = "Studded leather is the most durable of all hides and leathers and about as light. This one is in bikini form."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "studleatherkini"
 	item_state = "studleatherkini"
 	allowed_sex = list(FEMALE)
@@ -41,9 +41,9 @@
 /obj/item/clothing/armor/leather/hide/bikini
 	name = "hide bikini"
 	desc = "A light armor of wildbeast hide. Far more durable than leather. This will not keep a person warm though..."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "hidearmorkini"
 	item_state = "hidearmorkini"
 	allowed_sex = list(FEMALE)
@@ -60,9 +60,9 @@
 /obj/item/clothing/armor/leather/advanced/bikini
 	name = "hardened leather bikini"
 	desc = "Sturdy, durable, flexible. Will keep you alive in style, and now even less than before!"
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "advkini"
 	item_state = "advkini"
 	allowed_sex = list(FEMALE)
@@ -80,9 +80,9 @@
 /obj/item/clothing/armor/leather/masterwork/bikini
 	name = "masterworkw leather bikini"
 	desc = "This bikini is a craftsmanship marvel. Made with the finest leather. Strong, nimble, reliable."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "mastkini"
 	item_state = "mastkini"
 	allowed_sex = list(FEMALE)
@@ -99,9 +99,9 @@
 /obj/item/clothing/armor/plate/bikini
 	name = "half-plate bikini"
 	desc = "Half plate in bikini form, still just as protective somehow."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "halfplatekini"
 	item_state = "halfplatekini"
 	allowed_sex = list(FEMALE)
@@ -118,9 +118,9 @@
 /obj/item/clothing/armor/plate/iron/bikini
 	name = "iron half-plate bikini"
 	desc = "Half plate in bikini form, still just as protective somehow."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "halfplatekini"
 	item_state = "halfplatekini"
 	color = "#9EA48E"
@@ -139,9 +139,9 @@
 /obj/item/clothing/armor/plate/full/bikini
 	name = "fullplate bikini"
 	desc = "Full plate in bikini form, full package and full exposure."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "platekini"
 	allowed_sex = list(FEMALE)
 	flags_inv = HIDECROTCH|HIDEBOOB
@@ -157,9 +157,9 @@
 /obj/item/clothing/armor/chainmail/hauberk/bikini
 	name = "hauberk bikini"
 	desc = "Try not to get your nipples caught between the chains, and other bits. Now with near full coverage."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "hauberkkini"
 	item_state = "hauberkkini"
 	allowed_sex = list(FEMALE)
@@ -176,9 +176,9 @@
 /obj/item/clothing/armor/chainmail/bikini
 	name = "haubergon bikini"
 	desc = "Try not to get your nipples caught between the chains, and other bits."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "chainkini"
 	item_state = "chainkini"
 	allowed_sex = list(FEMALE)
@@ -195,9 +195,9 @@
 /obj/item/clothing/armor/chainmail/iron/bikini
 	name = "maille bikini"
 	desc = "Try not to get your nipples caught between the chains, and other bits."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "chainkini"
 	item_state = "chainkini"
 	color = "#9EA48E"
@@ -216,9 +216,9 @@
 /obj/item/clothing/armor/medium/scale/bikini
 	name = "scalemail bikini"
 	desc = "Overlapping steel plates over the tiddies and groin, almost makes the wearer look like she has silvery fish scales.."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "scalekini"
 	item_state = "scalekini"
 	allowed_sex = list(FEMALE)
@@ -235,9 +235,9 @@
 /obj/item/clothing/armor/brigandine/bikini
 	name = "brigandine bikini"
 	desc = "A coat with plates in bikini shape, concealed inside an exterior fabric. Protects the user from melee impacts and also ranged attacks to an extent."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "halfplatekini"
 	item_state = "halfplatekini"
 	allowed_sex = list(FEMALE)
@@ -254,9 +254,9 @@
 /obj/item/clothing/armor/gambeson/bikini
 	name = "gambeson bikini"
 	desc = "Thick quilted cloth in layers, good on its own or worn below metal as padding. This one is in bikini shape."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "gambesonkini"
 	item_state = "gambesonkini"
 	allowed_sex = list(FEMALE)
@@ -265,9 +265,9 @@
 /obj/item/clothing/armor/gambeson/bikini/bra
 	name = "gambeson top"
 	desc = "Thick quilted cloth in layers, good on its own or worn below metal as padding. Atleast for half of your body, if magic didn't exist."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "gambesonbra"
 	item_state = "gambesonbra"
 	allowed_sex = list(FEMALE)
@@ -276,9 +276,9 @@
 /obj/item/clothing/armor/gambeson/light/bikini
 	name = "light gambeson bikini"
 	desc = "Thin and the maker skimped on the padding, typically worn by the peasantry to give some protection against cold for... some of the body."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "gambesonlkini"
 	item_state = "gambesonlkini"
 	allowed_sex = list(FEMALE)
@@ -295,9 +295,9 @@
 /obj/item/clothing/armor/gambeson/heavy/bikini
 	name = "padded gambeson bikini"
 	desc = "Thick, padded, this will help a little even against arrows. A wise woman carried steel as well, but it will do in a pinch."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "gambesonpkini"
 	item_state = "gambesonpkini"
 	allowed_sex = list(FEMALE)
@@ -306,9 +306,9 @@
 /obj/item/clothing/armor/gambeson/heavy/bikini/bra
 	name = "padded gambeson top"
 	desc = "Thick, padded, this will help a little even against arrows. A wise bottomless woman carried steel as well, but it will do in a pinch."
-	icon = 'modular_whisper/icons/clothing/armor/armor.dmi'
-	mob_overlay_icon = 'modular_whisper/icons/clothing/armor/onmob/armor.dmi'
-	sleeved = 'modular_whisper/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "gambesonpbra"
 	item_state = "gambesonpbra"
 	allowed_sex = list(FEMALE)
