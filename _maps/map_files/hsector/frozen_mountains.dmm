@@ -515,6 +515,10 @@
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/cave/rmh_dwarf_keep/smelters)
+"ck" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/cobblerock,
+/area/under/cavewet)
 "cl" = (
 /obj/structure/fake_machine/scomm,
 /turf/open/floor/ruinedwood/herringbone,
@@ -1194,6 +1198,10 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/indoors/town/manor)
+"fj" = (
+/obj/structure/flora/hotspring_rocks/small,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "fk" = (
 /obj/structure/bars,
 /turf/open/floor/cobble,
@@ -1390,9 +1398,19 @@
 	},
 /turf/open/floor/carpet/lord/left,
 /area/indoors/town/manor)
+"fZ" = (
+/mob/living/carbon/human/species/rousman/ambush,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "ga" = (
 /turf/open/floor/herringbone,
 /area/outdoors/exposed/rmh/manorgarri)
+"gb" = (
+/mob/living/simple_animal/hostile/retaliate/troll/rous{
+	faction = list("Hostile")
+	},
+/turf/open/floor/cobblerock,
+/area/under/cavewet)
 "gc" = (
 /obj/machinery/light/fueled/firebowl,
 /turf/closed/wall/mineral/decostone/cand,
@@ -1423,6 +1441,10 @@
 	},
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/grand)
+"gk" = (
+/mob/living/carbon/human/species/rousman/ambush,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "gl" = (
 /obj/structure/stairs/stone{
 	dir = 8
@@ -1961,6 +1983,10 @@
 "iy" = (
 /turf/open/floor/hay,
 /area/indoors/town/manor)
+"iz" = (
+/obj/structure/flora/rock/pile,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "iA" = (
 /obj/machinery/light/fueled/wallfire/candle/l,
 /turf/open/floor/herringbone,
@@ -2216,6 +2242,10 @@
 	},
 /turf/open/floor/grass/cold,
 /area/outdoors/mountains/rmh_mountains/frozen/lowlands)
+"jw" = (
+/obj/item/natural/rock,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "jx" = (
 /obj/structure/bars/pipe{
 	dir = 1;
@@ -2403,6 +2433,10 @@
 /mob/living/simple_animal/hostile/retaliate/minotaur,
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
+"ki" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "kj" = (
 /turf/open/floor/metal,
 /area/indoors/town/manor)
@@ -3300,6 +3334,10 @@
 	dir = 1
 	},
 /area/indoors/cave/rmh_dwarf_keep/living)
+"ok" = (
+/obj/item/natural/rock,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "ol" = (
 /obj/structure/door/viewport{
 	dir = 2;
@@ -3705,6 +3743,10 @@
 	},
 /turf/open/floor/tile/harem,
 /area/indoors/town/manor)
+"ql" = (
+/obj/effect/decal/cleanable/blood/gibs/core,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "qm" = (
 /obj/structure/bars/pipe{
 	pixel_y = 10;
@@ -4974,6 +5016,10 @@
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/tile/harem,
 /area/indoors/town/manor)
+"vD" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/dirt,
+/area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
 "vE" = (
 /turf/open/floor/snow,
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
@@ -6610,6 +6656,10 @@
 	},
 /turf/open/floor/grass/cold,
 /area/outdoors/mountains/rmh_mountains)
+"CX" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/cobblerock,
+/area/under/cavewet)
 "CZ" = (
 /obj/machinery/light/fueled/hearth{
 	icon_state = "hearth0"
@@ -6721,6 +6771,10 @@
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/hexstone,
 /area/outdoors/exposed/rmh_dwarf_keep)
+"DB" = (
+/obj/item/natural/rock,
+/turf/open/floor/cobblerock,
+/area/under/cavewet)
 "DC" = (
 /obj/structure/flora/tree/pine{
 	icon_state = "pine2-snow"
@@ -6780,6 +6834,9 @@
 "DO" = (
 /turf/open/floor/cobble/snow,
 /area/outdoors/mountains/rmh_mountains)
+"DP" = (
+/turf/open/floor/cobblerock,
+/area/under/cavewet)
 "DQ" = (
 /turf/open/floor/cobblerock,
 /area/under/town/basement/keep)
@@ -6932,7 +6989,7 @@
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
 "Ey" = (
 /obj/structure/door/arcyne/bolt,
-/obj/effect/mapping_helpers/access/keyset/manor/mage,
+/obj/effect/mapping_helpers/access/keyset/town/tower,
 /obj/effect/mapping_helpers/access/locker,
 /turf/open/floor/concrete,
 /area/indoors/town/rmh/magician/pass)
@@ -7497,6 +7554,10 @@
 "Hj" = (
 /turf/open/floor/naturalstone,
 /area/outdoors/exposed/rmh_dwarf_keep)
+"Hk" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "Hl" = (
 /obj/structure/fluff/pillow/black{
 	dir = 1
@@ -8158,6 +8219,10 @@
 /obj/structure/flora/grass/thorn_bush,
 /turf/open/floor/grass/cold,
 /area/outdoors/mountains/rmh_mountains/frozen/lowlands)
+"JR" = (
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "JS" = (
 /obj/effect/decal/cleanable/debris/stone,
 /obj/item/natural/rock,
@@ -8756,6 +8821,10 @@
 "Mq" = (
 /turf/open/floor/grass/cold,
 /area/outdoors/mountains/rmh_mountains/frozen/lowlands)
+"Mr" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/dirt/road,
+/area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
 "Mt" = (
 /obj/structure/rack/shelf/biggest,
 /obj/item/storage/sack{
@@ -9146,6 +9215,26 @@
 	dir = 2
 	},
 /area/indoors/town/manor)
+"NX" = (
+/obj/structure/closet/crate/chest/old_crate,
+/obj/effect/spawner/map_spawner/loot/coin/absurd,
+/obj/effect/spawner/map_spawner/loot/dungeon/materials,
+/obj/effect/spawner/map_spawner/loot/dungeon/materials,
+/obj/effect/spawner/map_spawner/loot/dungeon/materials,
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/obj/effect/spawner/map_spawner/loot/dungeon/armor,
+/obj/effect/spawner/map_spawner/loot/dungeon/armor,
+/obj/effect/spawner/map_spawner/loot/dungeon/armor,
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "NY" = (
 /obj/structure/flora/tree/pine/dead{
 	icon_state = "dead2"
@@ -9730,6 +9819,9 @@
 "QG" = (
 /turf/closed/wall/mineral/decostone/center,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
+"QH" = (
+/turf/open/floor/naturalstone,
+/area/under/cavewet)
 "QI" = (
 /obj/machinery/light/fueled/chand{
 	status = 3;
@@ -9792,6 +9884,10 @@
 "QX" = (
 /turf/open/floor/cobble,
 /area/outdoors/exposed/rmh/manorgarri)
+"QY" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/ruinedwood/spiral,
+/area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
 "Ra" = (
 /turf/open/floor/metal,
 /area/outdoors/exposed/rmh_dwarf_keep)
@@ -10093,10 +10189,18 @@
 	},
 /turf/closed/wall/mineral/stonebrick,
 /area/outdoors/exposed/rmh/manorgarri)
+"Su" = (
+/obj/effect/decal/cleanable/blood/gibs/limb,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "Sw" = (
 /obj/item/natural/wood/plank,
 /turf/open/floor/cobble/snow,
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
+"Sx" = (
+/obj/effect/decal/cleanable/blood/gibs/body,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "Sz" = (
 /obj/structure/bed/wool,
 /obj/item/bedsheet/pelt,
@@ -11388,6 +11492,12 @@
 	},
 /turf/open/floor/metal,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
+"XS" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/dark_ice{
+	base_icon_state = "blackice"
+	},
+/area/under/cavewet)
 "XT" = (
 /turf/open/floor/carpet/lord/left,
 /area/indoors/town/manor)
@@ -11466,6 +11576,10 @@
 /obj/machinery/light/fueled/candle/floorcandle,
 /turf/open/floor/tile/harem2,
 /area/indoors/town/bath)
+"Yi" = (
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "Yj" = (
 /obj/effect/decal/cleanable/debris/wood,
 /turf/open/floor/volcanic,
@@ -11562,6 +11676,10 @@
 "YD" = (
 /turf/closed/wall/mineral/wooddark/horizontal,
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
+"YE" = (
+/obj/effect/decal/cleanable/blood/gibs/up,
+/turf/open/floor/cobblerock/alt,
+/area/under/cavewet)
 "YF" = (
 /obj/structure/healingfountain{
 	pixel_y = 17;
@@ -25174,7 +25292,7 @@ bH
 bH
 bH
 bH
-ef
+QH
 bH
 bH
 bH
@@ -25303,22 +25421,22 @@ bH
 bH
 bH
 bH
+QH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+JR
 ef
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-ef
-ef
-ef
+JR
 ef
 bH
 bH
@@ -25432,8 +25550,8 @@ bH
 bH
 bH
 bH
-ef
-ef
+QH
+QH
 bH
 bH
 bH
@@ -25561,8 +25679,8 @@ bH
 bH
 bH
 bH
-ef
-ef
+QH
+Hk
 bH
 bH
 bH
@@ -25690,22 +25808,22 @@ bH
 bH
 bH
 bH
+QH
+QH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+bH
+QH
+ok
 ef
-ef
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-bH
-ef
-ef
-ef
-ef
+QH
 bH
 bH
 bH
@@ -25819,9 +25937,9 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
+ok
+QH
+QH
 bH
 bH
 bH
@@ -25831,10 +25949,10 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
+fZ
+QH
+QH
+QH
 bH
 bH
 bH
@@ -25948,9 +26066,9 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
+QH
+Hk
+QH
 bH
 bH
 bH
@@ -25959,10 +26077,10 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
+QH
+QH
+QH
+QH
 bH
 bH
 bH
@@ -26078,9 +26196,9 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
+QH
+QH
+QH
 bH
 bH
 bH
@@ -26088,9 +26206,9 @@ bH
 bH
 bH
 ef
-ef
-ef
-ef
+QH
+QH
+Hk
 ef
 bH
 bH
@@ -26207,17 +26325,17 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
+QH
+QH
+QH
+QH
 bH
 bH
 bH
 bH
 bH
 ef
-ef
+YE
 ef
 ef
 bH
@@ -26337,8 +26455,8 @@ bH
 bH
 bH
 bH
-ef
-ef
+ok
+Su
 bH
 bH
 bH
@@ -26346,7 +26464,7 @@ bH
 bH
 ef
 ef
-ef
+jw
 ef
 ef
 bH
@@ -26466,14 +26584,14 @@ bH
 bH
 bH
 bH
-ef
+QH
 ef
 ef
 bH
 bH
 bH
 bH
-ef
+jw
 ef
 ef
 ef
@@ -26727,10 +26845,10 @@ bH
 bH
 bH
 ef
+JR
 ef
 ef
-ef
-ef
+fj
 ef
 ef
 bH
@@ -26857,9 +26975,9 @@ bH
 bH
 bH
 ef
+JR
 ef
-ef
-ef
+Sx
 ef
 bH
 bH
@@ -27128,7 +27246,7 @@ bH
 bH
 ef
 ef
-ef
+JR
 ef
 ef
 bH
@@ -27230,9 +27348,9 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
+NX
+QH
+QH
 bH
 bH
 bH
@@ -27255,10 +27373,10 @@ bH
 bH
 bH
 ef
+QH
 ef
 ef
-ef
-ef
+JR
 ef
 bH
 bH
@@ -27359,10 +27477,10 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
+QH
+Hk
+QH
+QH
 bH
 bH
 bH
@@ -27373,7 +27491,7 @@ bH
 bH
 bH
 ef
-EW
+XS
 Fa
 EW
 ef
@@ -27382,10 +27500,10 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
+fZ
+QH
+QH
+ok
 ef
 ef
 bH
@@ -27488,11 +27606,11 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
-ef
+QH
+QH
+gb
+DP
+DB
 bH
 bH
 bH
@@ -27505,16 +27623,16 @@ ef
 bJ
 bJ
 ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
+fj
+QH
+QH
+QH
+QH
+QH
+QH
+Hk
+QH
+QH
 ef
 bH
 bH
@@ -27618,12 +27736,12 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
-ef
-ef
+DP
+DP
+DP
+DP
+ck
+DP
 bH
 bH
 bH
@@ -27635,14 +27753,14 @@ ef
 ef
 ef
 bH
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
+QH
+QH
+Hk
+QH
+ok
+QH
+QH
+QH
 ef
 bH
 bH
@@ -27749,27 +27867,27 @@ bH
 bH
 bH
 bH
+DP
+CX
+DP
+DP
+QH
+ki
+ki
+ki
 ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
+Yi
+JR
 ef
 bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
-ef
+iz
+QH
+QH
+QH
+QH
 bH
 bH
 bH
@@ -27879,14 +27997,14 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
+DP
+DP
+QH
+QH
+QH
+QH
+ql
+QH
 ef
 ef
 bH
@@ -28009,14 +28127,14 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
-ef
-ef
-ef
-ef
+QH
+QH
+Hk
+QH
+ok
+QH
+QH
+QH
 bH
 bH
 bH
@@ -28139,13 +28257,13 @@ bH
 bH
 bH
 bH
-ef
-ef
-ef
-ef
-ef
-ef
-ef
+QH
+QH
+QH
+QH
+QH
+QH
+QH
 bH
 bH
 bH
@@ -28267,12 +28385,12 @@ bH
 bH
 bH
 bH
+gk
 ef
-ef
-ef
-ef
-ef
-ef
+QH
+Hk
+QH
+QH
 bH
 bH
 bH
@@ -28394,13 +28512,13 @@ bH
 bH
 bH
 bH
+QH
+Hk
 ef
 ef
+jw
 ef
-ef
-ef
-ef
-ef
+QH
 bH
 bH
 bH
@@ -28523,8 +28641,8 @@ bH
 bH
 bH
 bH
-ef
-ef
+QH
+QH
 ef
 ef
 ef
@@ -28653,7 +28771,7 @@ bH
 bH
 bH
 bH
-ef
+QH
 ef
 bH
 bH
@@ -58986,7 +59104,7 @@ wa
 Eu
 vE
 vE
-RP
+QY
 aq
 pQ
 lY
@@ -60005,7 +60123,7 @@ lY
 lY
 lY
 Jc
-Jc
+Mr
 Jc
 Jc
 lY
@@ -61040,7 +61158,7 @@ vE
 vE
 vE
 lY
-lY
+vD
 lY
 RD
 Jc
