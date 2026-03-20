@@ -43,7 +43,7 @@
 /datum/status_effect/buff/drunken_rage
 	id = "drunken_rage"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/drunken_rage
-	effectedstats = list(STATKEY_CON = 2, STATKEY_END = 2, STATKEY_STR = 1)
+	effectedstats = list(STATKEY_CON = 10, STATKEY_END = 10, STATKEY_INT = -10, STATKEY_SPD = 5, STATKEY_STR = -10, STATKEY_PER = 5)
 	duration = -1
 	tick_interval = 2 SECONDS
 	var/last_drink_time
@@ -69,10 +69,13 @@
 	apply_blur_overlay()
 	RegisterSignal(owner, COMSIG_MOB_THROW, PROC_REF(on_mob_throw))
 	RegisterSignal(owner, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_item_attack))
+	RegisterSignal(owner, COMSIG_MOB_KICK, PROC_REF(on_kick))
 	owner.add_filter(DRUNKEN_RAGE_GLOW_FILTER, 2, outline_filter(2, "#c4a020"))
 	owner.visible_message(span_danger("[owner] enters a drunken frenzy!"), span_boldwarning("DRUNKEN RAGE! The alcohol fuels my fury!"))
 	playsound(owner, 'sound/magic/barbroar.ogg', 100, TRUE)
 	owner.add_stress(/datum/stress_event/drunk)
+	// Remove base alcohol debuff
+	owner.remove_status_effect(/datum/status_effect/buff/drunk)
 	return TRUE
 
 /datum/status_effect/buff/drunken_rage/on_remove()
@@ -82,7 +85,7 @@
 		owner.mind.martial_art.smashes_tables = smashes_tables_original
 	remove_blur_overlay()
 	owner.remove_filter(DRUNKEN_RAGE_GLOW_FILTER)
-	UnregisterSignal(owner, list(COMSIG_MOB_THROW, COMSIG_MOB_ITEM_ATTACK))
+	UnregisterSignal(owner, list(COMSIG_MOB_THROW, COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_KICK))
 	clear_highlights()
 	owner.remove_stress(/datum/stress_event/drunk)
 	. = ..()
@@ -105,6 +108,8 @@
 		return
 	if(!sober_warning_given && world.time - last_drink_time >= (DRUNKEN_BRAWLER_SOBER_TIMER - 30 SECONDS))
 		to_chat(owner, span_warning("I feel drowsy... I should drink something soon or I'll pass out!"))
+	// Suppress base alcohol debuff
+	owner.remove_status_effect(/datum/status_effect/buff/drunk)
 	highlight_alcohol()
 
 // ============================================================
@@ -140,12 +145,30 @@
 // COMBAT MECHANICS
 // ============================================================
 
+// Drunken kick - launches the target like a throw
+/datum/status_effect/buff/drunken_rage/proc/on_kick(mob/living/source, mob/living/target, selzone, damage_blocked)
+	SIGNAL_HANDLER
+	if(!isliving(target))
+		return
+	var/kick_range = rand(3, 4)
+	var/throw_dir = get_dir(source, target)
+	var/turf/target_turf = get_ranged_target_turf(target, throw_dir, kick_range)
+	RegisterSignal(target, COMSIG_MOVABLE_IMPACT, PROC_REF(on_thrown_victim_impact))
+	target.throw_at(target_turf, kick_range, 3, source)
+	target.visible_message(span_danger("[source] sends [target] flying with a mighty drunken kick!"), span_danger("[source] kicks me so hard I go flying!"))
+	playsound(target, 'sound/combat/hits/kick/kick.ogg', 100, TRUE)
+
+// Enhanced throwing - intercept when brawler throws someone
 /datum/status_effect/buff/drunken_rage/proc/on_mob_throw(mob/living/source, atom/target)
 	SIGNAL_HANDLER
 	if(!isliving(source.pulling))
 		return
 	var/mob/living/thrown_mob = source.pulling
+	var/throw_range = rand(3, 4)
+	var/throw_dir = get_dir(source, thrown_mob)
+	var/turf/target_turf = get_ranged_target_turf(thrown_mob, throw_dir, throw_range)
 	RegisterSignal(thrown_mob, COMSIG_MOVABLE_IMPACT, PROC_REF(on_thrown_victim_impact))
+	thrown_mob.throw_at(target_turf, throw_range, 3, source)
 
 /datum/status_effect/buff/drunken_rage/proc/on_thrown_victim_impact(mob/living/thrown, atom/hit_atom, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER

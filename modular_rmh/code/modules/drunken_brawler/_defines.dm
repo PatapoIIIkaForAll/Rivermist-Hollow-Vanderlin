@@ -1,7 +1,7 @@
 #define DRUNKEN_RAGE_BLUR_FILTER "drunken_rage_blur"
 #define DRUNKEN_RAGE_GLOW_FILTER "drunken_rage_glow"
 #define DRUNKEN_RAGE_HIGHLIGHT_FILTER "drunken_rage_highlight"
-#define DRUNKEN_BRAWLER_DRINK_THRESHOLD 10
+#define DRUNKEN_BRAWLER_DRINK_THRESHOLD 1 // TODO: вернуть на 10 после тестов
 #define DRUNKEN_BRAWLER_SOBER_TIMER (90 SECONDS)
 
 GLOBAL_LIST_INIT(tavern_areas, list(
