@@ -191,6 +191,7 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"Darkling" = TRAIT_DARKLING,
 		"Wildmagic" = TRAIT_WILDMAGIC,
 		"Drunkmaster" = TRAIT_DRUNKMASTER,
+		"Drunken Brawler" = TRAIT_DRUNKEN_BRAWLER,
 		"Rune Severed" = TRAIT_RUNE_SEVERED,
 		"Inflexible" = TRAIT_UNDODGING,
 		"Freeze Hunger" = TRAIT_FREEZEHUNGER,
@@ -325,6 +326,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DARKLING = span_info("I am a creature of the dark and am sensitive to the light. The hateful sun is especially harsh on my eyes."),
 	TRAIT_WILDMAGIC = span_info("Unruly magic sparks and fizzes through my veins. Each time I cast a spell, my magic might surge and trigger a random magical effect.."),
 	TRAIT_DRUNKMASTER = span_info("You are Immune to the negative effects of being drunk. It makes you only stronger!"),
+	TRAIT_DRUNKEN_BRAWLER = span_info("When entering a tavern, you can unleash a Drunken Rage if you have enough alcohol in your blood!"),
 	TRAIT_PONYGIRL_RIDEABLE = span_notice("Willing or not, I've been trained to carry other people's burdens."),
 ))
 

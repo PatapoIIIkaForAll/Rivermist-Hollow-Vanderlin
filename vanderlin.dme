@@ -3947,6 +3947,7 @@
 #include "modular_rmh\code\modules\clothing\vladegeg\wintercoat.dm"
 #include "modular_rmh\code\modules\clothing\vladegeg\armor\druid.dm"
 #include "modular_rmh\code\modules\crafting\blueprints\carpentry.dm"
+#include "modular_rmh\code\modules\drunken_brawler\drunken_include.dm"
 #include "modular_rmh\code\modules\farming\big_liquid_containers.dm"
 #include "modular_rmh\code\modules\food\emberwine.dm"
 #include "modular_rmh\code\modules\food\gingerbread.dm"

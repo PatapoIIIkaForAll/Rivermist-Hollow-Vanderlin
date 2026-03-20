@@ -563,6 +563,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_DARKLING 			"Darkling"
 #define TRAIT_WILDMAGIC 		"Wildmagic"
 #define TRAIT_DRUNKMASTER 		"Drunkmaster"
+#define TRAIT_DRUNKEN_BRAWLER	"Drunken Brawler"
 #define TRAIT_RUNE_SEVERED		"runesevered"
 #define TRAIT_FREEZEHUNGER 		"Freeze Hunger"
 #define TRAIT_EGG_LAYER "vaginal_egg_layer"
