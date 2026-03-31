@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/revel_in_slaughter
 	name = "Revel in Slaughter"
-	desc = "The blood of your enemy shall boil, their skin feeling as if it's being ripped apart! Graggar demands their blood must FLOW!!!"
+	desc = "The blood of your enemy shall boil, their skin feeling as if it's being ripped apart! Gruumsh demands their blood must FLOW!!!"
 	button_icon_state = "bloodsteal"
 	sound = 'sound/magic/antimagic.ogg'
 

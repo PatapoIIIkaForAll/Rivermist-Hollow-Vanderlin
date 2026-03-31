@@ -125,8 +125,8 @@
 	sellprice = 35
 
 /obj/item/weapon/mace/cane/necran
-	name = "necran rod"
-	desc = "Carved from dark stone, engraved with gold. Often carried by elderly Necrans."
+	name = "dark rod"
+	desc = "Carved from dark stone, engraved with gold."
 	icon_state = "necran_cane"
 	force = DAMAGE_MACE - 3
 	force_wielded = DAMAGE_MACE - 1
@@ -347,7 +347,7 @@
 				return list("shrink" = 0.4,"sx" = -3,"sy" = -4,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 70,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 1,"wflip" = 0,"eflip" = 0)
 
 /obj/item/weapon/mace/cudgel/psy
-	name = "psydonian handmace"
+	name = "aonic handmace"
 	desc = "A shorthanded mace, a convenient sleeping aid, or a means to root out heresy. It's all in the wrist."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psyflangedmace"
@@ -456,7 +456,7 @@
 //................ Grand mace ............... //
 /obj/item/weapon/mace/goden/steel
 	name = "grand mace"
-	desc = "A cast polearm, rumored to be the weapon-design used by Psydon himself."
+	desc = "A cast polearm, rumored to be the weapon-design used by the first inquisitors of Ao."
 	icon_state = "polemace"
 	gripped_intents = list(MACE_HVYSMASH) // It's a 2h flanged mace, not a goedendag.
 	wbalance = DODGE_CHANCE_NORMAL
@@ -478,10 +478,10 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0)
 
-//................ Psydonian Grand Mace ............... //
+//................ Aonic Grand Mace ............... //
 /obj/item/weapon/mace/goden/psydon
-	name = "psydonian grand mace"
-	desc = "A mighty mace which seems to be a large psycross with a handle, though no less effective at crushing the spirit and bones of the inhumen."
+	name = "aonic grand mace"
+	desc = "A mighty mace which seems to be a large holy symbol with a handle, though no less effective at crushing the spirit and bones of the dark faithful."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psymace"
 	wbalance = DODGE_CHANCE_NORMAL

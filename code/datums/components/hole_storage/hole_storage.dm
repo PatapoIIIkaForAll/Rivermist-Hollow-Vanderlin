@@ -194,9 +194,11 @@
  * @param removed_item - The removed item
  * @param target_layer - The storage layer where we should put the item in
 */
-/datum/component/body_storage/proc/handle_removal(datum/source, obj/item/removed_item, target_layer)
+/datum/component/body_storage/proc/handle_removal(datum/source, obj/item/removed_item, target_layer, removal_reason = BODYSTORAGE_REMOVE_MANUAL)
 	if(!target_layer)
 		target_layer = find_item_layer(removed_item)
+	if(!removed_item?.can_remove_from_body_storage(removal_reason))
+		return FALSE
 	if(check_item_in_layer(source, removed_item, target_layer))
 		remove_from_storage(source, removed_item, target_layer)
 		return TRUE
@@ -230,10 +232,10 @@
 		return FALSE
 	if(source_layer == new_layer)
 		return FALSE
-	var/obj/item/item_a = return_random_item_from_layer(source, source_layer)
+	var/obj/item/item_a = return_random_item_from_layer(source, source_layer, BODYSTORAGE_REMOVE_RANDOM)
 	if(!item_a)
 		return FALSE
-	SEND_SIGNAL(parent, COMSIG_BODYSTORAGE_TRY_REMOVE, item_a, source_layer)
+	SEND_SIGNAL(parent, COMSIG_BODYSTORAGE_TRY_REMOVE, item_a, source_layer, BODYSTORAGE_REMOVE_RANDOM)
 	return handle_insertion(source, item_a, new_layer, force)
 
 /**
@@ -266,20 +268,28 @@
  * Returns the reference to a random irem from selected layer
  * @param target_layer - The target layer
 */
-/datum/component/body_storage/proc/return_random_item_from_layer(datum/source, target_layer)
+/datum/component/body_storage/proc/return_random_item_from_layer(datum/source, target_layer, removal_reason = BODYSTORAGE_REMOVE_MANUAL)
 	var/list/t_layer = all_layers[target_layer]
-	if(t_layer.len)
-		return pick(t_layer)
+	if(!t_layer.len)
+		return null
+
+	var/list/removable_items = list()
+	for(var/obj/item/stored_item as anything in t_layer)
+		if(stored_item.can_remove_from_body_storage(removal_reason))
+			removable_items += stored_item
+
+	if(removable_items.len)
+		return pick(removable_items)
 
 /**
  * Removes and returns the reference to a random irem from selected layer
  * @param target_layer - The target layer
 */
 /datum/component/body_storage/proc/remove_random_item_from_layer(datum/source, target_layer)
-	var/obj/item/picked_item = return_random_item_from_layer(source, target_layer)
+	var/obj/item/picked_item = return_random_item_from_layer(source, target_layer, BODYSTORAGE_REMOVE_RANDOM)
 	if(picked_item)
-		SEND_SIGNAL(parent, COMSIG_BODYSTORAGE_TRY_REMOVE, picked_item, target_layer)
-		return picked_item
+		if(SEND_SIGNAL(parent, COMSIG_BODYSTORAGE_TRY_REMOVE, picked_item, target_layer, BODYSTORAGE_REMOVE_RANDOM))
+			return picked_item
 
 /**
  * Returns the list of available layers

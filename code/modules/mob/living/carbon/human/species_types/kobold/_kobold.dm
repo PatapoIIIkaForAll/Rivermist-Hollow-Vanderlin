@@ -26,7 +26,7 @@
 /datum/species/kobold
 	name = "Kobold"
 	id = SPEC_ID_KOBOLD
-	desc = "Speculated to have originated from the dank depths of Subterra, \
+	desc = "Speculated to have originated from the dank depths of Underdark, \
 	Kobolds are a species of stout sea-faring and mountain-dwelling lizardfolk infamous for their skills in trap-making, \
 	their habit of hoarding grandiose amounts of trinkets and artifacts, and their opportunism.\
 	\n\n\
@@ -91,7 +91,7 @@
 		OFFSET_ARMOR = list(0,0),\
 		OFFSET_UNDIES = list(0,0),\
 	)
-// Попытка починить смещение органов
+
 	offset_genitals_m = list(
 		OFFSET_PENIS = list(0,-4),\
 		OFFSET_BREASTS = list(0,-4),\
@@ -200,18 +200,6 @@
 /datum/species/kobold/after_creation(mob/living/carbon/C)
 	..()
 	C.dna.species.accent_language = C.dna.species.get_accent(native_language, 1)
-
-/datum/species/kobold/spec_life(mob/living/carbon/human/H)
-	. = ..()
-	if(prob(1) && !(H.rogue_sneaking))
-		if(!COOLDOWN_FINISHED(src, kobold_cooldown))
-			return
-		var/emote = "sniff"
-		if(prob(35))
-			emote = "cough"
-		H.emote(emote, forced = TRUE)
-
-		COOLDOWN_START(src, kobold_cooldown, 5 MINUTES)
 
 /datum/species/kobold/get_skin_list()
 	return sortList(list(

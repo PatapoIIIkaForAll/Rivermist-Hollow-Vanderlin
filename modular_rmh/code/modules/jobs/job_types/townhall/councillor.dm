@@ -40,6 +40,8 @@
 
 /datum/job/councilor/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
+	var/mob/living/carbon/human/human_councilor = spawned
+	grant_outlaw_decree(human_councilor)
 	spawned.verbs |= /mob/living/carbon/human/proc/councilor_announcement
 
 // ─────────────────────────────

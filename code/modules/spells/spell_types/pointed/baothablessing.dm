@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/baothablessings
-	name = "Baotha's Blessings"
+	name = "Sharess's Blessings"
 	desc = "Reverses overdose effect on a target and soothe their mood.."
 	button_icon_state = "lesserheal"
 	sound = 'sound/magic/heal.ogg'

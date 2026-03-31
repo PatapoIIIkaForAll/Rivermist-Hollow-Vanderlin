@@ -41,7 +41,7 @@
 /datum/action/cooldown/spell/undirected/song/intellectual_interval
 	name = "Intellectual Interval"
 	desc = "A tune for thinkers and craftsmen in your audience. (+3 INT)"
-	invocation = "%The pretty moon Noc and mighty hammers of Malum!"
+	invocation = "%Lady Mystra and mighty hammers of Moradin!"
 	button_icon_state = "melody_t1_base"
 	background_icon_state = "melody_t1_base"
 	spell_cost = 40

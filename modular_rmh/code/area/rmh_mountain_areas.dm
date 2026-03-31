@@ -10,6 +10,8 @@
 	background_track_night = 'sound/music/area/decap.ogg'
 	first_time_text = "DUSK SPIRE MOUNTAINS"
 	ambush_times = list("night","dawn","dusk")
+	ambush_types = list(
+				/turf/open/floor/snow/rough)
 	ambush_mobs = list(
 				/mob/living/carbon/human/species/skeleton/npc/ambush = 11,
 				/mob/living/simple_animal/hostile/retaliate/direbear = 13,
@@ -26,8 +28,8 @@
 	background_track = 'sound/music/area/decap.ogg'
 	ambush_times = null
 	ambush_mobs = null
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/decap.ogg'
+	background_track_night = 'sound/music/area/decap.ogg'
 
 /area/indoors/cave/rmh_cave/cold
 	name = "Cold Caves"
@@ -45,18 +47,19 @@
 	first_time_text = "DUSK SPIRE MANOR"
 	icon_state = "manor"
 	background_track = 'sound/music/area/manor.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/manor.ogg'
+	background_track_night = 'sound/music/area/manor.ogg'
 	converted_type = /area/outdoors/exposed/rmh/manorgarri
 	keep_area = TRUE
 
 /area/outdoors/exposed/rmh/manorgarri
 	name = "Dusk Spire Manor Court"
 	first_time_text = "DUSK SPIRE MANOR COURTYARD"
-	icon_state = "manorgarri"
+	icon = 'modular_rmh/icons/turf/areas.dmi'
+	icon_state = "dsmanor"
 	background_track = 'sound/music/area/manorgarri.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/manorgarri.ogg'
+	background_track_night = 'sound/music/area/manorgarri.ogg'
 	keep_area = TRUE
 	ambientsounds = DRONING_MOUNTAIN
 	ambientnight = DRONING_MOUNTAIN
@@ -64,7 +67,10 @@
 /area/indoors/town/rmh/manor/basement
 	name = "Dusk Spire Manor Basement"
 	first_time_text = "DUSK SPIRE MANOR BASEMENT"
-	icon_state = "basement"
+	icon = 'modular_rmh/icons/turf/areas.dmi'
+	icon_state = "mbasement"
+	keep_area = TRUE
+	ceiling_protected = TRUE
 
 /area/indoors/town/rmh/manor/bath
 	name = "Dusk Spire Manor Baths"
@@ -73,11 +79,13 @@
 	background_track = 'modular_rmh/sound/music/area/baths.ogg'
 	background_track_dusk = 'modular_rmh/sound/music/area/baths_dusk.ogg'
 	background_track_night = 'modular_rmh/sound/music/area/baths_night.ogg'
+	ceiling_protected = TRUE
 
 /area/indoors/town/rmh/manor/vault
 	name = "Dusk Spire Manor Vault"
 	first_time_text = "DUSK SPIRE MANOR VAULT"
-	icon_state = "vault"
+	icon = 'modular_rmh/icons/turf/areas.dmi'
+	icon_state = "mvault"
 	keep_area = TRUE
 
 //KEEP OUTSKIRTS
@@ -101,14 +109,15 @@
 /area/indoors/cave/rmh_dwarf_keep
 	name = "Kêdnath Acöb"
 	first_time_text = "KÊDNATH ACÖB"
-	icon_state = "dwarfin"
+	icon = 'modular_rmh/icons/turf/areas.dmi'
+	icon_state = "df"
 	background_track = 'sound/music/area/dwarf.ogg'
 	ambientsounds = DRONING_CAVE_GENERIC
 	ambientnight = DRONING_CAVE_GENERIC
 	//spookysounds = AMBIENCE_CAVE
 	//spookynight = AMBIENCE_CAVE
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/dwarf.ogg'
+	background_track_night = 'sound/music/area/dwarf.ogg'
 	converted_type = /area/outdoors/exposed/rmh_dwarf_keep
 	ceiling_protected = TRUE
 	threat_region = THREAT_REGION_RMH_DWARF_FORTRESS
@@ -117,63 +126,64 @@
 /area/outdoors/exposed/rmh_dwarf_keep
 	name = "Kêdnath Acöb"
 	first_time_text = "KÊDNATH ACÖB"
-	icon_state = "dwarfin"
+	icon = 'modular_rmh/icons/turf/areas.dmi'
+	icon_state = "df"
 	background_track = 'sound/music/area/dwarf.ogg'
 	ambientsounds = DRONING_CAVE_GENERIC
 	ambientnight = DRONING_CAVE_GENERIC
 	//spookysounds = AMBIENCE_CAVE
 	//spookynight = AMBIENCE_CAVE
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/dwarf.ogg'
+	background_track_night = 'sound/music/area/dwarf.ogg'
 	threat_region = THREAT_REGION_RMH_DWARF_FORTRESS
 
 /area/indoors/cave/rmh_dwarf_keep/entrance
 	name = "Kêdnath Acöb Entrance Hall"
 	first_time_text = "KÊDNATH ACÖB ENTRANCE HALL"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "indoors"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/living
 	name = "Kêdnath Acöb Living Hall"
 	first_time_text = "KÊDNATH ACÖB LIVING HALL"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "living"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/communal
 	name = "Kêdnath Acöb Communal Hall"
 	first_time_text = "KÊDNATH ACÖB COMMUNAL HALL"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "village"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/grand
 	name = "Kêdnath Acöb Grand Hall"
 	first_time_text = "KÊDNATH ACÖB GRAND HALL"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "duke"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/throne
 	name = "Kêdnath Acöb Throne Hall"
 	first_time_text = "KÊDNATH ACÖB THRONE HALL"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "manor"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/treasury
 	name = "Kêdnath Acöb Treasury Hall"
 	first_time_text = "KÊDNATH ACÖB TREASURY HALL"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "vault"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/smelters
 	name = "Kêdnath Acöb Workshop: Smelters"
 	first_time_text = "KÊDNATH ACÖB WORKSHOP: SMELTERS"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "fire_chamber"
+	icon_state = "df"
 
 /area/indoors/cave/rmh_dwarf_keep/forge
 	name = "Kêdnath Acöb Workshop: Forge"
 	first_time_text = "KÊDNATH ACÖB WORKSHOP: FORGE"
 	icon = 'modular_rmh/icons/turf/areas.dmi'
-	icon_state = "forge"
+	icon_state = "df"
 
 //TRANSITIONS
 

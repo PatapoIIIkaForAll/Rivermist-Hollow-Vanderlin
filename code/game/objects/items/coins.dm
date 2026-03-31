@@ -416,7 +416,7 @@
 //PLATINUM
 /obj/item/coin/platinum
 	name = "roldon"
-	desc = "A platinum coin bearing the symbol of the Taurus and the pre-kingdom psycross. These were in the best condition of the provincial gold mints, the rest were melted down. It's valued at 1000 amna per coin."
+	desc = "A platinum coin bearing the symbol of the Taurus and an old royal holy symbol. These were in the best condition of the provincial gold mints, the rest were melted down. It's valued at 1000 amna per coin."
 	icon_state = "p1"
 	sellprice = 1000
 	base_type = CTYPE_PLAT
@@ -425,7 +425,7 @@
 //GOLD
 /obj/item/coin/gold
 	name = "danter"
-	desc = "A gold coin bearing the symbol of the Taurus and the pre-kingdom psycross. These were in the best condition of the provincial gold mints, the rest were melted down. It's valued at 100 amna per coin."
+	desc = "A gold coin bearing the symbol of the Taurus and an old royal holy symbol. These were in the best condition of the provincial gold mints, the rest were melted down. It's valued at 100 amna per coin."
 	icon_state = "g1"
 	sellprice = 100
 	base_type = CTYPE_GOLD

@@ -85,7 +85,7 @@
 	sellprice = 10
 
 /obj/item/weapon/sword/short/psy
-	name = "psydonian shortsword"
+	name = "exotic shortsword"
 	desc = "Darkholdian smiths worked with artificers, and an esoteric blade was born: a blade with an unique design, dismissing a crossguard in favor of a hollow beak to hook and draw harm away from its user. Short in length, yet lethally light in weight."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psyswordshort"
@@ -549,7 +549,7 @@
 				)
 
 /obj/item/weapon/sword/rapier/psy
-	name = "psydonian rapier"
+	name = "exotic rapier"
 	desc = "A highly ornate silver rapier, used more as a show of status for members of the inquisition."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psyrapier"
@@ -935,7 +935,7 @@
 	force = DAMAGE_SWORD + 2
 
 /obj/item/weapon/sword/long/psydon
-	name = "psydonian longsword"
+	name = "exotic longsword"
 	desc = "A large silver longsword forged in the shape of a psycross."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psysword"
@@ -975,7 +975,7 @@
 	enchant(/datum/enchantment/silver)
 
 /obj/item/weapon/sword/long/oldpsysword //Not attainable
-	name = "old psydonian longsword"
+	name = "old exotic longsword"
 	desc = "A finely made longsword, plated in a worn-down veneer of grubby silver. It's long seen better daes."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "opsysword"
@@ -1012,7 +1012,7 @@
 
 //................ Psydonian Greatsword ............... //
 /obj/item/weapon/sword/long/greatsword/psydon
-	name = "psydonian greatsword"
+	name = "exotic greatsword"
 	desc = "A mighty silver greatsword made to strike fear into the heart of even archdevils."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psygsword"
@@ -1050,7 +1050,7 @@
 	minstr = 9 //So the ordinator can use his sword as old.
 
 /obj/item/weapon/sword/long/broadsword/psy
-	name = "old psydonian broadsword"
+	name = "old exotic broadsword"
 	desc = "Even the most ignorant of zealots know that the holy silver loses its properties when not blessed by Adjudicators and Priests of the Holy See for an extended period of time. Its edge remains as lethal as ever, however."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psybroadsword"
@@ -1059,7 +1059,7 @@
 
 /obj/item/weapon/sword/long/broadsword/psy/relic
 	name = "Creed"
-	desc = "Bathed in Psydonian prayers, this large and heavy blade exists to slay the inhumen and evil. The crossguard’s psycross is engraved with prayers of the Ordo Benetarus. You’re the light - show them the way."
+	desc = "Bathed in exotic prayers, this large and heavy blade exists to slay the inhumen and evil. The crossguard’s psycross is engraved with prayers of the Ordo Benetarus. You’re the light - show them the way."
 
 /obj/item/weapon/sword/long/broadsword/psy/getonmobprop(tag)
 	. = ..()

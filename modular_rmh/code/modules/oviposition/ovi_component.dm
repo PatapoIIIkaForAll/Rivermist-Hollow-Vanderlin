@@ -126,6 +126,8 @@
 	var/mob/living/receiver_owner = action.flipped ? session.user : session.target
 	if(!receiver_owner)
 		return null
+	if(!target_allows_mob_erp_action(carrier, receiver_owner, /datum/erp_preference/boolean/allow_mob_oviposition))
+		return null
 
 	var/obj/item/organ/receiver = get_receiver_for_hole(receiver_owner, action.hole_id)
 	if(!receiver)

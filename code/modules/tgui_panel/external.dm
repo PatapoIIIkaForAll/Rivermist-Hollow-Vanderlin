@@ -12,6 +12,7 @@
 	set name = "Fix chat"
 	set category = "OOC.Fix"
 	var/action
+	enforce_status_window_layout(TRUE)
 	log_tgui(src, "Started fixing.", context = "verb/fix_tgui_panel")
 
 	nuke_chat()

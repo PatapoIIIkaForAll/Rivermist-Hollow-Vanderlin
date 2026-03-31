@@ -423,7 +423,7 @@ If you want to expand on poisons theres tons of fun effects TG chemistry has tha
 	return ..()
 
 /datum/reagent/organpoison/human
-	name = "Humen Organ Poison"
+	name = "Human Organ Poison"
 	cannibalism_pool = SPECIES_CANNIBAL_MEN
 
 /datum/reagent/organpoison/kobold

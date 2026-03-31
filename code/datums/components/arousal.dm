@@ -95,6 +95,8 @@
 /datum/component/arousal/proc/handle_orgasm_count()
 	if(!recent_orgasm_count)
 		return
+	if(last_climax_reset_time == 0)
+		last_climax_reset_time = world.time
 	if(last_climax_reset_time + ORGASM_RESET_TIME < world.time)
 		recent_orgasm_count -= 1
 		last_climax_reset_time = world.time

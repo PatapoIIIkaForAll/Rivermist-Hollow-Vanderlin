@@ -187,7 +187,7 @@ SUBSYSTEM_DEF(death_arena)
 
 
 /obj/structure/table/wood/fine/altar
-	name = "Ravox's sacrifical altar"
+	name = "Tempus's sacrificial altar"
 	desc = "It awaits an offering of your triumphs"
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "ravox_altar"
@@ -201,8 +201,8 @@ SUBSYSTEM_DEF(death_arena)
 	SSdeath_arena.process_fight_end(item, user)
 
 /obj/structure/underworld/ravox
-	name = "Ravox"
-	desc = "Ravox, God of Warfare, Justice, and Bravery. He finds solace in his friendship with Necra and his retreat to the Underworld. Upon your gaze, he gives you a respectful nod. Damn, he's cool.."
+	name = "Tempus"
+	desc = "Tempus, Lord of Battles. He meets brave warriors in the Fugue Plane, meeting your gaze with the calm of one who has seen every war worth fighting."
 	icon = 'icons/roguetown/underworld/ravox.dmi'
 	icon_state = "ravox"
 	layer = ABOVE_MOB_LAYER
@@ -214,8 +214,8 @@ SUBSYSTEM_DEF(death_arena)
 
 
 /obj/structure/underworld/necra
-	name = "Necra"
-	desc = "The Undermaiden herself, in her true form. The most ancient of living gods. She observes your battles gleefully, gratitude in her eyes to be relieved from the arduousness of eternity. Her close friend and confidant, Ravox, sits by her side. The two must have worked hard to restructure the underworld like this. They seem pleased with their work."
+	name = "Jergal"
+	desc = "The Scribe of the Doomed himself, ancient and implacable. He watches your battles from the stillness of the Fugue Plane, with Tempus as an unusual company."
 	icon = 'icons/roguetown/underworld/necra.dmi'
 	icon_state = "necra"
 	layer = ABOVE_MOB_LAYER

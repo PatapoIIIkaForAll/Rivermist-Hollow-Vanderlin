@@ -68,11 +68,14 @@
 			if(!E)
 				continue
 			for(var/obj/I in T)
+				var/prize
 				if(I.anchored)
 					continue
 				if(!isturf(I.loc))
 					continue
-				var/prize = I.get_real_price()// - (I.get_real_price() * SStreasury.queens_tax)
+				if (istype(I, /obj/item/coin))
+					continue
+				prize = I.get_real_price()// - (I.get_real_price() * SStreasury.queens_tax)
 				if(prize >= 1)
 					play_sound=TRUE
 					budgie += prize

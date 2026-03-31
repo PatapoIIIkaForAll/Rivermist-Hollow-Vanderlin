@@ -1,5 +1,6 @@
 /mob/living/simple_animal/hostile/retaliate/elemental
 	dendor_taming_chance = DENDOR_TAME_PROB_NONE
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST|MOB_ELEMENTAL
 
 /mob/living/simple_animal/hostile/retaliate/elemental/Initialize()
 	. = ..()

@@ -9,7 +9,7 @@
 	antimagic_flags = MAGIC_RESISTANCE_HOLY
 	associated_skill = /datum/skill/magic/holy
 
-	invocation = "Let the weight of Malum's hammer fall!"
+	invocation = "Let the weight of Moradin's hammer fall!"
 	invocation_type = INVOCATION_SHOUT
 
 	charge_time = 2 SECONDS

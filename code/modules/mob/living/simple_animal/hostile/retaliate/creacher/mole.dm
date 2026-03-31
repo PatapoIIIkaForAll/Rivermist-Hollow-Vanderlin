@@ -125,7 +125,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/mole/briars
 	name = "Moss Crawler Mole"
-	desc = "One of many miracles of Dendor, they hide in deep forests only able to be summoned by wise briars who dedicate themselves to call for spirits of forest in time of need"
+	desc = "One of many miracles of Silvanus, they hide in deep forests only able to be summoned by wise briars who dedicate themselves to call for spirits of forest in time of need"
 	icon = 'icons/roguetown/mob/monster/mole.dmi'
 	icon_state = "mole_briars"
 	icon_living = "mole_briars"

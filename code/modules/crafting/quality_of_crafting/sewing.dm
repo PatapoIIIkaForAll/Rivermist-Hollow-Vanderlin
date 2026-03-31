@@ -814,7 +814,7 @@
 	category = "Cloak"
 
 /datum/repeatable_crafting_recipe/sewing/psydon_tabbard
-	name = "psydonic tababrd"
+	name = "aonic tabard"
 	output = /obj/item/clothing/cloak/tabard/adept
 	requirements = list(/obj/item/natural/cloth = 2,
 				/obj/item/natural/fibers = 1)
@@ -1693,7 +1693,7 @@
 	category = "Accessories"
 
 /datum/repeatable_crafting_recipe/sewing/psy_sack
-	name = "psydonian sack mask"
+	name = "exotic sack mask"
 	output = /obj/item/clothing/face/sack/psy
 	requirements = list(
 		/obj/item/natural/cloth = 4,
@@ -1753,7 +1753,7 @@
 	craftdiff = 2
 
 /datum/repeatable_crafting_recipe/sewing/caparison/psy
-	name = "psydonite caparison"
+	name = "aonic caparison"
 	output =/obj/item/caparison/psy
 
 /datum/repeatable_crafting_recipe/sewing/caparison/astrata

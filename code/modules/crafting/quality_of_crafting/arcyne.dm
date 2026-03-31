@@ -2,7 +2,7 @@
 	abstract_type = /datum/repeatable_crafting_recipe/arcyne
 	skillcraft = /datum/skill/magic/arcane
 	craftdiff = 0
-	category = "Arcyne"
+	category = "Arcane"
 	allow_inverse_start = TRUE
 
 /datum/repeatable_crafting_recipe/arcyne/arcana

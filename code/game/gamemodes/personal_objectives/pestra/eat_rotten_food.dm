@@ -1,8 +1,8 @@
 /datum/objective/personal/rotten_feast
 	name = "Rotten Feast"
-	category = "Pestra's Chosen"
+	category = "Ilmater's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Pestra grows stronger", "Pestra blesses you (+1 Constitution)")
+	rewards = list("2 Triumphs", "Ilmater grows stronger", "Ilmater blesses you (+1 Constitution)")
 	var/meals_eaten = 0
 	var/meals_required = 1
 
@@ -26,11 +26,11 @@
 	if(meals_eaten >= meals_required)
 		complete_objective()
 	else
-		to_chat(owner.current, span_notice("Rotten meal consumed! Eat [meals_required - meals_eaten] more to complete Pestra's objective."))
+		to_chat(owner.current, span_notice("Rotten meal consumed! Eat [meals_required - meals_eaten] more to complete Ilmater's objective."))
 
 /datum/objective/personal/rotten_feast/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have consumed enough rotten food to complete Pestra's objective!"))
+	to_chat(owner.current, span_greentext("You have consumed enough rotten food to complete Ilmater's objective!"))
 	adjust_storyteller_influence(PESTRA, 20)
 	UnregisterSignal(owner.current, COMSIG_ROTTEN_FOOD_EATEN)
 
@@ -39,4 +39,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_PESTRA_BLESSING, STATKEY_CON, 1)
 
 /datum/objective/personal/rotten_feast/update_explanation_text()
-	explanation_text = "Let nothing go to waste! Consume [meals_required] piece of rotten food to gain Pestra's favor!"
+	explanation_text = "Endure what others would cast aside. Consume [meals_required] piece of rotten food to gain Ilmater's favor!"

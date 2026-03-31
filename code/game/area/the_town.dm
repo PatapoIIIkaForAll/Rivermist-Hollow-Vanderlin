@@ -107,12 +107,12 @@
 
 /area/indoors/town/church/chapel
 	icon_state = "chapel"
-	first_time_text = "THE HOUSE OF THE TEN"
+	first_time_text = "THE HOUSE OF THE GODS"
 
 /area/indoors/town/church/inquisition
 	name = "inquisition"
 	icon_state = "inquisition"
-	first_time_text = "INQUISITIONS LAIR"
+	first_time_text = "THE INQUISITION"
 
 /area/indoors/town/fire_chamber
 	name = "incinerator"

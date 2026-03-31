@@ -1,7 +1,7 @@
 
 /obj/item/clothing/cloak/martyr
 	name = "martyr cloak"
-	desc = "An elegant cloak in the colors of Astrata. Looks like it can only fit Humen-sized people."
+	desc = "An elegant cloak in the colors of Lathander. Looks like it can only fit Human-sized people."
 	color = null
 	icon_state = "martyrcloak"
 	item_state = "martyrcloak"

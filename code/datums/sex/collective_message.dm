@@ -63,6 +63,21 @@
 		return
 
 	subtle_mode = any_has_erp_pref(involved_mobs, /datum/erp_preference/boolean/subtle_session_messages)
+
+/datum/collective_message/Destroy()
+	if(sessions)
+		for(var/datum/sex_session/session as anything in sessions)
+			if(session?.collective == src)
+				session.collective = null
+		sessions.Cut()
+	sessions = null
+	if(involved_mobs)
+		involved_mobs.Cut()
+	involved_mobs = null
+	collective_id = null
+	collective_span_class = null
+	collective_display_name = null
+	return ..()
 /*
 /datum/collective_message/proc/register_collective_tab()
 	for(var/mob/living/carbon/human/person in involved_mobs)

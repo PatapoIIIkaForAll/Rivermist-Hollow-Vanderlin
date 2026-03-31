@@ -27,20 +27,39 @@
 	accessory_type = /datum/sprite_accessory/none
 
 /obj/item/organ/genitals/filling_organ/testicles/Insert(mob/living/M, special, drop_if_replaced)
-	. = ..()
 	if(M.cum)
 		reagent_to_make = M.cum
 	if(!virility)
 		reagent_to_make = /datum/reagent/consumable/cum/sterile
+	. = ..()
+	if(!virility)
 		reagents.clear_reagents()
 		reagents.add_reagent(reagent_to_make, reagents.maximum_volume)
 	add_bodystorage(M, null, /datum/component/body_storage/testicles)
+	sync_cum_source_data()
 
 /obj/item/organ/genitals/filling_organ/testicles/Remove(mob/living/M, special, drop_if_replaced)
 	. = ..()
 	var/datum/component/body_storage/testicles/comp = GetComponent(/datum/component/body_storage/testicles)
 	comp?.RemoveComponent()
 	qdel(comp)
+
+/obj/item/organ/genitals/filling_organ/testicles/on_life()
+	. = ..()
+	sync_cum_source_data()
+
+/obj/item/organ/genitals/filling_organ/testicles/proc/sync_cum_source_data()
+	if(!owner || !reagents)
+		return FALSE
+
+	var/datum/reagent/current_reagent = reagents.get_reagent(reagent_to_make)
+	if(!istype(current_reagent, /datum/reagent/consumable/cum))
+		current_reagent = reagents.get_master_reagent()
+	if(!istype(current_reagent, /datum/reagent/consumable/cum))
+		return FALSE
+
+	var/datum/reagent/consumable/cum/current_cum = current_reagent
+	return current_cum.sync_parent_data(owner)
 
 /obj/item/organ/genitals/filling_organ/testicles/get_availability(datum/species/owner_species, mob/living/C, datum/preferences/pref_load)
 	if(issimple(C))

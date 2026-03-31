@@ -171,7 +171,7 @@
 
 /obj/structure/flora/tree/underworld
 	name = "screaming tree"
-	desc = "humen faces everywhere."
+	desc = "human  faces everywhere."
 	icon = 'icons/roguetown/misc/foliagetall.dmi'
 	icon_state = "screaming1"
 	base_icon_state = "screaming"

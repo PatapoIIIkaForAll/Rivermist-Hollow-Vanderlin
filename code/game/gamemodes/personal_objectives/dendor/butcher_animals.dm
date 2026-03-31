@@ -1,8 +1,8 @@
 /datum/objective/personal/butcher_animals
 	name = "Butcher Animals"
-	category = "Dendor's Chosen"
+	category = "Silvanus's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Dendor grows stronger", "Butchering knowledge")
+	rewards = list("2 Triumphs", "Silvanus grows stronger", "Butchering knowledge")
 	var/animals_butchered = 0
 	var/animals_required = 2
 
@@ -26,11 +26,11 @@
 	if(animals_butchered >= animals_required)
 		complete_objective()
 	else
-		to_chat(owner.current, span_notice("Animal butchered! Butcher [animals_required - animals_butchered] more to complete Dendor's will."))
+		to_chat(owner.current, span_notice("Animal butchered! Butcher [animals_required - animals_butchered] more to complete Silvanus's will."))
 
 /datum/objective/personal/butcher_animals/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've butchered enough animals to satisfy Dendor!"))
+	to_chat(owner.current, span_greentext("You've butchered enough animals to satisfy Silvanus!"))
 	adjust_storyteller_influence(DENDOR, 20)
 	UnregisterSignal(owner.current, COMSIG_MOB_BUTCHERED)
 
@@ -39,4 +39,4 @@
 	owner.current.adjust_skillrank(/datum/skill/labor/butchering, 1)
 
 /datum/objective/personal/butcher_animals/update_explanation_text()
-	explanation_text = "Butcher [animals_required] animal\s to satisfy Dendor."
+	explanation_text = "Butcher [animals_required] animals to satisfy Silvanus."

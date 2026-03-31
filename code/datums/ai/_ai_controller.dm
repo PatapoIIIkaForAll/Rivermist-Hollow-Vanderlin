@@ -283,12 +283,11 @@ have ways of interacting with a specific atom and control it. They posses a blac
 
 /datum/ai_controller/proc/on_client_enter(datum/source, atom/target)
 	SIGNAL_HANDLER
-	if(ai_status == AI_STATUS_IDLE)
-		set_ai_status(AI_STATUS_ON)
+	reset_ai_status()
 
 /datum/ai_controller/proc/on_client_exit(datum/source, datum/exited)
 	SIGNAL_HANDLER
-	recalculate_idle()
+	reset_ai_status()
 
 /datum/ai_controller/proc/get_current_turf()
 	var/mob/living/mob_pawn = pawn

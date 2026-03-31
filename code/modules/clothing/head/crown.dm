@@ -129,7 +129,7 @@
 
 /obj/item/clothing/head/crown/sparrowcrown
 	name = "champions circlet"
-	desc = "Winner of tournaments, bask in Ravox's glory."
+	desc = "Winner of tournaments, bask in Tempus's glory."
 	icon_state = "sparrowcrown"
 	sellprice = VALUE_GOLD_ITEM
 

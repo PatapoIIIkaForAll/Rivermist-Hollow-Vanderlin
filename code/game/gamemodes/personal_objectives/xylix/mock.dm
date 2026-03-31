@@ -1,8 +1,8 @@
 /datum/objective/personal/mock
 	name = "Mock"
-	category = "Xylix's Chosen"
+	category = "Tymora's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Xylix grows stronger")
+	rewards = list("2 Triumphs", "Tymora grows stronger")
 
 /datum/objective/personal/mock/on_creation()
 	. = ..()
@@ -37,12 +37,12 @@
 
 /datum/objective/personal/mock/monarch/update_explanation_text()
 	. = ..()
-	explanation_text = "Viciously mock the monarch for Xylix!"
+	explanation_text = "Viciously mock the monarch for Tymora!"
 
 /// Noble variant
 /datum/objective/personal/mock/noble
 	name = "Mock Nobles"
-	rewards = list("2 Triumphs", "Xylix grows stronger", "Xylix blesses you (+1 Fortune)")
+	rewards = list("2 Triumphs", "Tymora grows stronger", "Tymora blesses you (+1 Fortune)")
 	var/mocked_targets = 0
 	var/required_count = 2
 
@@ -71,4 +71,4 @@
 
 /datum/objective/personal/mock/noble/update_explanation_text()
 	. = ..()
-	explanation_text = "Viciously mock [required_count] nobles for Xylix!"
+	explanation_text = "Viciously mock [required_count] nobles for Tymora!"

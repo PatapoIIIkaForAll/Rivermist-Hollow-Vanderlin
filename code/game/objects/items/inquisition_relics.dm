@@ -194,8 +194,8 @@
 					to_chat(H, (span_cultsmall(pick(lines))))
 
 /atom/movable/screen/alert/status_effect/buff/censerbuff
-	name = "Inspired by Psydon."
-	desc = "The lingering blessing of Psydon tells me to ENDURE."
+	name = "Inspired by Ao."
+	desc = "The lingering blessing of Ao tells me to ENDURE."
 	icon_state = "censerbuff"
 
 /datum/status_effect/buff/censerbuff
@@ -206,7 +206,7 @@
 
 /datum/stress_event/syoncalamity
 	stress_change = 15
-	desc = span_boldred("Yet another part of Psydon lost!")
+	desc = span_boldred("Yet another part of Ao lost!")
 	timer = 15 MINUTES
 
 /datum/intent/flail/strike/smash/golgotha
@@ -236,7 +236,7 @@
 
 /obj/item/flashlight/flare/torch/lantern/psycenser
 	name = "Censer of Penitence"
-	desc = "A device filled with bubbling silver. Its unstable state is dangerous to those who do not know its true nature, but to wield it is great honour for Psydon."
+	desc = "A device filled with bubbling silver. Its unstable state is dangerous to those who do not know its true nature, but to wield it is great honour for Ao."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psycenser"
 	item_state = "psycenser"
@@ -251,7 +251,7 @@
 /obj/item/flashlight/flare/torch/lantern/psycenser/examine(mob/user)
 	. = ..()
 	if(fuel > 0)
-		. += span_info("If opened, it may bless Psydon weapons and those of Psydon faith.")
+		. += span_info("If opened, it may bless Aonic weapons and those faithful to Ao.")
 		. += span_warning("Smashing a creature with it open will create a devastating explosion and render it useless.")
 	if(fuel <= 0)
 		. += span_info("It is gone.")
@@ -369,9 +369,9 @@
 
 /datum/component/psyblessed/proc/on_examine(datum/source, mob/user, list/examine_list)
 	if(!is_blessed)
-		examine_list += span_info("<font color = '#cfa446'>This object may be blessed by the lingering fragment of Psydon. Until then, its impure alloying of silver-and-steel cannot blight inhumen foes on its own.</font>")
+		examine_list += span_info("<font color = '#cfa446'>This object may be blessed by the lingering fragment of Ao. Until then, its impure alloying of silver-and-steel cannot blight dark-faith foes on its own.</font>")
 	if(is_blessed)
-		examine_list += span_info("<font color = '#46bacf'>This object has been blessed by the fragment of Psydon.</font>")
+		examine_list += span_info("<font color = '#46bacf'>This object has been blessed by the fragment of Ao.</font>")
 		if(silver)
 			examine_list += span_info("It has been imbued with <b>silver</b>.")
 
@@ -738,7 +738,7 @@
 
 /obj/item/inqarticles/garrote // Do not give this item out freely to other classes. Do not subtype this item for other classes. This is intended purely as the Confessor's identifying sidegrade, and as a bonus for the Inspector INQ. I will be very sad if you disregard this comment. Thank you. - Yische.
 	name = "\proper seizing garrote" // It's nonlethal. It's so silly and fun.
-	desc = "A macabre instrument favored by the more clandestine of the Psydonian Silver Order; A length of thick leather inquiry cordage that has been dipped in both holy water and dye before being consecrated and spell-laced, held and threaded between two iron links. Perfect for apprehension."
+	desc = "A macabre instrument favored by the more clandestine of the Aonic Silver Order; A length of thick leather inquiry cordage that has been dipped in both holy water and dye before being consecrated and spell-laced, held and threaded between two iron links. Perfect for apprehension."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "garrote"
 	throw_speed = 3
@@ -1403,7 +1403,7 @@
 
 // FINISH THIS AT YOUR LEISURE. I'M JUST LEAVING IT HERE UNIMPLEMENTED. IT'S INTENDED TO WORK AS A COMBINATION OF THE NOC FAR-SIGHT AND THE NOCSHADES. HAVE FUN! - YISCHE
 /obj/item/inqarticles/spyglass
-	name = "otavan nocshade eyepiece"
+	name = "otavan weaveshade eyepiece"
 	desc = ""
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "spyglass"

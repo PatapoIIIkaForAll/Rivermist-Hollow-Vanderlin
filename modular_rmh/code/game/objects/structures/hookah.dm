@@ -104,7 +104,7 @@
 
 /obj/item/hookah_mouthpiece
 	name = "hookah mouthpiece"
-	desc = "Pestra knows how many tongues this thing has seen so far."
+	desc = "Only the gods know how many tongues this thing has seen so far."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "mouthpiece"
 	force = 5 // To hit someone with it.

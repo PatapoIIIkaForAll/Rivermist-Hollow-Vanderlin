@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/retaliate/cow
 	icon = 'icons/roguetown/mob/monster/cow.dmi'
 	name = "cow"
-	desc = "The grail of many farmers. Commonfolk associate the motherly sow with Eora, and the raging bull with Ravox."
+	desc = "The grail of many farmers. Commonfolk associate the motherly sow with Sune, and the raging bull with Tempus."
 	icon_state = "cow"
 	icon_living = "cow"
 	icon_dead = "cow_dead"

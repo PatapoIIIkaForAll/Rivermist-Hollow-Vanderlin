@@ -1,5 +1,6 @@
 /obj/structure/fake_machine/vendor/inn_rmh
 	lockids = list(ACCESS_INN)
+	density = FALSE
 
 /obj/structure/fake_machine/vendor/inn_rmh/Initialize()
     . = ..()

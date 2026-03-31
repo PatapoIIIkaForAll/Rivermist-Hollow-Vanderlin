@@ -129,7 +129,8 @@
 		skin_tone = pick_assoc(skins)
 	if(randomise[RANDOM_EYE_COLOR])
 		eye_color = random_eye_color()
-	features = random_features()
+	features = pref_species.get_random_features()
+	sanitize_species_mutant_colors()
 
 	if(pref_species.default_features["ears"])
 		features["ears"] = pref_species.default_features["ears"]
@@ -146,31 +147,79 @@
 	else
 		taur_type = null
 
-/datum/preferences/proc/update_preview_icon()
-	set waitfor = 0
-	if(!parent)
-		return
-	// Determine what job is marked as 'High' priority, and dress them up as such.
-	var/datum/job/previewJob
+/datum/preferences/proc/get_preview_job()
+	var/datum/job/preview_job
 	var/highest_pref = 0
 	for(var/job in job_preferences)
 		if(job_preferences[job] > highest_pref)
-			previewJob = SSjob.GetJob(job)
+			preview_job = SSjob.GetJob(job)
 			highest_pref = job_preferences[job]
+	return preview_job
 
-	// Set up the dummy for its photoshoot
-	var/mob/living/carbon/human/dummy/mannequin = generate_or_wait_for_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
-	//for(var/datum/quirk/quirk in mannequin.quirks)
-	//	mannequin.remove_quirk(quirk.type)
-	mannequin.transform = matrix()
+/datum/preferences/proc/get_preview_resource_token()
+	if(!preview_resource_token)
+		preview_resource_token = copytext(md5("[REF(src)]"), 1, 9)
+	return preview_resource_token
 
-	apply_prefs_to(mannequin, TRUE, TRUE)
-	if(preview_subclass)
-		mannequin.job = preview_subclass.title
-		mannequin.dress_up_as_job(preview_subclass, TRUE)
-	else if(previewJob)
-		mannequin.job = previewJob.title
-		mannequin.dress_up_as_job(previewJob, TRUE)
+/datum/preferences/proc/get_preview_dummy_key()
+	return "[DUMMY_HUMAN_SLOT_PREFERENCES]_[get_preview_resource_token()]"
 
-	parent.show_character_previews(new /mutable_appearance(mannequin))
-	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES, TRUE)
+/datum/preferences/proc/get_character_preview_data(mob/user)
+	var/list/preview_data = list()
+	if(!user?.client)
+		return preview_data
+
+	var/datum/job/preview_job = preview_subclass || get_preview_job()
+	var/resource_token = get_preview_resource_token()
+	preview_image_revision++
+
+	var/list/preview_dirs = list(
+		"preview_north" = NORTH,
+		"preview_south" = SOUTH,
+		"preview_east" = EAST,
+		"preview_west" = WEST,
+	)
+	var/icon/preview_icon = get_flat_human_icon(
+		null,
+		preview_job,
+		src,
+		get_preview_dummy_key(),
+		list(NORTH, SOUTH, EAST, WEST)
+	)
+	if(!preview_icon)
+		preview_icon = icon('icons/blanks/32x32.dmi', "nothing")
+
+	for(var/preview_key in preview_dirs)
+		var/icon/flat_icon = icon(preview_icon, "", preview_dirs[preview_key], 1, 0)
+		var/resource_name = "preference_preview_[resource_token]_[preview_key]_[preview_image_revision].png"
+		user << browse_rsc(flat_icon, resource_name)
+		preview_data[preview_key] = resource_name
+
+	return preview_data
+
+/datum/preferences/proc/update_preview_icon()
+	set waitfor = 0
+	var/mob/user = parent?.mob
+	if(!user || !winexists(user, "preferences_browser"))
+		return
+
+	var/update_generation = ++preview_update_generation
+	var/list/preview_data = get_character_preview_data(user)
+	if(length(preview_data))
+		schedule_preview_icon_update(user, preview_data, update_generation)
+
+/datum/preferences/proc/schedule_preview_icon_update(mob/user, list/preview_data, update_generation)
+	// Before subsystem init, addtimer() is not reliable for lobby preview refreshes.
+	// Keep the one-tick delay that fixes live browser loading, but fall back to spawn.
+	if(SStimer?.initialized)
+		addtimer(CALLBACK(src, PROC_REF(push_preview_icon_update), user, preview_data, update_generation), 1)
+	else
+		sleep(world.tick_lag)
+		push_preview_icon_update(user, preview_data, update_generation)
+
+/datum/preferences/proc/push_preview_icon_update(mob/user, list/preview_data, update_generation)
+	if(update_generation != preview_update_generation)
+		return
+	if(!user || !winexists(user, "preferences_browser"))
+		return
+	user << output(list2params(preview_data), "preferences_browser:updateCharacterData")

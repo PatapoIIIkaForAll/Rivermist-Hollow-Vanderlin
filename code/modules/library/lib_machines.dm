@@ -199,7 +199,7 @@
 /obj/machinery/printingpress/proc/choose_search_parameters(mob/user)
 	var/search_title = input(user, "Enter the title (optional):") as text|null
 	var/search_author = input(user, "Enter the author (optional):") as text|null
-	var/search_category = input(user, "Select a category (optional):") in list("Any", "Myths & Tales", "Legends & Accounts", "Thesis", "Eoratica") // Removed "Apocrypha & Grimoires"
+	var/search_category = input(user, "Select a category (optional):") in list("Any", "Myths & Tales", "Legends & Accounts", "Thesis", "Erotica") // Removed "Apocrypha & Grimoires"
 	// Pass the selected parameters to search_manuscripts
 	search_manuscripts(user, search_title, search_author, search_category)
 

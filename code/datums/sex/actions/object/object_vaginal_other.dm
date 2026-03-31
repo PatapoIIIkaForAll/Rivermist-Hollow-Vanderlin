@@ -19,6 +19,8 @@
 
 /datum/sex_action/object_fuck/object_vaginal_other/other/vagina/on_start(mob/living/user, mob/living/target)
 	. = ..()
+	if(!.)
+		return FALSE
 	var/obj/item/dildo = user.get_active_held_item()
 	if(istype(user.get_active_held_item(), /obj/item/weapon) || istype(user.get_active_held_item(), /obj/item/ammo_casing))
 		to_chat(user, span_userdanger("\the [dildo] will hurt [target]!"))

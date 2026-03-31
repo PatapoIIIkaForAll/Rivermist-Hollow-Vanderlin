@@ -461,6 +461,45 @@ GLOBAL_LIST_INIT(oocpronouns_required, list(
 
 	SSticker.show_roundend_report(src, TRUE)
 
+/client/proc/enforce_status_window_layout(reset_to_default = FALSE)
+	var/list/sizes = params2list(winget(src, "infowindow.info;statwindow", "size"))
+	if(!sizes["infowindow.info.size"] || !sizes["statwindow.size"])
+		return FALSE
+
+	var/list/info_size = splittext(sizes["infowindow.info.size"], "x")
+	var/list/stat_size = splittext(sizes["statwindow.size"], "x")
+	if(length(info_size) != 2 || length(stat_size) != 2)
+		return FALSE
+
+	var/info_height = text2num(info_size[2])
+	var/stat_height = text2num(stat_size[2])
+	if(!info_height)
+		return FALSE
+
+	// Keep the status panel usable without letting it shove chat out of the window.
+	var/min_stat_height = max(1, min(120, round(info_height * 0.25)))
+	var/min_output_height = max(1, min(180, round(info_height * 0.4)))
+	var/max_stat_height = max(min_stat_height, info_height - min_output_height)
+	var/target_height = clamp(round(info_height / 3), min_stat_height, max_stat_height)
+
+	if(!reset_to_default)
+		target_height = clamp(stat_height, min_stat_height, max_stat_height)
+		if(abs(target_height - stat_height) <= 1)
+			return FALSE
+	else if(abs(target_height - stat_height) <= 1)
+		return FALSE
+
+	var/target_splitter_pct = round((100 * target_height) / info_height, 0.1)
+	winset(src, "infowindow.info", "splitter=[target_splitter_pct]")
+	return TRUE
+
+/client/verb/refresh_status_window_layout()
+	set instant = TRUE
+	set hidden = TRUE
+	set name = ".refresh_status_window_layout"
+
+	enforce_status_window_layout()
+
 /client/verb/fit_viewport()
 	set name = "Fit Viewport"
 	set category = "OOC"
@@ -504,7 +543,7 @@ GLOBAL_LIST_INIT(oocpronouns_required, list(
 		desired_width = round(height * aspect_ratio)
 
 	if (text2num(map_size[1]) == desired_width)
-		// Nothing to do
+		enforce_status_window_layout(TRUE)
 		return
 
 	// Avoid auto-resizing the statpanel and chat into nothing.
@@ -524,6 +563,7 @@ GLOBAL_LIST_INIT(oocpronouns_required, list(
 
 		if (got_width == desired_width)
 			// success
+			enforce_status_window_layout(TRUE)
 			return
 		else if (isnull(delta))
 			// calculate a probable delta value based on the difference
@@ -534,6 +574,8 @@ GLOBAL_LIST_INIT(oocpronouns_required, list(
 
 		pct += delta
 		winset(src, "mainwindow.split", "splitter=[pct]")
+
+	enforce_status_window_layout(TRUE)
 
 /// Attempt to automatically fit the viewport, assuming the user wants it
 /client/proc/attempt_auto_fit_viewport()

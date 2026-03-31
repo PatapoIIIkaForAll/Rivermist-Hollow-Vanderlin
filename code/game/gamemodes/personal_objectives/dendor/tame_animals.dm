@@ -1,8 +1,8 @@
 /datum/objective/personal/tame_animal
 	name = "Tame an Animal"
-	category = "Dendor's Chosen"
+	category = "Silvanus's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Dendor grows stronger", "Taming knowledge")
+	rewards = list("2 Triumphs", "Silvanus grows stronger", "Taming knowledge")
 	var/tamed_count = 0
 	var/required_tames = 1
 
@@ -28,7 +28,7 @@
 
 /datum/objective/personal/tame_animal/complete_objective(mob/living/simple_animal/animal)
 	. = ..()
-	to_chat(owner.current, span_greentext("You have tamed [animal], fulfilling Dendor's will!"))
+	to_chat(owner.current, span_greentext("You have tamed [animal], fulfilling Silvanus's will!"))
 	adjust_storyteller_influence(DENDOR, 20)
 	UnregisterSignal(owner.current, COMSIG_ANIMAL_TAMED)
 
@@ -37,4 +37,4 @@
 	owner.current.adjust_skillrank(/datum/skill/labor/taming, 1)
 
 /datum/objective/personal/tame_animal/update_explanation_text()
-	explanation_text = "Tame an animal, either by feeding it or any other means until it acknowledges you as a friend. Dendor wills it!"
+	explanation_text = "Tame an animal, either by feeding it or any other means until it acknowledges you as a friend. Silvanus wills it!"

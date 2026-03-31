@@ -24,6 +24,8 @@ const listeners = {
   // Chunking
   oversizePayloadResponse,
   acknowledgePayloadChunk,
+  // DM still emits the legacy misspelling for chunk acknowledgements.
+  acknowlegePayloadChunk: acknowledgePayloadChunk,
 } as const;
 
 export const bus = new EventBus(listeners);

@@ -1,6 +1,9 @@
 import { logger } from '../logging';
 import { createQueue } from './handlers/chunking';
 
+const MAX_BYOND_MESSAGE_URL_SIZE = 2048;
+const PAYLOAD_CHUNK_MESSAGE_TYPE = 'payloadChunk';
+
 /**
  * Sends an action to `ui_act` on `src_object` that this tgui window
  * is associated with.
@@ -18,21 +21,11 @@ export function sendAct(
   }
 
   const stringifiedPayload = JSON.stringify(payload);
-  const urlSize = Object.entries({
-    type: `act/${action}`,
-    payload: stringifiedPayload,
-    tgui: 1,
-    windowId: Byond.windowId,
-  }).reduce(
-    (url, [key, value], i) =>
-      url +
-      `${i > 0 ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
-    '',
-  ).length;
+  const urlSize = estimateMessageUrlSize(`act/${action}`, payload);
 
-  if (urlSize > 2048) {
-    const chunks: string[] = stringifiedPayload.split(chunkSplitter);
+  if (urlSize > MAX_BYOND_MESSAGE_URL_SIZE) {
     const id = `${Date.now()}`;
+    const chunks = splitPayloadIntoChunks(stringifiedPayload, id);
     createQueue({ id, chunks });
     Byond.sendMessage('oversizedPayloadRequest', {
       type: `act/${action}`,
@@ -45,57 +38,63 @@ export function sendAct(
   Byond.sendMessage(`act/${action}`, payload);
 }
 
-function encodedLengthBinarySearch(haystack: string[], length: number): number {
-  const haystackLength = haystack.length;
-  let high = haystackLength - 1;
-  let low = 0;
-  let mid = 0;
+function estimateMessageUrlSize(type: string, payload: unknown): number {
+  return Object.entries({
+    type,
+    payload: JSON.stringify(payload),
+    tgui: 1,
+    windowId: Byond.windowId,
+  }).reduce(
+    (url, [key, value], i) =>
+      url +
+      `${i > 0 ? '&' : '?'}${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+    '',
+  ).length;
+}
 
-  while (low < high) {
-    mid = Math.round((low + high) / 2);
-    const substringLength = encodeURIComponent(
-      haystack.slice(0, mid).join(''),
-    ).length;
-    if (substringLength === length) {
-      break;
-    }
-    if (substringLength < length) {
+function splitPayloadIntoChunks(payload: string, id: string): string[] {
+  const chars = Array.from(payload);
+  const chunks: string[] = [];
+  let startIndex = 0;
+
+  while (startIndex < chars.length) {
+    const endIndex = findLargestSafeChunkEnd(chars, startIndex, id);
+    chunks.push(chars.slice(startIndex, endIndex).join(''));
+    startIndex = endIndex;
+  }
+
+  return chunks;
+}
+
+function findLargestSafeChunkEnd(
+  chars: string[],
+  startIndex: number,
+  id: string,
+): number {
+  let low = startIndex + 1;
+  let high = chars.length;
+  let bestEnd = low;
+
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const chunk = chars.slice(startIndex, mid).join('');
+    const urlSize = estimateMessageUrlSize(PAYLOAD_CHUNK_MESSAGE_TYPE, {
+      id,
+      chunk,
+    });
+
+    if (urlSize <= MAX_BYOND_MESSAGE_URL_SIZE) {
+      bestEnd = mid;
       low = mid + 1;
     } else {
       high = mid - 1;
     }
   }
 
-  return mid;
+  return bestEnd;
 }
 
-const chunkSplitter = {
-  [Symbol.split]: (string: string) => {
-    const charSeq = string[Symbol.iterator]().toArray();
-    const length = charSeq.length;
-    const chunks: string[] = [];
-    let startIndex = 0;
-    let endIndex = 1024;
-    while (startIndex < length) {
-      const cut = charSeq.slice(
-        startIndex,
-        endIndex < length ? endIndex : undefined,
-      );
-      const cutString = cut.join('');
-      if (encodeURIComponent(cutString).length > 1024) {
-        const splitIndex = startIndex + encodedLengthBinarySearch(cut, 1024);
-        chunks.push(
-          charSeq
-            .slice(startIndex, splitIndex < length ? splitIndex : undefined)
-            .join(''),
-        );
-        startIndex = splitIndex;
-      } else {
-        chunks.push(cutString);
-        startIndex = endIndex;
-      }
-      endIndex = startIndex + 1024;
-    }
-    return chunks;
-  },
+export const __testables__ = {
+  estimateMessageUrlSize,
+  splitPayloadIntoChunks,
 };

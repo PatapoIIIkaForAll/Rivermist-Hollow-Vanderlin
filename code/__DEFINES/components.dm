@@ -30,6 +30,11 @@
 //from SSatoms InitAtom - Only if the  atom was not deleted or failed initialization and has a loc
 #define COMSIG_ATOM_AFTER_SUCCESSFUL_INITIALIZED_ON "atom_init_success_on"
 #define COMSIG_PARENT_EXAMINE "atom_examine"                    //from base of atom/examine(): (/mob)
+#define COMSIG_POCKET_ACCESS_BUILD_INSTANCE_KEY "pocket_access_build_instance_key" // called by pocket access components: (mob/user, datum/component/pocket_access/access, list/context)
+	#define COMPONENT_POCKET_ACCESS_USE_CUSTOM_KEY (1<<0)
+#define COMSIG_POCKET_ACCESS_CAN_PERFORM_ACTION "pocket_access_can_perform_action" // called by pocket access components: (mob/user, action, datum/component/pocket_access/access, datum/pocket_dimension/instance, list/context)
+	#define COMPONENT_POCKET_ACCESS_BLOCK_ACTION (1<<0)
+#define COMSIG_POCKET_ACCESS_PERFORMED_ACTION "pocket_access_performed_action" // called by pocket access components after a successful action: (mob/user, action, datum/component/pocket_access/access, datum/pocket_dimension/instance)
 #define COMSIG_ATOM_GET_EXAMINE_NAME "atom_examine_name"		//from base of atom/get_examine_name(): (/mob, list/overrides)
 	//Positions for overrides list
 	#define EXAMINE_POSITION_ARTICLE 1

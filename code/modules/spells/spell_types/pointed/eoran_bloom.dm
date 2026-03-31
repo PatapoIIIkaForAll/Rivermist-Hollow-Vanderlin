@@ -45,7 +45,7 @@
 
 /obj/item/clothing/head/peaceflower
 	name = "Sune bud"
-	desc = "A flower of gentle petals, associated with Eora or Necra. Usually adorned as a headdress or laid at graves as a symbol of love or peace."
+	desc = "A flower of gentle petals, associated with Sune or Jergal. Usually adorned as a headdress or laid at graves as a symbol of love or peace."
 	icon = 'icons/roguetown/items/produce.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head_items.dmi'
 	icon_state = "peaceflower"
@@ -96,8 +96,8 @@
 
 //Putting this here for now until we have a better place. Ook wants this to inject drugs eventually. I guess this is decent for now.
 /obj/item/clothing/head/corruptflower
-	name = "baothan bud"
-	desc = "A flower of dark petals and sharp thorns, associated with Baotha. It is said that these allow their wearer to better commune with their goddess."
+	name = "blissaran bud"
+	desc = "A flower of dark petals and sharp thorns, associated with Blissara. It is said that these allow their wearer to better commune with their goddess."
 	icon = 'icons/roguetown/items/produce.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head_items.dmi'
 	icon_state = "corruptflower"

@@ -344,42 +344,19 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 
 /// Declares someone an outlaw
 /obj/structure/fake_machine/titan/proc/declare_outlaw(mob/living/carbon/human/user, message)
-	if(message in GLOB.outlawed_players)
-		say("That person is already an outlaw!")
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+	if(!declare_outlaw_by_name(user, message, src))
 		reset_mode()
 		return FALSE
-	var/found = FALSE
-	for(var/mob/living/carbon/human/to_be_outlawed in GLOB.player_list)
-		if(to_be_outlawed.real_name == message)
-			found = TRUE
-		if(to_be_outlawed.job == "Faceless One")
-			say("Who? That person doesn't exist!")
-			playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-			reset_mode()
-			return FALSE
-	if(!found)
-		say("That person doesn't exist!")
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		reset_mode()
-		return FALSE
-	GLOB.outlawed_players |= message
-	priority_announce("[message] has been declared an outlaw and must be captured or slain.", "[user.real_name], The [user.get_role_title()] Decrees", 'sound/misc/alert.ogg', "Captain")
 	reset_mode()
 	return TRUE
 
 /// Pardons an outlaw
 /obj/structure/fake_machine/titan/proc/pardon_outlaw(mob/living/carbon/human/user, message)
-	if(message in GLOB.outlawed_players)
-		GLOB.outlawed_players -= message
-		priority_announce("[message] is no longer an outlaw in Rivermist Hollow lands.", "[user.real_name], The [user.get_role_title()] Decrees", 'sound/misc/alert.ogg', "Captain")
-		reset_mode()
-		return TRUE
-	else
-		say("That person is not an outlaw!")
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+	if(!pardon_outlaw_by_name(user, message, src))
 		reset_mode()
 		return FALSE
+	reset_mode()
+	return TRUE
 
 /// Sets the taxes of the realm
 /obj/structure/fake_machine/titan/proc/set_taxes(mob/living/carbon/human/user)

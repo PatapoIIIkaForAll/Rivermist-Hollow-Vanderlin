@@ -113,7 +113,7 @@
 	item_state = "fencercuirass"
 
 /obj/item/clothing/armor/cuirass/psydon
-	name = "psydonian chestplate"
+	name = "exotic chestplate"
 	desc = "An expertly smithed form-fitting steel cuirass that is much lighter and agile, but breaks with much more ease. It's thinner, but backed with silk and leather."
 	melt_amount = 75
 	icon_state = "ornatechestplate"
@@ -128,7 +128,6 @@
 	max_integrity = 300
 
 /obj/item/clothing/armor/cuirass/ornate
-	name = "psydonian cuirass"
+	name = "exotic cuirass"
 	icon_state = "ornatecuirass"
-	desc = "An ornate steel cuirass with tassets, favored by both the Oratorium Throni Vacui and the Order of the Silver Psycross. \
-			Made to endure."
+	desc = "An sturdy and endurable curiass."

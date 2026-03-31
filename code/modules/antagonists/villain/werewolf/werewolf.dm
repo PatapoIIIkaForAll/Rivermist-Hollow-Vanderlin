@@ -13,10 +13,20 @@
 		"MY LUPINE MARK!",
 	)
 	var/special_role = ROLE_WEREWOLF
-	/// Are we currently out of our human form? Redundancy to easily check for transformation
+	/// Are we currently out of our human form? Redundancy to easily check for transformation.
 	var/transformed
-	/// How much rage decays by while transformed
+	/// How much rage decays by while transformed.
 	var/transformed_rage_decay = 5
+	/// TRUE while the werewolf is stuck in the transformation animation.
+	var/transformation_in_progress = FALSE
+	/// Consecutive nightfalls spent without letting the beast out.
+	var/nights_without_transformation = 0
+	/// TRUE once either form change has happened since the previous nightfall.
+	var/transformed_since_last_nightfall = FALSE
+	/// Cached time-of-day value used to detect nightfall without touching the night subsystem.
+	var/last_seen_tod = null
+	/// TRUE once the werewolf has skipped too many nights and must transform as soon as possible.
+	var/forced_transformation_pending = FALSE
 
 	var/wolfname = "Werewolf"
 	var/list/datum/action/werewolf_form_powers = list(
@@ -28,6 +38,7 @@
 		/datum/action/cooldown/spell/throw_target
 	)
 	COOLDOWN_DECLARE(message_cooldown)
+	COOLDOWN_DECLARE(transformation_cooldown)
 
 	innate_traits = list(
 		TRAIT_STRONGBITE,
@@ -36,7 +47,6 @@
 		TRAIT_BESTIALSENSE,
 		TRAIT_BRUSHWALK
 	)
-	var/forced_transform = FALSE
 
 /datum/antagonist/werewolf/lesser
 	name = "Lesser Werewolf"
@@ -65,33 +75,34 @@
 	owner.special_role = name
 	if(increase_votepwr)
 		forge_werewolf_objectives()
-	owner.current.add_spell(/datum/action/cooldown/spell/undirected/werewolf_form)
+
 	owner.current.grant_language(/datum/language/beast)
+	owner.current.add_spell(/datum/action/cooldown/spell/undirected/werewolf_form, source = owner)
 
 	var/datum/rage/werewolf/new_rage = new
 	new_rage.grant_to_holder(owner.current)
-	RegisterSignal(owner.current, COMSIG_RAGE_BOTTOMED, PROC_REF(remove_werewolf))
-	RegisterSignal(owner.current, COMSIG_RAGE_OVERRAGE, PROC_REF(begin_transform))
 
 	wolfname = "[pick(strings("werewolf_names.json", "wolf_prefixes"))] [pick(strings("werewolf_names.json", "wolf_suffixes"))]"
-	owner.current.verbs |= /mob/living/carbon/human/proc/toggle_werewolf_transform
+	last_seen_tod = GLOB.tod
 	return ..()
 
 /datum/antagonist/werewolf/on_removal()
 	remove_werewolf(forced = TRUE)
+	clear_transformation_pressure()
+
 	// owner.current should now be the original human mob, if not something is terribly wrong
 	if(!silent && owner.current)
-		to_chat(owner.current,span_danger("I am no longer a [special_role]!"))
+		to_chat(owner.current, span_danger("I am no longer a [special_role]!"))
 	owner.special_role = null
-	owner.current.remove_spell(/datum/action/cooldown/spell/undirected/werewolf_form)
-	owner.current.remove_language(/datum/language/beast)
 
-	UnregisterSignal(owner.current, list(COMSIG_RAGE_BOTTOMED, COMSIG_RAGE_OVERRAGE))
+	if(owner.current)
+		owner.current.remove_spell(/datum/action/cooldown/spell/undirected/werewolf_form)
+		owner.current.remove_language(/datum/language/beast)
+
 	if(ishuman(owner.current))
 		var/mob/living/carbon/human/current_human = owner.current
 		QDEL_NULL(current_human.rage_datum)
 
-	owner.current.verbs -= /mob/living/carbon/human/proc/toggle_werewolf_transform
 	return ..()
 
 /datum/antagonist/werewolf/proc/add_objective(datum/objective/O)
@@ -101,7 +112,7 @@
 	objectives -= O
 
 /datum/antagonist/werewolf/proc/forge_werewolf_objectives()
-	var/list/primary = pick(list("1","2"))
+	var/list/primary = pick(list("1", "2"))
 	var/list/secondary = pick(list("1", "2"))
 	switch(primary)
 		if("1")
@@ -153,7 +164,7 @@
 /mob/living/carbon/human/proc/werewolf_infect_attempt()
 	var/datum/antagonist/werewolf/wolfy = werewolf_check()
 	var/mob/living/carbon/human/H = src
-	if(istype(H.wear_neck, /obj/item/clothing/neck/psycross/silver) || istype(H.wear_wrists, /obj/item/clothing/neck/psycross/silver) )
+	if(istype(H.wear_neck, /obj/item/clothing/neck/psycross/silver) || istype(H.wear_wrists, /obj/item/clothing/neck/psycross/silver))
 		if(prob(50))
 			return
 	if(!wolfy)
@@ -255,24 +266,3 @@
 	ADD_TRAIT(src, TRAIT_NODROP, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOEMBED, TRAIT_GENERIC)
 
-/mob/living/carbon/human/proc/toggle_werewolf_transform()
-	set name = "Toggle Transformation"
-	set category = "WEREWOLF"
-	var/datum/antagonist/werewolf/ww = mind.has_antag_datum(/datum/antagonist/werewolf)
-	if(isnull(ww))
-		to_chat(src, span_warning("You are not a werewolf!"))
-		return
-	if(ww.forced_transform)
-		ww.forced_transform = FALSE
-	else
-		ww.forced_transform = TRUE
-	if(!ww.transformed && ww.forced_transform)
-		flash_fullscreen("redflash3")
-		ww.werewolf_transform()
-		ww.transformed = TRUE
-	else if(ww.transformed)
-		ww.werewolf_untransform()
-		flash_fullscreen("redflash3")
-		ww.transformed = FALSE
-		Stun(30)
-		Knockdown(30)

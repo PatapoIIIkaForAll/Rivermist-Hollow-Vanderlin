@@ -5,6 +5,8 @@
 	var/datum/ai_behavior/find_potential_targets/owning_behavior
 	/// The ai controller we're using
 	var/datum/ai_controller/controller
+	/// Blackboard key storing this field on the controller
+	var/field_key
 	/// The target key we're trying to fill
 	var/target_key
 	/// The targeting strategy KEY we're using
@@ -20,14 +22,17 @@
 
 // Initially, run the check manually
 // If that fails, set up a field and have it manage the behavior fully
-/datum/proximity_monitor/advanced/ai_target_tracking/New(atom/_host, range, _ignore_if_not_on_turf = TRUE, datum/ai_behavior/find_potential_targets/owning_behavior, datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key)
+/datum/proximity_monitor/advanced/ai_target_tracking/New(atom/_host, range, _ignore_if_not_on_turf = TRUE, datum/ai_behavior/find_potential_targets/owning_behavior, datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key, field_key = null)
 	. = ..()
 	src.owning_behavior = owning_behavior
 	src.controller = controller
+	src.field_key = field_key
 	src.target_key = target_key
 	src.targeting_strategy_key = targeting_strategy_key
 	src.hiding_location_key = hiding_location_key
 	src.filter = controller.blackboard[targeting_strategy_key]
+	if(isnull(src.field_key) && owning_behavior)
+		src.field_key = BB_FIND_TARGETS_FIELD(owning_behavior.type)
 	RegisterSignal(controller, COMSIG_PARENT_QDELETING, PROC_REF(controller_deleted))
 	RegisterSignal(controller, COMSIG_AI_CONTROLLER_PICKED_BEHAVIORS, PROC_REF(controller_think))
 	RegisterSignal(controller, AI_CONTROLLER_BEHAVIOR_QUEUED(owning_behavior.type), PROC_REF(behavior_requeued))
@@ -39,8 +44,11 @@
 	. = ..()
 	if(!QDELETED(controller) && owning_behavior)
 		controller.modify_cooldown(owning_behavior, world.time + owning_behavior.get_cooldown(controller))
+	if(!QDELETED(controller) && field_key)
+		controller.clear_blackboard_key(field_key)
 	owning_behavior = null
 	controller = null
+	field_key = null
 	target_key = null
 	targeting_strategy_key = null
 	hiding_location_key = null
@@ -54,7 +62,13 @@
 	. = ..()
 	if(first_build)
 		return
-	owning_behavior.new_turf_found(target, controller, filter)
+	var/list/present = list()
+	for(var/atom/movable/AM in target)
+		present += AM
+	if(length(present))
+		owning_behavior.new_atoms_found(present, controller, target_key, filter, hiding_location_key)
+	else
+		owning_behavior.new_turf_found(target, controller, filter)
 
 /datum/proximity_monitor/advanced/ai_target_tracking/field_turf_crossed(atom/movable/movable, turf/location, turf/old_location)
 	if(!owning_behavior.atom_allowed(movable, filter, controller.pawn, controller))

@@ -1864,57 +1864,55 @@
 	if(!target || mammons_to_add <= 0)
 		return FALSE
 
-	var/static/list/coin_types_in_order = list(
-		/obj/item/coin/platinum,
-		/obj/item/coin/gold,
-		/obj/item/coin/electrum,
-		/obj/item/coin/silver,
-		/obj/item/coin/copper,
-	)
-	var/static/list/coin_type_values
-	var/static/coin_stack_limit = 20
-	if(!coin_type_values)
-		coin_type_values = list()
-		for(var/coin_type in coin_types_in_order)
-			var/obj/item/coin/sample_coin = new coin_type()
-			coin_type_values[coin_type] = sample_coin.sellprice
-			qdel(sample_coin)
-
 	var/remaining_mammons = mammons_to_add
 
-	for(var/coin_type in coin_types_in_order)
-		var/coin_value = coin_type_values[coin_type]
-		if(coin_value <= 0 || remaining_mammons < coin_value)
+	// First, try to add to existing coin stacks
+	for(var/obj/item/coin/existing_coin in target.contents)
+		if(!existing_coin.base_type || remaining_mammons <= 0)
 			continue
 
-		var/coins_needed = floor(remaining_mammons / coin_value)
-		if(coins_needed <= 0)
+		var/space_in_stack = 20 - existing_coin.quantity // MAX_COIN_STACK_SIZE = 20
+		if(space_in_stack <= 0)
 			continue
 
-		for(var/obj/item/coin/existing_coin in target.contents)
-			if(existing_coin.type != coin_type || coins_needed <= 0)
-				continue
-
-			var/space_in_stack = coin_stack_limit - existing_coin.quantity
-			if(space_in_stack <= 0)
-				continue
-
-			var/coins_to_add = min(coins_needed, space_in_stack)
+		var/coins_to_add = min(floor(remaining_mammons / existing_coin.sellprice), space_in_stack)
+		if(coins_to_add > 0)
 			existing_coin.set_quantity(existing_coin.quantity + coins_to_add)
-			coins_needed -= coins_to_add
-			remaining_mammons -= coins_to_add * coin_value
+			remaining_mammons -= coins_to_add * existing_coin.sellprice
 
-		while(coins_needed > 0)
-			var/coins_to_create = min(coins_needed, coin_stack_limit)
-			var/obj/item/coin/new_coin = new coin_type(get_turf(target), coins_to_create)
+	// Create new coin stacks for remaining mammons
+	while(remaining_mammons > 0)
+		var/coin_type_to_create = null
+		var/coin_value = 0
 
-			if(ismob(target))
-				target.put_in_hands(new_coin)
-			else
-				new_coin.forceMove(target)
+		// Determine best coin denomination
+		if(remaining_mammons >= 1000)
+			coin_type_to_create = /obj/item/coin/platinum
+			coin_value = 1000
+		else if(remaining_mammons >= 100)
+			coin_type_to_create = /obj/item/coin/gold
+			coin_value = 100
+		else if(remaining_mammons >= 50)
+			coin_type_to_create = /obj/item/coin/electrum
+			coin_value = 50
+		else if(remaining_mammons >= 10)
+			coin_type_to_create = /obj/item/coin/silver
+			coin_value = 10
+		else if(remaining_mammons >= 1)
+			coin_type_to_create = /obj/item/coin/copper
+			coin_value = 1
+		else
+			break // Less than 1 mammon remaining
 
-			coins_needed -= coins_to_create
-			remaining_mammons -= coins_to_create * coin_value
+		var/coins_to_create = min(floor(remaining_mammons / coin_value), 20)
+		var/obj/item/coin/new_coin = new coin_type_to_create(get_turf(target), coins_to_create)
+
+		if(ismob(target))
+			target.put_in_hands(new_coin)
+		else
+			new_coin.forceMove(target)
+
+		remaining_mammons -= coins_to_create * coin_value
 
 	return mammons_to_add - remaining_mammons // Return actual amount added
 

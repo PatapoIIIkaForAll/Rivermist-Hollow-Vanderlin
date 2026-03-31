@@ -29,8 +29,8 @@
 	block2add = FOV_BEHIND
 
 /obj/item/clothing/head/helmet/heavy/psydonbarbute
-	name = "psydonian barbute"
-	desc = "A barbute styled with Psydonian Imagery."
+	name = "exotic barbute"
+	desc = "A barbute styled with Aonic imagery."
 	icon_state = "psydonbarbute"
 	item_state = "psydonbarbute"
 	block2add = FOV_BEHIND
@@ -89,7 +89,7 @@
 // Vampire Lord is no longer as OP, but the armor should protect against dreaded stabs or it makes the vitae spent on it pointless.
 /obj/item/clothing/head/helmet/heavy/vampire
 	name = "savoyard"
-	desc = "A terrifying yet crude helmet shaped like a humen skull. Commands the inspiring terror of inhumen tyrants from yils past."
+	desc = "A terrifying yet crude helmet shaped like a human skull. Commands the inspiring terror of inhumen tyrants from yils past."
 	icon_state = "savoyard"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR
 
@@ -187,8 +187,8 @@
 	name = "willful helmet"
 	desc = "Baothan knights are an antithesis : the tiefling queen preaches self preservation at the cost of even family or friend. Choosing to embark on a quest to knightlyhood means facing peril at the forefront. \
 	Indeed, many are the upstarts who understood the folly of their journey, and either turned back to the warmth of ozium and wine or died in the process. \
-	The original wearer of this helmet is no such pushover : they do not have the might of Graggar nor the magick of Zizo, and instead rely on their wits and grit to proclaim their unicity in the face of this cold, uncaring world. \
-	It is rumoured that Baotha offers this baroque piece in person, as a reward for the knight's unflinching will in the face of sheer terror, minute after minute, hour after hour. \
+	The original wearer of this helmet is no such pushover : they do not have the might of Gruumsh nor the magick of Lolth, and instead rely on their wits and grit to proclaim their unicity in the face of this cold, uncaring world. \
+	It is rumoured that Blissara offers this baroque piece in person, as a reward for the knight's unflinching will in the face of sheer terror, minute after minute, hour after hour. \
 	Fashioned in steel and petals, it has no viewport, the wearer instead having their senses heightened to preternatural levels." // yes, this is a long item description, but it's the only piece of armour unique to Baotha.
 	icon_state = "baothahelm"
 	icon = 'icons/roguetown/clothing/special/baothanknight.dmi'
@@ -234,7 +234,7 @@
 //............... Noc Helmet ............... //
 /obj/item/clothing/head/helmet/heavy/necked/noc
 	name = "night helmet"
-	desc = "A sleek and rounded heavy helmet with a maille neck cover. Its unique craft is said to allow holy warriors of Noc additional insight before battle."
+	desc = "A sleek and rounded heavy helmet with a maille neck cover. Its unique craft is said to allow holy warriors of Mystra additional insight before battle."
 	icon_state = "nochelm"
 	item_weight = 6 * SILVER_MULTIPLIER
 	flags_inv = HIDEEARS
@@ -521,8 +521,8 @@
 		return
 
 /obj/item/clothing/head/helmet/heavy/absolver
-	name = "psydonian conical helm"
-	desc = "Its shape confounds and confuses the enemies of Psydon. Offering unfound protection in its visage, the gaze is horrific to those without understanding."
+	name = "exotic conical helm"
+	desc = "Its shape confounds and confuses the enemies of Ao. Offering unfound protection in its visage, the gaze is horrific to those without understanding."
 	icon_state = "absolutionisthelm"
 	item_state = "absolutionisthelm"
 	emote_environment = 3
@@ -537,7 +537,7 @@
 	clothing_flags = NONE
 
 /obj/item/clothing/head/helmet/heavy/psybucket
-	name = "psydonian bucket helmet"
+	name = "exotic bucket helmet"
 	desc = "Originally just a bucket with a psycross nailed on, it proved surprisingly effective, making its way into common use for inquisitorial templars. Steel encapsulates your head, and His cross facing enemies reminds them that you will endure until they meet oblivion. Only then may you rest."
 	icon_state = "psybucket"
 	item_state = "psybucket"
@@ -547,7 +547,7 @@
 	max_integrity = 400
 
 /obj/item/clothing/head/helmet/heavy/psysallet
-	name = "psydonian sallet"
+	name = "exotic sallet"
 	desc = "A boiled leather cap, crowned with steel and veiled with His cross. Fear not - He will show you the way, and He will see your blows well-struck."
 	icon_state = "psysallet"
 	item_state = "psysallet"

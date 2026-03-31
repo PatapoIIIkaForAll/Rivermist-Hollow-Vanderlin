@@ -24,8 +24,8 @@
 // When other elements are used, add them here
 
 // Alignments
-#define MAGIC_ALIGNMENT_NORMAL "Follower of Noc"
-#define MAGIC_ALIGNMENT_NECROMANCER "Child of Zizo"
+#define MAGIC_ALIGNMENT_NORMAL "Follower of Mystra"
+#define MAGIC_ALIGNMENT_NECROMANCER "Child of Lolth"
 
 /// Returns the raw attunement correspondance between args 1 and 3. Its fine if both are negative, since thats a positive correspondance.
 /// The direction and intensity of the correspondance should correspond to altered casting cost - intense positive correspondance should lower

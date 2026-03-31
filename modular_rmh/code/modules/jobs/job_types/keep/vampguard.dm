@@ -69,7 +69,7 @@
 				var/turf/T = H.loc
 				if(T.can_see_sky())
 					if(T.get_lumcount() > 0.15)
-						to_chat(H, span_warning("Astrata spurns me! I must get out of her rays!")) // VLord is more punished for daylight excursions.
+						to_chat(H, span_warning("Lathander spurns me! I must get out of his rays!")) // VLord is more punished for daylight excursions.
 						var/turf/N = H.loc
 						if(N.can_see_sky())
 							if(N.get_lumcount() > 0.15)

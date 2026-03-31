@@ -223,7 +223,7 @@
 
 /datum/blueprint_recipe/structure/psydon_metal_cross
 	name = "metal psycross"
-	desc = "A metal psycross dedicated to Psydon."
+	desc = "A metal holy symbol dedicated to Ao."
 	required_materials = list(
 		/obj/item/ingot/iron = 3,
 	)
@@ -234,7 +234,7 @@
 
 /datum/blueprint_recipe/structure/astrata_cross
 	name = "astrata cross"
-	desc = "A metal psycross dedicated to Astrata."
+	desc = "A metal holy symbol dedicated to Lathander."
 	required_materials = list(
 		/obj/item/ingot/iron = 3,
 	)
@@ -245,7 +245,7 @@
 
 /datum/blueprint_recipe/structure/astrata_cross_gold
 	name = "golden astrata cross"
-	desc = "A golden psycross dedicated to Astrata."
+	desc = "A golden holy symbol dedicated to Lathander."
 	required_materials = list(
 		/obj/item/ingot/gold = 3,
 	)

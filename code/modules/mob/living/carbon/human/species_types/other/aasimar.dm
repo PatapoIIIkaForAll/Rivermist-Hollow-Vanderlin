@@ -16,7 +16,7 @@
 	native_language = "Celestial"
 	desc = "Immortal offspring sculpted by the gods for use in servitude. \
 	\n\n\
-	Aasimar roaming alone on Psydonia often are those abandoned after serving their purpose. \
+	Aasimar roaming alone on Faerun often are those abandoned after serving their purpose. \
 	This species is often revered due to their celestial origin, \
 	but face great solitude as not many of their kind exist. \
 	Many an aasimar will detest the reverence in which they are greeted with, \
@@ -25,7 +25,7 @@
 	An aasimar may be crafted with any number of materials. \
 	Many resemble sculptures of stone or are ceramic in skin, \
 	but their insides are just as mortal as any other. \
-	Most Aasimar were created to serve The Ten, and few if any Psydonic Aasimar remain to this day- \
+	Most Aasimar were created to serve the gods, and few if any temple-forged Aasimar remain to this day- \
 	decrepit husks of what were once great warriors. "
 
 
@@ -88,6 +88,19 @@
 
 	meat = list(/obj/item/natural/stone = 1)
 
+	organs = list(
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart,
+		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes,
+		ORGAN_SLOT_EARS = /obj/item/organ/ears,
+		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,
+		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
+		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
+		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_ANUS = /obj/item/organ/genitals/filling_organ/anus,
+	)
+
 	bodypart_features = list(
 		/datum/bodypart_feature/hair/head,
 		/datum/bodypart_feature/hair/facial,
@@ -106,6 +119,7 @@
 		/datum/customizer/organ/genitals/belly/human,
 		/datum/customizer/organ/genitals/butt/human,
 		/datum/customizer/organ/genitals/testicles/human,
+		/datum/customizer/organ/wings/aasimar,
 	)
 
 	body_markings = list(

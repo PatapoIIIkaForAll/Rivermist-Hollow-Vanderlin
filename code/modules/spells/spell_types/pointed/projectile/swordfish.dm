@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/projectile/swordfish
-	name = "Abyssor's Rage"
-	desc = "Throw a swordfish from Abyssor's domain."
+	name = "Umberlee's Rage"
+	desc = "Throw a swordfish from Umberlee's domain."
 	button_icon_state = "curse2"
 	sound = 'sound/magic/whiteflame.ogg'
 
@@ -8,7 +8,7 @@
 	antimagic_flags = MAGIC_RESISTANCE_HOLY
 	associated_skill = /datum/skill/magic/holy
 
-	invocation = "Feel Abyssor's rage!"
+	invocation = "Feel Umberlee's rage!"
 	invocation_type = INVOCATION_SHOUT
 
 	charge_time = 2 SECONDS
@@ -20,7 +20,7 @@
 //esssentially a magic throwing knife
 /obj/projectile/magic/swordfish
 	name = "swordfish"
-	desc = "But one enactor of Abyssor's rage."
+	desc = "But one enactor of Umberlee's rage."
 	icon = 'icons/roguetown/misc/fish.dmi'
 	icon_state = "swordfish_proj"
 	damage = DAMAGE_DAGGER * 2
@@ -38,7 +38,7 @@
 
 /obj/item/reagent_containers/food/snacks/fish/swordfish
 	name = "swordfish"
-	desc = "But one enactor of Abyssor's rage."
+	desc = "But one enactor of Umberlee's rage."
 	icon = 'icons/roguetown/misc/fish.dmi'
 	icon_state = "swordfishcom"
 	fish_id = "swordfish"

@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/status/guidance
-	name = "Arcyne Guidance"
-	desc = "Blesses your target with arcyne luck, improving their ability in combat."
+	name = "Arcane Guidance"
+	desc = "Blesses your target with arcane luck, improving their ability in combat."
 	button_icon_state = "guidance"
 	sound = 'sound/magic/haste.ogg'
 
@@ -48,5 +48,5 @@
 
 /atom/movable/screen/alert/status_effect/buff/guidance
 	name = "Guidance"
-	desc = span_nicegreen("Arcyne assistance guides my senses in combat.")
+	desc = span_nicegreen("Arcane assistance guides my senses in combat.")
 	icon_state = "buff"

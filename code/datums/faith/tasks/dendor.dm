@@ -1,7 +1,7 @@
 
 /datum/devotion_task/dendor_harvest
 	name = "Reap the Bounty"
-	desc = "Harvest crops blessed by Dendor"
+	desc = "Harvest crops blessed by Silvanus"
 	devotion_reward = 2
 	progression_reward = 2
 	cooldown_time = 0 SECONDS
@@ -28,8 +28,8 @@
 	return FALSE
 
 /datum/devotion_task/dendor_bless
-	name = "Provide Dendor's Blessing"
-	desc = "Spread dendors word to plants"
+	name = "Provide Silvanus's Blessing"
+	desc = "Spread Silvanus's blessing to plants"
 	devotion_reward = 25
 	progression_reward = 12
 	cooldown_time = 25 SECONDS

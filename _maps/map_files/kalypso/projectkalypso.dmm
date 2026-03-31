@@ -3368,7 +3368,7 @@
 /turf/open/floor/dirt,
 /area/outdoors)
 "qQ" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /turf/open/floor/greenstone,
 /area/under/cave)
 "qS" = (
@@ -5493,7 +5493,7 @@
 	},
 /area/outdoors)
 "BN" = (
-/obj/structure/bookcase/random/eoratica{
+/obj/structure/bookcase/random/erotica{
 	name = "bookcase (Torture Manuscripts)"
 	},
 /turf/open/floor/greenstone,
@@ -6438,7 +6438,7 @@
 /turf/open/floor/ruinedwood/turned,
 /area/under/cave)
 "GY" = (
-/obj/item/book/random_book/eoratica{
+/obj/item/book/random_book/erotica{
 	pixel_x = 11;
 	pixel_y = -11
 	},
@@ -6458,7 +6458,7 @@
 /turf/open/floor/blocks,
 /area/under/cave)
 "Hi" = (
-/obj/item/book/random_book/eoratica,
+/obj/item/book/random_book/erotica,
 /obj/item/reagent_containers/glass/bottle/beer/fireleaf{
 	pixel_x = 10;
 	pixel_y = -12
@@ -8163,7 +8163,7 @@
 /turf/open/floor/dirt,
 /area/outdoors)
 "Qm" = (
-/obj/item/book/random_book/eoratica,
+/obj/item/book/random_book/erotica,
 /obj/item/clothing/head/peaceflower,
 /turf/open/floor/grass/eora,
 /area/outdoors)
@@ -9681,7 +9681,7 @@
 /turf/open/floor/grass,
 /area/outdoors)
 "Yy" = (
-/obj/item/book/random_book/eoratica,
+/obj/item/book/random_book/erotica,
 /obj/item/reagent_containers/glass/bottle{
 	pixel_x = -13;
 	pixel_y = -7

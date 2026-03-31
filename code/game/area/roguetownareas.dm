@@ -105,7 +105,7 @@
 	background_track = 'sound/music/area/decap.ogg'
 	background_track_dusk = null
 	background_track_night = null
-	first_time_text = "MALUMS ANVIL"
+	first_time_text = "MORADIN'S ANVIL"
 	custom_area_sound = 'sound/misc/stings/MalumSting.ogg'
 	ambush_times = list("night","dawn","dusk","day")
 
@@ -237,7 +237,7 @@
 	threat_region = THREAT_REGION_COAST
 
 /area/outdoors/eora
-	name = "eoran grove"
+	name = "sune's grove"
 	icon_state = "eora"
 	droning_index = DRONING_FOREST_DAY
 	background_track = 'sound/music/area/eora.ogg'
@@ -338,7 +338,7 @@
 /area/under/cavelava
 	name = "cavelava"
 	icon_state = "cavelava"
-	first_time_text = "MALUM'S ARTERY"
+	first_time_text = "MORADIN'S ARTERY"
 	droning_index = DRONING_CAVE_LAVA
 	ambient_index = AMBIENCE_CAVE
 	ambush_times = list("night","dawn","dusk","day")
@@ -666,11 +666,11 @@
 
 /area/indoors/town/church/chapel
 	icon_state = "chapel"
-	first_time_text = "THE HOUSE OF THE TEN"
+	first_time_text = "THE HOUSE OF THE GODS"
 
 /area/indoors/town/church/inquisition
 	name = "inquisition"
-	first_time_text = "INQUISITIONS LAIR"
+	first_time_text = "THE INQUISITION"
 
 /area/indoors/town/fire_chamber
 	name = "incinerator"
@@ -874,7 +874,7 @@
 	name = "lair (Vampire Lord)"
 
 /area/outdoors/bog/inhumen_camp
-	name = "lair (Inhumen)"
+	name = "lair (Dark Gods)"
 	background_track = 'sound/music/area/decap.ogg'
 	first_time_text = "THE DEEP BOG"
 

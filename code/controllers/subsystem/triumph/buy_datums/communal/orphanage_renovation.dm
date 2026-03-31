@@ -9,7 +9,7 @@
 	SSmapping.add_world_trait(/datum/world_trait/orphanage_renovated, 0)
 
 	bordered_message(world, list(
-		span_reallybig("The Orphanage has been renovated! Eora smiles upon you all!"),
+		span_reallybig("The Orphanage has been renovated! Yondalla smiles upon you all!"),
 	))
 
 	for(var/client/C in GLOB.clients)

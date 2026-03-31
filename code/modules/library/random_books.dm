@@ -42,13 +42,13 @@
 	name = "bookcase (Thesis)"
 	category = "Thesis"
 
-/obj/structure/bookcase/random/eoratica
-	name = "bookcase (Eoratica)"
-	category = "Eoratica"
+/obj/structure/bookcase/random/erotica
+	name = "bookcase (Erotica)"
+	category = "Erotica"
 
 /obj/structure/bookcase/random/archive // Deprecated subtype, used in the old code. Swap these out for one of the types above whenever possible.
 	name = "bookcase (Random)"
-	category = "Eoratica"
+	category = "Erotica"
 	desc = "This is an improper bookcase. Please exit the game and inform your local mapper where this is and to replace it."
 
 /obj/item/book/random_book
@@ -113,9 +113,9 @@
 	book_category = "Thesis"
 	name = "Book (Thesis)"
 
-/obj/item/book/random_book/eoratica
-	book_category = "Eoratica"
-	name = "Book (Eoratica)"
+/obj/item/book/random_book/erotica
+	book_category = "Erotica"
+	name = "Book (Erotica)"
 
 /obj/item/book/random // Deprecated subtype
 	name = "Book (improper)"

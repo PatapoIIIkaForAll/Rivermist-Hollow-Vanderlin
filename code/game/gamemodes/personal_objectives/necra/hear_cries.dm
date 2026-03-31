@@ -1,9 +1,9 @@
 /datum/objective/personal/listen_whispers
 	name = "Listen to Dead's Whispers"
-	category = "Necra's Chosen"
+	category = "Jergal's Chosen"
 	triumph_count = 2
 	immediate_effects = list("Gained a temporary ability to listen to the cries of the dead")
-	rewards = list("2 Triumphs", "Necra grows stronger", "Death and suffering won't disturb you")
+	rewards = list("2 Triumphs", "Jergal grows stronger", "Death and suffering won't disturb you")
 	var/time_required = 3 MINUTES
 	var/time_spent = 0
 	var/last_check = 0
@@ -57,7 +57,7 @@
 
 /datum/objective/personal/listen_whispers/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have listened to the whispers of the dead long enough to satisfy Necra!"))
+	to_chat(owner.current, span_greentext("You have listened to the whispers of the dead long enough to satisfy Jergal!"))
 	adjust_storyteller_influence(NECRA, 20)
 	STOP_PROCESSING(SSprocessing, src)
 
@@ -66,4 +66,4 @@
 	ADD_TRAIT(owner.current, TRAIT_STEELHEARTED, OBJECTIVE_TRAIT)
 
 /datum/objective/personal/listen_whispers/update_explanation_text()
-	explanation_text = "Necra wants you to understand death better. Spend at least [time_required / (1 MINUTES)] minutes in the church listening to the whispers of the dead while wearing an amulet of Necra."
+	explanation_text = "Jergal wants you to understand death better. Spend at least [time_required / (1 MINUTES)] minutes in the church listening to the whispers of the dead while wearing an amulet of Jergal."

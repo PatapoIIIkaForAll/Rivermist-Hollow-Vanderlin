@@ -12,11 +12,13 @@
 
 /proc/randomize_human(mob/living/carbon/human/H)
 	set waitfor = 0
-	H.gender = pick(MALE, FEMALE)
+	var/gender_ratio = H.dna?.species.gender_ratio ? H.dna?.species.gender_ratio : 50
+	if(rand(gender_ratio))
+		H.gender = MALE
+	else
+		H.gender = FEMALE
 	H.real_name = random_unique_name(H.gender)
 	H.name = H.real_name
-//	H.underwear = random_underwear(H.gender)
-//	H.underwear_color = random_short_color()
 	H.skin_tone = random_skin_tone()
 	H.dna.human_blood_type = random_human_blood_type()
 

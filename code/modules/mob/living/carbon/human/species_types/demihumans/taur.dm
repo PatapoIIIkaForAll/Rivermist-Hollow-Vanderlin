@@ -6,15 +6,15 @@
 	id = SPEC_ID_TAUR_KIN
 
 	desc = "Taur-Kins are a highly diverse and varied group of people, the majority of which are descendants of the \
-	first followers of Dendor who rejected civilization in favour of the deep forests. However, some came from \
+	first followers of Silvanus who rejected civilization in favour of the deep forests. However, some came from \
 	magical anomalies or curses, Divine or otherwise. \
-	<br><br> \ Their bloodlines were blessed by Dendor for their ancestor&#39;s devotion \
-	and this is reflected in their appearance. Some descendants of the first Dendorite Taur-Kins, \
-	especially those not as devoted to the ways of Dendor and filled \
+	<br><br> \ Their bloodlines were blessed by Silvanus for their ancestor&#39;s devotion \
+	and this is reflected in their appearance. Some descendants of the first forest-blessed Taur-Kins, \
+	especially those not as devoted to the ways of Silvanus and filled \
 	with wanderlust, emerged from their remote communities to embrace the civilization their ancestors had once rejected. \
 	<br><br> \
 	At first, they faced discrimination from people wary of their abnormal appearances. Yet, their appearance was a blessing \
-	from Dendor, and the clergy of the Ten made this known throughout the lands of the faithful. Taur-Kins are now fully \
+	from Silvanus, and the clergy of the gods made this known throughout the lands of the faithful. Taur-Kins are now fully \
 	accepted, with many even holding titles of landed nobility. However, there is still an air of distrust and uncertainty \
 	surrounding them, especially for those who acquired their features during life rather than through birth."
 

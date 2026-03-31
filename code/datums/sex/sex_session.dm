@@ -52,13 +52,17 @@
 	assign_to_collective()
 
 	RegisterSignal(user, COMSIG_SEX_CLIMAX, PROC_REF(on_climax))
-
-	add_ui_tracking("sexcon[our_sex_id]")
+	RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(on_participant_qdeleting))
+	if(target != user)
+		RegisterSignal(target, COMSIG_PARENT_QDELETING, PROC_REF(on_participant_qdeleting))
 
 	addtimer(CALLBACK(src, PROC_REF(check_sex)), 30 SECONDS)
 
 /datum/sex_session/Destroy(force, ...)
-	UnregisterSignal(user, list(COMSIG_SEX_CLIMAX, COMSIG_SEX_AROUSAL_CHANGED))
+	if(user)
+		UnregisterSignal(user, list(COMSIG_SEX_CLIMAX, COMSIG_SEX_AROUSAL_CHANGED, COMSIG_PARENT_QDELETING))
+	if(target && target != user)
+		UnregisterSignal(target, COMSIG_PARENT_QDELETING)
 	stop_current_action()
 	// Remove from collective
 	if(session_updater)
@@ -72,6 +76,14 @@
 			//collective.unregister_collective_tab()
 			LAZYREMOVE(GLOB.sex_collectives, collective)
 			qdel(collective)
+		collective = null
+
+	if(active_actions)
+		active_actions.Cut()
+	active_actions = null
+	current_action = null
+	user = null
+	target = null
 
 	GLOB.sex_sessions -= src
 	. = ..()
@@ -103,12 +115,18 @@
 		return
 	qdel(src)
 
+/datum/sex_session/proc/on_participant_qdeleting()
+	SIGNAL_HANDLER
+	qdel(src)
+
 /datum/sex_session/proc/is_ui_open()
 	if(!user?.client)
 		return FALSE
 	return winexists(user.client, "sexcon[our_sex_id]")
 
 /datum/sex_session/proc/add_ui_tracking(window_id)
+	if(session_updater)
+		return
 	session_updater = new /datum/ui_updater(user, window_id, src, FALSE)
 
 	session_updater.track_property("arousal_data", "updateProgressBars", variable = FALSE)
@@ -285,6 +303,9 @@
 	active_actions -= action
 	action.on_finish(user, target)
 	update_current_action()
+	if(!length(active_actions))
+		// This is only a one-shot "finish the current loop" latch; don't let it leak into a future encounter.
+		just_climaxed = FALSE
 	qdel(action)
 
 /datum/sex_session/proc/can_perform_action(action_type, performing = FALSE)
@@ -760,6 +781,11 @@
 	return content.Join("")
 
 /datum/sex_session/proc/show_ui(selected_tab = "interactions")
+	if(!user?.client)
+		return
+	if(!session_updater)
+		add_ui_tracking("sexcon[our_sex_id]")
+
 	var/list/dat = list()
 	var/list/arousal_data = list()
 	SEND_SIGNAL(user, COMSIG_SEX_GET_AROUSAL, arousal_data)

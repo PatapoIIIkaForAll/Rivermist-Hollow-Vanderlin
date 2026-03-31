@@ -16,7 +16,11 @@
 /datum/ui_updater/Destroy()
 	if(tracker)
 		qdel(tracker)
+		tracker = null
+	viewer = null
+	window_id = null
 	property_js_map.Cut()
+	property_js_map = null
 	return ..()
 
 /datum/ui_updater/proc/track_property(property_path, js_update_function, datum/callback/data_getter = null, variable = TRUE)

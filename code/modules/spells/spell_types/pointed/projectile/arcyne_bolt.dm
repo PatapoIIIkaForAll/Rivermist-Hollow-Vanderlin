@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/projectile/arcyne_bolt
-	name = "Arcyne Bolt"
-	desc = "Shoot out rapid bolts of arcyne power."
+	name = "Arcane Bolt"
+	desc = "Shoot out rapid bolts of arcane power."
 	button_icon_state =  "arcane_bolt"
 	sound = 'sound/magic/vlightning.ogg'
 

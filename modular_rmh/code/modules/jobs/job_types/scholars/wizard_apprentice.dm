@@ -1,6 +1,6 @@
 /datum/job/guild_wizard_apprentice
 	title = "Guild Wizard Apprentice"
-	tutorial = "You are learning the Arcyne Arts. Study hard, assist your mentors, and practice your magic to become a fully fledged guild wizard."
+	tutorial = "You are learning the arcane arts. Study hard, assist your mentors, and practice your magic to become a fully fledged guild wizard."
 	department_flag = SCHOLARS
 	faction = FACTION_TOWN
 	total_positions = 4

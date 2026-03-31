@@ -1,8 +1,8 @@
 /datum/objective/personal/improve_craft
 	name = "Improve Craft Skills"
-	category = "Malum's Chosen"
+	category = "Moradin's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Malum grows stronger", "Malum blesses you (+1 Intelligence)")
+	rewards = list("2 Triumphs", "Moradin grows stronger", "Moradin blesses you (+1 Intelligence)")
 	var/levels_gained = 0
 	var/required_levels = 2
 
@@ -37,11 +37,11 @@
 		complete_objective()
 	else
 		var/remaining = required_levels - levels_gained
-		to_chat(owner.current, span_notice("Craft skill improved! [remaining] more level[remaining == 1 ? "" : "s"] needed to fulfill Malum's task!"))
+		to_chat(owner.current, span_notice("Craft skill improved! [remaining] more level[remaining == 1 ? "" : "s"] needed to fulfill Moradin's task!"))
 
 /datum/objective/personal/improve_craft/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've improved your craft skills enough to please Malum!"))
+	to_chat(owner.current, span_greentext("You've improved your craft skills enough to please Moradin!"))
 	adjust_storyteller_influence(MALUM, 20)
 	UnregisterSignal(owner.current, COMSIG_SKILL_RANK_CHANGE)
 
@@ -50,4 +50,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_MALUM_BLESSING, STATKEY_INT, 1)
 
 /datum/objective/personal/improve_craft/update_explanation_text()
-	explanation_text = "Improve your craft skills by gaining [required_levels] new skill levels through practice or dreams. For Malum!"
+	explanation_text = "Improve your craft skills by gaining [required_levels] new skill levels through practice or dreams. For Moradin!"

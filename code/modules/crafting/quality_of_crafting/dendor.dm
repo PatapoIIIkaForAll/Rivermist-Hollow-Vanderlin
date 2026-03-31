@@ -1,9 +1,9 @@
 /datum/repeatable_crafting_recipe/dendor
 	abstract_type = /datum/repeatable_crafting_recipe/dendor
-	category = "Dendor"
+	category = "Silvanus"
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_growing
-	name = "green sacrifice to Dendor (unique)"
+	name = "green sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_gote
 	starting_atom = /obj/item/natural/worms/grub_silk
 	requirements = list(/obj/item/natural/worms/grub_silk = 1,
@@ -13,7 +13,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_tending
-	name = "viridian sacrifice to Dendor (unique)"
+	name = "viridian sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_gote
 	starting_atom = /obj/item/alch/herb/euphorbia
 	requirements = list(/obj/item/alch/herb/euphorbia = 1,
@@ -23,7 +23,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_stinging
-	name = "yellow sacrifice to Dendor (unique)"
+	name = "yellow sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_saiga
 	starting_atom = /obj/item/reagent_containers/food/snacks/fish/eel
 	requirements = list(/obj/item/reagent_containers/food/snacks/fish/eel = 1,
@@ -33,7 +33,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_hiding
-	name = "citrine sacrifice to Dendor (unique)"
+	name = "citrine sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_saiga
 	starting_atom = /obj/item/alch/herb/calendula
 	requirements = list(/obj/item/alch/herb/calendula = 1,
@@ -43,7 +43,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_devouring
-	name = "red sacrifice to Dendor (unique)"
+	name = "red sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_volf
 	starting_atom = /obj/item/bait/bloody
 	requirements = list(/obj/item/bait/bloody = 2)
@@ -51,7 +51,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_falconing
-	name = "crimson sacrifice to Dendor (unique)"
+	name = "crimson sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_volf
 	starting_atom = /obj/item/reagent_containers/food/snacks/egg
 	requirements = list(/obj/item/reagent_containers/food/snacks/egg = 1,
@@ -60,7 +60,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_lording
-	name = "purple sacrifice to Dendor (unique)"
+	name = "purple sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_troll
 	starting_atom = /obj/item/alch/horn
 	requirements = list(/obj/item/alch/horn = 2)
@@ -68,7 +68,7 @@
 	crafting_sound = 'sound/foley/burning_sacrifice.ogg'
 
 /datum/repeatable_crafting_recipe/dendor/sacrifice_shaping
-	name = "indigo sacrifice to Dendor (unique)"
+	name = "indigo sacrifice to Silvanus (unique)"
 	attacked_atom = /obj/structure/fluff/psycross/crafted/shrine/dendor_troll
 	starting_atom = /obj/item/alch/sinew
 	requirements = list(/obj/item/alch/sinew = 2,
@@ -109,7 +109,7 @@
 
 /*	.................   Base Blessing of Dendor   ................... */
 /obj/item/dendor_blessing
-	name = "blank blessing of Dendor"
+	name = "blank blessing of Silvanus"
 	icon = 'icons/roguetown/misc/magick.dmi'
 	icon_state = ""
 	plane = -1
@@ -140,7 +140,7 @@
 		var/paths = list(TRAIT_DENDOR_GROWING, TRAIT_DENDOR_STINGING, TRAIT_DENDOR_DEVOURING, TRAIT_DENDOR_LORDING)
 		for(var/T in paths)
 			if(HAS_TRAIT(user, T) && T != path_trait)
-				to_chat(user, span_warning("Dendor rejects my offering... I already follow another path."))
+				to_chat(user, span_warning("Silvanus rejects my offering... I already follow another path."))
 				icon_state = initial(icon_state)
 				return
 
@@ -150,7 +150,7 @@
 			return
 
 		if(gives_tier2 && HAS_TRAIT(user, TRAIT_BLESSED))
-			to_chat(user, span_info("Dendor has already blessed me once. Further miracles must be earned differently."))
+			to_chat(user, span_info("Silvanus has already blessed me once. Further miracles must be earned differently."))
 			icon_state = initial(icon_state)
 			return
 
@@ -167,7 +167,7 @@
 
 		qdel(src)
 	else
-		to_chat(user, span_warning("Dendor finds me unworthy of his blessings..."))
+		to_chat(user, span_warning("Silvanus finds me unworthy of his blessings..."))
 	return
 
 /obj/item/dendor_blessing/proc/check_blessing_requirements(mob/living/user)
@@ -181,7 +181,7 @@
 
 /*	.................   Green Blessings of Dendor   ................... */
 /obj/item/dendor_blessing/growing
-	name = "growing blessing of Dendor"
+	name = "growing blessing of Silvanus"
 	icon_state = "dendor_grow"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_gote
 	path_trait = TRAIT_DENDOR_GROWING
@@ -197,7 +197,7 @@
 	user.apply_status_effect(/datum/status_effect/buff/calm)
 
 /obj/item/dendor_blessing/tending
-	name = "tending blessing of Dendor"
+	name = "tending blessing of Silvanus"
 	icon_state = "dendor_grow"
 	color = "#35ffc6"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_gote
@@ -216,7 +216,7 @@
 
 /*	.................   Yellow Blessings of Dendor   ................... */
 /obj/item/dendor_blessing/stinging
-	name = "stinging blessing of Dendor"
+	name = "stinging blessing of Silvanus"
 	icon_state = "dendor_sting"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_saiga
 	path_trait = TRAIT_DENDOR_STINGING
@@ -233,7 +233,7 @@
 	user.apply_status_effect(/datum/status_effect/buff/calm)
 
 /obj/item/dendor_blessing/hiding
-	name = "hiding blessing of Dendor"
+	name = "hiding blessing of Silvanus"
 	icon_state = "dendor_sting"
 	color = "#e39c2b"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_saiga
@@ -251,7 +251,7 @@
 
 /*	.................  Red Blessings of Dendor   ................... */
 /obj/item/dendor_blessing/devouring
-	name = "devouring blessing of Dendor"
+	name = "devouring blessing of Silvanus"
 	icon_state = "dendor_consume"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_volf
 	path_trait = TRAIT_DENDOR_DEVOURING
@@ -259,7 +259,7 @@
 
 /obj/item/dendor_blessing/devouring/check_blessing_requirements(mob/living/user)
 	if(!user.get_spell(/datum/action/cooldown/spell/undirected/bless_crops))
-		to_chat(user, span_warning("My faith to Dendor is insufficient..."))
+		to_chat(user, span_warning("My faith to Silvanus is insufficient..."))
 		return FALSE
 	return ..()
 
@@ -287,7 +287,7 @@
 	to_chat(user, span_warning("Things that grow no longer interest me, the desire to hunt fills my heart!"))
 
 /obj/item/dendor_blessing/falconing
-	name = "falconing blessing of Dendor"
+	name = "falconing blessing of Silvanus"
 	icon_state = "dendor_consume"
 	color = "#d52bff"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_volf
@@ -305,7 +305,7 @@
 
 /*	.................  Purple Blessings of Dendor   ................... */
 /obj/item/dendor_blessing/lording
-	name = "lording blessing of Dendor"
+	name = "lording blessing of Silvanus"
 	icon_state = "dendor_lord"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_troll
 	path_trait = TRAIT_DENDOR_LORDING
@@ -313,7 +313,7 @@
 
 /obj/item/dendor_blessing/lording/check_blessing_requirements(mob/living/user)
 	if(!user.get_spell(/datum/action/cooldown/spell/healing))
-		to_chat(user, span_warning("My faith to Dendor is insufficient..."))
+		to_chat(user, span_warning("My faith to Silvanus is insufficient..."))
 		return FALSE
 	return ..()
 
@@ -329,7 +329,7 @@
 	to_chat(user, span_warning("I no longer care for mending wounds, let the lords of the forest be known!"))
 
 /obj/item/dendor_blessing/shaping
-	name = "shaping blessing of Dendor"
+	name = "shaping blessing of Silvanus"
 	icon_state = "dendor_lord"
 	color = "#14b7ff"
 	associated_shrine = /obj/structure/fluff/psycross/crafted/shrine/dendor_troll
@@ -340,7 +340,7 @@
 /obj/item/dendor_blessing/shaping/give_blessing(mob/living/carbon/human/user)
 	playsound(get_turf(user), 'sound/vo/smokedrag.ogg', 100, TRUE)
 	playsound(get_turf(user), pick('sound/vo/mobs/troll/idle1.ogg','sound/vo/mobs/troll/idle2.ogg'), 50, TRUE)
-	to_chat(user, span_good("You grow taller and stronger, the might of Dendor surges through you."))
+	to_chat(user, span_good("You grow taller and stronger, the might of Silvanus surges through you."))
 	user.emote("smile")
 	user.add_spell(/datum/action/cooldown/spell/undirected/troll_shape, source = user.cleric)
 	user.apply_status_effect(/datum/status_effect/buff/calm)

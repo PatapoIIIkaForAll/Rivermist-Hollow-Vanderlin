@@ -1,8 +1,8 @@
 /datum/objective/personal/improve_combat
 	name = "Improve Combat Skills"
-	category = "Ravox's Chosen"
+	category = "Tempus's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Ravox grows stronger", "Ravox blesses you (+1 Strength)")
+	rewards = list("2 Triumphs", "Tempus grows stronger", "Tempus blesses you (+1 Strength)")
 	var/levels_gained = 0
 	var/required_levels = 2
 
@@ -37,11 +37,11 @@
 		complete_objective()
 	else
 		var/remaining = required_levels - levels_gained
-		to_chat(owner.current, span_notice("Combat skill improved! [remaining] more level[remaining == 1 ? "" : "s"] needed to fulfill Ravox's task!"))
+		to_chat(owner.current, span_notice("Combat skill improved! [remaining] more level[remaining == 1 ? "" : "s"] needed to fulfill Tempus's task!"))
 
 /datum/objective/personal/improve_combat/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've improved your combat skills enough to satisfy Ravox!"))
+	to_chat(owner.current, span_greentext("You've improved your combat skills enough to satisfy Tempus!"))
 	adjust_storyteller_influence(RAVOX, 20)
 	UnregisterSignal(owner.current, COMSIG_SKILL_RANK_CHANGE)
 
@@ -50,4 +50,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_RAVOX_BLESSING, STATKEY_STR, 1)
 
 /datum/objective/personal/improve_combat/update_explanation_text()
-	explanation_text = "Improve your combat skills by gaining [required_levels] new skill levels through practice or dreams. For Ravox!"
+	explanation_text = "Improve your combat skills by gaining [required_levels] new skill levels through practice or dreams. For Tempus!"

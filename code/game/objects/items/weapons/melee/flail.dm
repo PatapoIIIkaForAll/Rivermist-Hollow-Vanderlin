@@ -87,7 +87,7 @@
 
 //................ Psydon Flail ............... //
 /obj/item/weapon/flail/psydon
-	name = "psydonian flail"
+	name = "exotic flail"
 	desc = "A flail fashioned with the iconography of Psydon, and crafted entirely out of silver."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psyflail"
@@ -105,7 +105,7 @@
 
 /obj/item/weapon/flail/psydon/relic
 	name = "Consecratia"
-	desc = "The weight of His anguish, His pain, His hope and His love for humenkind - all hanging on this ornamental silver-steel head chained to this arm. A declaration of love for all that Psydon lives for, and a crushing reminder that the Ordo Benetarus will endure anything to defend it."
+	desc = "A peculiar-looking morningstar."
 	icon_state = "psymorningstar"
 
 

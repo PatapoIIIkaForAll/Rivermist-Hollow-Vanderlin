@@ -184,24 +184,6 @@
 
 /datum/species/gnome/deep/get_skin_list()
 	return sortList(list(
-		"Pale"         = SKIN_TONE_PALE,
-		"White 1"      = SKIN_TONE_WHITE1,
-		"White 2"      = SKIN_TONE_WHITE2,
-		"White 3"      = SKIN_TONE_WHITE3,
-		"White 4"      = SKIN_TONE_WHITE4,
-		"Tan"          = SKIN_TONE_TAN,
-		"Mediterranean 1" = SKIN_TONE_MEDIT1,
-		"Mediterranean 2" = SKIN_TONE_MEDIT2,
-		"Latin"        = SKIN_TONE_LATIN,
-		"Middle-east 1" = SKIN_TONE_MID_EAST1,
-		"Middle-east 2" = SKIN_TONE_MID_EAST2,
-		"Native American 1" = SKIN_TONE_NATIVE1,
-		"Native American 2" = SKIN_TONE_NATIVE2,
-		"Polynesian"   = SKIN_TONE_POLYNESIAN,
-		"Melanesian"   = SKIN_TONE_MELANESIAN,
-		"Black 1"      = SKIN_TONE_BLACK1,
-		"Black 2"      = SKIN_TONE_BLACK2,
-		"Black 3"      = SKIN_TONE_BLACK3,
 		"Pale Blue"       = SKIN_TONE_DROW_PALE_BLUE,       // #9796a9
 		"Pale Purple"     = SKIN_TONE_DROW_PALE_PURPLE,     // #897489
 		"Pale Grey"       = SKIN_TONE_DROW_PALE_GREY,       // #938f9c

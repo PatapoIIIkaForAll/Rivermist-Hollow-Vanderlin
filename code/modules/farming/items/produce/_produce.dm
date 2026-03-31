@@ -203,7 +203,7 @@
 
 /obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry
 	name = "jacksberries"
-	desc = "Common berries found throughout most of Faience. A traveler's repast, or Dendor's wrath."
+	desc = "Common berries found throughout most of Faerun. A traveler's repast, or Silvanus's wrath."
 	icon_state = "berriesc0"
 	seed = /obj/item/neuFarm/seed/berry
 	tastes = list("berry" = 1)
@@ -608,7 +608,7 @@
 /* .......... Poppies ........ */
 /obj/item/reagent_containers/food/snacks/produce/poppy
 	name = "poppy"
-	desc = "For their crimson beauty and the sedating effect of their crushed seeds, these flowers are considered a symbol of Eora."
+	desc = "For their crimson beauty and the sedating effect of their crushed seeds, these flowers are considered a symbol of Sune."
 	icon_state = "poppy"
 	seed = /obj/item/neuFarm/seed/poppy
 	throwforce = 0
@@ -642,7 +642,7 @@
 
 /obj/item/reagent_containers/food/snacks/produce/mushroom/waddle
 	name = "waddle"
-	desc = "A staple to all those that wander the forests of Faience. Its bright color and unique shape have lent it its name. Some even say it tastes like roast bird."
+	desc = "A staple to all those that wander the forests of Faerun. Its bright color and unique shape have lent it its name. Some even say it tastes like roast bird."
 	icon_state = "waddle"
 	seed = /obj/item/neuFarm/seed/spore/waddle
 	throwforce = 0

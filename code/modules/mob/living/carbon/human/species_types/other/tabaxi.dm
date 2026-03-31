@@ -146,16 +146,7 @@
 	return TRUE
 
 /datum/species/tabaxi/get_skin_list()
-	return list(
-		"Orange" = ORANGE_FUR,
-		"Light grey" = LIGHTGREY_FUR,
-		"Dark grey" = DARKGREY_FUR,
-		"Light orange" = LIGHTORANGE_FUR,
-		"Light brown" = LIGHTBROWN_FUR,
-		"White brown" = WHITEBROWN_FUR,
-		"Dark brown" = DARKBROWN_FUR,
-		"Black" = BLACK_FUR,
-	)
+	return get_common_mutant_color_palette()
 
 /datum/species/tabaxi/get_random_body_markings(list/passed_features)
 	return assemble_body_markings_from_set(GLOB.body_marking_sets_by_type[/datum/body_marking_set/tiger_dark], passed_features, src)

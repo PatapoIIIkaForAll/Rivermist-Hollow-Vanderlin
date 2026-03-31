@@ -102,7 +102,7 @@
 
 /datum/special_trait/night_owl
 	name = "Night Owl"
-	greet_text = span_notice("I've always preferred Noc over his other half.")
+	greet_text = span_notice("I've always preferred Mystra's starlight to Lathander's glare.")
 	weight = 100
 
 /datum/special_trait/night_owl/on_apply(mob/living/carbon/human/character, silent)
@@ -190,10 +190,9 @@
 	character.mind.special_items["Whip"] = /obj/item/weapon/whip/antique
 	character.adjust_skillrank(/datum/skill/combat/whipsflails, 6, TRUE)
 
-/datum/special_trait/psydons_rider
-	name = "Psydon's Drunkest Rider"
-	greet_text = span_notice("I ride! None of the laws shall stop me for that is Psydon's divine will!")
-	req_text = "Worship Psydon"
+/datum/special_trait/drunk_rider
+	name = "Rivermist's Drunkest Rider"
+	greet_text = span_notice("I ride! None of the laws shall stop me, for I am full of fuel!")
 	weight = 100
 
 /datum/special_trait/psydons_rider/on_apply(mob/living/carbon/human/character, silent)
@@ -326,10 +325,10 @@
 
 /datum/special_trait/burdened
 	name = "The Burdened One"
-	greet_text = span_notice("You are a true instrument of creation, the most blessed of Malum, nothing will stop your toil, be it sleep or fatigue.")
+	greet_text = span_notice("You are a true instrument of creation, the most blessed of Moradin, nothing will stop your toil, be it sleep or fatigue.")
 	weight = 10
 	allowed_patrons = list(/datum/patron/divine/malum)
-	req_text = "Worship Malum, must be a carpenter, elder, smith, artificer or miner."
+	req_text = "Worship Moradin, must be a carpenter, elder, smith, artificer or miner."
 	allowed_jobs = list(/datum/job/artisan, /datum/job/artisan_apprentice, /datum/job/towner) // no combat roles
 
 /datum/special_trait/burdened/on_apply(mob/living/carbon/human/character, silent)
@@ -377,8 +376,8 @@
 
 /datum/special_trait/lucky
 	name = "Fortune's Grace"
-	greet_text = span_notice("Xylix favor me, I am extremely lucky.")
-	req_text = "Have Xylix as your Patron"
+	greet_text = span_notice("Tymora favors me, I am extremely lucky.")
+	req_text = "Have Tymora as your Patron"
 	weight = 7
 
 /datum/special_trait/lucky/on_apply(mob/living/carbon/human/character, silent)
@@ -386,8 +385,8 @@
 
 /datum/special_trait/blessed
 	name = "The Blessed One"
-	greet_text = span_notice("I am beloved by the Ten, I have been blessed by all their boons.")
-	req_text = "Be Tennite"
+	greet_text = span_notice("I am beloved by the gods, I have been blessed by all their boons.")
+	req_text = "Be devoted to the gods"
 	weight = 7
 
 /datum/special_trait/blessed/on_apply(mob/living/carbon/human/character, silent)
@@ -743,7 +742,7 @@
 
 /datum/special_trait/glutton
 	name = "The Glutton"
-	greet_text = span_notice("Baotha has cursed my entire bloodline, demanding that we indulge in luxuries and dine in decadence.")
+	greet_text = span_notice("Gods have cursed my entire bloodline, demanding that we indulge in luxuries and dine in decadence.")
 	weight = 20
 	req_text = "Monarch"
 	allowed_jobs = list(/datum/job/lord)

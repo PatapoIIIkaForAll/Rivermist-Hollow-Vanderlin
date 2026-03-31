@@ -314,7 +314,24 @@
 			return TRUE
 	return FALSE
 
+/obj/item/reagent_containers/food/snacks/clothing
+	name = "temporary moth clothing snack item"
+	desc = ""
+	list_reagents = list(/datum/reagent/consumable/nutriment = 3)
+	tastes = list("dust" = 1, "lint" = 1)
+	foodtype = CLOTH
+
 /obj/item/clothing/attack(mob/living/M, mob/living/user, list/modifiers)
+	if(user.used_intent.type != INTENT_HARM && ismoth(M))
+		var/obj/item/reagent_containers/food/snacks/clothing/clothing_as_food = new
+		clothing_as_food.name = name
+		if(clothing_as_food.attack(M, user, modifiers))
+			take_damage(90, sound_effect=FALSE)
+			if(atom_integrity <= 0)
+				user.visible_message("<span class='notice'>[user] gobbles \the [src] down!</span>", "<span class='notice'>I gobble he rest of \the [src] down.</span>")
+				qdel(src)
+				return
+		qdel(clothing_as_food)
 	if(M.on_fire)
 		if(user == M)
 			return

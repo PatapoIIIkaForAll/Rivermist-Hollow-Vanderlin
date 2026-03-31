@@ -3,4 +3,4 @@
 	icon_state = "o_midlamp1_nozap"
 	bulb_colour = "#e9a387"
 	base_state = "o_midlamp1"
-	state_suffix = "o_nozap"
+	state_suffix = "_nozap"

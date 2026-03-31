@@ -69,6 +69,11 @@
 	light_on = FALSE
 	light_system = MOVABLE_LIGHT
 
+	slot_flags = ITEM_SLOT_MOUTH
+	w_class = WEIGHT_CLASS_SMALL
+	grid_height = 32
+	grid_width = 32
+
 	var/max_charges = 10
 	var/charges = 10
 

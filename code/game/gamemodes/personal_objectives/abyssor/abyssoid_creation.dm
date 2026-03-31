@@ -1,9 +1,9 @@
 /datum/objective/personal/create_abyssoids
 	name = "Create Abyssoids"
-	category = "Abyssor's Chosen"
+	category = "Umberlee's Chosen"
 	triumph_count = 2
 	immediate_effects = list("Gained an ability to create abyssoid leeches")
-	rewards = list("2 Triumphs", "Abyssor grows stronger", "Abyssor blesses you (+1 Constitution)")
+	rewards = list("2 Triumphs", "Umberlee grows stronger", "Umberlee blesses you (+1 Constitution)")
 	var/abyssoids_created = 0
 	var/abyssoids_required = 5
 
@@ -32,7 +32,7 @@
 
 /datum/objective/personal/create_abyssoids/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have created enough abyssoids to satisfy Abyssor!"))
+	to_chat(owner.current, span_greentext("You have created enough abyssoids to satisfy Umberlee!"))
 	adjust_storyteller_influence(ABYSSOR, 20)
 	UnregisterSignal(owner.current, COMSIG_ABYSSOID_CREATED)
 

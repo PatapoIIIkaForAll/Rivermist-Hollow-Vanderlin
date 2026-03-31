@@ -1,8 +1,8 @@
 /datum/objective/personal/kick_groin
 	name = "Kick Groin"
-	category = "Lloth's Chosen"
+	category = "Lolth's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Lloth grows stronger", "Your nutcracks will be stronger", "Lloth blesses you (+1 Strength)")
+	rewards = list("2 Triumphs", "Lolth grows stronger", "Your nutcracks will be stronger", "Lolth blesses you (+1 Strength)")
 
 /datum/objective/personal/kick_groin/on_creation()
 	. = ..()
@@ -21,13 +21,13 @@
 		return
 
 	if(damage_blocked)
-		to_chat(owner.current, span_notice("The kick must inflict actual PAIN to please Lloth!"))
+		to_chat(owner.current, span_notice("The kick must inflict actual PAIN to please Lolth!"))
 	else
 		complete_objective()
 
 /datum/objective/personal/kick_groin/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've established your dominance over this man and completed Lloth's objective!"))
+	to_chat(owner.current, span_greentext("You've established your dominance over this man and completed Lolth's objective!"))
 	adjust_storyteller_influence(ZIZO, 20)
 	UnregisterSignal(owner.current, COMSIG_MOB_KICK)
 
@@ -37,4 +37,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_ZIZO_BLESSING, STATKEY_STR, 1)
 
 /datum/objective/personal/kick_groin/update_explanation_text()
-	explanation_text = "Kick a man in the balls to show your dominance and earn Lloth's approval!"
+	explanation_text = "Kick a man in the balls to show your dominance and earn Lolth's approval!"

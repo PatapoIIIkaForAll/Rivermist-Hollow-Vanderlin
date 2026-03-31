@@ -39,7 +39,7 @@
 	var/mob/living/carbon/human/follower = owner
 
 	owner.visible_message(
-		span_notice("[owner] begins a solemn prayer to Pestra."),
+		span_notice("[owner] begins a solemn prayer to Ilmater."),
 		span_notice("You begin the pain transfer ritual..."),
 	)
 

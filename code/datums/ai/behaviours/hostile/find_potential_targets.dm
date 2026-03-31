@@ -8,6 +8,11 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 	/// How far can we see stuff?
 	var/vision_range = 9
 
+/datum/ai_behavior/find_potential_targets/setup(datum/ai_controller/controller, ...)
+	if(controller.blackboard[BB_FIND_TARGETS_FIELD(type)])
+		return FALSE
+	return ..()
+
 /datum/ai_behavior/find_potential_targets/get_cooldown(datum/ai_controller/cooldown_for)
 	if(cooldown_for.blackboard[BB_FIND_TARGETS_FIELD(type)])
 		return 60 SECONDS
@@ -30,8 +35,9 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 		return
 
 	controller.clear_blackboard_key(target_key)
-	// If we're using a field rn, just don't do anything yeah?
+	// A passive field is already watching for new targets, so don't sit in current_behaviors blocking planning.
 	if(controller.blackboard[BB_FIND_TARGETS_FIELD(type)])
+		finish_action(controller, succeeded = FALSE)
 		return
 
 	var/list/potential_targets = hearers(vision_range, controller.pawn) - living_mob //Remove self, so we don't suicide

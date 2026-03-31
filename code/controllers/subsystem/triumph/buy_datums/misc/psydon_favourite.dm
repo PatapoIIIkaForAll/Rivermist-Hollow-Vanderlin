@@ -1,5 +1,5 @@
 /datum/triumph_buy/psydon_favourite
-	name = "Psydon's Favourite"
+	name = "Ao's Chosen"
 	desc = "Have a guaranteed place as a notable person of the Realm if you make it through the week!"
 	triumph_buy_id = TRIUMPH_BUY_PSYDON_FAVOURITE
 	triumph_cost = 2

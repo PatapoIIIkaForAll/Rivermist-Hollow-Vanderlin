@@ -153,7 +153,7 @@
  */
 /datum/action/cooldown/spell/undirected/song/suffocating_seliloquy
 	name = "Suffocating Seliloquy"
-	desc = "Continuously play a heavy tune that drowns non-audience members with Abyssor's rage."
+	desc = "Continuously play a heavy tune that drowns non-audience members with Umberlee's rage."
 	button_icon_state = "dirge_t3_base"
 	background_icon_state = "dirge_t3_base"
 	sound = 'sound/magic/debuffroll.ogg'

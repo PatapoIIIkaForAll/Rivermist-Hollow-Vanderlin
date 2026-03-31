@@ -170,23 +170,23 @@ GLOBAL_VAR_INIT(ambush_mobconsider_cooldown, 2 MINUTES) // Cooldown for each ind
 	for(var/obj/structure/flora/tree/RT in orange(max_dist, src))
 		if(istype(RT,/obj/structure/flora/tree/stump))
 			continue
-		if(isturf(RT.loc) && !get_dist(RT.loc, src) < min_dist)
-			possible_targets += get_adjacent_ambush_turfs(RT.loc)
+		if(isturf(RT.loc) && get_dist(RT.loc, src) >= min_dist)
+			possible_targets += get_adjacent_ambush_turfs(RT.loc, src)
 	for(var/obj/structure/flora/grass/bush/RB in orange(max_dist, src))
-		if(isturf(RB.loc) && !get_dist(RB.loc, src) < min_dist)
-			possible_targets += get_adjacent_ambush_turfs(RB.loc)
+		if(isturf(RB.loc) && get_dist(RB.loc, src) >= min_dist)
+			possible_targets += get_adjacent_ambush_turfs(RB.loc, src)
 	for(var/obj/structure/flora/newtree/RS in orange(max_dist, src))
 		if(!RS.density)
 			continue
-		if(isturf(RS.loc) && !get_dist(RS.loc, src) < min_dist)
-			possible_targets += get_adjacent_ambush_turfs(RS.loc)
+		if(isturf(RS.loc) && get_dist(RS.loc, src) >= min_dist)
+			possible_targets += get_adjacent_ambush_turfs(RS.loc, src)
 
 	return possible_targets
 
-/proc/get_adjacent_ambush_turfs(turf/T)
+/proc/get_adjacent_ambush_turfs(turf/T, atom/movable/requester)
 	var/list/adjacent = list()
 	for(var/turf/AT in get_adjacent_open_turfs(T))
-		if(AT.density || T.LinkBlockedWithAccess(AT, null))
+		if(AT.density || T.LinkBlockedWithAccess(AT, requester))
 			continue
 		adjacent += AT
 	return adjacent

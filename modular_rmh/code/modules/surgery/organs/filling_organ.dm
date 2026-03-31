@@ -36,6 +36,10 @@
 	var/conventional_pregnancy_stage = 0
 	var/conventional_pregnancy_timer
 	var/allows_conventional_impregnation = FALSE
+	var/spawn_embryo_on_fertilization = FALSE
+	var/fertilization_embryo_egg_type = OVI_EGG_EMBRYO
+	var/fertilization_embryo_hatch_result_type = null
+	var/fertilization_embryo_limit = 3
 
 	//misc
 	var/last_size_alert = 0
@@ -67,6 +71,11 @@
 		startsfilled = FALSE
 	if(special && startsfilled) // won't fill the organ if you insert this organ via surgery
 		reagents.add_reagent(reagent_to_make, reagents.maximum_volume)
+
+/obj/item/organ/genitals/filling_organ/on_reagent_change(changetype)
+	. = ..()
+	if(slot == ORGAN_SLOT_ANUS || slot == ORGAN_SLOT_VAGINA)
+		SEND_SIGNAL(src, COMSIG_BODYSTORAGE_CHANGED)
 
 /obj/item/organ/genitals/filling_organ/on_life()
 	var/mob/living/carbon/human/H = owner
@@ -318,28 +327,48 @@
 
 	return eggs
 
-/obj/item/organ/proc/start_oviposition_egg_growth(obj/item/oviposition_egg/egg, mob/living/father = null, hatch_result_type = null)
+/obj/item/organ/proc/count_internal_hatching_eggs()
+	var/count = 0
+	for(var/obj/item/oviposition_egg/egg as anything in get_oviposition_eggs())
+		if(egg.hatch_inside_host)
+			count += 1
+	return count
+
+/obj/item/organ/proc/count_internal_womb_hatchlings()
+	var/datum/component/body_storage/storage = get_oviposition_storage()
+	if(!storage)
+		return 0
+
+	var/count = 0
+	for(var/layer in storage.available_layers)
+		if(!storage.available_layers[layer])
+			continue
+		for(var/obj/item/mob_holder/internal_womb/holder as anything in storage.all_layers[layer])
+			count += 1
+	return count
+
+/obj/item/organ/proc/start_oviposition_egg_growth(obj/item/oviposition_egg/egg, mob/living/father = null, hatch_result_type = null, fertilized = FALSE, list/father_features = null, father_name = null)
 	if(!owner)
 		return FALSE
 	if(!egg || !is_oviposition_egg(egg) || egg.has_pregnancy())
 		return FALSE
-	if(egg.requires_fertilization() && !father)
+	if(egg.requires_fertilization() && !fertilized && !father && !LAZYLEN(father_features))
 		return FALSE
 	if(!hatch_result_type)
 		hatch_result_type = egg.get_hatch_result_type()
 
 	var/mob/living/egg_mother = egg.get_oviposition_mother(owner)
-	egg.AddComponent(/datum/component/pregnancy, egg_mother, father, hatch_result_type)
+	egg.AddComponent(/datum/component/pregnancy, egg_mother, father, hatch_result_type, fertilized, father_features, father_name)
 	return TRUE
 
-/obj/item/organ/proc/fertilize_oviposition_egg(mob/living/father = null, hatch_result_type = null)
+/obj/item/organ/proc/fertilize_oviposition_egg(mob/living/father = null, hatch_result_type = null, list/father_features = null, father_name = null)
 	if(!owner)
 		return null
 
 	for(var/obj/item/oviposition_egg/egg as anything in get_oviposition_eggs(FALSE))
 		if(!egg.requires_fertilization())
 			continue
-		if(start_oviposition_egg_growth(egg, father, hatch_result_type))
+		if(start_oviposition_egg_growth(egg, father, hatch_result_type, TRUE, father_features, father_name))
 			return egg
 
 	return null
@@ -354,19 +383,37 @@
 /obj/item/organ/proc/has_conventional_pregnancy()
 	return FALSE
 
-/obj/item/organ/proc/be_impregnated(mob/living/father = null)
+/obj/item/organ/proc/can_attempt_impregnation(allow_embryo_pregnancy = FALSE)
+	return FALSE
+
+/obj/item/organ/proc/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE)
+	return FALSE
+
+/obj/item/organ/proc/try_start_fertilization_embryo_pregnancy(mob/living/father = null, allow_embryo_pregnancy = FALSE, hatch_result_type = null, list/father_features = null, father_name = null)
+	return FALSE
+
+/obj/item/organ/proc/be_impregnated(mob/living/father = null, allow_embryo_pregnancy = FALSE, embryo_hatch_result_type = null, list/father_features = null, father_name = null)
 	return FALSE
 
 /obj/item/organ/genitals/filling_organ/has_conventional_pregnancy()
 	return allows_conventional_impregnation && pregnant
 
-/obj/item/organ/genitals/filling_organ/be_impregnated(mob/living/father = null)
-	if(!owner || owner.stat == DEAD)
+/obj/item/organ/genitals/filling_organ/can_attempt_impregnation(allow_embryo_pregnancy = FALSE)
+	if(!fertility || !owner || owner.stat == DEAD)
+		return FALSE
+	if(supports_oviposition_pregnancy() && LAZYLEN(get_oviposition_eggs(FALSE)))
+		return TRUE
+	if(can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy))
+		return TRUE
+	return allows_conventional_impregnation && !pregnant
+
+/obj/item/organ/genitals/filling_organ/be_impregnated(mob/living/father = null, allow_embryo_pregnancy = FALSE, embryo_hatch_result_type = null, list/father_features = null, father_name = null)
+	if(!fertility || !owner || owner.stat == DEAD)
 		return FALSE
 
 	var/list/hosted_eggs = get_oviposition_eggs()
 	if(length(hosted_eggs))
-		var/obj/item/oviposition_egg/fertilized_egg = fertilize_oviposition_egg(father)
+		var/obj/item/oviposition_egg/fertilized_egg = fertilize_oviposition_egg(father, null, father_features, father_name)
 		if(fertilized_egg)
 			if(owner.has_quirk(/datum/quirk/peculiarity/selfawaregeni))
 				to_chat(owner, span_love("A warm pulse runs through one of the eggs in my [get_oviposition_location_name()]."))
@@ -375,10 +422,15 @@
 			return TRUE
 
 		for(var/obj/item/oviposition_egg/egg as anything in hosted_eggs)
-			if(!egg.requires_fertilization() && start_oviposition_egg_growth(egg, father))
+			if(!egg.requires_fertilization() && start_oviposition_egg_growth(egg, father, null, FALSE, father_features, father_name))
 				return TRUE
-			if(egg.has_pregnancy())
-				return TRUE
+
+	if(try_start_fertilization_embryo_pregnancy(father, allow_embryo_pregnancy, embryo_hatch_result_type, father_features, father_name))
+		if(owner.has_quirk(/datum/quirk/peculiarity/selfawaregeni))
+			to_chat(owner, span_love("Something fertile settles deep in my [get_oviposition_location_name()]."))
+		else
+			to_chat(owner, span_love("Something in my [get_oviposition_location_name()] has taken root."))
+		return TRUE
 
 	if(!allows_conventional_impregnation || pregnant)
 		return FALSE
@@ -424,6 +476,41 @@
 		conventional_pregnancy_timer = addtimer(CALLBACK(src, PROC_REF(advance_conventional_pregnancy)), 3 HOURS, TIMER_STOPPABLE)
 	else
 		conventional_pregnancy_timer = null
+
+/obj/item/organ/genitals/filling_organ/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE)
+	if(!fertility || !owner || owner.stat == DEAD)
+		return FALSE
+	if(!allow_embryo_pregnancy || !spawn_embryo_on_fertilization || !supports_oviposition_pregnancy())
+		return FALSE
+	if(pregnant)
+		return FALSE
+	if(fertilization_embryo_limit <= 0)
+		return FALSE
+	return (count_internal_hatching_eggs() + count_internal_womb_hatchlings()) < fertilization_embryo_limit
+
+/obj/item/organ/genitals/filling_organ/try_start_fertilization_embryo_pregnancy(mob/living/father = null, allow_embryo_pregnancy = FALSE, hatch_result_type = null, list/father_features = null, father_name = null)
+	if(!can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy))
+		return FALSE
+
+	var/embryo_hatch_result_type = hatch_result_type || fertilization_embryo_hatch_result_type
+	if(!embryo_hatch_result_type && father)
+		embryo_hatch_result_type = get_oviposition_parent_hatch_result_type(father)
+	if(!embryo_hatch_result_type || !ispath(embryo_hatch_result_type, /mob/living))
+		return FALSE
+
+	var/obj/item/oviposition_egg/embryo = new
+	embryo.set_egg_type(fertilization_embryo_egg_type || OVI_EGG_EMBRYO)
+	embryo.set_oviposition_mother(owner)
+
+	var/fit_result = SEND_SIGNAL(src, COMSIG_BODYSTORAGE_TRY_INSERT, embryo, STORAGE_LAYER_DEEP)
+	switch(fit_result)
+		if(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_OK_OVERRIDE, INSERT_FEEDBACK_ALMOST_FULL)
+			if(start_oviposition_egg_growth(embryo, father, embryo_hatch_result_type, TRUE, father_features, father_name))
+				return TRUE
+
+	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_TRY_REMOVE, embryo, STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_INTERNAL)
+	qdel(embryo)
+	return FALSE
 
 //had to make this ghetto ass shit, fucks sake
 /mob/living/carbon/proc/mob_slot_wearing(zone)

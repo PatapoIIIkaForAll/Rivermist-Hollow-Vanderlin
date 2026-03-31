@@ -170,7 +170,7 @@
 
 /obj/item/clothing/armor/plate/fluted
 	name = "fluted half-plate"
-	desc = "An ornate steel cuirass, fitted with tassets and pauldrons for additional coverage. This lightweight deviation of 'plate armor' is favored by cuirassiers all across Psydonia, alongside fledging barons who've - up until now - waged their fiercest battles upon a chamberpot."
+	desc = "An ornate steel cuirass, fitted with tassets and pauldrons for additional coverage. This lightweight deviation of 'plate armor' is favored by cuirassiers all across Duskmar, alongside fledging barons who've - up until now - waged their fiercest battles upon a chamberpot."
 	icon_state = "ornatehalfplate"
 
 	equip_delay_self = 6 SECONDS
@@ -180,9 +180,9 @@
 	body_parts_covered = COVERAGE_FULL // Less durability than proper plate, more expensive to manufacture, and accurate to the sprite.
 
 /obj/item/clothing/armor/plate/fluted/ornate
-	name = "psydonian half-plate"
+	name = "exotic half-plate"
 	desc = "A sturdily made fluted half-plate armour-set, complete with pauldrons and shoulder-guards. \
-			Favored by both the Oratorium Throni Vacui and the Order of the Silver Psycross. It smells of the madness of an enduring God."
+			Favored by both the Oratorium Throni Vacui and the Aonic Silver Order. It smells of the madness of an enduring God."
 	icon_state = "ornatehalfplate"
 
 	max_integrity = 400
@@ -193,7 +193,7 @@
 
 /obj/item/clothing/armor/plate/fluted/ornate/ordinator
 	name = "inquisitorial ordinator's plate"
-	desc = "A relic that is said to have survived the early sieges of Darkhold, refurbished and repurposed to slay the arch-enemy in the name of Psydon. <br> A fluted cuirass that has been reinforced with thick padding and an additional shoulder piece. You will endure."
+	desc = "A relic that is said to have survived the early sieges of Darkhold, refurbished and repurposed to slay the arch-enemy in the name of Ao. <br> A fluted cuirass that has been reinforced with thick padding and an additional shoulder piece. You will endure."
 	icon_state = "ordinatorplate"
 
 
@@ -213,5 +213,5 @@
 
 /atom/movable/screen/alert/status_effect/buff/psydonic_endurance
 	name = "Psydonic Endurance"
-	desc = "I am protected by blessed Psydonian plate armor."
+	desc = "I am protected by blessed Aonic plate armor."
 	icon_state = "buff"

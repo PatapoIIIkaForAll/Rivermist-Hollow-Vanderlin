@@ -1,6 +1,6 @@
 /obj/item/needle
 	name = "needle"
-	desc = "A firm needle affixed with a simple thread, Pestra's most favored tool."
+	desc = "A firm needle affixed with a simple thread, a tool favored both by tailors and surgeons."
 	icon_state = "needle"
 	icon = 'icons/roguetown/items/misc.dmi'
 	w_class = WEIGHT_CLASS_TINY
@@ -176,6 +176,6 @@
 
 /obj/item/needle/blessed
 	name = "blessed needle"
-	desc = span_hierophant("A needle blessed by the ordained Pestrans of the Church. A coveted item, for its thread will never end. \n This thread however can only be used to sew wounds.")
+	desc = span_hierophant("A needle blessed by the ordained faithful of Ilmater. A coveted item, for its thread will never end. \n This thread however can only be used to sew wounds.")
 	infinite = TRUE
 	can_repair = TRUE

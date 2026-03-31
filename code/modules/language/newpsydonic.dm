@@ -1,6 +1,6 @@
 /datum/language/newpsydonic
-	name = "Psydonic"
-	desc = "The common language of Grenzelhoft, evolved from Old Psydonic over centuries."
+	name = "Duskmaric"
+	desc = "The common language of Duskmar, evolved from Old Duskmaric over centuries."
 	speech_verb = "states"
 	ask_verb = "questions"
 	exclaim_verb = "shouts"

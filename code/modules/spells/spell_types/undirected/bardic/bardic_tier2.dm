@@ -90,7 +90,7 @@
  */
 /datum/action/cooldown/spell/undirected/song/pestilent_piedpiper
 	name = "Pestilent Pied Piper"
-	desc = "Play a droning dirge of insect noises inspired by Pestra in the ears of non-audience members. (-1 END -2 CON)"
+	desc = "Play a droning dirge of insect noises inspired by Ilmater in the ears of non-audience members. (-1 END -2 CON)"
 	button_icon_state = "dirge_t2_base"
 	background_icon_state = "dirge_t2_base"
 	sound = 'sound/magic/debuffroll.ogg'

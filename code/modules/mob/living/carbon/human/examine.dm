@@ -144,7 +144,7 @@
 		if(GLOB.lord_titles[real_name]) //should be tied to known persons but can't do that until there is a way to recognise new people
 			. += span_notice("[m3] been granted the title of \"[GLOB.lord_titles[name]]\".")
 
-		if(dna.species.use_skintones)
+		/*if(dna.species.use_skintones)
 			var/skin_tone_wording = dna.species.skin_tone_wording ? lowertext(dna.species.skin_tone_wording) : "skin tone"
 			var/list/skin_tones = dna.species.get_skin_list()
 			var/skin_tone_seen = "incomprehensible"
@@ -155,7 +155,7 @@
 						skin_tone_seen = lowertext(tone)
 						break
 
-			. += span_info("[capitalize(m2)] [skin_tone_wording] is [skin_tone_seen].")
+			. += span_info("[capitalize(m2)] [skin_tone_wording] is [skin_tone_seen].")*/
 
 		if(culture)
 			if(!person_known || istype(culture, /datum/culture/universal/ambiguous))
@@ -273,13 +273,14 @@
 					. += span_redtext("[m1] an ex-agent of the court.")
 
 			if(real_name in GLOB.excommunicated_players)
-				. += span_userdanger("EXCOMMUNICATED!")
+				. += span_userdanger("GOD-FORSAKEN!")
 
 			if(real_name in GLOB.heretical_players)
 				. += span_userdanger("HERETIC! SHAME!")
 
 			if(user.mind)
-				if(is_zizocultist(user.mind) || is_zizolackey(user.mind))
+				var/mob/living/carbon/human/HU = user
+				if(is_zizocultist(user.mind) || is_zizolackey(user.mind) || HU.has_quirk(/datum/quirk/vice/lovefiend))
 					if(virginity)
 						. += span_userdanger("VIRGIN!")
 

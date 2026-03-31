@@ -8,7 +8,7 @@
 	antimagic_flags = MAGIC_RESISTANCE_HOLY
 	associated_skill = /datum/skill/magic/holy
 
-	invocation = "Ravox deems your persistence worthy!"
+	invocation = "Tempus deems your persistence worthy!"
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = FALSE
@@ -91,7 +91,7 @@
 		effectedstats[STATKEY_END] -= 1
 
 /atom/movable/screen/alert/status_effect/debuff/ravox_burden
-	name = "Ravox's Burden"
+	name = "Tempus's Burden"
 	desc = "My arms and legs are restrained by divine chains!"
 	icon_state = "restrained"
 

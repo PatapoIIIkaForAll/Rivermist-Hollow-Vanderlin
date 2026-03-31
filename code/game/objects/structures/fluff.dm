@@ -1386,7 +1386,7 @@
 		M.set_confusion_if_lower(power SECONDS)
 
 /obj/structure/fluff/psycross/psydon
-	name = "psydonian cross"
+	name = "exotic cross"
 	desc = "A wooden monument to Psydon. Let His name be naught but forgot'n."
 	icon_state = "psydon_wooden_cross"
 	icon = 'icons/roguetown/misc/psydon_cross.dmi'
@@ -1398,7 +1398,7 @@
 
 //this one is meant to be uncraftable
 /obj/structure/fluff/psycross/psydon/abandoned
-	name = "overgrown psydonian cross"
+	name = "overgrown exotic cross"
 	desc = "A decrepit monument to a dead god. Looking at it fills you with profound sadness."
 	icon_state = "psydon_abandoned_cross"
 

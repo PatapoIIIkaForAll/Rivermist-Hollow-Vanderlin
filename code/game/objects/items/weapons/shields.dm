@@ -269,7 +269,7 @@
 
 /obj/item/weapon/shield/tower/metal/psy
 	name = "Covenant"
-	desc = "The Ordo Benetarus holds a mantra: A Psydonian endures. A Psydonian preserves themselves. A Psydonian preserves His flock. Protect them."
+	desc = "The Ordo Benetarus holds a mantra: A servant of Ao endures. A servant of Ao preserves themselves. A servant of Ao preserves His flock. Protect them."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psyshield"
 	wdefense = ULTMATE_PARRY + 3

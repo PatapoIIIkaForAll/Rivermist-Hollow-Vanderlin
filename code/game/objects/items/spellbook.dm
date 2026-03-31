@@ -14,7 +14,7 @@
 	drop_sound = 'sound/foley/dropsound/book_drop.ogg'
 	force = 5
 	associated_skill = /datum/skill/misc/reading
-	name = "tome of the arcyne"
+	name = "tome of the Weave"
 	desc = "A crackling, glowing book, filled with runes and symbols that hurt the mind to stare at."
 	pages_to_mastery = 7
 	remarks = list("Recall that place of white and black, so cold after its season of heat...",
@@ -156,19 +156,19 @@
 	icon_state = "[base_icon_state]_[open]"
 
 /obj/item/book/granter/spellbook/on_reading_start(mob/user)
-	to_chat(user, span_notice("Arcyne mysteries abound in this enigmatic tome, gift of Noc..."))
+	to_chat(user, span_notice("Arcane mysteries abound in this enigmatic tome, gift of Mystra..."))
 
 /obj/item/book/granter/spellbook/on_reading_finished(mob/user)
 	var/mob/living/carbon/human/gamer = user
 	if(gamer != owner && !allowed_readers.Find(gamer))
-		to_chat(user, span_notice("What was that gibberish? Even for the arcyne it was completely illegible!"))
+		to_chat(user, span_notice("What was that gibberish? Even for the arcane it was completely illegible!"))
 		recoil(user)
 		return
 	user.mind?.has_studied = TRUE
 	var/mob/living/reader = user
 	var/qualityoflearn = (reader.STAINT*2 + (user.get_skill_level(/datum/skill/misc/reading, TRUE)* 5) + (user.get_skill_level(/datum/skill/magic/arcane, TRUE)*5))
 	if(reader.has_status_effect(/datum/status_effect/buff/weed))
-		to_chat(user, span_smallgreen("Swampweed truly does open one's third eye to the secrets of the arcyne..."))
+		to_chat(user, span_smallgreen("Swampweed truly does open one's third eye to the secrets of the Weave..."))
 		qualityoflearn += 10
 	var/obj/effect/decal/cleanable/roguerune/rune = (locate(/obj/effect/decal/cleanable/roguerune) in range(1, user))
 	if(rune)
@@ -176,7 +176,7 @@
 		qualityoflearn += rune.spellbonus
 		rune.do_invoke_glow()
 	if(stored_gem)
-		to_chat(user, span_smallnotice("I can feel the magical energies imbued within the crystalline dust scattered upon my tome resonate with the arcyne..."))
+		to_chat(user, span_smallnotice("I can feel the magical energies imbued within the crystalline dust scattered upon my tome resonate with the Weave..."))
 		qualityoflearn += stored_gem
 		stored_gem = FALSE
 	if(!isarcyne(user))
@@ -189,8 +189,8 @@
 		// the rock tomes are a *lot* easier to make, so we make them worse by them reducing your chances by 20%
 		qualityoflearn *= 0.8
 
-	user.visible_message(span_warning("[user] is filled with arcyne energy! You witness [user.p_their()] body convulse and spark brightly."), \
-	span_notice("Noc blesses me. I have been granted knowledge and wisdom beyond my years, this tome's mysteries unveiled one at a time."))
+	user.visible_message(span_warning("[user] is filled with arcane energy! You witness [user.p_their()] body convulse and spark brightly."), \
+	span_notice("Mystra blesses me. I have been granted knowledge and wisdom beyond my years, this tome's mysteries unveiled one at a time."))
 	qualityoflearn = qualityoflearn / 100
 	var/spellpoints = (src.bookquality * qualityoflearn)
 	spellpoints = CEILING(spellpoints, 1)
@@ -200,7 +200,7 @@
 	user.log_message("successfully studied their spellbook and gained spellpoints", LOG_ATTACK, color="orange")
 	onlearned(user)
 	if(prob(55))
-		to_chat(user, span_notice("Confounded arcyne mysteries, my notes have gone in circles. I must sleep before I can bring myself to open this damned thing again..."))
+		to_chat(user, span_notice("Confounded arcane mysteries, my notes have gone in circles. I must sleep before I can bring myself to open this damned thing again..."))
 		user.mind?.add_sleep_experience(/datum/skill/misc/reading, reader.STAINT*10)
 	to_chat(user, span_small("My notes include passages I've read before, but don't understand. I must sleep on their meaning..."))
 
@@ -208,7 +208,7 @@
 	used = FALSE
 
 /obj/item/book/granter/spellbook/recoil(mob/user)
-	user.visible_message(span_warning("[src] shoots out a spark of angry, arcyne energy at [user]!"))
+	user.visible_message(span_warning("[src] shoots out a spark of angry, arcane energy at [user]!"))
 	var/mob/living/gamer = user
 	gamer.electrocute_act(5, src)
 
@@ -232,44 +232,44 @@
 
 /// Book Types:
 /obj/item/book/granter/spellbook/horrible	//makeable with magic stones (bad quality ones)
-	name = "poorly made tome of the arcyne"
-	desc = "A poorly made book, it barely glows with arcyne and has only small notes on arcyne symbols."
+	name = "poorly made tome of the Weave"
+	desc = "A poorly made book that barely glows with arcane power and has only small notes on Weave symbols."
 	bookquality = 1
 	sellprice = 15
 
 /obj/item/book/granter/spellbook/mid	//decent magic stones and basic crafting materials
-	name = "beginners tome of the arcyne"
-	desc = "An obviously handcrafted book, it glows occasionally with arcyne and has a meager amount notes on arcyne symbols."
+	name = "beginners tome of the Weave"
+	desc = "An obviously handcrafted book. It glows occasionally with arcane power and has a meager amount of notes on Weave symbols."
 	bookquality = 2
 	sellprice = 30
 
 /obj/item/book/granter/spellbook/apprentice	//apprentices get made with obsidian
-	name = "apprentice tome of the arcyne"
-	desc = "A carefully made book, faintly glowing with arcyne and half filled with notes and theory on arcyne symbols."
+	name = "apprentice tome of the Weave"
+	desc = "A carefully made book, faintly glowing with arcane power and half filled with notes and theory on Weave symbols."
 	bookquality = 3
 	sellprice = 75
 
 /obj/item/book/granter/spellbook/adept	//refugee mages &normal loot
-	name = "adept tome of the arcyne"
-	desc = "A well-made book, it shines moderately with arcyne light. It has been filled with notes of varying degrees on the arcyne "
+	name = "adept tome of the Weave"
+	desc = "A well-made book. It shines moderately with arcane light and has been filled with notes of varying depth on the Weave."
 	bookquality = 4
 	sellprice = 150
 
 /obj/item/book/granter/spellbook/expert	//made from 2nd tier loot item
-	name = "expert tome of the arcyne"
-	desc = "A well cared for book, shining brightly with arcyne. It has many runes and arcyne symbols scribed within, with detailed notes."
+	name = "expert tome of the Weave"
+	desc = "A well cared for book, shining brightly with arcane power. It has many runes and Weave symbols scribed within, with detailed notes."
 	bookquality = 6
 	sellprice = 200
 
 /obj/item/book/granter/spellbook/master	// Court mage & made from 3rd tier loot item
-	name = "masterful tome of the arcyne"
-	desc = "A crackling, glowing book, filled with advanced arcyne runes and symbols that hurt the mind to stare at. A true master of the arcyne has left their mark behind."
+	name = "masterful tome of the Weave"
+	desc = "A crackling, glowing book filled with advanced arcane runes and symbols that hurt the mind to stare at. A true master of the Weave has left their mark behind."
 	bookquality = 8
 	sellprice = 250
 
 /obj/item/book/granter/spellbook/legendary	//max tier lootmade item
-	name = "legendary tome of the arcyne"
-	desc = "An incredible book that gives off glowing arcyne motes, it is filled with runes and arcyne theories that is hard for even masters of arcyne to understand. The arcyne script glows and practically whispers from the page.."
+	name = "legendary tome of the Weave"
+	desc = "An incredible book that gives off glowing arcane motes. It is filled with runes and arcane theories that are hard for even masters of the Weave to understand. The script glows and practically whispers from the page."
 	bookquality = 12
 	sellprice = 400
 
@@ -293,7 +293,7 @@
 /obj/item/spellbook_unfinished/pre_arcyne
 	name = "tome in waiting"
 	icon_state = "spellbook_unfinished"
-	desc = "A fully bound tome of scroll paper. It's lacking a certain arcyne energy."
+	desc = "A fully bound tome of scroll paper. It's lacking a certain arcane energy."
 
 /obj/item/natural/hide/attackby(obj/item/P, mob/living/carbon/human/user, list/modifiers)
 	var/found_table = locate(/obj/structure/table) in (loc)
@@ -325,7 +325,7 @@
 				else
 					playsound(src, 'sound/items/book_open.ogg', 100, TRUE)
 					if(isarcyne(user))
-						to_chat(user, span_notice("The book is bound. I must find a catalyst to channel the arcyne into it now."))
+						to_chat(user, span_notice("The book is bound. I must find a catalyst to channel arcane power into it now."))
 					else
 						to_chat(user, span_notice("I've made an empty book of thick, useless scroll paper. I can't even thumb through it!"))
 					new /obj/item/spellbook_unfinished/pre_arcyne(loc)
@@ -339,7 +339,7 @@
 /obj/item/spellbook_unfinished/pre_arcyne/attackby(obj/item/P, mob/living/carbon/human/user, list/modifiers)
 	var/found_table = locate(/obj/structure/table) in (loc)
 	if(istype(P, /obj/item/gem/amethyst))
-		user.visible_message(span_notice("I run my arcyne energy into the crystal. Its artificial lattices pulse and then fall dormant. It must not be strong enough to make a spellbook with!"))
+		user.visible_message(span_notice("I run my arcane energy into the crystal. Its artificial lattices pulse and then fall dormant. It must not be strong enough to make a spellbook with!"))
 		return
 	if(istype(P, /obj/item/gem/violet))
 		if(isturf(loc)&& (found_table))
@@ -348,7 +348,7 @@
 				if(isarcyne(user))
 					playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 					user.visible_message(span_warning("[user] crushes [user.p_their()] [P]! Its powder seeps into the [src]."), \
-						span_notice("I run my arcyne energy into the crystal. It shatters and seeps into the cover of the tome! Runes and symbols of an unknowable language cover it's pages now..."))
+			span_notice("I run my arcane energy into the crystal. It shatters and seeps into the cover of the tome! Runes and symbols of an unknowable language cover its pages now..."))
 					var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/expert(loc)
 					newbook.owner = user
 					qdel(P)
@@ -365,7 +365,7 @@
 				if(isarcyne(user))
 					playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 					user.visible_message(span_warning("[user] crushes [user.p_their()] [P]! Its powder seeps into the [src]."), \
-						span_notice("I run my arcyne energy into the crystal. It shatters and seeps into the cover of the tome! Runes and symbols of an unknowable language cover it's pages now..."))
+			span_notice("I run my arcane energy into the crystal. It shatters and seeps into the cover of the tome! Runes and symbols of an unknowable language cover its pages now..."))
 					var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/adept(loc)
 					newbook.owner = user
 					qdel(P)
@@ -384,8 +384,8 @@
 					if (isarcyne(user))
 						playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 						user.visible_message(span_warning("[user] crushes [user.p_their()] [P]! Its powder seeps into the [src]."), \
-							span_notice("I join my arcyne energy with that of the magical stone in my hands, which shudders briefly before dissolving into motes of ash. Runes and symbols of an unknowable language cover its pages now..."))
-						to_chat(user, span_notice("...yet even for an enigma of the arcyne, these characters are unlike anything I've seen before. They're going to be -much- harder to understand..."))
+							span_notice("I join my arcane energy with that of the magical stone in my hands, which shudders briefly before dissolving into motes of ash. Runes and symbols of an unknowable language cover its pages now..."))
+						to_chat(user, span_notice("...yet even for an enigma of the arcane, these characters are unlike anything I've seen before. They're going to be much harder to understand..."))
 						if(the_rock.magic_power <=5)
 							var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/horrible(loc)
 							newbook.owner = user
@@ -440,7 +440,7 @@
 							user.electrocute_act(5, src)
 							qdel(P)
 		else
-			to_chat(user, span_notice("This is a mere rock - it has no arcyne potential. Bah!"))
+			to_chat(user, span_notice("This is a mere rock - it has no arcane potential. Bah!"))
 			return ..()
 	else if (istype(P, /obj/item/natural/melded/t1))
 		if(isturf(loc) && (found_table))
@@ -449,15 +449,15 @@
 				if (isarcyne(user))
 					playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 					user.visible_message(span_warning("[user] imbues [user.p_their()] [P]! It fuses into the [src]."), \
-						span_notice("I join my arcyne energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
-					to_chat(user, span_notice("...yet even for an enigma of the arcyne, these characters are unlike anything I've seen before. They're going to be -much- harder to understand..."))
+						span_notice("I join my arcane energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
+					to_chat(user, span_notice("...yet even for an enigma of the arcane, these characters are unlike anything I've seen before. They're going to be much harder to understand..."))
 					var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/adept(loc)
 					newbook.owner = user
 					qdel(P)
 					qdel(src)
 				else
-					user.visible_message(span_warning("[user] sets down [P] upon the surface of [src] and watches expectantly. Without warning, the [P] lets out a burst of arcyne energy!"), \
-					span_notice("I should have known messing with the arcyne as dangerous!"))
+					user.visible_message(span_warning("[user] sets down [P] upon the surface of [src] and watches expectantly. Without warning, the [P] lets out a burst of arcane energy!"), \
+						span_notice("I should have known messing with the arcane is dangerous!"))
 					user.electrocute_act(20, src)
 					qdel(P)
 		return ..()
@@ -468,15 +468,15 @@
 				if (isarcyne(user))
 					playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 					user.visible_message(span_warning("[user] crushes [user.p_their()] [P]! Its powder seeps into the [src]."), \
-						span_notice("I join my arcyne energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
-					to_chat(user, span_notice("...yet even for an enigma of the arcyne, these characters are unlike anything I've seen before. They're going to be -much- harder to understand..."))
+						span_notice("I join my arcane energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
+					to_chat(user, span_notice("...yet even for an enigma of the arcane, these characters are unlike anything I've seen before. They're going to be much harder to understand..."))
 					var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/expert(loc)
 					newbook.owner = user
 					qdel(P)
 					qdel(src)
 				else
 					user.visible_message(span_warning("[user] sets down [P] upon the surface of [src] and watches expectantly. Without warning, the [P] violently explodes!"), \
-					span_notice("I should have known messing with the arcyne as dangerous!"))
+						span_notice("I should have known messing with the arcane is dangerous!"))
 					user.electrocute_act(40, src)
 					qdel(P)
 	else if (istype(P, /obj/item/natural/melded/t3))
@@ -486,15 +486,15 @@
 				if (isarcyne(user))
 					playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 					user.visible_message(span_warning("[user] crushes [user.p_their()] [P]! Its powder seeps into the [src]."), \
-						span_notice("I join my arcyne energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
-					to_chat(user, span_notice("...yet even for an enigma of the arcyne, these characters are unlike anything I've seen before. They're going to be -much- harder to understand..."))
+						span_notice("I join my arcane energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
+					to_chat(user, span_notice("...yet even for an enigma of the arcane, these characters are unlike anything I've seen before. They're going to be much harder to understand..."))
 					var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/master(loc)
 					newbook.owner = user
 					qdel(P)
 					qdel(src)
 				else
 					user.visible_message(span_warning("[user] sets down [P] upon the surface of [src] and watches expectantly. Without warning, the [P] violently explodes!"), \
-					span_notice("I should have known messing with the arcyne as dangerous!"))
+						span_notice("I should have known messing with the arcane is dangerous!"))
 					user.electrocute_act(60, src)
 					qdel(P)
 	else if (istype(P, /obj/item/natural/melded/t4))
@@ -504,15 +504,15 @@
 				if (isarcyne(user))
 					playsound(src, 'sound/magic/crystal.ogg', 100, TRUE)
 					user.visible_message(span_warning("[user] crushes [user.p_their()] [P]! Its powder seeps into the [src]."), \
-						span_notice("I join my arcyne energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
-					to_chat(user, span_notice("...yet even for an enigma of the arcyne, these characters are unlike anything I've seen before. They're going to be -much- harder to understand..."))
+						span_notice("I join my arcane energy with that of the [P] in my hands, which shudders briefly before dissolving into motes of energy. Runes and symbols of an unknowable language cover its pages now..."))
+					to_chat(user, span_notice("...yet even for an enigma of the arcane, these characters are unlike anything I've seen before. They're going to be much harder to understand..."))
 					var/obj/item/book/granter/spellbook/newbook = new /obj/item/book/granter/spellbook/legendary(loc)
 					newbook.owner = user
 					qdel(P)
 					qdel(src)
 				else
 					user.visible_message(span_warning("[user] sets down [P] upon the surface of [src] and watches expectantly. Without warning, the [P] violently explodes!"), \
-					span_notice("I should have known messing with the arcyne as dangerous!"))
+						span_notice("I should have known messing with the arcane is dangerous!"))
 					user.electrocute_act(80, src)
 					qdel(P)
 	else
@@ -554,14 +554,14 @@
 				var/crafttime = (60 - ((user.get_skill_level(/datum/skill/magic/arcane, TRUE))*5))
 				if(do_after(user, crafttime, target = src))
 					playsound(src, 'sound/magic/glass.ogg', 100, TRUE)
-					to_chat(user, span_notice("Running my arcyne energy through this crystal, I imbue the tome with my natural essence, attuning it to my state of mind..."))
+					to_chat(user, span_notice("Running my arcane energy through this crystal, I imbue the tome with my natural essence, attuning it to my state of mind..."))
 					stored_gem = gem.arcyne_potency
 					stored_attunement = gem.attuned
 					qdel(P)
 			else
 				to_chat(user, span_notice("Why am I jamming a gem into a book? I must look like a fool!"))
 		else
-			to_chat(user, span_notice("This tome is already coursing with arcyne energies..."))
+			to_chat(user, span_notice("This tome is already coursing with arcane energies..."))
 	else
 		return ..()
 

@@ -212,6 +212,31 @@
 	S.rotprocess = S.rotprocess * ((high_threshold - damage) / high_threshold)
 	return S
 
+/obj/item/organ/proc/get_body_storage_items_for_interaction(target_layer = null, removal_reason = BODYSTORAGE_REMOVE_MANUAL)
+	var/list/interactable_items = list()
+	var/list/stored_items = SEND_SIGNAL(src, COMSIG_BODYSTORAGE_GET_LISTS)
+	if(!islist(stored_items))
+		return interactable_items
+
+	if(target_layer)
+		var/list/layer_items = stored_items[target_layer]
+		if(!islist(layer_items))
+			return interactable_items
+		for(var/obj/item/stored_item as anything in layer_items)
+			if(stored_item.can_remove_from_body_storage(removal_reason))
+				interactable_items += stored_item
+		return interactable_items
+
+	for(var/layer in stored_items)
+		var/list/layer_items = stored_items[layer]
+		if(!islist(layer_items))
+			continue
+		for(var/obj/item/stored_item as anything in layer_items)
+			if(stored_item.can_remove_from_body_storage(removal_reason))
+				interactable_items += stored_item
+
+	return interactable_items
+
 ///Adjusts an organ's damage by the amount "d", up to a maximum amount, which is by default max damage
 /obj/item/organ/proc/applyOrganDamage(d, maximum = maxHealth)	//use for damaging effects
 	if(!d) //Micro-optimization.

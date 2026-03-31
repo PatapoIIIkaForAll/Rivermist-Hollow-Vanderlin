@@ -61,7 +61,7 @@
 
 #define TRIUMPH_CAT_SEASONAL "SEASONAL"
 
-#define TRIUMPH_BUY_SUBTERRAN_DWARF "subterran_dwarf"
+#define TRIUMPH_BUY_SUBTERRAN_DWARF "underdarkn_dwarf"
 #define TRIUMPH_BUY_FORMIKRAG_KOBOLD "formikrag_kobold"
 
 // Bought triumph buys category

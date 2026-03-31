@@ -2,6 +2,7 @@
 #define OVI_EGG_SPIDER "spider_ovi"
 #define OVI_EGG_BOG_BUG "bog_bug_ovi"
 #define OVI_EGG_HARPY "harpy_ovi"
+#define OVI_EGG_EMBRYO "embryo_ovi"
 
 // Egg profiles keep appearance and hatch behavior together so new egg types only
 // need one local subtype instead of special cases spread across the system.
@@ -14,15 +15,31 @@
 	var/display_color = null
 	var/hatch_result_type = /obj/item/reagent_containers/food/snacks/oviposition_egg/color/green //placeholder because we don't want human hatching
 	var/requires_fertilization = TRUE
-	var/poll_for_ghost = TRUE
+	var/poll_for_ghost = FALSE
 	var/require_ghost_to_hatch = TRUE
 	var/incubation_stage_duration = 5 MINUTES
 	var/list/stage_messages = null
 	var/ready_message = null
 	var/hatch_message = null
+	var/auto_hatch_when_laid = TRUE
+	var/hatch_inside_host = FALSE
+	var/allow_manual_host_removal = TRUE
+	var/newborn_start_scale = 0.5
+	var/newborn_growth_duration = 10 MINUTES
+	var/internal_hatch_layer = STORAGE_LAYER_INNER
+	var/internal_hatch_holder_type = /obj/item/mob_holder/internal_womb
+	var/internal_hatch_holder_bulk = 2
+	var/internal_hatch_triggers_contractions = FALSE
+	var/internal_hatch_auto_birth = FALSE
+	var/internal_hatch_birth_delay = 0
+	var/internal_hatch_message = null
+	var/internal_contraction_message = null
+	var/internal_birth_message = null
 
 /datum/oviposition_egg_profile/proc/get_stage_message(stage)
-	return stage_messages?[stage]
+	if(!islist(stage_messages) || stage < 1 || stage > length(stage_messages))
+		return null
+	return stage_messages[stage]
 
 /datum/oviposition_egg_profile/proc/apply_to_egg(obj/item/oviposition_egg/egg)
 	if(!egg)
@@ -33,6 +50,21 @@
 	egg.color = display_color
 	if(display_icon)
 		egg.icon = display_icon
+	egg.auto_hatch_when_laid = auto_hatch_when_laid
+	egg.hatch_inside_host = hatch_inside_host
+	egg.body_storage_manual_removal = allow_manual_host_removal
+	egg.body_storage_random_removal = allow_manual_host_removal
+	egg.newborn_start_scale = newborn_start_scale
+	egg.newborn_growth_duration = newborn_growth_duration
+	egg.internal_hatch_layer = internal_hatch_layer
+	egg.internal_hatch_holder_type = internal_hatch_holder_type
+	egg.internal_hatch_holder_bulk = internal_hatch_holder_bulk
+	egg.internal_hatch_triggers_contractions = internal_hatch_triggers_contractions
+	egg.internal_hatch_auto_birth = internal_hatch_auto_birth
+	egg.internal_hatch_birth_delay = internal_hatch_birth_delay
+	egg.internal_hatch_message = internal_hatch_message
+	egg.internal_contraction_message = internal_contraction_message
+	egg.internal_birth_message = internal_birth_message
 
 /datum/oviposition_egg_profile/spider
 	egg_type = OVI_EGG_SPIDER
@@ -68,6 +100,32 @@
 	display_color = "#eee3c7"
 	ready_message = "The harpy egg in my %CONTAINER% feels full and heavy, like a ripe nesting egg ready to be laid."
 
+/datum/oviposition_egg_profile/embryo
+	egg_type = OVI_EGG_EMBRYO
+	display_name = "embryo sac"
+	display_desc = "A fleshy pseudo-egg, soft and alive with a growing creature inside."
+	display_icon_state = "egg_color"
+	display_color = "#d7a29d"
+	incubation_stage_duration = 8 MINUTES
+	stage_messages = list(
+		1 = "Something fertile settles deep in my %CONTAINER%.",
+		2 = "The embryo in my %CONTAINER% grows heavier and more alive.",
+		3 = "A tight, restless pressure builds in my %CONTAINER%.",
+	)
+	ready_message = "The embryo in my %CONTAINER% is fully grown and about to hatch inside me."
+	hatch_message = "Something alive hatches from %EGG% inside my %CONTAINER%!"
+	auto_hatch_when_laid = FALSE
+	hatch_inside_host = TRUE
+	allow_manual_host_removal = FALSE
+	internal_hatch_layer = STORAGE_LAYER_INNER
+	internal_hatch_holder_bulk = 2
+	internal_hatch_triggers_contractions = TRUE
+	internal_hatch_auto_birth = TRUE
+	internal_hatch_birth_delay = 1 SECONDS
+	internal_hatch_message = "Something alive hatches inside my %CONTAINER%, forcing it to clench around the newborn."
+	internal_contraction_message = "My %CONTAINER% clenches in sharp contractions around the hatchling inside."
+	internal_birth_message = "%CARRIER% doubles over as a newborn forces its way out of %CONTAINER%!"
+
 /proc/get_oviposition_egg_profile(egg_type)
 	var/profile_type = /datum/oviposition_egg_profile
 	switch(egg_type)
@@ -77,12 +135,66 @@
 			profile_type = /datum/oviposition_egg_profile/bog_bug
 		if(OVI_EGG_HARPY)
 			profile_type = /datum/oviposition_egg_profile/harpy
+		if(OVI_EGG_EMBRYO)
+			profile_type = /datum/oviposition_egg_profile/embryo
 	return new profile_type
 
 /proc/get_species_oviposition_egg_type(mob/living/owner)
 	if(isharpy(owner))
 		return OVI_EGG_HARPY
 	return null
+
+/proc/get_oviposition_parent_hatch_result_type(mob/living/parent)
+	if(!parent)
+		return null
+	return parent.get_oviposition_parent_hatch_result_type()
+
+/proc/parent_triggers_oviposition_embryo_pregnancy(mob/living/parent)
+	if(!parent)
+		return FALSE
+	return parent.triggers_oviposition_embryo_pregnancy()
+
+/mob/living/proc/triggers_oviposition_embryo_pregnancy()
+	return FALSE
+
+/mob/living/proc/get_oviposition_parent_hatch_result_type()
+	if(ispath(type, /mob/living))
+		return type
+	return null
+
+/mob/living/carbon/human/triggers_oviposition_embryo_pregnancy()
+	return dna?.species?.triggers_oviposition_embryo_pregnancy() || FALSE
+
+/mob/living/carbon/human/get_oviposition_parent_hatch_result_type()
+	var/datum/species/parent_species = dna?.species
+	var/species_hatch_result_type = parent_species?.get_oviposition_parent_hatch_result_type()
+	if(species_hatch_result_type)
+		return species_hatch_result_type
+	return /mob/living/carbon/human
+
+/datum/species/proc/triggers_oviposition_embryo_pregnancy()
+	return FALSE
+
+/datum/species/proc/get_oviposition_parent_hatch_result_type()
+	return null
+
+/datum/species/goblin/triggers_oviposition_embryo_pregnancy()
+	return TRUE
+
+/datum/species/goblin/get_oviposition_parent_hatch_result_type()
+	return /mob/living/carbon/human/species/goblin/npc
+
+/datum/species/goblin/hell/get_oviposition_parent_hatch_result_type()
+	return /mob/living/carbon/human/species/goblin/npc/hell
+
+/datum/species/goblin/cave/get_oviposition_parent_hatch_result_type()
+	return /mob/living/carbon/human/species/goblin/npc/cave
+
+/datum/species/goblin/sea/get_oviposition_parent_hatch_result_type()
+	return /mob/living/carbon/human/species/goblin/npc/sea
+
+/datum/species/goblin/moon/get_oviposition_parent_hatch_result_type()
+	return /mob/living/carbon/human/species/goblin/npc/moon
 
 /proc/get_oviposition_parent_features(mob/living/parent)
 	if(!ishuman(parent))
@@ -106,11 +218,24 @@
 	name = "oviposition egg"
 	desc = "A soft, warm egg that feels alive even before it starts to twitch."
 	w_class = WEIGHT_CLASS_SMALL
-	body_storage_bulk = 1
+	body_storage_bulk = 2
 	var/egg_type = OVI_EGG_NORMAL
 	var/mob/living/oviposition_mother
 	var/oviposition_mother_name
 	var/list/oviposition_mother_features
+	var/auto_hatch_when_laid = TRUE
+	var/hatch_inside_host = FALSE
+	var/newborn_start_scale = 0.5
+	var/newborn_growth_duration = 10 MINUTES
+	var/internal_hatch_layer = STORAGE_LAYER_INNER
+	var/internal_hatch_holder_type = /obj/item/mob_holder/internal_womb
+	var/internal_hatch_holder_bulk = 2
+	var/internal_hatch_triggers_contractions = FALSE
+	var/internal_hatch_auto_birth = FALSE
+	var/internal_hatch_birth_delay = 0
+	var/internal_hatch_message = null
+	var/internal_contraction_message = null
+	var/internal_birth_message = null
 
 /obj/item/oviposition_egg/Initialize(mapload)
 	. = ..()
@@ -164,6 +289,9 @@
 	var/datum/oviposition_egg_profile/profile = get_egg_profile()
 	return profile?.hatch_message
 
+/obj/item/oviposition_egg/proc/auto_hatches_when_laid()
+	return auto_hatch_when_laid
+
 /obj/item/oviposition_egg/proc/should_poll_for_ghost()
 	var/datum/oviposition_egg_profile/profile = get_egg_profile()
 	return isnull(profile?.poll_for_ghost) ? FALSE : profile.poll_for_ghost
@@ -171,6 +299,12 @@
 /obj/item/oviposition_egg/proc/requires_ghost_to_hatch()
 	var/datum/oviposition_egg_profile/profile = get_egg_profile()
 	return isnull(profile?.require_ghost_to_hatch) ? FALSE : profile.require_ghost_to_hatch
+
+/obj/item/oviposition_egg/proc/get_newborn_start_scale()
+	return newborn_start_scale
+
+/obj/item/oviposition_egg/proc/get_newborn_growth_duration()
+	return newborn_growth_duration
 
 /obj/item/oviposition_egg/proc/get_pregnancy_component()
 	return GetComponent(/datum/component/pregnancy)
@@ -180,4 +314,4 @@
 
 /obj/item/oviposition_egg/proc/is_fertilized()
 	var/datum/component/pregnancy/pregnancy = get_pregnancy_component()
-	return !isnull(pregnancy?.father)
+	return pregnancy?.fertilized

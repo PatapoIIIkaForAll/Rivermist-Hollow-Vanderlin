@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/projectile/falcon_disrupt
-	name = "Wings of Dendor"
+	name = "Wings of Silvanus"
 	desc = "Summons a falcon that could deliver small items and act as a distraction."
 	button_icon_state = "verd"
 	sound = 'sound/vo/mobs/bird/birdfly.ogg'

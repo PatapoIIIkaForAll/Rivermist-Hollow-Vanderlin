@@ -11,7 +11,7 @@
 	name = "Half-Elf"
 	id = SPEC_ID_HALF_ELF
 	multiple_accents = list(
-		"Humen Accent" = "Imperial",
+		"Human Accent" = "Imperial",
 		"Elf Accent" = "Elfish"
 	)
 	desc = "Half-Elves are born of human and elven unions, inheriting traits from both worlds yet fully belonging to neither. \

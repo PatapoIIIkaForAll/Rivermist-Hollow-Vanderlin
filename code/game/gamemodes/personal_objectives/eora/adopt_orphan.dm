@@ -1,9 +1,9 @@
 /datum/objective/personal/adopt_orphan
 	name = "Adopt Orphan"
-	category = "Eora's Chosen"
+	category = "Sune's Chosen"
 	triumph_count = 3
 	immediate_effects = list("Gained an ability to adopt children")
-	rewards = list("3 Triumphs", "Eora grows stronger", "Eora blesses you (+1 Fortune)")
+	rewards = list("3 Triumphs", "Sune grows stronger", "Sune blesses you (+1 Fortune)")
 
 /datum/objective/personal/adopt_orphan/on_creation()
 	. = ..()
@@ -25,7 +25,7 @@
 
 /datum/objective/personal/adopt_orphan/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've adopted a child, completing Eora's objective!"))
+	to_chat(owner.current, span_greentext("You've adopted a child, completing Sune's objective!"))
 	adjust_storyteller_influence(EORA, 20)
 	UnregisterSignal(owner.current, COMSIG_ORPHAN_ADOPTED)
 
@@ -34,4 +34,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_EORA_BLESSING, STATKEY_LCK, 1)
 
 /datum/objective/personal/adopt_orphan/update_explanation_text()
-	explanation_text = "Adopt an orphan as your own child and provide them a loving home! Eora is counting on you!"
+	explanation_text = "Adopt an orphan as your own child and provide them a loving home! Sune is counting on you!"

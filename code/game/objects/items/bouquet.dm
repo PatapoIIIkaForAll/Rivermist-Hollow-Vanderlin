@@ -12,7 +12,7 @@
 
 /obj/item/bouquet/rosa
 	name = "rosa bouquet"
-	desc =  "A bouquet of rosas, one of Eora's most beautiful flowers. They are a symbol of love and devotion."
+	desc =  "A bouquet of rosas, one of Sune's most beautiful flowers. They are a symbol of love and devotion."
 	icon_state = "bouquet_rosa"
 
 /obj/item/bouquet/salvia

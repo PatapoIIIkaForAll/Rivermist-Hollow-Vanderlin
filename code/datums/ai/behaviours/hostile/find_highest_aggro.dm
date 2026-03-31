@@ -1,6 +1,11 @@
 /datum/ai_behavior/find_aggro_targets
 	action_cooldown = 1 SECONDS
 
+/datum/ai_behavior/find_aggro_targets/setup(datum/ai_controller/controller, ...)
+	if(controller.blackboard[BB_FIND_TARGETS_FIELD(type)])
+		return FALSE
+	return ..()
+
 /datum/ai_behavior/find_aggro_targets/get_cooldown(datum/ai_controller/cooldown_for)
 	if(cooldown_for.blackboard[BB_FIND_TARGETS_FIELD(type)])
 		return 60 SECONDS
@@ -31,7 +36,9 @@
 			current_target = null
 		else
 			// Check if target is too far away
-			var/maintain_range = controller.blackboard[BB_AGGRO_MAINTAIN_RANGE] || 12
+			var/maintain_range = controller.blackboard[BB_AGGRO_MAINTAIN_RANGE]
+			if(isnull(maintain_range))
+				maintain_range = 12
 
 			if (!targetting_datum.can_attack(living_mob, current_target) && !targetting_datum.should_disarm(living_mob, current_target))
 				controller.clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
@@ -61,8 +68,9 @@
 	// Clear target key since we don't have a valid target
 	controller.clear_blackboard_key(target_key)
 
-	// If we're using a field rn, just don't do anything
+	// A passive field is already watching for new threats, so don't block future planning while we wait.
 	if(controller.blackboard[BB_FIND_TARGETS_FIELD(type)])
+		finish_action(controller, succeeded = FALSE)
 		return
 
 	// If we don't have a target, check for new targets in range
@@ -70,7 +78,9 @@
 
 /// Scans for new potential targets
 /datum/ai_behavior/find_aggro_targets/proc/scan_for_new_targets(datum/ai_controller/controller, mob/living/living_mob, target_key, datum/targetting_datum/targetting_datum, hiding_location_key, targetting_datum_key)
-	var/aggro_range = controller.blackboard[BB_AGGRO_RANGE] || 9
+	var/aggro_range = controller.blackboard[BB_AGGRO_RANGE]
+	if(isnull(aggro_range))
+		aggro_range = 9
 	var/list/potential_targets = hearers(aggro_range, living_mob) - living_mob
 
 	if(!potential_targets.len)
@@ -126,7 +136,9 @@
 /datum/ai_behavior/find_aggro_targets/proc/failed_to_find_anyone(datum/ai_controller/controller, target_key, targeting_strategy_key, hiding_location_key)
 	if(HAS_TRAIT(controller.pawn, TRAIT_FRESHSPAWN))
 		return
-	var/aggro_range = controller.blackboard[BB_AGGRO_RANGE] || 9
+	var/aggro_range = controller.blackboard[BB_AGGRO_RANGE]
+	if(isnull(aggro_range))
+		aggro_range = 9
 	// takes the larger between our range() input and our implicit hearers() input (world.view)
 	aggro_range = max(aggro_range, ROUND_UP(max(getviewsize(world.view)) / 2))
 	// Set up proximity field to await someone interesting to come along

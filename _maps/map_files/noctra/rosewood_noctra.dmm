@@ -2039,7 +2039,7 @@
 /turf/open/floor/churchmarble,
 /area/indoors/town/clinic_large)
 "bcT" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /turf/open/floor/blocks/newstone,
 /area/under/town/basement)
 "bdd" = (
@@ -18088,7 +18088,7 @@
 /turf/open/floor/carpet,
 /area/indoors/town/tavern)
 "kms" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /obj/machinery/light/fueled/wallfire/candle{
 	pixel_y = -32;
 	pixel_x = 16
@@ -26522,7 +26522,7 @@
 /turf/open/floor/herringbone,
 /area/indoors/villagegarrison)
 "oRb" = (
-/obj/structure/bookcase/random/eoratica{
+/obj/structure/bookcase/random/erotica{
 	name = "bookcase (Torture Manuscripts)"
 	},
 /obj/effect/decal/cleanable/dirt/cobweb,

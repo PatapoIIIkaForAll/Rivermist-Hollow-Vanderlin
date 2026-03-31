@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/beast_tame
 	name = "Tame Beast"
-	desc = "Attempt to turn a beast of Dendor to your favor."
+	desc = "Attempt to turn a beast of Silvanus to your favor."
 	button_icon_state = "tamebeast"
 	sound = 'sound/vo/smokedrag.ogg'
 	charge_sound = 'sound/magic/holycharging.ogg'
@@ -56,8 +56,8 @@
 		return
 
 	owner.visible_message(
-		span_greentext("[owner] soothes \the [cast_on] with Dendor's whisper."),
-		span_notice("I tame the beast with Dendor's whisper."),
+		span_greentext("[owner] soothes \the [cast_on] with Silvanus's whisper."),
+		span_notice("I tame the beast with Silvanus's whisper."),
 	)
 
 	cast_on.LoadComponent(/datum/component/obeys_commands, pet_commands)

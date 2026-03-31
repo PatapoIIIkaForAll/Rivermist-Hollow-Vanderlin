@@ -8,3 +8,9 @@
 	icon = 'icons/roguetown/items/keys.dmi'
 	icon_state = "birdkey"
 	lockids = list(ACCESS_WITCH)
+
+/obj/item/key/loudmouth
+	name = "loudmouth's key"
+	desc = "This key from Town Mouth Room."
+	icon_state = "cheesekey"
+	lockids = list(ACCESS_LOUDMOUTH)

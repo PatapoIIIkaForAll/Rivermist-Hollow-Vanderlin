@@ -43,7 +43,7 @@
 				new /obj/item/grown/log/tree/essence(get_turf(src))
 				if(!essence_sound_played)
 					essence_sound_played = TRUE
-					to_chat(user, span_warning("Dendor watches over us..."))
+					to_chat(user, span_warning("Silvanus watches over us..."))
 					playsound(src,pick('sound/items/gem.ogg'), 100, FALSE)
 			else
 				new lumber(get_turf(src))
@@ -79,7 +79,7 @@
 				new /obj/item/grown/log/tree/essence(get_turf(src))
 				if(!essence_sound_played)
 					essence_sound_played = TRUE
-					to_chat(user, span_warning("Dendor watches over us..."))
+					to_chat(user, span_warning("Silvanus watches over us..."))
 					playsound(src,pick('sound/items/gem.ogg'), 100, FALSE)
 			else
 				new lumber_alt(get_turf(src))
@@ -274,7 +274,7 @@
 
 /obj/item/grown/log/tree/essence
 	name = "essence of lumber"
-	desc = "A mystical essence imbued with the power of Dendor. Very good source of fuel."
+	desc = "A mystical essence imbued with the power of Silvanus. Very good source of fuel."
 	icon_state = "lessence"
 	attacked_sound = 'sound/misc/woodhit.ogg'
 	static_debris = null

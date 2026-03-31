@@ -597,7 +597,7 @@
 	item_weight = 6 * BLACKSTEEL_MULTIPLIER
 
 /obj/item/clothing/head/helmet/blacksteel/psythorns
-	name = "crown of psydonian thorns"
+	name = "crown of exotic thorns"
 	desc = "Thorns fashioned from pliable yet durable blacksteel - woven and interlinked, fashioned to be worn upon the head."
 	body_parts_covered = HAIR | HEAD
 	icon_state = "psybarbs"

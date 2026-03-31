@@ -38,38 +38,34 @@
 				zenars_to_put = budget
 				type_to_put = /obj/item/coin/inqcoin
 	else
-		var/highest_found = FALSE
-		var/zenars = floor(budget/1000)
-		if(zenars)
-			budget -= zenars * 1000
-			highest_found = TRUE
-			type_to_put = /obj/item/coin/platinum
-		zenars = floor(budget/100)
-		if(zenars)
-			budget -= zenars * 100
-			highest_found = TRUE
-			type_to_put = /obj/item/coin/gold
-			zenars_to_put = zenars
-		zenars = floor(budget/50)
-		if(zenars)
-			budget -= zenars * 50
-			highest_found = TRUE
-			type_to_put = /obj/item/coin/electrum
-		zenars = floor(budget/10)
-		if(zenars)
-			budget -= zenars * 10
-			if(!highest_found)
-				highest_found = TRUE
-				type_to_put = /obj/item/coin/silver
-				zenars_to_put = zenars
-			else
-				new /obj/item/coin/silver(T, zenars)
-		if(budget >= 1)
-			if(!highest_found)
-				type_to_put = /obj/item/coin/copper
-				zenars_to_put = budget
-			else
-				new /obj/item/coin/copper(T, budget)
+		var coincounter
+		var counter = budget
+
+		if(floor(counter/1000) > 0)
+			coincounter += floor(counter/1000)
+			counter -= coincounter * 1000
+			new /obj/item/coin/platinum(T, coincounter)
+			coincounter = 0
+		if(floor(counter/100) > 0)
+			coincounter += floor(counter/100)
+			counter -= coincounter * 100
+			new /obj/item/coin/gold(T, coincounter)
+			coincounter = 0
+		if(floor(counter/50) > 0)
+			coincounter += floor(counter/50)
+			counter -= coincounter * 50
+			new /obj/item/coin/electrum(T, coincounter)
+			coincounter = 0
+		if(floor(counter/10) > 0)
+			coincounter += floor(counter/10)
+			counter -= coincounter * 10
+			new /obj/item/coin/silver(T, coincounter)
+			coincounter = 0
+		if(counter > 0)
+			coincounter += counter
+			new /obj/item/coin/copper(T, coincounter)
+			coincounter = 0
+
 	if(!type_to_put || zenars_to_put < 1)
 		return
 
@@ -80,7 +76,6 @@
 		zenars_to_put -= zenar_value
 		G.pixel_y = G.base_pixel_y + rand(-4, 4)
 		G.pixel_x = G.base_pixel_x + rand(-4, 4)
-
 		if(user)
 			user.put_in_hands(G)
 

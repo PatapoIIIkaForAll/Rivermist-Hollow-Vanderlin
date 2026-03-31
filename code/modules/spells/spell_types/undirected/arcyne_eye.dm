@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/undirected/arcyne_eye
-	name = "Arcyne Eye"
-	desc = "Tap into the arcyne to see what is unseen."
+	name = "Arcane Eye"
+	desc = "Tap into the arcane to see what is unseen."
 	button_icon_state = "transfix"
 	sound = 'sound/vo/smokedrag.ogg'
 

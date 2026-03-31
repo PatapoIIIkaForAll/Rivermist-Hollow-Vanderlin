@@ -5,7 +5,7 @@
 	name = "Half-Orc"
 	id = SPEC_ID_HALF_ORC
 	native_language = "Orcish"
-	desc = "The bastards of Graggar. \
+	desc = "The bastards of Gruumsh. \
 	\n\n\
 	Half-Orcs are the offspring of orcs and another species, half-orcs, \
 	or another species who has consumed much kinsflesh on their way to orcishness. \

@@ -1,7 +1,7 @@
 /obj/item/clothing/head/fisherhat
 	name = "straw hat"
 	desc = "Wenches shall lust for thee. Fishe will fear thee. \
-			Humen will cast their gaze aside. As thou walk, \
+			Human will cast their gaze aside. As thou walk, \
 			no creecher shall dare make a sound on thy presence. \
 			Thou wilt be alone on these barren lands."
 	icon_state = "fisherhat"
@@ -106,7 +106,7 @@
 
 /obj/item/clothing/head/wizhat/witch
 	name = "witch hat"
-	desc = "While officially, Witches heretical to Astrata and risk harassment by the faithkeepers, quite a few mages and Pestrans wear such hats anyways as a fashion statement."
+	desc = "While officially, witches are heretical to Lathander and risk harassment by the faithkeepers, quite a few mages and Ilmatari wear such hats anyways as a fashion statement."
 	icon_state = "witchhat"
 	detail_tag = "_detail"
 	detail_color = CLOTHING_SOOT_BLACK

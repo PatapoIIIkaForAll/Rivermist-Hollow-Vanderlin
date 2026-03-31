@@ -203,7 +203,6 @@
 		"Depth Grey-Blue" = SKIN_TONE_DROW_DEPTH_GREY_BLUE, // #5f5f70
 		"Pink"            = SKIN_TONE_DROW_PINK,            // #897489
 		"Very Pale"		  = SKIN_COLOR_DROW_PALE,	       // #fff0e9
-
 	))
 
 /datum/species/dwarf/duergar/get_possible_names(gender = MALE)

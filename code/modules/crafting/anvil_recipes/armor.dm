@@ -76,7 +76,7 @@
 // BRONZE HELMET
 
 /datum/anvil_recipe/armor/bronze/helmet
-	name = "Abyssor Helmet (+Bronze Bar)"
+	name = "Umberlee Helmet (+Bronze Bar)"
 	recipe_name = "an abyssor helmet"
 	req_bar = /obj/item/ingot/bronze
 	additional_items = list(/obj/item/ingot/bronze)
@@ -529,7 +529,7 @@
 	abstract_type = /datum/anvil_recipe/armor/steel/templar
 
 /datum/anvil_recipe/armor/steel/templar/helmet_noc
-	name = "Noc Helmet (+Silver Bar)"
+	name = "Mystra Helmet (+Silver Bar)"
 	recipe_name = "a noc helmet"
 	created_item = /obj/item/clothing/head/helmet/heavy/necked/noc
 	additional_items = list(/obj/item/ingot/silver)
@@ -553,7 +553,7 @@
 	additional_items = list(/obj/item/ingot/iron)
 
 /datum/anvil_recipe/armor/steel/templar/helmet_dendor
-	name = "Dendor Helmet (+Small Log)"
+	name = "Silvanus Helmet (+Small Log)"
 	recipe_name = "a dendorian helmet"
 	created_item = /obj/item/clothing/head/helmet/heavy/necked/dendorhelm
 	additional_items = list(/obj/item/grown/log/tree/small)
@@ -565,19 +565,19 @@
 	additional_items = list(/obj/item/ingot/iron)
 
 /datum/anvil_recipe/armor/steel/templar/helmet_malum
-	name = "Malum Helmet (+Iron Bar)"
+	name = "Moradin Helmet (+Iron Bar)"
 	recipe_name = "a malumite helmet"
 	created_item = /obj/item/clothing/head/helmet/heavy/necked/malumhelm
 	additional_items = list(/obj/item/ingot/iron)
 
 /datum/anvil_recipe/armor/steel/templar/helmet_ravox
-	name = "Ravox Helmet (+Iron Bar)"
+	name = "Tempus Helmet (+Iron Bar)"
 	recipe_name = "a ravoxian helmet"
 	created_item = /obj/item/clothing/head/helmet/heavy/necked/ravox
 	additional_items = list(/obj/item/ingot/iron)
 
 /datum/anvil_recipe/armor/steel/templar/helmet_xylix
-	name = "Xylix Helmet (+Iron Bar)"
+	name = "Tymora Helmet (+Iron Bar)"
 	recipe_name = "a xylixian helmet"
 	created_item = /obj/item/clothing/head/helmet/heavy/necked/xylix
 	additional_items = list(/obj/item/ingot/iron)
@@ -1368,7 +1368,7 @@
 	craftdiff = 3
 
 /datum/anvil_recipe/armor/psydonboots
-	name = "crown of psydonian thorns"
+	name = "crown of exotic thorns"
 	req_bar = /obj/item/ingot/blacksteel
 	created_item = /obj/item/clothing/head/helmet/blacksteel/psythorns
 	craftdiff = 3
@@ -1407,7 +1407,7 @@
 	created_item = /obj/item/clothing/head/helmet/heavy/psybucket
 
 /datum/anvil_recipe/armor/blessedsilver/helmetabso
-	name = "Psydonian Conical Helm (+2 Blessed Silver)"
+	name = "Aonic Conical Helm (+2 Blessed Silver)"
 	req_bar = /obj/item/ingot/silverblessed
 	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/ingot/silverblessed)
 	created_item = /obj/item/clothing/head/helmet/heavy/absolver

@@ -1,0 +1,100 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/wall/mineral/wood,
+/area/pocket_dimension/magic_closet)
+"b" = (
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"c" = (
+/obj/structure/closet/crate/crafted_closet/inn,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"d" = (
+/obj/effect/landmark/pocket_dimension/drop_spot,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"e" = (
+/obj/effect/landmark/pocket_dimension/entry,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"f" = (
+/obj/effect/landmark/pocket_dimension/exit/closet,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"g" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/west,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"h" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/east,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+"L" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/east,
+/obj/item/clothing/pants/loincloth/colored/pink,
+/turf/open/floor/wood,
+/area/pocket_dimension/magic_closet)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+c
+h
+c
+L
+c
+a
+"}
+(3,1,1) = {"
+a
+c
+b
+c
+b
+c
+a
+"}
+(4,1,1) = {"
+a
+f
+e
+b
+d
+b
+a
+"}
+(5,1,1) = {"
+a
+c
+b
+c
+b
+c
+a
+"}
+(6,1,1) = {"
+a
+c
+g
+c
+g
+c
+a
+"}
+(7,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+"}

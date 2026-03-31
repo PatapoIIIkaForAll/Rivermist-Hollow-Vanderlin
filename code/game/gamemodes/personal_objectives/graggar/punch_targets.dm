@@ -1,8 +1,8 @@
 /datum/objective/personal/punch_women
 	name = "Punch Women"
-	category = "Graggar's Chosen"
+	category = "Gruumsh's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Graggar grows stronger", "Graggar blesses you (+2 Strength)")
+	rewards = list("2 Triumphs", "Gruumsh grows stronger", "Gruumsh blesses you (+2 Strength)")
 	var/punches_done = 0
 	var/punches_required = 3
 
@@ -32,7 +32,7 @@
 
 /datum/objective/personal/punch_women/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have dealt enough face punches to satisfy Graggar!"))
+	to_chat(owner.current, span_greentext("You have dealt enough face punches to satisfy Gruumsh!"))
 	adjust_storyteller_influence(GRAGGAR, 20)
 	UnregisterSignal(owner.current, COMSIG_HEAD_PUNCHED)
 
@@ -41,4 +41,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_GRAGGAR_BLESSING, STATKEY_STR, 2)
 
 /datum/objective/personal/punch_women/update_explanation_text()
-	explanation_text = "Punch women [punches_required] time\s in the face to demonstrate your devotion to Graggar!"
+	explanation_text = "Punch women [punches_required] time\s in the face to demonstrate your devotion to Gruumsh!"

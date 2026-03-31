@@ -6,7 +6,7 @@
 	icon_living = "deep1"
 	icon_dead = "deep1_d"
 	gender = MALE
-	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
+	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID|MOB_ABERRATION
 	robust_searching = 1
 	move_to_delay = 3
 	base_constitution = 11

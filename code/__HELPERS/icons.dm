@@ -1027,7 +1027,8 @@ GLOBAL_LIST_EMPTY(friendly_animal_types)
 	var/mob/living/carbon/human/dummy/body = generate_or_wait_for_human_dummy(dummy_key)
 
 	if(prefs)
-		prefs.apply_prefs_to(body, TRUE)
+		// Preview dummies are pooled, so clear taur state when the current prefs don't use one.
+		prefs.apply_prefs_to(body, TRUE, TRUE)
 
 	var/datum/outfit/outfit = outfit_override || job?.outfit
 	if(job)

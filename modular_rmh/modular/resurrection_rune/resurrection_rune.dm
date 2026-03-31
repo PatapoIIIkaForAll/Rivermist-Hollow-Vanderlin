@@ -4,7 +4,7 @@
 #define RUNE_HARD_CRIT_AUTO_DELAY 10 MINUTES
 #define RUNE_REVIVAL_TITHE_MIN 20
 #define RUNE_REVIVAL_TITHE_MAX 50
-#define RUNE_WARDROBE_LOSS_CHANCE 10
+#define RUNE_WARDROBE_LOSS_CHANCE 100
 #define RUNE_STAGE_NONE 0
 #define RUNE_STAGE_SOFT_CRIT 1
 #define RUNE_STAGE_HARD_CRIT 2
@@ -524,6 +524,7 @@
 	body.visible_message(span_blue("With a loud pop, [body.name] suddenly disappears!"))
 	playsound(get_turf(body), 'sound/magic/repulse.ogg', 100, FALSE, -1)
 	body.ExtinguishMob()
+	maybe_strip_revival_clothes(body, voluntary)
 	body.forceMove(destination_turf)
 	body.revive(ADMIN_HEAL_ALL, force_grab_ghost = TRUE)
 	body.clear_fullscreens()
@@ -597,7 +598,6 @@
 
 /datum/resurrection_rune_controller/proc/apply_revival_side_effects(mob/living/carbon/target, voluntary = FALSE, turf/return_turf = null)
 	charge_revival_tithe(target)
-	maybe_strip_revival_clothes(target, voluntary)
 	give_revival_compass(target, return_turf)
 
 /datum/resurrection_rune_controller/proc/give_revival_compass(mob/living/carbon/target, turf/return_turf)

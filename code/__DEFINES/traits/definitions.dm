@@ -166,6 +166,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SIXTHSENSE "sixth_sense"
 /// Immune to the effects of phobias
 #define TRAIT_FEARLESS "fearless"
+/// Protected from evil and good - disadvantage for matching creatures attacking this mob
+#define TRAIT_PROTECTION_EVIL_GOOD "protection_evil_good"
 //These are used for brain-based paralysis, where replacing the limb won't fix it
 /// Brain paralysis of left arm
 #define TRAIT_PARALYSIS_L_ARM "para-l-arm"
@@ -317,10 +319,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NOSTRUGGLE "nostruggle"
 /// Black-bagged. More snowflaking.
 #define TRAIT_BAGGED "bagged"
-/// Pain Tolerance. Through faith, ENDURE.
-#define TRAIT_PSYDONIAN_GRIT "Psydonian Grit"
-/// Anti-Miracles on a selective basis, anastasis / cure rot still apply. Slow passive wound healing while you have blood.
-#define TRAIT_PSYDONITE "Psydonite's Devotion"
+/// Pain Tolerance.
+#define TRAIT_TRUE_GRIT "Grit"
 /// Capable of using Garrotes and Blackbags. Apprehension techniques.
 #define TRAIT_BLACKBAGGER "Apprehension Techniques"
 #define TRAIT_WOUNDREGEN "Wound Regeneration"
@@ -360,8 +360,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NOSLEEP "Fatal Insomnia"
 #define TRAIT_FASTSLEEP "Fast Sleeper"
 #define TRAIT_NUDIST "Nudist" //you can't wear most clothes
-#define TRAIT_INHUMANE_ANATOMY "Inhumen Anatomy" //can't wear hats and shoes
-#define TRAIT_NASTY_EATER "Inhumen Digestion" //can eat rotten food, organs, poison berries, and drink murky water
+#define TRAIT_INHUMANE_ANATOMY "Inhuman Anatomy" //can't wear hats and shoes
+#define TRAIT_NASTY_EATER "Inhuman Digestion" //can eat rotten food, organs, poison berries, and drink murky water
 #define TRAIT_NOFALLDAMAGE1 "Minor Fall Damage Immunity"
 #define TRAIT_NOFALLDAMAGE2 "Total	 Fall Damage Immunity"
 #define TRAIT_DEATHSIGHT "Veiled Whispers" // Is notified when a player character dies, but not told exactly where or how.
@@ -386,7 +386,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_POISONBITE "Poison Bite"
 #define TRAIT_FORAGER "Expert Forager"
 #define TRAIT_TINY "Tiny"
-#define TRAIT_DREAM_WATCHER	"Noc Blessed" //Unique Trait of the Dream Watcher Town Elder Class, they have a chance to know about antags or gods influences.
+#define TRAIT_DREAM_WATCHER	"Mystra Blessed" //Unique Trait of the Dream Watcher Town Elder Class, they have a chance to know about antags or gods influences.
 #define TRAIT_HOLLOWBONES "Hollow Bones"
 #define TRAIT_AMAZING_BACK "Light Load"
 #define TRAIT_KITTEN_MOM "Loved By Kittens"
@@ -443,9 +443,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_FANATICAL "Fanatical" //Trait used for fanatical mobs who can bypass the excommunication(not the curses though.)
 
 // Divine patron trait bonuses:
-#define TRAIT_SOUL_EXAMINE "Blessing of Necra"  //can check bodies to see if they have departed
-#define TRAIT_ROT_EATER "Blessing of Pestra" //can eat rotten food
-#define TRAIT_KNEESTINGER_IMMUNITY "Blessing of Dendor" //Can move through kneestingers.
+#define TRAIT_SOUL_EXAMINE "Blessing of Jergal"  //can check bodies to see if they have departed
+#define TRAIT_ROT_EATER "Blessing of Ilmater" //can eat rotten food
+#define TRAIT_KNEESTINGER_IMMUNITY "Blessing of Silvanus" //Can move through kneestingers.
 #define TRAIT_LEECHIMMUNE "Unleechable" //leeches drain very little blood
 #define TRAIT_SHARPER_BLADES "Sharper Blades" //Weapons lose less blade integrity
 #define TRAIT_BETTER_SLEEP "Better Sleep" //Recover more energy (blue bar) when sleeping
@@ -458,26 +458,26 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SILVER_BLESSED "Silver Blessed"
 
 // Inhumen patron trait bonuses
-#define TRAIT_ORGAN_EATER "Blessing of Graggar"//Can eat organs (duh.) and raw meat
-#define TRAIT_CRACKHEAD	"Blessing of Baotha" //No overdose on drugs.
+#define TRAIT_ORGAN_EATER "Blessing of Gruumsh"//Can eat organs (duh.) and raw meat
+#define TRAIT_CRACKHEAD	"Blessing of Blissara" //No overdose on drugs.
 #define TRAIT_CABAL "Of the Cabal" //Zizo cultists recognize each other too
-#define TRAIT_MATTHIOS_EYES	"Eyes of Matthios" //Examine to see the most expensive item someone has
+#define TRAIT_MATTHIOS_EYES	"Eyes of Mask" //Examine to see the most expensive item someone has
 
 // PATRON CURSE TRAITS
 #define TRAIT_CURSE "Curse" //source
 #define TRAIT_ATHEISM_CURSE "Curse of Atheism"
-#define TRAIT_PSYDON_CURSE "Psydon's Curse"
-#define TRAIT_ASTRATA_CURSE "Astrata's Curse"
-#define TRAIT_NOC_CURSE "Noc's Curse"
-#define TRAIT_RAVOX_CURSE "Ravox's Curse"
-#define TRAIT_NECRA_CURSE "Necra's Curse"
-#define TRAIT_XYLIX_CURSE "Xylix's Curse"
-#define TRAIT_PESTRA_CURSE "Pestra's Curse"
-#define TRAIT_EORA_CURSE "Eora's Curse"
-#define TRAIT_ZIZO_CURSE "Zizo's Curse"
-#define TRAIT_GRAGGAR_CURSE "Graggar's Curse"
-#define TRAIT_MATTHIOS_CURSE "Matthios' Curse"
-#define TRAIT_BAOTHA_CURSE "Baotha's Curse"
+#define TRAIT_PSYDON_CURSE "Ao's Curse"
+#define TRAIT_ASTRATA_CURSE "Lathander's Curse"
+#define TRAIT_NOC_CURSE "Mystra's Curse"
+#define TRAIT_RAVOX_CURSE "Tempus's Curse"
+#define TRAIT_NECRA_CURSE "Jergal's Curse"
+#define TRAIT_XYLIX_CURSE "Tymora's Curse"
+#define TRAIT_PESTRA_CURSE "Ilmater's Curse"
+#define TRAIT_EORA_CURSE "Sune's Curse"
+#define TRAIT_ZIZO_CURSE "Lolth's Curse"
+#define TRAIT_GRAGGAR_CURSE "Gruumsh's Curse"
+#define TRAIT_MATTHIOS_CURSE "Mask's Curse"
+#define TRAIT_BAOTHA_CURSE "Blissara's Curse"
 
 // HIDDEN DOOR TRAITS
 #define TRAIT_KNOW_KEEP_DOORS "know_keep_doors"

@@ -1,8 +1,8 @@
 /datum/objective/personal/energy_expenditure
 	name = "Spend Energy"
-	category = "Malum's Chosen"
+	category = "Moradin's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Malum grows stronger", "Malum blesses you (+1 Endurance)")
+	rewards = list("2 Triumphs", "Moradin grows stronger", "Moradin blesses you (+1 Endurance)")
 	var/energy_spent = 0
 	var/energy_required = 1000
 
@@ -28,7 +28,7 @@
 
 /datum/objective/personal/energy_expenditure/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've spent enough energy working to satisfy Malum!"))
+	to_chat(owner.current, span_greentext("You've spent enough energy working to satisfy Moradin!"))
 	adjust_storyteller_influence(MALUM, 20)
 	UnregisterSignal(owner.current, COMSIG_MOB_ENERGY_SPENT)
 
@@ -37,4 +37,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_MALUM_BLESSING, STATKEY_END, 1)
 
 /datum/objective/personal/energy_expenditure/update_explanation_text()
-	explanation_text = "Don't be a slacker! Spend at least [energy_required] energy working to satisfy Malum."
+	explanation_text = "Don't be a slacker! Spend at least [energy_required] energy working to satisfy Moradin."

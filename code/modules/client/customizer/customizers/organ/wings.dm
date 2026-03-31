@@ -73,3 +73,19 @@
 		/datum/sprite_accessory/wings/wide/dragon_alt2,
 		/datum/sprite_accessory/wings/huge/dragon,
 	)
+
+/datum/customizer/organ/wings/aasimar
+	customizer_choices = list(/datum/customizer_choice/organ/wings/aasimar)
+	allows_disabling = TRUE
+
+/datum/customizer_choice/organ/wings/aasimar
+	name = "Wings"
+	organ_type = /obj/item/organ/wings/flight/aasimar
+	allows_accessory_color_customization = TRUE
+	sprite_accessories = list(
+		/datum/sprite_accessory/wings/huge/dragon,
+		/datum/sprite_accessory/wings/huge/angel,
+		/datum/sprite_accessory/wings/huge/skeleton,
+		/datum/sprite_accessory/wings/huge/megamoth,
+		/datum/sprite_accessory/wings/huge/mothra,
+		)

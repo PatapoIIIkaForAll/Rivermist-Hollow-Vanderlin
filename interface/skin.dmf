@@ -112,6 +112,7 @@ window "infowindow"
 		saved-params = "splitter"
 		left = "statwindow"
 		right = "outputwindow"
+		on-size = ".refresh_status_window_layout"
 		is-vert = false
 
 window "outputwindow"

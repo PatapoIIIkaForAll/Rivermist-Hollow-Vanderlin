@@ -1,8 +1,8 @@
 /datum/objective/personal/blood_splash
 	name = "Splash Blood"
-	category = "Graggar's Chosen"
+	category = "Gruumsh's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Graggar grows stronger", "Graggar blesses you (+1 Strength, +1 Constitution)")
+	rewards = list("2 Triumphs", "Gruumsh grows stronger", "Gruumsh blesses you (+1 Strength, +1 Constitution)")
 
 /datum/objective/personal/blood_splash/on_creation()
 	. = ..()
@@ -30,7 +30,7 @@
 
 /datum/objective/personal/blood_splash/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have performed the blood ritual, appeasing Graggar!"))
+	to_chat(owner.current, span_greentext("You have performed the blood ritual, appeasing Gruumsh!"))
 	adjust_storyteller_influence(GRAGGAR, 20)
 	UnregisterSignal(owner.current, COMSIG_SPLASHED_MOB)
 
@@ -40,4 +40,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_GRAGGAR_BLESSING, STATKEY_CON, 1)
 
 /datum/objective/personal/blood_splash/update_explanation_text()
-	explanation_text = "There is much power in blood. Splash a bucket full of blood on yourself to appease Graggar!"
+	explanation_text = "There is much power in blood. Splash a bucket full of blood on yourself to appease Gruumsh!"

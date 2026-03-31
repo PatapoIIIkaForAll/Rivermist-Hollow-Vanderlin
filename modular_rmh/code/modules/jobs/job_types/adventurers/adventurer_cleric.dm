@@ -78,7 +78,10 @@
 
 /datum/job/adventurer_cleric/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
+	if(!spawned || QDELETED(spawned))
+		return
 	to_chat(spawned, "<br><font color='#855b14'><span class='bold'>If I wanted to make amnas by selling my services, or completing quests, the Adventurers Guild would be a good place to start.</span></font><br>")
+	spawned.add_spell(/datum/action/cooldown/spell/undirected/protection_evil_good, source = src)
 	var/holder = spawned.patron?.devotion_holder
 	if(holder)
 		var/datum/devotion/devotion = new holder()

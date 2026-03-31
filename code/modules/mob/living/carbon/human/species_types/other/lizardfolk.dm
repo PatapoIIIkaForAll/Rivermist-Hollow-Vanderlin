@@ -161,19 +161,4 @@
 	return assemble_body_markings_from_set(GLOB.body_marking_sets_by_type[/datum/body_marking_set/bellyscale], passed_features, src)
 
 /datum/species/lizardfolk/get_skin_list()
-	return list(
-		"Aquarela" = SKIN_COLOR_AQUARELA,
-		"Amor" = SKIN_COLOR_AMOR,
-		"Sangue" = SKIN_COLOR_SANGUE,
-		"Lama" = SKIN_COLOR_LAMA,
-		"Amazonia" = SKIN_COLOR_AMAZONIA,
-		"Serra" = SKIN_COLOR_SERRA,
-		"Sunny" = LIZARD_SKIN_SUNNY,
-		"Darksy" = LIZARD_SKIN_DARKSKY,
-		"Grey" = LIZARD_SKIN_GREY,
-		"Greeny" = LIZARD_SKIN_GREENY,
-		"Brown" = LIZARD_SKIN_BROWN,
-		"Celestial" = LIZARD_SKIN_CELESTIAL,
-		"Dark" = LIZARD_SKIN_NECRAL,
-		"Abyssal" = LIZARD_SKIN_ABYSSAL,
-	)
+	return get_common_mutant_color_palette()

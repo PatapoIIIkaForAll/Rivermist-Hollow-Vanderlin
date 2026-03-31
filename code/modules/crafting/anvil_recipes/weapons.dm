@@ -980,63 +980,63 @@
 	created_item = /obj/item/weapon/mace/elvenclub/silver
 
 /datum/anvil_recipe/weapons/psy/axe
-	name = "Psydonian War Axe (+1 B. Silver, +1 Stick)"
+	name = "Aonic War Axe (+1 B. Silver, +1 Stick)"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/axe/psydon
 	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/grown/log/tree/stick)
 	i_type = "Weapons"
 /datum/anvil_recipe/weapons/psy/mace
-	name = "Psydonian Mace (+1 B. Silver, +1 Stick)"
+	name = "Aonic Mace (+1 B. Silver, +1 Stick)"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/mace/goden/psydon
 	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/grown/log/tree/stick)
 	i_type = "Weapons"
 /datum/anvil_recipe/weapons/psy/spear
-	name = "Psydonian Spear (+1 Small Log)"
+	name = "Aonic Spear (+1 Small Log)"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/polearm/spear/psydon
 	additional_items = list(/obj/item/grown/log/tree/small)
 	i_type = "Weapons"
 /datum/anvil_recipe/weapons/psy/dagger
-	name = "Psydonian Dagger"
+	name = "Aonic Dagger"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/knife/dagger/silver/psydon
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/shortsword
-	name = "Psydonian Shortsword"
+	name = "Aonic Shortsword"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/sword/short/psy
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/katar
-	name = "Psydonian Katar"
+	name = "Aonic Katar"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/katar/psydon
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/knuckles
-	name = "Psydonian Knuckles"
+	name = "Aonic Knuckles"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/knuckles/psydon
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/cudgel
-	name = "Psydonian Handmace"
+	name = "Aonic Handmace"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/mace/cudgel/psy
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/halberd
-	name = "Psydonian Halberd (+1 B. Silver, +1 Small Log)"
+	name = "Aonic Halberd (+1 B. Silver, +1 Small Log)"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/polearm/halberd/psydon
@@ -1044,7 +1044,7 @@
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/gsword
-	name = "Psydonian Greatsword (+1 B. Silver)"
+	name = "Aonic Greatsword (+1 B. Silver)"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/sword/long/greatsword/psydon
@@ -1052,14 +1052,14 @@
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/sword
-	name = "Psydonian Sword"
+	name = "Aonic Sword"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/sword/long/psydon
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/whip
-	name = "Psydonian Whip (+2 Cured Leather)"
+	name = "Aonic Whip (+2 Cured Leather)"
 	req_bar = /obj/item/ingot/silverblessed
 	craftdiff = 3
 	created_item = /obj/item/weapon/whip/psydon

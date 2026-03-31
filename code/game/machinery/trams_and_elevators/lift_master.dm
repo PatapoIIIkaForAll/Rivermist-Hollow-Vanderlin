@@ -832,7 +832,7 @@ GLOBAL_LIST_EMPTY(active_lifts_by_type)
 		location = new crate_type(location)
 		location.name = "currency chest"
 
-	var/gold_coins = floor(total_coin_value/10)
+	var/gold_coins = floor(total_coin_value/100)
 	if(gold_coins >= 1)
 		var/stacks = floor(gold_coins/20) // keep this in sync with MAX_COIN_STACK_SIZE in coins.dm
 		if(stacks >= 1)
@@ -841,11 +841,11 @@ GLOBAL_LIST_EMPTY(active_lifts_by_type)
 		var/remainder = gold_coins % 20
 		if(remainder >= 1)
 			new /obj/item/coin/gold(location, remainder)
-	total_coin_value -= gold_coins*10
+	total_coin_value -= gold_coins*100
 	if(!total_coin_value)
 		return location
 
-	var/silver_coins = floor(total_coin_value/5)
+	var/silver_coins = floor(total_coin_value/10)
 	if(silver_coins >= 1)
 		var/stacks = floor(silver_coins/20)
 		if(stacks >= 1)
@@ -854,7 +854,7 @@ GLOBAL_LIST_EMPTY(active_lifts_by_type)
 		var/remainder = silver_coins % 20
 		if(remainder >= 1)
 			new /obj/item/coin/silver(location, remainder)
-	total_coin_value -= silver_coins*5
+	total_coin_value -= silver_coins*10
 	if(!total_coin_value)
 		return location
 

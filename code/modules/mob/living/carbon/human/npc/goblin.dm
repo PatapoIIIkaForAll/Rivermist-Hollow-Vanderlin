@@ -149,18 +149,19 @@
 		OFFSET_CLOAK = list(0,0), OFFSET_FACEMASK = list(0,-5), OFFSET_HEAD = list(0,-4), \
 		OFFSET_FACE = list(0,-5), OFFSET_BELT = list(0,-4), OFFSET_BACK = list(0,-4), \
 		OFFSET_NECK = list(0,-4), OFFSET_MOUTH = list(0,-4), OFFSET_PANTS = list(0,0), \
-		OFFSET_SHIRT = list(0,0), OFFSET_ARMOR = list(0,0), OFFSET_HANDS = list(0,-3), OFFSET_BUTT = list(0,-4),\ OFFSET_UNDIES = list(0,-4)
+		OFFSET_SHIRT = list(0,0), OFFSET_ARMOR = list(0,0), OFFSET_HANDS = list(0,-3), OFFSET_BUTT = list(0,-4),\ OFFSET_UNDIES = list(0,-4), \
 		)
 	offset_features_f = list(
 		OFFSET_ID = list(0,-5), OFFSET_GLOVES = list(0,-4), OFFSET_WRISTS = list(0,-4), OFFSET_HANDS = list(0,-4), \
 		OFFSET_CLOAK = list(0,0), OFFSET_FACEMASK = list(0,-5), OFFSET_HEAD = list(0,-5), \
 		OFFSET_FACE = list(0,-5), OFFSET_BELT = list(0,-4), OFFSET_BACK = list(0,-5), \
 		OFFSET_NECK = list(0,-5), OFFSET_MOUTH = list(0,-5), OFFSET_PANTS = list(0,0), \
-		OFFSET_SHIRT = list(0,0), OFFSET_ARMOR = list(0,0), OFFSET_BUTT = list(0,-4),\ OFFSET_UNDIES = list(0,-4)
+		OFFSET_SHIRT = list(0,0), OFFSET_ARMOR = list(0,0), OFFSET_BUTT = list(0,-4),\ OFFSET_UNDIES = list(0,-4), \
 		)
 
 	dam_icon_f = null
 	dam_icon_m = null
+	gender_ratio = 90 // 90 percent of them will be male
 	damage_overlay_type = ""
 	changesource_flags = WABBAJACK
 	var/raceicon = "goblin"
@@ -280,7 +281,7 @@
 //	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
 //	blue breathes underwater, need a new specific one for this maybe organ cheque
 //	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_GENERIC)
-	if(gob_outfit)
+	if(gob_outfit && !skip_initial_outfit)
 		var/datum/outfit/O = new gob_outfit
 		if(O)
 			equipOutfit(O)

@@ -318,7 +318,7 @@
 /datum/stress_event/loinachegood
 	timer = 5 MINUTES
 	stress_change = -3
-	desc = list(span_green("My loins took a GOOD beating!~"),span_green("My loins got slammed GOOD!"),span_green("My loins got beaten GOOD!"))
+	desc = span_green("My loins took a GOOD beating!~")
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
@@ -662,12 +662,3 @@
 	name = "Violated"
 	desc = "You were pinned down, roughed up and fucked - you are in no condition to fight, run while you can. They don't want to hurt you - for now."
 	icon_state = "bait"
-
-/datum/status_effect/debuff/mob_fucked/on_apply()
-	. = ..()
-	ADD_TRAIT(owner, TRAIT_PACIFISM, TRAIT_GENERIC)
-
-
-/datum/status_effect/debuff/mob_fucked/on_remove()
-	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, TRAIT_GENERIC)

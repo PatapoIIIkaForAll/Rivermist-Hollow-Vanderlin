@@ -124,9 +124,12 @@
 	var/list/actions = list(
 		/datum/action/manage_voice_actions
 	)
+	/// Whether this synthetic form speaks through locked automaton voice lines.
+	var/voice_locked = TRUE
+	/// Additional multiplicative slowdown applied on top of stat changes.
+	var/movespeed_slowdown = 0.9
 
-/datum/species/automaton/on_species_gain(mob/living/carbon/C, datum/species/old_species, datum/preferences/pref_load)
-	. = ..()
+/datum/species/automaton/proc/add_synthetic_components(mob/living/carbon/C)
 	C.AddComponent(/datum/component/abberant_eater, list(/obj/item/ore/coal, /obj/item/grown/log/tree))
 	C.AddComponent(/datum/component/steam_life)
 	C.AddComponent(/datum/component/command_follower)
@@ -134,29 +137,79 @@
 	C.AddComponent(/datum/component/easy_repair)
 	C.AddComponent(/datum/component/damage_shutdown)
 
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
-	C.grant_language(/datum/language/common)
+/datum/species/automaton/proc/remove_synthetic_components(mob/living/carbon/C)
+	var/datum/component/component
 
+	component = C.GetComponent(/datum/component/abberant_eater)
+	component?.RemoveComponent()
+
+	component = C.GetComponent(/datum/component/steam_life)
+	component?.RemoveComponent()
+
+	component = C.GetComponent(/datum/component/command_follower)
+	component?.RemoveComponent()
+
+	component = C.GetComponent(/datum/component/augmentable)
+	component?.RemoveComponent()
+
+	component = C.GetComponent(/datum/component/easy_repair)
+	component?.RemoveComponent()
+
+	component = C.GetComponent(/datum/component/damage_shutdown)
+	component?.RemoveComponent()
+
+/datum/species/automaton/proc/add_species_actions(mob/living/carbon/C)
 	for(var/datum/action/action as anything in actions)
 		C.add_spell(action)
 
-	C.add_movespeed_modifier("automaton", multiplicative_slowdown = 0.9)
+/datum/species/automaton/proc/remove_species_actions(mob/living/carbon/C)
+	for(var/datum/action/action as anything in actions)
+		C.remove_spell(action)
 
+/datum/species/automaton/proc/apply_robotic_bodyparts(mob/living/carbon/C)
 	for(var/obj/item/bodypart/part as anything in C.bodyparts)
 		part.status = BODYPART_ROBOTIC
 
-/datum/species/automaton/on_species_loss(mob/living/carbon/C)
+/datum/species/automaton/proc/reset_robotic_bodyparts(mob/living/carbon/C)
+	for(var/obj/item/bodypart/part as anything in C.bodyparts)
+		if(part.status == BODYPART_ROBOTIC)
+			part.status = BODYPART_ORGANIC
+
+/datum/species/automaton/on_species_gain(mob/living/carbon/C, datum/species/old_species, datum/preferences/pref_load)
 	. = ..()
+	add_synthetic_components(C)
+
+	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	C.grant_language(/datum/language/common)
+
+	add_species_actions(C)
+
+	if(movespeed_slowdown)
+		C.add_movespeed_modifier("automaton", multiplicative_slowdown = movespeed_slowdown)
+
+	apply_robotic_bodyparts(C)
+
+/datum/species/automaton/on_species_loss(mob/living/carbon/C, datum/species/new_species)
+	. = ..()
+	if(!istype(new_species, /datum/species/automaton))
+		reset_robotic_bodyparts(C)
+	remove_synthetic_components(C)
+	remove_species_actions(C)
 	UnregisterSignal(C, list(COMSIG_MOB_SAY))
 	C.remove_language(/datum/language/common)
+	C.remove_movespeed_modifier("automaton")
 
 /datum/species/automaton/check_roundstart_eligible()
 	return FALSE
 
 /datum/species/automaton/handle_speech(mob/living/carbon/human/speaker, list/speech_args)
-	return COMPONENT_SPEECH_CANCEL
+	if(voice_locked)
+		return COMPONENT_SPEECH_CANCEL
+	return ..()
 
 /datum/species/automaton/get_skin_list()
+	if((MUTCOLORS in species_traits) || (MUTCOLORS_PARTSONLY in species_traits))
+		return get_common_mutant_color_palette()
 	return sortList(list(
 		"Polished Brass" = "B87333",
 		"Tarnished Bronze" = "8C7853",

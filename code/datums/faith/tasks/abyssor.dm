@@ -1,7 +1,7 @@
 
 /datum/devotion_task/abyssor_fish
 	name = "Harvest the Depths"
-	desc = "Fish from Abyssor's domain"
+	desc = "Fish from Umberlee's domain"
 	devotion_reward = 2
 	progression_reward = 2
 	cooldown_time = 20 SECONDS

@@ -888,7 +888,7 @@
 	)
 
 /obj/item/recipe_book/arcyne
-	name = "The Arcanum of Arcyne"
+	name = "The Arcanum of the Weave"
 	desc = "Penned by Elyndor Starforge, Grand Arcanist and Keeper of the Ethereal Crucible."
 	icon_state ="book4_0"
 	base_icon_state = "book4"

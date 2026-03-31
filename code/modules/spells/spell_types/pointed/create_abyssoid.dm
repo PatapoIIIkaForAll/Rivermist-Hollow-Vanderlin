@@ -37,7 +37,7 @@
 
 	follower.visible_message(
 		span_warning("[follower] begins stragely murmuring over [target]..."),
-		span_notice("You begin the transformation ritual, offering your blood to Abyssor."),
+		span_notice("You begin the transformation ritual, offering your blood to Umberlee."),
 	)
 
 	if(!do_after(follower, 10 SECONDS, target))

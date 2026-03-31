@@ -215,14 +215,14 @@
 	if(!HAS_TRAIT(holder_mob, TRAIT_FANATICAL))
 		prayer_effectiveness = 0
 		devotion = -1
-		to_chat(holder_mob, span_userdanger("I have been excommunicated! The Ten no longer listen to my prayers nor my requests."))
+		to_chat(holder_mob, span_userdanger("I have been forsaken! The gods no longer listen to my prayers nor my requests."))
 		STOP_PROCESSING(SSprocessing, src)
 
 /datum/devotion/proc/recommunicate()
 	if(!HAS_TRAIT(holder_mob, TRAIT_FANATICAL))
 		prayer_effectiveness = initial(prayer_effectiveness)
 		devotion = 0
-		to_chat(holder_mob, span_boldnotice("I have been welcomed back into the folds of the Ten."))
+		to_chat(holder_mob, span_boldnotice("I have been welcomed back into the folds of the gods."))
 		if(passive_devotion_gain || passive_progression_gain)
 			START_PROCESSING(SSprocessing, src)
 

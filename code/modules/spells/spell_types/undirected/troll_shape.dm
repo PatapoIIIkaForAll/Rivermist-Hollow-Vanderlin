@@ -46,7 +46,7 @@
 			next_stage_time = 3 SECONDS
 		if(TROLL_SHAPE_STAGE_2)
 			playsound(druid, 'sound/foley/sewflesh.ogg', 100, TRUE)
-			to_chat(druid, span_warning("My body is transforming, growing! Unbearable pain, Dendor has answered my prayers!"))
+			to_chat(druid, span_warning("My body is transforming, growing! Unbearable pain, Silvanus has answered my prayers!"))
 			druid.emote("pain", forced = TRUE)
 			druid.do_jitter_animation(4 SECONDS)
 			druid.Immobilize(4 SECONDS)

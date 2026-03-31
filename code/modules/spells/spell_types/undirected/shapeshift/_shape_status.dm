@@ -42,8 +42,8 @@
 	owner.regenerate_icons()
 	caster_mob.mind?.transfer_to(owner)
 	caster_mob.forceMove(owner)
-	if(owner.client?.prefs)
-		owner.client.fps = owner.client.prefs.clientfps
+	// Preserve the client's current FPS setting when shifting forms; forcing the
+	// preference value here makes transformed movement look choppy mid-round.
 	ADD_TRAIT(caster_mob, TRAIT_NO_TRANSFORM, id)
 	ADD_TRAIT(caster_mob, TRAIT_BOMBIMMUNE, id)
 	caster_mob.apply_status_effect(/datum/status_effect/grouped/stasis, STASIS_SHAPECHANGE_EFFECT)

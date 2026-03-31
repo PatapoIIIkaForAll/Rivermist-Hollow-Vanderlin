@@ -59,12 +59,12 @@
 /* Paintings */
 /obj/item/painting/queen
 	icon_state = "queenpainting"
-	desc = "A portrait of Queen Samantha I of Psydonia. Her sudden disappearance marked a day of tragedy and mourning still practiced to this year."
+	desc = "A portrait of one of the ladies of Duskmar."
 	sellprice = 40
 	deployed_structure = /obj/structure/fluff/walldeco/painting/queen
 
 /obj/structure/fluff/walldeco/painting/queen
-	desc = "A portrait of Queen Samantha I of Psydonia. Her sudden disappearance marked a day of tragedy and mourning still practiced to this year."
+	desc = "A portrait of one of the ladies of Duskmar."
 	icon_state = "queenpainting_deployed"
 	stolen_painting = /obj/item/painting/queen
 

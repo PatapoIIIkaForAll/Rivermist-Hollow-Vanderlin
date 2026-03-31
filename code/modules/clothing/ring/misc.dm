@@ -171,6 +171,7 @@
 	var/boost_target_value = 12
 	var/datum/component/boss_ring_stat_boost/equipped_stat_bonus
 	var/datum/weakref/bonus_owner_ref
+	misc_flags = CRAFTING_TEST_EXCLUDE
 
 /obj/item/clothing/ring/gold/quest_deadly_prize/Initialize(mapload)
 	. = ..()
@@ -235,6 +236,7 @@
 	var/boost_target_value = 16
 	var/datum/component/boss_ring_stat_boost/equipped_stat_bonus
 	var/datum/weakref/bonus_owner_ref
+	misc_flags = CRAFTING_TEST_EXCLUDE
 
 /obj/item/clothing/ring/gold/boss_prize/Initialize(mapload)
 	. = ..()
@@ -609,8 +611,8 @@
 	name = "signet ring"
 	icon_state = "signet"
 	icon_state = "signet"
-	desc = "A large golden ring engraved with the Symbol of Psydon."
-	desc = "A large golden signet ring engraved with the Symbol of Psydon."
+	desc = "A large golden ring engraved with the symbol of Ao."
+	desc = "A large golden signet ring engraved with the symbol of Ao."
 	sellprice = 135
 	sellprice = 135
 	var/tallowed = FALSE
@@ -641,7 +643,7 @@
 	name = "feldsher's ring"
 	icon_state = "ring_feldsher"
 	desc = "A hallowed copper ring, ritualistically forged by Pestran clergymen upon the graduation of a feldsher. \
-	\n This ring is proof of Pestra's blessing, in turn allowing the feldsher to extract and manipulate Lux so long as they follow Her teachings"
+	\n This ring is proof of Ilmater's blessing, in turn allowing the feldsher to extract and manipulate Lux so long as they follow His teachings"
 
 // ................... The Apothecary's ring .......................
 
@@ -656,7 +658,7 @@
 	if(is_apothecary_job(user.mind.assigned_role))
 		. += span_info("A hefty bloody made out of thaumic iron, proof of my successful graduation. \
 		It doesn't get any easier to wear with time, but at least it proves I'm a confirmed alchemist \
-		and can legally manipulate lux, so long as I follow Pestra's teachings.")
+		and can legally manipulate lux, so long as I follow Ilmater's teachings.")
 	else
 		. += "An uncomfortably heavy ring of thaumic iron. Specifically made for apothecaries upon graduation. \n \
-		This gives them the right to both extract and manipulate lux, so long as they follow Pestra's teachings."
+		This gives them the right to both extract and manipulate lux, so long as they follow Ilmater's teachings."

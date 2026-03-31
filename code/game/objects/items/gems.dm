@@ -227,7 +227,7 @@
 
 /obj/item/gem/jade
 	name = "raw joapstone"
-	desc = "A dull green gem. Joapstone is valued in multiple humen cultures and is believed to bring good fortune."
+	desc = "A dull green gem. Joapstone is valued in multiple human  cultures and is believed to bring good fortune."
 	icon = 'icons/roguetown/gems/gem_jade.dmi'
 	icon_state = "raw_jade"
 	sellprice = 50
@@ -241,7 +241,7 @@
 
 /obj/item/gem/coral
 	name = "raw aoetal"
-	desc = "Jagged like a hounds tooth. Aoetal is speculated to be the crystallized blood of fallen sailors. It is sacred to Abyssorians and is used in numerous Abyssorian rituals."
+	desc = "Jagged like a hounds tooth. Aoetal is speculated to be the crystallized blood of fallen sailors. It is sacred to the faithful of Umberlee and used in numerous sea rites."
 	icon = 'icons/roguetown/gems/gem_coral.dmi'
 	icon_state = "raw_coral"
 	sellprice = 60
@@ -255,7 +255,7 @@
 
 /obj/item/gem/amber
 	name = "raw petriamber"
-	desc = "A chunk of fossilized mushroom that shines radiantly in sunlight. It's prized amongst Astratans."
+	desc = "A chunk of fossilized mushroom that shines radiantly in sunlight. It's prized amongst Lathanderites."
 	icon = 'icons/roguetown/gems/gem_amber.dmi'
 	icon_state = "raw_amber"
 	sellprice = 50

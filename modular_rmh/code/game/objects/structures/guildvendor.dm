@@ -29,13 +29,13 @@
 	lockids = list("groom5")
 
 /obj/structure/fake_machine/vendor/guild_rmh
-	lock = /datum/lock/key/vendor
+	lockids = list(ACCESS_GAFFER)
 	density = FALSE
 
 /obj/structure/fake_machine/vendor/guild_rmh/Initialize()
     . = ..()
 
-    for (var/X in list(/obj/item/key/guildroomi, /obj/item/key/guildroomi, /obj/item/key/guildroomii, /obj/item/key/guildroomiii, /obj/item/key/guildroomiv, /obj/item/key/guildroomv))
+    for (var/X in list(/obj/item/key/guildroomi, /obj/item/key/guildroomi, /obj/item/key/guildroomii, /obj/item/key/guildroomii, /obj/item/key/guildroomiii, /obj/item/key/guildroomiii, /obj/item/key/guildroomiv, /obj/item/key/guildroomiv, /obj/item/key/guildroomv, /obj/item/key/guildroomv))
         var/obj/P = new X(src)
         held_items[P] = list()
         held_items[P]["NAME"] = P.name

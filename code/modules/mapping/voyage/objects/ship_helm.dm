@@ -594,7 +594,7 @@
 		tooltip += "Coordinates: ([round(island.nav_x)], [round(island.nav_y)])\\n"
 		tooltip += "Difficulty: [island.get_difficulty_text()]\\n"
 		if(island.matthios_fragment)
-			tooltip += "Contains: Matthios Fragment\\n"
+			tooltip += "Contains: Mask Fragment\\n"
 		tooltip += "Ores: [ore_text]\\n"
 		if(player_count > 0)
 			tooltip += "Players on island: [player_count]\\n"
@@ -608,7 +608,7 @@
 				<strong class='difficulty-[island.difficulty]'>[island.island_name]</strong>
 				[is_target ? "(DESTINATION)" : ""]
 				[player_count > 0 ? "<span class='player-count'>([player_count])</span>" : ""]
-				[island.matthios_fragment ? "<span class='matthios-indicator'>Fragment of Matthios</span>" : ""]
+				[island.matthios_fragment ? "<span class='matthios-indicator'>Fragment of Mask</span>" : ""]
 			</div>
 			<div class='info-label'>Difficulty: [island.get_difficulty_text()]</div>
 			<div class='info-label'>Distance: ~[round(distance)] leagues</div>
@@ -649,7 +649,7 @@
 		// Build tooltip for map marker
 		var/tooltip = "[island.island_name] ([round(island.nav_x)], [round(island.nav_y)])"
 		if(island.matthios_fragment)
-			tooltip += "\\nContains Matthios Fragment"
+			tooltip += "\\nContains Mask Fragment"
 		tooltip += "\\nOres: [ore_text]"
 		if(player_count > 0)
 			tooltip += "\\n[player_count] player[player_count > 1 ? "s" : ""] present"

@@ -13,6 +13,7 @@
 #define SPEC_ID_RAKSHARI "rakshari"
 #define SPEC_ID_KOBOLD "kobold"
 #define SPEC_ID_KOBOLD_FORMIKRAG "kobold_formikrag"
+#define SPEC_ID_KOBOLD_CLASSIC "kobold_classic"
 #define SPEC_ID_HOLLOWKIN "hollowkin"
 #define SPEC_ID_HARPY "harpy"
 #define SPEC_ID_TRITON "triton"
@@ -21,19 +22,25 @@
 #define SPEC_ID_GNOME "gnome"
 #define SPEC_ID_GNOME_D "deep gnome"
 #define SPEC_ID_AUTOMATON "automaton"
+#define SPEC_ID_CONSTRUCT "construct"
+#define SPEC_ID_DOLL "doll"
 #define SPEC_ID_BEASTKIN "beastkin"
 #define SPEC_ID_BEASTKINSMALL "beastkin small"
-#define SPEC_ID_HALF_BEASTKINSMALL "half-beastkin small"//placeholders for sorting
+#define SPEC_ID_HALF_BEASTKINSMALL "half-beastkin small"
 #define SPEC_ID_GYTH "gyth"
 #define SPEC_ID_DRAGONBORN "dragonborn"
 #define SPEC_ID_TRUE_ORC "true orc"
 #define SPEC_ID_PLAYER_GOBLIN "player goblin"
+#define SPEC_ID_FLUVIAN "fluvian"
 #define SPEC_ID_YUANTI "yuan-ti"
 #define SPEC_ID_TAUR_KIN "taurkin"
 #define SPEC_ID_MINOTAUR "minotaur"
-#define SPEC_ID_DRYDER "dryder"
+#define SPEC_ID_DRIDER "drider"
 #define SPEC_ID_LIZARDFOLK "lizardfolk"
 #define SPEC_ID_TABAXI "tabaxi"
+#define SPEC_ID_GNOLL "gnoll"
+#define SPEC_ID_OGRE "ogre"
+#define SPEC_ID_SEELIE "seelie"
 
 #define SPEC_ID_ORC	"orc"
 #define SPEC_ID_GOBLIN	"goblin"
@@ -50,12 +57,14 @@
 	SPEC_ID_ELF_W,\
 	SPEC_ID_HALF_ELF,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_HARPY,\
 	SPEC_ID_RAKSHARI,\
 	SPEC_ID_TRITON,\
 	SPEC_ID_MEDICATOR,\
+	SPEC_ID_FLUVIAN,\
 	SPEC_ID_KOBOLD,\
 	SPEC_ID_HOLLOWKIN,\
 	SPEC_ID_BEASTKIN,\
@@ -65,6 +74,9 @@
 	SPEC_ID_DRAGONBORN,\
 	SPEC_ID_TABAXI,\
 	SPEC_ID_LIZARDFOLK,\
+	SPEC_ID_GNOLL,\
+	SPEC_ID_OGRE,\
+	SPEC_ID_SEELIE,\
 	SPEC_ID_YUANTI,\
 	SPEC_ID_HALF_ORC,\
 	SPEC_ID_ORC,\
@@ -75,6 +87,8 @@
 	SPEC_ID_HALFLING,\
 	SPEC_ID_GNOME,\
 	SPEC_ID_GNOME_D,\
+	SPEC_ID_CONSTRUCT,\
+	SPEC_ID_DOLL,\
 	SPEC_ID_AUTOMATON, \
 )
 
@@ -94,10 +108,12 @@
 	SPEC_ID_DRAGONBORN,\
 	SPEC_ID_TABAXI,\
 	SPEC_ID_LIZARDFOLK,\
+	SPEC_ID_GNOLL,\
 	SPEC_ID_YUANTI,\
 	SPEC_ID_HARPY,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_AASIMAR,\
+	SPEC_ID_OGRE,\
 	SPEC_ID_HALF_ORC,\
 	SPEC_ID_ORC,\
 	SPEC_ID_ZIZOMBIE,\
@@ -114,6 +130,8 @@
 	SPEC_ID_TAUR_KIN,\
 	SPEC_ID_DRAGONBORN,\
 	SPEC_ID_YUANTI,\
+	SPEC_ID_GNOLL,\
+	SPEC_ID_OGRE,\
 	SPEC_ID_HARPY,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_AASIMAR,\
@@ -139,12 +157,15 @@
 	SPEC_ID_GNOME,\
 	SPEC_ID_GNOME_D,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_HARPY,\
 	SPEC_ID_RAKSHARI,\
 	SPEC_ID_TRITON,\
 	SPEC_ID_MEDICATOR,\
+	SPEC_ID_FLUVIAN,\
+	SPEC_ID_SEELIE,\
 	SPEC_ID_KOBOLD,\
 	SPEC_ID_HOLLOWKIN,\
 	SPEC_ID_BEASTKIN,\
@@ -156,6 +177,12 @@
 	SPEC_ID_TABAXI,\
 	SPEC_ID_LIZARDFOLK,\
 	SPEC_ID_HALF_ORC,\
+	SPEC_ID_CONSTRUCT,\
+	SPEC_ID_DOLL,\
+	SPEC_ID_GOBLIN,\
+	SPEC_ID_GNOLL,\
+	SPEC_ID_OGRE,\
+	SPEC_ID_SEELIE,\
 )
 
 /// Species not considered discriminated against in Rivermist Hollow. Used for nobility, etc.
@@ -195,6 +222,7 @@
 	SPEC_ID_YUANTI,\
 	SPEC_ID_TABAXI,\
 	SPEC_ID_LIZARDFOLK,\
+	SPEC_ID_SEELIE,\
 )
 
 /// Species who are non-exotic to Rivermist Hollow. These are species from foreign lands with no local pull or uncommon species. Used in miscellaneous cases, when they would not be that role.
@@ -229,6 +257,7 @@
 /// Dark elves, half-drow
 #define RACES_PLAYER_DROW list(\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 )
 
@@ -238,6 +267,7 @@
 	SPEC_ID_ELF_W,\
 	SPEC_ID_HALF_ELF,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 )
 
@@ -317,6 +347,7 @@
 	SPEC_ID_GNOME,\
 	SPEC_ID_GNOME_D,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 	SPEC_ID_HALF_ORC,\
 	SPEC_ID_HARPY,\
@@ -335,10 +366,14 @@
 #define RACES_PLAYER_HERETICAL_RACE list(\
 	SPEC_ID_DUERGAR,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_HALF_ORC,\
 	SPEC_ID_KOBOLD,\
+	SPEC_ID_GOBLIN,\
+	SPEC_ID_GNOLL,\
+	SPEC_ID_OGRE,\
 	SPEC_ID_RAKSHARI,\
 	SPEC_ID_HOLLOWKIN,\
 )
@@ -353,6 +388,7 @@
 	SPEC_ID_ELF_W,\
 	SPEC_ID_HALF_ELF,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_HARPY,\
@@ -365,9 +401,16 @@
 	SPEC_ID_DRAGONBORN,\
 	SPEC_ID_YUANTI,\
 	SPEC_ID_HALF_ORC,\
+	SPEC_ID_GOBLIN,\
 	SPEC_ID_ZIZOMBIE,\
 	SPEC_ID_TABAXI,\
 	SPEC_ID_LIZARDFOLK,\
+	SPEC_ID_GNOLL,\
+	SPEC_ID_OGRE,\
+	SPEC_ID_SEELIE,\
+	SPEC_ID_FLUVIAN,\
+	SPEC_ID_CONSTRUCT,\
+	SPEC_ID_DOLL,\
 )
 
 
@@ -379,12 +422,16 @@
 	SPEC_ID_ELF,\
 	SPEC_ID_HALF_ELF,\
 	SPEC_ID_DROW,\
+	SPEC_ID_DRIDER,\
 	SPEC_ID_HALF_DROW,\
 	SPEC_ID_TIEFLING,\
 	SPEC_ID_HARPY,\
 	SPEC_ID_TRITON,\
 	SPEC_ID_MEDICATOR,\
 	SPEC_ID_HALF_ORC,\
+	SPEC_ID_GNOLL,\
+	SPEC_ID_OGRE,\
+	SPEC_ID_SEELIE,\
 	SPEC_ID_ROUSMAN,\
 	SPEC_ID_ZIZOMBIE,\
 	SPEC_ID_HUMAN_SPACE,\

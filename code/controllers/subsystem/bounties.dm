@@ -1,5 +1,5 @@
 SUBSYSTEM_DEF(bounties)
-	name = "Matthios's Tasks"
+	name = "Mask's Tasks"
 	wait = 0.5 SECONDS
 	flags = SS_KEEP_TIMING | SS_NO_INIT | SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME

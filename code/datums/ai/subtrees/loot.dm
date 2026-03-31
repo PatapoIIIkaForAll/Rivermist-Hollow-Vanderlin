@@ -12,6 +12,8 @@
 	var/datum/component/ai_inventory_manager/inv = controller.get_inventory()
 	if(!inv)
 		return
+	if(!length(inv.container_refs))
+		return
 
 	var/list/blacklist = controller.blackboard[BB_LOOT_BLACKLIST]
 
@@ -21,6 +23,8 @@
 		if(_is_blacklisted(blacklist, candidate))
 			continue
 		if(!_item_is_wanted(inv, pawn, candidate))
+			continue
+		if(!inv.find_space_for(candidate))
 			continue
 		controller.set_blackboard_key(BB_LOOT_TARGET, candidate)
 		controller.queue_behavior(/datum/ai_behavior/loot_pick_up, BB_LOOT_TARGET)
@@ -70,6 +74,8 @@
 					continue
 				if(!_item_is_wanted(inv, pawn, held_inside))
 					continue
+				if(!inv.find_space_for(held_inside))
+					continue
 				if(!held_inside.canStrip(corpse))
 					continue
 				return held_inside
@@ -77,6 +83,8 @@
 		if(_is_blacklisted(blacklist, held))
 			continue
 		if(!_item_is_wanted(inv, pawn, held))
+			continue
+		if(!inv.find_space_for(held))
 			continue
 		if(!held.canStrip(corpse))
 			continue
@@ -93,6 +101,11 @@
 	. = ..()
 	var/obj/item/target = controller.blackboard[target_key]
 	if(QDELETED(target) || !isturf(target.loc))
+		return FALSE
+	var/datum/component/ai_inventory_manager/inv = controller.get_inventory()
+	if(!inv || !length(inv.container_refs))
+		return FALSE
+	if(!inv.find_space_for(target))
 		return FALSE
 	set_movement_target(controller, target)
 	return TRUE
@@ -112,6 +125,9 @@
 	if(!inv)
 		finish_action(controller, FALSE, target_key)
 		return
+	if(!length(inv.container_refs))
+		finish_action(controller, FALSE, target_key)
+		return
 
 	if(QDELETED(target) || !isturf(target.loc))
 		finish_action(controller, FALSE, target_key)
@@ -119,10 +135,6 @@
 
 	var/slot_flag = inv.find_space_for(target)
 	if(!slot_flag)
-		pawn.visible_message(span_notice("[pawn] looks at [target] but has no room for it."))
-		controller.add_blackboard_key_lazylist(BB_LOOT_BLACKLIST, target)
-		// Prune it after 5 minutes so the list doesn't grow forever
-		addtimer(CALLBACK(controller, TYPE_PROC_REF(/datum/ai_controller, remove_thing_from_blackboard_key), BB_LOOT_BLACKLIST, target), 5 MINUTES)
 		finish_action(controller, FALSE, target_key)
 		return
 
@@ -148,7 +160,15 @@
 /datum/ai_behavior/loot_strip_body/setup(datum/ai_controller/controller, body_key, item_key)
 	. = ..()
 	var/mob/living/body = controller.blackboard[body_key]
+	var/obj/item/target_item = controller.blackboard[item_key]
 	if(QDELETED(body))
+		return FALSE
+	if(QDELETED(target_item))
+		return FALSE
+	var/datum/component/ai_inventory_manager/inv = controller.get_inventory()
+	if(!inv || !length(inv.container_refs))
+		return FALSE
+	if(!inv.find_space_for(target_item))
 		return FALSE
 	set_movement_target(controller, body)
 	return TRUE
@@ -174,6 +194,16 @@
 		finish_action(controller, FALSE, body_key, item_key)
 		return
 
+	var/datum/component/ai_inventory_manager/inv = controller.get_inventory()
+	if(!inv || !length(inv.container_refs))
+		finish_action(controller, FALSE, body_key, item_key)
+		return
+
+	var/slot_flag = inv.find_space_for(target_item)
+	if(!slot_flag)
+		finish_action(controller, FALSE, body_key, item_key)
+		return
+
 	pawn.visible_message(span_notice("[pawn] searches [body]'s body."))
 
 	if(!do_after(pawn, strip_delay, body))
@@ -187,16 +217,8 @@
 		finish_action(controller, FALSE, body_key, item_key)
 		return
 
-	var/datum/component/ai_inventory_manager/inv = controller.get_inventory()
-	if(!inv)
-		finish_action(controller, FALSE, body_key, item_key)
-		return
-
-	var/slot_flag = inv.find_space_for(target_item)
+	slot_flag = inv.find_space_for(target_item)
 	if(!slot_flag)
-		controller.add_blackboard_key_lazylist(BB_LOOT_BLACKLIST, target_item)
-		// Prune it after 5 minutes so the list doesn't grow forever
-		addtimer(CALLBACK(controller, TYPE_PROC_REF(/datum/ai_controller, remove_thing_from_blackboard_key), BB_LOOT_BLACKLIST, target_item), 5 MINUTES)
 		finish_action(controller, FALSE, body_key, item_key)
 		return
 

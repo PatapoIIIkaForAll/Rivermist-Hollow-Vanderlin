@@ -107,8 +107,8 @@
 	icon_state = "ziqurat"
 	first_time_text = "ZIQURAT"
 	background_track = 'sound/music/area/dungeon2.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	converted_type = /area/outdoors/rmh_desert/dungeon1
 	ceiling_protected = TRUE
 
@@ -117,8 +117,8 @@
 	icon = 'modular_rmh/icons/turf/areas.dmi'
 	icon_state = "spidercave"
 	background_track = 'sound/music/area/dungeon.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE
 
 /area/indoors/cave/rmh_desertcaves
@@ -134,9 +134,9 @@
 	ambientnight = 'modular_rmh/sound/music/area/oasis_night.ogg'
 	//spookysounds = null
 	//spookynight = null
-	background_track = null
-	background_track_dusk = null
-	background_track_night = null
+	background_track = 'sound/silence.ogg'
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	converted_type = /area/indoors/shelter/rmh_desert
 
 // ДВОРЦОВЫЙ ПОГРЕБ - PALACE CELLAR
@@ -145,8 +145,8 @@
 	icon_state = "under"
 	first_time_text = "PALACE CELLAR"
 	background_track = 'sound/music/area/dungeon2.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE
 
 // TEAPALACE - ЧАЙХАНА
@@ -178,8 +178,8 @@
 	icon_state = "under"
 	first_time_text = "PALACE CASEMATES"
 	background_track = 'sound/music/area/dungeon2.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE
 
 // ГАРЕМ - HAREM
@@ -192,8 +192,8 @@
 	ambient_index = AMBIENCE_DUNGEON
 	ambient_index_night = AMBIENCE_DUNGEON
 	background_track = 'sound/music/area/catacombs.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE
 
 // ГАРЕМ НИЖНИЙ УРОВЕНЬ - LOWER HAREM
@@ -206,8 +206,8 @@
 	ambient_index = AMBIENCE_DUNGEON
 	ambient_index_night = AMBIENCE_DUNGEON
 	background_track = 'sound/music/area/catacombs.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE
 
 // PYRAMID DUNGEON
@@ -216,8 +216,8 @@
 	icon_state = "under"
 	first_time_text = "PYRAMID"
 	background_track = 'sound/music/area/dungeon2.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE
 
 // SPIDER DESERT CAVE
@@ -228,6 +228,6 @@
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/spider/mutated = 100)
 	background_track = 'sound/music/area/spidercave.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/silence.ogg'
+	background_track_night = 'sound/silence.ogg'
 	ceiling_protected = TRUE

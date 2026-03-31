@@ -134,6 +134,25 @@ if (mode == 2)
 if (mode == MY_MODE_FAST)
 ```
 
+### No unnecessary getter or setter procs
+
+Do not make procs that are used in one or two places, and that return single static variables or something that could be calculated "on the spot". It clutters the codebase.
+
+```dm
+// Bad
+#define SOME_DATA "data"
+proc/return_some_data()
+    return SOME_DATA
+
+proc/actual_opreration()
+    var/data_operation = return_some_data()
+
+// Good
+#define SOME_DATA "data"
+
+proc/actual_opreration()
+    var/data_operation = SOME_DATA
+```
 ### Time values — use defines, not raw deciseconds
 
 Use the project's `SECONDS`, `MINUTES`, `HOURS` defines. Raw decisecond literals are error-prone and unreadable.

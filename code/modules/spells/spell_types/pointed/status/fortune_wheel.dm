@@ -34,5 +34,5 @@
 
 /atom/movable/screen/alert/status_effect/buff/wheel
 	name = "The Wheel"
-	desc = "Xylix has spun your fate. You feel disorientated as if you had been rotated.\n"
+	desc = "Tymora has spun your fate. You feel disorientated as if you had been rotated.\n"
 	icon_state = "acid"

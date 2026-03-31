@@ -28,7 +28,9 @@
 		finish_action(controller, succeeded = FALSE)
 		return
 
-	var/aggro_range = controller.blackboard[aggro_range_key] || vision_range
+	var/aggro_range = controller.blackboard[aggro_range_key]
+	if(isnull(aggro_range))
+		aggro_range = vision_range
 
 	controller.clear_blackboard_key(target_key)
 	var/list/potential_targets = hearers(aggro_range, controller.pawn) - living_mob //Remove self, so we don't suicide

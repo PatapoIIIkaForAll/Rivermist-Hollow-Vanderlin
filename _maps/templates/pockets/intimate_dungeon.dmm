@@ -1,0 +1,461 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/wall/mineral/wooddark,
+/area/pocket_dimension/magic_closet)
+"b" = (
+/turf/closed/wall/mineral/wooddark/deco,
+/area/pocket_dimension/magic_closet)
+"c" = (
+/obj/structure/bed/inn/double{
+	dir = 1
+	},
+/obj/effect/decal/carpet/square/black{
+	dir = 4;
+	pixel_y = 0;
+	pixel_x = -5
+	},
+/obj/item/bedsheet/double_pelt{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"d" = (
+/obj/structure/wooden_horse{
+	dir = 8
+	},
+/obj/effect/decal/borderfall{
+	dir = 2;
+	pixel_y = -8
+	},
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"e" = (
+/turf/open/floor/carpet/red,
+/area/pocket_dimension/magic_closet)
+"f" = (
+/obj/structure/chair/bench/couch/middle,
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"g" = (
+/obj/structure/bookcase/random/erotica,
+/turf/open/floor/carpet/red,
+/area/pocket_dimension/magic_closet)
+"h" = (
+/obj/effect/landmark/pocket_dimension/exit/closet,
+/turf/closed/wall/mineral/wooddark,
+/area/pocket_dimension/magic_closet)
+"i" = (
+/obj/structure/fluff/pillow/blue{
+	dir = 8
+	},
+/obj/effect/decal/carpet/kover_black{
+	dir = 2;
+	pixel_y = 1;
+	pixel_x = 16
+	},
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"k" = (
+/obj/structure/table/wood/nice,
+/obj/item/reagent_containers/glass/cup/glassware{
+	pixel_y = 7;
+	pixel_x = -8
+	},
+/obj/item/reagent_containers/glass/carafe/redwine{
+	pixel_y = 11;
+	pixel_x = 4
+	},
+/obj/item/reagent_containers/glass/cup/glassware{
+	pixel_y = 2;
+	pixel_x = -4
+	},
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"l" = (
+/obj/structure/bondage/x_pillory,
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"o" = (
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"s" = (
+/obj/structure/table/wood/reinforced_alter,
+/obj/structure/shisha/hookah,
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"t" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/obj/structure/curtain/purple,
+/turf/open/floor/woodturned,
+/area/pocket_dimension/magic_closet)
+"u" = (
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"v" = (
+/obj/structure/chair/bench/couch/right,
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"w" = (
+/obj/structure/chair/bench/couch/middle{
+	dir = 4
+	},
+/obj/effect/decal/borderfall{
+	dir = 8
+	},
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"x" = (
+/obj/structure/fluff/wallclock/r,
+/turf/open/floor/carpet/red,
+/area/pocket_dimension/magic_closet)
+"y" = (
+/obj/structure/fluff/walldeco/painting/crown{
+	pixel_y = 32
+	},
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet/purple,
+/area/pocket_dimension/magic_closet)
+"z" = (
+/obj/structure/curtain/bounty/dir{
+	open = 0;
+	dir = 8
+	},
+/turf/open/floor/woodturned,
+/area/pocket_dimension/magic_closet)
+"A" = (
+/obj/machinery/light/fueled/wallfire{
+	pixel_x = -32
+	},
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"B" = (
+/obj/structure/wooden_horse/metal{
+	dir = 4
+	},
+/obj/structure/fluff/walldeco/painting/skull{
+	pixel_y = -32
+	},
+/obj/effect/decal/borderfall{
+	dir = 2;
+	pixel_y = -8
+	},
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"C" = (
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet/purple,
+/area/pocket_dimension/magic_closet)
+"D" = (
+/obj/structure/curtain/blue,
+/turf/open/floor/woodturned,
+/area/pocket_dimension/magic_closet)
+"E" = (
+/obj/structure/fluff/railing/border/north,
+/obj/structure/closet/crate/crafted_closet/dark,
+/turf/open/floor/woodturned,
+/area/pocket_dimension/magic_closet)
+"F" = (
+/obj/item/reagent_containers/glass/bucket/wooden/alter{
+	dropshrink = 0;
+	anchored = 1;
+	name = "flower bucket"
+	},
+/obj/structure/flora/grass/herb/salvia{
+	plane = -8;
+	pixel_y = 11;
+	pixel_x = -1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"G" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/north,
+/turf/closed/wall/mineral/wooddark,
+/area/pocket_dimension/magic_closet)
+"H" = (
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/item/rope{
+	pixel_y = 24
+	},
+/obj/item/rope{
+	pixel_x = -6;
+	pixel_y = 24
+	},
+/turf/open/floor/carpet/purple,
+/area/pocket_dimension/magic_closet)
+"I" = (
+/obj/effect/decal/borderfall{
+	dir = 2;
+	pixel_y = -8
+	},
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"J" = (
+/obj/structure/rack/shelf/big{
+	pixel_y = 0
+	},
+/turf/closed/wall/mineral/wooddark,
+/area/pocket_dimension/magic_closet)
+"L" = (
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/item/dildo/steel{
+	pixel_x = 0;
+	pixel_y = 8
+	},
+/obj/item/dildo/silver{
+	pixel_x = 6;
+	pixel_y = 5
+	},
+/obj/item/dildo/wood{
+	pixel_x = 12;
+	pixel_y = 2
+	},
+/obj/item/dildo/gold{
+	pixel_x = -6;
+	pixel_y = 6
+	},
+/obj/item/dildo/iron{
+	pixel_x = -12;
+	pixel_y = 2
+	},
+/obj/structure/table/wood/bar,
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"M" = (
+/obj/structure/fluff/pillow/blue,
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"N" = (
+/turf/open/floor/carpet/purple,
+/area/pocket_dimension/magic_closet)
+"O" = (
+/obj/structure/fluff/walldeco/painting,
+/turf/closed/wall/mineral/wooddark,
+/area/pocket_dimension/magic_closet)
+"P" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/obj/structure/curtain/red,
+/turf/open/floor/woodturned,
+/area/pocket_dimension/magic_closet)
+"R" = (
+/obj/effect/decal/borderfall{
+	dir = 2;
+	pixel_y = -8
+	},
+/turf/open/floor/carpet/purple,
+/area/pocket_dimension/magic_closet)
+"S" = (
+/obj/structure/chair/bench/couch/left{
+	dir = 4
+	},
+/obj/effect/decal/borderfall{
+	dir = 8
+	},
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"T" = (
+/turf/open/floor/carpet/royalblack,
+/area/pocket_dimension/magic_closet)
+"U" = (
+/obj/structure/bondage/gloryhole,
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet,
+/area/pocket_dimension/magic_closet)
+"W" = (
+/obj/structure/chair/bench/couch/corner,
+/obj/effect/decal/borderfall{
+	dir = 8
+	},
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/carpet/stellar,
+/area/pocket_dimension/magic_closet)
+"X" = (
+/obj/effect/decal/carpet/kover_purple,
+/obj/structure/bondage/torture_table/lever,
+/turf/open/floor/carpet/purple,
+/area/pocket_dimension/magic_closet)
+"Y" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/obj/effect/landmark/pocket_dimension/entry,
+/obj/effect/landmark/pocket_dimension/drop_spot,
+/turf/open/floor/carpet/red,
+/area/pocket_dimension/magic_closet)
+
+(1,1,1) = {"
+G
+b
+b
+b
+a
+b
+b
+a
+b
+b
+a
+"}
+(2,1,1) = {"
+b
+W
+w
+S
+a
+F
+T
+A
+T
+i
+b
+"}
+(3,1,1) = {"
+b
+f
+s
+u
+a
+k
+T
+c
+T
+M
+b
+"}
+(4,1,1) = {"
+b
+v
+u
+u
+a
+a
+z
+G
+a
+a
+a
+"}
+(5,1,1) = {"
+a
+a
+D
+D
+O
+g
+e
+e
+e
+E
+b
+"}
+(6,1,1) = {"
+h
+Y
+e
+e
+e
+x
+e
+e
+e
+E
+b
+"}
+(7,1,1) = {"
+a
+a
+P
+P
+a
+a
+a
+t
+t
+a
+a
+"}
+(8,1,1) = {"
+b
+l
+o
+o
+d
+J
+H
+N
+N
+R
+b
+"}
+(9,1,1) = {"
+G
+L
+o
+o
+I
+G
+C
+X
+X
+R
+G
+"}
+(10,1,1) = {"
+b
+U
+o
+o
+B
+a
+y
+N
+N
+R
+b
+"}
+(11,1,1) = {"
+a
+b
+b
+b
+b
+a
+b
+b
+b
+b
+a
+"}

@@ -1,6 +1,6 @@
 /obj/item/clothing/head/padded/pestra
 	name = "naga hood"
-	desc = "Worn by the faithful of Pestra. Resembling the face of the Naga clothed in rot."
+	desc = "Worn by the faithful of Ilmater. Resembling the face of the Naga clothed in rot."
 	icon_state = "pestrahood"
 	icon = 'icons/roguetown/clothing/patron_hoods.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/patron_hoods.dmi'
@@ -8,7 +8,7 @@
 
 /obj/item/clothing/head/roguehood/nochood
 	name = "moon hood"
-	desc = "The face of the Moon Prince. Worn by the faithful of Noc."
+	desc = "The face of the Lady of Mysteries. Worn by the faithful of Mystra."
 	icon_state = "nochood"
 	flags_inv = HIDEEARS|HIDEHAIR
 	default_hidden = HIDEEARS|HIDEHAIR
@@ -21,7 +21,7 @@
 
 /obj/item/clothing/head/padded/deathface
 	name = "death shroud"
-	desc = "A Veil for those in service to the Veiled Lady. When inducted into the cult of Necra, the supplicant must make a talisman to hold the memory of a loved one since passed."
+	desc = "A veil for those in service to the Final Scribe. When inducted into the cult of Jergal, the supplicant must make a talisman to hold the memory of a loved one since passed."
 	icon_state = "deathface"
 	flags_inv = HIDEEARS | HIDEHAIR | HIDEFACIALHAIR
 
@@ -30,19 +30,19 @@
 
 /obj/item/clothing/head/padded/deathshroud
 	name = "death shroud"
-	desc = "Worn by the faithful of Necra, or less savory individuals."
+	desc = "Worn by the faithful of Jergal, or less savory individuals."
 	icon_state = "necrahood"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
 
 /obj/item/clothing/head/padded/pestra
 	name = "naga hood"
-	desc = "Worn by the faithful of Pestra. Resembling the face of the Naga clothed in rot."
+	desc = "Worn by the faithful of Ilmater. Resembling the face of the Naga clothed in rot."
 	icon_state = "pestrahood"
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
 
 /obj/item/clothing/head/padded/abyssor
 	name = "sea hood"
-	desc = "A green hood worn by the faithful of Abyssor."
+	desc = "A green hood worn by the faithful of Umberlee."
 	icon_state = "abysshood"
 	icon = 'icons/roguetown/clothing/patron_hoods.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/patron_robes.dmi'
@@ -50,7 +50,7 @@
 
 /obj/item/clothing/head/roguehood/eora
 	name = "opera hood"
-	desc = "A silver opera mask worn by the faithful of Eora, usually during their rituals. Comes with a hood that can be pulled up for warmth."
+	desc = "A silver opera mask worn by the faithful of Sune, usually during their rituals. Comes with a hood that can be pulled up for warmth."
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/64x64/head.dmi'
 	icon_state = "eorahood"
 	bloody_icon = 'icons/effects/blood64x64.dmi'
@@ -63,7 +63,7 @@
 
 /obj/item/clothing/head/roguehood/astrata
 	name = "sun hood"
-	desc = "Worn by the faithful of Astrata."
+	desc = "Worn by the faithful of Lathander."
 	icon_state = "astratahood"
 	resistance_flags = FIRE_PROOF // Not the sun hat!
 

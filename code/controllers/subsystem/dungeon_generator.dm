@@ -1,5 +1,5 @@
 SUBSYSTEM_DEF(dungeon_generator)
-	name = "Matthios Creation"
+	name = "Dungeon Generator"
 	wait = 1 SECONDS
 
 	init_order = INIT_ORDER_DUNGEON

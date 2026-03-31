@@ -1,8 +1,8 @@
 /datum/objective/personal/inhumen_scorn
-	name = "Scorn Inhumen"
-	category = "Astrata's Chosen"
+	name = "Scorn Dark Worshippers"
+	category = "Lathander's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Astrata grows stronger", "Ability to silence inhumen")
+	rewards = list("2 Triumphs", "Lathander grows stronger", "Ability to silence dark worshippers")
 	var/spits_done = 0
 	var/spits_required = 1
 
@@ -25,13 +25,13 @@
 	spits_done++
 
 	if(spits_done < spits_required)
-		to_chat(owner.current, span_notice("Inhumen scorned! Scorn [spits_required - spits_done] more to complete the objective!"))
+		to_chat(owner.current, span_notice("Dark worshipper scorned! Scorn [spits_required - spits_done] more to complete the objective!"))
 	else
 		complete_objective()
 
 /datum/objective/personal/inhumen_scorn/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have scorned enough inhumen and completed Astrata's objective!"))
+	to_chat(owner.current, span_greentext("You have scorned enough dark worshippers and completed Lathander's objective!"))
 	adjust_storyteller_influence(ASTRATA, 20)
 	UnregisterSignal(owner.current, COMSIG_SPAT_ON)
 
@@ -40,4 +40,4 @@
 	owner.current.add_spell(/datum/action/cooldown/spell/silence_inhumen, source = src)
 
 /datum/objective/personal/inhumen_scorn/update_explanation_text()
-	explanation_text = "Spit on [spits_required] inhumen to gain Astrata's approval!"
+	explanation_text = "Spit on [spits_required] dark worshippers to gain Lathander's approval!"

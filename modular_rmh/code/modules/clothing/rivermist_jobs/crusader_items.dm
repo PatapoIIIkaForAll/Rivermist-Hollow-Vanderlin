@@ -1,6 +1,6 @@
 /obj/item/clothing/cloak/stabard/crusader
 	name = "surcoat of the golden order"
-	desc = "A surcoat drenched in charcoal water, golden thread stitched in the style of Psydon's Knights of Old Psydonia."
+	desc = "A surcoat drenched in charcoal water, golden thread stitched in the style of Ao's knights of old Duskmar."
 	icon_state = "crusader_surcoat"
 	icon = 'icons/roguetown/clothing/special/crusader.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/crusader.dmi'
@@ -9,7 +9,7 @@
 
 /obj/item/clothing/cloak/stabard/crusader/t
 	name = "surcoat of the silver order"
-	desc = "A surcoat drenched in charcoal water, white cotton stitched in the symbol of Psydon."
+	desc = "A surcoat drenched in charcoal water, white cotton stitched in the symbol of Ao."
 	icon_state = "crusader_surcoatt2"
 
 /obj/item/clothing/cloak/cape/crusader
@@ -33,7 +33,7 @@
 	misc_flags = CRAFTING_TEST_EXCLUDE
 
 /obj/item/clothing/head/helmet/heavy/crusader/t
-	desc = "A silver gilded bucket helm, inscriptions in old Psydonic are found embezeled on every inch of silver."
+	desc = "A silver gilded bucket helm, inscriptions in old Duskmaric are found embezeled on every inch of silver."
 	icon_state = "crusader_helmt2"
 	icon = 'icons/roguetown/clothing/special/crusader.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/crusader.dmi'

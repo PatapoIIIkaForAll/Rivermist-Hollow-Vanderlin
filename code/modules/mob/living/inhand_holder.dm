@@ -64,10 +64,22 @@
 	appearance = L?.appearance
 	plane = ABOVE_HUD_PLANE
 
+/obj/item/mob_holder/proc/is_in_hole_storage()
+	if(!istype(loc, /obj/item/organ))
+		return FALSE
+
+	var/obj/item/organ/storage_organ = loc
+	return !!SEND_SIGNAL(storage_organ, COMSIG_BODYSTORAGE_FIND_ITEM_LAYER, src)
+
+/obj/item/mob_holder/proc/can_release_from_hole_storage()
+	return FALSE
+
 /obj/item/mob_holder/proc/release(del_on_release = TRUE)
 	if(!held_mob)
 		if(del_on_release && !destroying)
 			qdel(src)
+		return FALSE
+	if(!destroying && is_in_hole_storage() && !can_release_from_hole_storage())
 		return FALSE
 	if(isliving(loc))
 		var/mob/living/L = loc
@@ -87,3 +99,34 @@
 
 /obj/item/mob_holder/container_resist()
 	release()
+
+/obj/item/mob_holder/internal_womb
+	name = "womb-held hatchling"
+	desc = "Something alive is being held inside."
+	slot_flags = NONE
+	can_head = FALSE
+	body_storage_bulk = 2
+	body_storage_manual_removal = FALSE
+	body_storage_random_removal = FALSE
+	var/allow_internal_release = FALSE
+
+/obj/item/mob_holder/internal_womb/Destroy()
+	allow_internal_release = TRUE
+	return ..()
+
+/obj/item/mob_holder/internal_womb/proc/set_internal_bulk(new_bulk)
+	body_storage_bulk = max(1, round(new_bulk))
+	return body_storage_bulk
+
+/obj/item/mob_holder/internal_womb/can_release_from_hole_storage()
+	return allow_internal_release
+
+/obj/item/mob_holder/internal_womb/relaymove(mob/user)
+	if(allow_internal_release)
+		return ..()
+	return FALSE
+
+/obj/item/mob_holder/internal_womb/container_resist()
+	if(allow_internal_release)
+		return ..()
+	return FALSE

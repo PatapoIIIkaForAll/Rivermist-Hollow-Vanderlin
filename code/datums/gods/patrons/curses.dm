@@ -71,37 +71,37 @@
 ///   TEN CURSES   ///
 //////////////////////
 /datum/curse/astrata
-	name = "Astrata's Curse"
+	name = "Lathander's Curse"
 	description = "I am forsaken by the Sun. Healing miracles have no effect on me."
 	trait = TRAIT_ASTRATA_CURSE
 
 /datum/curse/noc
-	name = "Noc's Curse"
+	name = "Mystra's Curse"
 	description = "Magical knowledge is now beyond my grasp."
 	trait = TRAIT_NOC_CURSE
 
 /datum/curse/ravox
-	name = "Ravox's Curse"
+	name = "Tempus's Curse"
 	description = "Violence disgusts me. I struggle to bring myself to wield any kind of weapon."
 	trait = TRAIT_RAVOX_CURSE
 
 /datum/curse/necra
-	name = "Necra's Curse"
-	description = "Necra has claimed my soul. No one will bring me back from the dead."
+	name = "Jergal's Curse"
+	description = "Jergal has claimed my soul. No one will bring me back from the dead."
 	trait = TRAIT_NECRA_CURSE
 
 /datum/curse/xylix
-	name = "Xylix's Curse"
+	name = "Tymora's Curse"
 	description = "Fortune is no longer on my side."
 	trait = TRAIT_XYLIX_CURSE
 
 /datum/curse/pestra
-	name = "Pestra's Curse"
+	name = "Ilmater's Curse"
 	description = "I feel sick to my stomach, and my skin is slowly starting to rot."
 	trait = TRAIT_PESTRA_CURSE
 
 /datum/curse/eora
-	name = "Eora's Curse"
+	name = "Sune's Curse"
 	description = "I am unable to show any kind of affection or love, whether intimate or platonic."
 	trait = TRAIT_EORA_CURSE
 
@@ -109,7 +109,7 @@
 /// INHUMEN CURSES ///
 //////////////////////
 /datum/curse/zizo
-	name = "Zizo's Curse"
+	name = "Lolth's Curse"
 	description = "I can no longer distinguish reality from delusion."
 	trait = TRAIT_ZIZO_CURSE
 	/// Chance to call hallucination handle procs on life
@@ -117,7 +117,7 @@
 	var/atom/movable/screen/fullscreen/maniac/hallucinations
 
 /datum/curse/zizo/minor
-	name = "Zizo's Minor Curse"
+	name = "Lolth's Minor Curse"
 	description = "I struggle to distinguish reality from delusion."
 	hallucination_prob = 10
 
@@ -128,17 +128,17 @@
 	var/atom/movable/screen/fullscreen/maniac/hallucinations
 
 /datum/curse/graggar
-	name = "Graggar's Curse"
+	name = "Gruumsh's Curse"
 	description = "I am engulfed by unspeakable rage. I cannot stop myself from harming others. When that's not an option, my rage is directed inward."
 	trait = TRAIT_GRAGGAR_CURSE
 
 /datum/curse/matthios
-	name = "Matthios' Curse"
+	name = "Mask's Curse"
 	description = "I hate the sight of wealth, and I struggle to do anything with amnas."
 	trait = TRAIT_MATTHIOS_CURSE
 
 /datum/curse/baotha
-	name = "Baotha's Curse"
+	name = "Blissara's Curse"
 	description = "I'm in a constant state of ecstasy."
 	trait = TRAIT_BAOTHA_CURSE
 

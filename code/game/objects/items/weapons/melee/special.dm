@@ -277,7 +277,7 @@
 	melt_amount = 75
 
 /obj/item/weapon/katar/psydon
-	name = "psydonian katar"
+	name = "exotic katar"
 	desc = "An exotic weapon taken from the hands of wandering monks, an esoteric design to the Darkhold. Special care was taken into account towards the user's knuckles: silver-tipped steel from tip to edges, and His holy cross reinforcing the heart of the weapon, with curved shoulders to allow its user to deflect incoming blows - provided they lead it in with the blade."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psykatar"
@@ -352,7 +352,7 @@
 				return list("shrink" = 0.1,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/weapon/knuckles/psydon
-	name = "psydonian knuckles"
+	name = "exotic knuckles"
 	desc = "A simple piece of harm molded in a holy mixture of steel and silver, finished with three stumps - Psydon's crown - to crush the heretics' garments and armor into smithereens."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psyknuckle"

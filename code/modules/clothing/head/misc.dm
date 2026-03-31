@@ -22,13 +22,13 @@
 
 /obj/item/clothing/head/knitcap
 	name = "knit cap"
-	desc = "A crude peasant cap worn by about every serf under Astrata's radiance."
+	desc = "A crude peasant cap worn by about every serf under Lathander's radiance."
 	icon_state = "knitcap"
 	min_cold_protection_temperature = -5
 
 /obj/item/clothing/head/turban
 	name = "turban"
-	desc = "A headwrap worn throughout the southern parts of Faience."
+	desc = "A headwrap worn throughout the southern parts of Faerun."
 	icon_state = "turban"
 	min_cold_protection_temperature = -5
 
@@ -347,8 +347,8 @@
 	sewrepair = FALSE
 
 /obj/item/clothing/head/roguehood/psydon
-	name = "psydonian hood"
-	desc = "A hood worn by Psydon's disciples, oft-worn in conjunction with its matching tabard. Made with spell-laced fabric to provide some protection."
+	name = "exotic hood"
+	desc = "A hood worn by Ao's disciples, oft-worn in conjunction with its matching tabard. Made with spell-laced fabric to provide some protection."
 	icon_state = "psydonhood"
 	item_state = "psydonhood"
 	color = null

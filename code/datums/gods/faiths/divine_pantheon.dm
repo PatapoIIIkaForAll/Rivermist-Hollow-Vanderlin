@@ -1,5 +1,5 @@
 /datum/faith/divine_pantheon
-	name = "\improper Divine Pantheon"
-	desc = "The most accepted religion around Faience. \
-		May Necra and her children protect us from the four!"
+	name = "\improper Faerunian Pantheon"
+	desc = "The most accepted faith across Faerun. \
+		May the gods watch over us and keep the darkness at bay."
 	godhead = /datum/patron/divine/astrata

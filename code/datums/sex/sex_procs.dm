@@ -95,6 +95,18 @@
 		return session
 	return null
 
+/proc/get_or_create_sex_session(mob/living/giver, mob/living/taker, show_ui = FALSE)
+	if(!giver || !taker)
+		return null
+
+	var/datum/sex_session/session = get_sex_session(giver, taker)
+	if(session && !QDELETED(session))
+		if(show_ui)
+			session.show_ui()
+		return session
+
+	return giver.start_sex_session(taker, show_ui)
+
 /mob/living/proc/has_hands()
 	return TRUE
 
@@ -382,6 +394,22 @@
 
 /mob/proc/has_erp_pref(pref_type)
 	return get_erp_pref(pref_type) == TRUE
+
+/proc/should_apply_mob_erp_target_pref(mob/living/actor, mob/living/target)
+	if(!isliving(actor) || !isliving(target))
+		return FALSE
+	if(actor.client)
+		return FALSE
+	if(!target.client)
+		return FALSE
+	return TRUE
+
+/proc/target_allows_mob_erp_action(mob/living/actor, mob/living/target, pref_type)
+	if(!ispath(pref_type, /datum/erp_preference))
+		return TRUE
+	if(!should_apply_mob_erp_target_pref(actor, target))
+		return TRUE
+	return target.get_erp_pref(pref_type)
 
 /mob/proc/get_all_erp_prefs()
 	if(!client?.prefs)

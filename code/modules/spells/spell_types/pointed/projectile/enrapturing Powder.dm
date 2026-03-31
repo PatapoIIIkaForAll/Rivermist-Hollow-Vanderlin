@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/projectile/blowingdust
 	name = "Enrapturing Powder"
-	desc = "Baotha's presence is always known, finding her blessings gathering on you like dust. With a good swipe, I could make others indulge in her fruits."
+	desc = "Sharess's presence is always known, finding her blessings gathering on you like dust. With a good swipe, I could make others indulge in her fruits."
 	button_icon_state = "curse2"
 	sound = 'sound/magic/whiteflame.ogg'
 

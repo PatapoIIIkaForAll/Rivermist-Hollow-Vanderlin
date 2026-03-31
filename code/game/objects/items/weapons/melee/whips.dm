@@ -69,7 +69,7 @@
 
 //................ Psydon Whip ............... //
 /obj/item/weapon/whip/psydon
-	name = "psydonian whip"
+	name = "exotic whip"
 	desc = "A whip fashioned with the iconography of Psydon, and crafted entirely out of silver."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psywhip"

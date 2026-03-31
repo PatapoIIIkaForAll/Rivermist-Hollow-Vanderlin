@@ -2218,7 +2218,7 @@
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/town/bath)
 "bcT" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /turf/open/floor/blocks/newstone,
 /area/under/town/basement)
 "bcW" = (
@@ -17327,7 +17327,7 @@
 /turf/open/floor/cobblerock,
 /area/outdoors/town)
 "irX" = (
-/obj/structure/bookcase/random/eoratica{
+/obj/structure/bookcase/random/erotica{
 	name = "bookcase (Torture Manuscripts)"
 	},
 /turf/open/floor/twig,
@@ -21057,7 +21057,7 @@
 /turf/open/floor/dirt,
 /area/outdoors/town/keep)
 "kms" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /obj/machinery/light/fueled/wallfire/candle{
 	pixel_y = -32;
 	pixel_x = 16
@@ -30835,7 +30835,7 @@
 /turf/open/floor/herringbone,
 /area/indoors/villagegarrison)
 "oRb" = (
-/obj/structure/bookcase/random/eoratica{
+/obj/structure/bookcase/random/erotica{
 	name = "bookcase (Torture Manuscripts)"
 	},
 /obj/effect/decal/cleanable/dirt/cobweb,
@@ -32031,7 +32031,7 @@
 /turf/closed/wall/mineral/decostone/moss/blue,
 /area/under/town/basement)
 "ptM" = (
-/obj/structure/bookcase/random/eoratica{
+/obj/structure/bookcase/random/erotica{
 	name = "bookcase (The Dangers of Holding Hands)"
 	},
 /turf/open/floor/twig,

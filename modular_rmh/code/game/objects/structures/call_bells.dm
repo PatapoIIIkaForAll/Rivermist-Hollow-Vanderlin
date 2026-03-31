@@ -151,6 +151,15 @@
 	)
 	specific_location = "Watch"
 
+//TOWNMOUTH BELLS
+
+/obj/structure/call_bell/loudmouth
+	name = "townmouth's bell"
+	notify_titles = list(
+		/datum/job/advclass/towner/town_mouth
+	)
+	specific_location = "Tavern's second floor"
+
 //CHAPEL BELLS
 
 /obj/structure/call_bell/chapel
@@ -340,6 +349,10 @@
 	icon_state = "bell_common"
 
 /obj/structure/call_bell/townwatch/small
+	icon = 'modular_rmh/icons/obj/structures/call_bells.dmi'
+	icon_state = "bell_common"
+
+/obj/structure/call_bell/loudmouth/small
 	icon = 'modular_rmh/icons/obj/structures/call_bells.dmi'
 	icon_state = "bell_common"
 

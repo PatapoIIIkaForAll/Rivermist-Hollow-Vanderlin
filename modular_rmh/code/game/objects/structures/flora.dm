@@ -180,3 +180,15 @@
 /obj/structure/flora/grass/fullgrass/Initialize()
 	. = ..()
 	icon_state = "fullgrass_[rand(1,3)]"
+
+/obj/structure/flora/grass/crawlvines
+	name = "crawling vines"
+	desc = "Vines sprouting in different corners of dead and vivid regions."
+	icon = 'icons/roguetown/misc/decoration.dmi'
+	icon_state = "vinez"
+	base_icon_state = "vinez"
+	num_random_icons = 0
+	attacked_sound = "plantcross"
+	destroy_sound = "plantcross"
+	max_integrity = 5
+	debris = list(/obj/item/natural/fibers = 2)

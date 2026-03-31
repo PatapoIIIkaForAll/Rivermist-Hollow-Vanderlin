@@ -73,7 +73,7 @@
 
 /obj/item/clothing/head/helmet/medium/decorated/skullmet
 	name = "skullmet"
-	desc = "A crude helmet constructed with the skull of various beasts of Dendor."
+	desc = "A crude helmet constructed with the skull of various beasts of Silvanus."
 	icon = 'icons/roguetown/clothing/special/forest_guard.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/forest_guard.dmi'
 	icon_state = "skullmet_volf"

@@ -1,7 +1,7 @@
 /datum/faith/inhumen_pantheon
-	name = "\improper Inhumen Pantheon"
-	desc = "The Ten are FALSE GODS.\n\
-		They keep us trapped and choke out our divine light, \
-		but only through FULL BELIEF in the divinity of men and women can we escape and reach true enlightenment\n\
-		The inhumen gods smile upon us as we defile the Ten and become the divinities we were always meant to be."
+	name = "\improper Dark Gods"
+	desc = "The gods of Faerun are FALSE.\n\
+		They keep us bound beneath their order and choke out our own ascent, \
+		but only through full belief in darker powers can we break their chains and claim forbidden enlightenment.\n\
+		The dark gods smile upon us as we defy the pantheon."
 	godhead = /datum/patron/inhumen/zizo

@@ -42,7 +42,7 @@
 							)
 	spawnableTurfs = list(/turf/open/floor/dirt/road=2,
 						/turf/open/water/swamp=1)
-	allowed_areas = list(/area/outdoors/bog/rmh/north, /area/outdoors/bog/rmh/south)
+	allowed_areas = list(/area/outdoors/rmh_bog/north, /area/outdoors/rmh_bog/south)
 
 /datum/mapGeneratorModule/rmh_bog/bogroad
 	clusterCheckFlags = CLUSTER_CHECK_ALL_ATOMS
@@ -54,7 +54,7 @@
 	allowed_turfs = list(/turf/open/floor/dirt)
 	excluded_turfs = list(/turf/open/floor/dirt/road)
 	spawnableTurfs = list(/obj/structure/flora/grass = 23)
-	allowed_areas = list(/area/outdoors/bog/rmh/north, /area/outdoors/bog/rmh/south)
+	allowed_areas = list(/area/outdoors/rmh_bog/north, /area/outdoors/rmh_bog/south)
 
 /datum/mapGeneratorModule/rmh_bog/boggrass
 	clusterCheckFlags = CLUSTER_CHECK_ALL_ATOMS
@@ -62,15 +62,14 @@
 	excluded_turfs = list()
 	clusterMax = 2
 	clusterMin = 0
-	allowed_areas = list(/area/outdoors/bog/rmh/north, /area/outdoors/bog/rmh/south)
+	allowed_areas = list(/area/outdoors/rmh_bog/north, /area/outdoors/rmh_bog/south)
 	spawnableAtoms = list(/obj/structure/kneestingers = 60)
 
 /datum/mapGeneratorModule/rmh_bog/bogwater
 	clusterCheckFlags = CLUSTER_CHECK_SAME_ATOMS
 	allowed_turfs = list(/turf/open/water/swamp)
 	excluded_turfs = list(/turf/open/water/swamp/deep)
-	allowed_areas = list(/area/outdoors/bog/rmh/north,
-						 /area/outdoors/bog/rmh/south)
+	allowed_areas = list(/area/outdoors/rmh_bog/north, /area/outdoors/rmh_bog/south)
 	clusterMax = 1
 	clusterMin = 0
 	spawnableAtoms = list(/obj/structure/kneestingers = 5,

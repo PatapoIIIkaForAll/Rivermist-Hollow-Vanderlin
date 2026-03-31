@@ -86,6 +86,7 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 #define ismedicator(A) (is_species(A, /datum/species/medicator))
 #define istriton(A) (is_species(A, /datum/species/triton))
 #define ishalfling(A) (is_species(A, /datum/species/halfling))
+#define ismoth(A) (is_species(A, /datum/species/fluvian))
 
 #define isgoblin(A) (is_species(A, /datum/species/goblin))
 #define isorc(A) (is_species(A, /datum/species/orc))

@@ -94,3 +94,6 @@
 
 // Outsider
 #define ACCESS_WITCH "witchhut"
+
+// Extra
+#define ACCESS_LOUDMOUTH "townmouth"

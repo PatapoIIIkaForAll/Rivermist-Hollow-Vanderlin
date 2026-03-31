@@ -167,7 +167,7 @@
 	for(var/obj/item/I in target.get_equipped_items())
 		if(istype(I, /obj/item/clothing))
 			var/obj/item/clothing/C = I
-			if(C.armor_class > AC_LIGHT)
+			if(C.armor_class > AC_LIGHT && !C.allow_erp_equipped)
 				hidden_slots |= C.body_parts_covered
 	if(location in body_parts_covered2organ_names(hidden_slots))
 		return FALSE
@@ -245,12 +245,22 @@
 	if(!requires_hole_storage || !hole_id || !stored_item_type)
 		return TRUE
 
-	var/obj/item/item_to_store
-
 	var/obj/item/organ/target_o = target.getorganslot(hole_id)
+	if(!target_o)
+		to_chat(user, span_warning("[target == user ? "My" : "[target]'s"] [hole_id] can't take items right now."))
+		return FALSE
+
+	var/datum/component/body_storage/storage_comp = target_o.GetComponent(/datum/component/body_storage)
+	if(!storage_comp)
+		to_chat(user, span_warning("[target == user ? "My" : "[target]'s"] [hole_id] can't take items right now."))
+		return FALSE
+
+	var/obj/item/item_to_store
 
 	var/self = (user == target)
 	var/datum/sex_session/session = get_sex_session(user, target)
+	if(!session)
+		return FALSE
 	var/force = FALSE
 	if(session.get_current_force() >= SEX_FORCE_HIGH)
 		force = TRUE
@@ -331,7 +341,8 @@
 			if(istype(stored_item, /obj/item/penis_fake))
 				var/obj/item/penis_fake/fake_penis = stored_item
 				var/mob/living/original_owner = find_original_owner_by_ckey(fake_penis.original_owner_ckey)
-				SEND_SIGNAL(target_o, COMSIG_BODYSTORAGE_FORCE_REMOVE, fake_penis, STORAGE_LAYER_INNER)
+				if(target_o)
+					SEND_SIGNAL(target_o, COMSIG_BODYSTORAGE_FORCE_REMOVE, fake_penis, STORAGE_LAYER_INNER)
 				if(!silent)
 					if(original_owner)
 						to_chat(original_owner, span_notice("Your penis has been withdrawn from [target]'s [hole_id]."))

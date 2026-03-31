@@ -155,7 +155,7 @@
 
 /datum/blueprint_recipe/carpentry/psydon_wooden_cross
 	name = "wooden psycross"
-	desc = "A wooden psycross dedicated to Psydon."
+	desc = "A wooden holy symbol dedicated to Ao."
 	required_materials = list(
 		/obj/item/grown/log/tree/small = 1,
 		/obj/item/grown/log/tree/stake = 3

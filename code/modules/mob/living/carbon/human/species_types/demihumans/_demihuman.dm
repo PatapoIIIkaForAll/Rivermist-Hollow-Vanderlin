@@ -14,20 +14,20 @@
 	id = SPEC_ID_HOLLOWKIN
 	desc = "Half-Beastkin are short lived, widely diverse, and have an insatiable hatred for dark elves. \
 	This hate stems from their long standing political neighbor and rival, \
-	the dark-elven kingdoms of Subterra. \
-	Dendor and Xylix stand as the 'patron-deities' of this species despite having no hand in their creation. \
+	the dark-elven kingdoms of Underdark. \
+	Silvanus and Tymora stand as the 'patron-deities' of this species despite having no hand in their creation. \
 	Half-Beastkin view freedom to be of the upmost importance due to their dark-elven neighbors' tendencies toward slavery and their own history of subjugation. \
-	They also, often mistakenly, worship Dendor for the boon of their animalistic nature, perceiving him as the source of their traits, talents, and instinct. \
+	They also, often mistakenly, worship Silvanus for the boon of their animalistic nature, perceiving him as the source of their traits, talents, and instinct. \
 	\n\n\
 	Their true origin is much darker. Half-Beastkin are the product of dark-elven ingenuity and fleshcrafting. \
 	Their creation is a simple story of malice and greed- of sapient animal hybrid slave homunculi, \
-	a person turned product which they could market and sell to other great houses of modern Subterra. \
+	a person turned product which they could market and sell to other great houses of modern Underdark. \
 	The true nature of their existence is largely lost to the half-beastkin through centuries. \
 	The dark elves still recall, of course, viciously mocking their creations from deep within their caves, \
 	declaring them but nothing more than animals or pets. \
-	Half-Beastkin react violently to dark-elven attempts at oppression, this leads to conflicts across the world of Psydonia. \
+	Half-Beastkin react violently to dark-elven attempts at oppression, this leads to conflicts across Faerun. \
 	\n\n\
-	To the unaligned observer, half-beastkin are often seen amongst bandit bands, working openly with Agents of Matthios, \
+	To the unaligned observer, half-beastkin are often seen amongst bandit bands, working openly with agents of Mask, \
 	conflating the idea of freedom between the two deities. There is, of course, the old wives' tales that circulate... \
 	how half-beastkin lead to infestations of Werewolves. Half-Beastkin are often denied nobility from this rumour alone. \
 	Whether this is true or not is unknown to the common person, \
@@ -217,6 +217,8 @@
 	C.remove_language(/datum/language/beast)
 
 /datum/species/demihuman/get_skin_list()
+	if((MUTCOLORS in species_traits) || (MUTCOLORS_PARTSONLY in species_traits))
+		return get_common_mutant_color_palette()
 	return sortList(list(
 		"Pale"         = SKIN_TONE_PALE,
 		"White 1"      = SKIN_TONE_WHITE1,

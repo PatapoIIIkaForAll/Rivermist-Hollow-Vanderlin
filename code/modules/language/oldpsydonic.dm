@@ -1,5 +1,5 @@
 /datum/language/oldpsydonic
-	name = "Old Psydonic"
+	name = "Old Duskmaric"
 	desc = ""
 	speech_verb = "states"
 	ask_verb = "questions"

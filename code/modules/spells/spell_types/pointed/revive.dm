@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/revive
 	name = "Anastasis"
-	desc = "Return a soul from Necra's grasp with the light of Astrata."
+	desc = "Return a soul from Jergal's grasp with the light of Lathander."
 	button_icon_state = "revive"
 	sound = 'sound/magic/revive.ogg'
 	charge_sound = 'sound/magic/holycharging.ogg'
@@ -49,7 +49,7 @@
 			return . | SPELL_CANCEL_CAST
 
 	if(HAS_TRAIT(cast_on, TRAIT_NECRA_CURSE))
-		to_chat(owner, span_warning("Necra holds tight to this one."))
+		to_chat(owner, span_warning("Jergal holds tight to this one."))
 		reset_spell_cooldown()
 		return . | SPELL_CANCEL_CAST
 
@@ -82,7 +82,7 @@
 		cast_on.visible_message(span_warning("Holy light engulfs [cast_on], but they remain limp..."))
 		return
 	if(!cast_on.revive())
-		to_chat(owner, span_warning("Astrata's light fails to revive [cast_on]!"))
+		to_chat(owner, span_warning("Lathander's light fails to revive [cast_on]!"))
 		return
 	if(cast_on.health > HALFWAYCRITDEATH)
 		cast_on.adjustOxyLoss(cast_on.health - HALFWAYCRITDEATH)

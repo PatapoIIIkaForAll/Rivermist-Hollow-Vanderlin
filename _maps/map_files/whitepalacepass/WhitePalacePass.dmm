@@ -18385,7 +18385,7 @@
 /obj/item/book/random_book/legends,
 /obj/item/book/random_book/legends,
 /obj/item/book/random_book/legends,
-/obj/item/book/random_book/eoratica,
+/obj/item/book/random_book/erotica,
 /turf/open/floor/concrete,
 /area/indoors/town/shop)
 "qUo" = (
@@ -18697,7 +18697,7 @@
 /turf/open/openspace,
 /area/outdoors/river)
 "rhv" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /turf/open/floor/church/purple,
 /area/under/cave)
 "rhC" = (
@@ -22622,7 +22622,7 @@
 /turf/open/floor/ruinedwood/darker,
 /area/indoors/town/clocktower)
 "uQg" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /turf/open/floor/ruinedwood/chevron,
 /area/indoors/town/keep/library)
 "uQt" = (
@@ -23491,7 +23491,7 @@
 /turf/open/floor/dirt/road,
 /area/indoors/lich)
 "vIc" = (
-/obj/structure/bookcase/random/eoratica,
+/obj/structure/bookcase/random/erotica,
 /turf/open/floor/churchrough/purple,
 /area/under/cave)
 "vIu" = (

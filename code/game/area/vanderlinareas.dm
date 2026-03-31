@@ -1,7 +1,7 @@
-// Malum's Anvil Areas
+// Moradin's Anvil Areas
 
 /area/under/mountains/anvil
-	name = "malum's anvil generic under (don't use)"
+	name = "moradin's anvil generic under (don't use)"
 	icon_state = "rogue"
 	droning_index = DRONING_MOUNTAIN
 	ambient_index = AMBIENCE_GENERIC
@@ -13,9 +13,9 @@
 	plane = INDOOR_PLANE
 
 /area/under/mountains/anvil/lower
-	name = "malum's anvil under lower caves"
+	name = "moradin's anvil under lower caves"
 	icon_state = "lowercavemalum"
-	first_time_text = "MALUM'S ANVIL"
+	first_time_text = "MORADIN'S ANVIL"
 	ambush_types = list(
 				/turf/open/floor/dirt,
 				/turf/open/floor/cobblerock)
@@ -27,7 +27,7 @@
 				/mob/living/simple_animal/hostile/retaliate/troll/cave = 10)
 
 /area/under/mountains/anvil/upper
-	name = "malum's anvil under upper caves"
+	name = "moradin's anvil under upper caves"
 	icon_state = "uppercavemalum"
 	ambush_types = list(
 				/turf/open/floor/naturalstone)
@@ -38,28 +38,28 @@
 				/mob/living/simple_animal/hostile/retaliate/troll/cave = 5)
 
 /area/under/mountains/anvil/lower/building
-	name = "malum's anvil cave building"
+	name = "moradin's anvil cave building"
 	icon_state = "cavebuildingmalum"
 	first_time_text = null
 	ambush_types = null
 	ambush_mobs = null
 
 /area/under/mountains/anvil/dungeon
-	name = "malum's anvil upper dungeon"
+	name = "moradin's anvil upper dungeon"
 	icon_state = "dungeonupper"
 
 /area/under/mountains/anvil/dungeon/can_craft_here()
 	return FALSE
 
 /area/under/mountains/anvil/dungeon/lower
-	name = "malum's anvil lower dungeon"
+	name = "moradin's anvil lower dungeon"
 	icon_state = "dungeonlower"
 
 /area/under/mountains/anvil/dungeon/lower/can_craft_here()
 	return FALSE
 
 /area/outdoors/mountains/anvil
-	name = "malum's anvil generic outdoors (don't use)"
+	name = "moradin's anvil generic outdoors (don't use)"
 	icon_state = "rogue"
 	outdoors = TRUE
 	droning_index = DRONING_TOWN_DAY
@@ -72,22 +72,22 @@
 	converted_type = /area/indoors/shelter
 
 /area/outdoors/mountains/anvil/peak
-	name = "malum's anvil peak"
+	name = "moradin's anvil peak"
 	icon_state = "anvilpeakmalum"
 	background_track = 'sound/music/area/decap.ogg'
 	background_track_dusk = null
 	background_track_night = null
-	first_time_text = "THE PEAK OF MALUM'S ANVIL"
+	first_time_text = "THE PEAK OF MORADIN'S ANVIL"
 
 /area/outdoors/mountains/anvil/snowy
-	name = "malum's anvil snow"
+	name = "moradin's anvil snow"
 	icon_state = "snowypeakmalum"
 	background_track = 'sound/music/area/decap.ogg'
 	background_track_dusk = null
 	background_track_night = null
 
 /area/outdoors/mountains/anvil/snowyforest
-	name = "malum's anvil forest"
+	name = "moradin's anvil forest"
 	icon_state = "snowyforestmalum"
 	background_track = 'sound/music/area/decap.ogg'
 	background_track_dusk = null
@@ -102,7 +102,7 @@
 				/mob/living/carbon/human/species/orc/ambush = 20)
 
 /area/outdoors/mountains/anvil/castle
-	name = "malum's anvil castle"
+	name = "moradin's anvil castle"
 	icon_state = "castlemalum"
 	background_track = 'sound/music/area/decap.ogg'
 	background_track_dusk = null
@@ -115,7 +115,7 @@
 				/mob/living/carbon/human/species/orc/ambush = 20)
 
 /area/outdoors/mountains/anvil/grove
-	name = "malum's anvil hidden grove"
+	name = "moradin's anvil hidden grove"
 	icon_state = "grovemalum"
 	ambush_types = list(
 				/turf/open/floor/dirt,
@@ -124,11 +124,11 @@
 				/mob/living/simple_animal/hostile/retaliate/wolf = 10)
 
 /area/outdoors/mountains/anvil/lavaexposed
-	name = "malum's anvil exposed lava" // Mostly exists so lava exposed to the sky will act like it is
+	name = "moradin's anvil exposed lava" // Mostly exists so lava exposed to the sky will act like it is
 	icon_state = "exposedlavamalum"
 
 /area/indoors/mountains/anvil
-	name = "malum's anvil generic indoors (don't use)"
+	name = "moradin's anvil generic indoors (don't use)"
 	icon_state = "indoors"
 	droning_index = DRONING_INDOORS
 	ambient_index = AMBIENCE_GENERIC
@@ -143,5 +143,5 @@
 	icon_state = null
 
 /area/indoors/mountains/anvil/surface/building
-	name = "malum's anvil surface building"
+	name = "moradin's anvil surface building"
 	icon_state = "surfacebuildingmalum"

@@ -89,20 +89,20 @@
 //////////////////////
 
 /obj/item/caparison/psy
-	name = "psydonite caparison"
-	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with Psycrosses. This one fits on a Saiga."
+	name = "strange caparison"
+	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with unknown symbols. This one fits on a Saiga."
 	caparison_state = "psy_caparison"
 	female_caparison_state = "psy_caparison-f"
 
 /obj/item/caparison/astrata
-	name = "astratan caparison"
-	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with Astratan crosses. This one fits on a Saiga."
+	name = "lathanderite caparison"
+	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with Lathander's sunbursts. This one fits on a Saiga."
 	caparison_state = "astra_caparison"
 	female_caparison_state = "astra_caparison-f"
 
 /obj/item/caparison/eora
-	name = "eoran caparison"
-	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with Eoran hearts. This one fits on a Saiga."
+	name = "sunite caparison"
+	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with Sunite hearts. This one fits on a Saiga."
 	caparison_state = "eora_caparison"
 	female_caparison_state = "eora_caparison-f"
 
@@ -113,8 +113,8 @@
 	female_caparison_state = "azure_caparison-f"
 
 /obj/item/caparison/heartfelt
-	name = "Heartfelt caparison"
-	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with the colours of Heartfelt. This one fits on a Saiga."
+	name = "Lantan caparison"
+	desc = "A decorative piece of cloth meant to be used as a saddle decoration. It's adorned with the colours of Lantan. This one fits on a Saiga."
 	caparison_state = "heartfelt_caparison"
 	female_caparison_state = "heartfelt_caparison-f"
 
@@ -129,4 +129,4 @@
 	valid_animal_types = list(/mob/living/simple_animal/hostile/retaliate/honse)
 	color = COLOR_WHITE
 	detail_types = list("Quad" = "quad")
-	symbol_types = list("Psycross" = "psycross", "Astrata" = "astrata")
+	symbol_types = list("Holy Symbol" = "psycross", "Lathander" = "astrata")

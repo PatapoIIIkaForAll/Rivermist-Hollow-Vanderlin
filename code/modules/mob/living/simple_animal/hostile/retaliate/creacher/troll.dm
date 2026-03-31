@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/retaliate/troll
 	name = "troll"
-	desc = "Elven legends say these monsters were servants of Dendor tasked to guard his realm; nowadays, they are sometimes found in the company of orcs."
+	desc = "Elven legends say these monsters were servants of Silvanus tasked to guard his realm; nowadays, they are sometimes found in the company of orcs."
 	icon = 'icons/mob/creacher/trolls/troll.dmi'
 	icon_state = "troll"
 	icon_living = "troll"

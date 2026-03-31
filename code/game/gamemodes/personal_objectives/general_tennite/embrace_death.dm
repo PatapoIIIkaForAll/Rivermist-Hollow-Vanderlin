@@ -1,9 +1,9 @@
 /datum/objective/personal/embrace_death
 	name = "Embrace Death"
-	category = "Marked by Necra"
+	category = "Marked by Jergal"
 	triumph_count = 3
 	immediate_effects = list("Gained an ability to pass on peacefully")
-	rewards = list("3 Triumphs", "Necra grows stronger", "Eternal Rest")
+	rewards = list("3 Triumphs", "Jergal grows stronger", "Eternal Rest")
 
 /datum/objective/personal/embrace_death/on_creation()
 	. = ..()
@@ -17,4 +17,4 @@
 	adjust_storyteller_influence(NECRA, 20)
 
 /datum/objective/personal/embrace_death/update_explanation_text()
-	explanation_text = "Your time has come. Embrace death through Necra's gift to achieve final rest and secure your soul."
+	explanation_text = "Your time has come. Embrace death through Jergal's gift to achieve final rest and secure your soul."

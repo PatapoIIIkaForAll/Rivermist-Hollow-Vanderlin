@@ -1,5 +1,6 @@
 /datum/sex_action/object_fuck/object_anal_other
 	name = "Fuck their ass with object"
+	hole_id = ORGAN_SLOT_ANUS
 	var/ouchietext = "owie"
 	check_same_tile = FALSE
 	user_priority = 1
@@ -29,6 +30,8 @@
 
 /datum/sex_action/object_fuck/object_anal_other/on_start(mob/living/user, mob/living/target)
 	. = ..()
+	if(!.)
+		return FALSE
 	var/obj/item/dildo = user.get_active_held_item()
 	if(istype(user.get_active_held_item(), /obj/item/weapon) || istype(user.get_active_held_item(), /obj/item/ammo_casing))
 		to_chat(user, span_userdanger("\the [dildo] will hurt [target]!"))

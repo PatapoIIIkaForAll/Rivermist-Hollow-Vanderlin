@@ -178,12 +178,12 @@
 //  ARTICLES  RIGHT HERE! THAT'S RIGHT!
 
 /datum/inqports/articles/psycrosssilver
-	name = "1 Silver Psycross"
+	name = "1 Silver Holy Symbol"
 	item_type = /obj/item/clothing/neck/psycross/silver
 	marquescost = 14
 
 /datum/inqports/articles/psycross
-	name = "1 Psycross"
+	name = "1 Holy Symbol"
 	item_type = /obj/item/clothing/neck/psycross
 	marquescost = 2
 
@@ -283,7 +283,7 @@
 		new /obj/item/flashlight/flare/torch/lantern(src)
 
 /datum/inqports/equipment/psydonthorns
-	name = "1 Psydonian Thorns"
+	name = "1 Aonic Thorns"
 	item_type = /obj/item/clothing/wrists/bracers/psythorns
 	marquescost = 16
 
@@ -331,7 +331,7 @@
 		new /obj/item/clothing/head/inqarticles/blackbag(src)
 
 /datum/inqports/equipment/psydonhelms
-	name = "Helms of Psydon"
+	name = "Helms of Ao"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/equipment/psydonhelms
 	marquescost = 12
 	maximum = 1
@@ -352,7 +352,7 @@
 	new /obj/item/psydonmusicbox(src)
 
 /datum/inqports/equipment/nocshades
-	name = "1 Nocshade Lens-Pair"
+	name = "1 Weaveshade Lens-Pair"
 	item_type = /obj/item/clothing/face/spectacles/inq
 	marquescost = 16
 

@@ -74,6 +74,9 @@
 	if(!ismob(attacker))
 		return
 
+	var/datum/targetting_datum/targetting_datum = victim.ai_controller.blackboard[BB_TARGETTING_DATUM]
+	targetting_datum?.set_horny_target_hostile(victim, attacker)
+
 	// Base threat from being attacked
 	var/threat_to_add = 5
 

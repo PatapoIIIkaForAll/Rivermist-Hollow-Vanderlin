@@ -98,6 +98,31 @@ SUBSYSTEM_DEF(tgui)
 		return null
 	return window
 
+/datum/controller/subsystem/tgui/proc/prewarm_popup_window(mob/user)
+	set waitfor = FALSE
+
+	if(!user?.client)
+		return
+
+	var/window_id = TGUI_WINDOW_ID(1)
+	var/datum/tgui_window/window = user.client.tgui_windows[window_id]
+	if(!window)
+		window = new(user.client, window_id, pooled = TRUE)
+
+	if(window.locked || window.status != TGUI_WINDOW_CLOSED)
+		return
+
+	window.status = TGUI_WINDOW_LOADING
+	window.initialize(
+		strict_mode = TRUE,
+		fancy = user.client.prefs.tgui_fancy,
+		assets = list(
+			get_asset_datum(/datum/asset/simple/tgui),
+		))
+	winset(user.client, window.id, "is-visible=false")
+	window.send_asset(get_asset_datum(/datum/asset/group/tgui_window_shared))
+	user.client.browse_queue_flush()
+
 /**
  * public
  *

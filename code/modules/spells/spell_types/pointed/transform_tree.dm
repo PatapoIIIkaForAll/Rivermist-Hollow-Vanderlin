@@ -79,5 +79,5 @@
 	playsound(T, 'sound/ambience/noises/mystical (4).ogg', 50, TRUE)
 
 	if(uses <= 0)
-		to_chat(H, span_warning("Dendor's blessing fades from you."))
+		to_chat(H, span_warning("Silvanus's blessing fades from you."))
 		H.remove_spell(src)

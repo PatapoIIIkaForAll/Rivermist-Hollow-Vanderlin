@@ -121,8 +121,8 @@
 	sewrepair = TRUE
 
 /obj/item/clothing/face/sack/psy
-	name = "psydonian sack mask"
-	desc = "An ordinary brown sack. This one has eyeholes cut into it, bearing a crude chalk drawing of Psydon's cross upon its visage. Unsettling for most."
+	name = "exotic sack mask"
+	desc = "An ordinary brown sack. This one has eyeholes cut into it, bearing a crude chalk drawing of Ao's symbol upon its visage. Unsettling for most."
 	icon_state = "sackmask_psy"
 
 /obj/item/clothing/face/antiq

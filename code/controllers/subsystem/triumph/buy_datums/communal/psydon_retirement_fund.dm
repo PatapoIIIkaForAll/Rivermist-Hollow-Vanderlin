@@ -1,5 +1,5 @@
 /datum/triumph_buy/communal/psydon_retirement_fund
-	name = "Psydon's Retirement Fund"
+	name = "Duskmar Relief Fund"
 	desc = "Contribute to a fund that will be redistributed to the poorest players when its full or when the round ends."
 	triumph_buy_id = TRIUMPH_BUY_PSYDON_RETIREMENT
 	maximum_pool = 300
@@ -20,10 +20,10 @@
 
 	if(length(eligible) == 1)
 		var/client/C = eligible[1]
-		adjust_triumphs(C, total_pool, FALSE, "Psydon's Retirement Fund", override_bonus = TRUE)
+		adjust_triumphs(C, total_pool, FALSE, "Duskmar Relief Fund", override_bonus = TRUE)
 
 		bordered_message(world, list(
-			span_reallybig("A total of [total_pool] triumph[total_pool == 1 ? " has" : "s have"] been redistributed to 1 beneficiary from the Psydon's Retirement Fund!"),
+			span_reallybig("A total of [total_pool] triumph[total_pool == 1 ? " has" : "s have"] been redistributed to 1 beneficiary from the Duskmar Relief Fund!"),
 		))
 
 		SStriumphs.communal_pools[type] = 0
@@ -101,10 +101,10 @@
 	for(var/client/C in distribution)
 		if(distribution[C] > 0)
 			number_of_beneficiaries++
-			adjust_triumphs(C, distribution[C], FALSE, "Psydon's Retirement Fund", override_bonus = TRUE)
+			adjust_triumphs(C, distribution[C], FALSE, "Duskmar Relief Fund", override_bonus = TRUE)
 
 	bordered_message(world, list(
-		span_reallybig("A total of [total_pool] triumph[total_pool == 1 ? " has" : "s have"] been redistributed between [number_of_beneficiaries] beneficiaries from the Psydon's Retirement Fund!"),
+		span_reallybig("A total of [total_pool] triumph[total_pool == 1 ? " has" : "s have"] been redistributed between [number_of_beneficiaries] beneficiaries from the Duskmar Relief Fund!"),
 	))
 
 	SStriumphs.communal_pools[type] = 0

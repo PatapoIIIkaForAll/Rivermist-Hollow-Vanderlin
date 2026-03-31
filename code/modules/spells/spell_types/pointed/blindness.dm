@@ -28,13 +28,13 @@
 	cast_on.visible_message(span_warning("[owner] points at [cast_on]'s eyes!"), span_warning("My eyes are covered in darkness!"))
 
 /datum/action/cooldown/spell/blindness/miracle
-	name = "Noc's Blindness"
+	name = "Mystra's Blindness"
 	charge_sound = 'sound/magic/holycharging.ogg'
 
 	spell_type = SPELL_MIRACLE
 	antimagic_flags = MAGIC_RESISTANCE_HOLY
 	associated_skill = /datum/skill/magic/holy
 
-	invocation = "Noc blinds thee of thy sins!"
+	invocation = "Mystra blinds thee of thy sins!"
 	invocation_type = INVOCATION_SHOUT
 

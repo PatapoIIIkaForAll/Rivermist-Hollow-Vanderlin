@@ -1,0 +1,100 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/wall/mineral/wood,
+/area/pocket_dimension/test_chamber)
+"b" = (
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+"c" = (
+/obj/effect/landmark/pocket_dimension/entry,
+/obj/structure/chair/wood/alt,
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+"d" = (
+/obj/effect/landmark/pocket_dimension/exit,
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+"e" = (
+/obj/structure/table/wood/plain_alt,
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+"f" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/west,
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+"A" = (
+/obj/machinery/light/fueled/torchholder/metal_torch,
+/turf/closed/wall/mineral/wood,
+/area/pocket_dimension/test_chamber)
+"N" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/north,
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+"R" = (
+/obj/machinery/light/fueled/torchholder/metal_torch/east,
+/turf/open/floor/wood,
+/area/pocket_dimension/test_chamber)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+b
+b
+R
+b
+b
+a
+"}
+(3,1,1) = {"
+a
+b
+b
+b
+b
+b
+a
+"}
+(4,1,1) = {"
+A
+d
+b
+c
+e
+N
+a
+"}
+(5,1,1) = {"
+a
+b
+b
+b
+b
+b
+a
+"}
+(6,1,1) = {"
+a
+b
+b
+f
+b
+b
+a
+"}
+(7,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+"}

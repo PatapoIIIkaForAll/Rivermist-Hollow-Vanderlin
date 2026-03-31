@@ -1,9 +1,9 @@
 /datum/objective/personal/retainer
 	name = "Recruit Retainer"
-	category = "Astrata's Chosen"
+	category = "Lathander's Chosen"
 	triumph_count = 2
 	immediate_effects = list("Gained an ability to recruit retainers")
-	rewards = list("2 Triumphs", "Astrata grows stronger", "Astrata blesses you (+1 Fortune)")
+	rewards = list("2 Triumphs", "Lathander grows stronger", "Lathander blesses you (+1 Fortune)")
 	var/retainers_recruited = 0
 
 /datum/objective/personal/retainer/on_creation()
@@ -28,7 +28,7 @@
 
 /datum/objective/personal/retainer/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have recruited a retainer and completed Astrata's objective!"))
+	to_chat(owner.current, span_greentext("You have recruited a retainer and completed Lathander's objective!"))
 	adjust_storyteller_influence(ASTRATA, 20)
 
 /datum/objective/personal/retainer/reward_owner()
@@ -36,7 +36,7 @@
 	owner.current.adjust_stat_modifier(STATMOD_ASTRATA_BLESSING, STATKEY_LCK, 1)
 
 /datum/objective/personal/retainer/update_explanation_text()
-	explanation_text = "Recruit at least one retainer to serve you and to demonstrate your ability to lead to Astrata."
+	explanation_text = "Recruit at least one retainer to serve you and to demonstrate your ability to lead to Lathander."
 
 /datum/action/cooldown/spell/undirected/list_target/convert_role/retainer
 	name = "Recruit Retainer"

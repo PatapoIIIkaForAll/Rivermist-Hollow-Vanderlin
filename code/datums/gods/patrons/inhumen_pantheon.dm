@@ -3,25 +3,25 @@
 	associated_faith = /datum/faith/inhumen_pantheon
 
 	confess_lines = list(
-		"PSYDON AND HIS CHILDREN ARE THE DEMIURGE!",
-		"THE TEN ARE WORTHLESS COWARDS!",
-		"THE TEN ARE DECEIVERS!"
+		"AO AND THE GODS ARE LIARS!",
+		"THE SO-CALLED GODS ARE WORTHLESS COWARDS!",
+		"THE GODS ARE DECEIVERS!"
 	)
 
 /datum/patron/inhumen/can_pray(mob/living/follower)
 	for(var/obj/structure/fluff/psycross/cross in view(7, get_turf(follower)))
 		if(cross.divine && !cross.obj_broken)
-			to_chat(follower, span_danger("That accursed cross won't let me commune with the Forbidden One!"))
+			to_chat(follower, span_danger("That accursed holy symbol won't let me commune with the dark powers!"))
 			return FALSE
 
 	return TRUE
 
-/* ----------------- */
+/* ----------------- */ // THESE RENAMES ARE MADE TO REMOVE ALL MENTIONS OF RT'S GODS, ACTUAL GODS ARE IN THE RMH MODULAR FOLDER
 
 /datum/patron/inhumen/zizo
-	name = ZIZO
-	domain = "Ascended Goddess of Forbidden Magic, Domination, and Power"
-	desc = "Snow elf who slaughtered her kind in ascension, conquered and remade the Dark Elven empires in her name. She proves that any with will can achieve divinity... though at a cost."
+	name = "Lolth"
+	domain = "Goddess of Domination, Treachery, and Dark Elves"
+	desc = "The Spider Queen, cruel matron of ambition and domination, whispering promises of power to those willing to betray everything for it."
 	flaws = "Hubris, Superiority, Fury"
 	worshippers = "Dark Elves, Aspirants, Necromancers, Misandrists"
 	sins = "Pearl-clutching, Moralism, Wastefulness"
@@ -29,9 +29,9 @@
 	//added_traits = list(TRAIT_CABAL)	No need for this. They have fleshcrafting now.
 	devotion_holder = /datum/devotion/inhumen/zizo
 	confess_lines = list(
-		"I FOLLOW THE PATH OF ZIZO!",
-		"LONG LIVE QUEEN ZIZO!",
-		"ZIZO SHOWED ME THE WAY!",
+		"I FOLLOW THE PATH OF LOLTH!",
+		"LONG LIVE THE SPIDER QUEEN!",
+		"LOLTH SHOWED ME THE WAY!",
 	)
 	storyteller = /datum/storyteller/zizo
 	added_verbs = list(
@@ -40,9 +40,9 @@
 	)
 
 /datum/patron/inhumen/graggar
-	name = GRAGGAR
-	domain = "Ascended God, the Dark Sini-Star of Unnatural Beasts, Unsated Consumption, and Unbridled Hatred"
-	desc = "Became the first orc upon ascension through his habit of consuming the bodies of those he conquered. His forces continue to ravage the lands in his name. Through him, one may achieve true strength."
+	name = "Gruumsh"
+	domain = "God of Orcs, Conquest, and Unbridled Hatred"
+	desc = "The One-Eyed God, roaring for conquest, blood, and strength without mercy from all who bear his mark."
 	flaws = "Rage, Hatred, Bloodthirst"
 	worshippers = "Greenskins, The Revenge-Driven, Sadists, Misogynists"
 	sins = "Compassion, Frailty, Servility"
@@ -50,16 +50,16 @@
 	added_traits = list(TRAIT_ORGAN_EATER)
 	devotion_holder = /datum/devotion/inhumen/graggar
 	confess_lines = list(
-		"GRAGGAR IS THE BEAST I WORSHIP!",
-		"GRAGGAR WILL RAVAGE YOU!",
-		"GRAGGAR BRINGS UNHOLY DESTRUCTION!"
+		"GRUUMSH IS THE BEAST I WORSHIP!",
+		"GRUUMSH WILL RAVAGE YOU!",
+		"GRUUMSH BRINGS HOLY DESTRUCTION!"
 	)
 	storyteller = /datum/storyteller/graggar
 
 /datum/patron/inhumen/matthios
-	name = MATTHIOS
-	domain = "God of Thievery, Ill-Gotten Gains, and Highwaymen"
-	desc = "Legendary humen bandit whose name was attributed to countless great thefts. It is because of his legacy that nobles clutch their coin purses to their chests in town."
+	name = "Mask"
+	domain = "God of Thievery, Shadows, and Ill-Gotten Gains"
+	desc = "Lord of Shadows, patron of thieves and hidden hands, whose faithful lift wealth from the proud before it can be defended."
 	flaws = "Pride, Greed, Orneriness"
 	worshippers = "Outlaws, Noble-Haters, Downtrodden Peasantry"
 	sins = "Clumsiness, Stupidity, Humility"
@@ -67,16 +67,16 @@
 	added_traits = list(TRAIT_MATTHIOS_EYES)
 	devotion_holder = /datum/devotion/inhumen/matthios
 	confess_lines = list(
-		"MATTHIOS STEALS FROM THE WORTHLESS!",
-		"MATTHIOS IS JUSTICE FOR THE COMMON MAN!",
-		"MATTHIOS IS MY LORD, I SHALL BE HIS MARTYR!",
+		"MASK STEALS FROM THE WORTHLESS!",
+		"MASK HIDES ME FROM THE MIGHTY!",
+		"MASK IS MY LORD, I SHALL BE HIS KNIFE!",
 	)
 	storyteller = /datum/storyteller/matthios
 
 /datum/patron/inhumen/baotha
-	name = BAOTHA
-	domain = "Goddess of Drugs, Self-Preservation, and Remorseless Joy"	//Bright-dyed hair falls within 'remorseless joy.' Joy for one's self at expense of the setting. Same for her music taste.
-	desc = "Ascended, formerly disgraced tiefling queen, notorious for having a mind elsewhere. Drove her kingdom into the ground through her demands and addictions. The first tiefling noble, last tiefling noble, and sole reason there are no more tiefling nobles. As she preaches to her followers, 'Joy at all costs!'"
+	name = "Blissara"
+	domain = "Goddess of Ecstasy, Psychic Hunger, and Selfish Delight"	//Bright-dyed hair falls within 'remorseless joy.' Joy for one's self at expense of the setting. Same for her music taste.
+	desc = "A veiled, forbidden power of euphoric surrender and predatory desire. Her whispers promise belonging, bliss, and release at any cost."
 	flaws = "Manipulation, Self-Destruction, Willingness to Sacrifice Others"
 	worshippers = "Addicts, Hedonists, Pink-Haired Harlots"
 	sins = "Sobriety, Self-Sacrifice, Faltering Willpower"
@@ -84,17 +84,17 @@
 	added_traits = list(TRAIT_CRACKHEAD)
 	devotion_holder = /datum/devotion/inhumen/baotha
 	confess_lines = list(
-		"LIVE, LAUGH, LOVE! IN BAOTHA'S NAME!",
-		"JOY AT ALL COSTS! BAOTHA'S TEACHINGS REIGN!",
-		"BAOTHA'S WHISPERS CALM MY MIND!",
+		"LIVE, LAUGH, LOVE! IN BLISSARA'S NAME!",
+		"JOY AT ALL COSTS! BLISSARA'S TEACHINGS REIGN!",
+		"BLISSARA'S WHISPERS CALM MY MIND!",
 	)
 	storyteller = /datum/storyteller/baotha
 
 /// Maniac Patron - Their mind is broken by secrets of Zizo/Graggar combined. They quite possibly know the reality of what happens outside the planet. They may think this is all a game. They are clearly insane.
 /datum/patron/inhumen/graggar_zizo
-	name = "Graggazo"
-	domain = "Ascended God who slaughtered her kind in ascension, the Dark Sini-Star of Unnatural Beasts, Forbidden Magic, and Unbridled Hatred."
-	desc = "Became the first snow orc upon ascension through his habit of consuming the bodies of those he conquered. His forces continue to ravage the lands in her name. He proves that any with will can achieve divinity... though at a cost. MAKE THIS MAKE SENSE. MY MIND! MY MIND!!"
+	name = "The Shattered Idol"
+	domain = "Broken divinity of spider-schemes, blood-hunger, and forbidden revelation."
+	desc = "A shattered thing formed from truths no mortal mind should hold. Lolth's webs and Gruumsh's hunger have tangled together into a god-shaped wound."
 	flaws = "Nothing, Everything, Nothing"
 	worshippers = "Broken Minds, Overshared Secrets, Space-Faring Species Like You, Misanthropes"
 	sins = "The Unseen, Secrets, Worthless Pigs"
@@ -103,7 +103,7 @@
 	confess_lines = list(
 		"WHERE AM I!",
 		"NONE OF THIS IS REAL!",
-		"WHO AM I WORSHIPPING?!"
+		"WHAT AM I WORSHIPPING?!"
 	)
 
 /datum/patron/inhumen/graggar_zizo/preference_accessible(datum/preferences/prefs)

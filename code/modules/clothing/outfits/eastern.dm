@@ -217,19 +217,19 @@
 /obj/item/clothing/neck/psycross/bpearl
 	name = "blue pearl amulet"
 	icon_state = "bpearlcross"
-	desc = "An amulet made of rare blue pearls, usually worn by priests and worshippers of Abyssor, or as lucky charms for captains of ships."
+	desc = "An amulet made of rare blue pearls, usually worn by priests and worshippers of Umberlee, or as lucky charms for captains of ships."
 	sellprice = 220
 
 /obj/item/clothing/neck/psycross/shell
 	name = "oyster shell necklace"
 	icon_state = "oyster_necklace"
-	desc = "A necklace of strung-up seashells, the calming noise they make when they clack together is reminiscent of a shellfish's claws. They remind you that while men no longer live in water, Abyssor will always remember our origins."
+	desc = "A necklace of strung-up seashells, the calming noise they make when they clack together is reminiscent of a shellfish's claws. They remind you that while men no longer live in water, Umberlee will always remember our origins."
 	sellprice = 25
 
 /obj/item/clothing/neck/psycross/shell/bracelet
 	name = "shell bracelet"
 	icon_state = "oyster_bracelet"
-	desc = "A beaded bracelet made from seashells, their rough exterior and glossy interior reminding you that Abyssor's children hide the best gifts at the deepest spots beneath the waves."
+	desc = "A beaded bracelet made from seashells, their rough exterior and glossy interior reminding you that Umberlee's children hide the best gifts at the deepest spots beneath the waves."
 	sellprice = 15
 	slot_flags = ITEM_SLOT_WRISTS
 

@@ -181,7 +181,7 @@
 	//initialise organs
 	create_internal_organs() //most of it is done in set_species now, this is only for parent call
 	physiology = new()
-	culture = new()
+	culture = GLOB.culture_singletons[culture]
 
 	. = ..()
 
@@ -195,7 +195,7 @@
 
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(physiology)
-	QDEL_NULL(culture)
+	culture = null
 	GLOB.human_list -= src
 	return ..()
 

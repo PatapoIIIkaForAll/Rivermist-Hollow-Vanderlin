@@ -14,9 +14,9 @@
 
 /mob/living/simple_animal/hostile/retaliate/troll/broodmother
 	name = "Broodmother"
-	desc = "Once, Eora gifted to Graggar the Luxus Pragmas and told him to make a female companion with it.\
-			He was supposed to make a beautiful and courageous wife from it, is what Eora had hoped he would do.\
-			Instead, Graggar created this."
+	desc = "Once, Sune gifted to Gruumsh the Luxus Pragmas and told him to make a female companion with it.\
+			He was supposed to make a beautiful and courageous wife from it, is what Sune had hoped he would do.\
+			Instead, Gruumsh created this."
 	icon = 'icons/mob/creacher/trolls/broodmother.dmi'
 	icon_state = "broodmother"
 	gender = FEMALE

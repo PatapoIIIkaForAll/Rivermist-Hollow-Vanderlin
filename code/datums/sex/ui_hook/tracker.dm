@@ -24,8 +24,15 @@
 
 /datum/ui_tracker/Destroy()
 	stop_tracking()
+	tracked_object = null
+	on_change_callback = null
+	if(data_getters)
+		data_getters.Cut()
+	data_getters = null
 	tracked_properties.Cut()
+	tracked_properties = null
 	cached_values.Cut()
+	cached_values = null
 	return ..()
 
 /datum/ui_tracker/proc/track_property(property_path, datum/callback/data_getter = null, variable = TRUE)

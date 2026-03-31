@@ -1239,7 +1239,7 @@
 
 /obj/item/book/robber
 	name = "Reading for Robbers"
-	desc = "By Flavius of Dendor"
+	desc = "By Flavius of Silvanus"
 	icon_state ="basic_book_0"
 	base_icon_state = "basic_book"
 	bookfile = "tales4.json"
@@ -1273,15 +1273,15 @@
 	bookfile = "tales8.json"
 
 /obj/item/book/necra
-	name = "Burial Rites for Necra"
-	desc = "By Hunlaf, Gravedigger. Revised by Lenore, Priest of Necra."
+	name = "Burial Rites for Myrkul"
+	desc = "By Hunlaf, Gravedigger. Revised by Lenore, Priest of Myrkul."
 	icon_state ="book6_0"
 	base_icon_state = "book6"
 	bookfile = "tales9.json"
 
 /obj/item/book/noc
 	name = "Dreamseeker"
-	desc = "By Hunlaf, Gravedigger. Revised by Lenore, Priest of Necra."
+	desc = "By Hunlaf, Gravedigger. Revised by Lenore, Priestess of Mystra."
 	icon_state ="book6_0"
 	base_icon_state = "book6"
 	bookfile = "tales10.json"
@@ -1301,7 +1301,7 @@
 	bookfile = "tales12.json"
 
 /obj/item/book/arcyne
-	name = "Latent Magicks, where does Arcyne Power come from?"
+	name = "Latent Magicks, where does arcane power come from?"
 	desc = "By Kildren Birchwood, scholar of Magicks"
 	icon_state ="book4_0"
 	base_icon_state = "book4"
@@ -1551,7 +1551,7 @@
 		// Prompt user to populate manuscript fields
 		var/newtitle = dd_limittext(SANITIZE_HEAR_MESSAGE(input(user, "Enter the title of the manuscript:") as text|null), MAX_CHARTER_LEN)
 		var/newauthor = dd_limittext(SANITIZE_HEAR_MESSAGE(input(user, "Enter the author's name:") as text|null), MAX_CHARTER_LEN)
-		var/newcategory = input(user, "Select the category of the manuscript:") in list("Apocrypha & Grimoires", "Myths & Tales", "Legends & Accounts", "Thesis", "Eoratica")
+		var/newcategory = input(user, "Select the category of the manuscript:") in list("Apocrypha & Grimoires", "Myths & Tales", "Legends & Accounts", "Thesis", "Romance & Scandal")
 		var/newicon = book_icons[input(user, "Choose a book style", "Book Style") as anything in book_icons]
 
 		if(newtitle && newauthor && newcategory)
@@ -1562,7 +1562,7 @@
 			select_icon = newicon
 			icon_state = "paperwrite"
 			to_chat(user, "<span class='notice'>You have successfully authored and titled the manuscript.</span>")
-			var/complete = browser_alert(user, "Is the manuscript finished?", "WORDS OF NOC", DEFAULT_INPUT_CHOICES)
+			var/complete = browser_alert(user, "Is the manuscript finished?", "WORDS OF MYSTRA", DEFAULT_INPUT_CHOICES)
 			SEND_SIGNAL(user, COMSIG_BOOK_WRITTEN)
 			if(complete == CHOICE_YES && compiled_pages)
 				written = TRUE
@@ -1637,14 +1637,14 @@
 ____________End of Example*/
 
 /obj/item/book/magicaltheory
-	name = "Arcyne Foundations - A historie of the Arcyne"
+	name = "Arcane Foundations - A historie of the Weave"
 	desc = "Written by the rector of the Valerian College of Magick"
 	icon_state ="knowledge_0"
 	base_icon_state = "knowledge"
 	bookfile = "MagicalTheory.json"
 
 /obj/item/book/vownecrapage
-	name = "Necra's Vow of Silence"
+	name = "Jergal's Vow of Silence"
 	desc = "A faded page, with seemingly no author."
 	icon_state = "book8_0"
 	base_icon_state = "book8"
@@ -1696,10 +1696,10 @@ ____________End of Example*/
 	bookfile = "Neu_cooking.json"
 
 /obj/item/book/bibble/psy
-	name = "The PSY Book"
+	name = "The AO Book"
 	icon_state = "bibble_0" // change when sprites avaliable
 	base_icon_state = "bibble"
-	title = "psydon bible"
+	title = "ao scripture"
 	dat = "gott.json"
 	verses_file = "strings/psybibble.txt"
 

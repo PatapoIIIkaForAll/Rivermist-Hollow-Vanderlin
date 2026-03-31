@@ -22,8 +22,26 @@
 	default_value = TRUE
 	category = "General"
 
+/datum/erp_preference/boolean/allow_belly_inflation
+	name = "Belly Inflation"
+	description = "If fluids in your vagina or anus can visibly inflate your belly"
+	default_value = TRUE
+	category = "General"
+
 /datum/erp_preference/boolean/always_show_nsfw_flavor
 	name = "Always show nsfw flavor"
 	description = "If you want your nsfw flavor to be shown even when clothed"
 	default_value = FALSE
 	category = "General"
+
+/datum/erp_preference/boolean/allow_mob_oviposition
+	name = "Allow mob oviposition"
+	description = "If you want mobs to perform oviposition when possible"
+	default_value = TRUE
+	category = "Mobs"
+
+/datum/erp_preference/boolean/allow_mob_breeding
+	name = "Allow mob breeding"
+	description = "If you want mobs to breed you when possible"
+	default_value = FALSE
+	category = "Mobs"

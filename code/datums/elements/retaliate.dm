@@ -20,4 +20,6 @@
 	SIGNAL_HANDLER
 	if (!victim.ai_controller)
 		return
+	var/datum/targetting_datum/targetting_datum = victim.ai_controller.blackboard[BB_TARGETTING_DATUM]
+	targetting_datum?.set_horny_target_hostile(victim, attacker)
 	victim.ai_controller.add_blackboard_key_assoc_lazylist(BB_BASIC_MOB_RETALIATE_LIST, attacker, world.time)

@@ -136,9 +136,7 @@
 		target_organ = user.getorganslot(hole_id)
 	else
 		target_organ = target.getorganslot(hole_id)
-	var/list/stored_items = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_GET_LISTS)
-	var/list/stored_items_layer = stored_items[STORAGE_LAYER_INNER]
-	if(!stored_items_layer.len)
+	if(!length(target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL)))
 		return FALSE
 	return TRUE
 
@@ -177,8 +175,10 @@
 		else
 			target_organ = target.getorganslot(hole_id)
 
-	var/obj/item/removed_item
-	removed_item = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_REMOVE_RAND_ITEM, STORAGE_LAYER_INNER)
+	var/list/interactable_items = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL)
+	var/obj/item/removed_item = length(interactable_items) ? pick(interactable_items) : null
+	if(removed_item && !SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_REMOVE, removed_item, STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL))
+		removed_item = null
 	if(!removed_item)
 		to_chat(user, sex_session.spanify_force("I couldn't find anything inside..."))
 		sex_session.stop_current_action(src)
@@ -213,8 +213,7 @@
 		return FALSE
 
 	target_organ = target.getorganslot(hole_id)
-	var/list/stored_items = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_GET_LISTS)
-	stored_items_layer = stored_items[STORAGE_LAYER_DEEP]
+	stored_items_layer = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL)
 	if(!stored_items_layer.len)
 		return FALSE
 	return TRUE
@@ -234,8 +233,7 @@
 /datum/sex_action/hole_storage/vagina_remove_deep/on_start(mob/living/user, mob/living/target)
 	. = ..()
 	target_organ = user.getorganslot(hole_id)
-	var/list/stored_items = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_GET_LISTS)
-	stored_items_layer = stored_items[STORAGE_LAYER_DEEP]
+	stored_items_layer = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL)
 
 	to_chat(user, span_warning("I brace myself and start pushing out items from deep inside my pussy..."))
 
@@ -248,8 +246,7 @@
 	if(!target_organ)
 		target_organ = target.getorganslot(hole_id)
 
-	var/list/stored_items = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_GET_LISTS)
-	stored_items_layer = stored_items[STORAGE_LAYER_DEEP]
+	stored_items_layer = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL)
 
 	var/datum/sex_session/sex_session = get_sex_session(user, target)
 
@@ -266,8 +263,9 @@
 			sex_session.stop_current_action(src)
 			return
 
-	var/obj/item/removed_item
-	removed_item = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_REMOVE_RAND_ITEM, STORAGE_LAYER_DEEP)
+	var/obj/item/removed_item = length(stored_items_layer) ? pick(stored_items_layer) : null
+	if(removed_item && !SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_REMOVE, removed_item, STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL))
+		removed_item = null
 	if(!removed_item)
 		to_chat(user, sex_session.spanify_force("There was nothing inside."))
 		sex_session.stop_current_action(src)

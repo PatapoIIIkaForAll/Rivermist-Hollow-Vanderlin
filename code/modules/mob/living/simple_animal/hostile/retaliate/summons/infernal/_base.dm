@@ -1,6 +1,7 @@
 /mob/living/simple_animal/hostile/retaliate/infernal
 	food_max = 0
 	dendor_taming_chance = DENDOR_TAME_PROB_NONE
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST|MOB_FIEND
 /mob/living/simple_animal/hostile/retaliate/infernal/Initialize()
 	. = ..()
 	ADD_TRAIT(src,TRAIT_NOFIRE, "[type]")

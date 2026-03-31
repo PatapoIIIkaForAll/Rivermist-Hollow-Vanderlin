@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/silence_inhumen
-	name = "Silence Inhumen"
+	name = "Silence Dark Faith"
 	button_icon_state = "bcry"
 	sound = null
 	self_cast_possible = FALSE

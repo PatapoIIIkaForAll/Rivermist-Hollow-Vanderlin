@@ -1,5 +1,6 @@
 /datum/sex_action/object_fuck/object_anal
 	name = "Fuck ass with object"
+	hole_id = ORGAN_SLOT_ANUS
 	var/ouchietext = "owie"
 	do_time = 5 SECONDS
 	user_priority = 100
@@ -14,6 +15,8 @@
 
 /datum/sex_action/object_fuck/object_anal/can_perform(mob/living/user, mob/living/target)
 	. = ..()
+	if(!.)
+		return FALSE
 	if(user != target)
 		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_GROIN, TRUE))
@@ -26,6 +29,8 @@
 
 /datum/sex_action/object_fuck/object_anal/on_start(mob/living/user, mob/living/target)
 	. = ..()
+	if(!.)
+		return FALSE
 	var/obj/item/dildo = user.get_active_held_item()
 	if(istype(user.get_active_held_item(), /obj/item/weapon) || istype(user.get_active_held_item(), /obj/item/ammo_casing))
 		to_chat(user, span_userdanger("\the [dildo] will hurt [target]!"))

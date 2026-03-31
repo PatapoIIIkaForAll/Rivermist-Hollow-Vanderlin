@@ -1,8 +1,8 @@
 /datum/objective/personal/grave_robbery
 	name = "Rob Graves"
-	category = "Matthios' Chosen"
+	category = "Mask's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Matthios grows stronger", "Ability to rob graves without being cursed", "Matthios blesses you (+1 Endurance)")
+	rewards = list("2 Triumphs", "Mask grows stronger", "Ability to rob graves without being cursed", "Mask blesses you (+1 Endurance)")
 	var/graves_robbed = 0
 	var/graves_required = 2
 
@@ -26,11 +26,11 @@
 	if(graves_robbed >= graves_required)
 		complete_objective()
 	else
-		to_chat(owner.current, span_notice("Grave robbed! Rob [graves_required - graves_robbed] more to complete Matthios' task."))
+		to_chat(owner.current, span_notice("Grave robbed! Rob [graves_required - graves_robbed] more to complete Mask's task."))
 
 /datum/objective/personal/grave_robbery/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've robbed enough graves to earn Matthios' respect!"))
+	to_chat(owner.current, span_greentext("You've robbed enough graves to earn Mask's respect!"))
 	adjust_storyteller_influence(MATTHIOS, 20)
 	UnregisterSignal(owner.current, COMSIG_GRAVE_ROBBED)
 
@@ -40,4 +40,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_MATTHIOS_BLESSING, STATKEY_END, 1)
 
 /datum/objective/personal/grave_robbery/update_explanation_text()
-	explanation_text = "Rob at least [graves_required] graves to earn Matthios' respect."
+	explanation_text = "Rob at least [graves_required] graves to earn Mask's respect."

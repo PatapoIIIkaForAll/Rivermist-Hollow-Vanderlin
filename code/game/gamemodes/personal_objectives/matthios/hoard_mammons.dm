@@ -1,8 +1,8 @@
 /datum/objective/personal/hoard_mammons
 	name = "Hoard Amnas"
-	category = "Matthios' Chosen"
+	category = "Mask's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Matthios grows stronger", "Ability to see item's value on examine", "Matthios blesses you (+1 Fortune)")
+	rewards = list("2 Triumphs", "Mask grows stronger", "Ability to see item's value on examine", "Mask blesses you (+1 Fortune)")
 	var/target_mammons = 300
 	var/current_amount = 0
 	var/check_cooldown = 20 SECONDS
@@ -36,7 +36,7 @@
 
 /datum/objective/personal/hoard_mammons/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have accumulated enough amnas, completing Matthios' objective!"))
+	to_chat(owner.current, span_greentext("You have accumulated enough amnas, completing Mask's objective!"))
 	adjust_storyteller_influence(MATTHIOS, 20)
 	STOP_PROCESSING(SSprocessing, src)
 
@@ -46,4 +46,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_MATTHIOS_BLESSING, STATKEY_LCK, 1)
 
 /datum/objective/personal/hoard_mammons/update_explanation_text()
-	explanation_text = "Accumulate at least [target_mammons] amnas in your possession to demonstrate your greediness to Matthios."
+	explanation_text = "Accumulate at least [target_mammons] amnas in your possession to demonstrate your greediness to Mask."

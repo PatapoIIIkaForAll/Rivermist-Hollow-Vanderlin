@@ -9,7 +9,7 @@
 	antimagic_flags = MAGIC_RESISTANCE_HOLY
 	associated_skill = /datum/skill/magic/holy
 
-	invocation = "Metal bends to the heat of Malum's forge!"
+	invocation = "Metal bends to the heat of Moradin's forge!"
 	invocation_type = INVOCATION_SHOUT
 
 	charge_time = 2 SECONDS
@@ -41,7 +41,7 @@
 		target.visible_message("<font color='yellow'>After [owner]'s incantation, [target] melts into an ingot.</font>")
 		itemtospawn = new target.smeltresult(get_turf(target))
 	else if(target_loc == owner)
-		owner.visible_message("<font color='yellow'>[owner] channels Malum's power to smelt [target] [owner.p_theyre()] holding.</font>")
+		owner.visible_message("<font color='yellow'>[owner] channels Moradin's power to smelt [target] [owner.p_theyre()] holding.</font>")
 		itemtospawn = new target.smeltresult(get_turf(target))
 	else
 		return FALSE

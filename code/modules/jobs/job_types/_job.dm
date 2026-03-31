@@ -935,7 +935,7 @@
 		dat += "<br><i>This information is not all-encompassing. Many classes have other quirks and skills that define them.</i>"
 		if(istype(src,/datum/job/advclass/towner/jester))
 			LAZYCLEARLIST(dat)
-			dat = list("<font color = '#d151ab'><center>Come one, come all, where Psydon Lies! <br>Let Xylix roll the dice, <br>unto our untimely demise! <br>Ahahaha!</center>")
+			dat = list("<font color = '#d151ab'><center>Come one, come all, where Ao lies! <br>Let Tymora roll the dice, <br>unto our untimely demise! <br>Ahahaha!</center>")
 			dat += "<center><b><font size = 4>STR: ???</b><br>"
 			dat += "<b>WIL: ???</b><br>"
 			dat += "<b>CON: ???</b><br>"

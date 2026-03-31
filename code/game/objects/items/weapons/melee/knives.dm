@@ -351,7 +351,7 @@
 
 //................ Psydonian Dagger ............... //
 /obj/item/weapon/knife/dagger/silver/psydon
-	name = "psydonian dagger"
+	name = "exotic dagger"
 	desc = "A silver dagger favored by close range fighters of the inquisition."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psydagger"
@@ -631,7 +631,7 @@
 	sellprice = 4
 
 /obj/item/weapon/knife/throwingknife/psydon
-	name = "psydonian tossblade"
+	name = "exotic tossblade"
 	desc = "An unconventional method of delivering silver to a heretic; but one PSYDON smiles at, all the same. Doubles as an 'actual' knife in a pinch."
 	icon_state = "throw_knifes"
 	item_state = "bone_dagger"

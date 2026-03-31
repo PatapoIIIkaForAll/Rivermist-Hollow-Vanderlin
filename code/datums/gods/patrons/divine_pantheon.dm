@@ -34,15 +34,15 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 		return TRUE
 
 
-	to_chat(follower, span_danger("I need an amulet of my patron, or a nearby Pantheon Cross, for my prayers to be heard..."))
+	to_chat(follower, span_danger("I need an amulet of my patron, or a nearby shrine of the gods, for my prayers to be heard..."))
 	return FALSE
 
-/* ----------------- */
+/* ----------------- */ // THESE RENAMES ARE MADE TO REMOVE ALL MENTIONS OF RT'S GODS, ACTUAL GODS ARE IN THE RMH MODULAR FOLDER
 
 /datum/patron/divine/astrata
-	name = ASTRATA
-	domain = "Goddess of Order, the Sun Queen"
-	desc = "Crafted from the head of Psydon, twin of Noc. She gifted mankind the Sun, protecting Psydonia from all forces which may seek it harm: from both outside and within."
+	name = "Lathander"
+	domain = "God of Dawn, Renewal, and Radiance"
+	desc = "The Morninglord, patron of sunrise, rebirth, and bold new beginnings. His light blesses hopeful hearts across Faerun."
 	flaws = "Tyrannical, Ill-Tempered, Uncompromising"
 	worshippers = "Nobles, Zealots, Commoners"
 	sins = "Betrayal, Sloth, Witchcraft"
@@ -50,17 +50,17 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_APRICITY)
 	devotion_holder = /datum/devotion/divine/astrata
 	confess_lines = list(
-		"ASTRATA IS MY LIGHT!",
-		"ASTRATA BRINGS LAW!",
-		"I SERVE THE GLORY OF THE SUN!",
+		"LATHANDER IS MY LIGHT!",
+		"DAWN BRINGS RENEWAL!",
+		"I SERVE THE GLORY OF THE MORNING!",
 	)
 	storyteller = /datum/storyteller/astrata
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/astrata
 
 /datum/patron/divine/noc
-	name = NOC
-	domain = "God of Knowledge, the Moon Prince"
-	desc = "Crafted from the helmet of Psydon, twin of Astrata. He gifted mankind divine wisdom."
+	name = "Mystra"
+	domain = "Goddess of Magic, Knowledge, and the Weave"
+	desc = "Mistress of the Weave, guardian of magic's balance, and patron of those who seek hidden truths through spellcraft."
 	flaws = "Cynical, Isolationist, Unfiltered Honesty"
 	worshippers = "Magic Practitioners, Scholars, Scribes"
 	sins = "Suppressing Truth, Burning Books, Censorship"
@@ -68,17 +68,17 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_TUTELAGE)
 	devotion_holder = /datum/devotion/divine/noc
 	confess_lines = list(
-		"NOC IS NIGHT!",
-		"NOC SEES THE TRUTH!",
-		"I SEEK THE MYSTERIES OF THE MOON!",
+		"MYSTRA GUIDES MY HAND!",
+		"THE WEAVE REVEALS THE TRUTH!",
+		"I SEEK THE MYSTERIES OF MAGIC!",
 	)
 	storyteller = /datum/storyteller/noc
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/noc
 
 /datum/patron/divine/dendor
-	name = DENDOR
-	domain = "God of Nature and Beasts"
-	desc = "Crafted from the bones of Psydon as the embodiment of the natural world. Driven mad with time."
+	name = "Silvanus"
+	domain = "God of Nature, Beasts, and the Wild Balance"
+	desc = "The Oak Father, ancient and impartial, whose will governs the turning of the seasons and the balance of the wild."
 	flaws = "Madness, Rebelliousness, Disorderliness"
 	worshippers = "Druids, Beasts, Madmen"
 	sins = "Deforestation, Overhunting, Disrespecting Nature"
@@ -86,7 +86,7 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_KNEESTINGER_IMMUNITY)
 	devotion_holder = /datum/devotion/divine/dendor
 	confess_lines = list(
-		"DENDOR PROVIDES!",
+		"SILVANUS PROVIDES!",
 		"THE TREEFATHER BRINGS BOUNTY!",
 		"I ANSWER THE CALL OF THE WILD!",
 	)
@@ -94,9 +94,9 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/dendor
 
 /datum/patron/divine/abyssor
-	name = ABYSSOR
-	domain = "God of Seas and Storms"
-	desc = "Crafted from the blood of Psydon as sovereign of the waters. Enraged by ignorance of Him from followers of The Ten."
+	name = "Umberlee"
+	domain = "Goddess of Seas, Storms, and Wrath"
+	desc = "The Bitch Queen, wrathful mistress of the sea, feared by sailors who pay tribute lest her tides drag them to a watery grave."
 	flaws= "Reckless, Stubborn, Destructive"
 	worshippers = "Sailors of the Sea and Sky, Horrid Sea-Creachers, Fog Islanders"
 	sins = "Fear, Hubris, Forgetfulness"
@@ -104,17 +104,17 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_LEECHIMMUNE)
 	devotion_holder = /datum/devotion/divine/abyssor
 	confess_lines = list(
-		"ABYSSOR COMMANDS THE WAVES!",
-		"THE OCEAN'S FURY IS ABYSSOR'S WILL!",
+		"UMBERLEE COMMANDS THE WAVES!",
+		"THE OCEAN'S FURY IS UMBERLEE'S WILL!",
 		"I AM DRAWN BY THE PULL OF THE TIDE!",
 	)
 	storyteller = /datum/storyteller/abyssor
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/abyssor
 
 /datum/patron/divine/necra
-	name = NECRA
-	domain = "Mother Goddess of Death and Time"
-	desc = "The Veiled Lady, once close partner to Psydon. She created the Nine others from his corpse, guiding them from the Underworld."
+	name = "Jergal"
+	domain = "God of Death, Fate, and Final Record"
+	desc = "The Scribe of the Doomed, ancient seneschal of endings, who records every mortal fate with perfect, terrible calm."
 	flaws = "Unchanging, Apathetic, Easy to Bore"
 	worshippers = "Orderlies, Gravetenders, Mourners"
 	sins = "Heretical Magic, Untimely Death, Disturbance of Rest"
@@ -122,17 +122,17 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_SOUL_EXAMINE)
 	devotion_holder = /datum/devotion/divine/necra
 	confess_lines = list(
-		"ALL SOULS FIND THEIR WAY TO NECRA!",
-		"THE UNDERMAIDEN IS OUR FINAL REPOSE!",
-		"I FEAR NOT DEATH, MY LADY AWAITS ME!",
+		"ALL SOULS FIND THEIR WAY TO JERGAL!",
+		"THE SCRIBE OF THE DOOMED RECORDS US ALL!",
+		"I FEAR NOT DEATH, FOR MY END IS WRITTEN!",
 	)
 	storyteller = /datum/storyteller/necra
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/necra
 
 /datum/patron/divine/ravox
-	name = RAVOX
-	domain = "God of Warfare, Justice, and Bravery"
-	desc = "Crafted from the blade of Psydon, a champion of all who seek righteousness for themselves and others."
+	name = "Tempus"
+	domain = "God of War, Courage, and Battle"
+	desc = "Lord of Battles, patron of courage and honorable warfare, who exalts valor without caring who claims the field."
 	flaws = "Carelessness, Aggression, Pride"
 	worshippers = "Warriors, Sellswords, Guardsmen"
 	sins = "Cowardice, Cruelty, Stagnation"
@@ -140,17 +140,17 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_SHARPER_BLADES)
 	devotion_holder = /datum/devotion/divine/ravox
 	confess_lines = list(
-		"RAVOX IS JUSTICE!",
-		"THROUGH STRIFE, GRACE!",
+		"TEMPUS STEELS MY HEART!",
+		"THROUGH BATTLE, HONOR!",
 		"THE DRUMS OF WAR BEAT IN MY CHEST!",
 	)
 	storyteller = /datum/storyteller/ravox
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/ravox
 
 /datum/patron/divine/xylix
-	name = XYLIX
-	domain = "Deity of Trickery, Freedom, and Inspiration"
-	desc = "Crafted from the silver tongue of Psydon. Xylix is a force of change and deceit, yet allows little known of their gender let alone presence."
+	name = "Tymora"
+	domain = "Goddess of Luck, Fortune, and Daring"
+	desc = "Lady Luck, smiling on the bold, the reckless, and the clever who wager everything on a single turn of fate."
 	flaws = "Petulance, Deception, Gambling-Prone"
 	worshippers = "Cheats, Performers, The Hopeless"
 	sins = "Boredom, Predictability, Routine"
@@ -158,24 +158,24 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_BLACKLEG)
 	devotion_holder = /datum/devotion/divine/xylix
 	confess_lines = list(
-		"ASTRATA IS MY LIGHT!",
-		"NOC IS NIGHT!",
-		"DENDOR PROVIDES!",
-		"ABYSSOR COMMANDS THE WAVES!",
-		"RAVOX IS JUSTICE!",
-		"ALL SOULS FIND THEIR WAY TO NECRA!",
+		"LATHANDER IS MY LIGHT!",
+		"MYSTRA GUIDES THE WEAVE!",
+		"SILVANUS PROVIDES!",
+		"UMBERLEE COMMANDS THE WAVES!",
+		"TEMPUS STEELS THE BOLD!",
+		"ALL SOULS FIND THEIR WAY TO JERGAL!",
 		"HAHAHAHA! AHAHAHA! HAHAHAHA!", //the only xylix-related confession
-		"PESTRA SOOTHES ALL ILLS!",
-		"MALUM IS MY FORGE!",
-		"EORA BRINGS US TOGETHER!",
+		"ILMATER SOOTHES ALL ILLS!",
+		"MORADIN IS MY FORGE!",
+		"SUNE BRINGS US TOGETHER!",
 	)
 	storyteller = /datum/storyteller/xylix
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/xylix
 
 /datum/patron/divine/pestra
-	name = PESTRA
-	domain = "Goddess of Disease, Alchemy, and Medicine"
-	desc = "A mistake; Psydon's intestines left behind. She slithered out, bringing forth the cycle of life and decay."
+	name = "Ilmater"
+	domain = "God of Suffering, Endurance, and Compassion"
+	desc = "The Crying God, who bears suffering so others may be spared, and teaches mercy through endurance and relief."
 	flaws = "Drunkenness, Crudeness, Irresponsibility"
 	worshippers = "The Ill and Infirm, Alchemists, Physicians"
 	sins = "´Curing´ Abnormalities, Refusing to Help Unfortunates, Groveling"
@@ -183,9 +183,9 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_ROT_EATER)
 	devotion_holder = /datum/devotion/divine/pestra
 	confess_lines = list(
-		"PESTRA SOOTHES ALL ILLS!",
-		"DECAY IS A CONTINUATION OF LIFE!",
-		"MY AFFLICTION IS MY TESTAMENT!",
+		"ILMATER SOOTHES ALL ILLS!",
+		"SUFFERING CAN BE ENDURED!",
+		"MY PAIN IS NOT MINE ALONE TO BEAR!",
 	)
 	storyteller = /datum/storyteller/pestra
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/pestra
@@ -196,9 +196,9 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 		return
 
 /datum/patron/divine/malum
-	name = MALUM
-	domain = "God of Toil, Innovation, and Creation"
-	desc = "Crafted from the hands of Psydon. He would later use his own to construct wondrous inventions."
+	name = "Moradin"
+	domain = "God of Toil, Forge, and Creation"
+	desc = "The All-Father, divine smith of the dwarves, whose hammer shapes stone, steel, and worthy souls alike."
 	flaws = "Obsessive, Exacting, Overbearing"
 	worshippers = "Smiths, Miners, Sculptors"
 	sins = "Cheating, Shoddy Work, Suicide"
@@ -206,7 +206,7 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_BETTER_SLEEP)
 	devotion_holder = /datum/devotion/divine/malum
 	confess_lines = list(
-		"MALUM IS MY FORGE!",
+		"MORADIN IS MY FORGE!",
 		"TRUE VALUE IS IN THE TOIL!",
 		"I AM AN INSTRUMENT OF CREATION!",
 	)
@@ -214,9 +214,9 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	associated_psycross = /obj/item/clothing/neck/psycross/silver/malum
 
 /datum/patron/divine/eora
-	name = EORA
-	domain = "Goddess of Love, Family, and Art"
-	desc = "Crafted from the heart of Psydon, a spreader of love and beauty, and strengthener of bonds."
+	name = "Sune"
+	domain = "Goddess of Love, Beauty, and Art"
+	desc = "The Lady of Love, radiant patron of beauty, romance, and the bonds that make mortal life worth cherishing."
 	flaws= "Naivete, Impulsiveness, Bigotry"
 	worshippers = "Mothers, Artists, Married Couples"
 	sins = "Sadism, Abandonment, Ruining Beauty"
@@ -224,7 +224,7 @@ GLOBAL_LIST_INIT(patron_sound_themes, list(
 	added_traits = list(TRAIT_EXTEROCEPTION)
 	devotion_holder = /datum/devotion/divine/eora
 	confess_lines = list(
-		"EORA BRINGS US TOGETHER!",
+		"SUNE BRINGS US TOGETHER!",
 		"HER BEAUTY IS EVEN IN THIS TORMENT!",
 		"I LOVE YOU, EVEN AS YOU TRESPASS AGAINST ME!",
 	)

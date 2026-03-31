@@ -91,6 +91,6 @@
 		return
 	if(temp_anonymous && (recipient.STAPER >= 15))
 		if(recipient.mind?.do_i_know(name = owner.real_name))
-			to_chat(recipient, "Arcyne whispers fill the back of my head, resolving into [owner]'s voice: <font color=#7246ff>[temp_message]</font>")
+			to_chat(recipient, "Whispers of the Weave fill the back of my head, resolving into [owner]'s voice: <font color=#7246ff>[temp_message]</font>")
 			return
-	to_chat(recipient, "Arcyne whispers fill the back of my head, resolving into an unknown [owner.gender == FEMALE ? "woman" : "man"]'s voice: <font color=#7246ff>[temp_message]</font>")
+	to_chat(recipient, "Whispers of the Weave fill the back of my head, resolving into an unknown [owner.gender == FEMALE ? "woman" : "man"]'s voice: <font color=#7246ff>[temp_message]</font>")

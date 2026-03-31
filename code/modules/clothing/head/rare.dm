@@ -78,7 +78,7 @@
 //............... Hoplite Helmet ............... //
 /obj/item/clothing/head/rare/hoplite // Unique Hoplite kit
 	name = "ancient helmet"
-	desc = "A weathered bronze helmet topped with a symbol of Astrata's sun."
+	desc = "A weathered bronze helmet topped with a symbol of Lathander's sun."
 	icon = 'icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/64x64/head.dmi'
 	bloody_icon = 'icons/effects/blood64x64.dmi'

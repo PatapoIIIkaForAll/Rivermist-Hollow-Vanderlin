@@ -1,6 +1,6 @@
 /datum/storyteller/astrata
-	name = ASTRATA
-	desc = "Astrata will provide a balanced and varied experience. Consider this the default experience."
+	name = "Lathander"
+	desc = "Lathander provides a balanced and varied experience. Consider this the default experience."
 	weight = 6
 	always_votable = TRUE
 	follower_modifier = LOWER_FOLLOWER_MODIFIER
@@ -32,9 +32,9 @@
 	)
 
 /datum/storyteller/noc
-	name = NOC
-	desc = "Noc will try to send more magical events."
-	welcome_text = "The veil between realms shimmers in your presence."
+	name = "Mystra"
+	desc = "Mystra will try to send more magical events."
+	welcome_text = "The Weave shimmers in your presence."
 	weight = 4
 	always_votable = TRUE
 	follower_modifier = LOWER_FOLLOWER_MODIFIER
@@ -66,8 +66,8 @@
 	)
 
 /datum/storyteller/ravox
-	name = RAVOX
-	desc = "Ravox will cause raids to happen naturally instead of only when people are dying a lot."
+	name = "Tempus"
+	desc = "Tempus will cause raids to happen naturally instead of only when people are dying a lot."
 	welcome_text = "The drums of war grow louder."
 	weight = 4
 	always_votable = TRUE
@@ -103,13 +103,13 @@
 			STATS_YIELDS = list("name" = "Yields made:", "points" = -4, "capacity" = -40),
 		),
 		"Set 5" = list(
-			STATS_UNDERWORLD_DUELS = list("name" = "Underworld duels:", "points" = 6, "capacity" = 60),
+			STATS_UNDERWORLD_DUELS = list("name" = "Fugue duels:", "points" = 6, "capacity" = 60),
 		)
 	)
 
 /datum/storyteller/abyssor
-	name = ABYSSOR
-	desc = "Abyssor likes to send water and trade-related events."
+	name = "Umberlee"
+	desc = "Umberlee likes to send water and trade-related events."
 	welcome_text = "The tides of fate shift in your favor."
 	weight = 4
 	always_votable = TRUE
@@ -129,7 +129,7 @@
 			STATS_WATER_CONSUMED = list("name" = "Water consumed:", "points" = 0.014, "capacity" = 90),
 		),
 		"Set 3" = list(
-			STATS_ABYSSOR_REMEMBERED = list("name" = "Abyssor remembered:", "points" = 1.15, "capacity" = 50),
+			STATS_ABYSSOR_REMEMBERED = list("name" = "Umberlee remembered:", "points" = 1.15, "capacity" = 50),
 			STATS_ALIVE_TRITONS = list("name" = "Number of tritons:", "points" = 7.75, "capacity" = 70),
 		),
 		"Set 4" = list(
@@ -142,8 +142,8 @@
 	)
 
 /datum/storyteller/xylix
-	name = XYLIX
-	desc = "Xylix is a wildcard, spinning the wheels of fate."
+	name = "Tymora"
+	desc = "Tymora is a wildcard, spinning the wheels of fate."
 	welcome_text = "The dice have been cast, let chaos reign."
 	weight = 4
 	always_votable = TRUE
@@ -188,8 +188,8 @@
 	)
 
 /datum/storyteller/necra
-	name = NECRA
-	desc = "Necra takes things very slow, rarely bringing in newcomers."
+	name = "Jergal"
+	desc = "Jergal takes things very slow, rarely bringing in newcomers."
 	welcome_text = "The grave whispers, patience is virtue."
 	weight = 4
 	always_votable = TRUE
@@ -231,8 +231,8 @@
 	)
 
 /datum/storyteller/pestra
-	name = PESTRA
-	desc = "Pestra keeps things simple, with a slight bias towards alchemy."
+	name = "Ilmater"
+	desc = "Ilmater keeps things simple, with a slight bias towards medicine and relief."
 	welcome_text = "The balance of life and craft tilts in your favor."
 	color_theme = "#AADDAA"
 
@@ -264,8 +264,8 @@
 	)
 
 /datum/storyteller/malum
-	name = MALUM
-	desc = "Malum believes in hard work, intervening more often than others."
+	name = "Moradin"
+	desc = "Moradin believes in hard work, intervening more often than others."
 	welcome_text = "Toil and perseverance shall shape your destiny."
 	color_theme = "#D4A56C"
 
@@ -304,8 +304,8 @@
 	)
 
 /datum/storyteller/eora
-	name = EORA
-	desc = "Eora hates death and promotes love. Raids will never naturally progress, only death will bring them."
+	name = "Sune"
+	desc = "Sune hates death and promotes love. Raids will never naturally progress, only death will bring them."
 	welcome_text = "Life shall flourish under my watchful gaze."
 	color_theme = "#9966CC"
 
@@ -347,8 +347,8 @@
 	)
 
 /datum/storyteller/dendor
-	name = DENDOR
-	desc = "Dendor likes to send nature-themed events."
+	name = "Silvanus"
+	desc = "Silvanus likes to send nature-themed events."
 	welcome_text = "The wilds whisper your name."
 	weight = 4
 	always_votable = TRUE
@@ -381,7 +381,7 @@
 			STATS_FOREST_DEATHS = list("name" = "Forest deaths:", "points" = 6, "capacity" = 80),
 		),
 		"Set 4" = list(
-			STATS_DENDOR_SACRIFICES = list("name" = "Sacrifices to Dendor:", "points" = 12.5, "capacity" = 75),
+			STATS_DENDOR_SACRIFICES = list("name" = "Offerings to Silvanus:", "points" = 12.5, "capacity" = 75),
 		),
 		"Set 5" = list(
 			STATS_ANIMALS_TAMED = list("name" = "Animals tamed:", "points" = 4.5, "capacity" = 60),
@@ -391,8 +391,8 @@
 // INHUMEN
 
 /datum/storyteller/zizo
-	name = ZIZO
-	desc = "Zizo thrives on risk and reward, favoring the daring and unpredictable."
+	name = "Lolth"
+	desc = "Lolth thrives on risk and reward, favoring the daring and unpredictable."
 	welcome_text = "You will kneel."
 	weight = 4
 	always_votable = TRUE
@@ -418,7 +418,7 @@
 
 	influence_sets = list(
 		"Set 1" = list(
-			STATS_ZIZO_PRAISED = list("name" = "Zizo praised:", "points" = 1.25, "capacity" = 45),
+			STATS_ZIZO_PRAISED = list("name" = "Lolth praised:", "points" = 1.25, "capacity" = 45),
 			STATS_ALIVE_DARK_ELVES = list("name" = "Number of dark elves:", "points" = 6.75, "capacity" = 60),
 		),
 		"Set 2" = list(
@@ -438,8 +438,8 @@
 	cost_variance = 50  // Events will be highly variable in cost
 
 /datum/storyteller/baotha
-	name = BAOTHA
-	desc = "Baotha revels in chaos, making events and reality unpredictable."
+	name = "Blissara"
+	desc = "Blissara revels in chaos, making events and reality unpredictable."
 	welcome_text = "The world bends to my whims."
 	weight = 4
 	always_votable = TRUE
@@ -484,8 +484,8 @@
 	cost_variance = 30  // Makes events more erratic in timing
 
 /datum/storyteller/graggar
-	name = GRAGGAR
-	desc = "Graggar encourages war and conquest, making combat the solution to all."
+	name = "Gruumsh"
+	desc = "Gruumsh encourages war and conquest, making combat the solution to all."
 	welcome_text = "Victory or death!"
 	weight = 4
 	always_votable = TRUE
@@ -532,8 +532,8 @@
 	cost_variance = 10  // Less randomness, more direct
 
 /datum/storyteller/matthios
-	name = MATTHIOS
-	desc = "Matthios manipulates wealth and corruption, rewarding those who make deals."
+	name = "Mask"
+	desc = "Mask manipulates wealth and corruption, rewarding those who make deals."
 	welcome_text = "Fortune favors the cunning."
 	weight = 4
 	always_votable = TRUE

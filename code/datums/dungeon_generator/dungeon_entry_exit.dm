@@ -8,7 +8,7 @@ GLOBAL_LIST_INIT(dungeon_exits, list())
 /obj/structure/dungeon_entry/center/vanderlin
 
 /obj/structure/dungeon_entry
-	name = "The Tomb of Matthios"
+	name = "The Tomb of Forgotten"
 	desc = ""
 
 	icon = 'icons/roguetown/misc/portal.dmi'

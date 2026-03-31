@@ -32,7 +32,7 @@
 
 /obj/item/reagent_containers/food/snacks/spiderhoney/honey/mad
 	name = "mad honey"
-	desc = "Dark green honey tainted by the strange plants of the bog, yet often sought by Dendorite Melissae."
+	desc = "Dark green honey tainted by the strange plants of the bog, yet often sought by beekeepers devoted to Silvanus."
 	icon_state = "honey_green"
 	volume = 20
 	tastes = list("earthy sweetness" = 1, "something spicy" = 1)
@@ -40,7 +40,7 @@
 
 /obj/item/reagent_containers/food/snacks/spiderhoney/honey/poppy
 	name = "rouge honey"
-	desc = "A rich red honey, still used in traditional medicine and prized by the faithful of Pestra."
+	desc = "A rich red honey, still used in traditional medicine and prized by the faithful of Ilmater."
 	icon_state = "honey_red"
 	volume = 20
 	tastes = list("numbing sweetness" = 1, "a flash of white" = 1)
@@ -55,7 +55,7 @@
 
 /obj/item/reagent_containers/food/snacks/spiderhoney/honey/luminescent
 	name = "moon honey"
-	desc = "Strange blue honey, softly glowing with all the promise and danger of Noc's starborne knowledge."
+	desc = "Strange blue honey, softly glowing with all the promise and danger of Mystra's starborne knowledge."
 	icon_state = "honey_glowing"
 	volume = 20
 	tastes = list("complex sweetness" = 1, "sharp floral tones" = 1)

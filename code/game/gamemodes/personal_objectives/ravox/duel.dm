@@ -1,9 +1,9 @@
 /datum/objective/personal/ravox_duel
 	name = "Honor Duels"
-	category = "Ravox's Chosen"
+	category = "Tempus's Chosen"
 	triumph_count = 3
 	immediate_effects = list("Gained an ability to challenge others")
-	rewards = list("3 Triumphs", "Ravox grows stronger", "Ravox blesses you (+1 Strength)")
+	rewards = list("3 Triumphs", "Tempus grows stronger", "Tempus blesses you (+1 Strength)")
 	var/duels_won = 0
 	var/duels_required = 1
 
@@ -21,7 +21,7 @@
 
 /datum/objective/personal/ravox_duel/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have proven your worth in combat! Ravox is pleased!"))
+	to_chat(owner.current, span_greentext("You have proven your worth in combat! Tempus is pleased!"))
 	adjust_storyteller_influence(RAVOX, 20)
 
 /datum/objective/personal/ravox_duel/reward_owner()

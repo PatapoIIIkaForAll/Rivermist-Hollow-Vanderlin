@@ -9,8 +9,8 @@
 	//spookysounds = AMBIENCE_CAVE
 	//spookynight = AMBIENCE_CAVE
 	background_track = 'sound/music/area/underdark.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/underdark.ogg'
+	background_track_night = 'sound/music/area/underdark.ogg'
 	ambush_times = list("night","dawn","dusk","day")
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/spider/mutated = 20,
@@ -27,8 +27,8 @@
 	first_time_text = "THE UNDERDARK"
 	icon_state = "caves"
 	background_track = 'sound/music/area/caves.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/caves.ogg'
+	background_track_night = 'sound/music/area/caves.ogg'
 	ambush_times = list("night","dawn","dusk","day")
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/elemental/crawler = 30,
@@ -40,8 +40,8 @@
 	first_time_text = "THE GLIMMERLAKES"
 	icon_state = "lake"
 	background_track = 'sound/music/area/underdark.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/underdark.ogg'
+	background_track_night = 'sound/music/area/underdark.ogg'
 	ambush_times = null
 	ambush_mobs = null
 	threat_region = THREAT_REGION_RMH_UNDERDARK
@@ -91,8 +91,8 @@
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/infernal/imp = 50)
 	background_track = 'sound/music/area/decap.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/decap.ogg'
+	background_track_night = 'sound/music/area/decap.ogg'
 	//deathsight_message = "Lava Hollows"
 
 /area/under/underdark/rmh/shar
@@ -101,8 +101,8 @@
 	//spookysounds = SPOOKY_MYSTICAL
 	//spookynight = SPOOKY_MYSTICAL
 	background_track = 'sound/music/area/underdark.ogg'
-	background_track_dusk = null
-	background_track_night = null
+	background_track_dusk = 'sound/music/area/underdark.ogg'
+	background_track_night = 'sound/music/area/underdark.ogg'
 	ambush_times = list("night","dawn","dusk","day")
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/dreamfiend = 50)

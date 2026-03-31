@@ -1,8 +1,8 @@
 /datum/objective/personal/taste_lux
 	name = "Taste Divine Essence"
-	category = "Baotha's Chosen"
+	category = "Blissara's Chosen"
 	triumph_count = 3
-	rewards = list("3 Triumphs", "Baotha grows stronger", "Baotha blesses you (+2 Fortune)")
+	rewards = list("3 Triumphs", "Blissara grows stronger", "Blissara blesses you (+2 Fortune)")
 
 /datum/objective/personal/taste_lux/on_creation()
 	. = ..()
@@ -24,7 +24,7 @@
 
 /datum/objective/personal/taste_lux/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have tasted the divine essence, completing Baotha's objective!"))
+	to_chat(owner.current, span_greentext("You have tasted the divine essence, completing Blissara's objective!"))
 	adjust_storyteller_influence(BAOTHA, 20)
 	UnregisterSignal(owner.current, COMSIG_LUX_TASTED)
 
@@ -33,4 +33,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_BAOTHA_BLESSING, STATKEY_LCK, 2)
 
 /datum/objective/personal/taste_lux/update_explanation_text()
-	explanation_text = "Experience the divine by tasting the forbidden Lux essence! Baotha is watching..."
+	explanation_text = "Experience the divine by tasting the forbidden Lux essence! Blissara is watching..."

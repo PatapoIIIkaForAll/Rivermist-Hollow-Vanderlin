@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/undirected/conjure_item/summon_parchment
 	name = "Summon Parchment"
-	desc = "Summon a blank sheet of parchment from the library of Noc."
+	desc = "Summon a blank sheet of parchment from the library of Mystra."
 	button_icon_state = "summon_paper"
 	sound = 'sound/items/book_page.ogg'
 

@@ -186,7 +186,7 @@
 
 //................ Psydonian Spear ............... //
 /obj/item/weapon/polearm/spear/psydon
-	name = "psydonian spear"
+	name = "exotic spear"
 	desc = "A polearm with a twisting trident head perfect for mangling the bodies of the impure."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psyspear"
@@ -254,7 +254,7 @@
 //................ Stone Short Spear ............... //		- Short spears got shorter reach and worse wield effect, made for one handed and throwing
 /obj/item/weapon/polearm/spear/stone
 	name = "simple spear"
-	desc = "With this weapon, the tribes of humenity became the chosen people of Psydon."
+	desc = "With this weapon, the tribes of humanity rose from the beasly state."
 	icon_state = "stonespear"
 	force = DAMAGE_SPEAR - 2
 	force_wielded = DAMAGE_SPEAR + 2
@@ -400,7 +400,7 @@
 
 //................ Psydonian Halberd ............... //
 /obj/item/weapon/polearm/halberd/psydon
-	name = "psydonian halberd"
+	name = "exotic halberd"
 	desc = "A mighty halberd capable of cutting down the heretical with remarkable ease, be it effigy, man, or beast."
 	icon = 'icons/roguetown/weapons/64/psydonite.dmi'
 	icon_state = "psyhalberd"
@@ -623,7 +623,7 @@
 
 
 /obj/item/weapon/polearm/woodstaff/naledi
-	name = "psydonian warstaff"
+	name = "exotic warstaff"
 	desc = "A staff carrying the black and gold insignia of the war scholars."
 	icon_state = "naledistaff"
 	force = DAMAGE_SPEARPLUS

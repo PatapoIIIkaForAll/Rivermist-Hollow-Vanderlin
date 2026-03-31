@@ -90,9 +90,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('modular_rmh/sound/music/combat/combat_ascended.ogg')
 
 /datum/combat_music/astrata
-	name = "Astratan Light"
+	name = "Lathander's Light"
 	desc = ""
-	shortname = "Astrata"
+	shortname = "Lathander"
 	credits = "T-87 SULFURHEAD - Heliotrix (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/cmode/church/combat_astrata.ogg')
 
@@ -104,9 +104,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('modular_rmh/sound/music/combat/cmode/antag/combat_deadlyshadows.ogg')
 
 /datum/combat_music/astratan_zeal
-	name = "Astratan Zeal"
+	name = "Lathanderite Zeal"
 	desc = "You will never bloody your hand, striking with Her guidance."
-	shortname = "Astratan"
+	shortname = "Lathander"
 	credits = "Jesper Kyd - Light of the Imperium"
 	musicpath = list('modular_rmh/sound/music/combat/combat_holy.ogg')
 
@@ -191,9 +191,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('modular_rmh/sound/music/combat/combat_weird.ogg')
 
 /datum/combat_music/dendor
-	name = "Dendorite Clergy (Warden)"
+	name = "Silvanite Clergy (Warden)"
 	desc = ""
-	shortname = "Dendor"
+	shortname = "Silvanus"
 	credits = "T87-Sulfurhead - Metamorphosis (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/cmode/garrison/combat_warden.ogg')
 
@@ -225,9 +225,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('modular_rmh/sound/music/combat/combat_dwarf.ogg')
 
 /datum/combat_music/eora
-	name = "Eoran Clergy"
+	name = "Sunite Clergy"
 	desc = "Do not listen to this one after a breakup." // from the credits.txt lol
-	shortname = "Eora"
+	shortname = "Sune"
 	credits = "T-87 SULFURHEAD - Family Melts Away (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/cmode/church/combat_eora.ogg')
 
@@ -252,30 +252,30 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('modular_rmh/sound/music/combat/combat_grenzelhoft.ogg')
 
 /datum/combat_music/heretic_zizo
-	name = "Heretic - Zizo (Lich)"
+	name = "Heretic - Lolth"
 	desc = "Trust nobody, after all the power has always been within you."
-	shortname = "Zizo"
+	shortname = "Lolth"
 	credits = "T87-Sulfurhead - DEMESNE (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/combat_heretic.ogg')
 
 /datum/combat_music/heretic_matthios
-	name = "Heretic - Matthios"
+	name = "Heretic - Mask"
 	desc = "A rush of vigour. You've forgotten the last time you were told what's right or what to do."
-	shortname = "Matthios"
+	shortname = "Mask"
 	credits = "T87-Sulfurhead - Amontillado (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/combat_matthios.ogg')
 
 /datum/combat_music/heretic_graggar
-	name = "Heretic - Graggar"
+	name = "Heretic - Gruumsh"
 	desc = "Perhaps this time, you will finally feel powerful."
-	shortname = "Graggar"
+	shortname = "Gruumsh"
 	credits = "T87-Sulfurhead - Black Powder (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/combat_graggar.ogg')
 
 /datum/combat_music/heretic_baotha
-	name = "Heretic - Baotha"
+	name = "Heretic - Blissara"
 	desc = "Fuck tomorrow."
-	shortname = "Baotha"
+	shortname = "Blissara"
 	credits = "T87-Sulfurhead - Love Within You (Rough Mix) (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/combat_baotha.ogg')
 
@@ -380,9 +380,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	musicpath = list('modular_rmh/sound/music/combat/combat_holy.ogg')
 
 /datum/combat_music/necra
-	name = "Necran Clergy"
+	name = "Jergalite Clergy"
 	desc = ""
-	shortname = "Necra"
+	shortname = "Jergal"
 	credits = "T-87 SULFURHEAD - Formerly Known as Toulouse Lautrec (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list('modular_rmh/sound/music/combat/cmode/church/combat_necra.ogg')
 

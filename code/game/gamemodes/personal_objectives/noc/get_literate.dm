@@ -1,8 +1,8 @@
 /datum/objective/personal/literacy
 	name = "Get Literate"
-	category = "Noc's Chosen"
+	category = "Mystra's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Noc grows stronger", "Mathematics knowledge")
+	rewards = list("2 Triumphs", "Mystra grows stronger", "Mathematics knowledge")
 
 /datum/objective/personal/literacy/on_creation()
 	. = ..()
@@ -24,7 +24,7 @@
 
 /datum/objective/personal/literacy/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You've learned to read, completing Noc's objective!"))
+	to_chat(owner.current, span_greentext("You've learned to read, completing Mystra's objective!"))
 	adjust_storyteller_influence(NOC, 20)
 	UnregisterSignal(owner.current, COMSIG_SKILL_RANK_CHANGE)
 
@@ -33,4 +33,4 @@
 	owner.current.adjust_skillrank(/datum/skill/labor/mathematics, 1)
 
 /datum/objective/personal/literacy/update_explanation_text()
-	explanation_text = "Get rid of your ignorance! Learn to read to please Noc!"
+	explanation_text = "Get rid of your ignorance! Learn to read to please Mystra!"

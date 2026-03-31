@@ -35,6 +35,7 @@
 /datum/parsed_map/proc/initTemplateBounds()
 	var/list/atom/atoms = list()
 	var/list/area/areas = list()
+	var/list/atom/initialize_atoms = list()
 
 	var/list/turfs = block(	locate(bounds[MAP_MINX], bounds[MAP_MINY], bounds[MAP_MINZ]),
 							locate(bounds[MAP_MAXX], bounds[MAP_MAXY], bounds[MAP_MAXZ]))
@@ -48,9 +49,12 @@
 	for(var/turf/T as anything in border)
 		T.air_update_turf(TRUE) //calculate adjacent turfs along the border to prevent runtimes
 
-	if(SSatoms.initialized)
+	if(SSatoms.initialized == INITIALIZATION_INSSATOMS)
 		SSmapping.reg_in_areas_in_z(areas)
-	SSatoms.InitializeAtoms(atoms)
+
+	initialize_atoms += areas
+	initialize_atoms += atoms
+	SSatoms.InitializeAtoms(initialize_atoms)
 
 /datum/map_template/proc/load_new_z()
 	var/x = round((world.maxx - width)/2)

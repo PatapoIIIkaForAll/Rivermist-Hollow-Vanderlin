@@ -82,7 +82,8 @@
 	if(oldstate != erect_state && owner)
 		if(iscarbon(owner))
 			var/mob/living/carbon/carbon_owner = owner
-			carbon_owner.update_body_parts()
+			// Visible organ overlays are not part of the normal limb render key.
+			carbon_owner.update_body_parts(TRUE)
 
 
 /obj/item/organ/genitals/penis/proc/create_fake_variant(mob/living/user)

@@ -1,6 +1,6 @@
 /obj/item/explosive/deathshell
 	name = "Death Shell"
-	desc = "A smooth shiny cylinder, bronze in color and material, with a styled indent on top that looks like a button. There is an archaic ticking noise inside, one which spells doom to all who dare defy the art of Malum.  Known as ´The Widow Maker´ among artificer social circles due to the inherent risk of crafting such explosives, often leading to traumatic amputations and death."
+	desc = "A smooth shiny cylinder, bronze in color and material, with a styled indent on top that looks like a button. There is an archaic ticking noise inside, one which spells doom to all who dare defy the craft of Moradin. Known as 'The Widow Maker' among artificer social circles due to the inherent risk of crafting such explosives, often leading to traumatic amputations and death."
 	icon_state = "deathshell"
 	icon = 'icons/obj/bombs.dmi'
 	w_class = WEIGHT_CLASS_NORMAL

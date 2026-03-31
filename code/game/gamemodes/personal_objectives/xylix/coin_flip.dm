@@ -1,8 +1,8 @@
 /datum/objective/personal/coin_flip
 	name = "Flip Coin"
-	category = "Xylix's Chosen"
+	category = "Tymora's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Xylix grows stronger", "Xylix blesses you (+1 Fortune)")
+	rewards = list("2 Triumphs", "Tymora grows stronger", "Tymora blesses you (+1 Fortune)")
 	var/obj/item/coin/required_coin_type = /obj/item/coin/gold
 	var/winning_side
 
@@ -44,13 +44,13 @@
 			change_rules(our_coin)
 			return
 	else
-		to_chat(user, span_redtext("Sadly, the coin didn't land on the winning side... Better luck next time! Xylix takes the coin!"))
+		to_chat(user, span_redtext("Sadly, the coin didn't land on the winning side... Better luck next time! Tymora takes the coin!"))
 		qdel(our_coin)
 		return
 
 /datum/objective/personal/coin_flip/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("The coin landed on the winning side! You won the game and earned Xylix's favor!"))
+	to_chat(owner.current, span_greentext("The coin landed on the winning side! You won the game and earned Tymora's favor!"))
 	adjust_storyteller_influence(XYLIX, 20)
 	UnregisterSignal(owner.current, COMSIG_COIN_FLIPPED)
 
@@ -59,7 +59,7 @@
 	owner.current.adjust_stat_modifier(STATMOD_XYLIX_BLESSING, STATKEY_LCK, 1)
 
 /datum/objective/personal/coin_flip/update_explanation_text()
-	explanation_text = "Xylix wants to play a game! Simply flip a [initial(required_coin_type.name)] and see if you win! Only Xylix knows the rules! Or do they?"
+	explanation_text = "Tymora wants to play a game! Simply flip a [initial(required_coin_type.name)] and see if you win! Only Tymora knows the rules! Or does she?"
 
 /datum/objective/personal/coin_flip/proc/change_rules(obj/item/coin/our_coin)
 	var/list/coin_types = list(/obj/item/coin/copper, /obj/item/coin/silver, /obj/item/coin/gold) - required_coin_type

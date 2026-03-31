@@ -41,7 +41,7 @@
 	spawnableTurfs = list(
 		/turf/open/floor/dirt/road = 30
 	)
-	allowed_areas = list(/area/outdoors/woods/rmh)
+	allowed_areas = list(/area/outdoors/rmh_darkforest)
 
 /datum/mapGeneratorModule/forestroad
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS

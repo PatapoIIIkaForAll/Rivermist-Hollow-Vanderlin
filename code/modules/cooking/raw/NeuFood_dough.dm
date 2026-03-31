@@ -672,7 +672,7 @@
 
 /obj/item/reagent_containers/food/snacks/cheesecake_cooked
 	name = "cheesecake"
-	desc = "Humenity's favored creation."
+	desc = "Humanity's favored creation."
 	icon_state = "cheesecake"
 	dropshrink = 0.8
 	slices_num = 6

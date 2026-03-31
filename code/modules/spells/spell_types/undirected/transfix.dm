@@ -77,6 +77,14 @@
 		// If the vampire failed badly
 		var/knowledgable = (willroll - bloodroll) >= 3
 
+		if(HAS_TRAIT(target, TRAIT_PROTECTION_EVIL_GOOD))
+			var/datum/status_effect/buff/protection_evil_good/ward = target.has_status_effect(/datum/status_effect/buff/protection_evil_good)
+			if(ward)
+				var/ward_color = ward.is_inhumen ? "#8B0000" : "#FFD700"
+				to_chat(target, "<b><font color='[ward_color]'>[ward.is_inhumen ? "Dark power surges around me, shielding my mind!" : "My golden ward flares, shielding my mind from unholy influence!"]</font></b>")
+				to_chat(owner, "<b><font color='[ward_color]'>[target] is protected by a [ward.is_inhumen ? "sinister blood-red" : "golden divine"] ward! I fail to ensnare their mind!</font></b>")
+			continue
+
 		if(!powerful)
 			var/static/list/silver_items = list(
 				/obj/item/clothing/neck/psycross/silver,

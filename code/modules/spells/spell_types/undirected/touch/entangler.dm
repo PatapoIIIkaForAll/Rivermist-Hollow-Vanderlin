@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/undirected/touch/entangler
-	name = "Hand of Dendor"
+	name = "Hand of Silvanus"
 	desc = "Invoke a hand which will create living vines and grant protection."
 	button_icon_state = "entangle"
 	sound = 'sound/items/dig_shovel.ogg'
@@ -42,7 +42,7 @@
 /datum/action/cooldown/spell/undirected/touch/entangler/proc/try_mark(mob/living/victim)
 	var/has_trait = HAS_TRAIT_FROM(victim, TRAIT_ENTANGLER_IMMUNE, MAGIC_TRAIT)
 	var/action = has_trait ? "removing" : "adding"
-	owner.visible_message("[owner] presses their thumb on [victim]'s forehead and begins [action] Dendor's mark.")
+	owner.visible_message("[owner] presses their thumb on [victim]'s forehead and begins [action] Silvanus's mark.")
 	if(!do_after(owner, 5 SECONDS, victim))
 		return
 	if(has_trait)

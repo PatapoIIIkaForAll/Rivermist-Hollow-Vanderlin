@@ -59,6 +59,7 @@
 	var/obj/item/wear_wrists = null
 	var/obj/item/cloak = null
 	var/obj/item/clothing/wear_shirt = null
+	var/skip_initial_outfit = FALSE
 
 	var/hygiene = HYGIENE_LEVEL_NORMAL
 

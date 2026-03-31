@@ -168,10 +168,10 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0)
 
-//................ Psydonian Axe ............... //
+//................ Aonic Axe ............... //
 /obj/item/weapon/axe/psydon
-	name = "psydonian axe"
-	desc = "An axe forged of silver with a small psycross attached, Dendor and his foul beastmen be damned."
+	name = "aonic axe"
+	desc = "An axe forged of silver with a small holy symbol attached, Silvanus and his foul beastmen be damned."
 	icon = 'icons/roguetown/weapons/32/psydonite.dmi'
 	icon_state = "psyaxe"
 	max_blade_int = 240
@@ -246,7 +246,7 @@
 //................ Steel Axe ............... //
 /obj/item/weapon/axe/steel
 	name = "steel axe"
-	desc = "A bearded steel axe revered by dwarf, humen and elf alike. Performs much better than its iron counterpart."
+	desc = "A bearded steel axe revered by dwarf, human  and elf alike. Performs much better than its iron counterpart."
 	icon_state = "saxe"
 	max_blade_int = 300
 	max_integrity = INTEGRITY_STRONGEST
@@ -419,8 +419,8 @@
 
 
 /obj/item/weapon/greataxe/psy
-	name = "psydonic poleaxe"
-	desc = "A poleaxe, fitted with a reinforced shaft and a beaked axe head of alloyed silver. As the fragility of swords've become more apparent, the Psydonic Orders - following the disastrous Massacre of Blastenghyll - have shifted their focus towards arming their paladins with longer-lasting greatweapons."
+	name = "aonic poleaxe"
+	desc = "A poleaxe fitted with a reinforced shaft and a beaked axe head of alloyed silver. As the fragility of swords has become more apparent, the Aonic orders have shifted toward arming their paladins with longer-lasting greatweapons."
 	icon = 'icons/roguetown/weapons/64/axes.dmi'
 	icon_state = "silverpolearm"
 	possible_item_intents = list(AXE_CUT, AXE_CHOP, MACE_STRIKE) //When possible, add the longsword's 'alternate grip' mechanic to let people flip this around into a Mace-scaling weapon with swapped damage.

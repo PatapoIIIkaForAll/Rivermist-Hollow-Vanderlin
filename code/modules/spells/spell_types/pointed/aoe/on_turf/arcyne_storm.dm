@@ -1,5 +1,5 @@
 /datum/action/cooldown/spell/aoe/on_turf/arcyne_storm
-	name = "Arcyne storm"
+	name = "Arcane storm"
 	desc = "Conjure ripples of force into existence over a large area, injuring any who enter."
 	button_icon_state = "hierophant"
 

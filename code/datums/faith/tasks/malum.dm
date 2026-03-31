@@ -1,7 +1,7 @@
 
 /datum/devotion_task/malum_craft
 	name = "Forge Divine Works"
-	desc = "Craft items to honor Malum"
+	desc = "Craft items to honor Moradin"
 	devotion_reward = 3
 	progression_reward = 2
 	cooldown_time = 15 SECONDS
@@ -12,7 +12,7 @@
 	if(.)
 		user.visible_message(
 			span_notice("[user] completes their work with devoted precision."),
-			span_notice("My labor honors Malum.")
+			span_notice("My labor honors Moradin.")
 		)
 
 /datum/devotion_task/malum_smelt

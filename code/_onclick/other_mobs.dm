@@ -95,7 +95,7 @@
 
 	user.changeNext_move(CLICK_CD_MELEE)
 
-/mob/living/carbon/human/attack_hand_secondary(mob/user, list/modifiers)
+/*/mob/living/carbon/human/attack_hand_secondary(mob/user, list/modifiers)
 	. = ..()
 	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
 		return
@@ -110,7 +110,7 @@
 		if(!target.is_apprentice())
 			to_chat(user, span_notice("You offer apprenticeship to [target]."))
 			user.make_apprentice(target)
-			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN*/
 
 /atom/proc/onkick(mob/user)
 	return

@@ -41,6 +41,7 @@ SUBSYSTEM_DEF(mapping)
 	var/datum/space_level/transit
 	var/datum/space_level/empty_space
 	var/num_of_res_levels = 1
+	var/num_of_pocket_res_levels = 0
 	/// True when in the process of adding a new Z-level, global locking
 	var/adding_new_zlevel = FALSE
 
@@ -151,6 +152,7 @@ SUBSYSTEM_DEF(mapping)
 
 	z_list = SSmapping.z_list
 	multiz_levels = SSmapping.multiz_levels
+	num_of_pocket_res_levels = SSmapping.num_of_pocket_res_levels
 
 #define INIT_ANNOUNCE(X) to_chat(world, span_boldannounce("[X]")); log_world(X)
 /datum/controller/subsystem/mapping/proc/LoadGroup(list/errorList, name, path, files, list/traits, list/default_traits, silent = FALSE, delve = 0)
@@ -375,6 +377,30 @@ SUBSYSTEM_DEF(mapping)
 				return reserve
 	QDEL_NULL(reserve)
 
+/datum/controller/subsystem/mapping/proc/RequestPocketBlockReservation(width, height, type = /datum/turf_reservation, turf_type_override)
+	UNTIL(!clearing_reserved_turfs)
+	for(var/z_level in levels_by_trait(ZTRAIT_POCKET_RESERVED))
+		var/datum/turf_reservation/existing_reserve = new type
+		if(turf_type_override)
+			existing_reserve.turf_type = turf_type_override
+		if(existing_reserve.Reserve(width, height, z_level))
+			return existing_reserve
+		qdel(existing_reserve)
+
+	num_of_pocket_res_levels += 1
+	var/datum/space_level/new_reserved = add_new_zlevel("Pocket/Reserved [num_of_pocket_res_levels]", list(
+		ZTRAIT_RESERVED = TRUE,
+		ZTRAIT_POCKET_RESERVED = TRUE,
+	))
+	initialize_reserved_level(new_reserved.z_value)
+
+	var/datum/turf_reservation/new_reserve = new type
+	if(turf_type_override)
+		new_reserve.turf_type = turf_type_override
+	if(new_reserve.Reserve(width, height, new_reserved.z_value))
+		return new_reserve
+	QDEL_NULL(new_reserve)
+
 //This is not for wiping reserved levels, use wipe_reservations() for that.
 /datum/controller/subsystem/mapping/proc/initialize_reserved_level(z)
 	UNTIL(!clearing_reserved_turfs)				//regardless, lets add a check just in case.
@@ -391,16 +417,35 @@ SUBSYSTEM_DEF(mapping)
 		var/turf/T = t
 		T.turf_flags |= UNUSED_RESERVATION_TURF
 	unused_turfs["[z]"] = block
+	ensure_reserved_area_tracks_z(z, TRUE)
 	reservation_ready["[z]"] = TRUE
 	clearing_reserved_turfs = FALSE
 
+/datum/controller/subsystem/mapping/proc/ensure_reserved_area_tracks_z(z_level, populate_existing_turfs = FALSE)
+	var/area/reserved_area = GLOB.areas_by_type[world.area]
+	if(!reserved_area || !z_level)
+		return
+
+	LISTASSERTLEN(reserved_area.turfs_by_zlevel, z_level, list())
+	LISTASSERTLEN(reserved_area.turfs_to_uncontain_by_zlevel, z_level, list())
+	if(populate_existing_turfs && !length(reserved_area.turfs_by_zlevel[z_level]))
+		reserved_area.turfs_by_zlevel[z_level] = Z_TURFS(z_level)
+
 /datum/controller/subsystem/mapping/proc/reserve_turfs(list/turfs)
+	var/area/reserved_area = GLOB.areas_by_type[world.area]
 	for(var/turf/T as anything in turfs)
+		var/area/old_area = get_area(T)
 		T.empty(RESERVED_TURF_TYPE, RESERVED_TURF_TYPE, null, TRUE)
+		if(reserved_area)
+			ensure_reserved_area_tracks_z(T.z)
+			if(old_area && old_area != reserved_area)
+				T.change_area(old_area, reserved_area)
+			else
+				reserved_area.contents += T
+				reserved_area.turfs_by_zlevel[T.z] |= T
 		LAZYINITLIST(unused_turfs["[T.z]"])
 		unused_turfs["[T.z]"] |= T
 		T.turf_flags |= UNUSED_RESERVATION_TURF
-		GLOB.areas_by_type[world.area].contents += T
 		CHECK_TICK
 
 /datum/controller/subsystem/mapping/proc/reg_in_areas_in_z(list/areas)

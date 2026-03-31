@@ -68,6 +68,14 @@
 #define MOB_EPIC		(1<<7) //megafauna
 #define MOB_REPTILE		(1<<8)
 #define MOB_SPIRIT		(1<<9)
+#define MOB_FIEND		(1<<10)
+#define MOB_FEY			(1<<11)
+#define MOB_ELEMENTAL	(1<<12)
+#define MOB_CELESTIAL	(1<<13)
+#define MOB_ABERRATION	(1<<14)
+
+/// Bitfield of all biotypes affected by Protection from Evil and Good
+#define MOB_PROTECTION_EVIL_GOOD (MOB_UNDEAD|MOB_FIEND|MOB_FEY|MOB_ELEMENTAL|MOB_CELESTIAL|MOB_ABERRATION)
 
 //Organ defines for carbon mobs
 #define CHRONIC_ARTHRITIS 1

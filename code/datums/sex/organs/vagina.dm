@@ -16,6 +16,7 @@
 	fertility = TRUE
 	allows_conventional_impregnation = TRUE
 	allows_oviposition_pregnancy = TRUE
+	spawn_embryo_on_fertilization = TRUE
 	oviposition_storage_component_type = /datum/component/body_storage/vagina
 	oviposition_location_name = "womb"
 	spiller = TRUE

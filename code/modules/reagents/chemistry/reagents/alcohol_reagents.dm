@@ -176,7 +176,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 
 // BEERS - Imported for now, later the styles will be 'mockable', if and when I get to brewing.
 
-// Humen Production - Underwhelming, but cheap.
+// Human Production - Underwhelming, but cheap.
 
 /datum/reagent/consumable/ethanol/gin
 	name = "Gin"
@@ -261,7 +261,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 
 // WINE - Fancy.. And yes: all drinks are beer, technically. Cope. Seethe. I didnt code it like this.
 
-// Humen Production - Grape Based
+// Human Production - Grape Based
 
 /datum/reagent/consumable/ethanol/sourwine // Peasant grade shit.
 	name = "Sour Wine"
@@ -560,7 +560,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	icon_state = "drunk"
 
 /atom/movable/screen/alert/status_effect/buff/drunknoc
-	name = "Noc-Shine Strength"
+	name = "Mystra-Shine Strength"
 	desc = ""
 	icon_state = "drunk"
 
@@ -580,7 +580,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	M.remove_status_effect(/datum/status_effect/buff/murkwine)
 
 /datum/reagent/consumable/ethanol/nocshine // wait, no, NOCSHINE
-	name = "Noc's Shine"
+	name = "Mystra's Shine"
 	boozepwr = 70  // YEEEEEHAAAWWWWWW
 	taste_description = "what might be my throat melting and nose hair burning"
 	color = "#d8fbfd63"

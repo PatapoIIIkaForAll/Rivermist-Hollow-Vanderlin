@@ -66,6 +66,7 @@
 
 /datum/job/watch_captain/after_spawn(mob/living/carbon/human/spawned, client/player_client)
 	. = ..()
+	grant_outlaw_decree(spawned)
 	spawned.verbs |= /mob/proc/haltyell
 
 /mob/proc/haltyell()

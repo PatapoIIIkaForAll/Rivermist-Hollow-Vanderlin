@@ -9,7 +9,9 @@
 
 /datum/ai_behavior/find_partner/perform(seconds_per_tick, datum/ai_controller/controller, target_key, partner_types_key, child_types_key)
 	. = ..()
-	max_children = controller.blackboard[BB_MAX_CHILDREN] || max_children
+	var/custom_max_children = controller.blackboard[BB_MAX_CHILDREN]
+	if(!isnull(custom_max_children))
+		max_children = custom_max_children
 	var/mob/pawn_mob = controller.pawn
 	var/list/partner_types = controller.blackboard[partner_types_key]
 	var/list/child_types = controller.blackboard[child_types_key]
@@ -85,4 +87,3 @@
 	if(QDELETED(living_pawn)) // pawn can be null at this point
 		return
 	living_pawn.cmode = initial(living_pawn.cmode)
-

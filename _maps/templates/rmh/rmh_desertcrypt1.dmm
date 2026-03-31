@@ -1,0 +1,1317 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"am" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/turf/open/floor/tile/brick,
+/area/under/rmh_desert/ziqurat)
+"aA" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone_tile/three,
+/area/under/rmh_desert/ziqurat)
+"bd" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"bt" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"bW" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"cm" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"cG" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 5
+	},
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"cT" = (
+/obj/structure/table/church{
+	icon_state = "redchurchtable";
+	dir = 8
+	},
+/obj/machinery/light/fueled/candle/floorcandle/alt,
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"cX" = (
+/obj/structure/carpet/green,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"dp" = (
+/obj/structure/carpet/blue,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"dF" = (
+/turf/closed/wall/mineral/desert_sandstone,
+/area/under/rmh_desert/ziqurat)
+"dL" = (
+/obj/structure/pillar/sand1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone_tile/two,
+/area/under/rmh_desert/ziqurat)
+"eM" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 4
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"fm" = (
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"fF" = (
+/obj/structure/door/desertdoorperm,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"fN" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"ga" = (
+/obj/structure/carpet/red,
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"gd" = (
+/obj/item/cushion/desert2,
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"gi" = (
+/obj/structure/closet/crate/coffin/sarcophagus,
+/obj/effect/spawner/map_spawner/loot/common,
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"gp" = (
+/obj/structure/flora/grass/thorn_bush,
+/turf/open/floor/sand/sandstone,
+/area/under/rmh_desert/ziqurat)
+"gH" = (
+/obj/structure/carpet/red,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"gR" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#3b3b3b";
+	pixel_y = 0
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"gS" = (
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"hE" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/obj/effect/spawner/map_spawner/loot/cheap_jewelry_spawner,
+/obj/effect/spawner/map_spawner/loot/cheap_clutter_spawner,
+/obj/effect/spawner/map_spawner/loot/cheap_tableware_spawner,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"iS" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"iY" = (
+/obj/item/cushion/desert3,
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"jl" = (
+/obj/structure/pillar/sand1{
+	density = 0;
+	pixel_y = -1
+	},
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"jn" = (
+/obj/structure/fluff/pillow/black{
+	dir = 8
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"ku" = (
+/obj/structure/pillar/sand1,
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"kJ" = (
+/obj/machinery/light/fueled/firebowl/church{
+	status = 3;
+	icon_state = "churchfire0"
+	},
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"kX" = (
+/obj/item/cushion/desert1,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"lf" = (
+/obj/effect/decal/edge{
+	dir = 2;
+	color = "#3b3b3b";
+	pixel_y = 0
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"lg" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone_tile/two,
+/area/under/rmh_desert/ziqurat)
+"lh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"lY" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"mA" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/brick,
+/area/under/rmh_desert/ziqurat)
+"no" = (
+/obj/structure/carpet/purple,
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/effect/spawner/map_spawner/loot/food,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"nT" = (
+/obj/structure/flora/grass/bush,
+/turf/open/floor/sand/sandstone,
+/area/under/rmh_desert/ziqurat)
+"oK" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"qf" = (
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"qC" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"rq" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"rr" = (
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#3b3b3b";
+	pixel_y = 0
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"rD" = (
+/obj/structure/carpet/purple,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"rX" = (
+/obj/structure/pillar/sand1,
+/turf/open/floor/sandstone_tile/two,
+/area/under/rmh_desert/ziqurat)
+"sG" = (
+/obj/structure/stairs/desert{
+	dir = 4
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"sU" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"tb" = (
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"tg" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 6
+	},
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"th" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 1
+	},
+/obj/machinery/light/fueled/firebowl/church{
+	status = 3;
+	icon_state = "churchfire0";
+	pixel_y = 0;
+	pixel_x = -4
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"tp" = (
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"ts" = (
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#3b3b3b";
+	pixel_y = 0
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"tw" = (
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"tB" = (
+/turf/closed/wall/window/stained/yellow,
+/area/under/rmh_desert/ziqurat)
+"tQ" = (
+/obj/effect/decal/carpet/kover_darkred{
+	pixel_x = 15;
+	pixel_y = 15
+	},
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"uf" = (
+/obj/structure/carpet/purple,
+/obj/item/cushion/desert1,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"wm" = (
+/obj/item/statue/gold/figurine{
+	pixel_y = 8
+	},
+/obj/structure/table/church{
+	icon_state = "redchurchtable_mid"
+	},
+/obj/structure/lever{
+	redstone_id = "pyramidenter"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"wu" = (
+/obj/structure/window/harem1,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"wG" = (
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"xa" = (
+/turf/open/floor/sandstone_tile/six,
+/area/under/rmh_desert/ziqurat)
+"xI" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"xJ" = (
+/obj/structure/fluff/pillow/magenta{
+	dir = 1
+	},
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"ya" = (
+/obj/structure/carpet,
+/obj/item/cushion/desert1,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"yj" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/turf/open/floor/tile/brick,
+/area/under/rmh_desert/ziqurat)
+"yU" = (
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"zr" = (
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#3b3b3b";
+	pixel_y = 0
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"zM" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"zP" = (
+/obj/structure/fluff/pillow,
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"Aa" = (
+/obj/item/cushion/desert1,
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"AL" = (
+/obj/structure/well/fountain{
+	pixel_x = -16;
+	pixel_y = 0;
+	plane = -7;
+	layer = 5
+	},
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"BG" = (
+/obj/structure/carpet,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"BI" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"BN" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 4
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"BZ" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Cn" = (
+/turf/open/floor/sandstone_tile/three,
+/area/under/rmh_desert/ziqurat)
+"CE" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"DN" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/carbon/human/species/skeleton/npc/hard{
+	silent = 1
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"DQ" = (
+/obj/structure/table/church{
+	icon_state = "redchurchtable";
+	dir = 1
+	},
+/obj/machinery/light/fueled/candle/floorcandle{
+	pixel_y = 1
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"Eu" = (
+/obj/structure/closet/crate/coffin/sarcophagus,
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/obj/effect/spawner/map_spawner/loot/potion_stats,
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"Fd" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/edge_corner{
+	dir = 2;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"Fo" = (
+/obj/structure/door/desertdoorperm,
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"Fw" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 4
+	},
+/obj/machinery/light/fueled/firebowl/church{
+	status = 3;
+	icon_state = "churchfire0";
+	pixel_y = 10;
+	pixel_x = -4
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Gs" = (
+/obj/item/cushion/desert3,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"GD" = (
+/obj/structure/pillar/sand1,
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"HA" = (
+/obj/effect/decal/edge{
+	color = "#7a684b"
+	},
+/turf/open/water/bath,
+/area/under/rmh_desert/ziqurat)
+"HH" = (
+/turf/open/water/bath,
+/area/under/rmh_desert/ziqurat)
+"IB" = (
+/obj/structure/carpet/cyan,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"IG" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 1
+	},
+/turf/open/water/bath,
+/area/under/rmh_desert/ziqurat)
+"IS" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/turf/open/floor/tile/brick,
+/area/under/rmh_desert/ziqurat)
+"Jq" = (
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"KW" = (
+/obj/machinery/light/fueled/firebowl/church{
+	status = 3;
+	icon_state = "churchfire0"
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Lc" = (
+/obj/machinery/light/fueled/firebowl/church{
+	status = 3;
+	icon_state = "churchfire0"
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"LJ" = (
+/turf/open/floor/tile/brick,
+/area/under/rmh_desert/ziqurat)
+"Mf" = (
+/obj/structure/carpet/green,
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/effect/spawner/map_spawner/loot/food,
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"NN" = (
+/turf/open/floor/sandstone_tile/two,
+/area/under/rmh_desert/ziqurat)
+"Ob" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/carbon/human/species/skeleton/npc/hardspread,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Om" = (
+/obj/item/cushion/desert2,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"On" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"OL" = (
+/obj/structure/fluff/pillow/red{
+	dir = 8
+	},
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"Pv" = (
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"PI" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"PM" = (
+/obj/effect/decal/carpet/square/black{
+	dir = 4;
+	pixel_x = 26;
+	pixel_y = -7
+	},
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"PU" = (
+/obj/structure/closet/crate/coffin/sarcophagus,
+/obj/effect/spawner/map_spawner/loot/weapon,
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"Qb" = (
+/obj/structure/carpet/cyan,
+/obj/structure/fluff/pillow/red,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Qd" = (
+/obj/structure/carpet/red,
+/obj/structure/fluff/pillow/purple{
+	dir = 1
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Qq" = (
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"Rh" = (
+/obj/structure/flora/tree/dead_bush,
+/turf/open/floor/sand/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Se" = (
+/obj/structure/carpet/blue,
+/obj/item/cushion/desert2,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"SD" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone_tile/six,
+/area/under/rmh_desert/ziqurat)
+"SE" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 8
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Ux" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/carbon/human/species/skeleton/npc/hard{
+	silent = 1
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"UF" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/misc,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"UH" = (
+/obj/structure/pillar/sand1,
+/turf/open/floor/sandstone_tile/six,
+/area/under/rmh_desert/ziqurat)
+"UT" = (
+/obj/structure/flora/grass/thorn_bush,
+/turf/open/floor/sand,
+/area/under/rmh_desert/ziqurat)
+"UY" = (
+/obj/structure/well/fountain{
+	pixel_x = -16;
+	pixel_y = 0;
+	plane = -7;
+	layer = 5
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"Vi" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/fueled/firebowl/church{
+	status = 3;
+	icon_state = "churchfire0"
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Vt" = (
+/obj/effect/decal/carpet{
+	dir = 4
+	},
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"Vx" = (
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#3b3b3b";
+	pixel_y = 0
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"Xv" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"XO" = (
+/obj/structure/curtain/magenta,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Yb" = (
+/obj/structure/closet/crate/coffin/sarcophagus,
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/obj/effect/spawner/map_spawner/loot/potion_vitals,
+/turf/open/floor/sandstone_tile/five,
+/area/under/rmh_desert/ziqurat)
+"Yh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"Yx" = (
+/turf/closed/wall/mineral/desert_soapstone,
+/area/under/rmh_desert/ziqurat)
+"Yz" = (
+/obj/effect/decal/edge_corner{
+	dir = 2;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem1,
+/area/under/rmh_desert/ziqurat)
+"YK" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/diamond,
+/area/under/rmh_desert/ziqurat)
+"Zn" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"ZG" = (
+/obj/structure/closet/crate/coffin/sarcophagus,
+/obj/effect/spawner/map_spawner/loot/magic,
+/turf/open/floor/sandstone_tile/two,
+/area/under/rmh_desert/ziqurat)
+
+(1,1,1) = {"
+KW
+wG
+fN
+wG
+wG
+dF
+ku
+yU
+yU
+UH
+LJ
+LJ
+LJ
+ku
+yU
+yU
+UH
+dF
+wG
+wG
+UF
+wG
+KW
+"}
+(2,1,1) = {"
+wG
+YK
+YK
+Jq
+lY
+dF
+qf
+qf
+qf
+xa
+LJ
+LJ
+LJ
+fm
+qf
+qf
+qf
+dF
+bW
+Jq
+YK
+YK
+wG
+"}
+(3,1,1) = {"
+wG
+YK
+AL
+Jq
+wG
+fF
+qf
+qf
+PI
+SD
+mA
+LJ
+LJ
+fm
+qf
+qf
+qf
+fF
+wG
+YK
+UY
+YK
+wG
+"}
+(4,1,1) = {"
+wG
+YK
+Jq
+YK
+hE
+dF
+qf
+PI
+Vi
+UH
+mA
+LJ
+LJ
+GD
+Lc
+PI
+PI
+dF
+bW
+YK
+YK
+YK
+wG
+"}
+(5,1,1) = {"
+wG
+fN
+fN
+fN
+wG
+tB
+qf
+Ob
+PI
+xa
+LJ
+LJ
+LJ
+fm
+PI
+PI
+qf
+tB
+wG
+fN
+fN
+wG
+wG
+"}
+(6,1,1) = {"
+dF
+dF
+fF
+dF
+tB
+Yx
+qf
+qf
+PI
+SD
+IS
+LJ
+LJ
+fm
+PI
+PI
+PI
+Yx
+tB
+dF
+fF
+dF
+dF
+"}
+(7,1,1) = {"
+rX
+qf
+PI
+qf
+qf
+qf
+qf
+qf
+qf
+UH
+mA
+mA
+LJ
+GD
+qf
+PI
+iS
+PI
+qf
+qf
+qf
+qf
+Rh
+"}
+(8,1,1) = {"
+NN
+PI
+oK
+Qq
+oK
+oK
+Qq
+Qq
+qf
+Cn
+Cn
+aA
+fm
+fm
+qf
+PI
+qf
+PI
+qf
+Lc
+qf
+qf
+UT
+"}
+(9,1,1) = {"
+dL
+qf
+kJ
+HH
+HH
+HH
+HH
+kJ
+yU
+Cn
+sU
+rq
+Yz
+yU
+yU
+Lc
+qf
+Yx
+tB
+dF
+tB
+dF
+tB
+"}
+(10,1,1) = {"
+lg
+yU
+yU
+yU
+yU
+yU
+yU
+yU
+yU
+tb
+Vx
+tw
+ts
+Yz
+yU
+ku
+dF
+dF
+Eu
+NN
+ZG
+yU
+gi
+"}
+(11,1,1) = {"
+dL
+LJ
+mA
+LJ
+LJ
+mA
+LJ
+fm
+gS
+Vx
+tw
+cT
+tw
+ts
+Fd
+fm
+dF
+jl
+yU
+NN
+NN
+Zn
+fm
+"}
+(12,1,1) = {"
+lg
+LJ
+LJ
+IS
+mA
+mA
+LJ
+Cn
+bd
+tw
+tw
+wm
+tw
+Ux
+lf
+fm
+Fo
+fm
+yU
+xI
+BI
+lg
+yU
+"}
+(13,1,1) = {"
+rX
+LJ
+IS
+mA
+LJ
+LJ
+LJ
+fm
+Yh
+zr
+tw
+DQ
+lh
+gR
+bt
+xa
+dF
+jl
+SD
+SD
+yU
+yU
+yU
+"}
+(14,1,1) = {"
+NN
+yU
+yU
+yU
+yU
+yU
+yU
+yU
+yU
+tp
+zr
+tw
+rr
+Pv
+xa
+UH
+dF
+dF
+Yb
+fm
+gi
+fm
+PU
+"}
+(15,1,1) = {"
+rX
+qf
+kJ
+HH
+HH
+HH
+HH
+kJ
+yU
+yU
+tp
+zM
+Pv
+xa
+xa
+Lc
+qf
+Yx
+tB
+dF
+tB
+dF
+tB
+"}
+(16,1,1) = {"
+NN
+qf
+Qq
+oK
+Qq
+oK
+Qq
+Qq
+qf
+ku
+xa
+xa
+xa
+ku
+qf
+qC
+qf
+qf
+qf
+Lc
+qf
+qf
+nT
+"}
+(17,1,1) = {"
+rX
+qf
+qf
+PI
+PI
+PI
+PI
+PI
+qf
+Yx
+dF
+fF
+dF
+Yx
+qf
+qf
+qf
+qf
+qf
+qf
+qf
+qC
+gp
+"}
+(18,1,1) = {"
+dF
+dF
+fF
+dF
+tB
+Yx
+dF
+tB
+dF
+dF
+LJ
+mA
+LJ
+dF
+dF
+tB
+dF
+Yx
+tB
+dF
+fF
+dF
+dF
+"}
+(19,1,1) = {"
+BG
+BG
+qf
+On
+Om
+wu
+yj
+mA
+LJ
+LJ
+mA
+mA
+mA
+LJ
+LJ
+LJ
+am
+wu
+Se
+dp
+qf
+Gs
+qC
+"}
+(20,1,1) = {"
+BG
+ya
+Mf
+cX
+cX
+wu
+yj
+DN
+cm
+tg
+SE
+sG
+SE
+cG
+cm
+BZ
+am
+wu
+qf
+Qd
+gH
+gH
+jn
+"}
+(21,1,1) = {"
+qf
+CE
+cX
+cX
+cX
+XO
+LJ
+Xv
+BN
+Fw
+OL
+Jq
+iY
+th
+BN
+eM
+LJ
+XO
+qf
+gH
+gH
+ga
+qf
+"}
+(22,1,1) = {"
+kX
+gH
+gH
+Gs
+qf
+wu
+yj
+IG
+HA
+Jq
+tQ
+Vt
+PM
+xJ
+IG
+HA
+am
+wu
+uf
+rD
+qf
+Qb
+IB
+"}
+(23,1,1) = {"
+qf
+gH
+gH
+qf
+CE
+wu
+yj
+IG
+HA
+Aa
+Jq
+zP
+Jq
+gd
+IG
+HA
+am
+wu
+no
+rD
+Gs
+IB
+IB
+"}

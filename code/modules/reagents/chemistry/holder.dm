@@ -228,7 +228,7 @@
 					R.react_single(T, target, method, part, show_message)
 				else
 					R.react_single(T, target_atom, method, part, show_message)
-				T.on_transfer(target_atom, method, transfer_amount * multiplier)
+				T.on_transfer(target_atom, method, transfer_amount * multiplier, transfered_by)
 			remove_reagent(T.type, transfer_amount)
 			transfer_log[T.type] = transfer_amount
 	else
@@ -251,7 +251,7 @@
 					R.react_single(T, target, method, transfer_amount, show_message)
 				else
 					R.react_single(T, target_atom, method, transfer_amount, show_message)
-				T.on_transfer(target_atom, method, transfer_amount * multiplier)
+				T.on_transfer(target_atom, method, transfer_amount * multiplier, transfered_by)
 			remove_reagent(T.type, transfer_amount)
 			transfer_log[T.type] = transfer_amount
 

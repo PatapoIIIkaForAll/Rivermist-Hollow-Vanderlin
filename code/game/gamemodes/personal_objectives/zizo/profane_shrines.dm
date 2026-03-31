@@ -1,9 +1,9 @@
 /datum/objective/personal/build_zizo_shrine
 	name = "Construct Profane Shrines"
-	category = "Lloth's Chosen"
+	category = "Lolth's Chosen"
 	triumph_count = 2
 	immediate_effects = list("Gained an ability to construct profane shrines")
-	rewards = list("2 Triumphs", "Lloth grows stronger", "Lloth blesses you (+2 Fortune)")
+	rewards = list("2 Triumphs", "Lolth grows stronger", "Lolth blesses you (+2 Fortune)")
 	var/target_type = /obj/structure/fluff/psycross/zizocross
 	var/target_count = 2
 	var/current_count = 0
@@ -34,7 +34,7 @@
 
 /datum/objective/personal/build_zizo_shrine/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have built all the required profane shrines, completing Lloth's objective!"))
+	to_chat(owner.current, span_greentext("You have built all the required profane shrines, completing Lolth's objective!"))
 	adjust_storyteller_influence(ZIZO, 20)
 	UnregisterSignal(owner.current, COMSIG_ITEM_CRAFTED)
 
@@ -43,5 +43,5 @@
 	owner.current.adjust_stat_modifier(STATMOD_ZIZO_BLESSING, STATKEY_LCK, 2)
 
 /datum/objective/personal/build_zizo_shrine/update_explanation_text()
-	explanation_text = "Construct [target_count] profane shrine[target_count > 1 ? "s" : ""] to spread Lloth's corruption!"
+	explanation_text = "Construct [target_count] profane shrine[target_count > 1 ? "s" : ""] to spread Lolth's corruption!"
 

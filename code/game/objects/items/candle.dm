@@ -132,7 +132,7 @@
 
 /obj/item/candle/eora
 	icon = 'icons/roguetown/items/lighting.dmi'
-	name = "eora's candle"
+	name = "sune's candle"
 	desc = ""
 	color = "#f858b5ff"
 	light_color = "#ff13d8ff"

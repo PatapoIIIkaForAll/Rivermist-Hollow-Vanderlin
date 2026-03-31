@@ -1,56 +1,55 @@
-/datum/culture/universal/vanderlin
-	name = "Vanderlin"
-	description = "Both a city and a state; \
-	a cultural melting pot inheriting Enigma's title of Trade Capital of Psydonia after the fall of Heartfelt. \
-	Vanderlinians love their pastas and bicker endlessly."
+/datum/culture/universal/duskmar
+	name = "Duskmar"
+	description = "A misty duchy that shelters Rivermist and the settlements around it. \
+	Duskmar folk bicker endlessly, trade eagerly, and take quiet pride in enduring the mist."
 
-/datum/culture/universal/rockhill
-	name = "Rockhill"
+/datum/culture/universal/marches
+	name = "Mere Marches"
 	description = "Once a shithole, now an even worse shithole. \
-	Located conveniently in the fetid bogs of Enigma, Rockhill has since converted into a militaristic bastion against the Brass Cataclysm. \
+	Located in the fetid marches beyond Waterdeep, this frontier has hardened into a militarized bastion against ruin and rot. \
 	Their diet is interestingly comprised largely of whatever pies they can make."
 
-/datum/culture/universal/heartfelt
-	name = "Heartfelt"
-	description = "Those hailing from Heartfelt remember the trauma of their city's fall vividly. \
+/datum/culture/universal/lantan
+	name = "Lantan"
+	description = "Those hailing from Lantan remember the trauma of catastrophe vividly. \
 	The masterful doctors and steam artificers clutch this wound close to their hearts, \
 	forced to abandon their home and flee the expanding scourge of rogue automaton constructs."
 
-/datum/culture/universal/kingsfield
-	name = "Kingsfield"
-	description = "Kingsfieldian culture influences every nation connected by pneumatic tubes and rail. \
-	They are known to love artistry, bureaucracy, and their syrup."
+/datum/culture/universal/cormyr
+	name = "Cormyr"
+	description = "Cormyrean culture influences every realm touched by courtly law and royal ambition. \
+	They are known to love artistry, bureaucracy, and the theater of power."
 
-/datum/culture/universal/valoria
-	name = "Valoria"
-	description = "Despite potentially being located in the most unfortunate area of Faience, \
-	Valorians are known for their ingenuity and craft. \
-	Valorians will not hesitate to talk your ear off about whatever distracts them from impending doom."
+/datum/culture/universal/heartlands
+	name = "Western Heartlands"
+	description = "Despite living in some of Faerun's most unfortunate country, \
+	Heartlanders are known for their ingenuity and craft. \
+	They will not hesitate to talk your ear off about whatever they can think of."
 
-/datum/culture/universal/zaladin
-	name = "Zaladin"
+/datum/culture/universal/calimshan
+	name = "Calimshan"
 	description = "Both feared and respected for the sheer might of their armies, \
-	whether slaves or conscripts. Zaladinian heros may walk willingly into shackles for a chance at glory in their gladiator sports."
+	whether slaves or conscripts. Calishite heroes may walk willingly into shackles for a chance at glory in their gladiator sports."
 
-/datum/culture/universal/wintermare
-	name = "Wintermare"
-	description = "Proud, typically wealthy snow-dwellers. Known for their fashion and arcyne academia. \
-	Never ask them their opinions of Grenzelhoft."
+/datum/culture/universal/silvermarch
+	name = "Silver Marches"
+	description = "Proud, typically wealthy northerners. Known for their fashion and arcane academia. \
+	Never ask them their opinions of Luskan."
 
-/datum/culture/universal/grenzelhoft
-	name = "Grenzelholf"
+/datum/culture/universal/luskan
+	name = "Luskan"
 	description = "Known for their mighty weiners, meals, and talented jesters. \
-	Potentially some of the most grim, bigoted people one could ever meet. Never ask them their opinions of Wintermare."
+	Potentially some of the most grim, bigoted people one could ever meet."
 
-/datum/culture/universal/amber_hollow
-	name = "Amber Hollow"
+/datum/culture/universal/highforest
+	name = "High Forest"
 	description = "Almost all whom trace hollow-kin ancestry have family history reaching back to the hollow, \
 	a triumph over their dark elven once-overlords. Mighty redwoods make Hollow Dwellers proficient vertical navigators"
 
-/datum/culture/universal/crimsonlands
-	name = "Crimsonlands"
+/datum/culture/universal/hordelads
+	name = "Hordelands"
 	description = "Survivors, plain and simple. \
-	The harsh steppes of their nomadic peoples' homes are roaming with cannabalistic orc bands, \
+	The harsh steppes of their nomadic peoples' homes are roaming with orc and goblin bands, \
 	never granting the fortune of true relaxation."
 
 /datum/culture/universal/ambiguous

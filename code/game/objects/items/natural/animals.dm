@@ -3,7 +3,7 @@
 /obj/item/natural/hide
 	name = "hide"
 	icon_state = "hide"
-	desc = "Hide from one of Dendor's creachers."
+	desc = "Hide from one of Silvanus's creatures."
 	dropshrink = 0.90
 	force = 0
 	throwforce = 0
@@ -34,7 +34,7 @@
 /obj/item/natural/cured/essence
 	name = "essence of wilderness"
 	icon_state = "wessence"
-	desc = "A mystical essence imbued with the power of Dendor. Merely holding it transports one's mind to ancient times."
+	desc = "A mystical essence imbued with the power of Silvanus. Merely holding it transports one's mind to ancient times."
 	resistance_flags = FLAMMABLE
 	w_class = WEIGHT_CLASS_SMALL
 	sellprice = 20
@@ -42,7 +42,7 @@
 /obj/item/natural/fur // a piece of skin with animal hair on it. Could be called a fur but its untanned and also encompasses rat skins and goat skins so pelt is more suitable at least to my ears.
 	name = "fur"
 	icon_state = "wool1"
-	desc = "Pelt from one of Dendor's creachers."
+	desc = "Pelt from one of Silvanus's creatures."
 	dropshrink = 0.90
 	force = 0
 	throwforce = 0
@@ -72,7 +72,7 @@
 	icon_state = "wool2"
 
 /obj/item/natural/fur/direbear
-	desc = "fur from one of Dendor's mightiest creachers."
+	desc = "Fur from one of Silvanus's mightiest creatures."
 	icon_state = "pelt_direbear"
 	color = "#33302b"
 	sellprice = 28

@@ -1,8 +1,8 @@
 /datum/objective/personal/nobility
 	name = "Become Noble"
-	category = "Astrata's Chosen"
+	category = "Lathander's Chosen"
 	triumph_count = 3
-	rewards = list("3 Triumphs", "Astrata grows stronger", "Astrata blesses you (+1 Fortune)")
+	rewards = list("3 Triumphs", "Lathander grows stronger", "Lathander blesses you (+1 Fortune)")
 
 /datum/objective/personal/nobility/on_creation()
 	. = ..()
@@ -27,7 +27,7 @@
 
 /datum/objective/personal/nobility/complete_objective()
 	. = ..()
-	to_chat(owner.current, span_greentext("You have earned nobility and completed Astrata's objective!"))
+	to_chat(owner.current, span_greentext("You have earned nobility and completed Lathander's objective!"))
 	adjust_storyteller_influence(ASTRATA, 20)
 	UnregisterSignal(owner.current, SIGNAL_ADDTRAIT(TRAIT_NOBLE))
 
@@ -36,4 +36,4 @@
 	owner.current.adjust_stat_modifier(STATMOD_ASTRATA_BLESSING, STATKEY_LCK, 1)
 
 /datum/objective/personal/nobility/update_explanation_text()
-	explanation_text = "Become part of the nobility by any means to gain Astrata's approval!"
+	explanation_text = "Become part of the nobility by any means to gain Lathander's approval!"

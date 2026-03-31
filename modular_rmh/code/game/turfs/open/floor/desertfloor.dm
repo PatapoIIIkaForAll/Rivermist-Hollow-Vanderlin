@@ -114,6 +114,7 @@
 	icon_state = "sand-brick[rand(1,4)]"
 
 /turf/open/floor/sand/dunes/citybrick
+	name = "sand bricks"
 	icon_state = "city-brick1"
 	icon = 'modular_rmh/icons/turf/desertfloor.dmi'
 	footstep = FOOTSTEP_STONE
@@ -269,6 +270,7 @@
 ///.
 
 /turf/open/floor/sand/dunes/deserttile
+	name = "tiles"
 	icon_state = "tiledrab"
 	icon = 'modular_rmh/icons/turf/desertfloor.dmi'
 	footstep = FOOTSTEP_STONE
@@ -282,4 +284,3 @@
 	max_integrity = 1000
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
-	abstract_type = /turf/open/floor/sand/dunes/deserttile

@@ -188,10 +188,18 @@
     check_same_tile = FALSE
     check_distance = FALSE
 
-/datum/sex_action/portal_base/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
-
+/datum/sex_action/portal_base/proc/get_portal_wearer(mob/living/carbon/human/user)
 	var/obj/item/portallight/L = user.get_active_held_item()
 	if(!istype(L, /obj/item/portallight))
+		return null
+	return L.get_wearer()
+
+/datum/sex_action/portal_base/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	var/obj/item/portallight/L = user.get_active_held_item()
+	if(!istype(L, /obj/item/portallight))
+		return FALSE
+	var/mob/living/carbon/human/W = get_portal_wearer(user)
+	if(!W || target != W)
 		return FALSE
 	if(hole_id != L.org_target && !isnull(hole_id))
 		return FALSE
@@ -199,16 +207,19 @@
 
 /datum/sex_action/portal_base/can_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()
+	if(!.)
+		return FALSE
 	var/obj/item/portallight/L = user.get_active_held_item()
 	if(!istype(L, /obj/item/portallight))
 		return FALSE
-	var/mob/living/carbon/human/W = L.get_wearer()
+	var/mob/living/carbon/human/W = get_portal_wearer(user)
 	if(!W)
 		return FALSE
-	if(user == target && user != W)
+	if(target != W)
 		return FALSE
 	light = L
-	target = W
+	src.target = W
+	return TRUE
 
 /**
  * SEX ACTION: PORTAL HAND
@@ -231,9 +242,9 @@
 	to_chat(target, span_love("You feel a distant touch through the portal!"))
 
 /datum/sex_action/portal_base/portal_hand/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
-    var/datum/sex_session/sex_session = get_sex_session(user, target)
+    var/datum/sex_session/sex_session = get_or_create_sex_session(user, target)
     if(!sex_session)
-        sex_session = new(user, target)
+        return
     do_thrust_animate(user, user)
     if(can_show_action_message())
         to_chat(user, sex_session.spanify_force("You [sex_session.get_generic_force_adjective()] finger your target through the portal."))
@@ -268,9 +279,9 @@
 	to_chat(target, span_love("Warm sensations bloom between your legs!"))
 
 /datum/sex_action/portal_base/portal_oral/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
-    var/datum/sex_session/sex_session = get_sex_session(user, target)
+    var/datum/sex_session/sex_session = get_or_create_sex_session(user, target)
     if(!sex_session)
-        sex_session = new(user, target)
+        return
     user.make_sucking_noise()
     if(can_show_action_message())
         to_chat(user, sex_session.spanify_force("You [sex_session.get_generic_force_adjective()] lick your target through the portal."))
@@ -316,9 +327,9 @@
 	to_chat(target, span_love("You feel feel someting penetrating your pussy through the portal!"))
 
 /datum/sex_action/portal_base/portal_penis_vaginal/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
-    var/datum/sex_session/sex_session = get_sex_session(user, target)
+    var/datum/sex_session/sex_session = get_or_create_sex_session(user, target)
     if(!sex_session)
-        sex_session = new(user, target)
+        return
     do_thrust_animate(user, user)
     if(can_show_action_message(user, target))
         to_chat(user, sex_session.spanify_force("You [sex_session.get_generic_force_adjective()] fuck your target's pussy through the portal."))
@@ -374,9 +385,9 @@
 	to_chat(target, span_love("You feel someting penetrating your ass through the portal!"))
 
 /datum/sex_action/portal_base/portal_penis_anal/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
-    var/datum/sex_session/sex_session = get_sex_session(user, target)
+    var/datum/sex_session/sex_session = get_or_create_sex_session(user, target)
     if(!sex_session)
-        sex_session = new(user, target)
+        return
     do_thrust_animate(user, user)
     if(can_show_action_message(user, target))
         to_chat(user, sex_session.spanify_force("You [sex_session.get_generic_force_adjective()] fuck your target's ass through the portal."))
@@ -545,15 +556,18 @@
 	continous = TRUE
 
 /datum/sex_action/portal_base/portal_remove_vaginal/shows_on_menu(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	. = ..()
+	if(!.)
+		return FALSE
 	if(!user.get_inactive_held_item())
 		return FALSE
 	if(user == target)
 		target_organ = user.getorganslot(hole_id)
 	else
 		target_organ = target.getorganslot(hole_id)
-	var/list/stored_items = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_GET_LISTS)
-	var/list/stored_items_layer = stored_items[STORAGE_LAYER_INNER]
-	if(!stored_items_layer.len)
+	if(!target_organ)
+		return FALSE
+	if(!length(target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL)))
 		return FALSE
 	return TRUE
 
@@ -588,8 +602,10 @@
 		else
 			target_organ = target.getorganslot(hole_id)
 
-	var/obj/item/removed_item
-	removed_item = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_REMOVE_RAND_ITEM, STORAGE_LAYER_INNER)
+	var/list/interactable_items = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL)
+	var/obj/item/removed_item = length(interactable_items) ? pick(interactable_items) : null
+	if(removed_item && !SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_REMOVE, removed_item, STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL))
+		removed_item = null
 	if(!removed_item)
 		to_chat(user, sex_session.spanify_force("I couldn't find anything inside..."))
 		sex_session.stop_current_action(src)

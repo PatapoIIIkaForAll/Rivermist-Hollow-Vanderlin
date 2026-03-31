@@ -103,7 +103,7 @@
 /obj/item/clothing/armor/medium/scale/inqcoat/armored
 	slot_flags = ITEM_SLOT_ARMOR
 	name = "armored inquisitorial duster"
-	desc = "Metal plates reinforce this heavy coat, worn over the top of the finest Psydonian plate."
+	desc = "Metal plates reinforce this heavy coat, worn over the top of the finest Aonic plate."
 	smeltresult = /obj/item/ingot/steel
 	icon_state = "inqcoata"
 	item_state = "inqcoata"

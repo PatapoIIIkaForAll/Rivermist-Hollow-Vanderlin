@@ -52,6 +52,7 @@
 	backpack_contents = list(
 		/obj/item/paper/scroll = 1,
 		/obj/item/natural/feather = 1,
+		/obj/item/key/loudmouth = 1,
 		)
 
 //ANNOUNCEMENT SYSTEM

@@ -13,7 +13,7 @@
 	climb_stun = 0 //climbing onto crates isn't hard, guys
 	open_sound = 'sound/blank.ogg'
 	close_sound = 'sound/blank.ogg'
-	open_sound_volume = 353
+	open_sound_volume = 35
 	close_sound_volume = 50
 	drag_slowdown = 0
 

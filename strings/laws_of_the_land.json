@@ -42,11 +42,11 @@
 			"weight": 2
 		},
 		"human_supremacy": {
-			"name": "Humen Supremacy",
+			"name": "Human Supremacy",
 			"laws": [
 				"Thou shalt not be inhumen. All that is inhumen is lesser.",
-				"Thou shalt not associate with lesser beings, humens that do so forsake their humenity.",
-				"Lesser beings must be seperated from the humen."
+				"Thou shalt not associate with lesser beings, humens that do so forsake their humanity.",
+				"Lesser beings must be seperated from the human."
 			],
 			"weight": 1
 		}

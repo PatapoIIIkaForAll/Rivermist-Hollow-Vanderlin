@@ -56,6 +56,7 @@ GLOBAL_LIST_EMPTY(burgmeister_titles)
 	. = ..()
 	SSticker.rulermob = spawned
 	var/mob/living/carbon/human/H = spawned
+	grant_outlaw_decree(H)
 	addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, lord_color_choice)), 7 SECONDS)
 	ruler_title = "Burgmeister"
 	to_chat(world, "<b>[span_notice(span_big("[H.real_name] is [ruler_title] of [SSmapping.config.map_name]."))]</b>")

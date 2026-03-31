@@ -110,12 +110,12 @@
 			else
 				center = get_turf(cast_on)
 			if(center)
-				owner.visible_message(span_danger("Arcyne tendrils erupt from the ground around [owner]!"))
+				owner.visible_message(span_danger("Arcane tendrils erupt from the ground around [owner]!"))
 				E.cast(center)
 		if(6)
 			var/datum/action/cooldown/spell/undirected/touch/entangler/H = new
 			H.owner = owner
-			owner.visible_message(span_nicegreen("Living vines spiral around [owner]'s hand as Dendor answers the chaos!"))
+			owner.visible_message(span_nicegreen("Living vines spiral around [owner]'s hand as Silvanus answers the chaos!"))
 			H.cast(owner)
 		if(7)
 			/*var/datum/action/cooldown/spell/undirected/shapeshift/frog/F = new

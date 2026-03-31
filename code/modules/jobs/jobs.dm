@@ -80,6 +80,7 @@ GLOBAL_PROTECT(tavern_positions)
 
 GLOBAL_LIST_INIT(town_positions, list(
 	/datum/job/towner::title,
+	/datum/job/seelie::title,
 	/datum/job/artisan::title,
 	/datum/job/artisan_apprentice::title,
 ))
@@ -92,6 +93,7 @@ GLOBAL_LIST_INIT(outsiders_positions, list(
 	/datum/job/forest_ranger::title,
 	/datum/job/grove_druid::title,
 	/datum/job/swamp_witch::title,
+	/datum/job/ogre::title,
 ))
 GLOBAL_PROTECT(outsiders_positions)
 

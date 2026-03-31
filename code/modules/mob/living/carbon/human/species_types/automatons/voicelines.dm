@@ -1,7 +1,7 @@
 /mob/living/carbon/human/proc/voice_abyssorpraise()
-	set name = "Abyssor Praise"
+	set name = "Umberlee Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Abyssor Praise")
+	play_voice_line("Umberlee Praise")
 
 /mob/living/carbon/human/proc/voice_againsttime()
 	set name = "Against Time"
@@ -9,9 +9,9 @@
 	play_voice_line("Against Time")
 
 /mob/living/carbon/human/proc/voice_astratapraise()
-	set name = "Astrata Praise"
+	set name = "Lathander Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Astrata Praise")
+	play_voice_line("Lathander Praise")
 
 /mob/living/carbon/human/proc/voice_atonce()
 	set name = "At Once"
@@ -69,9 +69,9 @@
 	play_voice_line("Death Comes")
 
 /mob/living/carbon/human/proc/voice_dendorpraise()
-	set name = "Dendor Praise"
+	set name = "Silvanus Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Dendor Praise")
+	play_voice_line("Silvanus Praise")
 
 /mob/living/carbon/human/proc/voice_destroying()
 	set name = "Destroying"
@@ -89,14 +89,14 @@
 	play_voice_line("Elf Detected")
 
 /mob/living/carbon/human/proc/voice_eorapraise()
-	set name = "Eora Praise"
+	set name = "Sune Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Eora Praise")
+	play_voice_line("Sune Praise")
 
 /mob/living/carbon/human/proc/voice_eorapraise2()
-	set name = "Eora Praise 2"
+	set name = "Sune Praise 2"
 	set category = "Emotes.Automaton"
-	play_voice_line("Eora Praise 2")
+	play_voice_line("Sune Praise 2")
 
 /mob/living/carbon/human/proc/voice_error()
 	set name = "Error"
@@ -214,9 +214,9 @@
 	play_voice_line("Kill")
 
 /mob/living/carbon/human/proc/voice_malumpraise()
-	set name = "Malum Praise"
+	set name = "Moradin Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Malum Praise")
+	play_voice_line("Moradin Praise")
 
 /mob/living/carbon/human/proc/voice_movingtolocation()
 	set name = "Moving To Location"
@@ -234,9 +234,9 @@
 	play_voice_line("My Soul Is Caged")
 
 /mob/living/carbon/human/proc/voice_necrapraise()
-	set name = "Necra Praise"
+	set name = "Jergal Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Necra Praise")
+	play_voice_line("Jergal Praise")
 
 /mob/living/carbon/human/proc/voice_no()
 	set name = "No"
@@ -244,9 +244,9 @@
 	play_voice_line("No")
 
 /mob/living/carbon/human/proc/voice_nocpraise()
-	set name = "Noc Praise"
+	set name = "Mystra Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Noc Praise")
+	play_voice_line("Mystra Praise")
 
 /mob/living/carbon/human/proc/voice_nowomenallowed()
 	set name = "No Women Allowed"
@@ -269,19 +269,19 @@
 	play_voice_line("Organic Presence Detected")
 
 /mob/living/carbon/human/proc/voice_pestrapraise()
-	set name = "Pestra Praise"
+	set name = "Ilmater Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Pestra Praise")
+	play_voice_line("Ilmater Praise")
 
 /mob/living/carbon/human/proc/voice_psydonlives()
-	set name = "Psydon Lives"
+	set name = "Ao Endures"
 	set category = "Emotes.Automaton"
-	play_voice_line("Psydon Lives")
+	play_voice_line("Ao Endures")
 
 /mob/living/carbon/human/proc/voice_ravoxpraise()
-	set name = "Ravox Praise"
+	set name = "Tempus Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Ravox Praise")
+	play_voice_line("Tempus Praise")
 
 /mob/living/carbon/human/proc/voice_schmelfdetected()
 	set name = "Schmelf Detected"
@@ -329,9 +329,9 @@
 	play_voice_line("Wrench Bones")
 
 /mob/living/carbon/human/proc/voice_xylixpraise()
-	set name = "Xylix Praise"
+	set name = "Tymora Praise"
 	set category = "Emotes.Automaton"
-	play_voice_line("Xylix Praise")
+	play_voice_line("Tymora Praise")
 
 /mob/living/carbon/human/proc/voice_yes()
 	set name = "Yes"

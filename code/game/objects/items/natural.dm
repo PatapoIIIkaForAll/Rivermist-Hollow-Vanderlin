@@ -346,7 +346,7 @@
 /obj/item/natural/elementalmote
 	name = "elemental mote"
 	icon_state = "mote"
-	desc = "A mystical essence imbued with the power of Dendor. Merely holding it transports one's mind to ancient times."
+	desc = "A mystical essence imbued with the power of Silvanus. Merely holding it transports one's mind to ancient times."
 	resistance_flags = FIRE_PROOF
 	w_class = WEIGHT_CLASS_SMALL
 	sellprice = 20
@@ -363,7 +363,7 @@
 /obj/item/natural/elementalshard
 	name = "elemental shard"
 	icon_state = "shard"
-	desc = "A mystical essence imbued with the power of Dendor. Merely holding it transports one's mind to ancient times."
+	desc = "A mystical essence imbued with the power of Silvanus. Merely holding it transports one's mind to ancient times."
 	resistance_flags = FIRE_PROOF
 	w_class = WEIGHT_CLASS_SMALL
 	sellprice = 20
@@ -380,7 +380,7 @@
 /obj/item/natural/elementalfragment
 	name = "elemental fragment"
 	icon_state = "fragment"
-	desc = "A mystical essence imbued with the power of Dendor. Merely holding it transports one's mind to ancient times."
+	desc = "A mystical essence imbued with the power of Silvanus. Merely holding it transports one's mind to ancient times."
 	resistance_flags = FIRE_PROOF
 	w_class = WEIGHT_CLASS_SMALL
 	sellprice = 20
@@ -397,7 +397,7 @@
 /obj/item/natural/elementalrelic
 	name = "elemental relic"
 	icon_state = "relic"
-	desc = "A mystical essence imbued with the power of Dendor. Merely holding it transports one's mind to ancient times."
+	desc = "A mystical essence imbued with the power of Silvanus. Merely holding it transports one's mind to ancient times."
 	resistance_flags = FIRE_PROOF
 	w_class = WEIGHT_CLASS_SMALL
 	sellprice = 20
@@ -415,7 +415,7 @@
 /obj/item/natural/voidstone
 	name = "voidstone"
 	icon_state = "voidstone"
-	desc = "An incredibly rare substance torn from creatures immune to magick. This material forsakes Noc's gifts."
+	desc = "An incredibly rare substance torn from creatures immune to magick. This material forsakes Mystra's gifts."
 	resistance_flags = FIRE_PROOF
 	w_class = WEIGHT_CLASS_SMALL
 	sellprice = 20

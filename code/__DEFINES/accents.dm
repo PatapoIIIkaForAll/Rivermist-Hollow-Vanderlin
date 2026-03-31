@@ -1,7 +1,7 @@
 #define ACCENT_NONE "No Accent"
 #define ACCENT_DEFAULT "Species Accent"
 #define ACCENT_DWARF "Dwarf Accent"
-#define ACCENT_DELF "Dark-Elf Accent"
+#define ACCENT_DELF "Dark Elf Accent"
 #define ACCENT_ELF "Elf Accent"
 #define ACCENT_TIEFLING "Tiefling Accent"
 #define ACCENT_HORC "Half-Orc Accent"

@@ -1265,7 +1265,7 @@ GLOBAL_LIST_INIT(fish_compatible_fluid_types, list(
 	tastes = list("fish" = 1)
 	name = "cooked fish"
 	faretype = FARE_POOR
-	desc = "Abyssor's bounty, make sure to eat the eyes!"
+	desc = "Umberlee's bounty, make sure to eat the eyes!"
 	icon_state = "carpcooked"
 	foodtype = MEAT
 

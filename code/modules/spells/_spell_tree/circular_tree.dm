@@ -1,5 +1,5 @@
 /datum/spell_node/arcyne_eye
-	name = "Arcyne Eye"
+	name = "Arcane Eye"
 	desc = "Imbue yourself with the ability to perceive magical phenomena."
 	node_x = 0
 	node_y = 0
@@ -264,8 +264,8 @@
 	spell_type = /datum/action/cooldown/spell/conjure/phantom_ear
 
 /datum/spell_node/arcyne_affinity
-	name = "Arcyne Affinity"
-	desc = "Devote yourself to Noc."
+	name = "Weave Affinity"
+	desc = "Devote yourself to Mystra."
 	cost = 3
 	node_x = DOWN_X_LEFT
 	node_y = DOWN_Y_TIER_1
@@ -274,7 +274,7 @@
 
 /datum/spell_node/arcyne_affinity/on_node_buy(mob/user)
 	user.mana_pool?.adjust_attunement(/datum/attunement/arcyne, 0.15)
-	to_chat(user, span_notice("Noc whispers to you."))
+	to_chat(user, span_notice("Mystra whispers to you."))
 
 /datum/spell_node/air_affinity
 	name = "Air Affinity"
@@ -354,7 +354,7 @@
 	spell_type = /datum/action/cooldown/spell/projectile/fetch
 
 /datum/spell_node/arcane_bolt
-	name = "Arcyne Bolt"
+	name = "Arcane Bolt"
 	desc = "Launch a bolt of pure magical energy."
 	node_x = DOWN_X_LEFT -50
 	node_y = DOWN_Y_TIER_2
@@ -362,7 +362,7 @@
 	spell_type = /datum/action/cooldown/spell/projectile/arcyne_bolt
 
 /datum/spell_node/arcyne_storm
-	name = "Arcyne Storm"
+	name = "Arcane Storm"
 	desc = "Unleash a devastating storm of magical energy."
 	node_x = DOWN_X_LEFT -25
 	node_y = DOWN_Y_TIER_3
@@ -596,7 +596,7 @@
 // Убрал спелл, ибо гибает
 /*
 /datum/spell_node/gib
-	name = "Xylixs Cruel Prank"
+	name = "Tymora's Cruel Prank"
 	desc = "Fucked up and evil."
 	node_x = -500
 	node_y = -500

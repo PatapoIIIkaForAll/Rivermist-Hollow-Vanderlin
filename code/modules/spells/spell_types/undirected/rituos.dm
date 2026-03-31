@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/undirected/rituos
 	name = "Rituos"
-	desc = "Harness both Fleshcrafting and the Arcyne, and expunge the trappings of mortal flesh from your form in exchange for power unimaginable. Be warned: indulging in even the first step of this ritual will make you more deadite than not..."
+	desc = "Harness both Fleshcrafting and the Weave, and expunge the trappings of mortal flesh from your form in exchange for power unimaginable. Be warned: indulging in even the first step of this ritual will make you more deadite than not..."
 	button_icon_state = "createlight"
 	sound = 'sound/magic/timestop.ogg'
 

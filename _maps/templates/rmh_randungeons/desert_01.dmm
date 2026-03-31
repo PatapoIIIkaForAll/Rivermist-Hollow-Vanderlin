@@ -29,13 +29,12 @@
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
 "bz" = (
-/obj/structure/window/stained/yellow,
 /obj/effect/mapping_helpers/secret_door_creator{
 	name = "Desert Dungeon01 Door";
 	redstone_id = "Desertdoor3";
 	floor_turf = /turf/open/floor/concrete
 	},
-/turf/open/floor/sandstone_tile/five,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "bE" = (
 /obj/structure/trap/wall_projectile/fireball{
@@ -164,10 +163,6 @@
 	color = "#522f26"
 	},
 /turf/open/floor/sandstone_tile,
-/area/under/rmh_desert/pyramid)
-"eO" = (
-/obj/structure/window/stained/yellow,
-/turf/closed/wall/mineral/desert_sandstone,
 /area/under/rmh_desert/pyramid)
 "eR" = (
 /obj/structure/flora/grass/bush/wall,
@@ -705,13 +700,12 @@
 /turf/open/floor/sandstone_tile/six,
 /area/under/rmh_desert/pyramid)
 "zh" = (
-/obj/structure/window/stained/yellow,
 /obj/effect/mapping_helpers/secret_door_creator{
 	name = "Desert Dungeon01 Door";
 	redstone_id = "Desertdoor2";
 	floor_turf = /turf/open/floor/concrete
 	},
-/turf/open/floor/concrete,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "Ac" = (
 /turf/closed/wall/mineral/desert_soapstone,
@@ -846,12 +840,11 @@
 /turf/open/floor/tile/brownbrick,
 /area/under/rmh_desert/pyramid)
 "FD" = (
-/obj/structure/window/stained/yellow,
 /obj/structure/lever/hidden{
 	redstone_id = "Desertdoor5";
 	name = "secret lever"
 	},
-/turf/closed/wall/mineral/desert_soapstone,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "FN" = (
 /obj/structure/stone_tile/block{
@@ -903,13 +896,12 @@
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
 "HJ" = (
-/obj/structure/window/stained/yellow,
 /obj/effect/mapping_helpers/secret_door_creator{
 	name = "Desert Dungeon01 Door";
 	redstone_id = "Desertdoor4";
 	floor_turf = /turf/open/floor/concrete
 	},
-/turf/open/floor/sandstone_tile/five,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "HK" = (
 /obj/effect/decal/edge{
@@ -967,8 +959,7 @@
 	redstone_id = "Desertdoor5";
 	floor_turf = /turf/open/floor/concrete
 	},
-/obj/structure/window/stained/yellow,
-/turf/closed/wall/mineral/desert_soapstone,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "JH" = (
 /obj/effect/decal/edge{
@@ -1043,8 +1034,7 @@
 	redstone_id = "Desertdoor1";
 	floor_turf = /turf/open/floor/concrete
 	},
-/obj/structure/window/stained/yellow,
-/turf/open/floor/concrete,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "Lo" = (
 /obj/structure/bars/passage{
@@ -1140,8 +1130,7 @@
 /turf/open/floor/tile/harem,
 /area/under/rmh_desert/pyramid)
 "Op" = (
-/obj/structure/window/stained/yellow,
-/turf/closed/wall/mineral/desert_soapstone,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "OK" = (
 /obj/effect/decal/borderfall{
@@ -1163,12 +1152,11 @@
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
 "Qf" = (
-/obj/structure/window/stained/yellow,
 /obj/structure/lever/hidden{
 	redstone_id = "Desertdoor1";
 	name = "secret lever"
 	},
-/turf/closed/wall/mineral/desert_sandstone,
+/turf/closed/wall/window/stained/yellow,
 /area/under/rmh_desert/pyramid)
 "Ro" = (
 /obj/effect/decal/edge{
@@ -1569,7 +1557,7 @@ wo
 Vb
 Wj
 Wj
-eO
+Op
 LL
 JH
 Vd
@@ -2934,7 +2922,7 @@ wo
 Vb
 Wj
 Wj
-eO
+Op
 cu
 cu
 nW

@@ -109,7 +109,7 @@
 	filters += filter(type="drop_shadow", x=0, y=0, size=0.5, offset=1, color=rgb(218, 165, 32))
 
 /obj/item/clothing/wrists/bracers/psythorns
-	name = "psydonian thorns"
+	name = "exotic thorns"
 	desc = "Thorns fashioned from pliable yet durable blacksteel - woven and interlinked, fashioned to be wrapped around the wrists."
 	body_parts_covered = ARMS
 	icon_state = "psybarbs"

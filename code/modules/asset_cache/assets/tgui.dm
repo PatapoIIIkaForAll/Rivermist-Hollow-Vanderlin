@@ -27,3 +27,18 @@
 		"tgui-panel.bundle.css" = file("tgui/public/tgui-panel.bundle.css"),
 	)
 #endif
+
+/datum/asset/group/tgui_window_shared
+	children = list(
+		/datum/asset/simple/namespaced/fontawesome,
+		/datum/asset/simple/namespaced/tgfont,
+		/datum/asset/simple/namespaced/fonts,
+		/datum/asset/json/icon_ref_map,
+	)
+
+/datum/asset/group/tgui_preload
+	children = list(
+		/datum/asset/simple/tgui,
+		/datum/asset/simple/tgui_panel,
+		/datum/asset/group/tgui_window_shared,
+	)

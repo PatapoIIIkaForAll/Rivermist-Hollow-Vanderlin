@@ -1,0 +1,1802 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ak" = (
+/obj/effect/spawner/trap{
+	alpha = 0
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"aM" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"dp" = (
+/obj/structure/trap/fire{
+	alpha = 2
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"fx" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/materials,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"gl" = (
+/obj/structure/fermentation_keg/sandpot/random/beer,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"hg" = (
+/obj/effect/spawner/map_spawner/loot/armor,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"hK" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"ic" = (
+/obj/structure/redstone/pressure_plate,
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"iE" = (
+/obj/structure/trap/wall_projectile/fireball{
+	dir = 8;
+	alpha = 2
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"jF" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/obj/effect/spawner/map_spawner/loot/dungeon/tools,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"jY" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"kG" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"mW" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/medical,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"oa" = (
+/obj/effect/spawner/map_spawner/loot/cheap_jewelry_spawner,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"qK" = (
+/obj/machinery/light/fueled/firebowl/church/unholyfire{
+	pixel_x = 16;
+	pixel_y = -16;
+	density = 0
+	},
+/obj/effect/spawner/map_spawner/loot/dungeon/weapons,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"ra" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"sC" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/obj/machinery/light/fueled/torchholder/l,
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"to" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/obj/structure/door/desertdoorperm,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"tZ" = (
+/mob/living/simple_animal/hostile/retaliate/minotaur/axe,
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"uL" = (
+/obj/structure/trap/wall_projectile/fireball{
+	dir = 8;
+	alpha = 2
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"vH" = (
+/obj/machinery/light/fueled/firebowl/church/unholyfire,
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"wf" = (
+/obj/structure/redstone/dust{
+	alpha = 0
+	},
+/turf/closed/wall/mineral/desert_sandstone,
+/area/under/rmh_desert/ziqurat)
+"wr" = (
+/turf/closed/wall/mineral/desert_sandstone,
+/area/under/rmh_desert/ziqurat)
+"wW" = (
+/obj/structure/trap/spike{
+	alpha = 2
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"zL" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"zS" = (
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"BX" = (
+/obj/effect/mapping_helpers/secret_door_creator{
+	redstone_id = "pyramid";
+	name = "Pyramid Secret Door";
+	floor_turf = /turf/open/floor/tile/brownbrick
+	},
+/turf/closed/wall/mineral/desert_soapstone,
+/area/under/rmh_desert/ziqurat)
+"CV" = (
+/obj/structure/redstone/dust{
+	alpha = 0
+	},
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"Dx" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Ev" = (
+/obj/structure/redstone/repeater{
+	dir = 1
+	},
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"Ex" = (
+/obj/structure/door/desertdoorperm,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Fw" = (
+/obj/structure/redstone/torch{
+	dir = 2;
+	alpha = 0
+	},
+/turf/closed/wall/mineral/desert_sandstone,
+/area/under/rmh_desert/ziqurat)
+"FE" = (
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"FT" = (
+/obj/effect/mapping_helpers/secret_door_creator{
+	redstone_id = "pyramid2";
+	name = "Pyramid Secret Door";
+	floor_turf = /turf/open/floor/tile/brownbrick;
+	hidden_dc = 14
+	},
+/turf/closed/wall/mineral/desert_soapstone,
+/area/under/rmh_desert/ziqurat)
+"GD" = (
+/obj/structure/drape/desert2{
+	pixel_x = -32
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"GQ" = (
+/obj/structure/trap/wall_projectile/fireball{
+	dir = 2;
+	alpha = 2
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Hm" = (
+/obj/structure/fermentation_keg/fancypot/random/water,
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"HT" = (
+/obj/structure/lever/hidden{
+	redstone_id = "pyramid"
+	},
+/turf/closed/wall/mineral/desert_soapstone,
+/area/under/rmh_desert/ziqurat)
+"Ix" = (
+/obj/structure/door/desertdoorperm,
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"IS" = (
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"Je" = (
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Jg" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/obj/machinery/light/fueled/torchholder/l,
+/turf/open/floor/tile,
+/area/under/rmh_desert/ziqurat)
+"JF" = (
+/obj/effect/spawner/trap{
+	alpha = 0
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"JK" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"JP" = (
+/obj/effect/spawner/map_spawner/loot/potion_stats,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"Ld" = (
+/obj/structure/trap/poison{
+	alpha = 2
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"Lp" = (
+/obj/structure/lever{
+	redstone_id = "pyramid3";
+	pixel_x = 8;
+	pixel_y = 10
+	},
+/obj/structure/pillar/sand1{
+	density = 0;
+	pixel_y = -2
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"LF" = (
+/obj/structure/bars/passage{
+	damage_deflection = 500
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Ma" = (
+/obj/structure/trap/shock{
+	alpha = 2
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Pr" = (
+/obj/effect/spawner/map_spawner/loot/dungeon/weapons,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+"RX" = (
+/obj/structure/redstone/repeater{
+	dir = 1
+	},
+/turf/closed/wall/mineral/desert_sandstone,
+/area/under/rmh_desert/ziqurat)
+"VI" = (
+/obj/effect/mapping_helpers/secret_door_creator{
+	redstone_id = "pyramid3";
+	name = "Pyramid Secret Door";
+	floor_turf = /turf/open/floor/tile/brownbrick;
+	hidden_dc = 14
+	},
+/turf/closed/wall/mineral/desert_soapstone,
+/area/under/rmh_desert/ziqurat)
+"Wb" = (
+/obj/structure/redstone/torch{
+	dir = 2
+	},
+/turf/open/floor/sandstone_tile,
+/area/under/rmh_desert/ziqurat)
+"Wn" = (
+/obj/effect/spawner/trap{
+	alpha = 0
+	},
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"WM" = (
+/obj/structure/drape/desert2{
+	pixel_y = 32
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"Xn" = (
+/obj/structure/stairs/stone{
+	dir = 4
+	},
+/turf/open/floor/sandstone,
+/area/under/rmh_desert/ziqurat)
+"XX" = (
+/obj/structure/pillar/sand1{
+	density = 0;
+	pixel_y = -2
+	},
+/turf/open/floor/tile/brownbrick,
+/area/under/rmh_desert/ziqurat)
+"YH" = (
+/obj/structure/lever/hidden{
+	redstone_id = "pyramid2"
+	},
+/turf/closed/wall/mineral/desert_soapstone,
+/area/under/rmh_desert/ziqurat)
+"Zw" = (
+/obj/structure/drape/desert2{
+	pixel_y = -32
+	},
+/obj/effect/spawner/map_spawner/loot/dungeon/clothing,
+/turf/open/floor/tile/bfloorz,
+/area/under/rmh_desert/ziqurat)
+
+(1,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+"}
+(2,1,1) = {"
+BX
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+oa
+Je
+Je
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+"}
+(3,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+wr
+Je
+wr
+WM
+wr
+Je
+wr
+Je
+wr
+wr
+wr
+wr
+Ix
+wr
+Je
+wr
+Je
+wr
+"}
+(4,1,1) = {"
+wr
+Je
+Je
+Je
+wr
+WM
+Je
+Je
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+Je
+wr
+Je
+wr
+Je
+wr
+"}
+(5,1,1) = {"
+wr
+Je
+wr
+wr
+wr
+Ex
+wr
+wr
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+WM
+wr
+wr
+wr
+wr
+Je
+wr
+JK
+wr
+"}
+(6,1,1) = {"
+wr
+Je
+wr
+vH
+IS
+IS
+IS
+vH
+wr
+Je
+Je
+Je
+Je
+Je
+Ix
+Je
+Je
+Je
+wr
+wr
+Je
+wr
+Je
+Je
+Je
+Je
+wr
+Je
+wr
+"}
+(7,1,1) = {"
+wr
+Je
+wr
+IS
+IS
+ra
+IS
+IS
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+wr
+wr
+wr
+Je
+wr
+"}
+(8,1,1) = {"
+wr
+WM
+Ex
+IS
+IS
+tZ
+IS
+IS
+Ex
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+WM
+Je
+Je
+Je
+wr
+"}
+(9,1,1) = {"
+wr
+Je
+wr
+ra
+IS
+IS
+IS
+IS
+wr
+Je
+Lp
+wr
+VI
+VI
+wr
+Je
+Je
+wr
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+wr
+Je
+wr
+"}
+(10,1,1) = {"
+wr
+Je
+wr
+vH
+IS
+IS
+ra
+vH
+wr
+Je
+wr
+wr
+jF
+aM
+wr
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+Je
+Je
+Je
+Je
+wr
+"}
+(11,1,1) = {"
+wr
+Je
+wr
+wr
+wr
+Ex
+wr
+wr
+wr
+Je
+VI
+fx
+qK
+JP
+mW
+VI
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+wr
+Je
+wr
+wr
+wr
+"}
+(12,1,1) = {"
+wr
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+Je
+VI
+Pr
+hg
+mW
+fx
+VI
+Je
+wr
+wr
+wr
+wr
+wr
+Je
+Je
+wr
+wr
+wr
+FE
+wr
+"}
+(13,1,1) = {"
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+WM
+wr
+Je
+wr
+wr
+jF
+Zw
+wr
+wr
+Je
+wr
+zL
+FE
+FE
+wr
+wr
+wr
+wr
+FE
+wr
+FE
+wr
+"}
+(14,1,1) = {"
+wr
+Je
+wr
+Je
+Je
+Je
+Je
+Je
+wr
+Je
+Je
+wr
+VI
+VI
+wr
+Je
+Je
+wr
+FE
+wr
+ak
+wr
+FE
+FE
+FE
+FE
+wr
+FE
+wr
+"}
+(15,1,1) = {"
+wr
+wr
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+wr
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+wr
+wr
+wr
+FE
+wr
+Dx
+wr
+wr
+FE
+wr
+FE
+wr
+"}
+(16,1,1) = {"
+wr
+gl
+wr
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+wr
+Ld
+wr
+"}
+(17,1,1) = {"
+wr
+FE
+wr
+wr
+wr
+Je
+Je
+wr
+WM
+wr
+wr
+wr
+zS
+Wb
+wr
+RX
+ic
+FE
+wr
+dp
+wr
+wr
+wr
+wr
+FE
+wr
+wr
+FE
+wr
+"}
+(18,1,1) = {"
+wr
+FE
+FE
+FE
+wr
+wr
+wr
+wr
+LF
+wf
+Fw
+wr
+Ev
+CV
+wr
+wr
+wr
+wr
+wr
+FE
+wr
+FE
+FE
+FE
+FE
+FE
+ak
+FE
+wr
+"}
+(19,1,1) = {"
+wr
+FE
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+wr
+wr
+zS
+Wb
+wr
+RX
+ic
+FE
+wr
+Hm
+wr
+wr
+wr
+wr
+wr
+wW
+wr
+wr
+wr
+"}
+(20,1,1) = {"
+wr
+Wn
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+FE
+wr
+wr
+wr
+FE
+FE
+FE
+hK
+FE
+FE
+ak
+wr
+"}
+(21,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+Ex
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+wr
+wr
+wr
+FE
+wr
+FE
+wr
+"}
+(22,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+Wn
+wr
+wr
+wr
+wr
+wr
+XX
+wr
+XX
+wr
+FE
+wr
+FE
+wr
+FE
+FE
+Dx
+wr
+wr
+wr
+"}
+(23,1,1) = {"
+wr
+FE
+FE
+ak
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+FE
+FE
+FE
+wr
+"}
+(24,1,1) = {"
+wr
+zL
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+FE
+wr
+FE
+wr
+wr
+wr
+FE
+wr
+"}
+(25,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+wr
+wr
+FE
+wr
+FE
+wr
+wr
+Dx
+wr
+FE
+FE
+FE
+wr
+FE
+wr
+"}
+(26,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+Wn
+wr
+FE
+wr
+wr
+wr
+wr
+zL
+wr
+FE
+wr
+wr
+FE
+wr
+wr
+wr
+FE
+Ex
+FE
+wr
+"}
+(27,1,1) = {"
+wr
+FE
+FE
+ak
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+zL
+wr
+"}
+(28,1,1) = {"
+wr
+zL
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+Ix
+wr
+wr
+wr
+wr
+wr
+wr
+XX
+wr
+XX
+wr
+wr
+wr
+wr
+FE
+wr
+"}
+(29,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+ak
+FE
+wr
+wr
+sC
+IS
+Jg
+wr
+FE
+wr
+XX
+wr
+wr
+wr
+wr
+wr
+wr
+FE
+FE
+FE
+wr
+"}
+(30,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+FE
+FE
+Ix
+IS
+IS
+IS
+Ix
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+wr
+wr
+wr
+"}
+(31,1,1) = {"
+wr
+FE
+FE
+ak
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+wr
+jY
+IS
+kG
+wr
+FE
+wr
+wr
+wr
+wr
+wr
+wr
+hK
+wr
+FE
+FE
+FE
+wr
+"}
+(32,1,1) = {"
+wr
+zL
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+Xn
+wr
+wr
+FE
+wr
+FE
+FE
+FE
+uL
+wr
+FE
+wr
+wW
+wr
+FE
+wr
+"}
+(33,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+ak
+FE
+wr
+wr
+wr
+wr
+wr
+wr
+FE
+wr
+wr
+wr
+wr
+FE
+wr
+FE
+wr
+FE
+wr
+ak
+wr
+"}
+(34,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+FE
+Ex
+FE
+FE
+FE
+FE
+FE
+hK
+FE
+FE
+Dx
+wr
+FE
+wr
+FE
+wr
+FE
+wr
+FE
+wr
+"}
+(35,1,1) = {"
+wr
+FE
+FE
+ak
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+wr
+wr
+wr
+FE
+wr
+wr
+wr
+Ix
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+"}
+(36,1,1) = {"
+wr
+zL
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+FE
+wr
+FE
+FE
+FE
+wr
+Je
+Je
+iE
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+to
+wr
+"}
+(37,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+Je
+Je
+Je
+Je
+GQ
+Je
+Je
+Je
+Je
+wr
+"}
+(38,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+Wn
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+"}
+(39,1,1) = {"
+wr
+FE
+FE
+ak
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+wr
+ak
+wr
+wr
+Dx
+wr
+wr
+wr
+Je
+wr
+Je
+Je
+Je
+Je
+Je
+Je
+Je
+wr
+"}
+(40,1,1) = {"
+wr
+zL
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+Ma
+wr
+Je
+wr
+wr
+wr
+wr
+wr
+Je
+wr
+"}
+(41,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+wr
+wr
+wr
+wr
+FE
+wr
+wr
+FE
+wr
+Je
+wr
+Je
+wr
+JF
+GD
+Je
+wr
+Je
+wr
+"}
+(42,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+Dx
+wr
+FE
+FE
+FE
+FE
+FE
+wr
+FE
+wr
+Je
+wr
+Je
+wr
+WM
+HT
+JK
+wr
+wr
+wr
+"}
+(43,1,1) = {"
+wr
+FE
+FE
+ak
+FE
+FE
+FE
+FE
+ak
+FE
+wr
+wr
+FE
+wr
+FE
+wr
+wr
+FE
+wr
+Je
+wr
+Je
+wr
+Je
+wr
+Je
+wr
+Je
+wr
+"}
+(44,1,1) = {"
+wr
+zL
+wr
+wr
+wr
+FT
+wr
+wr
+wr
+wr
+wr
+FE
+FE
+wr
+FE
+wr
+FE
+FE
+wr
+Je
+Je
+Je
+wr
+Je
+wr
+Je
+wr
+Je
+wr
+"}
+(45,1,1) = {"
+wr
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+FE
+Ex
+FE
+wr
+wr
+FE
+wr
+FE
+wr
+wr
+wr
+wr
+wr
+wr
+Je
+wr
+Je
+wr
+Je
+wr
+"}
+(46,1,1) = {"
+wr
+XX
+wr
+XX
+wr
+XX
+wr
+XX
+wr
+XX
+wr
+FE
+FE
+FE
+FE
+FE
+ak
+Ix
+Je
+Je
+GQ
+Je
+Je
+Je
+wr
+Je
+Je
+Je
+wr
+"}
+(47,1,1) = {"
+wr
+wr
+wr
+wr
+wr
+YH
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+wr
+"}

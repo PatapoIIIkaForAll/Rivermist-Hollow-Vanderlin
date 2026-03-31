@@ -468,75 +468,75 @@
 // --------- Psycross -----------
 
 /datum/artificer_recipe/psycross
-	i_type = "Psycross"
-	category = "Psycross"
+	i_type = "Holy Symbol"
+	category = "Holy Symbols"
 	hammers_per_item = 5
 	craftdiff = 2
 
 /datum/artificer_recipe/psycross/silver
-	name = "silver Psycross"
+	name = "silver holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver
 
 /datum/artificer_recipe/psycross/gold
-	name = "golden Psycross"
+	name = "golden holy symbol"
 	required_item = /obj/item/ingot/gold
 	created_item = /obj/item/clothing/neck/psycross/g
 	hammers_per_item = 7
 	craftdiff = 3
 
 /datum/artificer_recipe/psycross/noc
-	name = "Noc Psycross"
+	name = "Mystra holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/noc
 
 /datum/artificer_recipe/psycross/astrata
-	name = "Astrata Psycross"
+	name = "Lathander holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/astrata
 
 /datum/artificer_recipe/psycross/dendor
-	name = "Dendor Psycross"
+	name = "Silvanus holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/dendor
 
 /datum/artificer_recipe/psycross/abyssor
-	name = "Abyssor Psycross"
+	name = "Umberlee holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/abyssor
 
 /datum/artificer_recipe/psycross/necra
-	name = "Necra Psycross"
+	name = "Jergal holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/necra
 
 /datum/artificer_recipe/psycross/ravox
-	name = "Ravox Psycross"
+	name = "Tempus holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/ravox
 
 /datum/artificer_recipe/psycross/xylix
-	name = "Xylix Psycross"
+	name = "Tymora holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/xylix
 
 /datum/artificer_recipe/psycross/eora
-	name = "Eora Psycross"
+	name = "Sune holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/eora
 
 /datum/artificer_recipe/psycross/pestra
-	name = "Pestra Psycross"
+	name = "Ilmater holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/pestra
 
 /datum/artificer_recipe/psycross/malum_silver
-	name = "Malum Psycross"
+	name = "Moradin holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/malum
 
 /datum/artificer_recipe/psycross/malum_steel
-	name = "Malum Steel Psycross"
+	name = "Moradin steel holy symbol"
 	required_item = /obj/item/ingot/silver
 	created_item = /obj/item/clothing/neck/psycross/silver/malum/steel
 	additional_items = list(/obj/item/ingot/steel = 1)

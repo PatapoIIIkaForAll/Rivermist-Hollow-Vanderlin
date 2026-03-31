@@ -31,6 +31,7 @@ require only minor tweaks.
 #define ZTRAIT_STATION "Station"
 #define ZTRAIT_MINING "Mining"
 #define ZTRAIT_RESERVED "Transit/Reserved"
+#define ZTRAIT_POCKET_RESERVED "Pocket/Reserved"
 #define ZTRAIT_AWAY "Away Mission"
 #define ZTRAIT_SPACE_RUINS "Space Ruins"
 #define ZTRAIT_LAVA_RUINS "Lava Ruins"
@@ -123,6 +124,34 @@ require only minor tweaks.
 /// TRUE if we're ok with going down
 #define Z_LEVEL_DOWN 2
 #define LARGEST_Z_LEVEL_INDEX Z_LEVEL_DOWN
+
+// Pocket dimension lifecycle policies
+#define POCKET_LIFECYCLE_KEEP_LOADED "keep_loaded"
+#define POCKET_LIFECYCLE_HIBERNATE "hibernate"
+#define POCKET_LIFECYCLE_COLLAPSE "collapse"
+
+// Pocket dimension persistence policies
+#define POCKET_PERSISTENCE_NONE "none"
+#define POCKET_PERSISTENCE_MOVABLES "movables"
+
+// Pocket access instance key modes
+// USER mode is scoped to the access owner, so each user gets their own pocket per access point.
+#define POCKET_ACCESS_INSTANCE_OWNER "owner"
+#define POCKET_ACCESS_INSTANCE_USER "user"
+#define POCKET_ACCESS_INSTANCE_LOCATION "location"
+#define POCKET_ACCESS_INSTANCE_CUSTOM "custom"
+
+// Pocket access actions
+#define POCKET_ACTION_ENTER "enter"
+#define POCKET_ACTION_LEAVE "leave"
+#define POCKET_ACTION_HIBERNATE "hibernate"
+#define POCKET_ACTION_COLLAPSE "collapse"
+
+// Pocket dimension instance states
+#define POCKET_STATE_ACTIVE "active"
+#define POCKET_STATE_HIBERNATING "hibernating"
+
+#define POCKET_DEFAULT_IDLE_TIMEOUT (5 MINUTES)
 
 /// Path for the next_map.json file, if someone, for some messed up reason, wants to change it.
 #define PATH_TO_NEXT_MAP_JSON "data/next_map.json"
