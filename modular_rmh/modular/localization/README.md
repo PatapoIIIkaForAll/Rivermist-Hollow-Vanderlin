@@ -45,10 +45,10 @@
 
 ## Проверка
 
-- `python tools/localization/localization.py check` — строки против исходников билда: строки, которым ничего не
-  соответствует, битые шаблоны, и что ещё не переведено (`tmp/localization/todo_*.tsv`). Код выхода 1 — есть
-  битые строки. `import` пересобирает импортированные файлы и оставляет только то, что есть в билде (аргументы —
-  `--help`).
+- `python <ai-skills>/scripts/strings_against_build.py check . modular_rmh/modular/localization/strings --out tmp/localization`
+  — строки против исходников билда: строки, которым ничего не соответствует, битые шаблоны и что ещё не
+  переведено (`todo_*.tsv`). Код выхода 1 — есть битые строки. Скрипт лежит в репозитории ai-skills, там же
+  `import`, который пересобирает импортированные файлы (`docs/localization-tooling.ru.md`).
 - Юнит-тесты — в конце `code/localization.dm`; движок чата — `bun test` для `translate.test.ts`.
 
 ## Подключение
