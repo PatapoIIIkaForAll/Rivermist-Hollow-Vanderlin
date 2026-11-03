@@ -1,0 +1,119 @@
+# Imported from Vibelin (modular_abel/localization/strings/status.txt) by tools/localization/localization.py.
+# Осмотр, алерты состояния и описания статус-эффектов.
+# Формат тот же: English = Русский. Грузится в общую таблицу точных совпадений.
+#
+# Обёртка осмотра приходит своей текстовой нодой: get_examine_string() в
+# code/game/atom/atom_examine.dm собирает "That's \a <b>[name]</b>", то есть
+# имя лежит в <b> отдельно. Само имя остаётся английским, если его нет в
+# items.txt, — это заметно, но не неверно.
+#
+# Описание предмета (desc) уходит в <span class='info'>, тоже отдельной нодой,
+# поэтому описания переводятся точным совпадением без всяких паттернов.
+
+# --- обёртка осмотра ---
+That's a = Это
+That's an = Это
+That's some = Это
+This is = Это
+That's = Это
+
+# --- голод и жажда ---
+I am getting hungry. = Я начинаю хотеть есть.
+My stomach hurts, I need food. = Живот болит, мне нужна еда.
+I AM STARVING! = Я УМИРАЮ С ГОЛОДУ!
+I am dying of starvation! I need to find food, quick! = Я умираю от голода! Нужно срочно найти еду!
+I could use a drink. = Не помешало бы выпить.
+If I don't drink something soon, my mouth will be sand. = Если скоро не попью, во рту будет песок.
+I AM DYING OF THIRST! = Я УМИРАЮ ОТ ЖАЖДЫ!
+I am dying of thirst! I need to find water, quick! = Я умираю от жажды! Нужно срочно найти воду!
+A hearty meal! = Сытная трапеза!
+I have supped on the finest of delicacies: life! = Я вкусил изысканнейшее из яств — жизнь!
+I felt a maggot wriggle as I swallowed... = Я почувствовал, как при глотке шевельнулся червяк...
+That tasted vile! = Гадость на вкус!
+That tasted like charcoal and cinder! = На вкус как уголь и зола!
+Augh! Why didn't I bring that food to fire? = Ах! Почему я не поднёс эту еду к огню?
+
+# --- кровь, боль, усталость ---
+Gah! I am bleeding! = Ах! У меня кровь!
+I am bleeding heavily! Help! = Я сильно истекаю кровью! Помогите!
+I am feeling tired. = Я чувствую усталость.
+I've pushed myself to my limit. = Я выжал себя досуха.
+Gaaaah, So sooooooore. = Ааааа, всё боооолит.
+I feel like I am dying... so... weak... = Кажется, я умираю... так... слабо...
+CAN'T... BREATHE... = НЕ... ДЫШУ...
+I smell HORRID. = От меня ЖУТКО несёт.
+Bags never sit right on my back, this hurts like hell! = Сумки никогда не сидят на спине как надо, спина раскалывается!
+A net was thrown on me... how can I move? = На меня набросили сеть... как теперь двигаться?
+I am knocked off balance! = Меня сбили с равновесия!
+I can barely feel my limbs! = Я едва чувствую конечности!
+I cannot take another action. = Я больше не могу ничего предпринять.
+
+# --- разум и настроение ---
+I feel peace. = Я спокоен.
+I feel stressed. = Я на взводе.
+I can't focus! It's all starting to get to me. = Не могу сосредоточиться! Всё это начинает меня доставать.
+I need relief. I need relief. I need relief. = Мне нужно облегчение. Мне нужно облегчение. Мне нужно облегчение.
+My body is a temple, and my mind a garden. = Моё тело — храм, а разум — сад.
+I can feel my physical prowess waning. = Я чувствую, как уходит физическая мощь.
+I can feel something... is this what it means to have a soul? = Я что-то чувствую... так вот каково это — иметь душу?
+Another consciousness is in your body... it is resisting you. = В твоём теле чужое сознание... оно сопротивляется.
+
+# --- зрение ---
+I can see everything. = Я вижу всё.
+I can see somethings. = Я кое-что вижу.
+Gazing Noc helps me think. = Взор Нока помогает мне думать.
+I have been blessed by Noc since I was born, with his help I can see and think better than anyone. = Нок благословил меня от рождения; с его помощью я вижу и мыслю лучше любого.
+
+# --- магические эффекты ---
+I am magically hastened. = Я магически ускорен.
+I am magically strengthened. = Я магически усилен.
+I am magically swift. = Я магически стремителен.
+I am magically resilient. = Я магически стоек.
+I am magically astute. = Я магически прозорлив.
+I feel reinforced by magick. = Магия укрепляет меня.
+I am somewhat protected against falling from heights. = Я отчасти защищён от падения с высоты.
+Bits of arcyne iron and steel surround my armor, any attacks against me are blunted. = Мою броню окружают крупицы арканного железа и стали — удары по мне притупляются.
+Divine intervention relieves me of my ailments. = Божественное вмешательство избавляет меня от недугов.
+My strength is being sapped by the Blood Curse! = Кровавое проклятие вытягивает мои силы!
+
+# --- бой: подсказки состояния ---
+A mistake. I can be hit through my parry and dodge to a lighter effect! = Ошибка. Меня можно достать сквозь блок и уворот, пусть и слабее!
+I fell for it. I'm exposed. I won't fall for it again. For now. = Я купился. Я открыт. Больше не куплюсь. Пока что.
+Attack stopped. = Атака прервана.
+I used it. I must wait. = Я это использовал. Надо подождать.
+I am already sleeping! = Я уже сплю!
+Holy energies block your path! = Священные силы преграждают путь!
+Alert! The warning bell rings ominously, signaling danger nearby! = Тревога! Набат зловеще гудит — рядом опасность!
+A putrid rotting scent fills your nose as Graggar's call for slaughter rattles you to your core... = Ноздри забивает смрад гнили: зов Граггара к резне пробирает до нутра...
+GRAGGAR! GRAGGAR! GRAGGAR! = ГРАГГАР! ГРАГГАР! ГРАГГАР!
+I have returned from oblivion... but at what cost... = Я вернулся из небытия... но какой ценой...
+
+# --- материалы: описания при осмотре ---
+A bar of wrought iron. = Слиток кованого железа.
+A bar of alloyed steel. = Слиток легированной стали.
+A bar of copper. = Слиток меди.
+A bar of glittering gold. = Слиток блистающего золота.
+A bar of glistening silver. The bane of nitewalkers. = Слиток сияющего серебра. Погибель ночных странников.
+A bar of cursed bloodsteel. = Слиток проклятой кровавой стали.
+A bar of wrought iron tempered with fire essence. = Слиток кованого железа, закалённый эссенцией огня.
+A blood red stone of uncertain origin, the precursor for bloodsteel. = Кроваво-красный камень неясного происхождения, предтеча кровавой стали.
+A bunch of cured leather pieces bundled together. = Связка выделанных кусков кожи.
+A bundle of wooden sticks, looks like they all need to stick together! = Связка деревянных палок — держатся вместе, как и положено!
+A blank mould that is ready to have its shape set by steady hands. = Пустая форма, готовая принять очертания от твёрдой руки.
+A broom, made from a bundle of twigs. = Метла из связки прутьев.
+A cup made from fired clay. = Чашка из обожжённой глины.
+A bowl safely housing an open flame. = Чаша, надёжно хранящая открытый огонь.
+Some grass. = Немного травы.
+A bush, a den for critters and treasures. = Куст — логово для зверья и тайников.
+
+
+# --- обрамление листа персонажа ---
+# Эти строки не привязаны ни к какой черте, поэтому остаются
+# в клиентском словаре как обычные фрагменты.
+I have no special traits. = Особых черт у меня нет.
+I don't know any languages. = Я не знаю ни одного языка.
+EXTRA-HEAVY!! = НЕПОДЪЁМНО!!
+Heavy! = Тяжело!
+Medium. = Средне.
+Light. = Легко.
+None. = Пусто.

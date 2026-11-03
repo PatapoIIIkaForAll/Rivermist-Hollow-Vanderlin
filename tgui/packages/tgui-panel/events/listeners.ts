@@ -2,6 +2,10 @@ import { loadStyleSheet } from 'common/assets';
 import { EventBus } from 'tgui-core/eventbus';
 import { playMusic, stopMusic } from '../audio/handlers';
 import { chatMessage } from '../chat/handlers';
+import {
+  localizationConfig,
+  localizationDeclensions,
+} from '../localization/handlers';
 import { pingReply, pingSoft } from '../ping/handlers';
 import {
   handleTelemetryData,
@@ -17,6 +21,8 @@ const listeners = {
   'audio/playMusic': playMusic,
   'audio/stopMusic': stopMusic,
   'chat/message': chatMessage,
+  'localization/config': localizationConfig,
+  'localization/declensions': localizationDeclensions,
   'ping/reply': pingReply,
   'ping/soft': pingSoft,
   roundrestart,

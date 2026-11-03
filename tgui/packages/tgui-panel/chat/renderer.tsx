@@ -12,6 +12,7 @@ import { classes } from 'tgui-core/react';
 import { RollTooltip } from '../chat_components/RollTooltip';
 import { TooltipHTML } from '../chat_components/TooltipHTML';
 import { store } from '../events/store';
+import { translateNode } from '../localization/translate';
 import { scrollTrackingAtom } from './atom';
 import {
   COMBINE_MAX_MESSAGES,
@@ -421,6 +422,7 @@ class ChatRenderer {
         } else {
           logger.error('Error: message is missing text payload', message);
         }
+        translateNode(node);
         // Get all nodes in this message that want to be rendered like jsx
         const nodes = node.querySelectorAll('[data-component]');
         for (let i = 0; i < nodes.length; i++) {

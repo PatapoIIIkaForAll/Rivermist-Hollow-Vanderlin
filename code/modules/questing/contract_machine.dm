@@ -560,16 +560,7 @@ GLOBAL_VAR_INIT(quest_preview_preload_bootstrapped, FALSE)
 	return "Contractor"
 
 /obj/structure/fake_machine/contractledger/proc/get_ui_language(mob/user)
-	var/client/user_client = user?.client
-	var/stored_language = null
-	if(user_client && islist(user_client.vars) && ("preferred_ui_language" in user_client.vars))
-		stored_language = user_client.vars["preferred_ui_language"]
-	if(!stored_language)
-		stored_language = "en"
-	var/selected_language = LOWER_TEXT("[stored_language]")
-	if(!(selected_language in list("en", "ru")))
-		return "en"
-	return selected_language
+	return get_preferred_ui_language(user)
 
 /obj/structure/fake_machine/contractledger/proc/get_ledger_interface_name(mob/user)
 	return get_ui_language(user) == "ru" ? "ContractLedgerRu" : "ContractLedger"

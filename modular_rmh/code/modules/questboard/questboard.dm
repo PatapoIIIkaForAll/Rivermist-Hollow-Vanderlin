@@ -280,12 +280,7 @@ GLOBAL_LIST_EMPTY(questboard_active_takers)
 	return listing
 
 /obj/structure/questboard/proc/get_ui_language(mob/user)
-	var/client/user_client = user?.client
-	var/stored_language = user_client?.vars["preferred_ui_language"]
-	if(!stored_language)
-		return "en"
-	stored_language = LOWER_TEXT("[stored_language]")
-	return (stored_language == "ru") ? "ru" : "en"
+	return get_preferred_ui_language(user)
 
 /obj/structure/questboard/ui_act(action, list/params)
 	. = ..()

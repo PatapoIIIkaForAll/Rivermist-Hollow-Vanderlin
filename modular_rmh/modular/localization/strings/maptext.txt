@@ -1,0 +1,34 @@
+# Imported by tools/localization/localization.py from tgstation-RPG's module_maptext.txt: the balloon alerts and other maptext that
+# this build's code also has. Do not edit by hand.
+winded! = одышка!
+fully fueled = топлива доверху
+interrupted! = прервано!
+interrupted = прервано
+too far! = слишком далеко!
+too far away! = слишком далеко!
+out of range! = слишком далеко!
+can't reach! = не дотянуться!
+blocked! = мешает преграда!
+no space! = нет места!
+it's full! = полно!
+empty! = пусто!
+locked! = заперто!
+locked = заперто
+unlocked = отперто
+closed! = закрыто!
+won't budge! = не поддаётся!
+can't move! = не сдвинуть!
+secured = закреплено
+unsecured = откреплено
+repaired = починено
+nothing happens! = ничего не происходит!
+can't do that! = так нельзя!
+failed! = не вышло!
+cancelled! = отменено!
+stuck to your hand! = прилипло к руке!
+unconscious! = без сознания!
+on fire! = горит!
+already loaded! = уже заряжено!
+THE OTAVAN INQUISITION = ОТАВСКАЯ ИНКВИЗИЦИЯ
+THE TERRORBOG = ЖУТКАЯ ТОПЬ
+The Undergrove = Подземная роща

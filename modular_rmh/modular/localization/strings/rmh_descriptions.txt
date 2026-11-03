@@ -1,0 +1,60 @@
+# Описания этого билда: английский текст desc целиком = русский.
+# Пишется руками; tools/localization/localization.py этот файл не трогает. Строки отсюда побеждают импортированные
+# (descriptions.txt) при совпадении ключа.
+#
+# Ключ с "^" — шаблон для описаний, которые игра собирает сама: $1|nom, $1|acc и т.д. склоняют захват по словарю
+# имён (items.txt, titles.txt, rmh_items.txt). Словарь строгий: если захват не склоняется (имени нет в словаре),
+# описание остаётся английским целиком, а не наполовину.
+#
+# Описание вида "[desc] Предложение." (начинки, качество готовки) отдельной строки не требует: игра переводит
+# известное начало и каждое дописанное предложение по отдельности, если переведены все части.
+# Род предмета здесь неизвестен, поэтому — безличные обороты, без прилагательных, согласуемых с предметом.
+
+# --- качество готовки (code/datums/quality/cooking.dm, cooking_base.dm) ---
+It is made without love or care. = Приготовлено без любви и старания.
+It barely looks like food. = Едва похоже на еду.
+It is a disgrace to cooking. = Позор поварскому делу.
+Cooking that might cause a divorce. = Стряпня, из-за которой впору разводиться.
+If there be gods of cooking they must be dead. = Если и есть боги стряпни, они давно мертвы.
+Is this food? = Это вообще еда?
+It looks good. = Выглядит хорошо.
+It looks tasty. = Выглядит аппетитно.
+It smells good. = Пахнет хорошо.
+This is fine cooking. = Это добрая стряпня.
+It seem to call out to you. = Так и манит к себе.
+Your mouth waters at the sight. = От одного вида текут слюнки.
+It will make a fine meal. = Из этого выйдет славная трапеза.
+It looks like good eating. = С виду — славная еда.
+It looks perfect. = Выглядит безупречно.
+It smells like heaven. = Пахнет божественно.
+It is a triumph of cooking. = Торжество поварского искусства.
+It is fit for royalty. = Достойно королевского стола.
+It is a masterwork. = Настоящий шедевр.
+
+# --- начинки и добавки (code/modules/cooking/cooked/NeuFood_snacks.dm, raw/NeuFood_dough.dm) ---
+Butter melts over the top. = Сверху тает масло.
+Fried onions have been minced overtop. = Сверху посыпано рубленым жареным луком.
+Fried potato wedges have been placed overtop. = Сверху выложены жареные дольки картофеля.
+Perhaps counterintuitively, frysteak has been chopped overtop. = Как ни странно, сверху накрошен жареный стейк.
+Crunchy sunreed has been scatered overtop. = Сверху рассыпан хрустящий солнцетростник.
+A thick slice of salumoi has been added. = Добавлен толстый ломоть салумои.
+Fat cheese slices has been added. = Добавлены жирные ломтики сыра.
+Its form holds the sugar excellently. = Сахар держится превосходно.
+It's form holds the chocolate drizzle excelently. = Шоколадная глазурь держится превосходно.
+It has a generous serving of cocaumole on top. = Сверху щедрая порция кокаумоле.
+It even has a generous serving of cocaumole on top. = Сверху даже есть щедрая порция кокаумоле.
+It has cocaumole dripping over it. = Сверху стекает кокаумоле.
+It's coated in spicy drowsbane. = Обсыпано острым сонноцветом.
+It's even coated in spicy drowsbane. = Даже обсыпано острым сонноцветом.
+It's smothered in spicy drowsbane. = Щедро обсыпано острым сонноцветом.
+A thick slice of cheese has been put ontop. = Сверху положен толстый ломоть сыра.
+A melting pat of butter has been added. = Добавлен тающий кусочек масла.
+A generous serving of honey has been poured on top. = Сверху щедро полито мёдом.
+Luxurious chocolate has been drizzled on top. = Сверху полито роскошным шоколадом.
+
+# --- описания, которые игра собирает из имени ---
+^A herb\. This one looks like (.+?)\.$ = Трава. С виду похожа на $1|acc.
+^A large ration pack containing an? (.+?)\.$ = Большой паёк; внутри — $1|nom.
+^A small ration pack containing an? (.+?)\.$ = Малый паёк; внутри — $1|nom.
+^This seems to be a work in progress (.+?)$ = Похоже, это ещё не готово: $1|nom.
+^A securely wrapped parcel containing (.+?)\.$ = Надёжно упакованная посылка; внутри — $1|nom.

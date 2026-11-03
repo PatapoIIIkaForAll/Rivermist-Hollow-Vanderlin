@@ -1,0 +1,608 @@
+# Imported from Vibelin (modular_abel/localization/strings/patterns.txt) by tools/localization/localization.py.
+# Сообщения с подстановкой. Пробуются по порядку, только если точного
+# совпадения в fragments.txt не нашлось, — первый сработавший выигрывает.
+#
+# Формат:  регулярка = шаблон
+#
+# Разделитель — первое вхождение " = " (с пробелами). В регулярках пробелов
+# вокруг "=" не бывает: (?=...) и (?<=...) пишутся слитно, так что это безопасно.
+#
+# Экранировать ничего не нужно: \d, \. и кавычки пишутся как есть.
+#
+# В шаблоне:
+#   $1, $2 ...  — захваты регулярки
+#   $2|acc      — захват, склонённый в падеж: ищется сначала в nouns.txt,
+#                 затем в склонениях персонажа; если нигде нет — остаётся как есть
+#   падежи: nom gen dat acc ins pre
+#
+# Регулярка применяется к ОДНОЙ текстовой ноде, уже без краевых пробелов.
+# Поэтому имя, обёрнутое в <b>, в захват не попадает — см. "dodges" ниже.
+#
+# ПОРЯДОК — ЧАСТНОЕ ПЕРЕД ОБЩИМ. "^(.+?) slashed (.+?)!$" радостно поймает
+# "I'm slashed by X!" и выдаст "I'm рубит by X!", если стоит выше.
+
+# --- удары по себе и получение удара (строго выше общих!) ---
+^I'm (?:slashed|stabbed|cut|clawed|struck|punched|chopped|bashed|whacked|smashed|sliced|whipped|slapped|kicked|bit) by (.+?)!$ = $1 наносит мне удар!
+^(.+?) (?:slashed|stabbed|cut|clawed|struck|punched|chopped|bashed|whacked|smashed|sliced|whipped|slapped|kicked|bit) themself!$ = $1 ранит себя!
+^I (?:slash|stab|cut|claw|strike|punch|chop|bash|smash|kick|bite) myself!$ = Я раню себя!
+
+# --- удары: первое лицо (выше третьего лица: "I cut X!" иначе поймает
+# "^(.+?) cut (.+?)!$", у которого настоящее и прошедшее время совпадают) ---
+^I slash (.+?)!$ = Я рублю $1|acc!
+^I stab (.+?)!$ = Я пронзаю $1|acc!
+^I cut (.+?)!$ = Я режу $1|acc!
+^I claw (.+?)!$ = Я раздираю $1|acc!
+^I strike (.+?)!$ = Я бью $1|acc!
+^I punch (.+?)!$ = Я бью кулаком $1|acc!
+^I chop (.+?)!$ = Я рублю $1|acc!
+^I bash (.+?)!$ = Я дубасю $1|acc!
+^I smash (.+?)!$ = Я крушу $1|acc!
+^I kick (.+?)!$ = Я пинаю $1|acc!
+^I bite (.+?)!$ = Я кусаю $1|acc!
+
+# --- удары: третье лицо ---
+^(.+?) slashed (.+?)!$ = $1 рубит $2|acc!
+^(.+?) stabbed (.+?)!$ = $1 пронзает $2|acc!
+^(.+?) clawed (.+?)!$ = $1 раздирает $2|acc!
+^(.+?) struck (.+?)!$ = $1 бьёт $2|acc!
+^(.+?) punched (.+?)!$ = $1 бьёт кулаком $2|acc!
+^(.+?) chopped (.+?)!$ = $1 рубит $2|acc!
+^(.+?) bashed (.+?)!$ = $1 дубасит $2|acc!
+^(.+?) whacked (.+?)!$ = $1 лупит $2|acc!
+^(.+?) smashed (.+?)!$ = $1 крушит $2|acc!
+^(.+?) whipped (.+?)!$ = $1 хлещет $2|acc!
+^(.+?) slapped (.+?)!$ = $1 шлёпает $2|acc!
+^(.+?) kicked (.+?)!$ = $1 пинает $2|acc!
+^(.+?) bit (.+?)!$ = $1 кусает $2|acc!
+
+# --- удар с указанием части тела ---
+# Самая частая строка боя. Собирается в двух местах:
+#   species.dm      "[user] [verb] me in the [zone]!"
+#   item_attack.dm  "[user] [verb] me in the [zone] with [item]!"
+# Глагол берётся из used_intent.attack_verb, поэтому он в настоящем времени —
+# с прошедшим временем блока выше пересечений нет.
+#
+# Вариант с оружием ОБЯЗАН стоять выше безоружного: иначе "(.+?)" сожрёт
+# "chest with the sword" целиком и падеж уйдёт в пустоту.
+#
+# "chops at" выше "chops" (и так же "hacks at", "viciously bites"): альтернация
+# в регулярке берёт первое подошедшее, короткий вариант оставил бы висеть " at".
+^(.+?) (?:slashes|clean-slashes|chops at|chops|hacks at|hacks|cleaves|slices) (.+?) in the (.+?) with (.+?)!$ = $1 рубит $2|dat $3|acc $4|ins!
+^(.+?) (?:slashes|clean-slashes|chops at|chops|hacks at|hacks|cleaves|slices) (.+?) in the (.+?)!$ = $1 рубит $2|dat $3|acc!
+^(.+?) (?:precision-cuts|cuts|lacerates) (.+?) in the (.+?) with (.+?)!$ = $1 режет $2|dat $3|acc $4|ins!
+^(.+?) (?:precision-cuts|cuts|lacerates) (.+?) in the (.+?)!$ = $1 режет $2|dat $3|acc!
+^(.+?) (?:stabs|thrusts|skewers|impales|picks) (.+?) in the (.+?) with (.+?)!$ = $1 пронзает $2|dat $3|acc $4|ins!
+^(.+?) (?:stabs|thrusts|skewers|impales|picks) (.+?) in the (.+?)!$ = $1 пронзает $2|dat $3|acc!
+^(.+?) (?:claws|scratches|rends|tears|mauls|eviscerates) (.+?) in the (.+?) with (.+?)!$ = $1 раздирает $2|dat $3|acc $4|ins!
+^(.+?) (?:claws|scratches|rends|tears|mauls|eviscerates) (.+?) in the (.+?)!$ = $1 раздирает $2|dat $3|acc!
+^(.+?) (?:drills|augers) (.+?) in the (.+?) with (.+?)!$ = $1 сверлит $2|dat $3|acc $4|ins!
+^(.+?) (?:drills|augers) (.+?) in the (.+?)!$ = $1 сверлит $2|dat $3|acc!
+^(.+?) (?:punches|jabs|clocks) (.+?) in the (.+?) with (.+?)!$ = $1 бьёт $2|acc кулаком в $3|acc $4|ins!
+^(.+?) (?:punches|jabs|clocks) (.+?) in the (.+?)!$ = $1 бьёт $2|acc кулаком в $3|acc!
+^(.+?) headbutts (.+?) in the (.+?) with (.+?)!$ = $1 бьёт $2|acc головой в $3|acc $4|ins!
+^(.+?) headbutts (.+?) in the (.+?)!$ = $1 бьёт $2|acc головой в $3|acc!
+^(.+?) (?:strikes|hits|hit) (.+?) in the (.+?) with (.+?)!$ = $1 бьёт $2|acc в $3|acc $4|ins!
+^(.+?) (?:strikes|hits|hit) (.+?) in the (.+?)!$ = $1 бьёт $2|acc в $3|acc!
+^(.+?) (?:bashes|smashes|clubs) (.+?) in the (.+?) with (.+?)!$ = $1 дубасит $2|acc в $3|acc $4|ins!
+^(.+?) (?:bashes|smashes|clubs) (.+?) in the (.+?)!$ = $1 дубасит $2|acc в $3|acc!
+^(.+?) (?:whips|lashes|canes|cracks) (.+?) in the (.+?) with (.+?)!$ = $1 хлещет $2|acc по $3|dat $4|ins!
+^(.+?) (?:whips|lashes|canes|cracks) (.+?) in the (.+?)!$ = $1 хлещет $2|acc по $3|dat!
+^(.+?) kicks (.+?) in the (.+?) with (.+?)!$ = $1 пинает $2|acc в $3|acc $4|ins!
+^(.+?) kicks (.+?) in the (.+?)!$ = $1 пинает $2|acc в $3|acc!
+^(.+?) (?:viciously bites|bites|gnashes) (.+?) in the (.+?) with (.+?)!$ = $1 кусает $2|acc за $3|acc $4|ins!
+^(.+?) (?:viciously bites|bites|gnashes) (.+?) in the (.+?)!$ = $1 кусает $2|acc за $3|acc!
+^(.+?) pecks (.+?) in the (.+?) with (.+?)!$ = $1 клюёт $2|acc в $3|acc $4|ins!
+^(.+?) pecks (.+?) in the (.+?)!$ = $1 клюёт $2|acc в $3|acc!
+^(.+?) rams (.+?) in the (.+?) with (.+?)!$ = $1 таранит $2|acc в $3|acc $4|ins!
+^(.+?) rams (.+?) in the (.+?)!$ = $1 таранит $2|acc в $3|acc!
+^(.+?) grabs (.+?) in the (.+?) with (.+?)!$ = $1 хватает $2|acc за $3|acc $4|ins!
+^(.+?) (?:grasps|touches|taps) (.+?) in the (.+?) with (.+?)!$ = $1 касается $3|gen $2|gen $4|ins!
+^(.+?) grabs (.+?) in the (.+?)!$ = $1 хватает $2|acc за $3|acc!
+^(.+?) (?:grasps|touches|taps) (.+?) in the (.+?)!$ = $1 касается $3|gen $2|gen!
+^(.+?) (?:sweeps|arcs) (.+?) in the (.+?) with (.+?)!$ = $1 рубит $2|acc с размаху по $3|dat $4|ins!
+^(.+?) (?:sweeps|arcs) (.+?) in the (.+?)!$ = $1 рубит $2|acc с размаху по $3|dat!
+^(.+?) lunges (.+?) in the (.+?) with (.+?)!$ = $1 делает выпад $2|dat в $3|acc $4|ins!
+^(.+?) lunges (.+?) in the (.+?)!$ = $1 делает выпад $2|dat в $3|acc!
+^(.+?) shoves (.+?) in the (.+?) with (.+?)!$ = $1 толкает $2|acc в $3|acc $4|ins!
+^(.+?) shoves (.+?) in the (.+?)!$ = $1 толкает $2|acc в $3|acc!
+^(.+?) dazes (.+?) in the (.+?) with (.+?)!$ = $1 оглушает $2|acc ударом в $3|acc $4|ins!
+^(.+?) dazes (.+?) in the (.+?)!$ = $1 оглушает $2|acc ударом в $3|acc!
+^(.+?) stings (.+?) in the (.+?) with (.+?)!$ = $1 жалит $2|acc в $3|acc $4|ins!
+^(.+?) stings (.+?) in the (.+?)!$ = $1 жалит $2|acc в $3|acc!
+^(.+?) attacked (.+?) in the (.+?) with (.+?)!$ = $1 бьёт $2|acc в $3|acc $4|ins!
+^(.+?) attacked (.+?) in the (.+?)!$ = $1 бьёт $2|acc в $3|acc!
+
+# --- защита ---
+# У "dodges" субъект приходит отдельной нодой: сообщение собрано как
+# "<b>[src]</b> dodges [user]'s attack!", поэтому имени в начале строки нет.
+^(.+?) blocks (.+?)'s attack!$ = $1 блокирует атаку $2|gen!
+^dodges (.+?)'s attack!$ = уклоняется от атаки $1|gen!
+^easily dodges (.+?)'s attack!$ = легко уклоняется от атаки $1|gen!
+^(.+?) blocks (.+?) with (.+?)!$ = $1 блокирует $2|acc с помощью $3|gen!
+
+# --- захваты, борьба, части тела ---
+^(.+?) twists (.+?)'s (.+?)!$ = $1 выкручивает $3|acc $2|gen!
+^(.+?) headbutts (.+?)'s (.+?)!$ = $1 бьёт головой в $3|acc $2|gen!
+^(.+?) bites (.+?)'s (.+?)!$ = $1 кусает $3|acc $2|gen!
+^(.+?) drinks from (.+?)'s (.+?)!$ = $1 пьёт из $3|gen $2|gen!
+^(.+?) smashes (.+?)'s (.+?) into (.+?)!$ = $1 впечатывает $3|acc $2|gen в $4|acc!
+^(.+?) drives a knee into (.+?)'s midsection!$ = $1 бьёт коленом в живот $2|gen!
+^(.+?) grabs (.+?)\.$ = $1 хватает $2|acc.
+^(.+?) shoves (.+?)!$ = $1 толкает $2|acc!
+^I shove (.+?)!$ = Я толкаю $1|acc!
+^I'm shoved by (.+?)!$ = $1 толкает меня!
+^(.+?) pushes (.+?)\.$ = $1 отталкивает $2|acc.
+^(.+?) disarms me of (.+?)!$ = $1 выбивает у меня $2|acc!
+^(.+?) disarms (.+?) of (.+?)!$ = $1 выбивает $3|acc из рук $2|gen!
+^(.+?) disarms (.+?)!$ = $1 обезоруживает $2|acc!
+^(.+?) struggles to disarm (.+?)!$ = $1 силится обезоружить $2|acc!
+^(.+?) charges into (.+?)!$ = $1 врезается в $2|acc с разбегу!
+^(.+?) crashes into (.+?)!$ = $1 врезается в $2|acc!
+^(.+?) smashes into (.+?)!$ = $1 влетает в $2|acc!
+^(.+?) runs into (.+?)!$ = $1 налетает на $2|acc!
+^I run into (.+?)!$ = Я налетаю на $1|acc!
+^(.+?) bounces off (.+?)!$ = $1 отскакивает от $2|gen!
+^(.+?) smashes through (.+?)!$ = $1 проламывает $2|acc!
+^(.+?) crushes (.+?) underfoot\.$ = $1 давит $2|acc ногой.
+^(.+?) stomps (.+?)!$ = $1 топчет $2|acc!
+^(.+?) kicks (.+?)!$ = $1 пинает $2|acc!
+^(.+?) starts to rip apart (.+?)!$ = $1 начинает разрывать $2|acc!
+^(.+?) consumes (.+?)!$ = $1 поглощает $2|acc!
+^Your fangs inject venom into (.+?)!$ = Мои клыки впрыскивают яд в $1|acc!
+
+# "cut" и "sliced" — одновременно прошедшее время и прилагательное в
+# названиях предметов ("cut petriamber gem", "sliced bread"). Наверху файла
+# они перехватывали любое сообщение, где такое название встретилось, поэтому
+# стоят здесь — ниже притяжательных форм, которые они у себя и отнимали.
+^(.+?) cut (.+?)!$ = $1 режет $2|acc!
+^(.+?) sliced (.+?)!$ = $1 вспарывает $2|acc!
+
+# --- раны с подстановкой части тела ---
+^The (.+?) is dislocated!$ = Вывихнуло $1|acc!
+^The (.+?) jolts painfully!$ = $1|acc пронзает болью!
+^The (.+?) is twisted out of place!$ = Вывернуло $1|acc из сустава!
+^The (.+?) is wrenched out of its socket!$ = Вырвало $1|acc из сустава!
+^The (.+?) is mauled!$ = Изувечило $1|acc!
+^The (.+?) is thoroughly disfigured!$ = Изуродовало $1|acc до неузнаваемости!
+^Blood sprays from (.+?)'s (.+?)!$ = Из $2|gen $1|gen хлещет кровь!
+^Blood rushes from (.+?)'s (.+?)!$ = Из $2|gen $1|gen потоком идёт кровь!
+^Blood bursts from (.+?)'s (.+?) with a great force!$ = Из $2|gen $1|gen кровь бьёт с огромной силой!
+^Blood runs from (.+?)'s nose\.$ = Из носа $1|gen течёт кровь.
+^(.+?) spills (?:their|his|her|its) organs!$ = $1 вываливает свои внутренности!
+^(.+?) spills (?:their|his|her|its) entrails!$ = $1 вываливает свои кишки!
+^(.+?) coughs up blood!$ = $1 кашляет кровью!
+^(.+?) clutches at (?:their|his|her|its) chest!$ = $1 хватается за грудь!
+^(.+?) suddenly collapses!$ = $1 внезапно оседает!
+^(.+?) catches fire!$ = $1 загорается!
+^(.+?) is burned by holy light!$ = Священный свет обжигает $1|acc!
+^(.+?) is dead already\.\.\.$ = Жизнь уже покинула $1|acc...
+^(.+?) isn't responding to my resuscitation\.\.\.$ = $1 не откликается на мои попытки откачать...
+^I can no longer move my (.+?)!$ = Я больше не могу двигать $1|ins!
+^I can no longer feel my (.+?)\.$ = Я больше не чувствую $1|acc.
+^You lose control of your (.+?)!$ = Я теряю власть над $1|ins!
+^I fall on my (.+?)!$ = Я падаю на $1|acc!
+
+# --- предметы и инвентарь ---
+^(.+?) picks up (.+?)\.$ = $1 подбирает $2|acc.
+# "draws X from Y" строго выше "draws X": иначе второй заберёт себе
+# "the rapier from the scabbard" целиком одним захватом.
+^You draw (.+?) from (.+?)\.$ = Я достаю $1|acc из $2|gen.
+^(.+?) draws (.+?) from (.+?)!$ = $1 достаёт $2|acc из $3|gen!
+^(.+?) draws (.+?)!$ = $1 достаёт $2|acc!
+^(.+?) adds (.+?) to (.+?)\.$ = $1 добавляет $2|acc в $3|acc.
+^(.+?) finds (.+?) in (.+?)\.$ = $1 находит $2|acc в $3|pre.
+^(.+?) places (.+?) onto (.+?)\.$ = $1 кладёт $2|acc на $3|acc.
+^You place (.+?) on (.+?)\.$ = Я кладу $1|acc на $2|acc.
+^(.+?) searches through (.+?)\.$ = $1 роется в $2|pre.
+^(.+?) snuffs (.+?)\.$ = $1 гасит $2|acc.
+^(.+?) sets (.+?) on fire!$ = $1 поджигает $2|acc!
+^(.+?) puts out the fire on (.+?)\.$ = $1 сбивает огонь с $2|gen.
+^(.+?) repairs (.+?)!$ = $1 чинит $2|acc!
+^(.+?) shatters into a million pieces!$ = $1 разлетается на тысячу осколков!
+^(.+?) is already lit!$ = $1 уже горит!
+^(.+?) is too hot to touch\.$ = Слишком горячо, чтобы взять $1|acc.
+^(.+?) is full!?$ = В $1|pre нет места!
+^(.+?) is empty!$ = В $1|pre пусто!
+^(.+?) is full, make some space!$ = В $1|pre нет места, освободи!
+^(.+?) won't fit in (.+?), make some space!$ = $1 не влезает в $2|acc, освободи место!
+^(.+?) is too big for (.+?)!$ = $1 не помещается в $2|acc!
+^(.+?) cannot hold (.+?)!$ = В $1|acc не влезает $2|nom!
+^(.+?) seems to be locked!$ = $1, похоже, на замке!
+^(.+?) is in the way!$ = $1 мешает!
+^(.+?) is in combat!$ = $1 в бою!
+^(.+?) is indisposed!$ = $1 сейчас не может!
+^I don't want to harm (.+?)!$ = Я не хочу навредить $1|dat!
+^I have no idea how to use (.+?)!$ = Я понятия не имею, как пользоваться $1|ins!
+^There is nothing to further repair on (.+?)\.$ = В $1|pre больше нечего чинить.
+^Put (.+?) on a table before working it!$ = Положи $1|acc на стол, прежде чем работать!
+^(.+?) is currently being worked on!$ = Над $1|ins уже работают!
+^(.+?)'s mind is too powerful to sway!$ = Разум $1|gen слишком силён, чтобы его пошатнуть!
+^(.+?) needs to be restrained or buckled first!$ = Сначала нужно связать или пристегнуть $1|acc!
+
+# --- хирургия ---
+# Частные формулировки идут выше общих "begins to ... in X's Y".
+^(.+?) successfully relocates the bone in (.+?)'s (.+?)!$ = $1 успешно вправляет кость в $3|pre $2|gen!
+^(.+?) begins to relocate the bone in (.+?)'s (.+?)\.$ = $1 начинает вправлять кость в $3|pre $2|gen.
+^(.+?) successfully sets the bone in (.+?)'s (.+?)\.$ = $1 успешно сращивает кость в $3|pre $2|gen.
+^(.+?) fails to set the bone in (.+?)'s (.+?)!$ = $1 не может срастить кость в $3|pre $2|gen!
+^(.+?) begins to set the bones in (.+?)'s (.+?)\.$ = $1 начинает сращивать кости в $3|pre $2|gen.
+^(.+?) begins to make an incision in (.+?)'s (.+?)\.$ = $1 начинает делать надрез в $3|pre $2|gen.
+^(.+?) begins to mend the incision in (.+?)'s (.+?)\.$ = $1 начинает зашивать надрез в $3|pre $2|gen.
+^(.+?) begins to retract the skin in (.+?)'s (.+?)\.$ = $1 начинает разводить кожу в $3|pre $2|gen.
+^(.+?) begins to clamp bleeders in (.+?)'s (.+?)\.$ = $1 начинает зажимать сосуды в $3|pre $2|gen.
+^(.+?) begins to saw through the bone in (.+?)'s (.+?)\.$ = $1 начинает пилить кость в $3|pre $2|gen.
+^Blood pools around the incision in (.+?)'s (.+?)\.$ = Вокруг надреза в $2|pre $1|gen набирается кровь.
+^Blood pools around the cut on (.+?)'s (.+?)\.$ = Вокруг пореза на $2|pre $1|gen набирается кровь.
+^(.+?) saws (.+?)'s (.+?) open!$ = $1 распиливает $3|acc $2|gen!
+^(.+?) fails to saw (.+?)'s (.+?) open!$ = $1 не может распилить $3|acc $2|gen!
+^(.+?) removes a tooth from (.+?)'s mouth!$ = $1 вырывает зуб изо рта $2|gen!
+^(.+?) begins to work (.+?) into (.+?)'s heart\.$ = $1 начинает вживлять $2|acc в сердце $3|gen.
+^(.+?) begins to scrape lux from (.+?)'s heart\.$ = $1 начинает соскабливать люкс с сердца $2|gen.
+^(.+?) works something into (.+?)'s innards\.$ = $1 что-то вживляет во внутренности $2|gen.
+^(.+?) extracts something from (.+?)'s innards\.$ = $1 что-то извлекает из внутренностей $2|gen.
+^(.+?) begins to saw through (.+?)'s bones\.$ = $1 начинает пилить кости $2|gen.
+^(.+?) attempts to patch some of (.+?)'s (.+?)\.$ = $1 пытается залатать $3|acc $2|gen.
+^(.+?) finishes the operation on (.+?)'s face\.$ = $1 заканчивает операцию на лице $2|gen.
+^(.+?) begins to make an incision in (.+?)\.$ = $1 начинает делать надрез в $2|pre.
+^(.+?) begins to mend the incision in (.+?)\.$ = $1 начинает зашивать надрез в $2|pre.
+^(.+?) saws (.+?) open!$ = $1 распиливает $2|acc!
+^(.+?) begins to operate on (.+?)\.$ = $1 начинает оперировать $2|acc.
+^(.+?) finishes\.$ = $1 заканчивает.
+^(.+?) screws up!$ = $1 всё портит!
+^(.+?) is missing their (.+?)!$ = У $1|gen нет $2|gen!
+
+# --- ремёсла и работа с предметами ---
+# "You need to put the X ..." отдельной строкой не нужен: общий паттерн
+# захватит "the X", а артикль движок снимет сам при поиске склонения.
+^You need to put (.+?) on a table to work on it\.$ = Чтобы работать, положи $1|acc на стол.
+^Flattening (.+?)\.\.\.$ = Раскатываю $1|acc...
+^Rolling (.+?) into flatdough\.$ = Раскатываю $1|acc в лепёшку.
+^Scoring lines into (.+?)\.\.\.$ = Надрезаю $1|acc...
+^Pressing a divot into (.+?)\.\.\.$ = Продавливаю ямку в $1|pre...
+^Breaking up (.+?)\.\.\.$ = Разламываю $1|acc...
+^Scooping out the (.+?)\.\.\.$ = Вычерпываю $1|acc...
+^(.+?) threshes the stalks!$ = $1 обмолачивает стебли!
+^(.+?) churns butter\.\.\.$ = $1 сбивает масло...
+^(.+?) strains fresh cheese\.\.\.$ = $1 отцеживает свежий сыр...
+^(.+?) hammers the contraption\.$ = $1 стучит молотом по механизму.
+^(.+?) is fully emptied of (.+?)\.$ = $1 полностью освобождён от $2|gen.
+^(.+?) is too dry to clean with!$ = $1 слишком сухо, чтобы этим мыть!
+^You remove (.+?) from (.+?)\.$ = Я вынимаю $1|acc из $2|gen.
+^There is already something wrapped in (.+?)\.$ = В $1|acc уже что-то завёрнуто.
+^You wrap (.+?) in the ration wrapper\.$ = Я заворачиваю $1|acc в паёк.
+^You unwrap (.+?) from the ration wrapper\.$ = Я разворачиваю $1|acc из пайка.
+^Recipe selected: (.+?)$ = Выбран рецепт: $1
+^Selected: (.+?)$ = Выбрано: $1
+
+# --- магия: эффекты по цели ---
+^(.+?) fizzles on contact with (.+?)!$ = $1 гаснет, коснувшись $2|gen!
+^The storm dissipates on contact with (.+?)!$ = Буря рассеивается, коснувшись $1|gen!
+^(.+?) shatters harmlessly against (.+?)!$ = $1 безвредно разбивается о $2|acc!
+^A purple haze shrouds (.+?)!$ = Лиловая дымка окутывает $1|acc!
+^(.+?) glows with a sickly light!$ = $1 светится болезненным светом!
+^(.+?) is stuck to your hand!$ = $1 прилип к моей руке!
+^(.+?)'s skin starts to shift\.$ = Кожа $1|gen начинает меняться.
+^(.+?) recoils as their flesh is burned by blood!$ = $1 отшатывается — кровь жжёт плоть!
+^I poison (.+?)\.$ = Я отравляю $1|acc.
+^(.+?) eats from (.+?)\.$ = $1 ест из $2|gen.
+^I swallow a gulp of (.+?)\.$ = Я делаю глоток $1|gen.
+^(.+?) is hit by (.+?)!$ = $1 получает удар $2|ins!
+^I'm hit by (.+?)!$ = Меня бьёт $1|ins!
+
+# --- перемещение и падения ---
+^I climb onto (.+?)\.$ = Я забираюсь на $1|acc.
+^I fail to climb onto (.+?)\.$ = Мне не удаётся забраться на $1|acc.
+^(.+?) climbs onto (.+?)\.$ = $1 забирается на $2|acc.
+^(.+?) falls off of (.+?)!$ = $1 сваливается с $2|gen!
+^I fall off of (.+?)!$ = Я сваливаюсь с $1|gen!
+^You fall to the ground, bringing (.+?) with you!$ = Я валюсь на землю, увлекая за собой $1|acc!
+^(.+?) topples off of (.+?) as they both fall to the ground!$ = $1 сваливается с $2|gen, и оба летят на землю!
+^You see (.+?) and freeze in terror!$ = Я вижу $1|acc и цепенею от ужаса!
+
+# --- подвал экзамайна ---
+# "kg" обязан идти выше "g": иначе "(.+?)g\." поймает "700kg." и оставит "700k".
+^It weighs around (.+?)kg\.$ = Вес около $1 кг.
+^It weighs around (.+?)g\.$ = Вес около $1 г.
+^Value: (.+?) mammon$ = Цена: $1 маммон
+^(.+?) is worth around (.+?) mammons\.$ = $1 стоит около $2 маммон.
+^(.+?) is worth around (.+?) mammon\.$ = $1 стоит около $2 маммон.
+^It should be inserted in the (.+?)\.$ = Вставляется в $1|acc.
+
+# --- удар без части тела и без оружия (в самом конце файла) ---
+# У этих форм нет ни "in the", ни "with", поэтому от обычной прозы они
+# ничем не отличаются: "The pain stings a little!" ловится ими так же
+# охотно, как настоящий удар. Отсюда два правила — блок стоит последним,
+# а всякая фиксированная строка, которую он перехватывает, заводится
+# точным фрагментом (фрагменты проверяются до паттернов).
+# Те же глаголы в настоящем времени, поэтому блок обязан стоять ниже варианта
+# с "in the ...", иначе "(.+?)" проглотит всю часть тела как имя цели.
+^(.+?) (?:slashes|clean-slashes|chops at|chops|hacks at|hacks|cleaves|slices) (.+?) with (.+?)!$ = $1 рубит $2|acc $3|ins!
+^(.+?) (?:slashes|clean-slashes|chops at|chops|hacks at|hacks|cleaves|slices) (.+?)!$ = $1 рубит $2|acc!
+^(.+?) (?:precision-cuts|cuts|lacerates) (.+?) with (.+?)!$ = $1 режет $2|acc $3|ins!
+^(.+?) (?:precision-cuts|cuts|lacerates) (.+?)!$ = $1 режет $2|acc!
+^(.+?) (?:stabs|thrusts|skewers|impales|picks) (.+?) with (.+?)!$ = $1 пронзает $2|acc $3|ins!
+^(.+?) (?:stabs|thrusts|skewers|impales|picks) (.+?)!$ = $1 пронзает $2|acc!
+^(.+?) (?:claws|scratches|rends|tears|mauls|eviscerates) (.+?) with (.+?)!$ = $1 раздирает $2|acc $3|ins!
+^(.+?) (?:claws|scratches|rends|tears|mauls|eviscerates) (.+?)!$ = $1 раздирает $2|acc!
+^(.+?) (?:drills|augers) (.+?) with (.+?)!$ = $1 сверлит $2|acc $3|ins!
+^(.+?) (?:drills|augers) (.+?)!$ = $1 сверлит $2|acc!
+^(.+?) (?:punches|jabs|clocks) (.+?)!$ = $1 бьёт $2|acc кулаком!
+^(.+?) headbutts (.+?)!$ = $1 бьёт $2|acc головой!
+^(.+?) (?:strikes|hits|hit) (.+?) with (.+?)!$ = $1 бьёт $2|acc $3|ins!
+^(.+?) (?:strikes|hits|hit) (.+?)!$ = $1 бьёт $2|acc!
+^(.+?) (?:bashes|smashes|clubs) (.+?) with (.+?)!$ = $1 дубасит $2|acc $3|ins!
+^(.+?) (?:bashes|smashes|clubs) (.+?)!$ = $1 дубасит $2|acc!
+^(.+?) (?:whips|lashes|canes|cracks) (.+?) with (.+?)!$ = $1 хлещет $2|acc $3|ins!
+^(.+?) (?:whips|lashes|canes|cracks) (.+?)!$ = $1 хлещет $2|acc!
+^(.+?) (?:viciously bites|bites|gnashes) (.+?)!$ = $1 кусает $2|acc!
+^(.+?) pecks (.+?)!$ = $1 клюёт $2|acc!
+^(.+?) rams (.+?)!$ = $1 таранит $2|acc!
+^(.+?) (?:grasps|touches|taps) (.+?)!$ = $1 касается $2|gen!
+^(.+?) (?:sweeps|arcs) (.+?)!$ = $1 рубит $2|acc с размаху!
+^(.+?) lunges (.+?) with (.+?)!$ = $1 делает выпад в сторону $2|gen $3|ins!
+^(.+?) lunges (.+?)!$ = $1 делает выпад в сторону $2|gen!
+^(.+?) dazes (.+?)!$ = $1 оглушает $2|acc!
+^(.+?) stings (.+?)!$ = $1 жалит $2|acc!
+^(.+?) attacked (.+?) with (.+?)!$ = $1 бьёт $2|acc $3|ins!
+^(.+?) attacked (.+?)!$ = $1 бьёт $2|acc!
+
+# --- блок свойств предмета (кнопка {?}) ---
+# Метка и значение склеены в одну текстовую ноду, поэтому фрагмент тут не
+# сработает: "Stamina Drain: 20" приходит целиком.
+^PROPERTIES OF (.+?)$ = СВОЙСТВА: $1
+^Max Range: (.+?)$ = Макс. дальность: $1
+^Stamina Drain: (.+?)$ = Расход выносливости: $1
+^MIN\.STR: (.+?)$ = Мин. сила: $1
+
+# --- осмотр состояния ---
+^☼ (.+?):$ = ☼ $1|nom:
+^Let's see how (.+?) is doing\.$ = Посмотрим, как себя чувствует $1|nom.
+^I check (.+?) for injuries\.$ = Я осматриваю $1|acc на предмет ран.
+^(.+?) examines themself\.$ = $1 осматривает себя.
+^(.+?) examines (.+?)\.$ = $1 осматривает $2|acc.
+^(.+?) is healthy\.$ = $1 здоров.
+
+# --- состояние конечности и органа при осмотре ---
+# Часть тела подставляется как $1, а её род заранее неизвестен, поэтому
+# прилагательное и глагол прошедшего времени здесь запрещены: "левая рука
+# сломан" вылезет ровно на одной записи из двадцати. Спасают два приёма —
+# безличный глагол ("Сломало $1|acc") и настоящее время 3-го лица, которое
+# по родам не изменяется вовсе ("$1|nom не чувствует").
+^(.+?) is dislocated\.$ = Вывихнуло $1|acc.
+^(.+?) is fractured\.$ = Сломало $1|acc.
+^(.+?) is crippled\.$ = Искалечило $1|acc.
+^(.+?) seems to be broken\.$ = Похоже, в $1|pre перелом.
+^(.+?) is clamped\.$ = На $1|pre зажим.
+^(.+?) is limp\.$ = Не слушается $1|nom.
+^(.+?) is numb to touch\.$ = $1|nom не чувствует прикосновений.
+^(.+?) is necrotic\.$ = Некроз в $1|pre.
+^(.+?) is skeletonized\.$ = От $1|gen остались одни кости.
+^(.+?) is starved of blood and unresponsive\.$ = Крови в $1|pre не хватает, отклика нет.
+^(.+?) has no teeth remaining\.$ = Зубов в $1|pre не осталось.
+^(.+?) has some light bruising and minor scarring\.$ = На $1|pre лёгкие ушибы и мелкие шрамы.
+^(.+?) bears noticeable scarring that may be affecting its function\.$ = На $1|pre заметные шрамы, и это может сказываться на работе.
+^(.+?) has a slight discoloration and feels unusually warm to the touch\.$ = Цвет $1|gen слегка изменён, на ощупь необычно тепло.
+^(.+?) has decayed for too long, and has turned a sickly color\. Only a skilled physican could restore this\.$ = $1|nom гниёт уже слишком долго и отдаёт нездоровым цветом. Вернуть это к жизни сумеет лишь умелый лекарь.
+^(.+?) is heavily scarred; its internal structure looks permanently compromised\.$ = На $1|pre густые шрамы, и внутреннее устройство, похоже, нарушено навсегда.
+^(.+?) is severely damaged, discolored and visibly struggling\.$ = $1|nom сильно повреждена, обесцвечена и явно еле работает.
+^(.+?) is visibly festering, blackened patches and foul discharge mark it as severely infected\.$ = $1|nom заметно гноится: чёрные пятна и гнусные выделения выдают тяжёлое заражение.
+^(.+?) looks a little off, but nothing immediately concerning\.$ = С $1|ins что-то не так, но тревожиться пока не о чем.
+^(.+?) looks inflamed and angry, with an unhealthy sheen across its surface\.$ = $1|nom воспалена и раздражена, по поверхности нездоровый блеск.
+^(.+?) shows significant trauma, deep bruising and structural damage are visible\.$ = На $1|pre тяжёлая травма: видны глубокие кровоподтёки и поломанное устройство.
+^Use a sharp item or scalpel to sever this organ from (.+?)\.$ = Острым предметом или скальпелем отдели этот орган от $1|gen.
+^Use (.+?) to heal this organ\.$ = Возьми $1|acc, чтобы вылечить этот орган.
+^Use a (.+?) to heal this organ\.$ = Возьми $1|acc, чтобы вылечить этот орган.
+^Use (.+?) to reattach this organ to (.+?)\.$ = Возьми $1|acc, чтобы приживить этот орган обратно $2|dat.
+^This animal is saddled: \((.+?)\)\.$ = На этом животном седло: ($1|nom).
+^This animal is wearing a bard: \((.+?)\)\.$ = На этом животном конский доспех: ($1|nom).
+^This animal is wearing a caparison: \((.+?)\)\.$ = На этом животном попона: ($1|nom).
+
+# --- сравнение силы при осмотре другого ---
+^(?:He|She|They) looks? much stronger than I\.$ = Он куда сильнее меня.
+^(?:He|She|They) looks? stronger than I\.$ = Он сильнее меня.
+^(?:He|She|They) looks? about as strong as I\.$ = Он примерно так же силён, как я.
+^(?:He|She|They) looks? weaker than I\.$ = Он слабее меня.
+^(?:He|She|They) looks? much weaker than I\.$ = Он куда слабее меня.
+
+# --- экзамайн: состояние предметов и построек с подстановкой ---
+^(.+?) is currently ON\.$ = $1|nom сейчас включено.
+^(.+?) is currently OFF\.$ = $1|nom сейчас выключено.
+^(.+?) seems to be active!$ = Похоже, $1|nom работает!
+^(.+?) is not moving\.$ = $1|nom не движется.
+^(.+?) is tucked into the bed\.$ = $1|nom уложено в постель.
+^A sheet is neatly tucked in, and (.+?) looks ready for a good rest\.$ = Простыня заправлена ровно, и $1|nom так и зовёт отдохнуть.
+^(.+?) is smoking from it\.$ = Из этого курит $1|nom.
+^(.+?) has been tampered with\.$ = В $1|acc влезали.
+^(.+?) are screwed to the floor\.$ = $1|nom привинчено к полу.
+^(.+?) are no longer screwed to the floor, and the flaps can be cut apart\.$ = $1|nom больше не привинчено к полу, и полог можно разрезать.
+^(.+?) will make (.+?) bottles\.$ = Из $1|gen выйдут бутыли: $2|nom.
+^(.+?) was bitten by someone!$ = $1|acc кто-то надкусил!
+^(.+?) was bitten multiple times!$ = $1|acc кусали не раз!
+^(.+?) was bitten (.+?) times!$ = $1|acc кусали столько раз: $2!
+^(.+?) is active, and linked to (.+?) souls\.$ = $1|nom работает и связано с душами: $2.
+^(.+?) is hardening and is (.+?)% completed\.$ = $1|nom твердеет, готово на $2%.
+^(.+?) has (.+?)% of its capacity remaining\.$ = У $1|gen осталось $2% ёмкости.
+^(.+?) is (.+?)% soaked in blood\.$ = $1|nom пропитано кровью на $2%.
+^(.+?) seems to be causing some pain\.$ = $1|nom, похоже, причиняет боль.
+^(.+?) has started damaging (.+?) and it looks like it may rot soon\.$ = $1|nom начал вредить $2|dat, и похоже, что скоро пойдёт гниение.
+
+# --- разделка ---
+^(.+?) has been fully drained of blood and skinned\. I can butcher it with a knife\.$ = Из $1|gen выпущена вся кровь, и шкура снята. Ножом можно разделать.
+^(.+?) has had its blood fully drained\. I can skin it with a knife\.$ = Из $1|gen выпущена вся кровь. Ножом можно снять шкуру.
+^(.+?) is having its blood drained\. If I try to skin or butcher it now, I may lose some parts\.$ = Из $1|gen сейчас спускают кровь. Если снимать шкуру или разделывать теперь, часть добычи пропадёт.
+
+# --- состояние существа при осмотре (he/she/they сводятся к одной форме) ---
+^(?:He|She|They|It) (?:is|are) filthy\.$ = Оно грязное.
+^(?:He|She|They|It) (?:is|are) foul\.$ = От него смердит.
+^(?:He's|She's|They're|It's) fat and engorged with blood\.$ = Оно раздулось и налилось кровью.
+^(?:He's|She's|They're|It's) starved\.$ = Оно изголодалось.
+^(?:He's|She's|They're|It's) well-fed\.$ = Оно сыто.
+^(?:He|She|They|It) wants? a meal\.$ = Оно просит есть.
+
+# --- счётчики и показания ---
+^Core Stability: (.+?)%$ = Устойчивость сердечника: $1%
+^Fuel remaining: (.+?) units$ = Топлива осталось: $1
+^Harvest rate: (.+?) units/tick$ = Скорость сбора: $1 за такт
+^Effective recharge: (.+?) units/min$ = Действительная подзарядка: $1 в минуту
+^Essence: (.+?) units$ = Эссенция: $1
+^Breeding requirement: (.+?) life essence$ = Для размножения нужно жизненной сути: $1
+^Currently sorting (.+?) item types\.$ = Сейчас разбирается видов вещей: $1.
+^Can sort up to (.+?) item types\.$ = Может разбирать до стольких видов вещей: $1.
+^Extracting\.\.\. (.+?) ticks remaining\.$ = Идёт извлечение... тактов осталось: $1.
+^Currently providing (.+?) pressure to the pipe system\.$ = Сейчас даёт трубной сети такой напор: $1.
+^Essence links: (.+?) connected\.$ = Связей эссенции присоединено: $1.
+^Ethereal links: (.+?) inbound, (.+?) outbound$ = Эфирные связи: входящих $1, исходящих $2
+^Installation requires Engineering skill level (.+?)$ = Для установки нужен уровень Механики: $1
+^Directory: (.+?)$ = Адрес: $1
+^Enchantment: (.+?)$ = Зачарование: $1
+^Current heading: (.+?)$ = Курс: $1
+^Auto-navigating to: (.+?)$ = Самоходом идём к: $1
+^Current position: \((.+?), (.+?)\)$ = Нынешнее место: ($1, $2)
+^Caught by (.+?) on (.+?)\.$ = Поймано: $1|nom, когда — $2.
+^Genetic traits: (.+?)\.$ = Родовые черты: $1.
+^Difficulty: (.+?) \| Reward offered: (.+?) mammons$ = Трудность: $1 | Награда: $2 маммонов
+^Difficulty: (.+?) \| Reward escrowed: (.+?) mammons$ = Трудность: $1 | Награда отложена: $2 маммонов
+^All (.+?) tent doors are in good condition\.$ = Все двери шатра целы, числом $1.
+^All (.+?) tent walls are in good condition\.$ = Все стены шатра целы, числом $1.
+^(.+?) of (.+?) tent doors are damaged\.$ = Повреждённых дверей шатра: $1 из $2.
+^(.+?) of (.+?) tent walls are damaged\.$ = Повреждённых стен шатра: $1 из $2.
+^Contains (.+?) dice\.$ = Внутри костей: $1.
+^Contains (.+?) units of essence smelling of (.+?)\.$ = Внутри эссенции, пахнущей $2|ins: $1.
+^Contains (.+?) units of (.+?)\.$ = Внутри $2|gen: $1.
+^I can tell these are (.+?)\.$ = Я узнаю: это $1|nom.
+^I'm ready to read a verse from the (.+?) section\.$ = Я готов прочесть стих из раздела $1|nom.
+
+# --- экзамайн: показания механизмов и узлов эссенции ---
+^Node charge: (.+?)$ = Заряд узла: $1
+^Node essence: (.+?) units$ = Эссенция узла: $1
+^Node recharge bonus: (.+?)$ = Прибавка к подзарядке узла: $1
+^Maximum node tier: (.+?)$ = Наибольший ранг узла: $1
+^Recharge Rate: (.+?) essence per minute$ = Скорость подзарядки: $1 эссенции в минуту
+^Network: (.+?) connected machine\(s\)$ = Сеть: присоединённых машин — $1
+^Linked to (.+?) stock type\(s\)\.$ = Связано с видами запаса: $1.
+^Processing slots: (.+?) used$ = Занято мест обработки: $1
+^Range: (.+?)$ = Дальность: $1
+^Recipe: (.+?)$ = Рецепт: $1
+^Loaded: (.+?)$ = Заряжено: $1
+^Item: (.+?)$ = Предмет: $1
+^Mode: Manual: locked to (.+?)\.$ = Лад: вручную — закреплён за: $1|nom.
+^Mode: (.+?)$ = Лад: $1
+^Insufficient water pressure\. Needs at least (.+?) pressure\.$ = Напора воды не хватает. Нужно хотя бы столько: $1.
+^Rotation can be connected from the (.+?) sides\.$ = Вращение можно подвести с таких сторон: $1.
+^It moves items (.+?)\.$ = Оно гонит вещи в эту сторону: $1.
+^It is attached to the (.+?) side\.$ = Прикреплено с этой стороны: $1.
+^It can hold up to (.+?) items\.$ = Вмещает столько вещей: $1.
+^It has (.+?) uses left\.$ = Применений осталось: $1.
+^It has been etched with (.+?)$ = На нём вытравлено: $1
+^It has been marked with (.+?), but has not been finished\.$ = На нём помечено: $1 — но работа не окончена.
+^Its keyhole has (.+?) etched next to it\.$ = Возле скважины вытравлено: $1.
+^It hums with stored energy — (.+?)\.$ = Оно гудит запасённой силой — $1.
+^It pulses with stored memory, (.+?), tier (.+?)\.$ = Оно пульсирует запасённой памятью: $1, ранг $2.
+^It smells of (.+?)\.$ = Пахнет $1|ins.
+^Smells faintly of (.+?)\.$ = Слабо пахнет $1|ins.
+^Smells slightly of (.+?)\.$ = Чуть пахнет $1|ins.
+^Smells intensely of (.+?)\.$ = Сильно пахнет $1|ins.
+^It's from (.+?), addressed to (.+?)\.$ = От кого: $1|nom, кому: $2|nom.
+^It's (.+?) cm long\.$ = Длина: $1 см.
+^It weighs (.+?) g\.$ = Вес: $1 г.
+^It has to be spun with a frequency of (.+?) to (.+?) seconds while fishing\.$ = При ловле крутить надо с частотой от $1 до $2 секунд.
+^MMB-Click on (.+?) to dump its contents\.$ = Щелчок средней кнопкой по $1|dat вываливает содержимое.
+^Right click (.+?) to select a \.ogg file\. Interact with self to toggle music\.$ = Правый щелчок по $1|dat выбирает файл .ogg. Взаимодействие с собой включает и выключает музыку.
+^Restores (.+?) Nitrogen$ = Возвращает азота: $1
+^Restores (.+?) Phosphorus$ = Возвращает фосфора: $1
+^Restores (.+?) Potassium$ = Возвращает калия: $1
+^Peeking under the card, you see the card reads: (.+?)\.$ = Заглянув под карту, видишь надпись: $1.
+^Peeking under the top card, you see it reads: (.+?)\.$ = Заглянув под верхнюю карту, видишь надпись: $1.
+^One (.+?) \((.+?) mammon\)$ = Одна штука: $1|nom ($2 маммонов)
+^Objective: Bring (.+?)x (.+?)\.$ = Цель: принести $1 шт. — $2|nom.
+^Objective: (.+?)$ = Цель: $1
+^Recipient: (.+?)$ = Получатель: $1
+^Reagent: (.+?) - (.+?) ligulae required\.$ = Реагент: $1|nom — нужно лигул: $2.
+^SIGNEE: (.+?), (.+?) of Vanderlin\.$ = ПОДПИСАВШИЙ: $1|nom, $2|nom Вандерлина.
+
+# --- экзамайн: температура, заряды, корабль, рыболовная снасть ---
+^Temperature: (.+?)°C$ = Температура: $1 °C
+^The furnace is around (.+?)°C$ = В горне около $1 °C
+^The crucible is around (.+?)C$ = В тигле около $1 C
+^The contraption has (.+?) charges left\.$ = Зарядов у снасти осталось: $1.
+^The mould is (.+?)% filled\.$ = Форма заполнена на $1%.
+^The base contains (.+?) of liquid\.$ = В основе жидкости: $1.
+^The pearl contains (.+?) Vitae$ = В жемчужине витэ: $1
+^The fire will last for (.+?)\.$ = Огня хватит на: $1.
+^The bowl is packed with (.+?)\. \((.+?) puffs remaining\.\)$ = Чаша набита: $1|ins. (Затяжек осталось: $2.)
+^The barrel is (.+?)loaded with powder\.$ = Ствол $1заряжен порохом.
+^The current mode is (.+?)\.$ = Нынешний лад: $1.
+^The current tax rate on deposits is (.+?) percent\. Kingdom nobles exempt\.$ = Нынешняя подать со вкладов: $1 процентов. Дворяне королевства освобождены.
+^The ring is bound to (.+?)\.$ = Кольцо привязано к: $1|dat.
+^The ship is docked at (.+?)\.$ = Корабль пришвартован у: $1|gen.
+^The ship is sailing at (.+?)% speed\.$ = Корабль идёт на $1% хода.
+^The speed of (.+?) is set to (.+?) RPM\.$ = Скорость $1|gen задана: $2 об/мин.
+^The sprinkler is currently active and spraying (.+?)\.$ = Разбрызгиватель работает и льёт $1|acc.
+^The nest looks (.+?)\.$ = Гнездо выглядит так: $1.
+^The dock bell can be rung by outsiders after (.+?) seconds\.$ = Пришлые смогут ударить в причальный колокол через столько секунд: $1.
+^The dock bell can be rung by sanctioned workers after (.+?) seconds\.$ = Дозволенные работники смогут ударить в причальный колокол через столько секунд: $1.
+^Sorts items to the (.+?) when they match the filter\.$ = Подходящие под отбор вещи гонит в эту сторону: $1.
+^Sound is playing at (.+?)% volume\.$ = Звук играет на громкости $1%.
+^Storage ID: (.+?)$ = Номер хранилища: $1
+^Storage Range: (.+?) tiles$ = Охват хранилища: $1 плиток
+^Target: (.+?)$ = Цель: $1
+^Set to extract (.+?) unit(?:s)?\.?$ = Задано извлекать столько: $1.
+^Spells stored within \((.+?)\):$ = Заклинаний внутри ($1):
+^This kit contains: (.+?)$ = В наборе: $1|nom
+^This countdown is displaying: (.+?)\.$ = Отсчёт показывает: $1.
+^This entrance was attuned to the (.+?) path\.$ = Этот вход настроен на путь: $1.
+^This exit was attuned to the (.+?) path\.$ = Этот выход настроен на путь: $1.
+^This contraption requires a new (.+?) to function\.$ = Чтобы снасть заработала, нужен новый $1|nom.
+^This node can only be installed in: (.+?)$ = Этот узел ставится только сюда: $1
+^There's a (.+?) ready to be worked\.$ = Готово к работе: $1|nom.
+^There is a piece of (.+?) ready to be worked\. I might need a knife for this\.$ = Есть кусок $1|gen, готовый к работе. Пожалуй, понадобится нож.
+^There's a (.+?) stuck on here\.$ = Сюда насажено: $1|nom.
+^There's a (.+?) strung on (.+?)\.$ = На $2|pre натянуто: $1|nom.
+^There's a (.+?) on (.+?)\.$ = На $2|pre есть $1|nom.
+^There are (.+?) (.+?) in this (.+?)\.$ = В этой связке ($3|nom) столько: $1 — $2|nom.
+^There is one (.+?) left\.$ = Осталась одна штука: $1|nom.
+^My (.+?) wonder has gone unseen! They must GAZE upon it!$ = Моё чудо ($1) осталось незамеченным! Они должны ВЗГЛЯНУТЬ на него!
+^They have GAZED at my (.+?) wonder!$ = Они ВЗГЛЯНУЛИ на моё чудо ($1)!
+
+# --- экзамайн: остатки ---
+^(.+?) is secured to the table\.$ = $1|nom закреплено на столе.
+^(.+?) intent$ = Намерение: $1
+^(.+?) inside\.$ = Внутри: $1.
+^(.+?) coins\.$ = Монет: $1.
+^(.+?) (.+?) \((.+?) mammon\)$ = $1 — $2|nom ($3 маммонов)
+^(.+?) Blood$ = Кровь: $1
+^(.+?) Blood \(Preferred\)$ = Кровь: $1 (предпочтительна)
+^Contains (.+?) units of (.+?)$ = Внутри $2|gen: $1
+^Contains: (.+?) \((.+?), Tier (.+?)\)$ = Внутри: $1|nom ($2, ранг $3)
+^It contains (.+?) of something\.$ = Внутри чего-то: $1.
+^It contains (.+?) of (.+?)\.$ = Внутри $2|gen: $1.
+^It has (.+?) left\.$ = Осталось: $1.
+^Smells strongly of (.+?)\.$ = Крепко пахнет $1|ins.
+^This node generates essence smelling of (.+?)\.$ = Этот узел родит эссенцию с запахом $1|gen.
+^This node generates (.+?)\.$ = Этот узел родит $1|acc.
+^This node cannot be installed in: (.+?)$ = Этот узел нельзя ставить сюда: $1
+^This parcel is addressed to (.+?)\.$ = Этот свёрток отправлен сюда: $1|nom.
+^This tent kit is currently assembled as a (.+?) tent\.$ = Этот шатёрный набор сейчас собран как шатёр $1.
+^This was signed by (.+?) the (.+?)\.$ = Подписал: $1|nom, $2|nom.
+^This one was attuned to a (.+?) rune\.(.*)$ = Это было настроено на руну $1|gen.$2
+^This one was imbued with a (.+?) rune\.(.*)$ = Это было напитано руной $1|ins.$2
+^Title: (.+?)$ = Заглавие: $1
+^Vials: (.+?)$ = Пузырьков: $1
+^Volume: (.+?)$ = Громкость: $1
+^Void Mode: ACTIVE, destroying (.+?) units per cycle\.$ = Лад пустоты: ВКЛЮЧЁН, уничтожает за цикл столько: $1.
+^Unlocked research nodes: (.+?)$ = Открытых узлов исследования: $1
+^Node: (.+?) — Tier (.+?)$ = Узел: $1 — ранг $2
+^Wearing (.+?)$ = Носит: $1
+^When activated, this rail will switch to (.+?)\.$ = Включённый, этот рельс переведёт стрелку сюда: $1.
+^You have (.+?) enchanted doors available as exits\.$ = Зачарованных дверей на выход доступно: $1.
+^You calculate this contraptions chance of failure to be anywhere between (.+?)% and (.+?)%\.$ = По твоим прикидкам вероятность отказа этой снасти где-то от $1% до $2%.
+^You can see a few humors loosely pressed against (.+?), (.+?)\.$ = К $2|dat неплотно прижаты гуморы: $1.
+^You can see a few humors stitched to (.+?), (.+?)\.$ = К $2|dat пришиты гуморы: $1.
+^I am being grabbed by (.+?)\.$ = Меня держит $1|nom.
+^I am holding (.+?) in my (.+?)\.$ = Я держу $1|acc в $2|pre.
+^I smell (.+?)\.$ = Я чую $1|acc.
+^It is attuned to (.+?)$ = Настроено на: $1|acc
+^(.+?) +- (.+?)% Melted$ = $1|nom — расплавлено на $2%
+^- (.+?): (.+?) units$ = — $1|nom: $2
+^- (.+?): (.+?) ligulae$ = — $1|nom: $2 лигул
+^- (.+?): (.+?) items$ = — $1|nom: $2 шт.

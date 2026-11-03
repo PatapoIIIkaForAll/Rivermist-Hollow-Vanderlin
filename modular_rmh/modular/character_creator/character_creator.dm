@@ -5,15 +5,11 @@
 /// validated character export/import. The succubus disguise and ooze reshape editors open the
 /// same interface in an appearance-only layout.
 
-#define CC_LANG_EN "en"
-#define CC_LANG_RU "ru"
 #define CC_EXPORT_FORMAT "rmh_character"
 #define CC_EXPORT_VERSION 1
 #define CC_IMPORT_MAX_LENGTH 200000
 #define CC_TEXT_CAP 512
 
-/// Interface language, stored once per account.
-/datum/preferences/var/character_creator_lang = CC_LANG_EN
 /// Preferred subclass per job title: list("Adventurer" = "/datum/job/advclass/..."). Stored per character.
 /datum/preferences/var/list/character_creator_subclasses
 /// TRUE after any character edit until the slot is saved or reloaded; DONE asks before closing.
@@ -76,27 +72,10 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 /datum/preferences/succubus_disguise/ui_data(mob/user)
 	. = ..()
 	// The sandbox is a fresh datum; the interface language lives on the player's own preferences.
-	var/datum/preferences/own_prefs = parent?.prefs
-	.["cc_lang"] = own_prefs?.character_creator_lang || CC_LANG_EN
+	.["cc_lang"] = get_client_ui_language(parent)
 	.["cc_markings"] = body_marking_data()
 
 // ---- Savefile hooks ----
-
-/datum/preferences/character_setup_load_menu_prefs(savefile/S)
-	. = ..()
-	if(!S)
-		return
-	S.cd = "/"
-	var/loaded_lang
-	S["character_creator_lang"] >> loaded_lang
-	character_creator_lang = (loaded_lang == CC_LANG_RU) ? CC_LANG_RU : CC_LANG_EN
-
-/datum/preferences/character_setup_save_menu_prefs(savefile/S)
-	. = ..()
-	if(!S)
-		return
-	S.cd = "/"
-	WRITE_FILE(S["character_creator_lang"], character_creator_lang)
 
 /datum/preferences/load_character(slot)
 	. = ..()
@@ -523,7 +502,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	. = ..()
 	if(!character_creator_active())
 		return
-	.["cc_lang"] = character_creator_lang
+	.["cc_lang"] = get_client_ui_language(parent)
 	.["cc_culture"] = "[read_preference(/datum/preference/choiced/culture)]"
 	.["cc_cultures_available"] = character_creator_available_cultures()
 	.["cc_subclass_prefs"] = character_creator_subclasses || list()
@@ -571,8 +550,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 		if("cc_tattoo")
 			return character_creator_tattoo_act(user, params)
 		if("cc_set_lang")
-			character_creator_lang = (params["lang"] == CC_LANG_RU) ? CC_LANG_RU : CC_LANG_EN
-			save_preferences()
+			set_ui_language(params["lang"])
 			return TRUE
 		if("cc_set_culture")
 			if(character_creator_set_culture(user, params["id"]))
@@ -1638,8 +1616,6 @@ GLOBAL_LIST_EMPTY(character_creator_loadout_catalog)
 		key = "[base_name] ([suffix])"
 	character.mind.special_items[key] = item_path
 
-#undef CC_LANG_EN
-#undef CC_LANG_RU
 #undef CC_EXPORT_FORMAT
 #undef CC_EXPORT_VERSION
 #undef CC_IMPORT_MAX_LENGTH

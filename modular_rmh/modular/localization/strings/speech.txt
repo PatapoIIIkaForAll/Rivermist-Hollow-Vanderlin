@@ -1,0 +1,132 @@
+# Imported from Vibelin (modular_abel/localization/strings/speech.txt) by tools/localization/localization.py.
+# Обёртки речи и эмоции. Самый частый текст во всей игре.
+#
+# Формат тот же, что в fragments.txt: English = Русский.
+# Эти строки грузятся в ту же таблицу точных совпадений.
+#
+# Почему это работает без паттернов: и речь, и эмоции приходят в чат
+# ОТДЕЛЬНОЙ текстовой нодой, потому что имя обёрнуто в свой тег.
+#   речь:   msg = "[processed_say_mod] \"[processed_input]\"" (code/game/say.dm)
+#           -> нода "says," отдельно, реплика игрока — в своём span и не трогается
+#   эмоции: msg = "<b>[user]</b> " + msg        (code/datums/emotes.dm)
+#           -> нода " blinks." отдельно; краевой пробел движок сохраняет сам
+
+# --- глаголы речи (запятую ставит say_quote, поэтому она входит в ключ) ---
+says, = говорит:
+asks, = спрашивает:
+exclaims, = восклицает:
+yells, = кричит:
+sings, = поёт:
+whispers, = шепчет:
+groans, = стонет:
+grunts, = хрипит:
+moans, = стонет:
+roars, = ревёт:
+squeaks, = пищит:
+glubs, = булькает:
+beeps, = пищит:
+blares, = гремит:
+
+# --- эмоции: лицо ---
+smiles. = улыбается.
+smiles weakly. = слабо улыбается.
+grins. = ухмыляется.
+grins smugly. = самодовольно ухмыляется.
+frowns. = хмурится.
+scowls. = злобно хмурится.
+glares. = сверлит взглядом.
+grimaces. = морщится.
+pouts. = дуется.
+winks. = подмигивает.
+blinks. = моргает.
+blinks rapidly. = часто моргает.
+raises an eyebrow. = поднимает бровь.
+stares. = уставился.
+stares blankly. = смотрит пустым взглядом.
+goes pale for a second. = на миг бледнеет.
+blushes. = краснеет.
+drools. = пускает слюни.
+
+# --- эмоции: голос ---
+laughs. = смеётся.
+giggles. = хихикает.
+chuckles. = посмеивается.
+cries. = плачет.
+whimpers. = поскуливает.
+sighs. = вздыхает.
+groans. = стонет.
+grumbles. = ворчит.
+mumbles. = бормочет.
+hmms. = хмыкает.
+hums. = напевает.
+snores. = храпит.
+yawns. = зевает.
+coughs. = кашляет.
+sneezes. = чихает.
+sniffs. = шмыгает носом.
+sniffs... = шмыгает носом...
+burps. = рыгает.
+gags. = давится.
+chokes! = задыхается!
+gasps! = ахает!
+gasps for air! = хватает ртом воздух!
+gasps out their last breath. = испускает последний вздох.
+screams! = кричит!
+screams in pain! = кричит от боли!
+screams in agony! = кричит в агонии!
+screams in rage! = кричит от ярости!
+moans. = стонет.
+purrs. = мурлычет.
+meows! = мяукает!
+whistles. = свистит.
+whistles for attention! = свистом привлекает внимание!
+shooshes. = шикает.
+clears their throat. = прочищает горло.
+shouts a halt! = кричит «стой»!
+tries to shout a convincing halt! = пытается убедительно крикнуть «стой»!
+lets out a distressed noise. = издаёт горестный звук.
+makes a noise. Tears stream down their face. = издаёт звук. По лицу текут слёзы.
+prays something. = что-то молитвенно шепчет.
+
+# --- эмоции: жесты ---
+nods. = кивает.
+shakes their head. = качает головой.
+bows. = кланяется.
+salutes. = отдаёт честь.
+waves. = машет рукой.
+points. = указывает.
+shrugs. = пожимает плечами.
+claps. = хлопает в ладоши.
+claps once... = один раз хлопает в ладоши...
+snaps their fingers. = щёлкает пальцами.
+snaps their fingers twice. = дважды щёлкает пальцами.
+snaps their fingers thrice. = трижды щёлкает пальцами.
+raises a hand. = поднимает руку.
+crosses their arms. = скрещивает руки на груди.
+stretches their arms. = потягивается.
+shakes their own hands. = потирает руки.
+spits on the ground. = плюёт на землю.
+strums an invisible lute. = бренчит на невидимой лютне.
+preens their feathers. = чистит перья.
+wags their tail. = виляет хвостом.
+lowers its head. = опускает голову.
+
+# --- эмоции: тело ---
+shivers. = дрожит.
+trembles in fear! = трясётся от страха!
+twitches. = дёргается.
+twitches violently. = бьётся в судорогах.
+sways around dizzily. = покачивается от головокружения.
+collapses. = падает без сил.
+faints. = теряет сознание.
+strains themself! = натужно напрягается!
+sulks down sadly. = уныло сникает.
+dances. = танцует.
+hops! = подпрыгивает!
+jumps! = прыгает!
+leaps! = совершает прыжок!
+meditates. = медитирует.
+blows a kiss. = посылает воздушный поцелуй.
+blinks their lights. = мигает огоньками.
+plays a loud tone. = издаёт громкий сигнал.
+sounds an alarm. = включает тревогу.
