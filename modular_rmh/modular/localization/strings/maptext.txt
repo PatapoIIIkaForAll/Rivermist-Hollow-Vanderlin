@@ -1,5 +1,3 @@
-# Imported by tools/localization/localization.py from tgstation-RPG's module_maptext.txt: the balloon alerts and other maptext that
-# this build's code also has. Do not edit by hand.
 winded! = одышка!
 fully fueled = топлива доверху
 interrupted! = прервано!

@@ -1,6 +1,3 @@
-# Imported by tools/localization/localization.py from Vibelin's descriptions.txt (by its types' English) and
-# tgstation-RPG's module_descriptions_en/ru.txt: only the descriptions this build has, keyed by this build's
-# own English. Do not edit: this build's own descriptions go to rmh_descriptions.txt. english desc = Russian
 ! = Заводная музыкальная шкатулка с печатью Oratorium Throni Vacui на боку. От неё веет унынием...
 (1 BLOOD PER WORD) Use available blood to write down words. Three words form a rune. = (1 КРОВЬ ЗА СЛОВО) Трать доступную кровь, чтобы записывать слова. Три слова складываются в руну.
 (1 BLOOD PER WORD) Use available blood to write down words. Three words form a rune. Access a list of the well known runes. = (1 КРОВЬ ЗА СЛОВО) Трать доступную кровь, чтобы записывать слова. Три слова складываются в руну. Открывает перечень хорошо известных рун.

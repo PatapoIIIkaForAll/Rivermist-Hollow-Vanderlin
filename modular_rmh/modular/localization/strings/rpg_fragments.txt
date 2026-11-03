@@ -1,5 +1,3 @@
-# Imported by tools/localization/localization.py from tgstation-RPG's module_fragments.txt: the exact chat lines that
-# this build's code also has. Do not edit by hand.
 Critical hit! = Критический удар!
 It pierces through to their flesh! = Пробивает до самой плоти!
 That's = Это

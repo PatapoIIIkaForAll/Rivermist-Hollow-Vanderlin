@@ -1,4 +1,3 @@
-# Imported from Vibelin (modular_abel/localization/strings/fragments.txt) by tools/localization/localization.py.
 # Целые куски текста, переводимые точным совпадением. Это самый быстрый путь
 # (хеш-лукап) и сюда попадает большая часть трафика — держите здесь всё, что
 # не содержит подставляемых имён.

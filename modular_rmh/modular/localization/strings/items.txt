@@ -1,5 +1,3 @@
-# Imported by tools/localization/localization.py from Vibelin's items.txt and tgstation-RPG's module_items.txt
-# and module_nouns.txt: only the names this build has. Do not edit: this build's own names go to rmh_items.txt.
 # english = nom | gen | dat | acc | ins | pre
 aberrant planar binding shackles = отклонённые планарные связующие оковы | отклонённых планарных связующих оков | отклонённым планарным связующим оковам | отклонённые планарные связующие оковы | отклонёнными планарными связующими оковами | отклонённых планарных связующих оковах
 absolver's robe = ряса отпускателя | рясы отпускателя | рясе отпускателя | рясу отпускателя | рясой отпускателя | рясе отпускателя
