@@ -1,18 +1,13 @@
 import collections
-import io
-import posixpath
 import re
-import subprocess
 import sys
-import tarfile
+from pathlib import Path
 
-PROJECT = "vanderlin.dme"
-STRINGS = "modular_rmh/modular/localization/strings"
-LOADER = "modular_rmh/modular/localization/code/localization.dm"
+PROJECT = Path("vanderlin.dme")
+STRINGS = Path("modular_rmh/modular/localization/strings")
+LOADER = Path("modular_rmh/modular/localization/code/localization.dm")
 ITEM = "/obj/item"
-SOURCES = (":(glob)*.dme", ":(glob)**/*.dm", ":(glob)**/*.txt")
 SEPARATOR = " = "
-TARGETS = {"name": "rmh_items.txt", "desc": "rmh_descriptions.txt"}
 INCLUDE = re.compile(r'^\s*#include\s+"([^"]+\.dm)"', re.M)
 TOKEN = re.compile(
     r"""//[^\n]*|/\*.*?\*/|\{".*?"\}|@"[^"\n]*"|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'""",
@@ -27,35 +22,18 @@ FILE_GROUP = re.compile(r'"(\w+)" = list\(([^)]*)\)')
 FILE_NAME = re.compile(r'"([^"]+\.txt)"')
 
 
-def read_tree(ref):
-    files = {}
-    command = ["git", "archive", "--format=tar", ref, "--", *SOURCES]
-    archive = subprocess.run(command, stdout=subprocess.PIPE, check=True).stdout
-    with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
-        for member in tar:
-            if member.isfile():
-                text = tar.extractfile(member).read().decode("utf-8", "ignore")
-                files[member.name] = text.replace("\r\n", "\n")
+def read_text(path):
+    return path.read_text(encoding="utf-8", errors="ignore").replace("\r\n", "\n")
+
+
+def read_code(path, files):
+    files[path] = read_text(path)
+    for name in INCLUDE.findall(files[path]):
+        name = name.replace("\\", "/")
+        found = next((p for p in (path.parent / name, Path(name)) if p.exists()), None)
+        if found and found not in files:
+            read_code(found, files)
     return files
-
-
-def code_files(files):
-    ordered, seen = [], set()
-
-    def walk(path):
-        folder = posixpath.dirname(path)
-        for name in INCLUDE.findall(files[path]):
-            name = name.replace("\\", "/")
-            found = posixpath.normpath(posixpath.join(folder, name))
-            if found not in files:
-                found = posixpath.normpath(name)
-            if found in files and found not in seen:
-                seen.add(found)
-                ordered.append(found)
-                walk(found)
-
-    walk(PROJECT)
-    return ordered
 
 
 def tokenize(text):
@@ -78,17 +56,17 @@ def literal_text(token):
     if EXPRESSION.search(token):
         return None
     text = token[2:-2] if token.startswith('{"') else token.lstrip("@")[1:-1]
-    text = re.sub(r"\\\r?\n\s*", "", text)
+    text = re.sub(r"\\\n\s*", "", text)
     text = re.sub(r"\\(?:im)?proper ?", "", text)
     return re.sub(r'\\(["\[\]])', r"\1", text)
 
 
 def read_types(files):
     types = collections.defaultdict(dict)
-    for path in code_files(files):
-        code, literals = tokenize(files[path])
+    for text in files.values():
+        code, literals = tokenize(text)
         owner = None
-        for number, line in enumerate(code.split("\n"), 1):
+        for line in code.split("\n"):
             if not line.strip() or line.startswith("#"):
                 continue
             if not line[0].isspace():
@@ -98,20 +76,23 @@ def read_types(files):
                     types[owner]
                 continue
             match = VAR_LINE.fullmatch(line) if owner else None
-            if match:
-                var, value = match.groups()
-                literal = LITERAL.fullmatch(value)
-                text = value if var.endswith("_type") else None
-                if literal:
-                    text = literal_text(literals[int(literal.group(1))])
-                types[owner][var] = (text, path, number)
+            if not match:
+                continue
+            var, value = match.groups()
+            literal = LITERAL.fullmatch(value)
+            if literal:
+                types[owner][var] = literal_text(literals[int(literal.group(1))])
+            elif var.endswith("_type"):
+                types[owner][var] = value
+            else:
+                types[owner][var] = "" if value == "null" else None
     return types
 
 
 def parent_of(types, path):
     declared = types[path].get("parent_type") if path in types else None
-    if declared and declared[0].startswith("/"):
-        return declared[0]
+    if declared and declared.startswith("/"):
+        return declared
     return path.rsplit("/", 1)[0] if path.count("/") > 1 else None
 
 
@@ -125,14 +106,9 @@ def declaring(types, path, var):
     return None
 
 
-def shown_text(types, path, var):
-    owner = declaring(types, path, var)
-    return types[owner][var][0] if owner else None
-
-
-def read_keys(files, filename):
+def read_keys(filename):
     keys = []
-    for raw in files.get(f"{STRINGS}/{filename}", "").lstrip("\ufeff").splitlines():
+    for raw in read_text(STRINGS / filename).lstrip("\ufeff").splitlines():
         line = raw.strip()
         if line and not line.startswith("#") and SEPARATOR in line:
             keys.append(line.split(SEPARATOR, 1)[0].strip())
@@ -143,46 +119,65 @@ def plain(text, var):
     return ARTICLE.sub("", text.strip()).strip().lower() if var == "name" else text.strip()
 
 
-def translated_texts(files, types):
-    groups = dict(FILE_GROUP.findall(files.get(LOADER, "")))
-    known = {"name": set(), "desc": set()}
+def read_translations(types):
+    groups = dict(FILE_GROUP.findall(read_text(LOADER)))
+    texts = {"name": set(), "desc": set()}
+    paths = {"name": set(), "desc": set()}
     for var, group in (("name", "names"), ("desc", "descriptions")):
         for filename in FILE_NAME.findall(groups.get(group, "")):
-            for key in read_keys(files, filename):
-                text = shown_text(types, key, var) if key.startswith("/") else key
+            for key in read_keys(filename):
+                text = key
+                if key.startswith("/"):
+                    paths[var].add(key)
+                    owner = declaring(types, key, var)
+                    text = types[owner][var] if owner else None
                 if text:
-                    known[var].add(plain(text, var))
-    return known
+                    texts[var].add(plain(text, var))
+    return texts, paths
 
 
-def untranslated_items(files):
-    types = read_types(files)
-    known = translated_texts(files, types)
-    found = {}
-    for path in types:
-        if path != ITEM and not path.startswith(ITEM + "/"):
-            continue
-        if types[path].get("abstract_type", (None,))[0] == path:
-            continue
-        for var in ("name", "desc"):
-            text = shown_text(types, path, var)
-            if text and text.strip() and plain(text, var) not in known[var]:
-                found[var, path] = declaring(types, path, var)
-    return found, types
+def item_paths(types):
+    for path in sorted(types):
+        if path == ITEM or path.startswith(ITEM + "/"):
+            if types[path].get("abstract_type") != path:
+                yield path
 
 
 def main():
-    base_ref = sys.argv[1] if len(sys.argv) > 1 else "HEAD^1"
-    head_ref = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
-    base, _ = untranslated_items(read_tree(base_ref))
-    head, types = untranslated_items(read_tree(head_ref))
-    new = collections.Counter((var, owner) for (var, path), owner in head.items() if (var, path) not in base)
-    for (var, owner), count in sorted(new.items(), key=lambda row: (row[0][1], row[0][0])):
-        text, path, line = types[owner][var]
-        text = re.sub(r"\s+", " ", text.replace("%", "%25"))[:120]
-        print(f"::error file={path},line={line}::{owner} needs a Russian {var} in {STRINGS}/{TARGETS[var]} (new items with it: {count}): {text}")
-    print(f"{ITEM}: {len(new)} new texts without a translation since {base_ref}")
-    return 1 if new else 0
+    types = read_types(read_code(PROJECT, {}))
+    texts, paths = read_translations(types)
+    shown = collections.Counter()
+    left = collections.Counter()
+    rows = {}
+    for path in item_paths(types):
+        for var in ("name", "desc"):
+            owner = declaring(types, path, var)
+            text = types[owner][var] if owner else ""
+            if text is not None and not text.strip():
+                continue
+            shown[var] += 1
+            if text is None:
+                done = owner in paths[var] or path in paths[var]
+                key = (var, owner)
+            else:
+                done = plain(text, var) in texts[var]
+                key = (var, plain(text, var))
+            if done:
+                continue
+            left[var] += 1
+            shown_as = "(not a plain string)" if text is None else re.sub(r"\s+", " ", text)
+            rows.setdefault(key, [var, owner, 0, shown_as])[2] += 1
+    if rows:
+        print("Add /type/path = nom | gen | dat | acc | ins | pre to rmh_items.txt, /type/path = text to rmh_descriptions.txt.")
+        print("Columns: kind, type, how many items show this text, English. One line translates all of them.")
+    for var, owner, count, text in sorted(rows.values(), key=lambda row: (row[1], row[0])):
+        print(f"{var}\t{owner}\t{count}\t{text}")
+    for var, label in (("name", "names"), ("desc", "descriptions")):
+        done = shown[var] - left[var]
+        print(f"{ITEM} {label}: {done} of {shown[var]} translated ({100 * done / shown[var]:.1f}%), {left[var]} left")
+    if rows:
+        print(f"::error::{ITEM}: {sum(left.values())} of {sum(shown.values())} texts have no translation, lines to write: {len(rows)}")
+    return 1 if rows else 0
 
 
 if __name__ == "__main__":
