@@ -57,4 +57,7 @@
 не меньше 500 строк, следующий подключается такой же строкой `#include` в `preferred_language.dm`.
 
 Правки вне модуля: `tgui-panel/chat/renderer.tsx` (`translateNode`), `tgui-panel/events/listeners.ts`,
-`preferences_savefile.dm`, `contract_machine.dm`, `questboard.dm`, `character_creator.dm`.
+`preferences_savefile.dm`, `contract_machine.dm`, `questboard.dm`, `character_creator.dm`, `tools/deploy.sh`.
+
+Файлы `strings/` игра читает во время работы, поэтому `tools/deploy.sh` копирует их рядом с `.dmb`: без них CI
+запускает мир с пустым словарём и падает на рантаймах.
