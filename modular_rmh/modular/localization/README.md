@@ -52,6 +52,11 @@
 
 ## Проверка
 
+На каждом PR шаг **Check Item Translations** (`tools/ci/check_item_translations.py`) сравнивает `/obj/item` в PR с
+базовой веткой и падает, если появился предмет с `name` или `desc` без перевода. Потомок переведённого родителя
+переведён вместе с ним, старые непереведённые предметы шаг не трогает. Сообщение показывает, какой тип и в какой файл
+дописать.
+
 Скрипт `strings_against_build.py` лежит в `scripts/` репозитория ai-skills, описание — `docs/localization-tooling.ru.md`.
 
 - `python <ai-skills>/scripts/strings_against_build.py missing . modular_rmh/modular/localization/strings > missing.tsv`
@@ -70,7 +75,8 @@
 не меньше 500 строк, следующий подключается такой же строкой `#include` в `preferred_language.dm`.
 
 Правки вне модуля: `tgui-panel/chat/renderer.tsx` (`translateNode`), `tgui-panel/events/listeners.ts`,
-`preferences_savefile.dm`, `contract_machine.dm`, `questboard.dm`, `character_creator.dm`, `tools/deploy.sh`.
+`preferences_savefile.dm`, `contract_machine.dm`, `questboard.dm`, `character_creator.dm`, `tools/deploy.sh`,
+`tools/ci/check_item_translations.py`, `.github/workflows/ci_suite.yml`.
 
 Файлы `strings/` игра читает во время работы, поэтому `tools/deploy.sh` копирует их рядом с `.dmb`: без них CI
 запускает мир с пустым словарём и падает на рантаймах.

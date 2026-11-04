@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - name: Setup cache
         uses: actions/cache@v4
         with:
@@ -105,6 +107,9 @@ jobs:
       - name: Check Changelogs
         if: steps.linter-setup.conclusion == 'success' && !cancelled()
         run: bash tools/ci/check_changelogs.sh
+      - name: Check Item Translations
+        if: steps.linter-setup.conclusion == 'success' && !cancelled()
+        run: tools/bootstrap/python tools/ci/check_item_translations.py
       # Fails because of player books and I CBA rn
       # - name: Check Miscellaneous Files
       #   if: steps.linter-setup.conclusion == 'success' && !cancelled()
