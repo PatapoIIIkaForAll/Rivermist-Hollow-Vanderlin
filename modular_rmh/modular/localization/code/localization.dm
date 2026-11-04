@@ -1,6 +1,7 @@
 #define LOCALIZATION_STRINGS "modular_rmh/modular/localization/strings"
 #define LOCALIZATION_SEPARATOR " = "
 #define LOCALIZATION_PATTERN_MARK "^"
+#define LOCALIZATION_TYPE_MARK "/"
 #define LOCALIZATION_CACHE_LIMIT 4000
 #define LOCALIZATION_CHAT_ASSET "data/chat_localization.json"
 #define LOCALIZATION_DECLENSION_MAX_LENGTH 128
@@ -8,7 +9,7 @@
 GLOBAL_LIST_INIT(localization_cases, list("nom", "gen", "dat", "acc", "ins", "pre"))
 
 GLOBAL_LIST_INIT(localization_files, list(
-	"names" = list("items.txt", "titles.txt", "rmh_items.txt", "rmh_titles.txt"),
+	"names" = list("items.txt", "words.txt", "titles.txt", "rmh_items.txt", "rmh_titles.txt"),
 	"body" = list("nouns.txt"),
 	"honorifics" = list("honorifics.txt"),
 	"descriptions" = list("descriptions.txt", "rmh_descriptions.txt"),
@@ -23,6 +24,7 @@ GLOBAL_LIST(localization_honorifics)
 GLOBAL_LIST(localization_honorific_titles)
 GLOBAL_LIST_EMPTY(localization_declensions)
 GLOBAL_LIST_EMPTY(localization_dictionaries)
+GLOBAL_LIST_EMPTY(localization_dead_types)
 GLOBAL_DATUM(localization_description_dictionary, /datum/localization_dictionary)
 GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 
@@ -54,6 +56,13 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 		for(var/list/pair as anything in localization_pairs(filename))
 			.[pair[1]] = pair[2]
 
+/proc/localization_atom_type(key, filename)
+	var/path = text2path(key)
+	if(ispath(path, /atom))
+		return path
+	GLOB.localization_dead_types |= "[filename]: [key]"
+	return null
+
 /proc/localization_nouns(list/filenames)
 	. = list()
 	var/expected = length(GLOB.localization_cases)
@@ -68,8 +77,14 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 				var/form = trim(forms[index])
 				if(length(form))
 					cases[GLOB.localization_cases[index]] = form
-			if(length(cases))
-				.[pair[1]] = cases
+			var/key = pair[1]
+			if(copytext(key, 1, 2) == LOCALIZATION_TYPE_MARK)
+				var/atom/thing = localization_atom_type(key, filename)
+				if(!thing)
+					continue
+				key = localization_bare_name(initial(thing.name))
+			if(length(key) && length(cases))
+				.[key] = cases
 
 /proc/localization_load_nouns()
 	if(!isnull(GLOB.localization_noun_table))
@@ -139,13 +154,16 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 /proc/localization_plain_name(name)
 	return trim(replacetext(replacetext("[name]", "\proper", ""), "\improper", ""))
 
+/proc/localization_bare_name(name)
+	var/static/regex/article = regex(@"^(?:the|an|a|some) ", "i")
+	return article.Replace(localization_plain_name(name), "")
+
 /proc/localization_name(english)
-	english = localization_plain_name(english)
+	english = localization_bare_name(english)
 	if(!length(english))
 		return null
 	localization_load_nouns()
-	var/static/regex/article = regex(@"^(?:the|an|a|some) ", "i")
-	return GLOB.localization_names[LOWER_TEXT(article.Replace(english, ""))]
+	return GLOB.localization_names[LOWER_TEXT(english)]
 
 /proc/localization_noun_forms(value)
 	if(!length(value))
@@ -197,10 +215,18 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 	GLOB.localization_dictionaries += src
 	for(var/filename in filenames)
 		for(var/list/pair as anything in localization_pairs(filename))
-			if(copytext(pair[1], 1, 2) == LOCALIZATION_PATTERN_MARK)
-				add_pattern(pair[1], pair[2])
-			else if(isnull(fragments[pair[1]]))
-				fragments[pair[1]] = pair[2]
+			var/key = pair[1]
+			var/mark = copytext(key, 1, 2)
+			if(mark == LOCALIZATION_PATTERN_MARK)
+				add_pattern(key, pair[2])
+				continue
+			if(mark == LOCALIZATION_TYPE_MARK)
+				var/atom/thing = localization_atom_type(key, filename)
+				if(!thing)
+					continue
+				key = trim(initial(thing.desc))
+			if(length(key) && isnull(fragments[key]))
+				fragments[key] = pair[2]
 	if(length(rejected))
 		stack_trace("Localization: [length(rejected)] patterns do not compile on the server and are skipped, the first: [rejected[1]]")
 
@@ -516,25 +542,18 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 	for(var/section in list("nouns", "honorifics", "fragments", "patterns"))
 		if(!length(dictionary[section]))
 			TEST_FAIL("the chat dictionary has no [section]")
-	var/list/descs = list()
-	var/list/names = list()
+	if(length(GLOB.localization_dead_types))
+		TEST_FAIL("[length(GLOB.localization_dead_types)] strings lines name a type the build does not have, the first: [GLOB.localization_dead_types[1]]")
+	var/missing_descs = 0
+	var/missing_names = 0
 	for(var/atom/thing as anything in subtypesof(/atom))
-		var/desc = initial(thing.desc)
-		if(desc)
-			descs[trim(desc)] = TRUE
+		var/desc = trim(initial(thing.desc))
+		if(length(desc) && !descriptions.fragments[desc])
+			missing_descs++
 		var/name = initial(thing.name)
-		if(name)
-			names[LOWER_TEXT(localization_plain_name(name))] = TRUE
-	var/dead_descs = 0
-	for(var/english in localization_table(GLOB.localization_files["descriptions"]))
-		if(copytext(english, 1, 2) != LOCALIZATION_PATTERN_MARK && !descs[english])
-			dead_descs++
-	localization_load_nouns()
-	var/dead_names = 0
-	for(var/english in GLOB.localization_names)
-		if(!names[english])
-			dead_names++
-	TEST_NOTICE(src, "Localization: [dead_descs] descriptions and [dead_names] names match no atom type's own (set at runtime or gone).")
+		if(name && !GLOB.localization_names[LOWER_TEXT(localization_bare_name(name))])
+			missing_names++
+	TEST_NOTICE(src, "Localization: [missing_descs] atom types show an untranslated desc, [missing_names] an untranslated name.")
 
 /datum/unit_test/localization_engine/Run()
 	var/datum/localization_dictionary/engine = new(list())
@@ -585,6 +604,7 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 #undef LOCALIZATION_STRINGS
 #undef LOCALIZATION_SEPARATOR
 #undef LOCALIZATION_PATTERN_MARK
+#undef LOCALIZATION_TYPE_MARK
 #undef LOCALIZATION_CACHE_LIMIT
 #undef LOCALIZATION_CHAT_ASSET
 #undef LOCALIZATION_DECLENSION_MAX_LENGTH

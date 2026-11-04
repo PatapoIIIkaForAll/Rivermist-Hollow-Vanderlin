@@ -241,7 +241,7 @@ describe('the module strings', () => {
   it('decline names in six cases', () => {
     const wrong: string[] = [];
     for (const file of files) {
-      if (!/^(rmh_)?(items|titles|nouns|honorifics)\.txt$/.test(file)) continue;
+      if (!/^(rmh_)?(items|words|titles|nouns|honorifics)\.txt$/.test(file)) continue;
       for (const [key, value] of strings(file)) {
         if (value.split('|').length !== 6) wrong.push(`${file}: ${key}`);
       }
