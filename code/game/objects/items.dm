@@ -220,6 +220,9 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 
 	var/thrown_bclass = BCLASS_BLUNT
 
+/// Whether this item's thrown impact bypasses the normal armour calculation.
+	var/ignore_throw_armor = FALSE
+
 	var/icon/experimental_inhand = TRUE
 	var/icon/experimental_onhip = FALSE
 	var/icon/experimental_onback = FALSE

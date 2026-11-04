@@ -837,7 +837,7 @@
  * Directional by design.
  */
 
-/mob/living/carbon/proc/get_faction_relationship(mob/living/carbon/user, mob/living/carbon/target, user_faction, target_faction)
+/mob/living/carbon/proc/get_faction_relationship(mob/living/carbon/user, mob/living/carbon/target, user_faction, target_faction, datum/social_recognition/recognition = null)
 	/* Directional faction rules must precede generic shared-bit alliance. */
 	if((user_faction & TOWNWATCH) && (target_faction & VILLAINS))
 		return SOCIAL_RELATION_HOSTILE
@@ -874,11 +874,20 @@
 	/* Town Watch rank is directional: only a junior observer gets HIGHER_RANK. */
 	if((user_faction & TOWNWATCH) && (target_faction & TOWNWATCH))
 		var/datum/job/user_role = user?.mind?.assigned_role
-		var/datum/job/target_role = target?.mind?.assigned_role
 
-		if(user_role && target_role)
-			var/user_is_lower_watch = (user_role.social_is_or_inherits(/datum/job/watch_guard) || user_role.social_is_or_inherits(/datum/job/watch_veteran) || user_role.social_is_or_inherits(/datum/job/watch_warden))
-			var/target_is_command_watch = (target_role.social_is_or_inherits(/datum/job/watch_sergeant) || target_role.social_is_or_inherits(/datum/job/watch_captain))
+		var/target_rank_title
+		if(recognition?.known_rank)
+			target_rank_title = recognition.known_rank
+		else
+			target_rank_title = recognition?.apparent_rank_title
+
+		if(user_role)
+			var/user_is_lower_watch = (
+				user_role.social_is_or_inherits(/datum/job/watch_guard) \
+				|| user_role.social_is_or_inherits(/datum/job/watch_veteran) \
+				|| user_role.social_is_or_inherits(/datum/job/watch_warden))
+
+			var/target_is_command_watch = target_rank_title in list("Town Watch Sergeant", "Town Watch Captain",)
 
 			if(user_is_lower_watch && target_is_command_watch)
 				return SOCIAL_RELATION_HIGHER_RANK
@@ -897,7 +906,6 @@
 
 /datum/social_profile/proc/get_profile_faction_flag()
 	return faction_flag
-
 
 /*
  * ============================================================================
@@ -966,7 +974,7 @@
 	if(!user_faction || !target_faction)
 		return
 
-	var/relationship = user.get_faction_relationship(user, context.target, user_faction, target_faction)
+	var/relationship = user.get_faction_relationship(user, src, user_faction, target_faction, recognition)
 
 	/* Only relationships returned by get_faction_relationship have handlers. */
 	switch(relationship)

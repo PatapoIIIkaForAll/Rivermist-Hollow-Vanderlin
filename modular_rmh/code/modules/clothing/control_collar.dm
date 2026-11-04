@@ -120,7 +120,7 @@ GLOBAL_LIST_INIT(reverse_slave_phrases_translations, list(
 	/// Stable key used in GLOB.slave_collars.
 	var/list_name
 	/// The rate at which the collar slowly drains the wearer's mana while equipped.
-	var/mana_drain_per_second = 1.5
+	var/mana_drain_per_second = 0
 	COOLDOWN_DECLARE(collar_phrase_usage)
 
 /obj/item/clothing/neck/slave_collar/male

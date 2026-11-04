@@ -24,6 +24,7 @@
 	)
 
 	give_bank_account = 150
+	daily_salary = 20
 
 	exp_type = list(EXP_TYPE_LIVING)
 	exp_types_granted = list(EXP_TYPE_GARRISON, EXP_TYPE_COMBAT)

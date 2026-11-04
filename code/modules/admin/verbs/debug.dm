@@ -43,7 +43,6 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	log_admin("[key_name(src)] has animalized [M.key].")
 	INVOKE_ASYNC(M, TYPE_PROC_REF(/mob, Animalize))
 
-
 //TODO: merge the vievars version into this or something maybe mayhaps
 /client/proc/cmd_debug_del_all(object as text)
 	set category = "Debug"
@@ -667,12 +666,121 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 
 	real_pack.pick_pack(usr)
 
-/client/proc/DebugSocialRecognition()
+
+/client/proc/debugdailysalarypayroll()
 	set category = "Debug.Debug"
-	set name = "Debug SOCIAL RECOGNITION"
+	set name = "SALARY DEBUG"
+	set desc = "Displays salary configuration, payroll eligibility, Treasury accounts, and payroll readiness."
 
 	if(!check_rights(R_DEBUG))
 		return
+
+	if(!SStreasury)
+		to_chat(src, span_warning("Treasury subsystem is unavailable."))
+		return
+
+	var/list/report = list()
+	var/list/seen_minds = list()
+
+	var/configured_jobs = 0
+	var/active_workers = 0
+	var/active_salary_workers = 0
+	var/missing_accounts = 0
+	var/total_due = 0
+
+	var/day_key = "day-[GLOB.payroll_day_number]"
+	var/day_completed = !!SStreasury.payroll_completed_days[day_key]
+
+	report += "PAYROLL DEBUG | day=[GLOB.payroll_day_number] | tod=[GLOB.tod] | dayspassed=[GLOB.dayspassed] | state=[SSticker.current_state]"
+	report += "Treasury=[SStreasury.treasury_value] | completed_today=[day_completed]"
+
+	// Show configured root roles, not advanced classes.
+	for(var/datum/job/configured_job as anything in SSjob.all_occupations)
+		if(configured_job.parent_job)
+			continue
+
+		if(isnum(configured_job.daily_salary) && configured_job.daily_salary > 0)
+			configured_jobs++
+			report += "CONFIGURED ROLE: [configured_job.title] | salary=[configured_job.daily_salary]"
+
+	if(!configured_jobs)
+		report += "CONFIG ERROR: No root role has a positive daily_salary."
+
+	// Inspect currently active human workers.
+	for(var/mob/living/carbon/human/employee in GLOB.human_list)
+		if(QDELETED(employee))
+			continue
+
+		var/datum/mind/employee_mind = employee.mind
+
+		if(!employee_mind || employee_mind.current != employee)
+			continue
+
+		if(employee_mind in seen_minds)
+			continue
+
+		seen_minds += employee_mind
+		active_workers++
+
+		// Preserve the actual assigned role.
+		var/datum/job/assigned_job = employee_mind.assigned_role
+
+		if(!istype(assigned_job, /datum/job))
+			report += "SKIP [employee.real_name] | reason=invalid assigned role"
+			continue
+
+		// Resolve the original/root role for salary purposes.
+		var/datum/job/payroll_job = assigned_job
+		var/list/visited_jobs = list()
+
+		while(payroll_job.parent_job)
+			if(payroll_job in visited_jobs)
+				payroll_job = null
+				break
+
+			visited_jobs += payroll_job
+			payroll_job = payroll_job.parent_job
+
+		if(!payroll_job)
+			report += "SKIP [employee.real_name] | assigned_job=[assigned_job.title] | reason=invalid parent_job chain"
+			continue
+
+		if(!isnum(payroll_job.daily_salary) || payroll_job.daily_salary <= 0)
+			report += "SKIP [employee.real_name] | assigned_job=[assigned_job.title] | payroll_role=[payroll_job.title] | salary=[payroll_job.daily_salary] (not configured)"
+			continue
+
+		active_salary_workers++
+
+		var/salary = floor(payroll_job.daily_salary)
+		total_due += salary
+
+		// Resolve the existing Treasury account.
+		var/account_key = SStreasury.resolve_bank_account_key(employee)
+
+		if(!account_key || !(account_key in SStreasury.bank_accounts))
+			missing_accounts++
+
+			report += "BLOCKED [employee.real_name] | assigned_job=[assigned_job.title] | payroll_role=[payroll_job.title] | salary=[salary] | reason=missing Treasury account"
+			continue
+
+		var/account_balance = SStreasury.bank_accounts[account_key]
+
+		if(!isnum(account_balance) || account_balance < 0)
+			report += "BLOCKED [employee.real_name] | assigned_job=[assigned_job.title] | payroll_role=[payroll_job.title] | salary=[salary] | reason=invalid account balance"
+			continue
+
+		report += "ELIGIBLE [employee.real_name] | assigned_job=[assigned_job.title] | payroll_role=[payroll_job.title] | salary=[salary] | balance=[account_balance]"
+
+	// Final diagnostic summary.
+	report += "SUMMARY | active=[active_workers] | active_with_salary=[active_salary_workers] | missing_accounts=[missing_accounts] | estimated_payroll=[total_due] | treasury_can_cover=[SStreasury.treasury_value >= total_due]"
+
+	to_chat(src, span_notice(jointext(report, "\n")))
+
+	log_admin("[key_name_admin(src)] generated a daily salary payroll diagnostic.")
+
+/client/proc/DebugSocialRecognition()
+	set category = "Debug.Debug"
+	set name = "Debug SOCIAL RECOGNITION"
 
 	var/mob/living/carbon/observer = input(usr, "Select the observer.", "Social Recognition Debug") as null|mob in GLOB.player_list
 
@@ -1115,3 +1223,87 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	to_chat(usr, span_boldnotice("===================================================================="))
 	to_chat(usr, span_boldnotice("                    END SOCIAL TRACE"))
 	to_chat(usr, span_boldnotice("===================================================================="))
+
+
+/client/proc/timeskip_to()
+	set category = "Debug"
+	set name = "Timeskip To"
+	set desc = "Simulates TOD transitions and daily events until the selected in-game time."
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	if(SSticker.current_state != GAME_STATE_PLAYING)
+		to_chat(src, span_warning("Timeskip is only available during active gameplay."))
+		return
+
+	if(GLOB.todoverride)
+		to_chat(src, span_warning("Disable SetTODOverride before using Timeskip To."))
+		return
+
+	var/list/TODs = list("dawn", "day", "dusk", "night")
+	var/target_tod = input(src, "Select the target time of day.", "Timeskip To") as null|anything in TODs
+
+	if(!target_tod)
+		return
+
+	var/days_to_advance = input(
+		src,
+		"How many dawn transitions should occur before reaching the selected TOD? (1-7)",
+		"Timeskip To",
+		1
+	) as null|num
+
+	if(isnull(days_to_advance))
+		return
+
+	days_to_advance = round(days_to_advance)
+
+	if(days_to_advance < 1 || days_to_advance > 7)
+		to_chat(src, span_warning("Choose between 1 and 7 days."))
+		return
+
+	if(alert(
+		src,
+		"This will process [days_to_advance] dawn transitions, including daily Treasury payments and other TOD-dependent events. Continue?",
+		"Confirm Timeskip",
+		"Yes",
+		"No"
+	) != "Yes")
+		return
+
+	// Synchronize any natural transition that has not yet been processed.
+	settod()
+
+	var/target_day_number = GLOB.payroll_day_number + days_to_advance
+	var/max_transitions = (days_to_advance * 4) + 4
+	var/transitions_processed = 0
+	var/failed = FALSE
+
+	while(GLOB.payroll_day_number < target_day_number || GLOB.tod != target_tod)
+		if(transitions_processed >= max_transitions)
+			failed = TRUE
+			break
+
+		if(!advance_station_time_to_next_tod_boundary())
+			failed = TRUE
+			break
+
+		transitions_processed++
+
+	// Apply player-facing effects only for the final TOD.
+	for(var/mob/living/player in GLOB.mob_list)
+		if(player.stat != DEAD && player.client)
+			player.do_time_change()
+
+	if(failed)
+		to_chat(src, span_warning("Timeskip stopped early. Current TOD: [GLOB.tod]. Processed transitions: [transitions_processed]."))
+		log_admin("[key_name_admin(src)] attempted a timeskip to [target_tod], but it stopped early.")
+		return
+
+	message_admins("[key_name_admin(src)] timeskipped [days_to_advance] dawn transitions to [target_tod].")
+	log_admin("[key_name_admin(src)] timeskipped [days_to_advance] dawn transitions to [target_tod].")
+
+	to_chat(src, span_notice("Timeskip complete. Current TOD: [GLOB.tod]. Payroll day: [GLOB.payroll_day_number]."))
+
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Timeskip To")

@@ -86,6 +86,10 @@
 	var/paycheck = PAYCHECK_MINIMAL
 	var/paycheck_department = ACCOUNT_CIV
 
+/// Fixed salary paid from the Town Treasury on each in-game day.
+/// Zero means this job is not enrolled in the daily payroll.
+	var/daily_salary = 0
+
 	/// Traits added to the mind of the mob assigned this job
 	var/list/mind_traits
 
@@ -847,6 +851,7 @@
 	data["exp_type"] = exp_type
 	data["paycheck"] = paycheck
 	data["paycheck_department"] = paycheck_department
+	data["daily_salary"] = daily_salary
 	data["display_order"] = display_order
 	data["job_flags"] = job_flags
 	data["allowed_sexes"] = allowed_sexes
@@ -990,7 +995,8 @@
 	if(data["spells"])
 		var/list/tmp = data["spells"]
 		spells = tmp.Copy()
-
+	if(isnum(data["daily_salary"]))
+		daily_salary = max(0, floor(data["daily_salary"]))
 
 	if(data["outfit"])
 		var/list/outfit_data = data["outfit"]

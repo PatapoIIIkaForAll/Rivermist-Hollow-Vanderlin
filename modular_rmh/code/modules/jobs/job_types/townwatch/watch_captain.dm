@@ -24,6 +24,7 @@
 	)
 
 	give_bank_account = 350
+	daily_salary = 30
 
 	exp_type = list(EXP_TYPE_LIVING)
 	exp_types_granted = list(EXP_TYPE_GARRISON, EXP_TYPE_COMBAT, EXP_TYPE_LEADERSHIP)
@@ -108,7 +109,7 @@
 
 /datum/outfit/watch_captain/marshall
 	name = "Town Watch Marshall"
-	head = /obj/item/clothing/head/helmet/sargebarbute
+	head = /obj/item/clothing/head/helmet/sargebarbute/town_watch
 	mask = null
 	neck = /obj/item/clothing/neck/highcollier
 	cloak = /obj/item/clothing/cloak/captain/town_watch
@@ -318,6 +319,17 @@
 	accept_message = "I swear fealty to the Burgmeister and the Town Watch!"
 	refuse_message = "I refuse."
 
+/datum/job/watch_guard/militia
+	title = "Town Watch Militia"
+	department_flag = TOWNWATCH
+	faction = FACTION_TOWN
+	job_flags = 0
+	display_order = JDO_WATCH_MILITIA
+	total_positions = 0
+	spawn_positions = 0
+	give_bank_account = 0
+	exp_requirements = 0
+
 /datum/action/cooldown/spell/undirected/list_target/convert_role/town_watch/on_conversion(mob/living/cast_on)
 	. = ..()
 	cast_on.verbs |= /mob/proc/haltyell
@@ -328,16 +340,19 @@
 	emote("haltyell")
 ///Emegency authonomy system. When captain is absent, it's ability to recruit is given to the sergeant.
 /proc/town_watch_captain_available()
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(QDELETED(H))
+	for (var/mob/living/carbon/human/H in GLOB.player_list)
+		if (QDELETED(H))
 			continue
-		var/datum/job/J = H.mind?.assigned_role
-		if(!J)
+		if (!H.client)
 			continue
-		if(J.parent_job)
-			J = J.parent_job
-		if(istype(J, /datum/job/watch_captain))
-			return TRUE
+		if (H.stat == DEAD)
+			continue
+		if (!H.mind)
+			continue
+		if (H.mind.assigned_role != "Town Watch Captain")
+			continue
+		return TRUE
+
 	return FALSE
 
 

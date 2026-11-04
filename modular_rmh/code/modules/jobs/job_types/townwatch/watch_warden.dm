@@ -24,6 +24,7 @@
 	)
 
 	give_bank_account = 125
+	daily_salary = 20
 
 	exp_type = list(EXP_TYPE_LIVING)
 	exp_types_granted = list(EXP_TYPE_GARRISON, EXP_TYPE_COMBAT)
@@ -196,7 +197,7 @@
 // Juggernaut WARDEN //
 ////////////////////////////////////////
 /datum/job/advclass/watch_warden/juggernaut
-	title = "Juggernaut"
+	title = "Iron Clad Watch"
 	tutorial = "You are a Juggernaut of the Town Watch. \
 	As the other wardens, you are responsible for prisoners, and ensure that sentences are carried out lawfully. \
 	Your way is one of brute force and unwavering determination. No one is a match for you in hand-to-hand combat. Heavy armor training made you stronger than the others in the corps."

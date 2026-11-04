@@ -112,12 +112,6 @@
 	SIGNAL_HANDLER
 	qdel(src)
 
-/datum/town_watch_command_trait/Destroy(force)
-	if(owner)
-		UnregisterSignal(owner, qdel(src))
-		owner = null
-	return ..()
-
 /datum/action/cooldown/spell/undirected/town_watch_command
 	name = "Issue Order"
 	desc = "Issue an order to the Town Watch."
@@ -200,18 +194,15 @@
 	action.Grant(owner)
 
 
-/datum/town_watch_command_trait/Destroy()
+/datum/town_watch_command_trait/Destroy(force)
 	close_command_menu()
 	cleanup_targeter()
-
 	if(owner)
 		UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
-
-	if(action)
-		action.Remove(owner)
-		QDEL_NULL(action)
-
-	owner = null
+		if(action)
+			action.Remove(owner)
+		owner = null
+	QDEL_NULL(action)
 	commands = null
 	command_mode = null
 	targeted_recipient = null
@@ -617,7 +608,7 @@
 
 	if(command)
 		for(var/trait in command.granted_traits)
-			ADD_TRAIT(owner, trait, src)
+			ADD_TRAIT(owner, trait, REF(src))
 
 		if(command.target_message)
 			to_chat(owner, span_blue(command.target_message))
@@ -627,7 +618,7 @@
 /datum/status_effect/buff/town_watch_order/on_remove()
 	if(command)
 		for(var/trait in command.granted_traits)
-			REMOVE_TRAIT(owner, trait, src)
+			REMOVE_TRAIT(owner, trait, REF(src))
 
 	. = ..()
 
