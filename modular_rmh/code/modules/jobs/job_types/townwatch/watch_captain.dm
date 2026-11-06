@@ -116,7 +116,7 @@
 	armor = /obj/item/clothing/armor/plate/full/matthios
 	shirt = /obj/item/clothing/shirt/undershirt/fancy
 	wrists = /obj/item/clothing/wrists/bracers/jackchain
-	gloves = /obj/item/clothing/gloves/plate/silver
+	gloves = /obj/item/clothing/gloves/plate
 	pants = /obj/item/clothing/pants/chainlegs
 	shoes = /obj/item/clothing/shoes/boots/leather/advanced/watch
 	backr = /obj/item/storage/backpack/satchel/black

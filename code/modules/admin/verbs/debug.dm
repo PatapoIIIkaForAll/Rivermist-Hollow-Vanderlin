@@ -666,7 +666,6 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 
 	real_pack.pick_pack(usr)
 
-
 /client/proc/debugdailysalarypayroll()
 	set category = "Debug.Debug"
 	set name = "SALARY DEBUG"
