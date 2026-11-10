@@ -1,0 +1,15 @@
+{
+	"map_name": "Tavern_test",
+	"map_path": "map_files/tavern_test",
+	"map_file": "tavern_test.dmm",
+	"traits": [
+		{"Up": true},
+		{"Up": true, "Down": true, "Leylines": true},
+		{"Up": true, "Down": true, "Leylines": true},
+		{"Up": true, "Down": true, "Leylines": true},
+		{"Down": true}
+	],
+	"minetype": null,
+	"space_empty_levels": 0,
+	"space_ruin_levels": 0
+}

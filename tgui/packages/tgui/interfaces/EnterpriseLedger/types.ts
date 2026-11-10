@@ -3,6 +3,8 @@ import type { BooleanLike } from 'tgui-core/react';
 export type Data = {
   // ui_static_data
   name: string;
+  // The id of the BYOND map control the floors are drawn on.
+  map: string | null;
   floors: FloorInfo[];
   rooms: RoomInfo[];
 
@@ -16,20 +18,19 @@ export type Data = {
 };
 
 export type RoomInfo = {
-  // The lock id of the room's doors.
-  id: string;
   name: string;
+  kind: 'guest' | 'service' | 'common';
   z: number;
   tiles: number;
   beds: number;
+  // How many furnishings the survey listed in the room.
+  items: number;
 };
 
 export type FloorInfo = {
   z: number;
   basement: BooleanLike;
   tiles: number;
-  // The id of the BYOND map control that shows this floor.
-  map: string;
 };
 
 export type Locale = {
@@ -52,6 +53,7 @@ export type Locale = {
     basement: string;
     guestRooms: string;
     guestRoomsNone: string;
+    surveyAgain: string;
   };
   formatPremises: (floors: number, basements: number, tiles: number) => string;
   formatFloor: (number: number) => string;

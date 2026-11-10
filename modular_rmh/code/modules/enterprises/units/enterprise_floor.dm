@@ -1,29 +1,8 @@
-// A map control never shows less than this many tiles; a smaller floor is centred in the frame.
-#define FLOOR_VIEW_MIN_WIDTH 20
-#define FLOOR_VIEW_MIN_HEIGHT 15
-
-// Pins the size of the floor's map and stays under the view; shared by every viewer.
-/atom/movable/screen/background/enterprise_floor
-	layer = GAME_PLANE - 1
+// A strip of a floor's picture, or its labels: only overlays, placed on the enterprise's map.
+/atom/movable/screen/enterprise_picture
+	plane = GAME_PLANE
+	layer = GAME_PLANE
 	del_on_map_removal = FALSE
-
-// Lies over the whole floor map: takes the mouse wheel and keeps clicks off the turfs shown under it.
-/atom/movable/screen/enterprise_floor_catcher
-	icon = 'icons/mob/screen_gen.dmi'
-	icon_state = "catcher"
-	plane = ABOVE_HUD_PLANE
-	alpha = 0
-	mouse_opacity = MOUSE_OPACITY_OPAQUE
-	del_on_map_removal = FALSE
-	var/datum/enterprise_floor/floor
-
-/atom/movable/screen/enterprise_floor_catcher/Destroy()
-	floor = null
-	return ..()
-
-/atom/movable/screen/enterprise_floor_catcher/MouseWheel(delta_x, delta_y, location, control, params)
-	if(floor && delta_y)
-		floor.enterprise.wheel_floor(usr, delta_y > 0 ? 1 : -1)
 
 /datum/enterprise_floor
 	var/datum/enterprise/enterprise
@@ -37,27 +16,17 @@
 	// One cell per turf of the bounding box, row by row; TRUE where the turf belongs to the floor.
 	var/list/mask
 	var/list/datum/enterprise_room/rooms = list()
-	// Laid out like the mask; holds the guest room a turf belongs to, if any.
+	// Laid out like the mask; holds the room a turf belongs to, if any.
 	var/list/datum/enterprise_room/room_cells
-	var/map_key
-	var/atom/movable/screen/map_view/view
-	var/atom/movable/screen/background/enterprise_floor/backdrop
-	var/atom/movable/screen/enterprise_floor_catcher/catcher
-	var/list/atom/movable/screen/plane_master/plane_masters
+	// The floor as it looked when last surveyed: one strip per row, then the room labels.
+	var/list/atom/movable/screen/enterprise_picture/picture
 
 /datum/enterprise_floor/New(z, datum/enterprise/enterprise)
-	var/static/keys_made = 0
-	keys_made++
 	src.z = z
 	src.enterprise = enterprise
-	// A map key has to start and end with a letter.
-	map_key = "enterprisefloor[keys_made]map"
 
 /datum/enterprise_floor/Destroy()
-	QDEL_NULL(view)
-	QDEL_NULL(backdrop)
-	QDEL_NULL(catcher)
-	QDEL_LIST(plane_masters)
+	QDEL_LIST(picture)
 	enterprise = null
 	turfs = null
 	mask = null
@@ -65,8 +34,9 @@
 	room_cells = null
 	return ..()
 
-/datum/enterprise_floor/proc/add_turfs(list/turf/added)
-	turfs += added
+/datum/enterprise_floor/proc/set_turfs(list/turf/new_turfs)
+	turfs = new_turfs
+	room_cells = null
 	var/turf/first = turfs[1]
 	min_x = first.x
 	min_y = first.y
@@ -82,8 +52,13 @@
 	mask = new /list(width * height)
 	for(var/turf/member as anything in turfs)
 		mask[(member.y - min_y) * width + (member.x - min_x) + 1] = TRUE
-	if(view)
-		update_view()
+
+/datum/enterprise_floor/proc/set_rooms(list/datum/enterprise_room/new_rooms)
+	rooms = new_rooms
+	room_cells = new /list(width * height)
+	for(var/datum/enterprise_room/room as anything in rooms)
+		for(var/turf/member as anything in room.turfs)
+			room_cells[cell_index(member)] = room
 
 /datum/enterprise_floor/proc/contains(turf/checked)
 	if(!checked || checked.z != z)
@@ -111,22 +86,46 @@
 				found += thing
 	return found
 
-/datum/enterprise_floor/proc/update_view()
-	var/frame_width = max(width, FLOOR_VIEW_MIN_WIDTH)
-	var/frame_height = max(height, FLOOR_VIEW_MIN_HEIGHT)
-	backdrop.fill_rect(1, 1, frame_width, frame_height)
-	catcher.fill_rect(1, 1, frame_width, frame_height)
-	view.set_position(1 + round((frame_width - width) / 2), 1 + round((frame_height - height) / 2))
-	view.vis_contents.Cut()
-	view.vis_contents += turfs
-	update_labels()
+/datum/enterprise_floor/proc/copy_appearance(atom/source, offset)
+	var/mutable_appearance/copy = new
+	copy.appearance = source.appearance
+	copy.pixel_x += offset
+	return copy
 
-// Writes each guest room's name over the room, as overlays of the view.
-/datum/enterprise_floor/proc/update_labels()
-	if(!view)
-		return
-	view.overlays.Cut()
+/**
+ * Draws the floor as it stands now: the turfs and every visible object on them, and no mobs at all.
+ * It is a picture, not a view: nothing in it moves until the floor is surveyed again.
+ */
+/datum/enterprise_floor/proc/take_picture()
+	QDEL_LIST(picture)
+	picture = list()
+	var/map_key = enterprise.map_key
+	var/screen_x = enterprise.frame_pad_x + 1 + (min_x - enterprise.frame_min_x)
+	var/screen_y = enterprise.frame_pad_y + 1 + (min_y - enterprise.frame_min_y)
+
+	for(var/row in 0 to height - 1)
+		var/list/strip_overlays = list()
+		for(var/column in 0 to width - 1)
+			if(!mask[row * width + column + 1])
+				continue
+			var/turf/member = locate(min_x + column, min_y + row, z)
+			var/offset = column * ICON_SIZE_X
+			strip_overlays += copy_appearance(member, offset)
+			for(var/obj/thing in member)
+				if(!thing.invisibility)
+					strip_overlays += copy_appearance(thing, offset)
+		if(!length(strip_overlays))
+			continue
+		var/atom/movable/screen/enterprise_picture/strip = new
+		strip.assigned_map = map_key
+		strip.set_position(screen_x, screen_y + row)
+		strip.overlays = strip_overlays
+		picture += strip
+
+	var/list/label_overlays = list()
 	for(var/datum/enterprise_room/room as anything in rooms)
+		if(!room.name || (room.kind != ENTERPRISE_ROOM_GUEST && length(room.turfs) < ENTERPRISE_ROOM_LABEL_MIN_TILES))
+			continue
 		var/turf/first = room.turfs[1]
 		var/room_min_x = first.x
 		var/room_max_x = first.x
@@ -145,45 +144,10 @@
 		label.maptext_height = ICON_SIZE_Y
 		label.pixel_x = (room_min_x - min_x) * ICON_SIZE_X
 		label.pixel_y = (round((room_min_y + room_max_y) / 2) - min_y) * ICON_SIZE_Y
-		view.overlays += label
-
-/**
- * The map control of a floor has no plane masters of its own, and without them the lighting and
- * emissive planes are drawn as plain pictures over the turfs. Every floor gets its own set; the
- * planes that only darken the picture are switched off, so the floor is shown fully lit.
- */
-/datum/enterprise_floor/proc/build_view()
-	backdrop = new
-	backdrop.assigned_map = map_key
-	catcher = new
-	catcher.assigned_map = map_key
-	catcher.floor = src
-	view = new
-	view.generate_view(map_key)
-	plane_masters = list()
-	for(var/plane_type in subtypesof(/atom/movable/screen/plane_master) - /atom/movable/screen/plane_master/blackness)
-		var/atom/movable/screen/plane_master/plane_master = new plane_type()
-		if(plane_master.blend_mode_override == BLEND_MULTIPLY)
-			plane_master.alpha = 0
-		else if(plane_master.blend_mode_override)
-			plane_master.blend_mode = plane_master.blend_mode_override
-		plane_master.assigned_map = map_key
-		plane_master.del_on_map_removal = FALSE
-		plane_master.screen_loc = "[map_key]:CENTER"
-		plane_masters += plane_master
-	update_view()
-
-/datum/enterprise_floor/proc/show_to(client/viewer)
-	if(!view)
-		build_view()
-	viewer.register_map_obj(backdrop)
-	viewer.register_map_obj(view)
-	viewer.register_map_obj(catcher)
-	for(var/atom/movable/screen/plane_master/plane_master as anything in plane_masters)
-		viewer.register_map_obj(plane_master)
-
-/datum/enterprise_floor/proc/hide_from(client/viewer)
-	viewer.clear_map(map_key)
-
-#undef FLOOR_VIEW_MIN_WIDTH
-#undef FLOOR_VIEW_MIN_HEIGHT
+		label_overlays += label
+	if(length(label_overlays))
+		var/atom/movable/screen/enterprise_picture/labels = new
+		labels.assigned_map = map_key
+		labels.set_position(screen_x, screen_y)
+		labels.overlays = label_overlays
+		picture += labels

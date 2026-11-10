@@ -95,8 +95,23 @@
 //#define USES_PQ
 //#define ABSOLUTE_MINIMUM_MODE //uncomment this to skip as many resource intensive ops as possible to load in for testing the fastest while preserving most gameplay features.
 
+//RMH EDITED START - the tavern cut out of Rivermist Hollow, for work on the enterprises module
+//#define TAVERN_TEST //uncomment this to load centcom and Tavern_test and thats it.
+#ifdef TAVERN_TEST
+#ifndef LOWMEMORYMODE
+#define LOWMEMORYMODE
+#endif
+#ifndef NO_DUNGEON
+#define NO_DUNGEON
+#endif
+#endif
+//RMH EDITED END
+
 #ifdef LOWMEMORYMODE
-#ifdef ABSOLUTE_MINIMUM_MODE
+#if defined(TAVERN_TEST) //RMH EDITED - was #ifdef ABSOLUTE_MINIMUM_MODE, the tavern map is asked first
+#define FORCE_MAP "tavern_test"
+#define FORCE_MAP_DIRECTORY "_maps"
+#elif defined(ABSOLUTE_MINIMUM_MODE)
 #define FORCE_MAP "minimal_test"
 #define FORCE_MAP_DIRECTORY "_maps"
 #else

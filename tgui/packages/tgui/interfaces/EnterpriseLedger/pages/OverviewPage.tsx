@@ -20,7 +20,7 @@ export const OverviewPage = (props: PageProps) => {
   const premises = data.floors || [];
   const tiles = premises.reduce((total, floor) => total + floor.tiles, 0);
   const basements = premises.filter((floor) => floor.basement).length;
-  const rooms = data.rooms || [];
+  const rooms = (data.rooms || []).filter((room) => room.kind === 'guest');
 
   return (
     <Section

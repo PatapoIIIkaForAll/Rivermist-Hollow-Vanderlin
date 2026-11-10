@@ -11,16 +11,20 @@
 	var/shift_active = FALSE
 	// Indexed by z-level; a level the enterprise does not reach holds null.
 	var/list/datum/enterprise_floor/floors = list()
-	// The z-level each open ledger is showing on its premises page, by REF of the viewer.
-	var/list/viewed_z = list()
 	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
 
 /datum/enterprise/Destroy()
 	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
 		ledger.enterprise = null
 	ledgers = null
-	QDEL_LIST_ASSOC_VAL(rooms)
+	guest_rooms = null
+	QDEL_LIST(rooms)
 	QDEL_LIST(floors)
+	QDEL_NULL(map_backdrop)
+	QDEL_NULL(map_catcher)
+	QDEL_LIST(map_plane_masters)
+	anchors = null
+	claimed_by_z = null
 	SSenterprises.enterprises -= type
 	return ..()
 
@@ -68,6 +72,7 @@
 /datum/enterprise/ui_static_data(mob/user)
 	return list(
 		"name" = name,
+		"map" = map_key,
 		"floors" = get_floors_data(),
 		"rooms" = get_rooms_data(),
 	)
@@ -104,6 +109,10 @@
 			return step_floor(ui.user, direction)
 		if("hide_floors")
 			hide_floors(ui.user)
+			return FALSE
+		if("survey_again")
+			// Sends its own full update, so no second push is owed.
+			survey_again(ui.user)
 			return FALSE
 	return FALSE
 

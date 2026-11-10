@@ -4476,6 +4476,7 @@
 #include "modular_ratwood\modular_deserttown\desertstuff.dm"
 #include "modular_ratwood\modular_deserttown\desertwalls.dm"
 #include "modular_rmh\code\tweaks.dm"
+#include "modular_rmh\code\_DEFINES\enterprises.dm"
 #include "modular_rmh\code\_DEFINES\gnoll.dm"
 #include "modular_rmh\code\_DEFINES\mothbug.dm"
 #include "modular_rmh\code\_DEFINES\partial_transformation.dm"

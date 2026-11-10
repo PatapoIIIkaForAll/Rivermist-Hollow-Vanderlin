@@ -1,12 +1,14 @@
 SUBSYSTEM_DEF(enterprises)
 	name = "Enterprises"
+	// The floors are pictured as they look, so walls must be smoothed and overlays compiled first.
+	init_order = INIT_ORDER_OVERLAY - 1
 	flags = SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
 	wait = 2 SECONDS
 	var/list/datum/enterprise/enterprises = list()
 	var/list/datum/enterprise/currentrun = list()
 
-// Runs after SSatoms: by then every mapped ledger has registered with its enterprise.
+// By now every mapped ledger has registered with its enterprise.
 /datum/controller/subsystem/enterprises/Initialize()
 	for(var/enterprise_type in enterprises)
 		var/datum/enterprise/enterprise = enterprises[enterprise_type]

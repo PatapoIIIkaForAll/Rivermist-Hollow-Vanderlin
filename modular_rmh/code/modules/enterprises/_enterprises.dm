@@ -1,3 +1,4 @@
+#include "enterprise_map.dm"
 #include "enterprise_premises.dm"
 #include "enterprise_rooms.dm"
 #include "enterprises_subsystem.dm"

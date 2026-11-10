@@ -30,6 +30,7 @@ const locale: Locale = {
     basement: 'Basement',
     guestRooms: 'Guest rooms',
     guestRoomsNone: 'None found',
+    surveyAgain: 'Survey again',
   },
   formatPremises: (floors, basements, tiles) =>
     `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,

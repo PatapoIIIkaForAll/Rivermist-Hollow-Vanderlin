@@ -30,6 +30,7 @@ const locale: Locale = {
     basement: 'Подвал',
     guestRooms: 'Жилые комнаты',
     guestRoomsNone: 'Не найдены',
+    surveyAgain: 'Осмотреть заново',
   },
   formatPremises: (floors, basements, tiles) =>
     `Этажей: ${floors}, подвальных уровней: ${basements}, клеток: ${tiles}`,

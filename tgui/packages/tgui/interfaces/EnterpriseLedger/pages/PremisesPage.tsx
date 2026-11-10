@@ -1,5 +1,12 @@
 import { useEffect, type WheelEvent } from 'react';
-import { ByondUi, NoticeBox, Section, Stack, Tabs } from 'tgui-core/components';
+import {
+  Button,
+  ByondUi,
+  NoticeBox,
+  Section,
+  Stack,
+  Tabs,
+} from 'tgui-core/components';
 
 import { useBackend } from '../../../backend';
 import type { Data, FloorInfo, Locale, PageProps } from '../types';
@@ -19,10 +26,10 @@ export const PremisesPage = (props: PageProps) => {
   const { locale } = props;
   const { act, data } = useBackend<Data>();
   const floors = data.floors || [];
-  // Which floor is open is the server's to say: the wheel over the map changes it there.
-  const floor = floors.find((entry) => entry.z === data.viewed_z);
   const labels = getFloorLabels(locale, floors);
 
+  // The server draws the floor on the map control; which floor is its to say,
+  // because the wheel over the map changes it there.
   useEffect(() => {
     act('open_premises');
     return () => act('hide_floors');
@@ -36,7 +43,15 @@ export const PremisesPage = (props: PageProps) => {
   };
 
   return (
-    <Section fill title={locale.labels.premises}>
+    <Section
+      fill
+      title={locale.labels.premises}
+      buttons={
+        <Button icon="rotate" onClick={() => act('survey_again')}>
+          {locale.labels.surveyAgain}
+        </Button>
+      }
+    >
       {!floors.length && <NoticeBox>{locale.labels.premisesMissing}</NoticeBox>}
       {!!floors.length && (
         <Stack vertical fill>
@@ -56,15 +71,15 @@ export const PremisesPage = (props: PageProps) => {
             </div>
           </Stack.Item>
           <Stack.Item grow>
-            {!!floor && (
-              // Keyed by the map id alone: another floor is another control.
+            {!!data.map && (
+              // One control for every floor: switching floors swaps the picture on it.
               <ByondUi
-                key={floor.map}
+                key={data.map}
                 width="100%"
                 height="100%"
                 phonehome={false}
                 params={{
-                  id: floor.map,
+                  id: data.map,
                   type: 'map',
                   'background-color': '#000000',
                 }}
