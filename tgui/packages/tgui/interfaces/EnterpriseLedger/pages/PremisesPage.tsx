@@ -1,4 +1,4 @@
-import { useEffect, useState, type WheelEvent } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -114,12 +114,6 @@ export const PremisesPage = (props: PageProps) => {
     return () => act('hide_floors');
   }, []);
 
-  const stepFloor = (event: WheelEvent) => {
-    if (event.deltaY) {
-      act('step_floor', { direction: event.deltaY < 0 ? 1 : -1 });
-    }
-  };
-
   if (!floors.length) {
     return (
       <Section fill title={locale.labels.premises}>
@@ -135,26 +129,29 @@ export const PremisesPage = (props: PageProps) => {
           fill
           title={locale.labels.premises}
           buttons={
-            <Button icon="rotate" onClick={() => act('survey_again')}>
-              {locale.labels.surveyAgain}
-            </Button>
+            <>
+              <Button icon="expand" onClick={() => act('reset_view')}>
+                {locale.labels.resetView}
+              </Button>
+              <Button icon="rotate" onClick={() => act('survey_again')}>
+                {locale.labels.surveyAgain}
+              </Button>
+            </>
           }
         >
           <Stack vertical fill>
             <Stack.Item>
-              <div onWheel={stepFloor}>
-                <Tabs>
-                  {floors.map((entry, index) => (
-                    <Tabs.Tab
-                      key={entry.z}
-                      selected={entry.z === data.viewed_z}
-                      onClick={() => act('view_floor', { z: entry.z })}
-                    >
-                      {labels[index]}
-                    </Tabs.Tab>
-                  ))}
-                </Tabs>
-              </div>
+              <Tabs>
+                {floors.map((entry, index) => (
+                  <Tabs.Tab
+                    key={entry.z}
+                    selected={entry.z === data.viewed_z}
+                    onClick={() => act('view_floor', { z: entry.z })}
+                  >
+                    {labels[index]}
+                  </Tabs.Tab>
+                ))}
+              </Tabs>
             </Stack.Item>
             <Stack.Item grow>
               {!!data.map && (

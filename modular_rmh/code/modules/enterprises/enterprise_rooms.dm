@@ -155,16 +155,6 @@
 		pocket.kept = TRUE
 		for(var/datum/enterprise_room/linked as anything in pocket.links)
 			reached |= linked.resolve()
-	for(var/datum/enterprise_room/pocket as anything in reached)
-		if((pocket in ledger_pockets) || !length(pocket.lock_doors))
-			continue
-		var/has_own_door = FALSE
-		for(var/obj/structure/door/door as anything in pocket.lock_doors)
-			if(is_own_door(door))
-				has_own_door = TRUE
-				break
-		if(!has_own_door)
-			pocket.kept = FALSE
 
 	prune_floors()
 	for(var/datum/enterprise_room/pocket as anything in pockets)

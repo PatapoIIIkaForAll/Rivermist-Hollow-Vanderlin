@@ -43,9 +43,10 @@ const locale: Locale = {
     guestRooms: 'Guest rooms',
     guestRoomsNone: 'None found',
     surveyAgain: 'Survey again',
+    resetView: 'Reset view',
     legend: 'Legend',
     legendHint:
-      'Point at a room to light it up. Click it on the map for its menu, or here for its details.',
+      'Point at a room to light it up. Click it on the map for its menu, or here for its details. The mouse wheel over the map zooms in and out.',
     legendEmpty: 'No rooms on this floor.',
   },
   room: {
@@ -82,7 +83,7 @@ const locale: Locale = {
   formatTiles: (tiles) => `${tiles} tiles`,
   formatBeds: (beds) => `beds: ${beds}`,
   formatRepair: (cost) => `Repair: ${cost}`,
-  formatMissing: (missing) => `gone: ${missing}`,
+  formatMissing: (missing) => `gone or broken: ${missing}`,
   formatLevel: (level, maxLevel) => `${level} of ${maxLevel}`,
   formatLevelUp: (level, nextLevel) => `Level ${level} → ${nextLevel}`,
   formatStay: (hours, minutes) => `${hours} h ${minutes} min`,

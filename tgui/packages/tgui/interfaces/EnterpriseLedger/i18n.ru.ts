@@ -43,9 +43,10 @@ const locale: Locale = {
     guestRooms: 'Жилые комнаты',
     guestRoomsNone: 'Не найдены',
     surveyAgain: 'Осмотреть заново',
+    resetView: 'Вернуть как было',
     legend: 'Легенда',
     legendHint:
-      'Наведите на комнату, чтобы подсветить её. Щелчок по ней на карте откроет меню, щелчок здесь — сведения.',
+      'Наведите на комнату, чтобы подсветить её. Щелчок по ней на карте откроет меню, щелчок здесь — сведения. Колесо мыши над картой приближает и отдаляет.',
     legendEmpty: 'На этом этаже комнат нет.',
   },
   room: {
@@ -82,7 +83,7 @@ const locale: Locale = {
   formatTiles: (tiles) => `клеток: ${tiles}`,
   formatBeds: (beds) => `кроватей: ${beds}`,
   formatRepair: (cost) => `Починить: ${cost}`,
-  formatMissing: (missing) => `пропало: ${missing}`,
+  formatMissing: (missing) => `пропало или сломано: ${missing}`,
   formatLevel: (level, maxLevel) => `${level} из ${maxLevel}`,
   formatLevelUp: (level, nextLevel) => `Уровень ${level} → ${nextLevel}`,
   formatStay: (hours, minutes) => `${hours} ч ${minutes} мин`,

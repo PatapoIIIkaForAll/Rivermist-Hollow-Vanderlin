@@ -9,11 +9,30 @@
 
 /datum/enterprise/proc/take_fixtures(list/turf/fresh)
 	for(var/turf/member as anything in fresh)
-		if(!get_room(member))
+		if(!contains(member))
 			continue
 		for(var/obj/thing in member)
 			if(!thing.invisibility && is_fixture(thing))
 				fixtures += new /datum/enterprise_fixture(thing)
+
+/datum/enterprise/proc/get_adjoining_room(turf/place)
+	var/static/list/kind_ranks = list(
+		ENTERPRISE_ROOM_GUEST = 1,
+		ENTERPRISE_ROOM_SERVICE = 2,
+		ENTERPRISE_ROOM_COMMON = 3,
+	)
+	var/datum/enterprise_room/chosen
+	for(var/direction in GLOB.cardinals)
+		var/datum/enterprise_room/candidate = get_room(get_step(place, direction))
+		if(!candidate || candidate == chosen)
+			continue
+		if(!chosen)
+			chosen = candidate
+			continue
+		var/rank_gap = kind_ranks[candidate.kind] - kind_ranks[chosen.kind]
+		if(rank_gap < 0 || (!rank_gap && length(candidate.turfs) < length(chosen.turfs)))
+			chosen = candidate
+	return chosen
 
 /datum/enterprise/proc/get_room_templates()
 	if(room_templates)
@@ -34,7 +53,7 @@
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.fixtures = list()
 	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		var/datum/enterprise_room/room = get_room(fixture.home)
+		var/datum/enterprise_room/room = get_room(fixture.home) || get_adjoining_room(fixture.home)
 		fixture.room = room
 		if(room)
 			room.fixtures += fixture

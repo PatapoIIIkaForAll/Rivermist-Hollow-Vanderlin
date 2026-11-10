@@ -1,10 +1,11 @@
 #define ENTERPRISE_MAP_MIN_WIDTH 20
 #define ENTERPRISE_MAP_MIN_HEIGHT 15
-#define ENTERPRISE_MENU_BUTTON_WIDTH 128
-#define ENTERPRISE_MENU_BUTTON_HEIGHT 24
-#define ENTERPRISE_MENU_BUTTON_STEP 26
+#define ENTERPRISE_MENU_BUTTON_WIDTH 320
+#define ENTERPRISE_MENU_BUTTON_HEIGHT 60
+#define ENTERPRISE_MENU_BUTTON_STEP 66
 #define ENTERPRISE_MENU_ALPHA_IDLE 170
 #define ENTERPRISE_MENU_ALPHA_HOVER 255
+#define ENTERPRISE_MENU_TEXT(text) {"<span style='font-family: "Pixelify Sans"; font-size: 18pt; color: #f0e2c4; text-align: center; vertical-align: middle; -dm-text-outline: 1px black'>[##text]</span>"}
 
 /atom/movable/screen/background/enterprise_map
 	layer = GAME_PLANE - 1
@@ -26,16 +27,25 @@
 
 /atom/movable/screen/enterprise_map_catcher/MouseWheel(delta_x, delta_y, location, control, params)
 	if(enterprise && delta_y)
-		enterprise.wheel_floor(usr, delta_y > 0 ? 1 : -1)
+		enterprise.zoom_view(usr, delta_y > 0 ? 1 : -1, params)
 
 /atom/movable/screen/enterprise_map_catcher/Click(location, control, params)
 	if(enterprise)
 		enterprise.close_room_menu(usr)
 
+/atom/movable/screen/enterprise_viewport
+	icon = 'modular_rmh/icons/enterprises/zone.dmi'
+	icon_state = "blank"
+	plane = GAME_PLANE
+	appearance_flags = PIXEL_SCALE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	del_on_map_removal = FALSE
+
 /atom/movable/screen/enterprise_zone
 	plane = ABOVE_HUD_PLANE
 	layer = 2
 	alpha = 1
+	appearance_flags = PIXEL_SCALE
 	mouse_opacity = MOUSE_OPACITY_ICON
 	mouse_over_pointer = MOUSE_HAND_POINTER
 	del_on_map_removal = FALSE
@@ -59,13 +69,14 @@
 
 /atom/movable/screen/enterprise_zone/MouseWheel(delta_x, delta_y, location, control, params)
 	if(room && delta_y)
-		room.enterprise.wheel_floor(usr, delta_y > 0 ? 1 : -1)
+		room.enterprise.zoom_view(usr, delta_y > 0 ? 1 : -1, params)
 
 /atom/movable/screen/enterprise_highlight
 	plane = ABOVE_HUD_PLANE
 	layer = 1.5
 	alpha = 70
 	color = "#ffd9a0"
+	appearance_flags = PIXEL_SCALE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	del_on_map_removal = FALSE
 
@@ -77,7 +88,6 @@
 	alpha = ENTERPRISE_MENU_ALPHA_IDLE
 	maptext_width = ENTERPRISE_MENU_BUTTON_WIDTH
 	maptext_height = ENTERPRISE_MENU_BUTTON_HEIGHT
-	maptext_y = 6
 	mouse_over_pointer = MOUSE_HAND_POINTER
 	del_on_map_removal = FALSE
 	var/action
@@ -102,9 +112,13 @@
 	var/mob/user
 	var/client/viewing
 	var/z
+	var/scale = 1
+	var/shift_x = 0
+	var/shift_y = 0
 	var/datum/enterprise_room/hovered
 	var/datum/enterprise_room/menu_room
 	var/datum/enterprise_room/highlighted
+	var/atom/movable/screen/enterprise_viewport/viewport
 	var/atom/movable/screen/enterprise_highlight/highlight
 	var/list/atom/movable/screen/enterprise_menu_button/buttons = list()
 
@@ -112,10 +126,13 @@
 	src.enterprise = enterprise
 	src.user = user
 	viewing = user.client
+	viewport = new
+	viewport.assigned_map = enterprise.map_key
+	viewport.set_position(1, 1)
 	highlight = new
-	highlight.assigned_map = enterprise.map_key
 
 /datum/enterprise_viewer/Destroy()
+	QDEL_NULL(viewport)
 	QDEL_NULL(highlight)
 	QDEL_LIST(buttons)
 	enterprise = null
@@ -140,6 +157,57 @@
 	if(on_map)
 		on_map -= hidden
 
+/datum/enterprise_viewer/proc/show(datum/enterprise_floor/floor)
+	hovered = null
+	close_menu()
+	viewport.vis_contents.Cut()
+	viewport.vis_contents += floor.picture
+	viewport.vis_contents += floor.zones
+	viewport.vis_contents += highlight
+	z = floor.z
+
+/datum/enterprise_viewer/proc/set_view(new_scale, new_shift_x, new_shift_y)
+	close_menu()
+	scale = new_scale
+	shift_x = clamp(new_shift_x, enterprise.frame_width * ICON_SIZE_X * (1 - scale), 0)
+	shift_y = clamp(new_shift_y, enterprise.frame_height * ICON_SIZE_Y * (1 - scale), 0)
+	var/matrix/view = matrix()
+	view.Scale(scale)
+	view.Translate(shift_x + (scale - 1) * ICON_SIZE_X / 2, shift_y + (scale - 1) * ICON_SIZE_Y / 2)
+	viewport.transform = view
+
+/datum/enterprise_viewer/proc/get_cursor(params)
+	var/screen_loc = params2list(params)["screen-loc"]
+	if(!screen_loc)
+		return null
+	var/list/axes = splittext(screen_loc, ",")
+	if(length(axes) != 2)
+		return null
+	var/list/x_parts = splittext(axes[1], ":")
+	var/list/y_parts = splittext(axes[2], ":")
+	var/x_count = length(x_parts)
+	if(x_count < 2 || length(y_parts) < 2)
+		return null
+	var/tile_x = text2num(x_parts[x_count - 1])
+	var/pixel_x = text2num(x_parts[x_count])
+	var/tile_y = text2num(y_parts[1])
+	var/pixel_y = text2num(y_parts[2])
+	if(isnull(tile_x) || isnull(pixel_x) || isnull(tile_y) || isnull(pixel_y))
+		return null
+	return list((tile_x - 1) * ICON_SIZE_X + pixel_x, (tile_y - 1) * ICON_SIZE_Y + pixel_y)
+
+/datum/enterprise_viewer/proc/zoom(direction, params)
+	var/static/list/scales = list(1, 1.5, 2, 3, 4)
+	var/new_scale = scales[clamp(scales.Find(scale) + direction, 1, length(scales))]
+	if(new_scale == scale)
+		return
+	var/list/cursor = get_cursor(params)
+	var/cursor_x = cursor ? cursor[1] : enterprise.frame_width * ICON_SIZE_X / 2
+	var/cursor_y = cursor ? cursor[2] : enterprise.frame_height * ICON_SIZE_Y / 2
+	var/pointed_x = (cursor_x - shift_x) / scale
+	var/pointed_y = (cursor_y - shift_y) / scale
+	set_view(new_scale, cursor_x - pointed_x * new_scale, cursor_y - pointed_y * new_scale)
+
 /datum/enterprise_viewer/proc/set_hovered(datum/enterprise_room/room)
 	hovered = room
 	update_highlight()
@@ -153,7 +221,8 @@
 	var/datum/enterprise_floor/floor = lit ? enterprise.get_floor(lit.z) : null
 	if(!floor || !length(lit.shape))
 		return
-	highlight.set_position(floor.get_screen_x(), floor.get_screen_y())
+	highlight.pixel_x = floor.get_pixel_x()
+	highlight.pixel_y = floor.get_pixel_y()
 	highlight.overlays += lit.shape
 
 /datum/enterprise_viewer/proc/close_menu()
@@ -186,21 +255,23 @@
 		room_max_x = max(room_max_x, member.x)
 		room_min_y = min(room_min_y, member.y)
 		room_max_y = max(room_max_y, member.y)
-	var/screen_x = floor.get_screen_x() + round((room_min_x + room_max_x) / 2) - floor.min_x
-	var/screen_y = floor.get_screen_y() + round((room_min_y + room_max_y) / 2) - floor.min_y
-	screen_x = clamp(screen_x, 3, enterprise.frame_width - 2)
-	screen_y = clamp(screen_y, 2, enterprise.frame_height - 1)
-	var/offset_x = -(ENTERPRISE_MENU_BUTTON_WIDTH - ICON_SIZE_X) / 2
-	var/offset_y = round((length(actions) - 1) * ENTERPRISE_MENU_BUTTON_STEP / 2) + (ICON_SIZE_Y - ENTERPRISE_MENU_BUTTON_HEIGHT) / 2
+	var/centre_x = floor.get_pixel_x() + ((room_min_x + room_max_x) / 2 - floor.min_x + 0.5) * ICON_SIZE_X
+	var/centre_y = floor.get_pixel_y() + ((room_min_y + room_max_y) / 2 - floor.min_y + 0.5) * ICON_SIZE_Y
+	var/stack_height = (length(actions) - 1) * ENTERPRISE_MENU_BUTTON_STEP + ENTERPRISE_MENU_BUTTON_HEIGHT
+	var/left = round(centre_x * scale + shift_x - ENTERPRISE_MENU_BUTTON_WIDTH / 2)
+	var/bottom = round(centre_y * scale + shift_y - stack_height / 2)
+	left = clamp(left, 0, enterprise.frame_width * ICON_SIZE_X - ENTERPRISE_MENU_BUTTON_WIDTH)
+	bottom = clamp(bottom, 0, enterprise.frame_height * ICON_SIZE_Y - stack_height)
 	var/russian = get_preferred_ui_language(user) == "ru"
+	var/height = bottom + stack_height - ENTERPRISE_MENU_BUTTON_HEIGHT
 	for(var/action in actions)
 		var/atom/movable/screen/enterprise_menu_button/button = new
 		button.assigned_map = enterprise.map_key
 		button.action = action
 		button.viewer = src
-		button.maptext = MAPTEXT_CENTER(enterprise.get_room_action_label(action, russian, repair_cost))
-		button.set_position(screen_x, screen_y, offset_x, offset_y)
-		offset_y -= ENTERPRISE_MENU_BUTTON_STEP
+		button.maptext = ENTERPRISE_MENU_TEXT(enterprise.get_room_action_label(action, russian, repair_cost))
+		button.set_position(1 + round(left / ICON_SIZE_X), 1 + round(height / ICON_SIZE_Y), left % ICON_SIZE_X, height % ICON_SIZE_Y)
+		height -= ENTERPRISE_MENU_BUTTON_STEP
 		buttons += button
 	add_to_screen(buttons)
 
@@ -297,21 +368,12 @@
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
 	if(viewer?.z == z)
 		return FALSE
-	if(viewer)
-		viewer.hovered = null
-		viewer.close_menu()
-		var/datum/enterprise_floor/shown = get_floor(viewer.z)
-		if(shown)
-			viewer.remove_from_screen(shown.picture)
-			viewer.remove_from_screen(shown.zones)
-	else
+	if(!viewer)
 		viewer = new(src, user)
 		viewers[REF(user)] = viewer
-		viewer.add_to_screen(list(map_backdrop, map_catcher, viewer.highlight))
+		viewer.add_to_screen(list(map_backdrop, map_catcher, viewer.viewport))
 		viewer.add_to_screen(map_plane_masters)
-	viewer.add_to_screen(floor.picture)
-	viewer.add_to_screen(floor.zones)
-	viewer.z = z
+	viewer.show(floor)
 	return TRUE
 
 /datum/enterprise/proc/open_premises(mob/user)
@@ -326,24 +388,15 @@
 			break
 	return chosen ? show_floor(user, chosen.z) : FALSE
 
-/datum/enterprise/proc/step_floor(mob/user, direction)
+/datum/enterprise/proc/zoom_view(mob/user, direction, params)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
-	if(!viewer)
-		return FALSE
-	var/next_z = get_next_floor_z(viewer.z, direction)
-	return next_z ? show_floor(user, next_z) : FALSE
+	if(viewer)
+		viewer.zoom(direction, params)
 
-/datum/enterprise/proc/get_next_floor_z(z, direction)
-	z += direction
-	while(z >= 1 && z <= length(floors))
-		if(floors[z])
-			return z
-		z += direction
-	return null
-
-/datum/enterprise/proc/wheel_floor(mob/user, direction)
-	if(step_floor(user, direction))
-		SStgui.update_uis(src)
+/datum/enterprise/proc/reset_view(mob/user)
+	var/datum/enterprise_viewer/viewer = get_viewer(user)
+	if(viewer)
+		viewer.set_view(1, 0, 0)
 
 /datum/enterprise/proc/hide_floors(mob/user)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
@@ -359,9 +412,17 @@
 		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
 		var/mob/user = viewer.user
 		var/z = viewer.z
+		var/scale = viewer.scale
+		var/shift_x = viewer.shift_x
+		var/shift_y = viewer.shift_y
 		hide_floors(user)
-		if(user?.client && !show_floor(user, z))
+		if(!user?.client)
+			continue
+		if(!show_floor(user, z))
 			open_premises(user)
+		viewer = get_viewer(user)
+		if(viewer)
+			viewer.set_view(scale, shift_x, shift_y)
 
 /datum/enterprise/proc/hover_room(mob/user, datum/enterprise_room/room)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
@@ -390,3 +451,4 @@
 #undef ENTERPRISE_MENU_BUTTON_STEP
 #undef ENTERPRISE_MENU_ALPHA_IDLE
 #undef ENTERPRISE_MENU_ALPHA_HOVER
+#undef ENTERPRISE_MENU_TEXT

@@ -1,6 +1,7 @@
 /atom/movable/screen/enterprise_picture
 	plane = GAME_PLANE
 	layer = GAME_PLANE
+	appearance_flags = PIXEL_SCALE
 	del_on_map_removal = FALSE
 
 /datum/enterprise_floor
@@ -89,6 +90,12 @@
 /datum/enterprise_floor/proc/get_screen_y()
 	return enterprise.frame_pad_y + 1 + (min_y - enterprise.frame_min_y)
 
+/datum/enterprise_floor/proc/get_pixel_x()
+	return (get_screen_x() - 1) * ICON_SIZE_X
+
+/datum/enterprise_floor/proc/get_pixel_y()
+	return (get_screen_y() - 1) * ICON_SIZE_Y
+
 /datum/enterprise_floor/proc/copy_appearance(atom/source, offset)
 	var/mutable_appearance/copy = new
 	copy.appearance = source.appearance
@@ -98,9 +105,8 @@
 /datum/enterprise_floor/proc/take_picture()
 	QDEL_LIST(picture)
 	picture = list()
-	var/map_key = enterprise.map_key
-	var/screen_x = get_screen_x()
-	var/screen_y = get_screen_y()
+	var/origin_x = get_pixel_x()
+	var/origin_y = get_pixel_y()
 
 	for(var/row in 0 to height - 1)
 		var/list/strip_overlays = list()
@@ -116,8 +122,8 @@
 		if(!length(strip_overlays))
 			continue
 		var/atom/movable/screen/enterprise_picture/strip = new
-		strip.assigned_map = map_key
-		strip.set_position(screen_x, screen_y + row)
+		strip.pixel_x = origin_x
+		strip.pixel_y = origin_y + row * ICON_SIZE_Y
 		strip.overlays = strip_overlays
 		picture += strip
 
@@ -137,7 +143,7 @@
 			room_max_y = max(room_max_y, member.y)
 		var/mutable_appearance/label = mutable_appearance()
 		label.plane = RUNECHAT_PLANE
-		label.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+		label.appearance_flags = RESET_COLOR | RESET_ALPHA
 		label.maptext = MAPTEXT_CENTER(room.name)
 		label.maptext_width = (room_max_x - room_min_x + 1) * ICON_SIZE_X
 		label.maptext_height = ICON_SIZE_Y
@@ -146,8 +152,8 @@
 		label_overlays += label
 	if(length(label_overlays))
 		var/atom/movable/screen/enterprise_picture/labels = new
-		labels.assigned_map = map_key
-		labels.set_position(screen_x, screen_y)
+		labels.pixel_x = origin_x
+		labels.pixel_y = origin_y
 		labels.overlays = label_overlays
 		picture += labels
 	mark_zones()
@@ -155,8 +161,8 @@
 /datum/enterprise_floor/proc/mark_zones()
 	QDEL_LIST(zones)
 	zones = list()
-	var/screen_x = get_screen_x()
-	var/screen_y = get_screen_y()
+	var/origin_x = get_pixel_x()
+	var/origin_y = get_pixel_y()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		var/list/mutable_appearance/shape = list()
 		for(var/turf/member as anything in room.turfs)
@@ -166,8 +172,8 @@
 			shape += square
 		room.shape = shape
 		var/atom/movable/screen/enterprise_zone/zone = new
-		zone.assigned_map = enterprise.map_key
 		zone.room = room
-		zone.set_position(screen_x, screen_y)
+		zone.pixel_x = origin_x
+		zone.pixel_y = origin_y
 		zone.overlays = shape
 		zones += zone

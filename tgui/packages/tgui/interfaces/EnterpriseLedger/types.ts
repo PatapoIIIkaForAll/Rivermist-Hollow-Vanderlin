@@ -104,6 +104,7 @@ export type Locale = {
     guestRooms: string;
     guestRoomsNone: string;
     surveyAgain: string;
+    resetView: string;
     legend: string;
     legendHint: string;
     legendEmpty: string;

@@ -89,22 +89,24 @@
 			found += fixture.get_thing()
 	return found
 
-/datum/enterprise_room/proc/get_missing_fixtures()
-	var/list/datum/enterprise_fixture/missing = list()
+/datum/enterprise_room/proc/get_damaged_fixtures()
+	var/list/datum/enterprise_fixture/damaged = list()
 	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		if(fixture.is_missing())
-			missing += fixture
-	return missing
+		if(fixture.needs_repair())
+			damaged += fixture
+	return damaged
 
 /datum/enterprise_room/proc/get_repair_cost()
 	var/worth = 0
-	for(var/datum/enterprise_fixture/fixture as anything in get_missing_fixtures())
+	for(var/datum/enterprise_fixture/fixture as anything in get_damaged_fixtures())
 		worth += fixture.value
 	return worth * ENTERPRISE_REPAIR_MULTIPLIER
 
 /datum/enterprise_room/proc/repair()
 	var/restored = 0
-	for(var/datum/enterprise_fixture/fixture as anything in get_missing_fixtures())
-		fixture.restore()
+	for(var/datum/enterprise_fixture/fixture as anything in get_damaged_fixtures())
+		var/obj/structure/door/door = fixture.restore()
+		if(istype(door))
+			doors |= WEAKREF(door)
 		restored++
 	return restored

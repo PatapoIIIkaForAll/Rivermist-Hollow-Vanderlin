@@ -94,7 +94,7 @@
 			line["missing"] = 0
 			lines[fixture.fixture_type] = line
 		line["count"]++
-		if(fixture.is_missing())
+		if(fixture.needs_repair())
 			line["missing"]++
 	var/list/contents_data = list()
 	for(var/fixture_type in lines)

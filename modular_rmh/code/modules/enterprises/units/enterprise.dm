@@ -106,11 +106,9 @@
 			if(!isnum(z) || z != round(z))
 				return FALSE
 			return show_floor(ui.user, z)
-		if("step_floor")
-			var/direction = params["direction"]
-			if(direction != 1 && direction != -1)
-				return FALSE
-			return step_floor(ui.user, direction)
+		if("reset_view")
+			reset_view(ui.user)
+			return FALSE
 		if("hide_floors")
 			hide_floors(ui.user)
 			return FALSE
