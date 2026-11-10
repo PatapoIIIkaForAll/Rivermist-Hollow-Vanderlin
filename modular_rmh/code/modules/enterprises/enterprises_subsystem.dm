@@ -1,10 +1,18 @@
 SUBSYSTEM_DEF(enterprises)
 	name = "Enterprises"
-	flags = SS_BACKGROUND | SS_NO_INIT
+	flags = SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
 	wait = 2 SECONDS
 	var/list/datum/enterprise/enterprises = list()
 	var/list/datum/enterprise/currentrun = list()
+
+// Runs after SSatoms: by then every mapped ledger has registered with its enterprise.
+/datum/controller/subsystem/enterprises/Initialize()
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
+			enterprise.claim_premises(ledger)
+	return ..()
 
 /datum/controller/subsystem/enterprises/fire(resumed)
 	if(!resumed)

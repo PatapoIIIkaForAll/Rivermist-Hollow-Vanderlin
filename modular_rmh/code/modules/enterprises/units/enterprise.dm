@@ -6,11 +6,15 @@
 	var/list/ledger_pages = list("overview")
 	var/list/obj/structure/fake_machine/enterprise_ledger/ledgers = list()
 	var/shift_active = FALSE
+	// Indexed by z-level; a level the enterprise does not reach holds null.
+	var/list/datum/enterprise_floor/floors = list()
+	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
 
 /datum/enterprise/Destroy()
 	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
 		ledger.enterprise = null
 	ledgers = null
+	QDEL_LIST(floors)
 	SSenterprises.enterprises -= type
 	return ..()
 
@@ -63,7 +67,15 @@
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
+		"premises" = get_premises_data(),
 	)
+
+/datum/enterprise/proc/get_premises_data()
+	var/list/premises = list()
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		if(floor)
+			premises += list(list("z" = floor.z, "tiles" = length(floor.turfs), "basement" = floor.basement))
+	return premises
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()

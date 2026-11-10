@@ -12,8 +12,11 @@
 /obj/structure/fake_machine/enterprise_ledger/Initialize(mapload)
 	. = ..()
 	enterprise = SSenterprises.get_enterprise(enterprise_type)
-	if(enterprise)
-		enterprise.ledgers += src
+	if(!enterprise)
+		return
+	enterprise.ledgers += src
+	if(SSenterprises.initialized)
+		enterprise.claim_premises(src)
 
 /obj/structure/fake_machine/enterprise_ledger/Destroy()
 	if(enterprise)

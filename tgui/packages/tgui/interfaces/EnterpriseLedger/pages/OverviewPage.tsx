@@ -17,6 +17,9 @@ export const OverviewPage = (props: PageProps) => {
   const { locale } = props;
   const { act, data } = useBackend<Data>();
   const { name, is_staff, shift_active } = data;
+  const premises = data.premises || [];
+  const tiles = premises.reduce((total, floor) => total + floor.tiles, 0);
+  const basements = premises.filter((floor) => floor.basement).length;
 
   return (
     <Section
@@ -44,6 +47,18 @@ export const OverviewPage = (props: PageProps) => {
           {shift_active
             ? locale.labels.shiftActive
             : locale.labels.shiftInactive}
+        </LabeledList.Item>
+        <LabeledList.Item
+          label={locale.labels.premises}
+          color={premises.length ? undefined : 'bad'}
+        >
+          {premises.length
+            ? locale.formatPremises(
+                premises.length - basements,
+                basements,
+                tiles,
+              )
+            : locale.labels.premisesMissing}
         </LabeledList.Item>
       </LabeledList>
     </Section>

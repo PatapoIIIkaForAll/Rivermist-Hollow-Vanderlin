@@ -24,7 +24,11 @@ const locale: Locale = {
     startShift: 'Start shift',
     endShift: 'End shift',
     sectionInProgress: 'This section of the ledger is still blank.',
+    premises: 'Premises',
+    premisesMissing: 'Not found: the ledger stands outside the premises.',
   },
+  formatPremises: (floors, basements, tiles) =>
+    `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,
 };
 
 export default locale;

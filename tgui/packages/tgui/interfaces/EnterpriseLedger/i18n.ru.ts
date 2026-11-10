@@ -24,7 +24,11 @@ const locale: Locale = {
     startShift: 'Начать смену',
     endShift: 'Закончить смену',
     sectionInProgress: 'Этот раздел книги пока пуст.',
+    premises: 'Помещения',
+    premisesMissing: 'Не найдены: книга стоит вне помещений.',
   },
+  formatPremises: (floors, basements, tiles) =>
+    `Этажей: ${floors}, подвальных уровней: ${basements}, клеток: ${tiles}`,
 };
 
 export default locale;
