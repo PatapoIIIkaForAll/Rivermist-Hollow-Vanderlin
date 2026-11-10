@@ -13,6 +13,7 @@ const locale: Locale = {
     menu: 'Menu',
     staff: 'Workers',
     commissions: 'Commissions',
+    debug: 'Debug',
   },
   purposes: {
     storage: 'Storage',
@@ -109,6 +110,23 @@ const locale: Locale = {
     prestigeGrade: 'Prestige Grade',
     prestigeGradeHint:
       'Spends the upgrade of this level saved on your account.',
+  },
+  debug: {
+    title: 'Debug',
+    note: 'This page exists only in a TAVERN_TEST build. What is set here is real for the round, and the round takings are saved to the account as usual.',
+    money: 'Money',
+    bank: 'My bank account',
+    ownerLevel: 'Owner level',
+    grant: 'Give the rooms of this owner level',
+    rooms: 'Room levels',
+    allRooms: 'All rooms',
+    patrons: 'Lodgers (NPC)',
+    patronsCount: 'In the house',
+    summon: 'Summon',
+    clearPatrons: 'Send them all away',
+    time: 'Time and sleep',
+    newDay: 'Start a new day',
+    tired: 'Make me tired',
   },
   stock: {
     title: 'Buying post',

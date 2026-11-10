@@ -88,8 +88,15 @@
 
 /datum/enterprise/ui_data(mob/user)
 	var/owner = is_owner(user)
+	var/list/pages = owner ? ledger_pages : ledger_pages - owner_pages
+	var/list/debug
+#ifdef TAVERN_TEST
+	pages = pages + "debug"
+	debug = get_debug_data(user)
+#endif
 	return list(
-		"pages" = owner ? ledger_pages : ledger_pages - owner_pages,
+		"pages" = pages,
+		"debug" = debug,
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
@@ -104,6 +111,11 @@
 	. = ..()
 	if(.)
 		return
+#ifdef TAVERN_TEST
+	var/debugged = debug_act(action, params, ui.user)
+	if(!isnull(debugged))
+		return debugged
+#endif
 	switch(action)
 		if("start_shift")
 			return start_shift(ui.user)
@@ -138,6 +150,91 @@
 /datum/enterprise/ui_close(mob/user)
 	. = ..()
 	hide_floors(user)
+
+#ifdef TAVERN_TEST
+/datum/enterprise/proc/get_debug_data(mob/user)
+	var/list/kinds = list()
+	for(var/mob/living/simple_animal/enterprise_patron/patron_type as anything in typesof(/mob/living/simple_animal/enterprise_patron))
+		kinds += initial(patron_type.name)
+	return list(
+		"bank" = get_bank_balance(user),
+		"owner_level" = owner_level,
+		"max_owner_level" = length(prestige_thresholds),
+		"max_room_level" = ENTERPRISE_MAX_LEVEL,
+		"patrons" = length(patrons),
+		"patron_kinds" = kinds,
+	)
+
+/datum/enterprise/proc/debug_act(action, list/params, mob/user)
+	switch(action)
+		if("debug_set")
+			var/value = params["value"]
+			if(!isnum(value))
+				return FALSE
+			value = max(round(value), 0)
+			switch(params["field"])
+				if("book")
+					book_balance = value
+				if("bank")
+					SStreasury.bank_accounts[user] = value
+				if("earned_today")
+					earned_today = value
+				if("earned_round")
+					earned_round = value
+					write_journal()
+				if("owner_level")
+					owner_level = min(value, length(prestige_thresholds))
+				else
+					return FALSE
+			return TRUE
+		if("debug_grant")
+			if(grant_owner_rooms(owner_level))
+				redraw()
+			return TRUE
+		if("debug_room_level")
+			var/level = params["level"]
+			var/room_id = params["room"]
+			if(!isnum(level))
+				return FALSE
+			var/list/datum/enterprise_room/changed = rooms
+			if(room_id)
+				var/datum/enterprise_room/room = get_room_by_id(room_id)
+				if(!room)
+					return FALSE
+				changed = list(room)
+			for(var/datum/enterprise_room/target as anything in changed)
+				target.set_level(level)
+			redraw()
+			return TRUE
+		if("debug_patron")
+			var/list/patron_types = typesof(/mob/living/simple_animal/enterprise_patron)
+			var/kind = params["kind"]
+			if(!isnum(kind) || kind != round(kind) || kind < 1 || kind > length(patron_types))
+				return FALSE
+			var/patron_type = patron_types[kind]
+			var/mob/living/simple_animal/enterprise_patron/patron = new patron_type(get_turf(user))
+			patron.visit(src)
+			for(var/lock_id in guest_rooms)
+				if(patron.take_room(guest_rooms[lock_id]))
+					break
+			update_static_data_for_all_viewers()
+			return TRUE
+		if("debug_clear_patrons")
+			for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons.Copy())
+				patron.leave()
+			update_static_data_for_all_viewers()
+			return TRUE
+		if("debug_new_day")
+			new_day()
+			return TRUE
+		if("debug_tired")
+			var/mob/living/carbon/human/sleeper = user
+			if(!istype(sleeper))
+				return FALSE
+			sleeper.apply_status_effect(/datum/status_effect/debuff/sleepytime)
+			return TRUE
+	return null
+#endif
 
 /datum/enterprise/tavern
 	name = "tavern"

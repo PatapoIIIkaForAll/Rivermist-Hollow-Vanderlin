@@ -15,6 +15,15 @@ export type PrestigeData = {
   grades: PrestigeGrade[];
 };
 
+export type DebugData = {
+  bank: number;
+  owner_level: number;
+  max_owner_level: number;
+  max_room_level: number;
+  patrons: number;
+  patron_kinds: string[];
+};
+
 export type Data = {
   name: string;
   map: string | null;
@@ -30,6 +39,7 @@ export type Data = {
   earned_round: number;
   earned_today: number;
   prestige: PrestigeData | null;
+  debug: DebugData | null;
 };
 
 export type RoomKind = 'guest' | 'service' | 'common';
@@ -205,6 +215,23 @@ export type Locale = {
     upgradeFunds: string;
     prestigeGrade: string;
     prestigeGradeHint: string;
+  };
+  debug: {
+    title: string;
+    note: string;
+    money: string;
+    bank: string;
+    ownerLevel: string;
+    grant: string;
+    rooms: string;
+    allRooms: string;
+    patrons: string;
+    patronsCount: string;
+    summon: string;
+    clearPatrons: string;
+    time: string;
+    newDay: string;
+    tired: string;
   };
   stock: {
     title: string;

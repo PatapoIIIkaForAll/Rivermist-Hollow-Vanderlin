@@ -13,6 +13,7 @@ const locale: Locale = {
     menu: 'Меню',
     staff: 'Работники',
     commissions: 'Заказы',
+    debug: 'Дебаг',
   },
   purposes: {
     storage: 'Склад',
@@ -108,6 +109,23 @@ const locale: Locale = {
     prestigeGrade: 'Prestige Grade',
     prestigeGradeHint:
       'Тратит улучшение этого уровня, сохранённое на вашем аккаунте.',
+  },
+  debug: {
+    title: 'Дебаг',
+    note: 'Эта страница есть только в сборке с TAVERN_TEST. Всё выставленное здесь настоящее для раунда, а заработок раунда сохраняется на аккаунт как обычно.',
+    money: 'Деньги',
+    bank: 'Мой счёт в банке',
+    ownerLevel: 'Уровень владельца',
+    grant: 'Выдать комнаты этого уровня владельца',
+    rooms: 'Уровни комнат',
+    allRooms: 'Все комнаты',
+    patrons: 'Постояльцы (НПС)',
+    patronsCount: 'В заведении',
+    summon: 'Призвать',
+    clearPatrons: 'Убрать всех',
+    time: 'Время и сон',
+    newDay: 'Начать новый день',
+    tired: 'Сделать меня уставшим',
   },
   stock: {
     title: 'Место закупки',
