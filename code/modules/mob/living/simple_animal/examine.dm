@@ -105,8 +105,11 @@
 	if(Adjacent(user) && HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS))
 		. += "<a href='byond://?src=[REF(src)];inspect_animal=1'>Inspect Wounds</a>"
 
-	if(desc)
-		. += desc
+	//RMH EDITED START - the desc goes through get_examine_desc() like every other examine, so a reader's language applies
+	var/shown_desc = get_examine_desc(user)
+	if(shown_desc)
+		. += shown_desc
+	//RMH EDITED END
 
 	var/hunger_line = get_hunger_examine()
 	if(hunger_line)

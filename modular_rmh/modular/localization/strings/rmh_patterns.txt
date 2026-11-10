@@ -1,1 +1,35 @@
 # Шаблоны чата этого билда (выше общих patterns.txt): ^регулярка$ = шаблон с $1, $2|acc.
+
+# --- осмотр: что на ком надето и что в руках ---
+# Строка "- She has <b>имя</b> on her chest." приходит тремя текстовыми нодами: начало, имя в <b>, место.
+# Имя переводит сервер и отдаёт в именительном падеже, поэтому начало и место переводятся порознь и так,
+# чтобы имя не надо было склонять: "— железная кираса на груди.", "— меч в правой руке."
+^- (?:I have|(?:He|She|They|It) (?:has|have))(?: (?:a|an|some|the))?$ = —
+^- (?:I am|(?:He|She|They|It) (?:is|are)) (?:holding|wielding)(?: (?:a|an|some|the))?$ = —
+^on (?:my|his|her|their|its) head\.$ = на голове.
+^on (?:my|his|her|their|its) face\.$ = на лице.
+^in (?:my|his|her|their|its) mouth\.$ = во рту.
+^around (?:my|his|her|their|its) neck\.$ = на шее.
+^on (?:my|his|her|their|its) torso\.$ = на теле.
+^on (?:my|his|her|their|its) chest\.$ = на груди.
+^on (?:my|his|her|their|its) legs\.$ = на ногах.
+^over (?:my|his|her|their|its) shoulders\.$ = на плечах.
+^on (?:my|his|her|their|its) feet\.$ = на ногах.
+^on (?:my|his|her|their|its) left shoulder\.$ = на левом плече.
+^on (?:my|his|her|their|its) right shoulder\.$ = на правом плече.
+^on (?:my|his|her|their|its) wrist\.$ = на запястье.
+^on (?:my|his|her|their|its) wrists\.$ = на запястьях.
+^on (?:my|his|her|their|its) hand\.$ = на руке.
+^on (?:my|his|her|their|its) hands\.$ = на руках.
+^on (?:my|his|her|their|its) finger\.$ = на пальце.
+^on (?:my|his|her|their|its) fingers\.$ = на пальцах.
+^around (?:my|his|her|their|its) waist\.$ = на поясе.
+^on (?:my|his|her|their|its) left side\.$ = на левом боку.
+^on (?:my|his|her|their|its) right side\.$ = на правом боку.
+^on (?:my|his|her|their|its) arms\.$ = на предплечьях.
+^on (?:my|his|her|their|its) waist\.$ = на талии.
+^in (?:my|his|her|their|its) left ear\.$ = в левом ухе.
+^in (?:my|his|her|their|its) right ear\.$ = в правом ухе.
+^in (?:my|his|her|their|its) (?:upper )?left hand(?: #\d+)?\.$ = в левой руке.
+^in (?:my|his|her|their|its) (?:upper )?right hand(?: #\d+)?\.$ = в правой руке.
+^in (?:my|his|her|their|its) hands\.$ = в обеих руках.

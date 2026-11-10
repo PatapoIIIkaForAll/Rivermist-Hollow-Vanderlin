@@ -275,8 +275,18 @@
 			continue
 		var/slot_title = null
 		switch(unobscured[I]) // this could probably be abstracted into its own proc at some point
-			if(ITEM_SLOT_SHIRT, ITEM_SLOT_ARMOR, ITEM_SLOT_PANTS, ITEM_SLOT_CLOAK, ITEM_SLOT_SHOES)
-				slot_title = " on"
+			//RMH EDITED START - every worn item names where it is worn: these five said only "on"
+			if(ITEM_SLOT_SHIRT)
+				slot_title = " on [P[THEIR]] torso"
+			if(ITEM_SLOT_ARMOR)
+				slot_title = " on [P[THEIR]] chest"
+			if(ITEM_SLOT_PANTS)
+				slot_title = " on [P[THEIR]] legs"
+			if(ITEM_SLOT_CLOAK)
+				slot_title = " over [P[THEIR]] shoulders"
+			if(ITEM_SLOT_SHOES)
+				slot_title = " on [P[THEIR]] feet"
+			//RMH EDITED END
 			if(ITEM_SLOT_HEAD)
 				slot_title = " on [P[THEIR]] head"
 			if(ITEM_SLOT_MASK)
@@ -301,18 +311,20 @@
 				slot_title = " on [P[THEIR]] left side"
 			if(ITEM_SLOT_BELT_R)
 				slot_title = " on [P[THEIR]] right side"
+			//RMH EDITED START - these six added the place as a line of its own, above an item line with no place
 			if(ITEM_SLOT_ARMSLEEVES)
-				. += " on [P[THEIR]] arms."
+				slot_title = " on [P[THEIR]] arms"
 			if(ITEM_SLOT_GARTER)
-				. += " on [P[THEIR]] waist."
+				slot_title = " on [P[THEIR]] waist"
 			if(ITEM_SLOT_CHOKER)
-				. += " around [P[THEIR]] neck."
+				slot_title = " around [P[THEIR]] neck"
 			if(ITEM_SLOT_SOCKS)
-				. += " on [P[THEIR]] legs."
+				slot_title = " on [P[THEIR]] legs"
 			if(ITEM_SLOT_EARRING_L)
-				. += " in [P[THEIR]] left ear."
+				slot_title = " in [P[THEIR]] left ear"
 			if(ITEM_SLOT_EARRING_R)
-				. += " in [P[THEIR]] right ear."
+				slot_title = " in [P[THEIR]] right ear"
+			//RMH EDITED END
 		// Worn armour gets a hover tooltip with its protection summary.
 		var/examine_phrase = I.get_examine_string(user, use_examine_name = TRUE)
 		if(istype(I, /obj/item/clothing))

@@ -20,6 +20,7 @@ EXPRESSION = re.compile(r"(?<!\\)\[")
 ARTICLE = re.compile(r"^(?:the|an|a|some) ", re.I)
 FILE_GROUP = re.compile(r'"(\w+)" = list\(([^)]*)\)')
 FILE_NAME = re.compile(r'"([^"]+\.txt)"')
+CYRILLIC = re.compile("[А-Яа-яЁё]")
 
 
 def read_text(path):
@@ -153,7 +154,7 @@ def main():
         for var in ("name", "desc"):
             owner = declaring(types, path, var)
             text = types[owner][var] if owner else ""
-            if text is not None and not text.strip():
+            if text is not None and (not text.strip() or CYRILLIC.search(text)):
                 continue
             shown[var] += 1
             if text is None:

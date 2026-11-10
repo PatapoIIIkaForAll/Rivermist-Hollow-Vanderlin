@@ -36,10 +36,7 @@
 	return TRUE
 
 /proc/sanitize_preferred_ui_language(language)
-	var/selected_language = LOWER_TEXT("[language || "en"]")
-	if(!(selected_language in list("en", "ru")))
-		return "en"
-	return selected_language
+	return LOWER_TEXT("[language || "en"]") == "ru" ? "ru" : "en"
 
 /proc/get_client_ui_language(client/target)
 	if(!target?.prefs)

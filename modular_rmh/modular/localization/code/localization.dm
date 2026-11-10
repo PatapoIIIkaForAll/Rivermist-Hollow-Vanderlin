@@ -3,6 +3,8 @@
 #define LOCALIZATION_PATTERN_MARK "^"
 #define LOCALIZATION_TYPE_MARK "/"
 #define LOCALIZATION_CACHE_LIMIT 4000
+/// Bytes of a strings file read at a time: about seventy lines, far under the thousand that trip the string table.
+#define LOCALIZATION_BLOCK 16384
 #define LOCALIZATION_CHAT_ASSET "data/chat_localization.json"
 #define LOCALIZATION_DECLENSION_MAX_LENGTH 128
 
@@ -28,21 +30,37 @@ GLOBAL_LIST_EMPTY(localization_dead_types)
 GLOBAL_DATUM(localization_description_dictionary, /datum/localization_dictionary)
 GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 
-/proc/localization_pairs(filename)
+/// A strings file cut into blocks of whole lines.
+/// The files are sorted by key, and BYOND hangs each new string that arrives in sorted order one level below the
+/// last in its string table: a thousand of them alive together make the engine sort every string in the world, in
+/// one stall that grows with the server. So a file is never split into lines whole; a reader takes a block, uses
+/// its pairs and drops them before the next.
+/proc/localization_blocks(filename)
 	. = list()
 	var/path = "[LOCALIZATION_STRINGS]/[filename]"
 	if(!fexists(path))
 		stack_trace("Localization: missing strings file [path]")
 		return
-	var/line_number = 0
-	for(var/raw_line in splittext(file2text(path), "\n"))
-		line_number++
+	var/text = file2text(path)
+	var/total = length(text)
+	var/position = 1
+	while(position <= total)
+		var/cut = (position + LOCALIZATION_BLOCK > total) ? 0 : findtext(text, "\n", position + LOCALIZATION_BLOCK)
+		. += copytext(text, position, cut)
+		if(!cut)
+			break
+		position = cut + 1
+
+/// The "key = value" pairs of one block of a strings file.
+/proc/localization_pairs(block, filename)
+	. = list()
+	for(var/raw_line in splittext(block, "\n"))
 		var/line = trim(raw_line)
 		if(!length(line) || copytext(line, 1, 2) == "#")
 			continue
 		var/split_at = findtext(line, LOCALIZATION_SEPARATOR)
 		if(!split_at)
-			stack_trace("Localization: [filename]:[line_number] has no \"[LOCALIZATION_SEPARATOR]\", skipped")
+			stack_trace("Localization: [filename] has a line with no \"[LOCALIZATION_SEPARATOR]\", skipped: [copytext_char(line, 1, 60)]")
 			continue
 		var/key = trim(copytext(line, 1, split_at))
 		var/value = trim(copytext(line, split_at + length(LOCALIZATION_SEPARATOR)))
@@ -53,8 +71,9 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 /proc/localization_table(list/filenames)
 	. = list()
 	for(var/filename in filenames)
-		for(var/list/pair as anything in localization_pairs(filename))
-			.[pair[1]] = pair[2]
+		for(var/block in localization_blocks(filename))
+			for(var/list/pair as anything in localization_pairs(block, filename))
+				.[pair[1]] = pair[2]
 
 /proc/localization_atom_type(key, filename)
 	var/path = text2path(key)
@@ -67,24 +86,25 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 	. = list()
 	var/expected = length(GLOB.localization_cases)
 	for(var/filename in filenames)
-		for(var/list/pair as anything in localization_pairs(filename))
-			var/list/forms = splittext(pair[2], "|")
-			if(length(forms) != expected)
-				stack_trace("Localization: [filename] \"[pair[1]]\" lists [length(forms)] forms, expected [expected]")
-				continue
-			var/list/cases = list()
-			for(var/index in 1 to expected)
-				var/form = trim(forms[index])
-				if(length(form))
-					cases[GLOB.localization_cases[index]] = form
-			var/key = pair[1]
-			if(copytext(key, 1, 2) == LOCALIZATION_TYPE_MARK)
-				var/atom/thing = localization_atom_type(key, filename)
-				if(!thing)
+		for(var/block in localization_blocks(filename))
+			for(var/list/pair as anything in localization_pairs(block, filename))
+				var/list/forms = splittext(pair[2], "|")
+				if(length(forms) != expected)
+					stack_trace("Localization: [filename] \"[pair[1]]\" lists [length(forms)] forms, expected [expected]")
 					continue
-				key = localization_bare_name(initial(thing.name))
-			if(length(key) && length(cases))
-				.[key] = cases
+				var/list/cases = list()
+				for(var/index in 1 to expected)
+					var/form = trim(forms[index])
+					if(length(form))
+						cases[GLOB.localization_cases[index]] = form
+				var/key = pair[1]
+				if(copytext(key, 1, 2) == LOCALIZATION_TYPE_MARK)
+					var/atom/thing = localization_atom_type(key, filename)
+					if(!thing)
+						continue
+					key = localization_bare_name(initial(thing.name))
+				if(length(key) && length(cases))
+					.[key] = cases
 
 /proc/localization_load_nouns()
 	if(!isnull(GLOB.localization_noun_table))
@@ -214,19 +234,20 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 	src.strict = strict
 	GLOB.localization_dictionaries += src
 	for(var/filename in filenames)
-		for(var/list/pair as anything in localization_pairs(filename))
-			var/key = pair[1]
-			var/mark = copytext(key, 1, 2)
-			if(mark == LOCALIZATION_PATTERN_MARK)
-				add_pattern(key, pair[2])
-				continue
-			if(mark == LOCALIZATION_TYPE_MARK)
-				var/atom/thing = localization_atom_type(key, filename)
-				if(!thing)
+		for(var/block in localization_blocks(filename))
+			for(var/list/pair as anything in localization_pairs(block, filename))
+				var/key = pair[1]
+				var/mark = copytext(key, 1, 2)
+				if(mark == LOCALIZATION_PATTERN_MARK)
+					add_pattern(key, pair[2])
 					continue
-				key = trim(initial(thing.desc))
-			if(length(key) && isnull(fragments[key]))
-				fragments[key] = pair[2]
+				if(mark == LOCALIZATION_TYPE_MARK)
+					var/atom/thing = localization_atom_type(key, filename)
+					if(!thing)
+						continue
+					key = trim(initial(thing.desc))
+				if(length(key) && isnull(fragments[key]))
+					fragments[key] = pair[2]
 	if(length(rejected))
 		stack_trace("Localization: [length(rejected)] patterns do not compile on the server and are skipped, the first: [rejected[1]]")
 
@@ -352,13 +373,21 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 /datum/asset/json/chat_localization
 	name = "chat_localization"
 
+/// Everything the server translates by is read here, when SSassets builds this asset at init: the strings are
+/// read once per round and no player's first examine or balloon alert pays for it.
+/datum/asset/json/chat_localization/register()
+	. = ..()
+	localization_description_dictionary()
+	localization_maptext_dictionary()
+
 /datum/asset/json/chat_localization/generate()
 	var/list/files = GLOB.localization_files
 	localization_load_nouns()
 	var/list/patterns = list()
 	for(var/filename in files["patterns"])
-		for(var/list/pair as anything in localization_pairs(filename))
-			patterns += list(list("re" = pair[1], "ru" = pair[2]))
+		for(var/block in localization_blocks(filename))
+			for(var/list/pair as anything in localization_pairs(block, filename))
+				patterns += list(list("re" = pair[1], "ru" = pair[2]))
 	return list(
 		"version" = 1,
 		"nouns" = GLOB.localization_noun_table,
@@ -531,6 +560,12 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 		for(var/filename in GLOB.localization_files[kind])
 			if(!fexists("[LOCALIZATION_STRINGS]/[filename]"))
 				TEST_FAIL("[LOCALIZATION_STRINGS]/[filename] is missing")
+				continue
+			var/whole = file2text("[LOCALIZATION_STRINGS]/[filename]")
+			var/joined = jointext(localization_blocks(filename), "\n")
+			// A cut that lands on the file's last newline leaves no empty block after it.
+			if(joined != whole && "[joined]\n" != whole)
+				TEST_FAIL("[filename] read by blocks is not the file: a block was cut inside a line or a character")
 	var/datum/localization_dictionary/maptext = localization_maptext_dictionary()
 	if(length(maptext.rejected))
 		TEST_FAIL("[length(maptext.rejected)] chat patterns do not compile in BYOND, the first: [maptext.rejected[1]]")
@@ -606,5 +641,6 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 #undef LOCALIZATION_PATTERN_MARK
 #undef LOCALIZATION_TYPE_MARK
 #undef LOCALIZATION_CACHE_LIMIT
+#undef LOCALIZATION_BLOCK
 #undef LOCALIZATION_CHAT_ASSET
 #undef LOCALIZATION_DECLENSION_MAX_LENGTH
