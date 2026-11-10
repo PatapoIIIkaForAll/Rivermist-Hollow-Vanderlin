@@ -12,6 +12,7 @@
 #include "enterprises_subsystem.dm"
 #include "machines\enterprise_ledger.dm"
 #include "machines\enterprise_stock.dm"
+#include "mapping\enterprise_room_marker.dm"
 #include "mobs\enterprise_patron.dm"
 #include "units\enterprise.dm"
 #include "units\enterprise_fixture.dm"

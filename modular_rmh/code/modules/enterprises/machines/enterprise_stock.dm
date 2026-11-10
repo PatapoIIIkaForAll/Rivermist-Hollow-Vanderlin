@@ -1,6 +1,6 @@
 /obj/structure/fake_machine/enterprise_stock
-	name = "tavern buying post"
-	desc = "The tavern buys food here. What it takes is paid for on the spot."
+	name = "buying post"
+	desc = "Goods are bought here. What is taken is paid for on the spot."
 	icon = 'icons/roguetown/misc/machines.dmi'
 	icon_state = "submit"
 	density = FALSE
@@ -16,7 +16,7 @@
 	if(!stock || istype(tool, /obj/item/coin))
 		return NONE
 	var/russian = get_preferred_ui_language(user) == "ru"
-	if(!stock.enterprise.get_stock_price(tool))
+	if(!stock.get_price(tool))
 		to_chat(user, span_warning(russian ? "Такое здесь не покупают." : "They do not buy that here."))
 		return ITEM_INTERACT_BLOCKING
 	if(!stock.can_take(tool))

@@ -14,11 +14,6 @@
 	)
 	ledger_pages = list("overview", "premises", "prestige", "menu", "staff", "commissions")
 	owner_pages = list("premises", "prestige")
-	stock_goods = list(
-		/obj/item/reagent_containers/food,
-		/obj/item/reagent_containers/powder/salt,
-		/obj/item/reagent_containers/powder/flour,
-	)
 	premises_hint = "Place the ledger on an area with tavern_area set."
 	staff_lock_ids = list(ACCESS_INN)
 	owner_keyring = /obj/item/storage/keyring/tavern_keeper

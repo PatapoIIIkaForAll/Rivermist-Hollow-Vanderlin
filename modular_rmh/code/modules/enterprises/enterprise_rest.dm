@@ -69,30 +69,14 @@
 	if(!room)
 		return FALSE
 	room.note_visit(sleeper)
-	if(room.level < ENTERPRISE_LEVEL_WOOD)
+	if(room.level < ENTERPRISE_LEVEL_WOOD || !room.template)
 		return FALSE
 	var/datum/weakref/who = WEAKREF(sleeper)
 	if(rested_today[who])
 		return FALSE
-	var/russian = get_preferred_ui_language(sleeper) == "ru"
-	var/purpose = room.get_purpose()
-	if(purpose == ENTERPRISE_PURPOSE_STAFF_QUARTERS && is_staff(sleeper))
-		rested_today[who] = TRUE
-		give_rest_buff(sleeper, room.level)
-		var/bonus = get_staff_bonus()
-		if(SStreasury.give_money_account(bonus, sleeper, "[name] wages"))
-			to_chat(sleeper, span_notice(russian ? "За день работы на счёт пришло [bonus]." : "The day's work has brought [bonus] to my account."))
-		return TRUE
-	if(purpose != ENTERPRISE_PURPOSE_GUEST_ROOM)
-		return FALSE
-	var/price = get_rest_price(room)
-	if(!take_from_account(sleeper, price))
-		to_chat(sleeper, span_warning(russian ? "На счёте нет [price] за ночлег: отдых будет обычным." : "My account cannot cover the [price] for the night: this will be an ordinary rest."))
+	if(!room.template.on_rest(room, sleeper))
 		return FALSE
 	rested_today[who] = TRUE
-	earn(price)
-	give_rest_buff(sleeper, room.level)
-	to_chat(sleeper, span_notice(russian ? "За ночлег со счёта списано [price]." : "The night has cost me [price] from my account."))
 	return TRUE
 
 /datum/enterprise/proc/handle_night(mob/living/carbon/human/sleeper)
@@ -106,14 +90,10 @@
 		return FALSE
 	var/datum/enterprise_room/room = get_room(eater)
 	var/datum/enterprise_seating/seating = room?.get_seating(seat)
-	if(!seating)
+	if(!seating || !room.template)
 		return FALSE
 	var/mob/living/simple_animal/enterprise_patron/patron = seating.get_patron()
 	if(patron && patron != eater)
 		patron.take_offence(eater)
 		return FALSE
-	var/mood_type = get_level_value(meal_moods, seating.get_level())
-	if(!mood_type)
-		return FALSE
-	eater.add_stress(mood_type)
-	return TRUE
+	return room.template.on_meal(room, eater, seating)

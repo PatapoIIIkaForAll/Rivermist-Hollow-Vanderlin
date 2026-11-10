@@ -10,6 +10,15 @@
 /datum/enterprise_room_template/proc/get_effect(datum/enterprise_room/room, level, russian)
 	return null
 
+/datum/enterprise_room_template/proc/on_survey(datum/enterprise_room/room)
+	return
+
+/datum/enterprise_room_template/proc/on_rest(datum/enterprise_room/room, mob/living/carbon/human/sleeper)
+	return FALSE
+
+/datum/enterprise_room_template/proc/on_meal(datum/enterprise_room/room, mob/living/eater, datum/enterprise_seating/seating)
+	return FALSE
+
 /datum/enterprise_room_template/guest_room
 	id = ENTERPRISE_PURPOSE_GUEST_ROOM
 	name = "Guest room"
@@ -29,6 +38,18 @@
 	return russian \
 		? "[price] за ночь. Уставший гость, выспавшись, на 30 минут получает: [stats]." \
 		: "[price] a night. A tired guest who sleeps here gets for 30 minutes: [stats]."
+
+/datum/enterprise_room_template/guest_room/on_rest(datum/enterprise_room/room, mob/living/carbon/human/sleeper)
+	var/datum/enterprise/enterprise = room.enterprise
+	var/russian = get_preferred_ui_language(sleeper) == "ru"
+	var/price = enterprise.get_rest_price(room)
+	if(!enterprise.take_from_account(sleeper, price))
+		to_chat(sleeper, span_warning(russian ? "На счёте нет [price] за ночлег: отдых будет обычным." : "My account cannot cover the [price] for the night: this will be an ordinary rest."))
+		return FALSE
+	enterprise.earn(price)
+	enterprise.give_rest_buff(sleeper, room.level)
+	to_chat(sleeper, span_notice(russian ? "За ночлег со счёта списано [price]." : "The night has cost me [price] from my account."))
+	return TRUE
 
 /datum/enterprise_room_template/kitchen
 	id = ENTERPRISE_PURPOSE_KITCHEN
@@ -64,14 +85,16 @@
 		? "Персонал спит бесплатно, на 30 минут получает: [stats], и долю дневной выручки на счёт." \
 		: "The staff sleep for free, get for 30 minutes: [stats], and a share of the day's takings to their account."
 
-/datum/enterprise_room_template/drink_storage
-	id = ENTERPRISE_PURPOSE_DRINK_STORAGE
-	name = "Drinks storage"
-	priority = 35
-	var/kegs_needed = 2
-
-/datum/enterprise_room_template/drink_storage/matches(datum/enterprise_room/room)
-	return !room.beds && room.count_fixtures(/obj/structure/fermentation_keg) >= kegs_needed
+/datum/enterprise_room_template/staff_quarters/on_rest(datum/enterprise_room/room, mob/living/carbon/human/sleeper)
+	var/datum/enterprise/enterprise = room.enterprise
+	if(!enterprise.is_staff(sleeper))
+		return FALSE
+	enterprise.give_rest_buff(sleeper, room.level)
+	var/bonus = enterprise.get_staff_bonus()
+	if(SStreasury.give_money_account(bonus, sleeper, "[enterprise.name] wages"))
+		var/russian = get_preferred_ui_language(sleeper) == "ru"
+		to_chat(sleeper, span_notice(russian ? "За день работы на счёт пришло [bonus]." : "The day's work has brought [bonus] to my account."))
+	return TRUE
 
 /datum/enterprise_room_template/storage
 	id = ENTERPRISE_PURPOSE_STORAGE
@@ -82,6 +105,13 @@
 		/obj/structure/closet,
 	)
 	var/stores_needed = 2
+	var/list/goods = list(
+		/obj/item/reagent_containers/food,
+		/obj/item/reagent_containers/powder/salt,
+		/obj/item/reagent_containers/powder/flour,
+	)
+	var/post_name = "food buying post"
+	var/post_desc = "Food is bought here. What is taken is paid for on the spot."
 
 /datum/enterprise_room_template/storage/matches(datum/enterprise_room/room)
 	if(room.count_fixtures(/obj/structure/chair))
@@ -97,8 +127,46 @@
 		return null
 	var/cap = enterprise.get_level_value(enterprise.stock_caps, max(level, ENTERPRISE_LEVEL_WOOD))
 	return russian \
-		? "Место закупки у двери хранит по [cap] каждого вида еды." \
-		: "The buying post at the door holds [cap] of each kind of food."
+		? "Место закупки у двери хранит по [cap] каждого вида товара." \
+		: "The buying post at the door holds [cap] of each kind of goods."
+
+/datum/enterprise_room_template/storage/on_survey(datum/enterprise_room/room)
+	if(room.stock)
+		return
+	var/turf/outside = room.get_door_step()
+	if(!outside)
+		return
+	var/datum/enterprise_stock/stock = new(room.enterprise, room, goods)
+	var/obj/structure/fake_machine/enterprise_stock/post = new(outside)
+	post.name = post_name
+	post.desc = post_desc
+	post.stock = stock
+	stock.post = post
+	room.stock = stock
+	for(var/direction in GLOB.cardinals)
+		if(!isclosedturf(get_step(outside, direction)))
+			continue
+		if(direction & (NORTH | SOUTH))
+			post.pixel_y = direction == NORTH ? ICON_SIZE_Y : -ICON_SIZE_Y
+		else
+			post.pixel_x = direction == EAST ? ICON_SIZE_X : -ICON_SIZE_X
+		break
+
+/datum/enterprise_room_template/storage/drinks
+	id = ENTERPRISE_PURPOSE_DRINK_STORAGE
+	name = "Drinks storage"
+	priority = 35
+	stores = list(
+		/obj/structure/fermentation_keg,
+	)
+	goods = list(
+		/obj/item/reagent_containers/glass/bottle,
+	)
+	post_name = "drinks buying post"
+	post_desc = "Bottled drink is bought here. What is taken is paid for on the spot."
+
+/datum/enterprise_room_template/storage/drinks/matches(datum/enterprise_room/room)
+	return !room.beds && ..()
 
 /datum/enterprise_room_template/service_hall
 	id = ENTERPRISE_PURPOSE_SERVICE_HALL
@@ -119,3 +187,11 @@
 	return russian \
 		? "Еда за столом, сидя на стуле, поднимает настроение на [minutes] минут." \
 		: "A meal eaten seated at a table lifts the mood for [minutes] minutes."
+
+/datum/enterprise_room_template/service_hall/on_meal(datum/enterprise_room/room, mob/living/eater, datum/enterprise_seating/seating)
+	var/datum/enterprise/enterprise = room.enterprise
+	var/mood_type = enterprise.get_level_value(enterprise.meal_moods, seating.get_level())
+	if(!mood_type)
+		return FALSE
+	eater.add_stress(mood_type)
+	return TRUE

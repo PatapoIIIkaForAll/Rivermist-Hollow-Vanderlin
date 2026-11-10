@@ -97,11 +97,19 @@
 /datum/enterprise_room/proc/furnish(list/datum/enterprise_room_template/templates)
 	beds = count_fixtures(/obj/structure/bed)
 	template = null
+	var/marked = get_marked_purpose()
 	for(var/datum/enterprise_room_template/candidate as anything in templates)
-		if(candidate.matches(src))
+		if(marked ? candidate.id == marked : candidate.matches(src))
 			template = candidate
 			break
 	build_seatings()
+
+/datum/enterprise_room/proc/get_marked_purpose()
+	for(var/turf/member as anything in turfs)
+		var/obj/effect/landmark/enterprise_room/marker = locate() in member
+		if(marker)
+			return marker.purpose
+	return null
 
 /datum/enterprise_room/proc/get_purpose()
 	return template?.id
