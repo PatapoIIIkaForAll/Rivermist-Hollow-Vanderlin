@@ -1,4 +1,3 @@
-// A strip of a floor's picture, or its labels: only overlays, placed on the enterprise's map.
 /atom/movable/screen/enterprise_picture
 	plane = GAME_PLANE
 	layer = GAME_PLANE
@@ -13,13 +12,11 @@
 	var/min_y = 0
 	var/width = 0
 	var/height = 0
-	// One cell per turf of the bounding box, row by row; TRUE where the turf belongs to the floor.
 	var/list/mask
 	var/list/datum/enterprise_room/rooms = list()
-	// Laid out like the mask; holds the room a turf belongs to, if any.
 	var/list/datum/enterprise_room/room_cells
-	// The floor as it looked when last surveyed: one strip per row, then the room labels.
 	var/list/atom/movable/screen/enterprise_picture/picture
+	var/list/atom/movable/screen/enterprise_zone/zones
 
 /datum/enterprise_floor/New(z, datum/enterprise/enterprise)
 	src.z = z
@@ -27,6 +24,7 @@
 
 /datum/enterprise_floor/Destroy()
 	QDEL_LIST(picture)
+	QDEL_LIST(zones)
 	enterprise = null
 	turfs = null
 	mask = null
@@ -69,7 +67,6 @@
 		return FALSE
 	return !!mask[row * width + column + 1]
 
-// Only for a turf inside the bounding box, which every turf of the floor is.
 /datum/enterprise_floor/proc/cell_index(turf/member)
 	return (member.y - min_y) * width + (member.x - min_x) + 1
 
@@ -86,22 +83,24 @@
 				found += thing
 	return found
 
+/datum/enterprise_floor/proc/get_screen_x()
+	return enterprise.frame_pad_x + 1 + (min_x - enterprise.frame_min_x)
+
+/datum/enterprise_floor/proc/get_screen_y()
+	return enterprise.frame_pad_y + 1 + (min_y - enterprise.frame_min_y)
+
 /datum/enterprise_floor/proc/copy_appearance(atom/source, offset)
 	var/mutable_appearance/copy = new
 	copy.appearance = source.appearance
 	copy.pixel_x += offset
 	return copy
 
-/**
- * Draws the floor as it stands now: the turfs and every visible object on them, and no mobs at all.
- * It is a picture, not a view: nothing in it moves until the floor is surveyed again.
- */
 /datum/enterprise_floor/proc/take_picture()
 	QDEL_LIST(picture)
 	picture = list()
 	var/map_key = enterprise.map_key
-	var/screen_x = enterprise.frame_pad_x + 1 + (min_x - enterprise.frame_min_x)
-	var/screen_y = enterprise.frame_pad_y + 1 + (min_y - enterprise.frame_min_y)
+	var/screen_x = get_screen_x()
+	var/screen_y = get_screen_y()
 
 	for(var/row in 0 to height - 1)
 		var/list/strip_overlays = list()
@@ -151,3 +150,24 @@
 		labels.set_position(screen_x, screen_y)
 		labels.overlays = label_overlays
 		picture += labels
+	mark_zones()
+
+/datum/enterprise_floor/proc/mark_zones()
+	QDEL_LIST(zones)
+	zones = list()
+	var/screen_x = get_screen_x()
+	var/screen_y = get_screen_y()
+	for(var/datum/enterprise_room/room as anything in rooms)
+		var/list/mutable_appearance/shape = list()
+		for(var/turf/member as anything in room.turfs)
+			var/mutable_appearance/square = mutable_appearance('modular_rmh/icons/enterprises/zone.dmi', "white")
+			square.pixel_x = (member.x - min_x) * ICON_SIZE_X
+			square.pixel_y = (member.y - min_y) * ICON_SIZE_Y
+			shape += square
+		room.shape = shape
+		var/atom/movable/screen/enterprise_zone/zone = new
+		zone.assigned_map = enterprise.map_key
+		zone.room = room
+		zone.set_position(screen_x, screen_y)
+		zone.overlays = shape
+		zones += zone

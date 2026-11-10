@@ -5,21 +5,25 @@
 	var/list/manager_jobs = list()
 	var/list/staff_jobs = list()
 	var/list/ledger_pages = list("overview")
-	// Pages of the ledger that only the owner is shown.
 	var/list/owner_pages = list("premises")
 	var/list/obj/structure/fake_machine/enterprise_ledger/ledgers = list()
 	var/shift_active = FALSE
-	// Indexed by z-level; a level the enterprise does not reach holds null.
 	var/list/datum/enterprise_floor/floors = list()
 	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
 
 /datum/enterprise/Destroy()
+	SStgui.close_uis(src)
+	for(var/viewer_key in viewers.Copy())
+		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
+		hide_floors(viewer.user)
 	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
 		ledger.enterprise = null
 	ledgers = null
 	guest_rooms = null
 	QDEL_LIST(rooms)
 	QDEL_LIST(floors)
+	QDEL_LIST(fixtures)
+	QDEL_LIST(room_templates)
 	QDEL_NULL(map_backdrop)
 	QDEL_NULL(map_catcher)
 	QDEL_LIST(map_plane_masters)
@@ -83,7 +87,7 @@
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
-		"viewed_z" = viewed_z[REF(user)],
+		"viewed_z" = get_viewer(user)?.z,
 	)
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -110,8 +114,15 @@
 		if("hide_floors")
 			hide_floors(ui.user)
 			return FALSE
+		if("hover_room")
+			hover_room(ui.user, get_room_by_id(params["room"]))
+			return FALSE
+		if("open_room")
+			var/datum/enterprise_room/room = get_room_by_id(params["room"])
+			if(room)
+				room_action(ui.user, room, ENTERPRISE_ROOM_ACTION_INFO)
+			return FALSE
 		if("survey_again")
-			// Sends its own full update, so no second push is owed.
 			survey_again(ui.user)
 			return FALSE
 	return FALSE

@@ -13,7 +13,6 @@ type PageDef = {
   component: ComponentType<PageProps>;
 };
 
-// A page id sent by DM that is not listed here opens the placeholder.
 const PAGES: Record<string, PageDef> = {
   overview: { icon: 'book-open', component: OverviewPage },
   premises: { icon: 'map', component: PremisesPage },
@@ -38,8 +37,8 @@ export const EnterpriseLedgerView = (props: { locale: Locale }) => {
   return (
     <Window
       title={`${locale.windowTitle}: ${enterpriseName}`}
-      width={860}
-      height={640}
+      width={1040}
+      height={700}
     >
       <Window.Content>
         <Stack vertical fill>

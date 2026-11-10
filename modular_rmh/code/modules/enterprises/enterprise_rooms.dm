@@ -3,12 +3,9 @@
 #define ROOM_CELL_TABLE 3
 
 /datum/enterprise
-	// Lock ids every member of staff carries; a door that only they can open is not a guest room.
 	var/list/staff_lock_ids = list()
-	// The keyring the owner starts with. What its keys open is the enterprise's; any other lock is someone else's.
 	var/owner_keyring
 	var/list/own_lock_ids
-	// Every room of the premises, and the guest rooms again by the lock id of their doors.
 	var/list/datum/enterprise_room/rooms = list()
 	var/list/datum/enterprise_room/guest_rooms = list()
 
@@ -19,23 +16,31 @@
 	var/datum/enterprise_floor/floor = get_floor(location.z)
 	return floor ? floor.get_room(location) : null
 
-// Every furnishing of one type across the premises, room by room.
 /datum/enterprise/proc/get_interior(atom_type)
 	var/list/obj/found = list()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		found += room.get_interior(atom_type)
 	return found
 
+/datum/enterprise/proc/get_room_by_id(id)
+	if(!isnum(id) || id != round(id) || id < 1 || id > length(rooms))
+		return null
+	return rooms[id]
+
 /datum/enterprise/proc/get_rooms_data()
 	var/list/rooms_data = list()
+	var/id = 0
 	for(var/datum/enterprise_room/room as anything in rooms)
+		id++
 		rooms_data += list(list(
+			"id" = id,
 			"name" = room.name,
 			"kind" = room.kind,
 			"z" = room.z,
 			"tiles" = length(room.turfs),
+			"purpose" = room.template?.id,
 			"beds" = room.beds,
-			"items" = length(room.interior),
+			"items" = length(room.fixtures),
 		))
 	return rooms_data
 
@@ -62,7 +67,6 @@
 	var/list/lock_ids = get_door_lock_ids(door)
 	return lock_ids ? length(lock_ids & own_lock_ids) : FALSE
 
-// A door name says what room it leads into, unless the mapper left the default or named the door itself.
 /datum/enterprise/proc/get_door_room_name(obj/structure/door/door)
 	var/static/list/door_words = list(" backdoor", " back door", " door", " entrance", " exit", " gate")
 	if(door.name == initial(door.name))
@@ -73,7 +77,6 @@
 			return null
 	return door.name
 
-// A wall, a window, or a door with a lock on it bounds a room; a table belongs to a room but is not walked through.
 /datum/enterprise/proc/classify_room_turf(turf/checked)
 	if(isclosedturf(checked))
 		return ROOM_CELL_BARRIER
@@ -88,22 +91,12 @@
 			has_table = TRUE
 	return has_table ? ROOM_CELL_TABLE : ROOM_CELL_OPEN
 
-/**
- * Splits the premises into rooms and throws out what is not the enterprise's.
- *
- * A pocket is what walls, windows, locked doors and counters close off. A pocket without a locked door joins
- * the largest pocket across a counter from it. The enterprise keeps the pockets its ledgers stand in and those
- * one of its own keys opens, plus all that can be reached from them without a door only foreign keys open:
- * through its own doors, across counters, and up or down where open space lies over a turf. A kept pocket
- * whose locked doors are all foreign is the hallway of someone else's rooms and is dropped too.
- */
 /datum/enterprise/proc/scan_rooms()
 	QDEL_LIST(rooms)
 	guest_rooms.Cut()
 	get_own_lock_ids()
 
 	var/list/datum/enterprise_room/pockets = list()
-	// door -> the pockets on its sides
 	var/list/door_sides = list()
 	for(var/datum/enterprise_floor/floor as anything in floors)
 		if(floor)
@@ -188,7 +181,6 @@
 	var/list/cells = new /list(cell_count)
 	for(var/turf/member as anything in floor.turfs)
 		cells[floor.cell_index(member)] = classify_room_turf(member)
-	// During the survey the cells hold pockets; set_rooms() lays the kept rooms out again afterwards.
 	var/list/datum/enterprise_room/owners = new /list(cell_count)
 	floor.room_cells = owners
 
@@ -196,7 +188,7 @@
 		var/start_cell = floor.cell_index(start)
 		if(cells[start_cell] != ROOM_CELL_OPEN || owners[start_cell])
 			continue
-		var/datum/enterprise_room/pocket = new(floor.z)
+		var/datum/enterprise_room/pocket = new(floor.z, src)
 		pockets += pocket
 		owners[start_cell] = pocket
 		pocket.turfs += start
@@ -227,7 +219,6 @@
 				if(kind == ROOM_CELL_BARRIER)
 					continue
 				if(kind == ROOM_CELL_OPEN || kind == ROOM_CELL_TABLE)
-					// Across a counter lies another pocket; the scan does not walk on from a table.
 					if(other && other != pocket)
 						if(on_table || kind == ROOM_CELL_TABLE)
 							pocket.link_with(other)
@@ -244,7 +235,6 @@
 					door_sides[kind] = sides
 				sides |= pocket
 
-// Leaves on each floor the turfs of the kept rooms and the walls, windows and doors that touch them.
 /datum/enterprise/proc/prune_floors()
 	for(var/z in 1 to length(floors))
 		var/datum/enterprise_floor/floor = floors[z]
@@ -276,9 +266,7 @@
 		floor.set_turfs(kept_turfs)
 		floor.basement = is_basement_floor(floor)
 
-// Gives every kept room its kind and its name.
 /datum/enterprise/proc/name_rooms(list/door_sides)
-	// room name -> for each door of that name, the kept rooms on its sides
 	var/list/sides_by_name = list()
 	for(var/obj/structure/door/door as anything in door_sides)
 		if(!is_own_door(door))
@@ -299,7 +287,6 @@
 			sides_by_name[room_name] = named_doors
 		named_doors += list(sides)
 
-	// A name goes to the room every door of that name leads to; of two candidates, to the one with fewer doors.
 	for(var/room_name in sides_by_name)
 		var/list/all_sides = sides_by_name[room_name]
 		var/list/datum/enterprise_room/candidates = all_sides[1]
@@ -345,7 +332,6 @@
 		if(length(guest_ids))
 			log_mapping("Map issue: [door] ([door.type]) at [AREACOORD(door)] carries the room lock \"[guest_ids[1]]\" but closes no room: the walls have a gap, there is a way in without that lock, or the doors of the room differ in locks.")
 
-// Puts the rooms in order, numbers the unnamed ones, hands them to their floors and lists what stands in them.
 /datum/enterprise/proc/sort_rooms()
 	var/list/datum/enterprise_room/ordered = list()
 	var/halls = 0

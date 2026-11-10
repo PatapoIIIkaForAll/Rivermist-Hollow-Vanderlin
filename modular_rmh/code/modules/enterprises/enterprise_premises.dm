@@ -1,10 +1,7 @@
-/// How often the owner may have the premises surveyed again from the ledger.
 #define ENTERPRISE_SURVEY_COOLDOWN (10 SECONDS)
 
 /datum/enterprise
-	// Where the ledgers stand: the rooms they are in are the enterprise's whatever their locks.
 	var/list/turf/anchors = list()
-	// Every turf the area rule gave, by z-level, before foreign rooms are thrown out of the floors.
 	var/list/claimed_by_z = list()
 	COOLDOWN_DECLARE(survey_cooldown)
 
@@ -29,11 +26,13 @@
 		log_mapping("Map issue: [anchor] ([anchor.type]) at [AREACOORD(anchor)] is outside the [name] premises. [premises_hint]")
 		return FALSE
 	anchors |= origin
+	var/list/turf/fresh
 	var/list/turf/claimed_level = origin.z <= length(claimed_by_z) ? claimed_by_z[origin.z] : null
 	if(claimed_level && (origin in claimed_level))
 		if(contains(origin))
 			return TRUE
 	else
+		fresh = list()
 		var/list/found_by_z = scan_premises(origin)
 		if(length(claimed_by_z) < length(found_by_z))
 			claimed_by_z.len = length(found_by_z)
@@ -42,15 +41,12 @@
 			if(!found)
 				continue
 			var/list/turf/claimed = claimed_by_z[z]
+			fresh += claimed ? (found - claimed) : found
 			claimed_by_z[z] = claimed ? (claimed | found) : found
-	survey()
+	survey(fresh)
 	return TRUE
 
-/**
- * Works the premises out afresh from the claimed turfs: the rooms and what stands in them, the floors
- * without what is not the enterprise's, and a new picture of every floor.
- */
-/datum/enterprise/proc/survey()
+/datum/enterprise/proc/survey(list/turf/fresh)
 	if(length(floors) < length(claimed_by_z))
 		floors.len = length(claimed_by_z)
 	for(var/z in 1 to length(claimed_by_z))
@@ -63,6 +59,9 @@
 			floors[z] = floor
 		floor.set_turfs(claimed)
 	scan_rooms()
+	if(length(fresh))
+		take_fixtures(fresh)
+	furnish_rooms()
 	update_map_frame()
 	for(var/datum/enterprise_floor/floor as anything in floors)
 		if(floor)
@@ -87,13 +86,19 @@
 			))
 	return floors_data
 
+/datum/enterprise/proc/get_floor_number(z)
+	var/number = 0
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		if(floor && !floor.basement && floor.z <= z)
+			number++
+	return number
+
 /datum/enterprise/proc/is_basement_floor(datum/enterprise_floor/floor)
 	for(var/turf/member as anything in floor.turfs)
 		if(!istype(member.loc, /area/under))
 			return FALSE
 	return TRUE
 
-// Walks every premises turf joined to the origin: the eight neighbours on its level, then the turf above and below.
 /datum/enterprise/proc/scan_premises(turf/origin)
 	var/row_length = world.maxx
 	var/level_size = row_length * world.maxy
