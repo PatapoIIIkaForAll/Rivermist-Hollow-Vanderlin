@@ -8,6 +8,7 @@ const locale: Locale = {
   },
   pages: {
     overview: 'Обзор',
+    premises: 'Помещения',
     menu: 'Меню',
     staff: 'Работники',
     zones: 'Отсеки и улучшения',
@@ -26,9 +27,21 @@ const locale: Locale = {
     sectionInProgress: 'Этот раздел книги пока пуст.',
     premises: 'Помещения',
     premisesMissing: 'Не найдены: книга стоит вне помещений.',
+    basement: 'Подвал',
+    refresh: 'Осмотреть заново',
+  },
+  cellKinds: {
+    wall: 'Стена',
+    floor: 'Пол',
+    furnished: 'Пол с обстановкой',
+    openSpace: 'Проём',
+    door: 'Дверь',
+    stairs: 'Лестница',
+    ledger: 'Книга',
   },
   formatPremises: (floors, basements, tiles) =>
     `Этажей: ${floors}, подвальных уровней: ${basements}, клеток: ${tiles}`,
+  formatFloor: (number) => `Этаж ${number}`,
 };
 
 export default locale;

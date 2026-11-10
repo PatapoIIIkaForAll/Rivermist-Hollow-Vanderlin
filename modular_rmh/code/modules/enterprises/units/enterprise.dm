@@ -60,6 +60,7 @@
 	return list(
 		"name" = name,
 		"pages" = ledger_pages,
+		"plan" = get_premises_plan(),
 	)
 
 /datum/enterprise/ui_data(mob/user)
@@ -67,15 +68,7 @@
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
-		"premises" = get_premises_data(),
 	)
-
-/datum/enterprise/proc/get_premises_data()
-	var/list/premises = list()
-	for(var/datum/enterprise_floor/floor as anything in floors)
-		if(floor)
-			premises += list(list("z" = floor.z, "tiles" = length(floor.turfs), "basement" = floor.basement))
-	return premises
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
@@ -86,4 +79,8 @@
 			return start_shift(ui.user)
 		if("end_shift")
 			return end_shift(ui.user)
+		if("refresh_premises")
+			// Sends its own full update, so no second push is owed.
+			refresh_premises_plan(ui.user)
+			return FALSE
 	return FALSE

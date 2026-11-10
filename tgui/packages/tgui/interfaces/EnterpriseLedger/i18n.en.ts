@@ -8,6 +8,7 @@ const locale: Locale = {
   },
   pages: {
     overview: 'Overview',
+    premises: 'Premises',
     menu: 'Menu',
     staff: 'Workers',
     zones: 'Zones & Upgrades',
@@ -26,9 +27,21 @@ const locale: Locale = {
     sectionInProgress: 'This section of the ledger is still blank.',
     premises: 'Premises',
     premisesMissing: 'Not found: the ledger stands outside the premises.',
+    basement: 'Basement',
+    refresh: 'Survey again',
+  },
+  cellKinds: {
+    wall: 'Wall',
+    floor: 'Floor',
+    furnished: 'Furnished floor',
+    openSpace: 'Open space',
+    door: 'Door',
+    stairs: 'Stairs',
+    ledger: 'Ledger',
   },
   formatPremises: (floors, basements, tiles) =>
     `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,
+  formatFloor: (number) => `Floor ${number}`,
 };
 
 export default locale;

@@ -17,7 +17,7 @@ export const OverviewPage = (props: PageProps) => {
   const { locale } = props;
   const { act, data } = useBackend<Data>();
   const { name, is_staff, shift_active } = data;
-  const premises = data.premises || [];
+  const premises = data.plan || [];
   const tiles = premises.reduce((total, floor) => total + floor.tiles, 0);
   const basements = premises.filter((floor) => floor.basement).length;
 

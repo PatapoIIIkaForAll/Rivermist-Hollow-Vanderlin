@@ -33,7 +33,7 @@
 			floors[z] = floor
 		floor.add_turfs(found)
 		floor.basement = is_basement_floor(floor)
-	SStgui.update_uis(src)
+	invalidate_premises_plan()
 	return TRUE
 
 /datum/enterprise/proc/is_basement_floor(datum/enterprise_floor/floor)

@@ -1131,7 +1131,6 @@
 /area/under/town/rmh/basement/tavern
 	name = "tavern's basement"
 	icon_state = "basement"
-	tavern_area = TRUE
 	droning_index = DRONING_BASEMENT
 	droning_index_night = DRONING_BASEMENT
 	ambient_index = AMBIENCE_DUNGEON
