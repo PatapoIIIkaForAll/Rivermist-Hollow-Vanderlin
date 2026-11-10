@@ -11,12 +11,15 @@
 	var/shift_active = FALSE
 	// Indexed by z-level; a level the enterprise does not reach holds null.
 	var/list/datum/enterprise_floor/floors = list()
+	// The z-level each open ledger is showing on its premises page, by REF of the viewer.
+	var/list/viewed_z = list()
 	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
 
 /datum/enterprise/Destroy()
 	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
 		ledger.enterprise = null
 	ledgers = null
+	QDEL_LIST_ASSOC_VAL(rooms)
 	QDEL_LIST(floors)
 	SSenterprises.enterprises -= type
 	return ..()
@@ -66,6 +69,7 @@
 	return list(
 		"name" = name,
 		"floors" = get_floors_data(),
+		"rooms" = get_rooms_data(),
 	)
 
 /datum/enterprise/ui_data(mob/user)
@@ -74,6 +78,7 @@
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
+		"viewed_z" = viewed_z[REF(user)],
 	)
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -85,12 +90,18 @@
 			return start_shift(ui.user)
 		if("end_shift")
 			return end_shift(ui.user)
+		if("open_premises")
+			return open_premises(ui.user)
 		if("view_floor")
 			var/z = params["z"]
 			if(!isnum(z) || z != round(z))
 				return FALSE
-			show_floor(ui.user, z)
-			return FALSE
+			return show_floor(ui.user, z)
+		if("step_floor")
+			var/direction = params["direction"]
+			if(direction != 1 && direction != -1)
+				return FALSE
+			return step_floor(ui.user, direction)
 		if("hide_floors")
 			hide_floors(ui.user)
 			return FALSE

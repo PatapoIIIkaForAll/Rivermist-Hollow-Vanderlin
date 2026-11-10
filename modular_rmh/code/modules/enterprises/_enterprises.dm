@@ -1,6 +1,8 @@
 #include "enterprise_premises.dm"
+#include "enterprise_rooms.dm"
 #include "enterprises_subsystem.dm"
 #include "machines\enterprise_ledger.dm"
 #include "units\enterprise.dm"
 #include "units\enterprise_floor.dm"
+#include "units\enterprise_room.dm"
 #include "units\tavern.dm"

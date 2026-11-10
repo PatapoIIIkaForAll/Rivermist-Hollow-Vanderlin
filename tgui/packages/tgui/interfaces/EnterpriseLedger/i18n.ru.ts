@@ -28,6 +28,8 @@ const locale: Locale = {
     premises: 'Помещения',
     premisesMissing: 'Не найдены: книга стоит вне помещений.',
     basement: 'Подвал',
+    guestRooms: 'Жилые комнаты',
+    guestRoomsNone: 'Не найдены',
   },
   formatPremises: (floors, basements, tiles) =>
     `Этажей: ${floors}, подвальных уровней: ${basements}, клеток: ${tiles}`,

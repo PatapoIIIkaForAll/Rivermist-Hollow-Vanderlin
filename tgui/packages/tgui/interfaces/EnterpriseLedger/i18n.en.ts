@@ -28,6 +28,8 @@ const locale: Locale = {
     premises: 'Premises',
     premisesMissing: 'Not found: the ledger stands outside the premises.',
     basement: 'Basement',
+    guestRooms: 'Guest rooms',
+    guestRoomsNone: 'None found',
   },
   formatPremises: (floors, basements, tiles) =>
     `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,

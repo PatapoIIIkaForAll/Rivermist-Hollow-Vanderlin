@@ -14,6 +14,7 @@
 	)
 	ledger_pages = list("overview", "premises", "menu", "staff", "zones", "commissions")
 	premises_hint = "Place the ledger on an area with tavern_area set."
+	staff_lock_ids = list(ACCESS_INN)
 
 /datum/enterprise/tavern/is_premises_turf(turf/checked)
 	var/area/checked_area = checked.loc

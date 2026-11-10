@@ -20,6 +20,7 @@ export const OverviewPage = (props: PageProps) => {
   const premises = data.floors || [];
   const tiles = premises.reduce((total, floor) => total + floor.tiles, 0);
   const basements = premises.filter((floor) => floor.basement).length;
+  const rooms = data.rooms || [];
 
   return (
     <Section
@@ -59,6 +60,11 @@ export const OverviewPage = (props: PageProps) => {
                 tiles,
               )
             : locale.labels.premisesMissing}
+        </LabeledList.Item>
+        <LabeledList.Item label={locale.labels.guestRooms}>
+          {rooms.length
+            ? `${rooms.length}: ${rooms.map((room) => room.name).join(', ')}`
+            : locale.labels.guestRoomsNone}
         </LabeledList.Item>
       </LabeledList>
     </Section>

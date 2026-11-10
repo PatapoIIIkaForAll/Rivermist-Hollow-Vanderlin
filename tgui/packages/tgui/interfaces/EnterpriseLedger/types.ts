@@ -4,12 +4,24 @@ export type Data = {
   // ui_static_data
   name: string;
   floors: FloorInfo[];
+  rooms: RoomInfo[];
 
   // ui_data
   pages: string[];
   can_manage: BooleanLike;
   is_staff: BooleanLike;
   shift_active: BooleanLike;
+  // The floor the server is showing this viewer; null until the premises page asks for one.
+  viewed_z: number | null;
+};
+
+export type RoomInfo = {
+  // The lock id of the room's doors.
+  id: string;
+  name: string;
+  z: number;
+  tiles: number;
+  beds: number;
 };
 
 export type FloorInfo = {
@@ -38,6 +50,8 @@ export type Locale = {
     premises: string;
     premisesMissing: string;
     basement: string;
+    guestRooms: string;
+    guestRoomsNone: string;
   };
   formatPremises: (floors: number, basements: number, tiles: number) => string;
   formatFloor: (number: number) => string;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, type WheelEvent } from 'react';
 import { ByondUi, NoticeBox, Section, Stack, Tabs } from 'tgui-core/components';
 
 import { useBackend } from '../../../backend';
@@ -19,56 +19,57 @@ export const PremisesPage = (props: PageProps) => {
   const { locale } = props;
   const { act, data } = useBackend<Data>();
   const floors = data.floors || [];
-  const [selectedZ, setSelectedZ] = useState<number | null>(null);
-  const floor =
-    floors.find((entry) => entry.z === selectedZ) ||
-    floors.find((entry) => !entry.basement) ||
-    floors[0];
-  const shownZ = floor ? floor.z : null;
+  // Which floor is open is the server's to say: the wheel over the map changes it there.
+  const floor = floors.find((entry) => entry.z === data.viewed_z);
   const labels = getFloorLabels(locale, floors);
 
-  // The server puts the floor's screen objects on this client's map control.
   useEffect(() => {
-    if (shownZ !== null) {
-      act('view_floor', { z: shownZ });
-    }
-  }, [shownZ]);
-
-  useEffect(() => {
+    act('open_premises');
     return () => act('hide_floors');
   }, []);
 
+  // Over the map itself the wheel goes to BYOND, not to the browser; this covers the tabs.
+  const stepFloor = (event: WheelEvent) => {
+    if (event.deltaY) {
+      act('step_floor', { direction: event.deltaY < 0 ? 1 : -1 });
+    }
+  };
+
   return (
     <Section fill title={locale.labels.premises}>
-      {!floor && <NoticeBox>{locale.labels.premisesMissing}</NoticeBox>}
-      {!!floor && (
+      {!floors.length && <NoticeBox>{locale.labels.premisesMissing}</NoticeBox>}
+      {!!floors.length && (
         <Stack vertical fill>
           <Stack.Item>
-            <Tabs>
-              {floors.map((entry, index) => (
-                <Tabs.Tab
-                  key={entry.z}
-                  selected={entry.z === floor.z}
-                  onClick={() => setSelectedZ(entry.z)}
-                >
-                  {labels[index]}
-                </Tabs.Tab>
-              ))}
-            </Tabs>
+            <div onWheel={stepFloor}>
+              <Tabs>
+                {floors.map((entry, index) => (
+                  <Tabs.Tab
+                    key={entry.z}
+                    selected={entry.z === data.viewed_z}
+                    onClick={() => act('view_floor', { z: entry.z })}
+                  >
+                    {labels[index]}
+                  </Tabs.Tab>
+                ))}
+              </Tabs>
+            </div>
           </Stack.Item>
           <Stack.Item grow>
-            {/* Keyed by the map id alone: another floor is another control. */}
-            <ByondUi
-              key={floor.map}
-              width="100%"
-              height="100%"
-              phonehome={false}
-              params={{
-                id: floor.map,
-                type: 'map',
-                'background-color': '#000000',
-              }}
-            />
+            {!!floor && (
+              // Keyed by the map id alone: another floor is another control.
+              <ByondUi
+                key={floor.map}
+                width="100%"
+                height="100%"
+                phonehome={false}
+                params={{
+                  id: floor.map,
+                  type: 'map',
+                  'background-color': '#000000',
+                }}
+              />
+            )}
           </Stack.Item>
         </Stack>
       )}

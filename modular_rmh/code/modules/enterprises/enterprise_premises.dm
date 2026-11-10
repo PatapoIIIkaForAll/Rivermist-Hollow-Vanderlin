@@ -29,10 +29,11 @@
 			floors.len = z
 		var/datum/enterprise_floor/floor = floors[z]
 		if(!floor)
-			floor = new(z)
+			floor = new(z, src)
 			floors[z] = floor
 		floor.add_turfs(found)
 		floor.basement = is_basement_floor(floor)
+	scan_rooms()
 	update_static_data_for_all_viewers()
 	return TRUE
 
@@ -51,16 +52,51 @@
 // Puts the live view of one floor on the viewer's screen and takes the other floors off it.
 /datum/enterprise/proc/show_floor(mob/user, z)
 	var/client/viewer = user?.client
-	if(!viewer)
-		return
-	hide_floors(user)
-	if(!is_owner(user))
-		return
 	var/datum/enterprise_floor/floor = get_floor(z)
-	if(floor)
-		floor.show_to(viewer)
+	if(!viewer || !floor || !is_owner(user))
+		return FALSE
+	if(viewed_z[REF(user)] == z)
+		return FALSE
+	hide_floors(user)
+	floor.show_to(viewer)
+	viewed_z[REF(user)] = z
+	return TRUE
+
+// Opens the lowest floor that is not a basement, or the lowest floor there is.
+/datum/enterprise/proc/open_premises(mob/user)
+	var/datum/enterprise_floor/chosen
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		if(!floor)
+			continue
+		if(!chosen)
+			chosen = floor
+		if(!floor.basement)
+			chosen = floor
+			break
+	return chosen ? show_floor(user, chosen.z) : FALSE
+
+// Moves the viewer one floor up or down, skipping the levels the enterprise does not reach.
+/datum/enterprise/proc/step_floor(mob/user, direction)
+	var/z = viewed_z[REF(user)]
+	if(!z)
+		return FALSE
+	var/next_z = get_next_floor_z(z, direction)
+	return next_z ? show_floor(user, next_z) : FALSE
+
+/datum/enterprise/proc/get_next_floor_z(z, direction)
+	z += direction
+	while(z >= 1 && z <= length(floors))
+		if(floors[z])
+			return z
+		z += direction
+	return null
+
+/datum/enterprise/proc/wheel_floor(mob/user, direction)
+	if(step_floor(user, direction))
+		SStgui.update_uis(src)
 
 /datum/enterprise/proc/hide_floors(mob/user)
+	viewed_z -= REF(user)
 	var/client/viewer = user?.client
 	if(!viewer)
 		return
