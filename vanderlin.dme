@@ -4781,6 +4781,7 @@
 #include "modular_rmh\code\modules\dungeons\procedural_layout.dm"
 #include "modular_rmh\code\modules\dungeons\procedural_templates.dm"
 #include "modular_rmh\code\modules\dungeons\procedural_tests.dm"
+#include "modular_rmh\code\modules\enterprises\_enterprises.dm"
 #include "modular_rmh\code\modules\farming\big_liquid_containers.dm"
 #include "modular_rmh\code\modules\food\cicerone.dm"
 #include "modular_rmh\code\modules\food\easter.dm"
