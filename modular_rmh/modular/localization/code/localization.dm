@@ -380,6 +380,12 @@ GLOBAL_DATUM(localization_maptext_dictionary, /datum/localization_dictionary)
 	localization_description_dictionary()
 	localization_maptext_dictionary()
 
+/// The dictionary is megabytes and only a Russian reader's panel asks for it. The browse_rsc transport can push
+/// every registered asset to every client in the background (ASSET_SIMPLE_PRELOAD): keep it out of that list.
+/datum/asset_transport/Initialize(list/assets)
+	. = ..()
+	preload -= LOCALIZATION_CHAT_ASSET
+
 /datum/asset/json/chat_localization/generate()
 	var/list/files = GLOB.localization_files
 	localization_load_nouns()

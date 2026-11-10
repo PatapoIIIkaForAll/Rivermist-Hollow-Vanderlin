@@ -11,7 +11,12 @@ type LocalizationConfig = {
 
 let fetchedUrl: string | null = null;
 
-async function fetchDictionary(url: string): Promise<void> {
+// The file may not be there yet. Over browse_rsc the server names it before
+// the client has received it, and megabytes take a while; a CDN can fail for
+// a moment. So a failed load is tried again, for about two minutes in all.
+const RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 15000, 30000, 60000];
+
+async function fetchDictionary(url: string, attempt = 0): Promise<void> {
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -19,6 +24,16 @@ async function fetchDictionary(url: string): Promise<void> {
     }
     loadDictionary((await response.json()) as Dictionary);
   } catch (error) {
+    if (fetchedUrl !== url) {
+      return;
+    }
+    if (attempt < RETRY_DELAYS_MS.length) {
+      setTimeout(
+        () => fetchDictionary(url, attempt + 1),
+        RETRY_DELAYS_MS[attempt],
+      );
+      return;
+    }
     fetchedUrl = null;
     logger.error(
       'failed to load the chat dictionary, staying in English',
