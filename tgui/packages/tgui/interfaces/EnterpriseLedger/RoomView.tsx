@@ -4,7 +4,6 @@ import {
   DmIcon,
   Icon,
   LabeledList,
-  NoticeBox,
   Section,
   Stack,
   Tabs,
@@ -29,6 +28,9 @@ const DECISECONDS_IN_MINUTE = 600;
 type RoomPageProps = {
   locale: Locale;
 };
+
+const getLevelLabel = (locale: Locale, level: number) =>
+  `${level} · ${locale.levelNames[level] || level}`;
 
 const ItemIcon = (props: { item: IconInfo }) => {
   const { item } = props;
@@ -102,21 +104,33 @@ const UpgradeRow = (props: { line: UpgradeLine }) => {
   );
 };
 
+const getStay = (locale: Locale, timeLeft: number | null) => {
+  if (timeLeft === null || timeLeft === undefined) {
+    return locale.room.tenantStayForever;
+  }
+  const hours = Math.floor(timeLeft / DECISECONDS_IN_HOUR);
+  const minutes = Math.floor(
+    (timeLeft % DECISECONDS_IN_HOUR) / DECISECONDS_IN_MINUTE,
+  );
+  return locale.formatStay(hours, minutes);
+};
+
 const TenantDetails = (props: { locale: Locale; tenant: TenantInfo }) => {
   const { locale, tenant } = props;
-  const hours = Math.floor(tenant.time_left / DECISECONDS_IN_HOUR);
-  const minutes = Math.floor(
-    (tenant.time_left % DECISECONDS_IN_HOUR) / DECISECONDS_IN_MINUTE,
-  );
   const needs = tenant.needs || [];
 
   return (
     <LabeledList>
       <LabeledList.Item label={locale.room.tenantName}>
         {tenant.name}
+        {!!tenant.patron && (
+          <Box inline color="label" ml={1}>
+            ({locale.room.tenantPatron})
+          </Box>
+        )}
       </LabeledList.Item>
       <LabeledList.Item label={locale.room.tenantStay}>
-        {locale.formatStay(hours, minutes)}
+        {getStay(locale, tenant.time_left)}
       </LabeledList.Item>
       <LabeledList.Item label={locale.room.tenantRent}>
         {tenant.rent}
@@ -154,9 +168,19 @@ const InfoPage = (props: RoomPageProps) => {
                 {data.beds}
               </LabeledList.Item>
             )}
+            {!!data.seatings && (
+              <LabeledList.Item label={locale.room.seatings}>
+                {data.seatings}
+              </LabeledList.Item>
+            )}
             <LabeledList.Item label={locale.room.level}>
-              {locale.formatLevel(data.level, data.max_level)}
+              {getLevelLabel(locale, data.level)}
             </LabeledList.Item>
+            {data.kind === 'guest' && (
+              <LabeledList.Item label={locale.room.rent}>
+                {data.rent || locale.room.rentNone}
+              </LabeledList.Item>
+            )}
             <LabeledList.Item label={locale.room.effect}>
               {data.effect || locale.room.effectNone}
             </LabeledList.Item>
@@ -186,6 +210,49 @@ const InfoPage = (props: RoomPageProps) => {
   );
 };
 
+const UpgradeButtons = (props: RoomPageProps) => {
+  const { locale } = props;
+  const { act, data } = useBackend<RoomData>();
+
+  return (
+    <Stack vertical>
+      {!data.upgrade_cost && !data.can_grade && (
+        <Stack.Item color="label">{locale.room.upgradeNotForSale}</Stack.Item>
+      )}
+      {!!data.upgrade_cost && (
+        <Stack.Item>
+          <Button
+            fluid
+            icon="arrow-up"
+            textAlign="center"
+            color="good"
+            disabled={data.funds < data.upgrade_cost}
+            onClick={() => act('upgrade')}
+          >
+            {locale.formatUpgrade(data.upgrade_cost)}
+          </Button>
+          <Box color="label" mt={0.5}>
+            {locale.room.upgradeFunds}: {data.funds}
+          </Box>
+        </Stack.Item>
+      )}
+      {!!data.can_grade && (
+        <Stack.Item>
+          <Button
+            fluid
+            icon="crown"
+            textAlign="center"
+            tooltip={locale.room.prestigeGradeHint}
+            onClick={() => act('prestige_grade')}
+          >
+            {locale.room.prestigeGrade}
+          </Button>
+        </Stack.Item>
+      )}
+    </Stack>
+  );
+};
+
 const UpgradePage = (props: RoomPageProps) => {
   const { locale } = props;
   const { data } = useBackend<RoomData>();
@@ -203,11 +270,16 @@ const UpgradePage = (props: RoomPageProps) => {
           }
         >
           <LabeledList>
-            <LabeledList.Item label={locale.room.effectNow}>
+            <LabeledList.Item
+              label={`${locale.room.effectNow} (${locale.levelNames[data.level]})`}
+            >
               {data.effect || locale.room.effectNone}
             </LabeledList.Item>
             {canGoUp && (
-              <LabeledList.Item label={locale.room.effectNext} color="good">
+              <LabeledList.Item
+                label={`${locale.room.effectNext} (${locale.levelNames[data.level + 1]})`}
+                color="good"
+              >
                 {data.next_effect || locale.room.effectNone}
               </LabeledList.Item>
             )}
@@ -229,12 +301,11 @@ const UpgradePage = (props: RoomPageProps) => {
           ))}
         </Section>
       </Stack.Item>
-      <Stack.Item>
-        <NoticeBox info>{locale.room.upgradeSoon}</NoticeBox>
-        <Button fluid disabled icon="arrow-up" textAlign="center">
-          {locale.room.upgrade}
-        </Button>
-      </Stack.Item>
+      {canGoUp && (
+        <Stack.Item>
+          <UpgradeButtons locale={locale} />
+        </Stack.Item>
+      )}
     </Stack>
   );
 };
@@ -246,7 +317,7 @@ export const EnterpriseRoomView = (props: { locale: Locale }) => {
   const Page = data.page === 'upgrade' ? UpgradePage : InfoPage;
 
   return (
-    <Window title={`${data.name} — ${purpose}`} width={520} height={640}>
+    <Window title={`${data.name} — ${purpose}`} width={540} height={660}>
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>

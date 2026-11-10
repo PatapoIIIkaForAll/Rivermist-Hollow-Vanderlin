@@ -59,9 +59,11 @@
 			floors[z] = floor
 		floor.set_turfs(claimed)
 	scan_rooms()
-	if(length(fresh))
-		take_fixtures(fresh)
+	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
 	furnish_rooms()
+	for(var/datum/enterprise_fixture/fixture as anything in taken)
+		fixture.apply_level(max(fixture.room ? fixture.room.level : ENTERPRISE_LEVEL_BARE, ENTERPRISE_LEVEL_WOOD))
+	place_stock_posts()
 	update_map_frame()
 	for(var/datum/enterprise_floor/floor as anything in floors)
 		if(floor)

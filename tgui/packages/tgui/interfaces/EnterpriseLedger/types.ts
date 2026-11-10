@@ -1,5 +1,20 @@
 import type { BooleanLike } from 'tgui-core/react';
 
+export type PrestigeGrade = {
+  level: number;
+  unlocked: BooleanLike;
+  saved: BooleanLike;
+  spent: BooleanLike;
+};
+
+export type PrestigeData = {
+  level: number;
+  max_level: number;
+  earned: number;
+  next: number | null;
+  grades: PrestigeGrade[];
+};
+
 export type Data = {
   name: string;
   map: string | null;
@@ -11,6 +26,10 @@ export type Data = {
   is_staff: BooleanLike;
   shift_active: BooleanLike;
   viewed_z: number | null;
+  book_balance: number;
+  earned_round: number;
+  earned_today: number;
+  prestige: PrestigeData | null;
 };
 
 export type RoomKind = 'guest' | 'service' | 'common';
@@ -22,6 +41,8 @@ export type RoomInfo = {
   z: number;
   tiles: number;
   purpose: string | null;
+  level: number;
+  tenant: string | null;
   beds: number;
   items: number;
 };
@@ -54,7 +75,8 @@ export type UpgradeLine = {
 
 export type TenantInfo = {
   name: string;
-  time_left: number;
+  patron: BooleanLike;
+  time_left: number | null;
   rent: number;
   needs: string[];
 };
@@ -74,10 +96,31 @@ export type RoomData = {
   max_level: number;
   effect: string | null;
   next_effect: string | null;
+  upgrade_cost: number;
+  can_grade: BooleanLike;
+  funds: number;
+  rent: number;
+  seatings: number;
   contents: ContentLine[];
   upgrades: UpgradeLine[];
   repair_cost: number;
   tenant: TenantInfo | null;
+};
+
+export type StockEntry = IconInfo & {
+  id: string;
+  amount: number;
+  price: number;
+  buyout: number;
+};
+
+export type StockData = {
+  enterprise: string;
+  level: number;
+  cap: number;
+  can_buy: BooleanLike;
+  funds: number;
+  entries: StockEntry[];
 };
 
 export type Locale = {
@@ -87,6 +130,7 @@ export type Locale = {
   purposes: Record<string, string>;
   enterprisePurposes: Record<string, Record<string, string>>;
   purposeUnknown: string;
+  levelNames: string[];
   labels: {
     yourRole: string;
     roleManager: string;
@@ -108,6 +152,24 @@ export type Locale = {
     legend: string;
     legendHint: string;
     legendEmpty: string;
+    bookBalance: string;
+    bookHint: string;
+    earnedRound: string;
+    earnedToday: string;
+  };
+  prestige: {
+    title: string;
+    level: string;
+    earned: string;
+    next: string;
+    nextNone: string;
+    roundNote: string;
+    gradesTitle: string;
+    gradesHint: string;
+    gradeLocked: string;
+    gradeEmpty: string;
+    gradeReady: string;
+    gradeSpent: string;
   };
   room: {
     info: string;
@@ -120,10 +182,15 @@ export type Locale = {
     level: string;
     effect: string;
     effectNone: string;
+    rent: string;
+    rentNone: string;
+    seatings: string;
     tenant: string;
     tenantNone: string;
     tenantName: string;
+    tenantPatron: string;
     tenantStay: string;
+    tenantStayForever: string;
     tenantRent: string;
     tenantNeeds: string;
     tenantNeedsNone: string;
@@ -134,7 +201,19 @@ export type Locale = {
     upgradeItems: string;
     upgradeItemsNone: string;
     upgradeMaxLevel: string;
-    upgradeSoon: string;
+    upgradeNotForSale: string;
+    upgradeFunds: string;
+    prestigeGrade: string;
+    prestigeGradeHint: string;
+  };
+  stock: {
+    title: string;
+    hint: string;
+    capacity: string;
+    empty: string;
+    price: string;
+    buy: string;
+    funds: string;
   };
   formatPremises: (floors: number, basements: number, tiles: number) => string;
   formatFloor: (number: number) => string;
@@ -145,6 +224,10 @@ export type Locale = {
   formatLevel: (level: number, maxLevel: number) => string;
   formatLevelUp: (level: number, nextLevel: number) => string;
   formatStay: (hours: number, minutes: number) => string;
+  formatUpgrade: (cost: number) => string;
+  formatRent: (rent: number) => string;
+  formatBuy: (cost: number) => string;
+  formatCapacity: (cap: number) => string;
 };
 
 export type PageProps = {

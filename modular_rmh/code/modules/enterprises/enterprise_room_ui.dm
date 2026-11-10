@@ -12,13 +12,6 @@
 		if(ENTERPRISE_ROOM_ACTION_REPAIR)
 			INVOKE_ASYNC(src, PROC_REF(repair_room), user, room)
 
-/datum/enterprise/proc/charge(mob/user, cost, reason)
-	if(!(user in SStreasury.bank_accounts) || SStreasury.bank_accounts[user] < cost)
-		return FALSE
-	SStreasury.bank_accounts[user] -= cost
-	SStreasury.log_to_steward("-[cost] from [user.real_name] ([reason])")
-	return TRUE
-
 /datum/enterprise/proc/repair_room(mob/user, datum/enterprise_room/room)
 	var/cost = room.get_repair_cost()
 	if(!cost)
@@ -27,8 +20,8 @@
 	var/yes = russian ? "Починить" : "Repair"
 	var/no = russian ? "Отмена" : "Cancel"
 	var/question = russian \
-		? "Вернуть на место всё, что пропало из комнаты «[room.name]»? С вашего счёта спишется [cost]." \
-		: "Bring back everything that is gone from [room.name]? [cost] will be taken from your account."
+		? "Вернуть на место всё, что пропало из комнаты «[room.name]»? Деньги спишутся из книги, а чего не хватит — с вашего счёта. Цена: [cost]." \
+		: "Bring back everything that is gone from [room.name]? It costs [cost]: the money comes from the ledger, and what it lacks from your account."
 	if(tgui_alert(user, question, russian ? "Починка" : "Repairs", list(yes, no)) != yes)
 		return FALSE
 	if(QDELETED(room) || QDELETED(user) || room.enterprise != src || !can_run_rooms(user))
@@ -36,8 +29,8 @@
 	cost = room.get_repair_cost()
 	if(!cost)
 		return FALSE
-	if(!charge(user, cost, "[name] repairs"))
-		to_chat(user, span_warning(russian ? "На счёте не хватает денег: нужно [cost]." : "There is not enough in the account: it takes [cost]."))
+	if(!pay(user, cost, "[name] repairs"))
+		to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
 		return FALSE
 	room.repair()
 	to_chat(user, span_notice(russian ? "Комната «[room.name]» приведена в порядок." : "[room.name] has been put back in order."))
@@ -103,32 +96,28 @@
 
 /datum/enterprise_room/proc/get_upgrades_data()
 	var/list/upgrades_data = list()
-	if(!template)
+	if(level >= ENTERPRISE_MAX_LEVEL)
 		return upgrades_data
 	var/list/counts = list()
+	var/list/becomes = list()
 	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		if(template.upgrades[fixture.fixture_type] && fixture.is_present())
-			counts[fixture.fixture_type]++
+		var/next_type = fixture.get_level_type(level + 1)
+		if(!next_type || next_type == fixture.fixture_type || !fixture.is_present())
+			continue
+		counts[fixture.fixture_type]++
+		becomes[fixture.fixture_type] = next_type
 	for(var/old_type in counts)
 		upgrades_data += list(list(
 			"id" = "[old_type]",
 			"count" = counts[old_type],
 			"from" = describe_type(old_type),
-			"to" = describe_type(template.upgrades[old_type]),
+			"to" = describe_type(becomes[old_type]),
 		))
 	return upgrades_data
 
 /datum/enterprise_room/ui_data(mob/user)
 	var/russian = get_preferred_ui_language(user) == "ru"
 	var/datum/enterprise_floor/floor = enterprise.get_floor(z)
-	var/list/tenant
-	if(tenant_name)
-		tenant = list(
-			"name" = tenant_name,
-			"time_left" = max(tenant_until - world.time, 0),
-			"rent" = tenant_rent,
-			"needs" = tenant_needs || list(),
-		)
 	return list(
 		"enterprise" = enterprise.name,
 		"name" = name,
@@ -139,13 +128,18 @@
 		"beds" = beds,
 		"page" = shown_pages[REF(user)] || ENTERPRISE_ROOM_PAGE_INFO,
 		"level" = level,
-		"max_level" = template ? template.get_max_level() : level,
-		"effect" = template?.get_effect(level, russian),
-		"next_effect" = template?.get_effect(level + 1, russian),
+		"max_level" = ENTERPRISE_MAX_LEVEL,
+		"effect" = template?.get_effect(src, level, russian),
+		"next_effect" = template?.get_effect(src, level + 1, russian),
+		"upgrade_cost" = enterprise.get_upgrade_cost(src),
+		"can_grade" = enterprise.can_spend_grade(level + 1),
+		"funds" = enterprise.book_balance + enterprise.get_bank_balance(user),
+		"rent" = enterprise.get_rest_price(src),
+		"seatings" = length(seatings),
 		"contents" = get_contents_data(),
 		"upgrades" = get_upgrades_data(),
 		"repair_cost" = get_repair_cost(),
-		"tenant" = tenant,
+		"tenant" = get_tenant_data(),
 	)
 
 /datum/enterprise_room/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -161,5 +155,11 @@
 			return TRUE
 		if("repair")
 			enterprise.room_action(ui.user, src, ENTERPRISE_ROOM_ACTION_REPAIR)
+			return FALSE
+		if("upgrade")
+			INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, upgrade_room), ui.user, src, FALSE)
+			return FALSE
+		if("prestige_grade")
+			INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, upgrade_room), ui.user, src, TRUE)
 			return FALSE
 	return FALSE

@@ -24,6 +24,11 @@
 	QDEL_LIST(floors)
 	QDEL_LIST(fixtures)
 	QDEL_LIST(room_templates)
+	QDEL_LIST(furnishings)
+	QDEL_LIST(patrons)
+	furnishing_by_type = null
+	rested_today = null
+	owner_ref = null
 	QDEL_NULL(map_backdrop)
 	QDEL_NULL(map_catcher)
 	QDEL_LIST(map_plane_masters)
@@ -82,12 +87,17 @@
 	)
 
 /datum/enterprise/ui_data(mob/user)
+	var/owner = is_owner(user)
 	return list(
-		"pages" = is_owner(user) ? ledger_pages : ledger_pages - owner_pages,
+		"pages" = owner ? ledger_pages : ledger_pages - owner_pages,
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
 		"viewed_z" = get_viewer(user)?.z,
+		"book_balance" = book_balance,
+		"earned_round" = earned_round,
+		"earned_today" = earned_today,
+		"prestige" = owner ? get_prestige_data() : null,
 	)
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)

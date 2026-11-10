@@ -39,9 +39,15 @@ type LegendRowProps = {
 
 const LegendRow = (props: LegendRowProps) => {
   const { locale, enterprise, room, highlighted, onHover, onOpen } = props;
-  const details = [getPurposeLabel(locale, enterprise, room.purpose)];
+  const details = [
+    getPurposeLabel(locale, enterprise, room.purpose),
+    locale.levelNames[room.level] || `${room.level}`,
+  ];
   if (room.beds) {
     details.push(locale.formatBeds(room.beds));
+  }
+  if (room.tenant) {
+    details.push(room.tenant);
   }
 
   return (

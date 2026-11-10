@@ -9,12 +9,14 @@ const locale: Locale = {
   pages: {
     overview: 'Overview',
     premises: 'Premises',
+    prestige: 'Prestige',
     menu: 'Menu',
     staff: 'Workers',
     commissions: 'Commissions',
   },
   purposes: {
     storage: 'Storage',
+    drink_storage: 'Drinks storage',
     guest_room: 'Guest room',
     service_hall: 'Service room',
     staff_quarters: 'Staff quarters',
@@ -26,6 +28,7 @@ const locale: Locale = {
     },
   },
   purposeUnknown: 'Room',
+  levelNames: ['Bare', 'Wood', 'Iron and bronze', 'Silver', 'Gold'],
   labels: {
     yourRole: 'Your role',
     roleManager: 'Manager',
@@ -48,6 +51,27 @@ const locale: Locale = {
     legendHint:
       'Point at a room to light it up. Click it on the map for its menu, or here for its details. The mouse wheel over the map zooms in and out.',
     legendEmpty: 'No rooms on this floor.',
+    bookBalance: 'In the ledger',
+    bookHint:
+      'Put coins on the ledger to pay them in. They cannot be taken back out: they go to upgrades, repairs and stock.',
+    earnedRound: 'Earned this round',
+    earnedToday: 'Earned today',
+  },
+  prestige: {
+    title: 'Prestige',
+    level: 'Owner level',
+    earned: 'Earned in all',
+    next: 'Next level at',
+    nextNone: 'The highest level is reached',
+    roundNote:
+      'What the ledger takes in this round is added when the round ends.',
+    gradesTitle: 'Prestige Ledger Upgrades',
+    gradesHint:
+      'The first room upgrade of a level you pay for is kept on your account, one per level. In later rounds the Prestige Grade button in a room spends it for free.',
+    gradeLocked: 'Opens with that owner level',
+    gradeEmpty: 'Nothing saved yet',
+    gradeReady: 'Saved, ready to use',
+    gradeSpent: 'Saved, used this round',
   },
   room: {
     info: 'Info',
@@ -60,11 +84,16 @@ const locale: Locale = {
     level: 'Level',
     effect: 'Effect',
     effectNone: 'Not set yet',
+    rent: 'A night costs',
+    rentNone: 'Nothing',
+    seatings: 'Table sets',
     tenant: 'Tenant',
     tenantNone: 'Nobody lives here.',
     tenantName: 'Lives here',
-    tenantStay: 'Stays for',
-    tenantRent: 'Pays a day',
+    tenantPatron: 'a lodger of the house',
+    tenantStay: 'Is put out in',
+    tenantStayForever: 'Never put out',
+    tenantRent: 'Pays a night',
     tenantNeeds: 'Asks for',
     tenantNeedsNone: 'Nothing',
     contents: 'Contents',
@@ -72,10 +101,23 @@ const locale: Locale = {
     effectNow: 'Now',
     effectNext: 'After the upgrade',
     upgradeItems: 'Furnishings that move up a level',
-    upgradeItemsNone: 'Nothing in this room has a better version yet.',
+    upgradeItemsNone: 'Nothing in this room changes with the next level.',
     upgradeMaxLevel: 'The room is at its highest level.',
-    upgradeSoon:
-      'Upgrades are not in the game yet: this is what one will change.',
+    upgradeNotForSale:
+      'The first level is not for sale: it comes with owner level 1.',
+    upgradeFunds: 'Ledger and account together',
+    prestigeGrade: 'Prestige Grade',
+    prestigeGradeHint:
+      'Spends the upgrade of this level saved on your account.',
+  },
+  stock: {
+    title: 'Buying post',
+    hint: 'Offer food to the post to sell it: you are paid at once. Those who run the place buy it out below.',
+    capacity: 'Holds of each kind',
+    empty: 'Nothing has been brought in yet.',
+    price: 'Paid',
+    buy: 'Buy out',
+    funds: 'Ledger and account together',
   },
   formatPremises: (floors, basements, tiles) =>
     `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,
@@ -87,6 +129,10 @@ const locale: Locale = {
   formatLevel: (level, maxLevel) => `${level} of ${maxLevel}`,
   formatLevelUp: (level, nextLevel) => `Level ${level} → ${nextLevel}`,
   formatStay: (hours, minutes) => `${hours} h ${minutes} min`,
+  formatUpgrade: (cost) => `Upgrade for ${cost}`,
+  formatRent: (rent) => `${rent} a night`,
+  formatBuy: (cost) => `Buy out for ${cost}`,
+  formatCapacity: (cap) => `${cap} of each kind`,
 };
 
 export default locale;

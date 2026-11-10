@@ -9,6 +9,7 @@
 	var/list/lock_ids
 	var/datum/weakref/thing
 	var/datum/enterprise_room/room
+	var/datum/enterprise_furnishing/family
 
 /datum/enterprise_fixture/New(obj/source)
 	fixture_type = source.type
@@ -27,6 +28,7 @@
 	home = null
 	thing = null
 	room = null
+	family = null
 	lock_ids = null
 	return ..()
 
@@ -69,3 +71,24 @@
 		key_lock.lockid_list = lock_ids.Copy()
 	thing = WEAKREF(replacement)
 	return replacement
+
+/datum/enterprise_fixture/proc/get_level_type(level)
+	return family ? family.get_tier(level) : null
+
+/datum/enterprise_fixture/proc/apply_level(level)
+	var/obj/new_type = get_level_type(level)
+	if(!new_type || new_type == fixture_type)
+		return FALSE
+	var/obj/found = get_thing()
+	fixture_type = new_type
+	name = initial(new_type.name)
+	value = max(initial(new_type.sellprice), ENTERPRISE_FIXTURE_MIN_VALUE)
+	if(!found || !isturf(found.loc))
+		return TRUE
+	var/obj/replacement = new new_type(found.loc)
+	replacement.dir = found.dir
+	replacement.pixel_x = found.pixel_x
+	replacement.pixel_y = found.pixel_y
+	thing = WEAKREF(replacement)
+	qdel(found)
+	return TRUE

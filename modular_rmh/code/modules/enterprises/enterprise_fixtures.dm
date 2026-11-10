@@ -3,17 +3,30 @@
 	var/list/datum/enterprise_room_template/room_templates
 
 /datum/enterprise/proc/is_fixture(obj/thing)
-	if(istype(thing, /obj/item/reagent_containers/food))
+	var/static/list/ignored = list(
+		/obj/item/reagent_containers/food,
+		/obj/structure/flora,
+		/obj/structure/flowerpot,
+		/obj/structure/fluff/clutter/shrub,
+		/obj/structure/fake_machine,
+	)
+	if(is_type_in_list(thing, ignored))
 		return FALSE
 	return istype(thing, /obj/structure) || istype(thing, /obj/machinery) || istype(thing, /obj/item)
 
 /datum/enterprise/proc/take_fixtures(list/turf/fresh)
+	var/list/datum/enterprise_fixture/taken = list()
 	for(var/turf/member as anything in fresh)
 		if(!contains(member))
 			continue
 		for(var/obj/thing in member)
-			if(!thing.invisibility && is_fixture(thing))
-				fixtures += new /datum/enterprise_fixture(thing)
+			if(thing.invisibility || !is_fixture(thing))
+				continue
+			var/datum/enterprise_fixture/fixture = new(thing)
+			fixture.family = get_furnishing(thing.type)
+			fixtures += fixture
+			taken += fixture
+	return taken
 
 /datum/enterprise/proc/get_adjoining_room(turf/place)
 	var/static/list/kind_ranks = list(

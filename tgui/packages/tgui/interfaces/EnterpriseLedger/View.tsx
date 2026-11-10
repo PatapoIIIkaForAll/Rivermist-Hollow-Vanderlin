@@ -6,6 +6,7 @@ import { Window } from '../../layouts';
 import { OverviewPage } from './pages/OverviewPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { PremisesPage } from './pages/PremisesPage';
+import { PrestigePage } from './pages/PrestigePage';
 import type { Data, Locale, PageProps } from './types';
 
 type PageDef = {
@@ -16,6 +17,7 @@ type PageDef = {
 const PAGES: Record<string, PageDef> = {
   overview: { icon: 'book-open', component: OverviewPage },
   premises: { icon: 'map', component: PremisesPage },
+  prestige: { icon: 'crown', component: PrestigePage },
 };
 
 const PLACEHOLDER: PageDef = {

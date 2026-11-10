@@ -1,4 +1,4 @@
-import { Button, LabeledList, Section } from 'tgui-core/components';
+import { Box, Button, LabeledList, Section } from 'tgui-core/components';
 
 import { useBackend } from '../../../backend';
 import type { Data, Locale, PageProps } from '../types';
@@ -66,7 +66,19 @@ export const OverviewPage = (props: PageProps) => {
             ? `${rooms.length}: ${rooms.map((room) => room.name).join(', ')}`
             : locale.labels.guestRoomsNone}
         </LabeledList.Item>
+        <LabeledList.Item label={locale.labels.bookBalance}>
+          {data.book_balance}
+        </LabeledList.Item>
+        <LabeledList.Item label={locale.labels.earnedToday}>
+          {data.earned_today}
+        </LabeledList.Item>
+        <LabeledList.Item label={locale.labels.earnedRound}>
+          {data.earned_round}
+        </LabeledList.Item>
       </LabeledList>
+      <Box color="label" mt={1}>
+        {locale.labels.bookHint}
+      </Box>
     </Section>
   );
 };

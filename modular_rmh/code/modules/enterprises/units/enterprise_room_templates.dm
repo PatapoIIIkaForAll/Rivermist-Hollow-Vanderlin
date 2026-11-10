@@ -3,60 +3,37 @@
 	var/id
 	var/name
 	var/priority = 100
-	var/list/effects = list()
-	var/list/effects_ru = list()
-	var/list/upgrades = list()
 
 /datum/enterprise_room_template/proc/matches(datum/enterprise_room/room)
 	return FALSE
 
-/datum/enterprise_room_template/proc/get_max_level()
-	return max(length(effects), 1)
-
-/datum/enterprise_room_template/proc/get_effect(level, russian)
-	var/list/lines = russian ? effects_ru : effects
-	if(level < 1 || level > length(lines))
-		return null
-	return lines[level]
+/datum/enterprise_room_template/proc/get_effect(datum/enterprise_room/room, level, russian)
+	return null
 
 /datum/enterprise_room_template/guest_room
-	id = "guest_room"
+	id = ENTERPRISE_PURPOSE_GUEST_ROOM
 	name = "Guest room"
 	priority = 10
-	effects = list(
-		"A plain room: a guest pays the base rent.",
-		"A comfortable room: a guest pays more a day and stays longer.",
-		"A fine room: wealthy guests ask for it.",
-	)
-	effects_ru = list(
-		"Простая комната: постоялец платит базовую плату.",
-		"Уютная комната: постоялец платит больше в сутки и живёт дольше.",
-		"Богатая комната: её спрашивают состоятельные гости.",
-	)
-	upgrades = list(
-		/obj/structure/bed/inn = /obj/structure/bed/wool,
-		/obj/structure/bed/inn/double = /obj/structure/bed/wool/double,
-		/obj/structure/mirror = /obj/structure/mirror/fancy,
-		/obj/structure/chair/wood/alt = /obj/structure/chair/wood/alt/fancy,
-	)
 
 /datum/enterprise_room_template/guest_room/matches(datum/enterprise_room/room)
 	return room.kind == ENTERPRISE_ROOM_GUEST
 
+/datum/enterprise_room_template/guest_room/get_effect(datum/enterprise_room/room, level, russian)
+	var/datum/enterprise/enterprise = room.enterprise
+	if(level > ENTERPRISE_MAX_LEVEL)
+		return null
+	if(level < ENTERPRISE_LEVEL_WOOD)
+		return russian ? "Ночлег без удобств: бесплатно и без прибавок." : "A bare room: free, and no better than any bed."
+	var/price = enterprise.get_level_value(enterprise.rest_prices, level)
+	var/stats = enterprise.get_level_value(russian ? enterprise.rest_stats_ru : enterprise.rest_stats, level)
+	return russian \
+		? "[price] за ночь. Уставший гость, выспавшись, на 30 минут получает: [stats]." \
+		: "[price] a night. A tired guest who sleeps here gets for 30 minutes: [stats]."
+
 /datum/enterprise_room_template/kitchen
-	id = "kitchen"
+	id = ENTERPRISE_PURPOSE_KITCHEN
 	name = "Kitchen"
 	priority = 20
-	effects = list(
-		"Dishes are cooked at the usual pace.",
-		"Dishes are cooked faster.",
-		"The finest dishes of the menu can be cooked.",
-	)
-	effects_ru = list(
-		"Блюда готовятся с обычной скоростью.",
-		"Блюда готовятся быстрее.",
-		"Можно готовить лучшие блюда меню.",
-	)
 	var/list/appliances = list(
 		/obj/machinery/light/fueled/oven,
 		/obj/machinery/light/fueled/hearth,
@@ -69,46 +46,40 @@
 	return FALSE
 
 /datum/enterprise_room_template/staff_quarters
-	id = "staff_quarters"
+	id = ENTERPRISE_PURPOSE_STAFF_QUARTERS
 	name = "Staff quarters"
 	priority = 30
-	effects = list(
-		"The staff have somewhere to sleep.",
-		"Rested staff tire more slowly on a shift.",
-		"Hired workers ask for lower wages.",
-	)
-	effects_ru = list(
-		"Персоналу есть где спать.",
-		"Отдохнувший персонал медленнее устаёт за смену.",
-		"Наёмные работники просят меньшее жалованье.",
-	)
-	upgrades = list(
-		/obj/structure/bed/shit = /obj/structure/bed/hay,
-		/obj/structure/bed/hay = /obj/structure/bed/inn,
-		/obj/structure/bed/inn = /obj/structure/bed/wool,
-	)
 
 /datum/enterprise_room_template/staff_quarters/matches(datum/enterprise_room/room)
 	return room.kind == ENTERPRISE_ROOM_SERVICE && room.beds > 0
 
+/datum/enterprise_room_template/staff_quarters/get_effect(datum/enterprise_room/room, level, russian)
+	var/datum/enterprise/enterprise = room.enterprise
+	if(level > ENTERPRISE_MAX_LEVEL)
+		return null
+	if(level < ENTERPRISE_LEVEL_WOOD)
+		return russian ? "Персоналу есть где спать, но без прибавок." : "The staff have somewhere to sleep, and nothing more."
+	var/stats = enterprise.get_level_value(russian ? enterprise.rest_stats_ru : enterprise.rest_stats, level)
+	return russian \
+		? "Персонал спит бесплатно, на 30 минут получает: [stats], и долю дневной выручки на счёт." \
+		: "The staff sleep for free, get for 30 minutes: [stats], and a share of the day's takings to their account."
+
+/datum/enterprise_room_template/drink_storage
+	id = ENTERPRISE_PURPOSE_DRINK_STORAGE
+	name = "Drinks storage"
+	priority = 35
+	var/kegs_needed = 2
+
+/datum/enterprise_room_template/drink_storage/matches(datum/enterprise_room/room)
+	return !room.beds && room.count_fixtures(/obj/structure/fermentation_keg) >= kegs_needed
+
 /datum/enterprise_room_template/storage
-	id = "storage"
+	id = ENTERPRISE_PURPOSE_STORAGE
 	name = "Storage"
 	priority = 40
-	effects = list(
-		"Holds the stock of the enterprise.",
-		"Holds more stock.",
-		"Food kept here spoils more slowly.",
-	)
-	effects_ru = list(
-		"Хранит запасы предприятия.",
-		"Вмещает больше запасов.",
-		"Еда здесь портится медленнее.",
-	)
 	var/list/stores = list(
 		/obj/structure/rack,
 		/obj/structure/closet,
-		/obj/structure/fermentation_keg,
 	)
 	var/stores_needed = 2
 
@@ -120,24 +91,31 @@
 		stores_found += room.count_fixtures(store)
 	return stores_found >= stores_needed
 
+/datum/enterprise_room_template/storage/get_effect(datum/enterprise_room/room, level, russian)
+	var/datum/enterprise/enterprise = room.enterprise
+	if(level > ENTERPRISE_MAX_LEVEL)
+		return null
+	var/cap = enterprise.get_level_value(enterprise.stock_caps, max(level, ENTERPRISE_LEVEL_WOOD))
+	return russian \
+		? "Место закупки у двери хранит по [cap] каждого вида еды." \
+		: "The buying post at the door holds [cap] of each kind of food."
+
 /datum/enterprise_room_template/service_hall
-	id = "service_hall"
+	id = ENTERPRISE_PURPOSE_SERVICE_HALL
 	name = "Service hall"
 	priority = 100
-	effects = list(
-		"Guests are served here.",
-		"Patrons are in a better mood and tip more.",
-		"Patrons of higher standing come in.",
-	)
-	effects_ru = list(
-		"Здесь обслуживают гостей.",
-		"Посетители в лучшем настроении и щедрее на чаевые.",
-		"Заходят посетители более высокого положения.",
-	)
-	upgrades = list(
-		/obj/structure/chair/stool = /obj/structure/chair/wood/alt,
-		/obj/structure/chair/wood/alt = /obj/structure/chair/wood/alt/fancy,
-	)
 
 /datum/enterprise_room_template/service_hall/matches(datum/enterprise_room/room)
 	return TRUE
+
+/datum/enterprise_room_template/service_hall/get_effect(datum/enterprise_room/room, level, russian)
+	var/datum/enterprise/enterprise = room.enterprise
+	if(level > ENTERPRISE_MAX_LEVEL)
+		return null
+	var/datum/stress_event/mood = enterprise.get_level_value(enterprise.meal_moods, level)
+	if(!mood)
+		return russian ? "Столы и стулья без отделки: еда за ними настроения не прибавляет." : "Bare tables and chairs: a meal at them does not lift the mood."
+	var/minutes = round(initial(mood.timer) / (1 MINUTES))
+	return russian \
+		? "Еда за столом, сидя на стуле, поднимает настроение на [minutes] минут." \
+		: "A meal eaten seated at a table lifts the mood for [minutes] minutes."

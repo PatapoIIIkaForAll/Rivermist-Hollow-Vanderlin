@@ -39,6 +39,8 @@
 			"z" = room.z,
 			"tiles" = length(room.turfs),
 			"purpose" = room.template?.id,
+			"level" = room.level,
+			"tenant" = room.get_occupant_name(),
 			"beds" = room.beds,
 			"items" = length(room.fixtures),
 		))
@@ -92,7 +94,8 @@
 	return has_table ? ROOM_CELL_TABLE : ROOM_CELL_OPEN
 
 /datum/enterprise/proc/scan_rooms()
-	QDEL_LIST(rooms)
+	var/list/datum/enterprise_room/former = rooms
+	rooms = list()
 	guest_rooms.Cut()
 	get_own_lock_ids()
 
@@ -162,6 +165,11 @@
 			rooms += pocket
 	name_rooms(door_sides)
 	sort_rooms()
+	for(var/datum/enterprise_room/old_room as anything in former)
+		var/datum/enterprise_room/heir = length(old_room.turfs) ? get_room(old_room.turfs[1]) : null
+		if(heir)
+			heir.inherit(old_room)
+	QDEL_LIST(former)
 	for(var/datum/enterprise_room/pocket as anything in pockets)
 		if(!(pocket in rooms))
 			qdel(pocket)

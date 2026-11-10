@@ -9,12 +9,14 @@ const locale: Locale = {
   pages: {
     overview: 'Обзор',
     premises: 'Помещения',
+    prestige: 'Престиж',
     menu: 'Меню',
     staff: 'Работники',
     commissions: 'Заказы',
   },
   purposes: {
     storage: 'Склад',
+    drink_storage: 'Склад напитков',
     guest_room: 'Жилая комната',
     service_hall: 'Комната обслуживания',
     staff_quarters: 'Жилая комната персонала',
@@ -26,6 +28,7 @@ const locale: Locale = {
     },
   },
   purposeUnknown: 'Комната',
+  levelNames: ['Без отделки', 'Дерево', 'Железо и бронза', 'Серебро', 'Золото'],
   labels: {
     yourRole: 'Ваша роль',
     roleManager: 'Управляющий',
@@ -48,6 +51,26 @@ const locale: Locale = {
     legendHint:
       'Наведите на комнату, чтобы подсветить её. Щелчок по ней на карте откроет меню, щелчок здесь — сведения. Колесо мыши над картой приближает и отдаляет.',
     legendEmpty: 'На этом этаже комнат нет.',
+    bookBalance: 'В книге',
+    bookHint:
+      'Положите монеты на книгу, чтобы внести их. Забрать их нельзя: они идут на улучшения, починку и закупку.',
+    earnedRound: 'Заработано за раунд',
+    earnedToday: 'Заработано за день',
+  },
+  prestige: {
+    title: 'Престиж',
+    level: 'Уровень владельца',
+    earned: 'Заработано всего',
+    next: 'Следующий уровень при',
+    nextNone: 'Достигнут высший уровень',
+    roundNote: 'Принятое книгой за этот раунд прибавится в конце раунда.',
+    gradesTitle: 'Prestige Ledger Upgrades',
+    gradesHint:
+      'Первое оплаченное улучшение комнаты каждого уровня сохраняется на вашем аккаунте, по одному на уровень. В следующих раундах кнопка Prestige Grade в комнате тратит его бесплатно.',
+    gradeLocked: 'Откроется с этим уровнем владельца',
+    gradeEmpty: 'Пока не сохранено',
+    gradeReady: 'Сохранено, можно применить',
+    gradeSpent: 'Сохранено, применено в этом раунде',
   },
   room: {
     info: 'Сведения',
@@ -60,11 +83,16 @@ const locale: Locale = {
     level: 'Уровень',
     effect: 'Эффект',
     effectNone: 'Пока не задан',
+    rent: 'Ночь стоит',
+    rentNone: 'Бесплатно',
+    seatings: 'Гарнитуры стол–стулья',
     tenant: 'Жилец',
     tenantNone: 'Здесь никто не живёт.',
     tenantName: 'Живёт',
-    tenantStay: 'Пробудет ещё',
-    tenantRent: 'Платит в сутки',
+    tenantPatron: 'постоялец заведения',
+    tenantStay: 'Выселят через',
+    tenantStayForever: 'Не выселяется',
+    tenantRent: 'Платит за ночь',
     tenantNeeds: 'Ему нужно',
     tenantNeedsNone: 'Ничего',
     contents: 'Содержимое',
@@ -72,10 +100,23 @@ const locale: Locale = {
     effectNow: 'Сейчас',
     effectNext: 'После улучшения',
     upgradeItems: 'Предметы, которые перейдут на новый уровень',
-    upgradeItemsNone: 'Для предметов этой комнаты пока нет версии получше.',
+    upgradeItemsNone: 'Со следующим уровнем в этой комнате ничего не меняется.',
     upgradeMaxLevel: 'Комната уже высшего уровня.',
-    upgradeSoon:
-      'Улучшений в игре пока нет: здесь показано, что изменит улучшение.',
+    upgradeNotForSale:
+      'Первый уровень не продаётся: он приходит с первым уровнем владельца.',
+    upgradeFunds: 'В книге и на счёте вместе',
+    prestigeGrade: 'Prestige Grade',
+    prestigeGradeHint:
+      'Тратит улучшение этого уровня, сохранённое на вашем аккаунте.',
+  },
+  stock: {
+    title: 'Место закупки',
+    hint: 'Поднесите еду к месту закупки, чтобы продать её: платят сразу. Управляющие выкупают её ниже.',
+    capacity: 'Вмещает каждого вида',
+    empty: 'Пока ничего не принесли.',
+    price: 'Заплачено',
+    buy: 'Выкупить',
+    funds: 'В книге и на счёте вместе',
   },
   formatPremises: (floors, basements, tiles) =>
     `Этажей: ${floors}, подвальных уровней: ${basements}, клеток: ${tiles}`,
@@ -87,6 +128,10 @@ const locale: Locale = {
   formatLevel: (level, maxLevel) => `${level} из ${maxLevel}`,
   formatLevelUp: (level, nextLevel) => `Уровень ${level} → ${nextLevel}`,
   formatStay: (hours, minutes) => `${hours} ч ${minutes} мин`,
+  formatUpgrade: (cost) => `Улучшить за ${cost}`,
+  formatRent: (rent) => `${rent} за ночь`,
+  formatBuy: (cost) => `Выкупить за ${cost}`,
+  formatCapacity: (cap) => `по ${cap} каждого вида`,
 };
 
 export default locale;
