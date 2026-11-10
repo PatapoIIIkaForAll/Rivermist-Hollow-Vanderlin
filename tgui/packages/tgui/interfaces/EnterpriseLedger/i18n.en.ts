@@ -28,16 +28,6 @@ const locale: Locale = {
     premises: 'Premises',
     premisesMissing: 'Not found: the ledger stands outside the premises.',
     basement: 'Basement',
-    refresh: 'Survey again',
-  },
-  cellKinds: {
-    wall: 'Wall',
-    floor: 'Floor',
-    furnished: 'Furnished floor',
-    openSpace: 'Open space',
-    door: 'Door',
-    stairs: 'Stairs',
-    ledger: 'Ledger',
   },
   formatPremises: (floors, basements, tiles) =>
     `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,

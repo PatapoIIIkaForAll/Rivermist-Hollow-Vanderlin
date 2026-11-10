@@ -1,9 +1,12 @@
 /datum/enterprise
 	abstract_type = /datum/enterprise
 	var/name = "enterprise"
+	var/list/owner_jobs = list()
 	var/list/manager_jobs = list()
 	var/list/staff_jobs = list()
 	var/list/ledger_pages = list("overview")
+	// Pages of the ledger that only the owner is shown.
+	var/list/owner_pages = list("premises")
 	var/list/obj/structure/fake_machine/enterprise_ledger/ledgers = list()
 	var/shift_active = FALSE
 	// Indexed by z-level; a level the enterprise does not reach holds null.
@@ -17,6 +20,9 @@
 	QDEL_LIST(floors)
 	SSenterprises.enterprises -= type
 	return ..()
+
+/datum/enterprise/proc/is_owner(mob/user)
+	return is_type_in_list(user?.mind?.assigned_role, owner_jobs)
 
 /datum/enterprise/proc/is_manager(mob/user)
 	return is_type_in_list(user?.mind?.assigned_role, manager_jobs)
@@ -59,12 +65,12 @@
 /datum/enterprise/ui_static_data(mob/user)
 	return list(
 		"name" = name,
-		"pages" = ledger_pages,
-		"plan" = get_premises_plan(),
+		"floors" = get_floors_data(),
 	)
 
 /datum/enterprise/ui_data(mob/user)
 	return list(
+		"pages" = is_owner(user) ? ledger_pages : ledger_pages - owner_pages,
 		"can_manage" = is_manager(user),
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
@@ -79,8 +85,17 @@
 			return start_shift(ui.user)
 		if("end_shift")
 			return end_shift(ui.user)
-		if("refresh_premises")
-			// Sends its own full update, so no second push is owed.
-			refresh_premises_plan(ui.user)
+		if("view_floor")
+			var/z = params["z"]
+			if(!isnum(z) || z != round(z))
+				return FALSE
+			show_floor(ui.user, z)
+			return FALSE
+		if("hide_floors")
+			hide_floors(ui.user)
 			return FALSE
 	return FALSE
+
+/datum/enterprise/ui_close(mob/user)
+	. = ..()
+	hide_floors(user)

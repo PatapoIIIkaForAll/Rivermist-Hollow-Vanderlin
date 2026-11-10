@@ -3,41 +3,22 @@ import type { BooleanLike } from 'tgui-core/react';
 export type Data = {
   // ui_static_data
   name: string;
-  pages: string[];
-  plan: FloorPlan[];
+  floors: FloorInfo[];
 
   // ui_data
+  pages: string[];
   can_manage: BooleanLike;
   is_staff: BooleanLike;
   shift_active: BooleanLike;
 };
 
-export type FloorPlan = {
+export type FloorInfo = {
   z: number;
   basement: BooleanLike;
-  width: number;
-  height: number;
   tiles: number;
-  // One string per row, south row first, one character per turf; see CELL_KINDS in PremisesPage.
-  rows: string[];
-  objects: PlanObject[];
+  // The id of the BYOND map control that shows this floor.
+  map: string;
 };
-
-export type PlanObject = {
-  // Column and row inside the floor, counted from its south-west corner.
-  x: number;
-  y: number;
-  name: string;
-};
-
-export type CellKind =
-  | 'wall'
-  | 'floor'
-  | 'furnished'
-  | 'openSpace'
-  | 'door'
-  | 'stairs'
-  | 'ledger';
 
 export type Locale = {
   windowTitle: string;
@@ -57,9 +38,7 @@ export type Locale = {
     premises: string;
     premisesMissing: string;
     basement: string;
-    refresh: string;
   };
-  cellKinds: Record<CellKind, string>;
   formatPremises: (floors: number, basements: number, tiles: number) => string;
   formatFloor: (number: number) => string;
 };

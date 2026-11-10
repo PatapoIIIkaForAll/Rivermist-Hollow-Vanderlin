@@ -33,8 +33,40 @@
 			floors[z] = floor
 		floor.add_turfs(found)
 		floor.basement = is_basement_floor(floor)
-	invalidate_premises_plan()
+	update_static_data_for_all_viewers()
 	return TRUE
+
+/datum/enterprise/proc/get_floors_data()
+	var/list/floors_data = list()
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		if(floor)
+			floors_data += list(list(
+				"z" = floor.z,
+				"basement" = floor.basement,
+				"tiles" = length(floor.turfs),
+				"map" = floor.map_key,
+			))
+	return floors_data
+
+// Puts the live view of one floor on the viewer's screen and takes the other floors off it.
+/datum/enterprise/proc/show_floor(mob/user, z)
+	var/client/viewer = user?.client
+	if(!viewer)
+		return
+	hide_floors(user)
+	if(!is_owner(user))
+		return
+	var/datum/enterprise_floor/floor = get_floor(z)
+	if(floor)
+		floor.show_to(viewer)
+
+/datum/enterprise/proc/hide_floors(mob/user)
+	var/client/viewer = user?.client
+	if(!viewer)
+		return
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		if(floor)
+			floor.hide_from(viewer)
 
 /datum/enterprise/proc/is_basement_floor(datum/enterprise_floor/floor)
 	for(var/turf/member as anything in floor.turfs)

@@ -1,5 +1,8 @@
 /datum/enterprise/tavern
 	name = "tavern"
+	owner_jobs = list(
+		/datum/job/innkeep,
+	)
 	manager_jobs = list(
 		/datum/job/innkeep,
 		/datum/job/matron,
