@@ -1,0 +1,354 @@
+/datum/enterprise
+	abstract_type = /datum/enterprise
+	var/name = "enterprise"
+	var/list/owner_jobs = list()
+	var/list/manager_jobs = list()
+	var/list/staff_jobs = list()
+	var/list/ledger_pages = list("overview")
+	var/list/owner_pages = list("premises")
+	var/list/obj/structure/fake_machine/enterprise_ledger/ledgers = list()
+	var/shift_active = FALSE
+	var/list/datum/enterprise_floor/floors = list()
+	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
+
+/datum/enterprise/Destroy()
+	SStgui.close_uis(src)
+	for(var/viewer_key in viewers.Copy())
+		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
+		hide_floors(viewer.user)
+	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
+		ledger.enterprise = null
+	ledgers = null
+	guest_rooms = null
+	QDEL_LIST(rooms)
+	QDEL_LIST(floors)
+	QDEL_LIST(fixtures)
+	QDEL_LIST(room_templates)
+	QDEL_LIST(furnishings)
+	QDEL_LIST(patrons)
+	furnishing_by_type = null
+	rested_today = null
+	owner_ref = null
+	QDEL_NULL(map_backdrop)
+	QDEL_NULL(map_catcher)
+	QDEL_LIST(map_plane_masters)
+	anchors = null
+	claimed_by_z = null
+	SSenterprises.enterprises -= type
+	return ..()
+
+/datum/enterprise/proc/is_owner(mob/user)
+	return is_type_in_list(user?.mind?.assigned_role, owner_jobs)
+
+/datum/enterprise/proc/is_manager(mob/user)
+	return is_type_in_list(user?.mind?.assigned_role, manager_jobs)
+
+/datum/enterprise/proc/is_staff(mob/user)
+	return is_manager(user) || is_type_in_list(user?.mind?.assigned_role, staff_jobs)
+
+/datum/enterprise/proc/start_shift(mob/user)
+	if(shift_active || !is_staff(user))
+		return FALSE
+	shift_active = TRUE
+	return TRUE
+
+/datum/enterprise/proc/end_shift(mob/user)
+	if(!shift_active || !is_staff(user))
+		return FALSE
+	shift_active = FALSE
+	return TRUE
+
+/datum/enterprise/proc/process_shift(delta_time)
+	return
+
+/datum/enterprise/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, get_preferred_ui_language(user) == "ru" ? "EnterpriseLedgerRu" : "EnterpriseLedger")
+		ui.set_autoupdate(FALSE)
+		ui.open()
+
+/datum/enterprise/ui_state(mob/user)
+	return GLOB.physical_state
+
+/datum/enterprise/ui_host(mob/user)
+	var/obj/structure/fake_machine/enterprise_ledger/nearest
+	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
+		if(!nearest || get_dist(user, ledger) < get_dist(user, nearest))
+			nearest = ledger
+	return nearest || src
+
+/datum/enterprise/ui_static_data(mob/user)
+	return list(
+		"name" = name,
+		"map" = map_key,
+		"floors" = get_floors_data(),
+		"rooms" = get_rooms_data(),
+	)
+
+/datum/enterprise/ui_data(mob/user)
+	var/owner = is_owner(user)
+	return list(
+		"pages" = owner ? ledger_pages : ledger_pages - owner_pages,
+		"can_manage" = is_manager(user),
+		"is_staff" = is_staff(user),
+		"shift_active" = shift_active,
+		"viewed_z" = get_viewer(user)?.z,
+		"book_balance" = book_balance,
+		"earned_round" = earned_round,
+		"earned_today" = earned_today,
+		"prestige" = owner ? get_prestige_data() : null,
+	)
+
+/datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+	switch(action)
+		if("start_shift")
+			return start_shift(ui.user)
+		if("end_shift")
+			return end_shift(ui.user)
+		if("open_premises")
+			return open_premises(ui.user)
+		if("view_floor")
+			var/z = params["z"]
+			if(!isnum(z) || z != round(z))
+				return FALSE
+			return show_floor(ui.user, z)
+		if("reset_view")
+			reset_view(ui.user)
+			return FALSE
+		if("hide_floors")
+			hide_floors(ui.user)
+			return FALSE
+		if("hover_room")
+			hover_room(ui.user, get_room_by_id(params["room"]))
+			return FALSE
+		if("open_room")
+			var/datum/enterprise_room/room = get_room_by_id(params["room"])
+			if(room)
+				room_action(ui.user, room, ENTERPRISE_ROOM_ACTION_INFO)
+			return FALSE
+		if("survey_again")
+			survey_again(ui.user)
+			return FALSE
+	return FALSE
+
+/datum/enterprise/ui_close(mob/user)
+	. = ..()
+	hide_floors(user)
+
+/datum/enterprise/tavern
+	name = "tavern"
+	owner_jobs = list(
+		/datum/job/innkeep,
+	)
+	manager_jobs = list(
+		/datum/job/innkeep,
+		/datum/job/matron,
+	)
+	staff_jobs = list(
+		/datum/job/cook,
+		/datum/job/tavern_wench,
+		/datum/job/advclass/tavern_wench,
+	)
+	ledger_pages = list("overview", "premises", "prestige", "menu", "staff", "commissions")
+	owner_pages = list("premises", "prestige")
+	premises_hint = "Place the ledger on an area with tavern_area set."
+	staff_lock_ids = list(ACCESS_INN)
+	owner_keyring = /obj/item/storage/keyring/tavern_keeper
+
+/datum/enterprise/tavern/is_premises_turf(turf/checked)
+	var/area/checked_area = checked.loc
+	return checked_area.tavern_area
+
+/area/under/town/rmh/basement/tavern
+	tavern_area = TRUE
+
+/obj/structure/fake_machine/enterprise_ledger
+	name = "enterprise ledger"
+	desc = "A heavy ledger on a pedestal, kept for the running of a business."
+	icon = 'icons/obj/questing.dmi'
+	icon_state = "contractledger"
+	density = TRUE
+	max_integrity = 0
+	obj_flags = CAN_BE_HIT | USES_TGUI
+	var/enterprise_type
+	var/datum/enterprise/enterprise
+
+/obj/structure/fake_machine/enterprise_ledger/Initialize(mapload)
+	. = ..()
+	enterprise = SSenterprises.get_enterprise(enterprise_type)
+	if(!enterprise)
+		return
+	enterprise.ledgers += src
+	if(SSenterprises.initialized)
+		enterprise.claim_premises(src)
+
+/obj/structure/fake_machine/enterprise_ledger/Destroy()
+	if(enterprise)
+		enterprise.ledgers -= src
+		enterprise = null
+	return ..()
+
+/obj/structure/fake_machine/enterprise_ledger/attack_hand(mob/living/user)
+	. = ..()
+	if(.)
+		return
+	if(!ishuman(user) || !enterprise)
+		return
+	if(!enterprise.is_staff(user))
+		to_chat(user, span_warning("The ledger's columns mean nothing to me."))
+		return
+	enterprise.ui_interact(user)
+
+/obj/structure/fake_machine/enterprise_ledger/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
+	if(!enterprise || !istype(tool, /obj/item/coin) || istype(tool, /obj/item/coin/inqcoin))
+		return NONE
+	var/russian = get_preferred_ui_language(user) == "ru"
+	if(!enterprise.is_manager(user))
+		to_chat(user, span_warning(russian ? "Вносить деньги в книгу может только управляющий." : "Only those who run the place may pay into the ledger."))
+		return ITEM_INTERACT_BLOCKING
+	var/value = tool.get_real_price()
+	if(value <= 0)
+		return ITEM_INTERACT_BLOCKING
+	qdel(tool)
+	enterprise.earn(value)
+	playsound(src, 'sound/misc/coininsert.ogg', 100, FALSE, -1)
+	to_chat(user, span_notice(russian ? "В книгу внесено [value]. Забрать их обратно нельзя." : "[value] has gone into the ledger. It cannot be taken back out."))
+	return ITEM_INTERACT_SUCCESS
+
+/obj/structure/fake_machine/enterprise_ledger/tavern
+	name = "tavern ledger"
+	desc = "The tavern's book of accounts: its menu, its staff and its rooms."
+	enterprise_type = /datum/enterprise/tavern
+
+SUBSYSTEM_DEF(enterprises)
+	name = "Enterprises"
+	init_order = INIT_ORDER_OVERLAY - 1
+	flags = SS_BACKGROUND
+	runlevels = RUNLEVEL_GAME
+	wait = 2 SECONDS
+	var/list/datum/enterprise/enterprises = list()
+	var/list/datum/enterprise/currentrun = list()
+	var/list/datum/weakref/pending_keys = list()
+	var/keys_ready = FALSE
+
+/datum/controller/subsystem/enterprises/Initialize()
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
+			enterprise.claim_premises(ledger)
+		enterprise.recover_journal()
+	keys_ready = TRUE
+	for(var/datum/weakref/key_ref as anything in pending_keys)
+		var/obj/item/key/key = key_ref.resolve()
+		if(!QDELETED(key))
+			note_key(key)
+	pending_keys = null
+	RegisterSignal(SSdcs, COMSIG_GLOB_JOB_AFTER_SPAWN, PROC_REF(on_job_spawn))
+	RegisterSignal(SSdcs, COMSIG_GLOB_TIME_OF_DAY_CHANGED, PROC_REF(on_time_of_day))
+	LAZYADD(SSticker.round_end_events, CALLBACK(src, PROC_REF(on_round_end)))
+	return ..()
+
+/datum/controller/subsystem/enterprises/fire(resumed)
+	if(!resumed)
+		currentrun = list()
+		for(var/enterprise_type in enterprises)
+			currentrun += enterprises[enterprise_type]
+	var/list/datum/enterprise/current_run = currentrun
+	var/delta_time = wait * 0.1
+
+	while(length(current_run))
+		var/datum/enterprise/enterprise = current_run[length(current_run)]
+		current_run.len--
+		if(!QDELETED(enterprise))
+			if(enterprise.shift_active)
+				enterprise.process_shift(delta_time)
+			if(COOLDOWN_FINISHED(enterprise, upkeep_cooldown))
+				COOLDOWN_START(enterprise, upkeep_cooldown, ENTERPRISE_UPKEEP_INTERVAL)
+				enterprise.upkeep()
+		if(MC_TICK_CHECK)
+			return
+
+/datum/controller/subsystem/enterprises/proc/get_enterprise(enterprise_type)
+	if(!ispath(enterprise_type, /datum/enterprise))
+		return null
+	var/datum/enterprise/enterprise = enterprises[enterprise_type]
+	if(enterprise)
+		return enterprise
+	var/datum/enterprise/prototype = enterprise_type
+	if(enterprise_type == initial(prototype.abstract_type))
+		return null
+	enterprise = new enterprise_type
+	enterprises[enterprise_type] = enterprise
+	return enterprise
+
+/datum/controller/subsystem/enterprises/proc/get_enterprise_at(atom/place)
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		if(enterprise.contains(place))
+			return enterprise
+	return null
+
+/datum/controller/subsystem/enterprises/proc/on_job_spawn(datum/source, datum/job/job, mob/living/carbon/human/spawned, client/player_client)
+	SIGNAL_HANDLER
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		if(is_type_in_list(job, enterprise.owner_jobs))
+			INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, welcome_owner), spawned, player_client?.ckey || spawned.ckey)
+
+/datum/controller/subsystem/enterprises/proc/on_time_of_day(datum/source, new_tod, old_tod)
+	SIGNAL_HANDLER
+	if(new_tod != "dawn")
+		return
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		enterprise.new_day()
+
+/datum/controller/subsystem/enterprises/proc/on_round_end()
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		enterprise.bank_experience()
+
+/datum/controller/subsystem/enterprises/proc/note_key(obj/item/key/key)
+	if(!keys_ready)
+		pending_keys += WEAKREF(key)
+		return
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		enterprise.track_key(key)
+
+/datum/controller/subsystem/enterprises/proc/note_rest(mob/living/carbon/human/sleeper)
+	var/datum/enterprise/enterprise = get_enterprise_at(sleeper)
+	if(enterprise)
+		enterprise.handle_rest(sleeper)
+
+/datum/controller/subsystem/enterprises/proc/note_night(mob/living/carbon/human/sleeper)
+	var/datum/enterprise/enterprise = get_enterprise_at(sleeper)
+	if(enterprise)
+		enterprise.handle_night(sleeper)
+
+/datum/controller/subsystem/enterprises/proc/note_meal(mob/living/eater)
+	var/datum/enterprise/enterprise = get_enterprise_at(eater)
+	if(enterprise)
+		enterprise.handle_meal(eater)
+
+/datum/status_effect/debuff/sleepytime/on_remove()
+	. = ..()
+	if(ishuman(owner) && owner.IsSleeping())
+		SSenterprises.note_rest(owner)
+
+/mob/living/carbon/human/finish_night_rest()
+	. = ..()
+	SSenterprises.note_night(src)
+
+/obj/item/reagent_containers/food/snacks/on_consume(mob/living/eater)
+	. = ..()
+	if(eater?.buckled)
+		SSenterprises.note_meal(eater)
+
+/obj/item/key/Initialize(mapload)
+	. = ..()
+	SSenterprises.note_key(src)
