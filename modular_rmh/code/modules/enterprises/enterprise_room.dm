@@ -18,6 +18,7 @@
 	var/list/datum/enterprise_room/room_cells
 	var/list/atom/movable/screen/enterprise_picture/picture
 	var/list/atom/movable/screen/enterprise_zone/zones
+	var/list/used_planes
 
 /datum/enterprise_floor/New(z, datum/enterprise/enterprise)
 	src.z = z
@@ -27,6 +28,7 @@
 	QDEL_LIST(picture)
 	QDEL_LIST(zones)
 	enterprise = null
+	used_planes = null
 	turfs = null
 	mask = null
 	rooms = null
@@ -105,6 +107,7 @@
 /datum/enterprise_floor/proc/take_picture(with_zones = TRUE)
 	QDEL_LIST(picture)
 	picture = list()
+	used_planes = list(GAME_PLANE, ABOVE_HUD_PLANE, RUNECHAT_PLANE)
 	var/origin_x = get_pixel_x()
 	var/origin_y = get_pixel_y()
 
@@ -116,9 +119,12 @@
 			var/turf/member = locate(min_x + column, min_y + row, z)
 			var/offset = column * ICON_SIZE_X
 			strip_overlays += copy_appearance(member, offset)
+			note_planes(member)
 			for(var/obj/thing in member)
-				if(!thing.invisibility)
-					strip_overlays += copy_appearance(thing, offset)
+				if(thing.invisibility || istype(thing, /obj/effect))
+					continue
+				strip_overlays += copy_appearance(thing, offset)
+				note_planes(thing)
 		if(!length(strip_overlays))
 			continue
 		var/atom/movable/screen/enterprise_picture/strip = new
@@ -158,6 +164,16 @@
 		picture += labels
 	if(with_zones || !zones)
 		mark_zones()
+	enterprise.update_plane_masters()
+
+/datum/enterprise_floor/proc/note_planes(atom/source)
+	used_planes |= source.plane
+	for(var/image/overlay as anything in source.overlays)
+		if(overlay.plane != FLOAT_PLANE)
+			used_planes |= overlay.plane
+	for(var/image/underlay as anything in source.underlays)
+		if(underlay.plane != FLOAT_PLANE)
+			used_planes |= underlay.plane
 
 /datum/enterprise_floor/proc/mark_zones()
 	QDEL_LIST(zones)

@@ -95,10 +95,13 @@
 		/obj/structure/flowerpot,
 		/obj/structure/fluff/clutter/shrub,
 		/obj/structure/fake_machine,
+		/obj/item/coin,
 	)
 	if(is_type_in_list(thing, ignored))
 		return FALSE
-	return istype(thing, /obj/structure) || istype(thing, /obj/machinery) || istype(thing, /obj/item)
+	if(isitem(thing))
+		return thing.sellprice > 0 && !thing.reagents?.total_volume
+	return istype(thing, /obj/structure) || istype(thing, /obj/machinery)
 
 /datum/enterprise/proc/take_fixtures(list/turf/fresh)
 	var/list/datum/enterprise_fixture/taken = list()
@@ -108,7 +111,9 @@
 		for(var/obj/thing in member)
 			if(thing.invisibility || !is_fixture(thing))
 				continue
-			taken += new /datum/enterprise_fixture(thing)
+			var/datum/enterprise_fixture/item = new(thing)
+			fixture_refs[item.thing] = item
+			taken += item
 	fixtures += taken
 	return taken
 
@@ -187,7 +192,7 @@
 	)
 	var/list/stock_caps = list(2, 4, 6, 10)
 	var/list/eviction_times = list(6 HOURS, 12 HOURS, 24 HOURS, 48 HOURS, 0)
-	var/list/patron_rent_percents = list(100, 100, 125, 150, 200)
+	var/list/patron_rent_percents = list(100, 100, 150, 250, 400)
 	var/list/prestige_thresholds = list(5000, 15000, 35000, 75000)
 	var/list/datum/enterprise_furnishing/furnishings
 	var/list/furnishing_by_type
@@ -212,6 +217,8 @@
 	return get_level_value(upgrade_costs, room.level + 1) || 0
 
 /datum/enterprise/proc/get_rest_price(datum/enterprise_room/room)
+	if(room.level < ENTERPRISE_LEVEL_WOOD)
+		return ENTERPRISE_BARE_REST_PRICE
 	return get_level_value(rest_prices, room.level) || 0
 
 /datum/enterprise/proc/get_rooms_by_purpose(list/purposes)
@@ -315,31 +322,47 @@
 			INVOKE_ASYNC(src, PROC_REF(repair_room), user, room)
 
 /datum/enterprise/proc/repair_room(mob/user, datum/enterprise_room/room)
-	var/cost = room.get_repair_cost()
-	if(!cost)
-		return FALSE
 	var/russian = get_preferred_ui_language(user) == "ru"
+	if(!room.damage)
+		to_chat(user, span_notice(russian ? "В комнате «[room.name]» всё на месте." : "Everything in [room.name] is in its place."))
+		return FALSE
+	var/book_cost = room.get_repair_cost()
+	if(book_balance >= book_cost)
+		book_balance -= book_cost
+		funds_changed()
+		return finish_repair(user, room, book_cost)
+	var/account_cost = room.get_account_repair_cost()
+	if(get_bank_balance(user) < account_cost)
+		to_chat(user, span_warning(russian \
+			? "Не хватает средств: починка стоит [book_cost] из книги или [account_cost] со счёта." \
+			: "There is not enough money: the repairs cost [book_cost] from the ledger or [account_cost] from the account."))
+		return FALSE
 	var/yes = russian ? "Починить" : "Repair"
 	var/no = russian ? "Отмена" : "Cancel"
 	var/question = russian \
-		? "Вернуть на место всё, что пропало из комнаты «[room.name]»? Деньги спишутся из книги, а чего не хватит — с вашего счёта. Цена: [cost]." \
-		: "Bring back everything that is gone from [room.name]? It costs [cost]: the money comes from the ledger, and what it lacks from your account."
+		? "В книге нет [book_cost]. Починить комнату «[room.name]» со своего счёта за [account_cost]?" \
+		: "The ledger does not hold [book_cost]. Repair [room.name] from your own account for [account_cost]?"
 	if(tgui_alert(user, question, russian ? "Починка" : "Repairs", list(yes, no)) != yes)
 		return FALSE
 	if(QDELETED(room) || QDELETED(user) || room.enterprise != src || !can_run_rooms(user))
 		return FALSE
 	check_rooms(list(room))
-	var/new_cost = room.get_repair_cost()
-	if(new_cost != cost)
+	if(room.get_account_repair_cost() != account_cost)
 		to_chat(user, span_warning(russian \
-			? (new_cost ? "Пока вы решали, в комнате «[room.name]» что-то изменилось: починка теперь стоит [new_cost]. Попробуйте ещё раз." : "Пока вы решали, в комнате «[room.name]» всё вернулось на место: чинить нечего.") \
-			: (new_cost ? "While you were deciding, something changed in [room.name]: the repairs now cost [new_cost]. Try again." : "While you were deciding, everything in [room.name] came back: there is nothing to repair.")))
+			? "Пока вы решали, в комнате «[room.name]» что-то изменилось. Попробуйте ещё раз." \
+			: "While you were deciding, something changed in [room.name]. Try again."))
 		return FALSE
-	if(!pay(user, cost, "[name] repairs"))
-		to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
+	if(get_bank_balance(user) < account_cost)
+		to_chat(user, span_warning(russian ? "Не хватает средств: нужно [account_cost] на счёте." : "There is not enough money: it takes [account_cost] from the account."))
 		return FALSE
+	SStreasury.bank_accounts[user] -= account_cost
+	SStreasury.log_to_steward("-[account_cost] from [user.real_name] ([name] repairs)")
+	return finish_repair(user, room, account_cost)
+
+/datum/enterprise/proc/finish_repair(mob/user, datum/enterprise_room/room, cost)
 	room.repair()
-	to_chat(user, span_notice(russian ? "Комната «[room.name]» приведена в порядок." : "[room.name] has been put back in order."))
+	var/russian = get_preferred_ui_language(user) == "ru"
+	to_chat(user, span_notice(russian ? "Комната «[room.name]» приведена в порядок за [cost]." : "[room.name] has been put back in order for [cost]."))
 	redraw(room)
 	return TRUE
 
@@ -386,7 +409,9 @@
 		line["id"] = "[fixture_type]"
 		line["name"] = group.name
 		line["count"] = length(group.items)
-		line["missing"] = group.get_damaged()
+		line["missing"] = group.missing
+		line["misplaced"] = group.misplaced
+		line["broken"] = group.broken
 		contents_data += list(line)
 	return contents_data
 
@@ -432,6 +457,7 @@
 		"contents" = get_contents_data(),
 		"upgrades" = get_upgrades_data(),
 		"repair_cost" = get_repair_cost(),
+		"repair_account_cost" = get_account_repair_cost(),
 		"tenant" = get_tenant_data(),
 	)
 
@@ -447,12 +473,15 @@
 			shown_pages[REF(ui.user)] = page
 			return FALSE
 		if("repair")
-			enterprise.room_action(ui.user, src, ENTERPRISE_ROOM_ACTION_REPAIR)
+			if(enterprise.press(ui.user, action))
+				enterprise.room_action(ui.user, src, ENTERPRISE_ROOM_ACTION_REPAIR)
 			return FALSE
 		if("upgrade")
-			INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, upgrade_room), ui.user, src, FALSE)
+			if(enterprise.press(ui.user, action))
+				INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, upgrade_room), ui.user, src, FALSE)
 			return FALSE
 		if("prestige_grade")
-			INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, upgrade_room), ui.user, src, TRUE)
+			if(enterprise.press(ui.user, action))
+				INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, upgrade_room), ui.user, src, TRUE)
 			return FALSE
 	return FALSE

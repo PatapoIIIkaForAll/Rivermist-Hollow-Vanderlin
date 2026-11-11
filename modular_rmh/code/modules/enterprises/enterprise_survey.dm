@@ -3,7 +3,6 @@
 /datum/enterprise
 	var/list/turf/anchors = list()
 	var/list/claimed_by_z = list()
-	var/grant_on_survey
 	COOLDOWN_DECLARE(survey_cooldown)
 
 /datum/enterprise/proc/is_premises_turf(turf/checked)
@@ -22,8 +21,6 @@
 	return floor ? floor.contains(location) : FALSE
 
 /datum/enterprise/proc/claim_premises(atom/anchor)
-	if(loading_premises)
-		return FALSE
 	var/turf/origin = get_turf(anchor)
 	if(!origin || !is_premises_turf(origin))
 		log_mapping("Map issue: [anchor] ([anchor.type]) at [AREACOORD(anchor)] is outside the [name] premises. [premises_hint]")
@@ -65,9 +62,6 @@
 	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
 	mark_start_stock(fresh)
 	furnish_rooms()
-	if(!isnull(grant_on_survey))
-		grant_owner_rooms(grant_on_survey, !length(taken))
-		grant_on_survey = null
 	if(length(taken))
 		for(var/datum/enterprise_room/room as anything in rooms)
 			room.apply_inventory_level(max(room.level, ENTERPRISE_LEVEL_WOOD))

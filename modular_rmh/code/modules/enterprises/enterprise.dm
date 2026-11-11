@@ -10,10 +10,6 @@
 	var/shift_active = FALSE
 	var/list/datum/enterprise_floor/floors = list()
 	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
-	var/list/premises_maps = list()
-	var/premises_level
-	var/premises_loaded = FALSE
-	var/loading_premises = FALSE
 
 /datum/enterprise/Destroy()
 	SStgui.close_uis(src)
@@ -26,98 +22,22 @@
 	QDEL_LIST(rooms)
 	QDEL_LIST(floors)
 	QDEL_LIST(fixtures)
+	fixture_refs = null
 	QDEL_LIST(room_templates)
 	QDEL_LIST(furnishings)
 	QDEL_LIST(patrons)
 	furnishing_by_type = null
 	rested_today = null
 	owner_ref = null
-	QDEL_NULL(map_backdrop)
 	QDEL_NULL(map_catcher)
 	QDEL_LIST(map_plane_masters)
+	shown_plane_masters = null
 	anchors = null
 	claimed_by_z = null
 	SSenterprises.enterprises -= type
 	return ..()
 
-/datum/enterprise/proc/get_plot_turfs()
-	return list()
-
-/datum/enterprise/proc/reset_premises()
-	for(var/viewer_key in viewers.Copy())
-		drop_viewer(viewer_key)
-	for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons.Copy())
-		patron.leave()
-	QDEL_LIST(rooms)
-	guest_rooms.Cut()
-	QDEL_LIST(fixtures)
-	QDEL_LIST(floors)
-	anchors = list()
-	claimed_by_z = list()
-
-/datum/enterprise/proc/load_premises(level, grant_level)
-	if(loading_premises || !length(premises_maps))
-		return FALSE
-	loading_premises = TRUE
-	level = clamp(level, 0, length(premises_maps) - 1)
-	var/loaded = place_premises(level)
-	loading_premises = FALSE
-	if(!loaded)
-		return FALSE
-	premises_level = level
-	grant_on_survey = grant_level
-	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
-		claim_premises(ledger)
-	grant_on_survey = null
-	return TRUE
-
-/datum/enterprise/proc/place_premises(level)
-	var/map_path = premises_maps[level + 1]
-	var/list/turf/plot = get_plot_turfs()
-	if(!length(plot))
-		log_mapping("Map issue: the [name] has no plot to load [map_path] onto. [premises_hint]")
-		return FALSE
-	var/turf/first = plot[1]
-	var/min_x = first.x
-	var/max_x = first.x
-	var/min_y = first.y
-	var/max_y = first.y
-	var/min_z = first.z
-	for(var/turf/member as anything in plot)
-		min_x = min(min_x, member.x)
-		max_x = max(max_x, member.x)
-		min_y = min(min_y, member.y)
-		max_y = max(max_y, member.y)
-		min_z = min(min_z, member.z)
-	var/datum/map_template/template = new(map_path, "[name] premises, owner level [level]", TRUE)
-	if(template.width != max_x - min_x + 1 || template.height != max_y - min_y + 1)
-		log_mapping("Map issue: [map_path] is [template.width]x[template.height] tiles, but the [name] plot is [max_x - min_x + 1]x[max_y - min_y + 1]. The premises were left as mapped.")
-		return FALSE
-	reset_premises()
-	clear_plot(plot)
-	if(!template.load(locate(min_x, min_y, min_z)))
-		log_mapping("Map issue: [map_path] could not be loaded for the [name].")
-		return FALSE
-	log_game("[name] premises loaded from [map_path] at [min_x],[min_y],[min_z]")
-	return TRUE
-
-/datum/enterprise/proc/clear_plot(list/turf/plot)
-	for(var/turf/member as anything in plot)
-		for(var/obj/thing in member)
-			if(keeps_on_plot(thing))
-				continue
-			for(var/obj/inner in thing)
-				qdel(inner)
-			qdel(thing)
-		CHECK_TICK
-
-/datum/enterprise/proc/keeps_on_plot(obj/thing)
-	if(istype(thing, /obj/effect/landmark))
-		return TRUE
-#ifdef TAVERN_TEST
-	if(istype(thing, /obj/structure/throne) || istype(thing, /obj/structure/fake_machine/titan))
-		return TRUE
-#endif
+/datum/enterprise/proc/place_ledger()
 	return FALSE
 
 /datum/enterprise/proc/is_owner(mob/user)
@@ -167,6 +87,7 @@
 		"map" = map_key,
 		"floors" = get_floors_data(),
 		"rooms" = get_rooms_data(),
+		"frame" = list(frame_width, frame_height),
 	)
 
 /datum/enterprise/ui_data(mob/user)
@@ -184,6 +105,7 @@
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
 		"viewed_z" = get_viewer(user)?.z,
+		"map_scale" = get_viewer(user)?.scale,
 		"book_balance" = book_balance,
 		"earned_round" = earned_round,
 		"earned_today" = earned_today,
@@ -203,9 +125,9 @@
 #endif
 	switch(action)
 		if("start_shift")
-			return start_shift(ui.user)
+			return press(ui.user, action) && start_shift(ui.user)
 		if("end_shift")
-			return end_shift(ui.user)
+			return press(ui.user, action) && end_shift(ui.user)
 		if("open_premises")
 			if(open_premises(ui.user))
 				ui.send_update()
@@ -219,7 +141,7 @@
 			return FALSE
 		if("reset_view")
 			reset_view(ui.user)
-			return FALSE
+			return TRUE
 		if("hide_floors")
 			hide_floors(ui.user)
 			return FALSE
@@ -232,10 +154,11 @@
 				room_action(ui.user, room, ENTERPRISE_ROOM_ACTION_INFO)
 			return FALSE
 		if("survey_again")
-			survey_again(ui.user)
+			if(press(ui.user, action))
+				survey_again(ui.user)
 			return FALSE
 		if("call_guest")
-			return call_guest(ui.user)
+			return press(ui.user, action) && call_guest(ui.user)
 	return FALSE
 
 /datum/enterprise/ui_close(mob/user)
@@ -282,8 +205,6 @@
 			if(grant_owner_rooms(owner_level))
 				redraw()
 			return TRUE
-		if("debug_reload")
-			return load_premises(owner_level, owner_level)
 		if("debug_room_level")
 			var/level = params["level"]
 			var/room_id = params["room"]
@@ -353,13 +274,6 @@
 		/mob/living/simple_animal/enterprise_patron/noble = 4,
 	)
 	premises_hint = "Place the ledger on an area with tavern_area set."
-	premises_maps = list(
-		"_maps/map_files/hsector/tavern/tavern_0.dmm",
-		"_maps/map_files/hsector/tavern/tavern_1.dmm",
-		"_maps/map_files/hsector/tavern/tavern_2.dmm",
-		"_maps/map_files/hsector/tavern/tavern_3.dmm",
-		"_maps/map_files/hsector/tavern/tavern_4.dmm",
-	)
 	staff_lock_ids = list(ACCESS_INN)
 	owner_keyring = /obj/item/storage/keyring/tavern_keeper
 
@@ -367,12 +281,23 @@
 	var/area/checked_area = checked.loc
 	return checked_area.tavern_area
 
-/datum/enterprise/tavern/get_plot_turfs()
-	var/list/turf/plot = list()
+/datum/enterprise/tavern/place_ledger()
+	if(length(ledgers))
+		return FALSE
 	for(var/area/place as anything in GLOB.areas)
-		if(place.tavern_area)
-			plot += place.get_turfs_from_all_zlevels()
-	return plot
+		if(!place.tavern_area)
+			continue
+		for(var/turf/member as anything in place.get_turfs_from_all_zlevels())
+			if(!(locate(/obj/structure/fake_machine/vendor/inn_rmh) in member))
+				continue
+			for(var/direction in GLOB.cardinals)
+				var/turf/spot = get_step(member, direction)
+				if(!spot || isclosedturf(spot) || !is_premises_turf(spot) || spot.is_blocked_turf(TRUE))
+					continue
+				new /obj/structure/fake_machine/enterprise_ledger/tavern(spot)
+				log_game("[name]: the ledger was set up at [AREACOORD(spot)]")
+				return TRUE
+	return FALSE
 
 /area/under/town/rmh/basement/tavern
 	tavern_area = TRUE
@@ -451,13 +376,8 @@ SUBSYSTEM_DEF(enterprises)
 		get_enterprise(enterprise_type)
 	for(var/enterprise_type in enterprises)
 		var/datum/enterprise/enterprise = enterprises[enterprise_type]
-		var/loaded = FALSE
-#ifdef TAVERN_TEST
-		loaded = enterprise.load_premises(ENTERPRISE_LEVEL_BARE)
-#endif
-		if(!loaded)
-			for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
-				enterprise.claim_premises(ledger)
+		for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
+			enterprise.claim_premises(ledger)
 		enterprise.recover_journal()
 	keys_ready = TRUE
 	for(var/datum/weakref/key_ref as anything in pending_keys)

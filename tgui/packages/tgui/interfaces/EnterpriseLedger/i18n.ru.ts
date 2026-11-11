@@ -116,7 +116,7 @@ const locale: Locale = {
     upgradeItemsNone: 'Со следующим уровнем в этой комнате ничего не меняется.',
     upgradeMaxLevel: 'Комната уже высшего уровня.',
     upgradeBlocked:
-      'Сначала почините комнату: пока в ней чего-то нет на месте или что-то сломано, улучшить её нельзя.',
+      'Верните вещи на место или почините комнату: пока в ней чего-то нет на месте или что-то сломано, улучшить её нельзя.',
     upgradeNotForSale:
       'Первый уровень не продаётся: он приходит с первым уровнем владельца.',
     upgradeFunds: 'В книге и на счёте вместе',
@@ -162,7 +162,6 @@ const locale: Locale = {
     bank: 'Мой счёт в банке',
     ownerLevel: 'Уровень владельца',
     grant: 'Выдать комнаты этого уровня владельца',
-    reload: 'Загрузить таверну этого уровня заново',
     rooms: 'Уровни комнат',
     allRooms: 'Все комнаты',
     patrons: 'Гости (НПС)',
@@ -189,7 +188,12 @@ const locale: Locale = {
   formatTiles: (tiles) => `клеток: ${tiles}`,
   formatBeds: (beds) => `кроватей: ${beds}`,
   formatRepair: (cost) => `Починить: ${cost}`,
-  formatMissing: (missing) => `пропало или сломано: ${missing}`,
+  formatRepairHint: (book, account) =>
+    `${book} из книги; если в ней меньше — ${account} со счёта`,
+  formatDamaged: (count) => `не в порядке: ${count}`,
+  formatGone: (count) => `пропало: ${count}`,
+  formatMisplaced: (count) => `не на месте: ${count}`,
+  formatBroken: (count) => `сломано: ${count}`,
   formatLevel: (level, maxLevel) => `${level} из ${maxLevel}`,
   formatLevelUp: (level, nextLevel) => `Уровень ${level} → ${nextLevel}`,
   formatStay: (hours, minutes) => `${hours} ч ${minutes} мин`,

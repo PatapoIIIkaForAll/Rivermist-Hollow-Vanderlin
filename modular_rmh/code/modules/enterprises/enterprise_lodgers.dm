@@ -110,7 +110,6 @@
 		var/mob/living/lodger = room.get_tenant()
 		if(lodger && take_from_account(lodger, due))
 			total += due
-			room.tenant_seen = world.time
 		else
 			evict(room, TRUE)
 	return earn(total)

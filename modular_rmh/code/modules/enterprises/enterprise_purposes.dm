@@ -32,7 +32,7 @@
 	if(level > ENTERPRISE_MAX_LEVEL)
 		return null
 	if(level < ENTERPRISE_LEVEL_WOOD)
-		return russian ? "Ночлег без удобств: бесплатно и без прибавок." : "A bare room: free, and no better than any bed."
+		return russian ? "Ночлег без удобств: [ENTERPRISE_BARE_REST_PRICE] за ночь и без прибавок." : "A bare room: [ENTERPRISE_BARE_REST_PRICE] a night, and no better than any bed."
 	var/price = enterprise.get_level_value(enterprise.rest_prices, level)
 	var/stats = enterprise.get_level_value(russian ? enterprise.rest_stats_ru : enterprise.rest_stats, level)
 	return russian \
@@ -47,6 +47,9 @@
 		to_chat(sleeper, span_warning(russian ? "На счёте нет [price] за ночлег: отдых будет обычным." : "My account cannot cover the [price] for the night: this will be an ordinary rest."))
 		return FALSE
 	enterprise.earn(price)
+	if(room.damaged)
+		to_chat(sleeper, span_warning(russian ? "За ночлег со счёта списано [price], но в комнате чего-то нет на месте или что-то сломано: отдых обычный." : "The night has cost me [price] from my account, but something in the room is gone or broken: this was an ordinary rest."))
+		return TRUE
 	enterprise.give_rest_buff(sleeper, room.level)
 	to_chat(sleeper, span_notice(russian ? "За ночлег со счёта списано [price]." : "The night has cost me [price] from my account."))
 	return TRUE
@@ -87,9 +90,10 @@
 
 /datum/enterprise_room_template/staff_quarters/on_rest(datum/enterprise_room/room, mob/living/carbon/human/sleeper)
 	var/datum/enterprise/enterprise = room.enterprise
-	if(!enterprise.is_staff(sleeper))
+	if(!enterprise.is_staff(sleeper) || room.level < ENTERPRISE_LEVEL_WOOD)
 		return FALSE
-	enterprise.give_rest_buff(sleeper, room.level)
+	if(!room.damaged)
+		enterprise.give_rest_buff(sleeper, room.level)
 	var/bonus = enterprise.get_staff_bonus()
 	if(SStreasury.give_money_account(bonus, sleeper, "[enterprise.name] wages"))
 		var/russian = get_preferred_ui_language(sleeper) == "ru"
@@ -191,7 +195,7 @@
 /datum/enterprise_room_template/service_hall/on_meal(datum/enterprise_room/room, mob/living/eater, datum/enterprise_seating/seating)
 	var/datum/enterprise/enterprise = room.enterprise
 	var/mood_type = enterprise.get_level_value(enterprise.meal_moods, seating.get_level())
-	if(!mood_type)
+	if(!mood_type || room.damaged)
 		return FALSE
 	eater.add_stress(mood_type)
 	return TRUE
@@ -267,11 +271,12 @@
 	if(!room)
 		return FALSE
 	room.note_visit(sleeper)
-	if(get_time_away(sleeper) || room.level < ENTERPRISE_LEVEL_WOOD || !room.template)
+	if(get_time_away(sleeper) || !room.template)
 		return FALSE
 	var/datum/weakref/who = WEAKREF(sleeper)
 	if(rested_today[who])
 		return FALSE
+	check_rooms(list(room))
 	if(!room.template.on_rest(room, sleeper))
 		return FALSE
 	rested_today[who] = TRUE
@@ -294,4 +299,5 @@
 	if(patron && patron != eater)
 		patron.take_offence(eater)
 		return FALSE
+	check_rooms(list(room))
 	return room.template.on_meal(room, eater, seating)

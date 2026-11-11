@@ -7,10 +7,6 @@
 #define ENTERPRISE_MENU_ALPHA_HOVER 255
 #define ENTERPRISE_MENU_TEXT(text) {"<span style='font-family: "Pixelify Sans"; font-size: 18pt; color: #f0e2c4; text-align: center; vertical-align: middle; -dm-text-outline: 1px black'>[##text]</span>"}
 
-/atom/movable/screen/background/enterprise_map
-	layer = GAME_PLANE - 1
-	del_on_map_removal = FALSE
-
 /atom/movable/screen/enterprise_map_catcher
 	icon = 'icons/mob/screen_gen.dmi'
 	icon_state = "catcher"
@@ -173,12 +169,11 @@
 /datum/enterprise_viewer/proc/set_view(new_scale, new_shift_x, new_shift_y)
 	close_menu()
 	scale = new_scale
-	shift_x = clamp(new_shift_x, enterprise.frame_width * ICON_SIZE_X * (1 - scale), 0)
-	shift_y = clamp(new_shift_y, enterprise.frame_height * ICON_SIZE_Y * (1 - scale), 0)
-	var/matrix/view = matrix()
-	view.Scale(scale)
-	view.Translate(shift_x + (scale - 1) * ICON_SIZE_X / 2, shift_y + (scale - 1) * ICON_SIZE_Y / 2)
-	viewport.transform = view
+	var/reach_x = enterprise.frame_width * ICON_SIZE_X * (1 - 1 / scale) / 2
+	var/reach_y = enterprise.frame_height * ICON_SIZE_Y * (1 - 1 / scale) / 2
+	shift_x = clamp(new_shift_x, -reach_x, reach_x)
+	shift_y = clamp(new_shift_y, -reach_y, reach_y)
+	viewport.transform = matrix(1, 0, shift_x, 0, 1, shift_y)
 
 /datum/enterprise_viewer/proc/get_cursor(params)
 	var/screen_loc = params2list(params)["screen-loc"]
@@ -204,13 +199,15 @@
 	var/static/list/scales = list(1, 1.5, 2, 3, 4)
 	var/new_scale = scales[clamp(scales.Find(scale) + direction, 1, length(scales))]
 	if(new_scale == scale)
-		return
+		return FALSE
+	var/centre_x = enterprise.frame_width * ICON_SIZE_X / 2
+	var/centre_y = enterprise.frame_height * ICON_SIZE_Y / 2
 	var/list/cursor = get_cursor(params)
-	var/cursor_x = cursor ? cursor[1] : enterprise.frame_width * ICON_SIZE_X / 2
-	var/cursor_y = cursor ? cursor[2] : enterprise.frame_height * ICON_SIZE_Y / 2
-	var/pointed_x = (cursor_x - shift_x) / scale
-	var/pointed_y = (cursor_y - shift_y) / scale
-	set_view(new_scale, cursor_x - pointed_x * new_scale, cursor_y - pointed_y * new_scale)
+	var/cursor_x = cursor ? cursor[1] : centre_x
+	var/cursor_y = cursor ? cursor[2] : centre_y
+	var/ratio = scale / new_scale
+	set_view(new_scale, shift_x + centre_x + (cursor_x - centre_x) * ratio - cursor_x, shift_y + centre_y + (cursor_y - centre_y) * ratio - cursor_y)
+	return TRUE
 
 /datum/enterprise_viewer/proc/set_hovered(datum/enterprise_room/room)
 	hovered = room
@@ -262,23 +259,31 @@
 		room_max_x = max(room_max_x, member.x)
 		room_min_y = min(room_min_y, member.y)
 		room_max_y = max(room_max_y, member.y)
-	var/centre_x = floor.get_pixel_x() + ((room_min_x + room_max_x) / 2 - floor.min_x + 0.5) * ICON_SIZE_X
-	var/centre_y = floor.get_pixel_y() + ((room_min_y + room_max_y) / 2 - floor.min_y + 0.5) * ICON_SIZE_Y
-	var/stack_height = (length(actions) - 1) * ENTERPRISE_MENU_BUTTON_STEP + ENTERPRISE_MENU_BUTTON_HEIGHT
-	var/left = round(centre_x * scale + shift_x - ENTERPRISE_MENU_BUTTON_WIDTH / 2)
-	var/bottom = round(centre_y * scale + shift_y - stack_height / 2)
-	left = clamp(left, 0, enterprise.frame_width * ICON_SIZE_X - ENTERPRISE_MENU_BUTTON_WIDTH)
-	bottom = clamp(bottom, 0, enterprise.frame_height * ICON_SIZE_Y - stack_height)
+	var/centre_x = floor.get_pixel_x() + ((room_min_x + room_max_x) / 2 - floor.min_x + 0.5) * ICON_SIZE_X + shift_x
+	var/centre_y = floor.get_pixel_y() + ((room_min_y + room_max_y) / 2 - floor.min_y + 0.5) * ICON_SIZE_Y + shift_y
+	var/half_width = ENTERPRISE_MENU_BUTTON_WIDTH / 2 / scale
+	var/half_stack = ((length(actions) - 1) * ENTERPRISE_MENU_BUTTON_STEP + ENTERPRISE_MENU_BUTTON_HEIGHT) / 2 / scale
+	var/frame_x = enterprise.frame_width * ICON_SIZE_X / 2
+	var/frame_y = enterprise.frame_height * ICON_SIZE_Y / 2
+	centre_x = clamp(centre_x, frame_x - frame_x / scale + half_width, frame_x + frame_x / scale - half_width)
+	centre_y = clamp(centre_y, frame_y - frame_y / scale + half_stack, frame_y + frame_y / scale - half_stack)
 	var/russian = get_preferred_ui_language(get_user()) == "ru"
-	var/height = bottom + stack_height - ENTERPRISE_MENU_BUTTON_HEIGHT
+	var/matrix/shrink = scale == 1 ? null : matrix(1 / scale, 0, 0, 0, 1 / scale, 0)
+	var/button_y = centre_y + half_stack - ENTERPRISE_MENU_BUTTON_HEIGHT / 2 / scale
 	for(var/action in actions)
 		var/atom/movable/screen/enterprise_menu_button/button = new
 		button.assigned_map = enterprise.map_key
 		button.action = action
 		button.viewer = src
 		button.maptext = ENTERPRISE_MENU_TEXT(enterprise.get_room_action_label(action, russian, repair_cost))
-		button.set_position(1 + round(left / ICON_SIZE_X), 1 + round(height / ICON_SIZE_Y), left % ICON_SIZE_X, height % ICON_SIZE_Y)
-		height -= ENTERPRISE_MENU_BUTTON_STEP
+		var/left = round(centre_x - ENTERPRISE_MENU_BUTTON_WIDTH / 2)
+		var/bottom = round(button_y - ENTERPRISE_MENU_BUTTON_HEIGHT / 2)
+		var/tile_x = round(left / ICON_SIZE_X)
+		var/tile_y = round(bottom / ICON_SIZE_Y)
+		button.set_position(1 + tile_x, 1 + tile_y, left - tile_x * ICON_SIZE_X, bottom - tile_y * ICON_SIZE_Y)
+		if(shrink)
+			button.transform = shrink
+		button_y -= ENTERPRISE_MENU_BUTTON_STEP / scale
 		buttons += button
 	add_to_screen(buttons)
 
@@ -286,14 +291,14 @@
 	var/datum/enterprise_room/room = menu_room
 	close_menu()
 	var/mob/user = get_user()
-	if(room && user)
+	if(room && user && (action == ENTERPRISE_ROOM_ACTION_INFO || enterprise.press(user, action)))
 		enterprise.room_action(user, room, action)
 
 /datum/enterprise
 	var/map_key
-	var/atom/movable/screen/background/enterprise_map/map_backdrop
 	var/atom/movable/screen/enterprise_map_catcher/map_catcher
 	var/list/atom/movable/screen/plane_master/map_plane_masters
+	var/list/atom/movable/screen/plane_master/shown_plane_masters = list()
 	var/frame_min_x = 1
 	var/frame_min_y = 1
 	var/frame_pad_x = 0
@@ -316,8 +321,6 @@
 	var/static/maps_made = 0
 	maps_made++
 	map_key = "enterprisemap[maps_made]view"
-	map_backdrop = new
-	map_backdrop.assigned_map = map_key
 	map_catcher = new
 	map_catcher.assigned_map = map_key
 	map_catcher.enterprise = src
@@ -332,6 +335,32 @@
 		plane_master.del_on_map_removal = FALSE
 		plane_master.screen_loc = "[map_key]:CENTER"
 		map_plane_masters += plane_master
+
+/datum/enterprise/proc/shapes_picture(atom/movable/screen/plane_master/plane_master)
+	if(plane_master.render_target || length(plane_master.filters) || plane_master.color || plane_master.alpha < 255)
+		return TRUE
+	return plane_master.blend_mode != BLEND_DEFAULT && plane_master.blend_mode != BLEND_OVERLAY
+
+/datum/enterprise/proc/update_plane_masters()
+	if(!map_key)
+		return
+	var/list/used = list()
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		if(floor?.used_planes)
+			used |= floor.used_planes
+	var/list/atom/movable/screen/plane_master/wanted = list()
+	for(var/atom/movable/screen/plane_master/plane_master as anything in map_plane_masters)
+		if((plane_master.plane in used) && shapes_picture(plane_master))
+			wanted += plane_master
+	var/list/atom/movable/screen/plane_master/added = wanted - shown_plane_masters
+	var/list/atom/movable/screen/plane_master/removed = shown_plane_masters - wanted
+	if(!length(added) && !length(removed))
+		return
+	shown_plane_masters = wanted
+	for(var/viewer_key in viewers)
+		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
+		viewer.remove_from_screen(removed)
+		viewer.add_to_screen(added)
 
 /datum/enterprise/proc/update_map_frame()
 	if(!map_key)
@@ -363,7 +392,6 @@
 	frame_min_y = min_y
 	frame_pad_x = round((frame_width - width) / 2)
 	frame_pad_y = round((frame_height - height) / 2)
-	map_backdrop.fill_rect(1, 1, frame_width, frame_height)
 	map_catcher.fill_rect(1, 1, frame_width, frame_height)
 
 /datum/enterprise/proc/get_viewer(mob/user)
@@ -380,8 +408,8 @@
 	if(!viewer)
 		viewer = new(src, user)
 		viewers[user.ckey] = viewer
-		viewer.add_to_screen(list(map_backdrop, map_catcher, viewer.viewport))
-		viewer.add_to_screen(map_plane_masters)
+		viewer.add_to_screen(list(map_catcher, viewer.viewport))
+		viewer.add_to_screen(shown_plane_masters)
 	viewer.show(floor)
 	return TRUE
 
@@ -399,8 +427,8 @@
 
 /datum/enterprise/proc/zoom_view(mob/user, direction, params)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
-	if(viewer)
-		viewer.zoom(direction, params)
+	if(viewer?.zoom(direction, params))
+		SStgui.update_user_uis(user, src)
 
 /datum/enterprise/proc/reset_view(mob/user)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)

@@ -57,6 +57,8 @@ export type Data = {
   is_staff: BooleanLike;
   shift_active: BooleanLike;
   viewed_z: number | null;
+  map_scale: number | null;
+  frame: number[] | null;
   book_balance: number;
   earned_round: number;
   earned_today: number;
@@ -95,6 +97,8 @@ export type ContentLine = IconInfo & {
   id: string;
   count: number;
   missing: number;
+  misplaced: number;
+  broken: number;
 };
 
 export type UpgradeLine = {
@@ -138,6 +142,7 @@ export type RoomData = {
   contents: ContentLine[];
   upgrades: UpgradeLine[];
   repair_cost: number;
+  repair_account_cost: number;
   tenant: TenantInfo | null;
 };
 
@@ -282,7 +287,6 @@ export type Locale = {
     bank: string;
     ownerLevel: string;
     grant: string;
-    reload: string;
     rooms: string;
     allRooms: string;
     patrons: string;
@@ -308,7 +312,11 @@ export type Locale = {
   formatTiles: (tiles: number) => string;
   formatBeds: (beds: number) => string;
   formatRepair: (cost: number) => string;
-  formatMissing: (missing: number) => string;
+  formatRepairHint: (book: number, account: number) => string;
+  formatDamaged: (count: number) => string;
+  formatGone: (count: number) => string;
+  formatMisplaced: (count: number) => string;
+  formatBroken: (count: number) => string;
   formatLevel: (level: number, maxLevel: number) => string;
   formatLevelUp: (level: number, nextLevel: number) => string;
   formatStay: (hours: number, minutes: number) => string;

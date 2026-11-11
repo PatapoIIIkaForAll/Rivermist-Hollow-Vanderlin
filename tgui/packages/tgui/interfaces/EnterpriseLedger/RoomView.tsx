@@ -72,9 +72,15 @@ const ContentRow = (props: { locale: Locale; line: ContentLine }) => {
       </Stack.Item>
       <Stack.Item grow>{line.name}</Stack.Item>
       {!!line.missing && (
-        <Stack.Item color="bad">
-          {locale.formatMissing(line.missing)}
+        <Stack.Item color="bad">{locale.formatGone(line.missing)}</Stack.Item>
+      )}
+      {!!line.misplaced && (
+        <Stack.Item color="average">
+          {locale.formatMisplaced(line.misplaced)}
         </Stack.Item>
+      )}
+      {!!line.broken && (
+        <Stack.Item color="bad">{locale.formatBroken(line.broken)}</Stack.Item>
       )}
       <Stack.Item color="label">×{line.count}</Stack.Item>
     </Stack>
@@ -398,6 +404,10 @@ export const EnterpriseRoomView = (props: { locale: Locale }) => {
                   <Button
                     icon="hammer"
                     color="average"
+                    tooltip={locale.formatRepairHint(
+                      data.repair_cost,
+                      data.repair_account_cost,
+                    )}
                     onClick={() => act('repair')}
                   >
                     {locale.formatRepair(data.repair_cost)}

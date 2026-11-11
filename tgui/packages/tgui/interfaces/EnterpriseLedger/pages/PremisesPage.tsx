@@ -20,6 +20,7 @@ const LEGEND_HOVER_COLOR = 'rgba(255, 217, 160, 0.16)';
 const HOVER_DELAY = 250;
 const HOVER_BUDGET = 40;
 const HOVER_BUDGET_WINDOW = 60000;
+const ICON_PIXELS = 32;
 
 const useHoverSender = (send: (id: number) => void) => {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -112,7 +113,7 @@ const LegendRow = (props: LegendRowProps) => {
         <Stack.Item grow>
           <Box bold>{room.name}</Box>
           <Box color="label">{details.join(' · ')}</Box>
-          {!!damaged && <Box color="bad">{locale.formatMissing(damaged)}</Box>}
+          {!!damaged && <Box color="bad">{locale.formatDamaged(damaged)}</Box>}
         </Stack.Item>
       </Stack>
     </div>
@@ -154,6 +155,56 @@ const Legend = (props: { locale: Locale }) => {
         />
       ))}
     </Section>
+  );
+};
+
+type MapViewProps = {
+  mapId: string;
+  frame: number[] | null;
+  scale: number;
+};
+
+const MapView = (props: MapViewProps) => {
+  const { mapId, frame, scale } = props;
+  const box = useRef<HTMLDivElement>(null);
+  const frameWidth = frame?.[0] || 0;
+  const frameHeight = frame?.[1] || 0;
+
+  useEffect(() => {
+    const apply = () => {
+      const rect = box.current?.getBoundingClientRect();
+      if (!rect || !frameWidth || !frameHeight || scale <= 1) {
+        Byond.winset(mapId, { zoom: 0, 'zoom-mode': 'normal' });
+        return;
+      }
+      const ratio = window.devicePixelRatio || 1;
+      const fit = Math.min(
+        (rect.width * ratio) / (frameWidth * ICON_PIXELS),
+        (rect.height * ratio) / (frameHeight * ICON_PIXELS),
+      );
+      Byond.winset(mapId, {
+        zoom: fit > 0 ? fit * scale : 0,
+        'zoom-mode': 'distort',
+      });
+    };
+    apply();
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, [mapId, scale, frameWidth, frameHeight]);
+
+  return (
+    <div ref={box} style={{ width: '100%', height: '100%' }}>
+      <ByondUi
+        width="100%"
+        height="100%"
+        phonehome={false}
+        params={{
+          id: mapId,
+          type: 'map',
+          'background-color': '#000000',
+        }}
+      />
+    </div>
   );
 };
 
@@ -218,16 +269,11 @@ export const PremisesPage = (props: PageProps) => {
             </Stack.Item>
             <Stack.Item grow>
               {!!data.map && (
-                <ByondUi
+                <MapView
                   key={data.map}
-                  width="100%"
-                  height="100%"
-                  phonehome={false}
-                  params={{
-                    id: data.map,
-                    type: 'map',
-                    'background-color': '#000000',
-                  }}
+                  mapId={data.map}
+                  frame={data.frame}
+                  scale={data.map_scale || 1}
                 />
               )}
             </Stack.Item>

@@ -142,20 +142,13 @@
 	owner_earned = saved["earned"]
 	owner_grades = saved["grades"]
 	owner_level = get_prestige_level(owner_earned)
+	place_ledger()
 	if(!welcomed[ckey])
 		welcomed[ckey] = TRUE
-		var/granted = FALSE
-		if(!premises_loaded)
-			if(premises_level == owner_level)
-				premises_loaded = TRUE
-			else if(load_premises(owner_level, owner_level))
-				premises_loaded = TRUE
-				granted = TRUE
-			if(premises_loaded)
-				var/russian = get_preferred_ui_language(owner) == "ru"
-				to_chat(owner, span_notice(russian ? "Заведение отстроено под мой уровень владельца: [owner_level]." : "The house stands as my owner level has earned it: [owner_level]."))
-		if(!granted && grant_owner_rooms(owner_level))
+		if(grant_owner_rooms(owner_level))
 			redraw()
+			var/russian = get_preferred_ui_language(owner) == "ru"
+			to_chat(owner, span_notice(russian ? "Заведение обставлено под мой уровень владельца: [owner_level]." : "The house is furnished as my owner level has earned it: [owner_level]."))
 	write_journal()
 	SStgui.update_uis(src)
 	return TRUE
@@ -375,7 +368,7 @@
 		return FALSE
 	var/mob/user = ui.user
 	var/datum/enterprise/enterprise = stock.enterprise
-	if(!enterprise.is_manager(user))
+	if(!enterprise.is_manager(user) || !enterprise.press(user, action))
 		return FALSE
 	var/item_type = text2path(params["id"])
 	var/datum/enterprise_stock_entry/entry = item_type ? stock.entries[item_type] : null

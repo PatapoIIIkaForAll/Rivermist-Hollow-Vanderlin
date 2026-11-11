@@ -117,7 +117,7 @@ const locale: Locale = {
     upgradeItemsNone: 'Nothing in this room changes with the next level.',
     upgradeMaxLevel: 'The room is at its highest level.',
     upgradeBlocked:
-      'Repair the room first: it cannot be upgraded while anything in it is gone or broken.',
+      'Bring the things back or repair the room: it cannot be upgraded while anything in it is gone, out of place or broken.',
     upgradeNotForSale:
       'The first level is not for sale: it comes with owner level 1.',
     upgradeFunds: 'Ledger and account together',
@@ -163,7 +163,6 @@ const locale: Locale = {
     bank: 'My bank account',
     ownerLevel: 'Owner level',
     grant: 'Give the rooms of this owner level',
-    reload: 'Load the tavern of this owner level anew',
     rooms: 'Room levels',
     allRooms: 'All rooms',
     patrons: 'Guests (NPC)',
@@ -190,7 +189,12 @@ const locale: Locale = {
   formatTiles: (tiles) => `${tiles} tiles`,
   formatBeds: (beds) => `beds: ${beds}`,
   formatRepair: (cost) => `Repair: ${cost}`,
-  formatMissing: (missing) => `gone or broken: ${missing}`,
+  formatRepairHint: (book, account) =>
+    `${book} from the ledger; if it holds less, ${account} from your account`,
+  formatDamaged: (count) => `out of order: ${count}`,
+  formatGone: (count) => `gone: ${count}`,
+  formatMisplaced: (count) => `out of place: ${count}`,
+  formatBroken: (count) => `broken: ${count}`,
   formatLevel: (level, maxLevel) => `${level} of ${maxLevel}`,
   formatLevelUp: (level, nextLevel) => `Level ${level} → ${nextLevel}`,
   formatStay: (hours, minutes) => `${hours} h ${minutes} min`,
