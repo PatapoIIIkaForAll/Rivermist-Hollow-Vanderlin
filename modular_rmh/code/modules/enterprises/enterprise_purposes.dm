@@ -167,6 +167,7 @@
 	var/list/door_words = list("storage", "warehouse", "shed", "pantry", "склад", "кладов", "сарай")
 	var/post_name = "food buying post"
 	var/post_desc = "Food is bought here. What is taken is paid for on the spot."
+	var/keeps_kegs = FALSE
 
 /datum/enterprise_room_template/storage/matches(datum/enterprise_room/room)
 	if(room.count_listed(/obj/structure/chair) || room.count_listed(/obj/structure/bed))
@@ -192,9 +193,10 @@
 	if(level > ENTERPRISE_MAX_LEVEL)
 		return null
 	var/cap = enterprise.get_level_value(enterprise.stock_caps, max(level, ENTERPRISE_LEVEL_WOOD))
-	return russian \
+	var/effect = russian \
 		? "Место закупки у двери хранит по [cap] каждого вида товара." \
 		: "The buying post at the door holds [cap] of each kind of goods."
+	return keeps_kegs ? "[effect] [enterprise.describe_keg_store(level, russian)]" : effect
 
 /datum/enterprise_room_template/storage/on_survey(datum/enterprise_room/room)
 	if(room.stock || room.leader)
@@ -212,6 +214,8 @@
 	post.stock = stock
 	stock.post = post
 	room.stock = stock
+	if(keeps_kegs)
+		stock.kegs = new /datum/enterprise_keg_store(stock)
 
 /datum/enterprise_room_template/storage/drinks
 	id = ENTERPRISE_PURPOSE_DRINK_STORAGE
@@ -226,7 +230,8 @@
 	)
 	door_words = list("drink", "alcohol", "cellar", "wine", "brew", "напит", "алкогол", "погреб", "вин")
 	post_name = "drinks buying post"
-	post_desc = "Bottled drink is bought here. What is taken is paid for on the spot."
+	post_desc = "Bottled drink is bought here. What is taken is paid for on the spot. The staff hand kegs in and draw drink here."
+	keeps_kegs = TRUE
 
 /datum/enterprise_room_template/service_hall
 	id = ENTERPRISE_PURPOSE_SERVICE_HALL

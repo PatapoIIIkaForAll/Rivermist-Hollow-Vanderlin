@@ -38,7 +38,9 @@
 	var/turf/place = get_turf(found)
 	if(place == home)
 		return TRUE
-	var/datum/enterprise_room/found_in = place ? room.enterprise.get_room(place) : null
+	if(!place)
+		return room.enterprise.is_kept(found)
+	var/datum/enterprise_room/found_in = room.enterprise.get_room(place)
 	return found_in && found_in.get_leader() == room.get_leader()
 
 /datum/enterprise_fixture/proc/get_present(datum/enterprise_room/room)

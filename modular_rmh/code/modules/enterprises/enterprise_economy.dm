@@ -219,6 +219,7 @@
 	src.goods = goods
 
 /datum/enterprise_stock/Destroy()
+	QDEL_NULL(kegs)
 	QDEL_LIST_ASSOC_VAL(entries)
 	if(post)
 		post.stock = null
@@ -358,15 +359,18 @@
 		"can_buy" = enterprise.is_manager(user),
 		"funds" = enterprise.book_balance + enterprise.get_bank_balance(user),
 		"entries" = stock.get_entries_data(),
+		"kegs" = stock.kegs?.get_data(user),
 	)
 
 /obj/structure/fake_machine/enterprise_stock/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return
-	if(action != "buy" || !stock)
+	if(!stock)
 		return FALSE
 	var/mob/user = ui.user
+	if(action != "buy")
+		return stock.kegs ? stock.kegs.act(action, params, user) : FALSE
 	var/datum/enterprise/enterprise = stock.enterprise
 	if(!enterprise.is_manager(user) || !enterprise.press(user, action))
 		return FALSE

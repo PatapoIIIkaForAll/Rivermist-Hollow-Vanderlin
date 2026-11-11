@@ -156,6 +156,25 @@ export type StockEntry = IconInfo & {
   buyout: number;
 };
 
+export type KegDrink = {
+  id: string;
+  name: string;
+  amount: number;
+  custom: BooleanLike;
+};
+
+export type KegData = {
+  stored: number;
+  keg_cap: number;
+  volume: number;
+  volume_cap: number;
+  custom: number;
+  custom_cap: number;
+  keg_volume: number;
+  can_use: BooleanLike;
+  drinks: KegDrink[];
+};
+
 export type StockData = {
   enterprise: string;
   level: number;
@@ -163,6 +182,7 @@ export type StockData = {
   can_buy: BooleanLike;
   funds: number;
   entries: StockEntry[];
+  kegs: KegData | null;
 };
 
 export type Locale = {
@@ -311,6 +331,19 @@ export type Locale = {
     buy: string;
     funds: string;
   };
+  kegs: {
+    title: string;
+    hint: string;
+    stored: string;
+    volume: string;
+    custom: string;
+    noKegs: string;
+    empty: string;
+    store: string;
+    takeEmpty: string;
+    fill: string;
+    other: string;
+  };
   formatPremises: (floors: number, basements: number, tiles: number) => string;
   formatFloor: (number: number) => string;
   formatTiles: (tiles: number) => string;
@@ -328,6 +361,7 @@ export type Locale = {
   formatRent: (rent: number) => string;
   formatBuy: (cost: number) => string;
   formatCapacity: (cap: number) => string;
+  formatUnits: (amount: number) => string;
   formatMorningCame: (kind: string) => string;
   formatCalls: (left: number, max: number) => string;
   formatGrumbling: (displeasure: number, max: number) => string;
