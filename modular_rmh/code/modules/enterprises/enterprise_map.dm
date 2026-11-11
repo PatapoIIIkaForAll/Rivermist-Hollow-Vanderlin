@@ -238,6 +238,9 @@
 
 /datum/enterprise_viewer/proc/open_menu(datum/enterprise_room/room)
 	close_menu()
+	enterprise.check_rooms(list(room))
+	if(QDELETED(src))
+		return
 	var/datum/enterprise_floor/floor = enterprise.get_floor(room.z)
 	if(!floor || !length(room.turfs))
 		return
@@ -370,6 +373,7 @@
 	var/datum/enterprise_floor/floor = get_floor(z)
 	if(!user?.client || !floor || !map_key || !is_owner(user))
 		return FALSE
+	check_rooms(floor.rooms)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
 	if(viewer?.z == z)
 		return FALSE

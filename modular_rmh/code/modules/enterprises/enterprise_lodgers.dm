@@ -33,8 +33,19 @@
 		return
 	room.let_to(equipper, key)
 
+/datum/enterprise/proc/get_time_away(mob/living/who)
+	if(!who)
+		return INFINITY
+	if(who.client)
+		return 0
+	return world.time - who.last_client_interact
+
 /datum/enterprise/proc/get_eviction_time()
 	return eviction_times[clamp(owner_level + 1, 1, length(eviction_times))]
+
+/datum/enterprise/proc/get_patron_rent(datum/enterprise_room/room)
+	var/percent = patron_rent_percents[clamp(owner_level + 1, 1, length(patron_rent_percents))]
+	return round(get_rest_price(room) * percent / 100)
 
 /datum/enterprise/proc/upkeep()
 	check_tenants()
@@ -51,10 +62,11 @@
 			continue
 		if(QDELETED(room.tenant_key?.resolve()))
 			room.end_tenancy()
-		else if(limit && world.time - room.tenant_seen > limit)
+			continue
+		if(limit && world.time - room.tenant_seen > limit)
 			evict(room)
 
-/datum/enterprise/proc/evict(datum/enterprise_room/room)
+/datum/enterprise/proc/evict(datum/enterprise_room/room, unpaid = FALSE)
 	var/mob/living/guest = room.get_tenant()
 	var/obj/item/key/key = room.tenant_key?.resolve()
 	if(!QDELETED(key))
@@ -63,11 +75,20 @@
 	if(hallway)
 		for(var/obj/item/left_behind as anything in room.get_loose_items())
 			left_behind.forceMove(hallway)
+		if(guest && get_time_away(guest) && get_room(guest) == room)
+			guest.buckled?.unbuckle_mob(guest, TRUE)
+			guest.forceMove(hallway)
 	if(guest)
 		var/russian = get_preferred_ui_language(guest) == "ru"
-		to_chat(guest, span_warning(russian \
-			? "Меня слишком долго не было: комнату «[room.name]» освободили, а вещи вынесли в коридор." \
-			: "I have been away too long: [room.name] has been cleared, and my things were put out in the hallway."))
+		if(unpaid)
+			to_chat(guest, span_warning(russian \
+				? "Пока меня не было, платить за комнату «[room.name]» было нечем: её освободили, а меня и мои вещи вынесли в коридор." \
+				: "While I was away there was nothing to pay for [room.name] with: it has been cleared, and I and my things were put out in the hallway."))
+		else
+			to_chat(guest, span_warning(russian \
+				? "Меня слишком долго не было: комнату «[room.name]» освободили, а вещи вынесли в коридор." \
+				: "I have been away too long: [room.name] has been cleared, and my things were put out in the hallway."))
+	log_game("[name]: [guest ? key_name(guest) : room.tenant_name] was put out of [room.name][unpaid ? " for not paying while away" : ""]")
 	room.end_tenancy()
 
 /datum/enterprise/proc/check_patrons()
@@ -75,10 +96,23 @@
 		if(patron.leaves_at && world.time >= patron.leaves_at)
 			patron.depart()
 
-/datum/enterprise/proc/collect_patron_rent()
+/datum/enterprise/proc/collect_rent()
 	var/total = 0
 	for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons)
 		total += patron.get_rent_due()
+	for(var/lock_id in guest_rooms)
+		var/datum/enterprise_room/room = guest_rooms[lock_id]
+		if(!room.tenant_name)
+			continue
+		var/due = room.get_away_rent()
+		if(!due)
+			continue
+		var/mob/living/lodger = room.get_tenant()
+		if(lodger && take_from_account(lodger, due))
+			total += due
+			room.tenant_seen = world.time
+		else
+			evict(room, TRUE)
 	return earn(total)
 
 /datum/enterprise_room/proc/get_tenant()
@@ -92,6 +126,11 @@
 /datum/enterprise_room/proc/get_occupant_name()
 	var/mob/living/lodger = get_patron()
 	return lodger ? lodger.name : tenant_name
+
+/datum/enterprise_room/proc/get_away_rent()
+	if(enterprise.get_time_away(get_tenant()) < ENTERPRISE_TENANT_AWAY_TIME)
+		return 0
+	return round(enterprise.get_rest_price(src) * ENTERPRISE_TENANT_AWAY_SHARE / 100)
 
 /datum/enterprise_room/proc/let_to(mob/living/guest, obj/item/key/key)
 	if(get_patron())
@@ -121,27 +160,32 @@
 	SStgui.update_uis(src)
 
 /datum/enterprise_room/proc/note_visit(mob/living/visitor)
-	if(tenant && tenant.resolve() == visitor)
+	if(tenant && tenant.resolve() == visitor && !enterprise.get_time_away(visitor))
 		tenant_seen = world.time
 
 /datum/enterprise_room/proc/get_tenant_data()
 	var/mob/living/simple_animal/enterprise_patron/lodger = get_patron()
-	var/rent = enterprise.get_rest_price(src)
 	if(lodger)
 		return list(
 			"name" = lodger.name,
 			"patron" = TRUE,
 			"time_left" = max(patron_until - world.time, 0),
-			"rent" = round(rent / ENTERPRISE_PATRON_RENT_DIVISOR),
+			"rent" = enterprise.get_patron_rent(src),
+			"away" = null,
+			"half" = FALSE,
 			"needs" = lodger.requests,
 		)
 	if(!tenant_name)
 		return null
 	var/limit = enterprise.get_eviction_time()
+	var/away = enterprise.get_time_away(get_tenant())
+	var/half = away >= ENTERPRISE_TENANT_AWAY_TIME
 	return list(
 		"name" = tenant_name,
 		"patron" = FALSE,
 		"time_left" = limit ? max(tenant_seen + limit - world.time, 0) : null,
-		"rent" = rent,
+		"rent" = half ? get_away_rent() : enterprise.get_rest_price(src),
+		"away" = (away && away != INFINITY) ? away : null,
+		"half" = half,
 		"needs" = list(),
 	)

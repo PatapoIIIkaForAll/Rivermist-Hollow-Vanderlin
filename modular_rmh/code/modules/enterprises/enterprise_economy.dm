@@ -54,7 +54,6 @@
 /datum/enterprise/proc/new_day(forced)
 	earned_today = 0
 	rested_today = list()
-	collect_patron_rent()
 	start_guest_day(forced)
 	SStgui.update_uis(src)
 

@@ -190,6 +190,7 @@
 		"prestige" = owner ? get_prestige_data() : null,
 		"guests" = get_guests_data(user),
 		"occupants" = get_occupants_data(),
+		"damaged" = get_damaged_data(),
 	)
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -313,6 +314,9 @@
 			return TRUE
 		if("debug_new_day")
 			new_day(TRUE)
+			return TRUE
+		if("debug_evening")
+			collect_rent()
 			return TRUE
 		if("debug_tired")
 			var/mob/living/carbon/human/sleeper = user
@@ -515,11 +519,13 @@ SUBSYSTEM_DEF(enterprises)
 
 /datum/controller/subsystem/enterprises/proc/on_time_of_day(datum/source, new_tod, old_tod)
 	SIGNAL_HANDLER
-	if(new_tod != "dawn")
-		return
 	for(var/enterprise_type in enterprises)
 		var/datum/enterprise/enterprise = enterprises[enterprise_type]
-		INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, new_day))
+		switch(new_tod)
+			if("dawn")
+				INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, new_day))
+			if("dusk")
+				INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, collect_rent))
 
 /datum/controller/subsystem/enterprises/proc/on_round_end()
 	for(var/enterprise_type in enterprises)
@@ -551,7 +557,7 @@ SUBSYSTEM_DEF(enterprises)
 
 /datum/status_effect/debuff/sleepytime/on_remove()
 	. = ..()
-	if(ishuman(owner) && owner.IsSleeping())
+	if(ishuman(owner) && !QDELETED(owner) && owner.IsSleeping())
 		SSenterprises.note_rest(owner)
 
 /mob/living/carbon/human/finish_night_rest()

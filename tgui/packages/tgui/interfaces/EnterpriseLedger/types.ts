@@ -63,6 +63,7 @@ export type Data = {
   prestige: PrestigeData | null;
   guests: GuestsData | null;
   occupants: Record<string, string> | null;
+  damaged: Record<string, number> | null;
   debug: DebugData | null;
 };
 
@@ -108,6 +109,8 @@ export type TenantInfo = {
   patron: BooleanLike;
   time_left: number | null;
   rent: number;
+  away: number | null;
+  half: BooleanLike;
   needs: string[];
 };
 
@@ -224,6 +227,8 @@ export type Locale = {
     tenantStay: string;
     tenantStayForever: string;
     tenantRent: string;
+    tenantAway: string;
+    tenantHalf: string;
     tenantNeeds: string;
     tenantNeedsNone: string;
     contents: string;
@@ -233,6 +238,7 @@ export type Locale = {
     upgradeItems: string;
     upgradeItemsNone: string;
     upgradeMaxLevel: string;
+    upgradeBlocked: string;
     upgradeNotForSale: string;
     upgradeFunds: string;
     prestigeGrade: string;
@@ -285,6 +291,7 @@ export type Locale = {
     clearPatrons: string;
     time: string;
     newDay: string;
+    evening: string;
     tired: string;
   };
   stock: {

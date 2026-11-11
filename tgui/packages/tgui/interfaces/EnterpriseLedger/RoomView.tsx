@@ -161,6 +161,16 @@ const TenantDetails = (props: { locale: Locale; tenant: TenantInfo }) => {
       <LabeledList.Item label={locale.room.tenantRent}>
         {tenant.rent}
       </LabeledList.Item>
+      {tenant.away !== null && tenant.away !== undefined && (
+        <LabeledList.Item label={locale.room.tenantAway} color="average">
+          {getStay(locale, tenant.away)}
+          {!!tenant.half && (
+            <Box inline color="label" ml={1}>
+              ({locale.room.tenantHalf})
+            </Box>
+          )}
+        </LabeledList.Item>
+      )}
       <LabeledList.Item label={locale.room.tenantNeeds}>
         {needs.length ? needs.join(', ') : locale.room.tenantNeedsNone}
       </LabeledList.Item>
@@ -239,9 +249,13 @@ const InfoPage = (props: RoomPageProps) => {
 const UpgradeButtons = (props: RoomPageProps) => {
   const { locale } = props;
   const { act, data } = useBackend<RoomData>();
+  const blocked = !!data.repair_cost;
 
   return (
     <Stack vertical>
+      {blocked && (
+        <Stack.Item color="bad">{locale.room.upgradeBlocked}</Stack.Item>
+      )}
       {!data.upgrade_cost && !data.can_grade && (
         <Stack.Item color="label">{locale.room.upgradeNotForSale}</Stack.Item>
       )}
@@ -252,7 +266,7 @@ const UpgradeButtons = (props: RoomPageProps) => {
             icon="arrow-up"
             textAlign="center"
             color="good"
-            disabled={data.funds < data.upgrade_cost}
+            disabled={blocked || data.funds < data.upgrade_cost}
             onClick={() => act('upgrade')}
           >
             {locale.formatUpgrade(data.upgrade_cost)}
@@ -268,6 +282,7 @@ const UpgradeButtons = (props: RoomPageProps) => {
             fluid
             icon="crown"
             textAlign="center"
+            disabled={blocked}
             tooltip={locale.room.prestigeGradeHint}
             onClick={() => act('prestige_grade')}
           >

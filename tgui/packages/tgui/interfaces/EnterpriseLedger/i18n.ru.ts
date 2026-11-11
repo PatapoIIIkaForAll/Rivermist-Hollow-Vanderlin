@@ -104,6 +104,8 @@ const locale: Locale = {
     tenantStay: 'Выселят через',
     tenantStayForever: 'Не выселяется',
     tenantRent: 'Платит за ночь',
+    tenantAway: 'Не в игре уже',
+    tenantHalf: 'больше часа: вечером платит половину',
     tenantNeeds: 'Ему нужно',
     tenantNeedsNone: 'Ничего',
     contents: 'Содержимое',
@@ -113,6 +115,8 @@ const locale: Locale = {
     upgradeItems: 'Предметы, которые перейдут на новый уровень',
     upgradeItemsNone: 'Со следующим уровнем в этой комнате ничего не меняется.',
     upgradeMaxLevel: 'Комната уже высшего уровня.',
+    upgradeBlocked:
+      'Сначала почините комнату: пока в ней чего-то нет на месте или что-то сломано, улучшить её нельзя.',
     upgradeNotForSale:
       'Первый уровень не продаётся: он приходит с первым уровнем владельца.',
     upgradeFunds: 'В книге и на счёте вместе',
@@ -167,6 +171,7 @@ const locale: Locale = {
     clearPatrons: 'Убрать всех',
     time: 'Время и сон',
     newDay: 'Начать новый день',
+    evening: 'Вечер: постояльцы платят',
     tired: 'Сделать меня уставшим',
   },
   stock: {

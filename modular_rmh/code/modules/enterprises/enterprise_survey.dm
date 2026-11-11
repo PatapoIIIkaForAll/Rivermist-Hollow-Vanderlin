@@ -68,8 +68,9 @@
 	if(!isnull(grant_on_survey))
 		grant_owner_rooms(grant_on_survey, !length(taken))
 		grant_on_survey = null
-	for(var/datum/enterprise_fixture/fixture as anything in taken)
-		fixture.apply_level(max(fixture.room ? fixture.room.level : ENTERPRISE_LEVEL_BARE, ENTERPRISE_LEVEL_WOOD))
+	if(length(taken))
+		for(var/datum/enterprise_room/room as anything in rooms)
+			room.apply_inventory_level(max(room.level, ENTERPRISE_LEVEL_WOOD))
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.template?.on_survey(room)
 	update_map_frame()
@@ -155,12 +156,6 @@
 	var/datum/enterprise_floor/floor = get_floor(location.z)
 	return floor ? floor.get_room(location) : null
 
-/datum/enterprise/proc/get_interior(atom_type)
-	var/list/obj/found = list()
-	for(var/datum/enterprise_room/room as anything in rooms)
-		found += room.get_interior(atom_type)
-	return found
-
 /datum/enterprise/proc/get_room_by_id(id)
 	if(!isnum(id) || id != round(id) || id < 1 || id > length(rooms))
 		return null
@@ -191,6 +186,15 @@
 		if(occupant)
 			occupants["[id]"] = occupant
 	return occupants
+
+/datum/enterprise/proc/get_damaged_data()
+	var/list/damaged_data = list()
+	var/id = 0
+	for(var/datum/enterprise_room/room as anything in rooms)
+		id++
+		if(room.damaged)
+			damaged_data["[id]"] = room.damaged
+	return damaged_data
 
 /datum/enterprise/proc/get_own_lock_ids()
 	if(own_lock_ids)

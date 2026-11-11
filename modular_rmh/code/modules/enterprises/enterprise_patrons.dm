@@ -165,9 +165,9 @@
 	free_table()
 
 /mob/living/simple_animal/enterprise_patron/proc/get_rent_due()
-	if(!lodging || !enterprise || get_goal() != ENTERPRISE_PATRON_GOAL_ROOM || goal_stage != ENTERPRISE_PATRON_STAGE_STAY)
+	if(!lodging || !enterprise || get_goal() != ENTERPRISE_PATRON_GOAL_ROOM)
 		return 0
-	return round(enterprise.get_rest_price(lodging) / ENTERPRISE_PATRON_RENT_DIVISOR)
+	return enterprise.get_patron_rent(lodging)
 
 /mob/living/simple_animal/enterprise_patron/proc/get_goal()
 	if(leaving)

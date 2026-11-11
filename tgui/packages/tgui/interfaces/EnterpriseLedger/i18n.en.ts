@@ -105,6 +105,8 @@ const locale: Locale = {
     tenantStay: 'Is put out in',
     tenantStayForever: 'Never put out',
     tenantRent: 'Pays a night',
+    tenantAway: 'Out of the game for',
+    tenantHalf: 'over an hour: pays half in the evening',
     tenantNeeds: 'Asks for',
     tenantNeedsNone: 'Nothing',
     contents: 'Contents',
@@ -114,6 +116,8 @@ const locale: Locale = {
     upgradeItems: 'Furnishings that move up a level',
     upgradeItemsNone: 'Nothing in this room changes with the next level.',
     upgradeMaxLevel: 'The room is at its highest level.',
+    upgradeBlocked:
+      'Repair the room first: it cannot be upgraded while anything in it is gone or broken.',
     upgradeNotForSale:
       'The first level is not for sale: it comes with owner level 1.',
     upgradeFunds: 'Ledger and account together',
@@ -168,6 +172,7 @@ const locale: Locale = {
     clearPatrons: 'Send them all away',
     time: 'Time and sleep',
     newDay: 'Start a new day',
+    evening: 'Evening: lodgers pay',
     tired: 'Make me tired',
   },
   stock: {

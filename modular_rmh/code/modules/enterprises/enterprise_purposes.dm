@@ -267,7 +267,7 @@
 	if(!room)
 		return FALSE
 	room.note_visit(sleeper)
-	if(room.level < ENTERPRISE_LEVEL_WOOD || !room.template)
+	if(get_time_away(sleeper) || room.level < ENTERPRISE_LEVEL_WOOD || !room.template)
 		return FALSE
 	var/datum/weakref/who = WEAKREF(sleeper)
 	if(rested_today[who])

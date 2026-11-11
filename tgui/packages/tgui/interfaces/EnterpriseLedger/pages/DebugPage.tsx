@@ -195,6 +195,9 @@ export const DebugPage = (props: PageProps) => {
         <Button icon="sun" onClick={() => act('debug_new_day')}>
           {locale.debug.newDay}
         </Button>
+        <Button icon="moon" onClick={() => act('debug_evening')}>
+          {locale.debug.evening}
+        </Button>
         <Button icon="bed" onClick={() => act('debug_tired')}>
           {locale.debug.tired}
         </Button>

@@ -64,14 +64,23 @@ type LegendRowProps = {
   enterprise: string;
   room: RoomInfo;
   occupant: string | undefined;
+  damaged: number | undefined;
   highlighted: boolean;
   onHover: (id: number) => void;
   onOpen: (id: number) => void;
 };
 
 const LegendRow = (props: LegendRowProps) => {
-  const { locale, enterprise, room, occupant, highlighted, onHover, onOpen } =
-    props;
+  const {
+    locale,
+    enterprise,
+    room,
+    occupant,
+    damaged,
+    highlighted,
+    onHover,
+    onOpen,
+  } = props;
   const details = [
     getPurposeLabel(locale, enterprise, room.purpose),
     locale.levelNames[room.level] || `${room.level}`,
@@ -103,6 +112,7 @@ const LegendRow = (props: LegendRowProps) => {
         <Stack.Item grow>
           <Box bold>{room.name}</Box>
           <Box color="label">{details.join(' · ')}</Box>
+          {!!damaged && <Box color="bad">{locale.formatMissing(damaged)}</Box>}
         </Stack.Item>
       </Stack>
     </div>
@@ -115,6 +125,7 @@ const Legend = (props: { locale: Locale }) => {
   const [hoveredId, setHoveredId] = useState(0);
   const rooms = (data.rooms || []).filter((room) => room.z === data.viewed_z);
   const occupants = data.occupants || {};
+  const damaged = data.damaged || {};
   const sendHover = useHoverSender((id) => act('hover_room', { room: id }));
 
   const hover = (id: number) => {
@@ -136,6 +147,7 @@ const Legend = (props: { locale: Locale }) => {
           enterprise={data.name}
           room={room}
           occupant={occupants[room.id]}
+          damaged={damaged[room.id]}
           highlighted={room.id === hoveredId}
           onHover={hover}
           onOpen={open}

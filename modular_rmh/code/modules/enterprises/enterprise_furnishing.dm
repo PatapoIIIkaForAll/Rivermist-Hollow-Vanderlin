@@ -1,98 +1,3 @@
-/datum/enterprise_fixture
-	var/fixture_type
-	var/name
-	var/turf/home
-	var/dir
-	var/pixel_x
-	var/pixel_y
-	var/value
-	var/list/lock_ids
-	var/datum/weakref/thing
-	var/datum/enterprise_room/room
-	var/datum/enterprise_furnishing/family
-
-/datum/enterprise_fixture/New(obj/source)
-	fixture_type = source.type
-	name = source.name
-	home = get_turf(source)
-	dir = source.dir
-	pixel_x = source.pixel_x
-	pixel_y = source.pixel_y
-	value = max(source.sellprice, ENTERPRISE_FIXTURE_MIN_VALUE)
-	var/datum/lock/key/key_lock = source.lock
-	if(istype(key_lock) && length(key_lock.lockid_list))
-		lock_ids = key_lock.lockid_list.Copy()
-	thing = WEAKREF(source)
-
-/datum/enterprise_fixture/Destroy()
-	home = null
-	thing = null
-	room = null
-	family = null
-	lock_ids = null
-	return ..()
-
-/datum/enterprise_fixture/proc/get_thing()
-	var/obj/found = thing?.resolve()
-	return QDELETED(found) ? null : found
-
-/datum/enterprise_fixture/proc/is_present()
-	var/obj/found = get_thing()
-	if(!found || !room)
-		return FALSE
-	return room.enterprise.get_room(found) == room || get_turf(found) == home
-
-/datum/enterprise_fixture/proc/is_missing()
-	var/obj/found = get_thing()
-	if(!found || !room)
-		return TRUE
-	return !room.enterprise.contains(found)
-
-/datum/enterprise_fixture/proc/is_broken()
-	var/obj/found = get_thing()
-	return found ? found.obj_broken : FALSE
-
-/datum/enterprise_fixture/proc/needs_repair()
-	return is_missing() || is_broken()
-
-/datum/enterprise_fixture/proc/restore()
-	var/obj/found = get_thing()
-	if(found && !is_missing())
-		if(found.uses_integrity)
-			found.repair_damage(found.max_integrity)
-		return found
-	var/obj/replacement = new fixture_type(home)
-	replacement.name = name
-	replacement.dir = dir
-	replacement.pixel_x = pixel_x
-	replacement.pixel_y = pixel_y
-	var/datum/lock/key/key_lock = replacement.lock
-	if(lock_ids && istype(key_lock))
-		key_lock.lockid_list = lock_ids.Copy()
-	thing = WEAKREF(replacement)
-	return replacement
-
-/datum/enterprise_fixture/proc/get_level_type(level)
-	return family ? family.get_tier(level) : null
-
-/datum/enterprise_fixture/proc/apply_level(level)
-	var/obj/new_type = get_level_type(level)
-	if(!new_type || new_type == fixture_type)
-		return FALSE
-	var/obj/found = get_thing()
-	fixture_type = new_type
-	name = initial(new_type.name)
-	value = max(initial(new_type.sellprice), ENTERPRISE_FIXTURE_MIN_VALUE)
-	if(!found || !isturf(found.loc))
-		return TRUE
-	var/obj/replacement = new new_type(found.loc)
-	replacement.dir = found.dir
-	replacement.pixel_x = found.pixel_x
-	replacement.pixel_y = found.pixel_y
-	thing = WEAKREF(replacement)
-	qdel(found)
-	return TRUE
-
 /datum/enterprise_furnishing
 	abstract_type = /datum/enterprise_furnishing
 	var/list/kinds = list()
@@ -203,10 +108,8 @@
 		for(var/obj/thing in member)
 			if(thing.invisibility || !is_fixture(thing))
 				continue
-			var/datum/enterprise_fixture/fixture = new(thing)
-			fixture.family = get_furnishing(thing.type)
-			fixtures += fixture
-			taken += fixture
+			taken += new /datum/enterprise_fixture(thing)
+	fixtures += taken
 	return taken
 
 /datum/enterprise/proc/mark_start_stock(list/turf/fresh)
@@ -258,14 +161,13 @@
 
 /datum/enterprise/proc/furnish_rooms()
 	for(var/datum/enterprise_room/room as anything in rooms)
-		room.fixtures = list()
-	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		var/datum/enterprise_room/room = get_room(fixture.home) || get_adjoining_room(fixture.home)
-		fixture.room = room
-		if(room)
-			room.fixtures += fixture
+		room.inventory = null
+	for(var/datum/enterprise_fixture/item as anything in fixtures)
+		var/datum/enterprise_room/room = get_room(item.home) || get_adjoining_room(item.home)
+		room?.add_fixture(item)
 	var/list/datum/enterprise_room_template/templates = get_room_templates()
 	for(var/datum/enterprise_room/room as anything in rooms)
+		room.check_inventory()
 		room.furnish(templates)
 
 /datum/enterprise
@@ -285,6 +187,7 @@
 	)
 	var/list/stock_caps = list(2, 4, 6, 10)
 	var/list/eviction_times = list(6 HOURS, 12 HOURS, 24 HOURS, 48 HOURS, 0)
+	var/list/patron_rent_percents = list(100, 100, 125, 150, 200)
 	var/list/prestige_thresholds = list(5000, 15000, 35000, 75000)
 	var/list/datum/enterprise_furnishing/furnishings
 	var/list/furnishing_by_type
@@ -364,7 +267,7 @@
 	if(QDELETED(room) || room.enterprise != src || !can_run_rooms(user))
 		return FALSE
 	var/russian = get_preferred_ui_language(user) == "ru"
-	if(room.level >= ENTERPRISE_MAX_LEVEL)
+	if(room.level >= ENTERPRISE_MAX_LEVEL || !check_intact(user, room))
 		return FALSE
 	var/target = room.level + 1
 	if(with_grade)
@@ -385,6 +288,8 @@
 			return FALSE
 		if(QDELETED(room) || QDELETED(user) || room.enterprise != src || !can_run_rooms(user) || room.level + 1 != target)
 			return FALSE
+		if(!check_intact(user, room))
+			return FALSE
 		if(!pay(user, cost, "[name] room upgrade"))
 			to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
 			return FALSE
@@ -400,6 +305,7 @@
 /datum/enterprise/proc/room_action(mob/user, datum/enterprise_room/room, action)
 	if(QDELETED(room) || room.enterprise != src || !can_run_rooms(user))
 		return
+	check_rooms(list(room))
 	switch(action)
 		if(ENTERPRISE_ROOM_ACTION_UPGRADE)
 			room.show_page(user, ENTERPRISE_ROOM_PAGE_UPGRADE)
@@ -422,8 +328,12 @@
 		return FALSE
 	if(QDELETED(room) || QDELETED(user) || room.enterprise != src || !can_run_rooms(user))
 		return FALSE
-	cost = room.get_repair_cost()
-	if(!cost)
+	check_rooms(list(room))
+	var/new_cost = room.get_repair_cost()
+	if(new_cost != cost)
+		to_chat(user, span_warning(russian \
+			? (new_cost ? "Пока вы решали, в комнате «[room.name]» что-то изменилось: починка теперь стоит [new_cost]. Попробуйте ещё раз." : "Пока вы решали, в комнате «[room.name]» всё вернулось на место: чинить нечего.") \
+			: (new_cost ? "While you were deciding, something changed in [room.name]: the repairs now cost [new_cost]. Try again." : "While you were deciding, everything in [room.name] came back: there is nothing to repair.")))
 		return FALSE
 	if(!pay(user, cost, "[name] repairs"))
 		to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
@@ -469,42 +379,31 @@
 	)
 
 /datum/enterprise_room/proc/get_contents_data()
-	var/list/lines = list()
-	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		var/list/line = lines[fixture.fixture_type]
-		if(!line)
-			line = describe_type(fixture.fixture_type)
-			line["id"] = "[fixture.fixture_type]"
-			line["name"] = fixture.name
-			line["count"] = 0
-			line["missing"] = 0
-			lines[fixture.fixture_type] = line
-		line["count"]++
-		if(fixture.needs_repair())
-			line["missing"]++
 	var/list/contents_data = list()
-	for(var/fixture_type in lines)
-		contents_data += list(lines[fixture_type])
+	for(var/fixture_type in inventory)
+		var/datum/enterprise_fixture_group/group = inventory[fixture_type]
+		var/list/line = describe_type(fixture_type)
+		line["id"] = "[fixture_type]"
+		line["name"] = group.name
+		line["count"] = length(group.items)
+		line["missing"] = group.get_damaged()
+		contents_data += list(line)
 	return contents_data
 
 /datum/enterprise_room/proc/get_upgrades_data()
 	var/list/upgrades_data = list()
 	if(level >= ENTERPRISE_MAX_LEVEL)
 		return upgrades_data
-	var/list/counts = list()
-	var/list/becomes = list()
-	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		var/next_type = fixture.get_level_type(level + 1)
-		if(!next_type || next_type == fixture.fixture_type || !fixture.is_present())
+	for(var/fixture_type in inventory)
+		var/datum/enterprise_fixture_group/group = inventory[fixture_type]
+		var/next_type = group.family?.get_tier(level + 1)
+		if(!next_type || next_type == fixture_type)
 			continue
-		counts[fixture.fixture_type]++
-		becomes[fixture.fixture_type] = next_type
-	for(var/old_type in counts)
 		upgrades_data += list(list(
-			"id" = "[old_type]",
-			"count" = counts[old_type],
-			"from" = describe_type(old_type),
-			"to" = describe_type(becomes[old_type]),
+			"id" = "[fixture_type]",
+			"count" = length(group.items),
+			"from" = describe_type(fixture_type),
+			"to" = describe_type(next_type),
 		))
 	return upgrades_data
 
