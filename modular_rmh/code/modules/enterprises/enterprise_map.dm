@@ -104,12 +104,12 @@
 	alpha = ENTERPRISE_MENU_ALPHA_IDLE
 
 /atom/movable/screen/enterprise_menu_button/Click(location, control, params)
-	if(viewer && viewer.user == usr)
+	if(viewer && viewer.get_user() == usr)
 		viewer.choose(action)
 
 /datum/enterprise_viewer
 	var/datum/enterprise/enterprise
-	var/mob/user
+	var/datum/weakref/user_ref
 	var/client/viewing
 	var/z
 	var/scale = 1
@@ -124,7 +124,7 @@
 
 /datum/enterprise_viewer/New(datum/enterprise/enterprise, mob/user)
 	src.enterprise = enterprise
-	src.user = user
+	user_ref = WEAKREF(user)
 	viewing = user.client
 	viewport = new
 	viewport.assigned_map = enterprise.map_key
@@ -136,12 +136,16 @@
 	QDEL_NULL(highlight)
 	QDEL_LIST(buttons)
 	enterprise = null
-	user = null
+	user_ref = null
 	viewing = null
 	hovered = null
 	menu_room = null
 	highlighted = null
 	return ..()
+
+/datum/enterprise_viewer/proc/get_user()
+	var/mob/user = user_ref?.resolve()
+	return QDELETED(user) ? null : user
 
 /datum/enterprise_viewer/proc/add_to_screen(list/atom/movable/screen/shown)
 	if(!viewing)
@@ -219,11 +223,11 @@
 	highlighted = lit
 	highlight.overlays.Cut()
 	var/datum/enterprise_floor/floor = lit ? enterprise.get_floor(lit.z) : null
-	if(!floor || !length(lit.shape))
+	if(!floor || !lit.outline)
 		return
 	highlight.pixel_x = floor.get_pixel_x()
 	highlight.pixel_y = floor.get_pixel_y()
-	highlight.overlays += lit.shape
+	highlight.overlays += lit.outline
 
 /datum/enterprise_viewer/proc/close_menu()
 	if(length(buttons))
@@ -262,7 +266,7 @@
 	var/bottom = round(centre_y * scale + shift_y - stack_height / 2)
 	left = clamp(left, 0, enterprise.frame_width * ICON_SIZE_X - ENTERPRISE_MENU_BUTTON_WIDTH)
 	bottom = clamp(bottom, 0, enterprise.frame_height * ICON_SIZE_Y - stack_height)
-	var/russian = get_preferred_ui_language(user) == "ru"
+	var/russian = get_preferred_ui_language(get_user()) == "ru"
 	var/height = bottom + stack_height - ENTERPRISE_MENU_BUTTON_HEIGHT
 	for(var/action in actions)
 		var/atom/movable/screen/enterprise_menu_button/button = new
@@ -278,7 +282,8 @@
 /datum/enterprise_viewer/proc/choose(action)
 	var/datum/enterprise_room/room = menu_room
 	close_menu()
-	if(room)
+	var/mob/user = get_user()
+	if(room && user)
 		enterprise.room_action(user, room, action)
 
 /datum/enterprise
@@ -359,7 +364,7 @@
 	map_catcher.fill_rect(1, 1, frame_width, frame_height)
 
 /datum/enterprise/proc/get_viewer(mob/user)
-	return user ? viewers[REF(user)] : null
+	return user?.ckey ? viewers[user.ckey] : null
 
 /datum/enterprise/proc/show_floor(mob/user, z)
 	var/datum/enterprise_floor/floor = get_floor(z)
@@ -370,7 +375,7 @@
 		return FALSE
 	if(!viewer)
 		viewer = new(src, user)
-		viewers[REF(user)] = viewer
+		viewers[user.ckey] = viewer
 		viewer.add_to_screen(list(map_backdrop, map_catcher, viewer.viewport))
 		viewer.add_to_screen(map_plane_masters)
 	viewer.show(floor)
@@ -399,30 +404,31 @@
 		viewer.set_view(1, 0, 0)
 
 /datum/enterprise/proc/hide_floors(mob/user)
-	var/datum/enterprise_viewer/viewer = get_viewer(user)
+	drop_viewer(user?.ckey)
+
+/datum/enterprise/proc/drop_viewer(viewer_key)
+	var/datum/enterprise_viewer/viewer = viewer_key ? viewers[viewer_key] : null
 	if(!viewer)
 		return
-	viewers -= REF(user)
+	viewers -= viewer_key
 	if(viewer.viewing)
 		viewer.viewing.clear_map(map_key)
 	qdel(viewer)
 
-/datum/enterprise/proc/reshow_floors()
+/datum/enterprise/proc/refresh_viewers()
 	for(var/viewer_key in viewers.Copy())
 		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
-		var/mob/user = viewer.user
-		var/z = viewer.z
-		var/scale = viewer.scale
-		var/shift_x = viewer.shift_x
-		var/shift_y = viewer.shift_y
-		hide_floors(user)
-		if(!user?.client)
+		var/mob/user = viewer.get_user()
+		if(!user?.client || user.client != viewer.viewing)
+			drop_viewer(viewer_key)
 			continue
-		if(!show_floor(user, z))
+		var/datum/enterprise_floor/floor = get_floor(viewer.z)
+		if(!floor)
+			drop_viewer(viewer_key)
 			open_premises(user)
-		viewer = get_viewer(user)
-		if(viewer)
-			viewer.set_view(scale, shift_x, shift_y)
+			continue
+		viewer.show(floor)
+		viewer.set_view(viewer.scale, viewer.shift_x, viewer.shift_y)
 
 /datum/enterprise/proc/hover_room(mob/user, datum/enterprise_room/room)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)

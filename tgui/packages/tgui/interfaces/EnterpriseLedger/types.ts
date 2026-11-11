@@ -42,6 +42,7 @@ export type GuestsData = {
   open: BooleanLike;
   morning_due: BooleanLike;
   morning_kind: string | null;
+  morning_locked: BooleanLike;
   present: GuestInfo[];
 };
 
@@ -61,6 +62,7 @@ export type Data = {
   earned_today: number;
   prestige: PrestigeData | null;
   guests: GuestsData | null;
+  occupants: Record<string, string> | null;
   debug: DebugData | null;
 };
 
@@ -71,12 +73,9 @@ export type RoomInfo = {
   name: string;
   kind: RoomKind;
   z: number;
-  tiles: number;
   purpose: string | null;
   level: number;
-  tenant: string | null;
   beds: number;
-  items: number;
 };
 
 export type FloorInfo = {
@@ -93,7 +92,6 @@ export type IconInfo = {
 
 export type ContentLine = IconInfo & {
   id: string;
-  value: number;
   count: number;
   missing: number;
 };
@@ -124,6 +122,7 @@ export type RoomData = {
   tiles: number;
   beds: number;
   page: RoomPage;
+  page_seq: number;
   level: number;
   max_level: number;
   effect: string | null;
@@ -245,6 +244,7 @@ export type Locale = {
     morning: string;
     morningDue: string;
     morningNext: string;
+    morningLocked: string;
     calls: string;
     call: string;
     callStaff: string;

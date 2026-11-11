@@ -318,7 +318,7 @@
 			found += room
 	return found
 
-/datum/enterprise/proc/raise_random_rooms(list/datum/enterprise_room/pool, amount, level)
+/datum/enterprise/proc/raise_random_rooms(list/datum/enterprise_room/pool, amount, level, apply = TRUE)
 	var/list/datum/enterprise_room/candidates = list()
 	for(var/datum/enterprise_room/room as anything in pool)
 		if(room.level < level)
@@ -326,34 +326,36 @@
 	for(var/step in 1 to min(amount, length(candidates)))
 		var/datum/enterprise_room/chosen = pick(candidates)
 		candidates -= chosen
-		chosen.set_level(level)
+		chosen.set_level(level, apply)
 
-/datum/enterprise/proc/grant_owner_rooms(owner_level)
+/datum/enterprise/proc/grant_owner_rooms(owner_level, apply = TRUE)
 	if(owner_level < 1)
 		return FALSE
 	var/base = owner_level >= 3 ? ENTERPRISE_LEVEL_IRON : ENTERPRISE_LEVEL_WOOD
 	for(var/datum/enterprise_room/room as anything in rooms)
-		room.raise_level(base)
+		room.raise_level(base, apply)
 	var/list/datum/enterprise_room/guest_list = get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_GUEST_ROOM))
 	var/list/datum/enterprise_room/stores = get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_STORAGE, ENTERPRISE_PURPOSE_DRINK_STORAGE))
 	switch(owner_level)
 		if(2)
-			raise_random_rooms(guest_list, 3, ENTERPRISE_LEVEL_IRON)
+			raise_random_rooms(guest_list, 3, ENTERPRISE_LEVEL_IRON, apply)
 			for(var/datum/enterprise_room/store as anything in stores)
-				store.raise_level(ENTERPRISE_LEVEL_IRON)
+				store.raise_level(ENTERPRISE_LEVEL_IRON, apply)
 		if(3)
-			raise_random_rooms(stores, 1, ENTERPRISE_LEVEL_SILVER)
+			raise_random_rooms(stores, 1, ENTERPRISE_LEVEL_SILVER, apply)
 		if(4 to INFINITY)
-			raise_random_rooms(guest_list, 3, ENTERPRISE_LEVEL_SILVER)
+			raise_random_rooms(guest_list, 3, ENTERPRISE_LEVEL_SILVER, apply)
 			for(var/datum/enterprise_room/store as anything in stores)
-				store.raise_level(ENTERPRISE_LEVEL_SILVER)
+				store.raise_level(ENTERPRISE_LEVEL_SILVER, apply)
 	return TRUE
 
-/datum/enterprise/proc/redraw()
-	for(var/datum/enterprise_floor/floor as anything in floors)
-		if(floor)
-			floor.take_picture()
-	reshow_floors()
+/datum/enterprise/proc/redraw(datum/enterprise_room/changed)
+	if(changed)
+		get_floor(changed.z)?.take_picture(FALSE)
+	else
+		for(var/datum/enterprise_floor/floor as anything in floors)
+			floor?.take_picture(FALSE)
+	refresh_viewers()
 	update_static_data_for_all_viewers()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		SStgui.update_uis(room)
@@ -389,7 +391,7 @@
 		save_grade(target)
 	room.set_level(target)
 	to_chat(user, span_notice(russian ? "Комната «[room.name]» теперь уровня [target]." : "[room.name] is now level [target]."))
-	redraw()
+	redraw(room)
 	return TRUE
 
 /datum/enterprise/proc/can_run_rooms(mob/user)
@@ -428,16 +430,14 @@
 		return FALSE
 	room.repair()
 	to_chat(user, span_notice(russian ? "Комната «[room.name]» приведена в порядок." : "[room.name] has been put back in order."))
-	var/datum/enterprise_floor/floor = get_floor(room.z)
-	if(floor)
-		floor.take_picture()
-		reshow_floors()
-	SStgui.update_uis(room)
+	redraw(room)
 	return TRUE
 
 /datum/enterprise_room/proc/show_page(mob/user, page)
 	shown_pages[REF(user)] = page
+	page_seq++
 	ui_interact(user)
+	SStgui.update_uis(src)
 
 /datum/enterprise_room/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -476,7 +476,6 @@
 			line = describe_type(fixture.fixture_type)
 			line["id"] = "[fixture.fixture_type]"
 			line["name"] = fixture.name
-			line["value"] = fixture.value
 			line["count"] = 0
 			line["missing"] = 0
 			lines[fixture.fixture_type] = line
@@ -521,6 +520,7 @@
 		"tiles" = length(turfs),
 		"beds" = beds,
 		"page" = shown_pages[REF(user)] || ENTERPRISE_ROOM_PAGE_INFO,
+		"page_seq" = page_seq,
 		"level" = level,
 		"max_level" = ENTERPRISE_MAX_LEVEL,
 		"effect" = template?.get_effect(src, level, russian),
@@ -546,7 +546,7 @@
 			if(page != ENTERPRISE_ROOM_PAGE_INFO && page != ENTERPRISE_ROOM_PAGE_UPGRADE)
 				return FALSE
 			shown_pages[REF(ui.user)] = page
-			return TRUE
+			return FALSE
 		if("repair")
 			enterprise.room_action(ui.user, src, ENTERPRISE_ROOM_ACTION_REPAIR)
 			return FALSE

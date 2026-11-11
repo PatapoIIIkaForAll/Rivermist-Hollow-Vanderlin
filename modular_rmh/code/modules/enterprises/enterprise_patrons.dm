@@ -84,10 +84,15 @@
 	if(!QDELETED(src))
 		transform = transform.Turn(90)
 
-/mob/living/simple_animal/enterprise_patron/Bump(atom/bumped)
+/mob/living/simple_animal/enterprise_patron/Moved(atom/old_loc, movement_dir, forced)
 	. = ..()
-	if(istype(bumped, /obj/structure/door))
-		open_door(bumped)
+	var/turf/here = loc
+	if(!isturf(here))
+		return
+	open_door(locate(/obj/structure/door) in here)
+	var/turf/ahead = movement_dir ? get_step(here, movement_dir) : null
+	if(ahead)
+		open_door(locate(/obj/structure/door) in ahead)
 
 /mob/living/simple_animal/enterprise_patron/proc/open_door(obj/structure/door/door)
 	if(QDELETED(door) || door.door_opened || door.switching_states || !door.anchored || door.locked())
@@ -98,7 +103,12 @@
 
 /obj/structure/door/CanAStarPass(ID, to_dir, datum/requester)
 	. = ..()
-	if(!. && anchored && !locked() && istype(requester, /mob/living/simple_animal/enterprise_patron))
+	if(!. && istype(requester, /mob/living/simple_animal/enterprise_patron) && anchored && !locked())
+		return TRUE
+
+/obj/structure/door/CanAllowThrough(atom/movable/mover, turf/target)
+	. = ..()
+	if(!. && istype(mover, /mob/living/simple_animal/enterprise_patron) && anchored && !locked())
 		return TRUE
 
 /mob/living/simple_animal/enterprise_patron/proc/forget_enterprise()
@@ -126,6 +136,7 @@
 	wanted.patron = WEAKREF(src)
 	wanted.patron_until = leaves_at
 	wanted.set_doors_locked(FALSE)
+	enterprise?.guests_changed()
 	return TRUE
 
 /mob/living/simple_animal/enterprise_patron/proc/take_seat(datum/enterprise_seating/wanted)
@@ -150,14 +161,13 @@
 			lodging.patron_until = 0
 			lodging.set_doors_locked(TRUE)
 		lodging = null
+		enterprise?.guests_changed()
 	free_table()
 
-/mob/living/simple_animal/enterprise_patron/proc/pay_rent()
-	if(!lodging || !enterprise)
+/mob/living/simple_animal/enterprise_patron/proc/get_rent_due()
+	if(!lodging || !enterprise || get_goal() != ENTERPRISE_PATRON_GOAL_ROOM || goal_stage != ENTERPRISE_PATRON_STAGE_STAY)
 		return 0
-	var/rent = round(enterprise.get_rest_price(lodging) / ENTERPRISE_PATRON_RENT_DIVISOR)
-	enterprise.earn(rent)
-	return rent
+	return round(enterprise.get_rest_price(lodging) / ENTERPRISE_PATRON_RENT_DIVISOR)
 
 /mob/living/simple_animal/enterprise_patron/proc/get_goal()
 	if(leaving)
@@ -170,6 +180,8 @@
 		return
 	for(var/datum/ai_behavior/enterprise_patron_walk/walk in controller.current_behaviors)
 		walk.finish_action(controller, FALSE, BB_ENTERPRISE_PATRON_TARGET)
+	controller.movement_path = null
+	controller.clear_blackboard_key(BB_FUTURE_MOVEMENT_PATH)
 
 /mob/living/simple_animal/enterprise_patron/proc/leave_seat()
 	seat = null
@@ -184,10 +196,14 @@
 	if(!seat)
 		return FALSE
 	var/obj/structure/wanted = seat.resolve()
-	if(QDELETED(wanted))
-		return TRUE
+	return QDELETED(wanted) || seat_blocked(wanted)
+
+/mob/living/simple_animal/enterprise_patron/proc/seat_blocked(obj/structure/wanted)
 	for(var/mob/living/sitter as anything in wanted.buckled_mobs)
 		if(sitter != src)
+			return TRUE
+	for(var/mob/living/other in get_turf(wanted))
+		if(other != src && other.density)
 			return TRUE
 	return FALSE
 
@@ -244,20 +260,26 @@
 /mob/living/simple_animal/enterprise_patron/proc/leave()
 	qdel(src)
 
+/mob/living/simple_animal/enterprise_patron/proc/turn_away()
+	remark(ENTERPRISE_PATRON_LINE_LOST)
+	start_leaving()
+
 /mob/living/simple_animal/enterprise_patron/proc/arrive()
+	var/goal = get_goal()
+	if(goal == ENTERPRISE_PATRON_GOAL_LEAVE)
+		leave()
+		return
+	if(seat && !sit_down())
+		goal_stage = ENTERPRISE_PATRON_STAGE_SEEK
+		return
 	goal_stage = ENTERPRISE_PATRON_STAGE_STAY
-	switch(get_goal())
-		if(ENTERPRISE_PATRON_GOAL_LEAVE)
-			leave()
+	switch(goal)
 		if(ENTERPRISE_PATRON_GOAL_BAR)
-			sit_down()
 			remark(ENTERPRISE_PATRON_LINE_ORDER)
 			stay_until = world.time + bar_time
 		if(ENTERPRISE_PATRON_GOAL_TABLE)
-			sit_down()
 			stay_until = world.time + table_time
 		if(ENTERPRISE_PATRON_GOAL_ROOM)
-			sit_down()
 			stay_until = leaves_at
 	enterprise?.guests_changed()
 
@@ -291,6 +313,7 @@
 
 /datum/ai_movement/hybrid_pathing/enterprise_patron
 	max_path_distance = 80
+	max_pathing_attempts = 3
 	always_advanced = TRUE
 
 /datum/ai_planning_subtree/enterprise_patron_speak/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
@@ -364,8 +387,8 @@
 
 /datum/ai_planning_subtree/enterprise_patron/find_bar/find_target(mob/living/simple_animal/enterprise_patron/patron)
 	var/list/claimed = patron.enterprise.get_claimed_seats(patron)
-	var/datum/enterprise_seating/bar = patron.enterprise.find_seating(TRUE, claimed)
-	return patron.claim_seat(bar?.get_free_chair(claimed))
+	var/datum/enterprise_seating/bar = patron.enterprise.find_seating(TRUE, claimed, patron)
+	return patron.claim_seat(bar?.get_free_chair(claimed, patron))
 
 /datum/ai_planning_subtree/enterprise_patron/find_bar/nothing_found(mob/living/simple_animal/enterprise_patron/patron)
 	patron.complain(ENTERPRISE_PATRON_LINE_NO_BAR)
@@ -377,10 +400,10 @@
 
 /datum/ai_planning_subtree/enterprise_patron/find_table/find_target(mob/living/simple_animal/enterprise_patron/patron)
 	var/list/claimed = patron.enterprise.get_claimed_seats(patron)
-	var/datum/enterprise_seating/free_set = patron.table_set || patron.enterprise.find_seating(FALSE, claimed)
+	var/datum/enterprise_seating/free_set = patron.table_set || patron.enterprise.find_seating(FALSE, claimed, patron)
 	if(!free_set || (free_set != patron.table_set && !patron.take_seat(free_set)))
 		return null
-	return patron.claim_seat(free_set.get_free_chair(claimed))
+	return patron.claim_seat(free_set.get_free_chair(claimed, patron))
 
 /datum/ai_planning_subtree/enterprise_patron/find_table/nothing_found(mob/living/simple_animal/enterprise_patron/patron)
 	patron.complain(ENTERPRISE_PATRON_LINE_NO_TABLE)
@@ -394,9 +417,10 @@
 	var/datum/enterprise_room/free_room = patron.lodging || patron.enterprise.find_free_room()
 	if(!free_room || (free_room != patron.lodging && !patron.take_room(free_room)))
 		return null
-	var/list/obj/beds = free_room.get_interior(/obj/structure/bed)
-	if(length(beds))
-		return patron.claim_seat(beds[1])
+	var/list/claimed = patron.enterprise.get_claimed_seats(patron)
+	for(var/obj/structure/bed/bed as anything in free_room.get_interior(/obj/structure/bed))
+		if(!(bed in claimed) && !patron.seat_blocked(bed))
+			return patron.claim_seat(bed)
 	patron.claim_seat(null)
 	for(var/turf/open/floor in free_room.turfs)
 		if(!floor.is_blocked_turf(TRUE))
@@ -417,6 +441,8 @@
 	var/atom/target = controller.blackboard[target_key]
 	if(QDELETED(target))
 		return FALSE
+	controller.movement_path = null
+	controller.clear_blackboard_key(BB_FUTURE_MOVEMENT_PATH)
 	set_movement_target(controller, target)
 
 /datum/ai_behavior/enterprise_patron_walk/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
@@ -448,11 +474,11 @@
 			claimed += taken
 	return claimed
 
-/datum/enterprise/proc/find_seating(bar, list/claimed)
+/datum/enterprise/proc/find_seating(bar, list/claimed, mob/living/asking)
 	var/list/datum/enterprise_seating/found = list()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		for(var/datum/enterprise_seating/seating as anything in room.seatings)
-			if(seating.is_bar() != bar || !seating.get_free_chair(claimed))
+			if(seating.is_bar() != bar || !seating.get_free_chair(claimed, asking))
 				continue
 			if(bar || seating.is_free())
 				found += seating
@@ -524,5 +550,4 @@
 		return null
 	var/mob/living/simple_animal/enterprise_patron/patron = new patron_type(entrance)
 	patron.visit(src)
-	guests_changed()
 	return patron

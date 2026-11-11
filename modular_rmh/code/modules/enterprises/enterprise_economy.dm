@@ -14,8 +14,15 @@
 	earned_round += amount
 	earned_today += amount
 	write_journal()
-	SStgui.update_uis(src)
+	funds_changed()
 	return TRUE
+
+/datum/enterprise/proc/funds_changed()
+	SStgui.update_uis(src)
+	for(var/datum/enterprise_room/room as anything in rooms)
+		SStgui.update_uis(room)
+		if(room.stock?.post)
+			SStgui.update_uis(room.stock.post)
 
 /datum/enterprise/proc/can_pay(mob/user, cost)
 	return book_balance + get_bank_balance(user) >= cost
@@ -32,7 +39,7 @@
 	if(from_bank)
 		SStreasury.bank_accounts[user] -= from_bank
 		SStreasury.log_to_steward("-[from_bank] from [user.real_name] ([reason])")
-	SStgui.update_uis(src)
+	funds_changed()
 	return TRUE
 
 /datum/enterprise/proc/take_from_account(mob/payer, cost)
@@ -45,9 +52,9 @@
 	return TRUE
 
 /datum/enterprise/proc/new_day(forced)
-	collect_patron_rent()
 	earned_today = 0
 	rested_today = list()
+	collect_patron_rent()
 	start_guest_day(forced)
 	SStgui.update_uis(src)
 
@@ -128,8 +135,8 @@
 /datum/enterprise/proc/welcome_owner(mob/living/carbon/human/owner, ckey)
 	if(!ckey)
 		return FALSE
-	if(owner_ckey && owner_ckey != ckey)
-		bank_experience()
+	if(owner_ckey && owner_ckey != ckey && !bank_experience())
+		earned_round = 0
 	owner_ckey = ckey
 	owner_ref = WEAKREF(owner)
 	var/list/saved = load_prestige(ckey)
@@ -138,11 +145,17 @@
 	owner_level = get_prestige_level(owner_earned)
 	if(!welcomed[ckey])
 		welcomed[ckey] = TRUE
-		if(!premises_loaded && (premises_level == owner_level || load_premises(owner_level)))
-			premises_loaded = TRUE
-			var/russian = get_preferred_ui_language(owner) == "ru"
-			to_chat(owner, span_notice(russian ? "Заведение отстроено под мой уровень владельца: [owner_level]." : "The house stands as my owner level has earned it: [owner_level]."))
-		if(grant_owner_rooms(owner_level))
+		var/granted = FALSE
+		if(!premises_loaded)
+			if(premises_level == owner_level)
+				premises_loaded = TRUE
+			else if(load_premises(owner_level, owner_level))
+				premises_loaded = TRUE
+				granted = TRUE
+			if(premises_loaded)
+				var/russian = get_preferred_ui_language(owner) == "ru"
+				to_chat(owner, span_notice(russian ? "Заведение отстроено под мой уровень владельца: [owner_level]." : "The house stands as my owner level has earned it: [owner_level]."))
+		if(!granted && grant_owner_rooms(owner_level))
 			redraw()
 	write_journal()
 	SStgui.update_uis(src)
@@ -306,7 +319,7 @@
 		return NONE
 	var/russian = get_preferred_ui_language(user) == "ru"
 	if(HAS_TRAIT(tool, TRAIT_ENTERPRISE_START_STOCK))
-		to_chat(user, span_warning(russian ? "Это из запасов самого заведения, данных на начало раунда: такое здесь не принимают." : "This is from the house's own stock, given at the start of the round: it is not taken here."))
+		to_chat(user, span_warning(russian ? "Это уже из запасов самого заведения: такое здесь не принимают." : "This already belongs to the house's own stock: it is not taken here."))
 		return ITEM_INTERACT_BLOCKING
 	if(!stock.get_price(tool))
 		to_chat(user, span_warning(russian ? "Такое здесь не покупают." : "They do not buy that here."))
@@ -377,6 +390,7 @@
 	stock.give(item_type)
 	SStreasury.log_to_steward("-[entry.price - cost] from treasury ([enterprise.name] purchase)")
 	var/obj/item/bought = new item_type(get_turf(user))
+	ADD_TRAIT(bought, TRAIT_ENTERPRISE_START_STOCK, REF(src))
 	if(!user.put_in_hands(bought))
 		bought.forceMove(get_turf(user))
 	playsound(src, 'sound/misc/hiss.ogg', 100, FALSE, -1)

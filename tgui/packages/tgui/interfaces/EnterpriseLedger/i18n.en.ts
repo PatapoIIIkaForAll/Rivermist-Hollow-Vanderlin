@@ -127,6 +127,7 @@ const locale: Locale = {
     morning: 'Morning guest',
     morningDue: 'Comes at 8 in the morning',
     morningNext: 'The next one comes tomorrow at 8',
+    morningLocked: 'every way in was locked at 8, so the guest left',
     calls: 'Can send for today',
     call: 'Send for a guest',
     callStaff: 'Only those who run the place may send for guests.',

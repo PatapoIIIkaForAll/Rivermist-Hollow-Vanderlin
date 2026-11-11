@@ -12,7 +12,10 @@
 
 /datum/enterprise/proc/track_key(obj/item/key/key)
 	var/list/access = key.get_access()
-	if(!length(access) || !length(own_lock_ids) || !length((access & own_lock_ids) - staff_lock_ids))
+	if(!length(access))
+		return FALSE
+	var/list/own = get_own_lock_ids()
+	if(!length((access & own) - staff_lock_ids))
 		return FALSE
 	RegisterSignal(key, COMSIG_ITEM_EQUIPPED, PROC_REF(on_key_equipped), override = TRUE)
 	return TRUE
@@ -73,8 +76,10 @@
 			patron.depart()
 
 /datum/enterprise/proc/collect_patron_rent()
+	var/total = 0
 	for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons)
-		patron.pay_rent()
+		total += patron.get_rent_due()
+	return earn(total)
 
 /datum/enterprise_room/proc/get_tenant()
 	var/mob/living/found = tenant?.resolve()
@@ -94,13 +99,15 @@
 		to_chat(guest, span_warning(russian ? "Комната «[name]» занята постояльцем." : "[name] is taken by a lodger."))
 		return FALSE
 	var/datum/weakref/guest_ref = WEAKREF(guest)
+	if(tenant == guest_ref && tenant_key?.resolve() == key)
+		return TRUE
 	if(tenant != guest_ref)
 		tenant = guest_ref
 		tenant_name = guest.real_name
 		tenant_since = world.time
 		tenant_seen = world.time
 	tenant_key = WEAKREF(key)
-	enterprise.update_static_data_for_all_viewers()
+	enterprise.guests_changed()
 	SStgui.update_uis(src)
 	return TRUE
 
@@ -110,7 +117,7 @@
 	tenant_key = null
 	tenant_since = 0
 	tenant_seen = 0
-	enterprise.update_static_data_for_all_viewers()
+	enterprise.guests_changed()
 	SStgui.update_uis(src)
 
 /datum/enterprise_room/proc/note_visit(mob/living/visitor)

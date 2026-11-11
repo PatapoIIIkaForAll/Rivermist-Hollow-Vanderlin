@@ -3,6 +3,7 @@
 /datum/enterprise
 	var/list/turf/anchors = list()
 	var/list/claimed_by_z = list()
+	var/grant_on_survey
 	COOLDOWN_DECLARE(survey_cooldown)
 
 /datum/enterprise/proc/is_premises_turf(turf/checked)
@@ -64,15 +65,17 @@
 	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
 	mark_start_stock(fresh)
 	furnish_rooms()
+	if(!isnull(grant_on_survey))
+		grant_owner_rooms(grant_on_survey, !length(taken))
+		grant_on_survey = null
 	for(var/datum/enterprise_fixture/fixture as anything in taken)
 		fixture.apply_level(max(fixture.room ? fixture.room.level : ENTERPRISE_LEVEL_BARE, ENTERPRISE_LEVEL_WOOD))
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.template?.on_survey(room)
 	update_map_frame()
 	for(var/datum/enterprise_floor/floor as anything in floors)
-		if(floor)
-			floor.take_picture()
-	reshow_floors()
+		floor?.take_picture()
+	refresh_viewers()
 	update_static_data_for_all_viewers()
 
 /datum/enterprise/proc/survey_again(mob/user)
@@ -106,15 +109,10 @@
 	return TRUE
 
 /datum/enterprise/proc/scan_premises(turf/origin)
-	var/row_length = world.maxx
-	var/level_size = row_length * world.maxy
-	var/list/seen_by_z = new /list(world.maxz)
 	var/list/found_by_z = new /list(world.maxz)
+	var/alist/seen = alist()
+	seen[origin] = TRUE
 	var/list/turf/queue = list(origin)
-	var/list/origin_seen = new /list(level_size)
-	origin_seen[(origin.y - 1) * row_length + origin.x] = TRUE
-	seen_by_z[origin.z] = origin_seen
-
 	var/position = 1
 	while(position <= length(queue))
 		var/turf/current = queue[position]
@@ -124,24 +122,18 @@
 			found = list()
 			found_by_z[current.z] = found
 		found += current
-
-		var/list/turf/neighbours = list(GET_TURF_ABOVE(current), GET_TURF_BELOW(current))
+		scan_neighbour(GET_TURF_ABOVE(current), seen, queue)
+		scan_neighbour(GET_TURF_BELOW(current), seen, queue)
 		for(var/direction in GLOB.alldirs)
-			neighbours += get_step(current, direction)
-		for(var/turf/neighbour as anything in neighbours)
-			if(!neighbour)
-				continue
-			var/list/seen = seen_by_z[neighbour.z]
-			if(!seen)
-				seen = new /list(level_size)
-				seen_by_z[neighbour.z] = seen
-			var/cell = (neighbour.y - 1) * row_length + neighbour.x
-			if(seen[cell])
-				continue
-			seen[cell] = TRUE
-			if(is_premises_turf(neighbour))
-				queue += neighbour
+			scan_neighbour(get_step(current, direction), seen, queue)
 	return found_by_z
+
+/datum/enterprise/proc/scan_neighbour(turf/neighbour, alist/seen, list/turf/queue)
+	if(!neighbour || seen[neighbour])
+		return
+	seen[neighbour] = TRUE
+	if(is_premises_turf(neighbour))
+		queue += neighbour
 
 #undef ENTERPRISE_SURVEY_COOLDOWN
 
@@ -184,14 +176,21 @@
 			"name" = room.name,
 			"kind" = room.kind,
 			"z" = room.z,
-			"tiles" = length(room.turfs),
 			"purpose" = room.template?.id,
 			"level" = room.level,
-			"tenant" = room.get_occupant_name(),
 			"beds" = room.beds,
-			"items" = length(room.fixtures),
 		))
 	return rooms_data
+
+/datum/enterprise/proc/get_occupants_data()
+	var/list/occupants = list()
+	var/id = 0
+	for(var/datum/enterprise_room/room as anything in rooms)
+		id++
+		var/occupant = room.get_occupant_name()
+		if(occupant)
+			occupants["[id]"] = occupant
+	return occupants
 
 /datum/enterprise/proc/get_own_lock_ids()
 	if(own_lock_ids)

@@ -11,6 +11,7 @@ import {
 import { useBackend } from '../../backend';
 import { Window } from '../../layouts';
 import type { Locale, StockData, StockEntry } from './types';
+import { useIconRefs } from './useIconRefs';
 
 const ICON_SIZE = '32px';
 
@@ -74,6 +75,7 @@ const StockRow = (props: StockRowProps) => {
 export const EnterpriseStockView = (props: { locale: Locale }) => {
   const { locale } = props;
   const { act, data } = useBackend<StockData>();
+  useIconRefs();
   const entries = data.entries || [];
   const enterpriseName =
     locale.enterpriseNames[data.enterprise] || data.enterprise;

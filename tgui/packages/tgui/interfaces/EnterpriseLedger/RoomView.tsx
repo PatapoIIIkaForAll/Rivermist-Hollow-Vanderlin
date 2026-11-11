@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -17,13 +18,16 @@ import type {
   IconInfo,
   Locale,
   RoomData,
+  RoomPage,
   TenantInfo,
   UpgradeLine,
 } from './types';
+import { useIconRefs } from './useIconRefs';
 
 const ICON_SIZE = '32px';
 const DECISECONDS_IN_HOUR = 36000;
 const DECISECONDS_IN_MINUTE = 600;
+const COUNTDOWN_STEP = 15000;
 
 type RoomPageProps = {
   locale: Locale;
@@ -115,6 +119,28 @@ const getStay = (locale: Locale, timeLeft: number | null) => {
   return locale.formatStay(hours, minutes);
 };
 
+const StayLeft = (props: { locale: Locale; timeLeft: number | null }) => {
+  const { locale, timeLeft } = props;
+  const [since, setSince] = useState(Date.now());
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    setSince(Date.now());
+    setNow(Date.now());
+    if (timeLeft === null || timeLeft === undefined) {
+      return;
+    }
+    const timer = setInterval(() => setNow(Date.now()), COUNTDOWN_STEP);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  if (timeLeft === null || timeLeft === undefined) {
+    return <>{getStay(locale, null)}</>;
+  }
+  const passed = Math.floor((now - since) / 100);
+  return <>{getStay(locale, Math.max(timeLeft - passed, 0))}</>;
+};
+
 const TenantDetails = (props: { locale: Locale; tenant: TenantInfo }) => {
   const { locale, tenant } = props;
   const needs = tenant.needs || [];
@@ -130,7 +156,7 @@ const TenantDetails = (props: { locale: Locale; tenant: TenantInfo }) => {
         )}
       </LabeledList.Item>
       <LabeledList.Item label={locale.room.tenantStay}>
-        {getStay(locale, tenant.time_left)}
+        <StayLeft locale={locale} timeLeft={tenant.time_left} />
       </LabeledList.Item>
       <LabeledList.Item label={locale.room.tenantRent}>
         {tenant.rent}
@@ -313,8 +339,20 @@ const UpgradePage = (props: RoomPageProps) => {
 export const EnterpriseRoomView = (props: { locale: Locale }) => {
   const { locale } = props;
   const { act, data } = useBackend<RoomData>();
+  const [chosen, setChosen] = useState({
+    room: data.name,
+    page: data.page,
+    seq: data.page_seq,
+  });
+  useIconRefs();
   const purpose = getPurposeLabel(locale, data.enterprise, data.purpose);
-  const Page = data.page === 'upgrade' ? UpgradePage : InfoPage;
+  const ownChoice = chosen.room === data.name && chosen.seq === data.page_seq;
+  const page = ownChoice ? chosen.page : data.page;
+  const Page = page === 'upgrade' ? UpgradePage : InfoPage;
+  const choose = (next: RoomPage) => {
+    setChosen({ room: data.name, page: next, seq: data.page_seq });
+    act('set_page', { page: next });
+  };
 
   return (
     <Window title={`${data.name} — ${purpose}`} width={540} height={660}>
@@ -326,15 +364,15 @@ export const EnterpriseRoomView = (props: { locale: Locale }) => {
                 <Tabs>
                   <Tabs.Tab
                     icon="circle-info"
-                    selected={data.page !== 'upgrade'}
-                    onClick={() => act('set_page', { page: 'info' })}
+                    selected={page !== 'upgrade'}
+                    onClick={() => choose('info')}
                   >
                     {locale.room.info}
                   </Tabs.Tab>
                   <Tabs.Tab
                     icon="arrow-up"
-                    selected={data.page === 'upgrade'}
-                    onClick={() => act('set_page', { page: 'upgrade' })}
+                    selected={page === 'upgrade'}
+                    onClick={() => choose('upgrade')}
                   >
                     {locale.room.upgrade}
                   </Tabs.Tab>

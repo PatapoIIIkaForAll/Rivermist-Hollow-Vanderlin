@@ -102,7 +102,7 @@
 	copy.pixel_x += offset
 	return copy
 
-/datum/enterprise_floor/proc/take_picture()
+/datum/enterprise_floor/proc/take_picture(with_zones = TRUE)
 	QDEL_LIST(picture)
 	picture = list()
 	var/origin_x = get_pixel_x()
@@ -156,7 +156,8 @@
 		labels.pixel_y = origin_y
 		labels.overlays = label_overlays
 		picture += labels
-	mark_zones()
+	if(with_zones || !zones)
+		mark_zones()
 
 /datum/enterprise_floor/proc/mark_zones()
 	QDEL_LIST(zones)
@@ -171,6 +172,9 @@
 			square.pixel_y = (member.y - min_y) * ICON_SIZE_Y
 			shape += square
 		room.shape = shape
+		var/mutable_appearance/outline = new
+		outline.overlays = shape
+		room.outline = outline
 		var/atom/movable/screen/enterprise_zone/zone = new
 		zone.room = room
 		zone.pixel_x = origin_x
@@ -192,6 +196,7 @@
 	var/list/datum/enterprise_fixture/fixtures = list()
 	var/list/datum/enterprise_seating/seatings = list()
 	var/list/mutable_appearance/shape
+	var/mutable_appearance/outline
 
 	var/datum/weakref/tenant
 	var/tenant_name
@@ -203,6 +208,7 @@
 	var/datum/enterprise_stock/stock
 
 	var/list/shown_pages = list()
+	var/page_seq = 0
 
 	var/enclosed = TRUE
 	var/kept = FALSE
@@ -231,6 +237,7 @@
 	doors = null
 	fixtures = null
 	shape = null
+	outline = null
 	lock_doors = null
 	links = null
 	merged_into = null
@@ -297,17 +304,18 @@
 /datum/enterprise_room/proc/get_purpose()
 	return template?.id
 
-/datum/enterprise_room/proc/set_level(new_level)
+/datum/enterprise_room/proc/set_level(new_level, apply = TRUE)
 	new_level = clamp(round(new_level), ENTERPRISE_LEVEL_BARE, ENTERPRISE_MAX_LEVEL)
 	if(new_level == level)
 		return FALSE
 	level = new_level
-	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
-		fixture.apply_level(level)
+	if(apply)
+		for(var/datum/enterprise_fixture/fixture as anything in fixtures)
+			fixture.apply_level(level)
 	return TRUE
 
-/datum/enterprise_room/proc/raise_level(new_level)
-	return new_level > level ? set_level(new_level) : FALSE
+/datum/enterprise_room/proc/raise_level(new_level, apply = TRUE)
+	return new_level > level ? set_level(new_level, apply) : FALSE
 
 /datum/enterprise_room/proc/build_seatings()
 	QDEL_LIST(seatings)
@@ -394,6 +402,7 @@
 		var/obj/structure/door/door = fixture.restore()
 		if(istype(door))
 			doors |= WEAKREF(door)
+			enterprise.exit_doors = null
 		restored++
 	return restored
 
@@ -494,14 +503,20 @@
 			stools++
 	return stools >= 2 && stools * 2 >= length(chairs)
 
-/datum/enterprise_seating/proc/get_free_chair(list/claimed)
+/datum/enterprise_seating/proc/get_free_chair(list/claimed, mob/living/asking)
 	var/list/obj/structure/chair/free = list()
 	for(var/datum/enterprise_fixture/fixture as anything in chairs)
 		var/obj/structure/chair/seat = fixture.get_thing()
-		if(!seat || !fixture.is_present() || length(seat.buckled_mobs) || (seat in claimed))
+		if(!seat || !fixture.is_present() || length(seat.buckled_mobs) || (seat in claimed) || is_stood_on(seat, asking))
 			continue
 		free += seat
 	return length(free) ? pick(free) : null
+
+/datum/enterprise_seating/proc/is_stood_on(obj/structure/chair/seat, mob/living/asking)
+	for(var/mob/living/other in get_turf(seat))
+		if(other != asking && other.density)
+			return TRUE
+	return FALSE
 
 /datum/enterprise_seating/proc/reseat()
 	if(is_bar())

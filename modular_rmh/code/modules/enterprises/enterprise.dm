@@ -18,8 +18,7 @@
 /datum/enterprise/Destroy()
 	SStgui.close_uis(src)
 	for(var/viewer_key in viewers.Copy())
-		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
-		hide_floors(viewer.user)
+		drop_viewer(viewer_key)
 	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
 		ledger.enterprise = null
 	ledgers = null
@@ -46,8 +45,7 @@
 
 /datum/enterprise/proc/reset_premises()
 	for(var/viewer_key in viewers.Copy())
-		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
-		hide_floors(viewer.user)
+		drop_viewer(viewer_key)
 	for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons.Copy())
 		patron.leave()
 	QDEL_LIST(rooms)
@@ -57,10 +55,23 @@
 	anchors = list()
 	claimed_by_z = list()
 
-/datum/enterprise/proc/load_premises(level)
+/datum/enterprise/proc/load_premises(level, grant_level)
 	if(loading_premises || !length(premises_maps))
 		return FALSE
+	loading_premises = TRUE
 	level = clamp(level, 0, length(premises_maps) - 1)
+	var/loaded = place_premises(level)
+	loading_premises = FALSE
+	if(!loaded)
+		return FALSE
+	premises_level = level
+	grant_on_survey = grant_level
+	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
+		claim_premises(ledger)
+	grant_on_survey = null
+	return TRUE
+
+/datum/enterprise/proc/place_premises(level)
 	var/map_path = premises_maps[level + 1]
 	var/list/turf/plot = get_plot_turfs()
 	if(!length(plot))
@@ -78,31 +89,36 @@
 		min_y = min(min_y, member.y)
 		max_y = max(max_y, member.y)
 		min_z = min(min_z, member.z)
-	var/datum/map_template/template = new(map_path, "[name] premises, owner level [level]")
+	var/datum/map_template/template = new(map_path, "[name] premises, owner level [level]", TRUE)
 	if(template.width != max_x - min_x + 1 || template.height != max_y - min_y + 1)
 		log_mapping("Map issue: [map_path] is [template.width]x[template.height] tiles, but the [name] plot is [max_x - min_x + 1]x[max_y - min_y + 1]. The premises were left as mapped.")
 		return FALSE
-	loading_premises = TRUE
 	reset_premises()
-	for(var/turf/member as anything in plot)
-		for(var/obj/thing in member)
-			if(istype(thing, /obj/effect/landmark))
-				continue
-#ifdef TAVERN_TEST
-			if(istype(thing, /obj/structure/throne) || istype(thing, /obj/structure/fake_machine/titan))
-				continue
-#endif
-			qdel(thing)
-	var/loaded = template.load(locate(min_x, min_y, min_z))
-	loading_premises = FALSE
-	if(!loaded)
+	clear_plot(plot)
+	if(!template.load(locate(min_x, min_y, min_z)))
 		log_mapping("Map issue: [map_path] could not be loaded for the [name].")
 		return FALSE
-	premises_level = level
 	log_game("[name] premises loaded from [map_path] at [min_x],[min_y],[min_z]")
-	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
-		claim_premises(ledger)
 	return TRUE
+
+/datum/enterprise/proc/clear_plot(list/turf/plot)
+	for(var/turf/member as anything in plot)
+		for(var/obj/thing in member)
+			if(keeps_on_plot(thing))
+				continue
+			for(var/obj/inner in thing)
+				qdel(inner)
+			qdel(thing)
+		CHECK_TICK
+
+/datum/enterprise/proc/keeps_on_plot(obj/thing)
+	if(istype(thing, /obj/effect/landmark))
+		return TRUE
+#ifdef TAVERN_TEST
+	if(istype(thing, /obj/structure/throne) || istype(thing, /obj/structure/fake_machine/titan))
+		return TRUE
+#endif
+	return FALSE
 
 /datum/enterprise/proc/is_owner(mob/user)
 	return is_type_in_list(user?.mind?.assigned_role, owner_jobs)
@@ -173,12 +189,12 @@
 		"earned_today" = earned_today,
 		"prestige" = owner ? get_prestige_data() : null,
 		"guests" = get_guests_data(user),
+		"occupants" = get_occupants_data(),
 	)
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	. = ..()
-	if(.)
-		return
+	if(..())
+		return FALSE
 #ifdef TAVERN_TEST
 	var/debugged = debug_act(action, params, ui.user)
 	if(!isnull(debugged))
@@ -190,12 +206,16 @@
 		if("end_shift")
 			return end_shift(ui.user)
 		if("open_premises")
-			return open_premises(ui.user)
+			if(open_premises(ui.user))
+				ui.send_update()
+			return FALSE
 		if("view_floor")
 			var/z = params["z"]
 			if(!isnum(z) || z != round(z))
 				return FALSE
-			return show_floor(ui.user, z)
+			if(show_floor(ui.user, z))
+				ui.send_update()
+			return FALSE
 		if("reset_view")
 			reset_view(ui.user)
 			return FALSE
@@ -262,11 +282,7 @@
 				redraw()
 			return TRUE
 		if("debug_reload")
-			if(!load_premises(owner_level))
-				return FALSE
-			grant_owner_rooms(owner_level)
-			redraw()
-			return TRUE
+			return load_premises(owner_level, owner_level)
 		if("debug_room_level")
 			var/level = params["level"]
 			var/room_id = params["room"]
@@ -350,10 +366,8 @@
 /datum/enterprise/tavern/get_plot_turfs()
 	var/list/turf/plot = list()
 	for(var/area/place as anything in GLOB.areas)
-		if(!place.tavern_area)
-			continue
-		for(var/turf/member in place)
-			plot += member
+		if(place.tavern_area)
+			plot += place.get_turfs_from_all_zlevels()
 	return plot
 
 /area/under/town/rmh/basement/tavern

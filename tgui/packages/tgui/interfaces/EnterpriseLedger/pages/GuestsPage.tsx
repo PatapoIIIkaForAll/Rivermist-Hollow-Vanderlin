@@ -48,17 +48,15 @@ const getCallBlock = (locale: Locale, guests: GuestsData) => {
   if (guests.calls_left <= 0) {
     return locale.guests.callNone;
   }
-  if (!guests.open) {
-    return locale.guests.callLocked;
-  }
   return null;
 };
 
 const getMorning = (locale: Locale, guests: GuestsData) => {
   if (guests.morning_kind) {
-    return locale.formatMorningCame(
-      locale.guestKinds[guests.morning_kind] || guests.morning_kind,
-    );
+    const kind = locale.guestKinds[guests.morning_kind] || guests.morning_kind;
+    return guests.morning_locked
+      ? `${kind}: ${locale.guests.morningLocked}`
+      : locale.formatMorningCame(kind);
   }
   return guests.morning_due
     ? locale.guests.morningDue

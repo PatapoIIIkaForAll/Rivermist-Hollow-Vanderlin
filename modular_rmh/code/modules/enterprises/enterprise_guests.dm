@@ -250,6 +250,7 @@
 	var/guest_calls_left = ENTERPRISE_GUEST_CALLS
 	var/morning_guest_due = TRUE
 	var/morning_guest_kind
+	var/morning_guest_locked = FALSE
 
 /datum/enterprise/proc/guests_changed()
 	SStgui.update_uis(src)
@@ -285,6 +286,7 @@
 	guest_calls_left = ENTERPRISE_GUEST_CALLS
 	morning_guest_due = TRUE
 	morning_guest_kind = null
+	morning_guest_locked = FALSE
 	welcome_morning_guest(forced)
 
 /datum/enterprise/proc/welcome_morning_guest(forced)
@@ -295,12 +297,20 @@
 		return null
 	if(!can_receive_guests())
 		return null
-	var/mob/living/simple_animal/enterprise_patron/guest = summon_patron(pick_guest_type(), get_entrance_turf())
+	var/turf/entrance = get_entrance_turf(TRUE)
+	var/locked_out = isnull(entrance)
+	if(locked_out)
+		entrance = get_entrance_turf()
+	var/mob/living/simple_animal/enterprise_patron/guest = summon_patron(pick_guest_type(), entrance)
 	if(!guest)
 		return null
 	morning_guest_due = FALSE
 	morning_guest_kind = guest.guest_kind
-	log_game("[name]: [guest.name] came as the morning guest.")
+	morning_guest_locked = locked_out
+	if(locked_out)
+		guest.turn_away()
+	log_game("[name]: [guest.name] came as the morning guest[locked_out ? " and found every way in locked" : ""].")
+	guests_changed()
 	return guest
 
 /datum/enterprise/proc/call_guest(mob/user)
@@ -339,5 +349,6 @@
 		"open" = !isnull(get_entrance_turf(TRUE)),
 		"morning_due" = morning_guest_due,
 		"morning_kind" = morning_guest_kind,
+		"morning_locked" = morning_guest_locked,
 		"present" = present,
 	)

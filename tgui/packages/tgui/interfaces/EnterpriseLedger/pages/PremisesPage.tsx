@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -11,11 +11,42 @@ import {
 } from 'tgui-core/components';
 
 import { useBackend } from '../../../backend';
+import { UI_INTERACTIVE } from '../../../constants';
 import { getPurposeIcon, getPurposeLabel } from '../purposes';
 import type { Data, FloorInfo, Locale, PageProps, RoomInfo } from '../types';
 
 const LEGEND_WIDTH = '17em';
 const LEGEND_HOVER_COLOR = 'rgba(255, 217, 160, 0.16)';
+const HOVER_DELAY = 250;
+const HOVER_BUDGET = 40;
+const HOVER_BUDGET_WINDOW = 60000;
+
+const useHoverSender = (send: (id: number) => void) => {
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const sentId = useRef(0);
+  const budget = useRef({ since: 0, used: 0 });
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  return (id: number) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      if (sentId.current === id) {
+        return;
+      }
+      const now = Date.now();
+      if (now - budget.current.since > HOVER_BUDGET_WINDOW) {
+        budget.current = { since: now, used: 0 };
+      }
+      if (budget.current.used >= HOVER_BUDGET) {
+        return;
+      }
+      budget.current.used += 1;
+      sentId.current = id;
+      send(id);
+    }, HOVER_DELAY);
+  };
+};
 
 const getFloorLabels = (locale: Locale, floors: FloorInfo[]) => {
   let number = 0;
@@ -32,13 +63,15 @@ type LegendRowProps = {
   locale: Locale;
   enterprise: string;
   room: RoomInfo;
+  occupant: string | undefined;
   highlighted: boolean;
   onHover: (id: number) => void;
   onOpen: (id: number) => void;
 };
 
 const LegendRow = (props: LegendRowProps) => {
-  const { locale, enterprise, room, highlighted, onHover, onOpen } = props;
+  const { locale, enterprise, room, occupant, highlighted, onHover, onOpen } =
+    props;
   const details = [
     getPurposeLabel(locale, enterprise, room.purpose),
     locale.levelNames[room.level] || `${room.level}`,
@@ -46,8 +79,8 @@ const LegendRow = (props: LegendRowProps) => {
   if (room.beds) {
     details.push(locale.formatBeds(room.beds));
   }
-  if (room.tenant) {
-    details.push(room.tenant);
+  if (occupant) {
+    details.push(occupant);
   }
 
   return (
@@ -81,10 +114,12 @@ const Legend = (props: { locale: Locale }) => {
   const { act, data } = useBackend<Data>();
   const [hoveredId, setHoveredId] = useState(0);
   const rooms = (data.rooms || []).filter((room) => room.z === data.viewed_z);
+  const occupants = data.occupants || {};
+  const sendHover = useHoverSender((id) => act('hover_room', { room: id }));
 
   const hover = (id: number) => {
     setHoveredId(id);
-    act('hover_room', { room: id });
+    sendHover(id);
   };
   const open = (id: number) => act('open_room', { room: id });
 
@@ -100,6 +135,7 @@ const Legend = (props: { locale: Locale }) => {
           locale={locale}
           enterprise={data.name}
           room={room}
+          occupant={occupants[room.id]}
           highlighted={room.id === hoveredId}
           onHover={hover}
           onOpen={open}
@@ -111,14 +147,23 @@ const Legend = (props: { locale: Locale }) => {
 
 export const PremisesPage = (props: PageProps) => {
   const { locale } = props;
-  const { act, data } = useBackend<Data>();
+  const { act, data, config } = useBackend<Data>();
   const floors = data.floors || [];
   const labels = getFloorLabels(locale, floors);
+  const interactive = config.status >= UI_INTERACTIVE;
+  const wasInteractive = useRef(interactive);
 
   useEffect(() => {
     act('open_premises');
     return () => act('hide_floors');
   }, []);
+
+  useEffect(() => {
+    if (interactive && !wasInteractive.current) {
+      act('open_premises');
+    }
+    wasInteractive.current = interactive;
+  }, [interactive]);
 
   if (!floors.length) {
     return (
