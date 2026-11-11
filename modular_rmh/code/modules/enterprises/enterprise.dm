@@ -284,13 +284,8 @@
 			var/kind = params["kind"]
 			if(!isnum(kind) || kind != round(kind) || kind < 1 || kind > length(patron_types))
 				return FALSE
-			var/patron_type = patron_types[kind]
-			var/mob/living/simple_animal/enterprise_patron/patron = new patron_type(get_turf(user))
-			patron.visit(src)
-			for(var/lock_id in guest_rooms)
-				if(patron.take_room(guest_rooms[lock_id]))
-					break
-			update_static_data_for_all_viewers()
+			if(!summon_patron(patron_types[kind], user))
+				return FALSE
 			return TRUE
 		if("debug_clear_patrons")
 			for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons.Copy())

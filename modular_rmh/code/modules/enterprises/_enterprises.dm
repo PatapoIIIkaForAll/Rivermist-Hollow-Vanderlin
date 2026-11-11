@@ -3,6 +3,7 @@
 #include "enterprise_furnishing.dm"
 #include "enterprise_lodgers.dm"
 #include "enterprise_map.dm"
+#include "enterprise_patrons.dm"
 #include "enterprise_purposes.dm"
 #include "enterprise_room.dm"
 #include "enterprise_survey.dm"

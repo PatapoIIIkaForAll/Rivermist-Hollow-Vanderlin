@@ -244,6 +244,7 @@
 	var/list/datum/enterprise_room/former = rooms
 	rooms = list()
 	guest_rooms.Cut()
+	exit_doors = null
 	get_own_lock_ids()
 
 	var/list/datum/enterprise_room/pockets = list()

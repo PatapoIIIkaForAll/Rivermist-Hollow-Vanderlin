@@ -217,6 +217,9 @@
 
 /datum/enterprise_room/Destroy()
 	SStgui.close_uis(src)
+	var/mob/living/simple_animal/enterprise_patron/lodger = get_patron()
+	if(lodger?.lodging == src)
+		lodger.lodging = null
 	for(var/datum/enterprise_fixture/fixture as anything in fixtures)
 		if(fixture.room == src)
 			fixture.room = null
@@ -347,6 +350,8 @@
 		if(!length(seating.chairs))
 			seatings -= seating
 			qdel(seating)
+			continue
+		seating.reseat()
 
 /datum/enterprise_room/proc/get_seating(obj/structure/chair/seat)
 	for(var/datum/enterprise_seating/seating as anything in seatings)
@@ -391,6 +396,16 @@
 			doors |= WEAKREF(door)
 		restored++
 	return restored
+
+/datum/enterprise_room/proc/set_doors_locked(locked)
+	for(var/datum/weakref/door_ref as anything in doors)
+		var/obj/structure/door/door = door_ref.resolve()
+		if(QDELETED(door))
+			continue
+		if(locked)
+			door.lock()
+		else
+			door.unlock()
 
 /datum/enterprise_room/proc/get_door_step()
 	var/turf/best
@@ -447,6 +462,9 @@
 	src.room = room
 
 /datum/enterprise_seating/Destroy()
+	var/mob/living/simple_animal/enterprise_patron/sitter = get_patron()
+	if(istype(sitter) && sitter.table_set == src)
+		sitter.table_set = null
 	room = null
 	tables = null
 	chairs = null
@@ -468,6 +486,31 @@
 
 /datum/enterprise_seating/proc/is_free()
 	return !get_patron()
+
+/datum/enterprise_seating/proc/is_bar()
+	var/stools = 0
+	for(var/datum/enterprise_fixture/fixture as anything in chairs)
+		if(ispath(fixture.fixture_type, /obj/structure/chair/stool))
+			stools++
+	return stools >= 2 && stools * 2 >= length(chairs)
+
+/datum/enterprise_seating/proc/get_free_chair(list/claimed)
+	var/list/obj/structure/chair/free = list()
+	for(var/datum/enterprise_fixture/fixture as anything in chairs)
+		var/obj/structure/chair/seat = fixture.get_thing()
+		if(!seat || !fixture.is_present() || length(seat.buckled_mobs) || (seat in claimed))
+			continue
+		free += seat
+	return length(free) ? pick(free) : null
+
+/datum/enterprise_seating/proc/reseat()
+	if(is_bar())
+		return
+	for(var/datum/enterprise_fixture/fixture as anything in chairs)
+		var/obj/structure/chair/seat = fixture.get_thing()
+		for(var/mob/living/simple_animal/enterprise_patron/sitter in seat?.buckled_mobs)
+			if(sitter.get_goal() == ENTERPRISE_PATRON_GOAL_TABLE)
+				sitter.take_seat(src)
 
 /obj/effect/landmark/enterprise_room
 	name = "enterprise room purpose"
