@@ -225,6 +225,15 @@ const locale: Locale = {
   formatMorningCame: (kind) => `Гость уже пришёл: ${kind}`,
   formatCalls: (left, max) => `ещё ${left} из ${max}`,
   formatGrumbling: (displeasure, max) => `Ворчит: ${displeasure} из ${max}`,
+  orders: {
+    walk: 'Идёт за свой стол',
+    note: 'Несёт записку с заказом к стойке',
+    wait: 'Ждёт заказ',
+    meal: 'Ест',
+    morning: 'утренний заказ',
+    debugMorning: 'Утро: постояльцы заказывают',
+  },
+  formatOrderLeft: (minutes) => `ещё ${minutes} мин`,
 };
 
 export default locale;

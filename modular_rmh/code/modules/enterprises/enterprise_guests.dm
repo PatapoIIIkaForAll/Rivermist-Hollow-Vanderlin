@@ -141,7 +141,7 @@
 	switch(get_goal())
 		if(ENTERPRISE_PATRON_GOAL_ROOM)
 			place = lodging
-		if(ENTERPRISE_PATRON_GOAL_TABLE)
+		if(ENTERPRISE_PATRON_GOAL_TABLE, ENTERPRISE_PATRON_GOAL_ORDER)
 			place = table_set?.room
 		if(ENTERPRISE_PATRON_GOAL_BAR)
 			var/obj/structure/stool = seat?.resolve()
@@ -155,6 +155,7 @@
 		"place" = place?.name,
 		"displeasure" = displeasure,
 		"max_displeasure" = max_displeasure,
+		"order" = get_order_data(),
 	)
 
 /mob/living/simple_animal/enterprise_patron/labourer
@@ -179,7 +180,7 @@
 	desc = "A merchant on the road, after a quiet table and a bed for the night."
 	guest_kind = "merchant"
 	goals = list(
-		ENTERPRISE_PATRON_GOAL_TABLE,
+		ENTERPRISE_PATRON_GOAL_ORDER,
 		ENTERPRISE_PATRON_GOAL_ROOM,
 	)
 	looks = list(
@@ -224,7 +225,7 @@
 	desc = "Someone of good family, who expects the best table and the best room."
 	guest_kind = "noble"
 	goals = list(
-		ENTERPRISE_PATRON_GOAL_TABLE,
+		ENTERPRISE_PATRON_GOAL_ORDER,
 		ENTERPRISE_PATRON_GOAL_ROOM,
 	)
 	looks = list(
@@ -288,6 +289,7 @@
 	morning_guest_kind = null
 	morning_guest_locked = FALSE
 	welcome_morning_guest(forced)
+	send_lodgers_to_order()
 
 /datum/enterprise/proc/welcome_morning_guest(forced)
 	if(!morning_guest_due || !SSticker.HasRoundStarted())

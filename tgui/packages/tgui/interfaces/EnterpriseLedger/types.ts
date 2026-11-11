@@ -33,6 +33,13 @@ export type GuestInfo = {
   place: string | null;
   displeasure: number;
   max_displeasure: number;
+  order: GuestOrder | null;
+};
+
+export type GuestOrder = {
+  state: 'note' | 'wait' | 'meal';
+  time_left: number | null;
+  morning: BooleanLike;
 };
 
 export type GuestsData = {
@@ -376,6 +383,15 @@ export type Locale = {
   formatMorningCame: (kind: string) => string;
   formatCalls: (left: number, max: number) => string;
   formatGrumbling: (displeasure: number, max: number) => string;
+  orders: {
+    walk: string;
+    note: string;
+    wait: string;
+    meal: string;
+    morning: string;
+    debugMorning: string;
+  };
+  formatOrderLeft: (minutes: number) => string;
 };
 
 export type PageProps = {

@@ -226,6 +226,15 @@ const locale: Locale = {
   formatMorningCame: (kind) => `Already here: ${kind}`,
   formatCalls: (left, max) => `${left} of ${max}`,
   formatGrumbling: (displeasure, max) => `Grumbling: ${displeasure} of ${max}`,
+  orders: {
+    walk: 'Going back to its table',
+    note: 'Taking an order note to the counter',
+    wait: 'Waiting for an order',
+    meal: 'Eating',
+    morning: 'a morning order',
+    debugMorning: 'Morning: lodgers order',
+  },
+  formatOrderLeft: (minutes) => `${minutes} min left`,
 };
 
 export default locale;

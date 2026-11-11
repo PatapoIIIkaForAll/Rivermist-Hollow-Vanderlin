@@ -239,6 +239,9 @@
 		if("debug_evening")
 			collect_rent()
 			return TRUE
+		if("debug_orders")
+			send_lodgers_to_order(TRUE)
+			return TRUE
 		if("debug_tired")
 			var/mob/living/carbon/human/sleeper = user
 			if(!istype(sleeper))

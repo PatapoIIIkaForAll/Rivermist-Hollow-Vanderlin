@@ -16,7 +16,7 @@
 	var/list/requests = list()
 	var/list/goals = list(
 		ENTERPRISE_PATRON_GOAL_BAR,
-		ENTERPRISE_PATRON_GOAL_TABLE,
+		ENTERPRISE_PATRON_GOAL_ORDER,
 		ENTERPRISE_PATRON_GOAL_ROOM,
 	)
 	var/goal_stage = ENTERPRISE_PATRON_STAGE_SEEK
@@ -165,7 +165,7 @@
 	free_table()
 
 /mob/living/simple_animal/enterprise_patron/proc/get_rent_due()
-	if(!lodging || !enterprise || get_goal() != ENTERPRISE_PATRON_GOAL_ROOM)
+	if(!lodging || !enterprise || leaving || !(ENTERPRISE_PATRON_GOAL_ROOM in goals))
 		return 0
 	return enterprise.get_patron_rent(lodging)
 
@@ -305,6 +305,7 @@
 	idle_behavior = /datum/idle_behavior/nothing
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/enterprise_patron_speak,
+		/datum/ai_planning_subtree/enterprise_patron/find_table/order,
 		/datum/ai_planning_subtree/enterprise_patron/leave,
 		/datum/ai_planning_subtree/enterprise_patron/find_bar,
 		/datum/ai_planning_subtree/enterprise_patron/find_table,
@@ -485,6 +486,8 @@
 	return length(found) ? pick(found) : null
 
 /datum/enterprise/proc/find_free_room()
+	if(!has_patron_room_left())
+		return null
 	var/list/datum/enterprise_room/found = list()
 	for(var/lock_id in guest_rooms)
 		var/datum/enterprise_room/room = guest_rooms[lock_id]

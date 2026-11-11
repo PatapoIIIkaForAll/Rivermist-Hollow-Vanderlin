@@ -539,7 +539,8 @@
 	for(var/datum/enterprise_fixture/fixture as anything in chairs)
 		var/obj/structure/chair/seat = fixture.get_thing()
 		for(var/mob/living/simple_animal/enterprise_patron/sitter in seat?.buckled_mobs)
-			if(sitter.get_goal() == ENTERPRISE_PATRON_GOAL_TABLE)
+			var/goal = sitter.get_goal()
+			if(goal == ENTERPRISE_PATRON_GOAL_TABLE || goal == ENTERPRISE_PATRON_GOAL_ORDER)
 				sitter.take_seat(src)
 
 /obj/effect/landmark/enterprise_room

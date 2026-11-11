@@ -6,10 +6,41 @@ import {
   Section,
   Stack,
   Table,
+  TimeDisplay,
 } from 'tgui-core/components';
 
 import { useBackend } from '../../../backend';
 import type { Data, GuestInfo, GuestsData, Locale, PageProps } from '../types';
+
+const getOrderDoing = (locale: Locale, guest: GuestInfo) => {
+  const text = locale.orders;
+  const order = guest.order;
+  const staying = guest.stage === 'stay';
+  if (!order) {
+    return staying ? locale.guests.tableStay : locale.guests.tableWalk;
+  }
+  const morning = order.morning ? `, ${text.morning}` : '';
+  if (order.state === 'note') {
+    return text.note + morning;
+  }
+  if (order.state === 'meal') {
+    return text.meal + morning;
+  }
+  if (!staying || order.time_left === null) {
+    return (staying ? text.wait : text.walk) + morning;
+  }
+  return (
+    <>
+      {text.wait} (
+      <TimeDisplay
+        auto="down"
+        value={order.time_left}
+        format={(value) => locale.formatOrderLeft(Math.ceil(value / 600))}
+      />
+      ){morning}
+    </>
+  );
+};
 
 const getDoing = (locale: Locale, guest: GuestInfo) => {
   const text = locale.guests;
@@ -21,6 +52,8 @@ const getDoing = (locale: Locale, guest: GuestInfo) => {
       return staying ? text.barStay : text.barWalk;
     case 'table':
       return staying ? text.tableStay : text.tableWalk;
+    case 'order':
+      return getOrderDoing(locale, guest);
     case 'room':
       return staying ? text.roomStay : text.roomWalk;
     default:
