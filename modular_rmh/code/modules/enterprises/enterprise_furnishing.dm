@@ -127,6 +127,7 @@
 /datum/enterprise/proc/mark_stock(obj/thing)
 	if(isitem(thing))
 		ADD_TRAIT(thing, TRAIT_ENTERPRISE_START_STOCK, REF(src))
+	mark_house_drink(thing)
 	for(var/obj/inside in thing)
 		mark_stock(inside)
 

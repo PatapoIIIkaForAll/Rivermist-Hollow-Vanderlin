@@ -196,7 +196,7 @@
 	var/effect = russian \
 		? "Место закупки у двери хранит по [cap] каждого вида товара." \
 		: "The buying post at the door holds [cap] of each kind of goods."
-	return keeps_kegs ? "[effect] [enterprise.describe_keg_store(level, russian)]" : effect
+	return keeps_kegs ? enterprise.describe_keg_store(level, russian) : effect
 
 /datum/enterprise_room_template/storage/on_survey(datum/enterprise_room/room)
 	if(room.stock || room.leader)
@@ -230,7 +230,7 @@
 	)
 	door_words = list("drink", "alcohol", "cellar", "wine", "brew", "напит", "алкогол", "погреб", "вин")
 	post_name = "drinks buying post"
-	post_desc = "Bottled drink is bought here. What is taken is paid for on the spot. The staff hand kegs in and draw drink here."
+	post_desc = "Drink poured in here is paid for by the town. Kegs are handed in and drink is drawn here."
 	keeps_kegs = TRUE
 
 /datum/enterprise_room_template/service_hall

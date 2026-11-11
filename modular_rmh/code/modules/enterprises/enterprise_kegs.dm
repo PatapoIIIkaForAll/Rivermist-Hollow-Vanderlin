@@ -13,13 +13,35 @@
 			return TRUE
 	return FALSE
 
+/datum/enterprise/proc/mark_house_drink(obj/thing)
+	if(!thing.reagents || istype(thing, /obj/item/reagent_containers/food))
+		return
+	for(var/datum/reagent/drink as anything in thing.reagents.reagent_list)
+		if(isnull(drink.data))
+			drink.data = list()
+		if(islist(drink.data))
+			drink.data[ENTERPRISE_STOCK_DATA] = TRUE
+
+/datum/enterprise/proc/stock_house_water(owner_level)
+	if(owner_level < ENTERPRISE_HOUSE_WATER_LEVEL)
+		return FALSE
+	var/stocked = FALSE
+	for(var/datum/enterprise_room/room as anything in rooms)
+		var/datum/enterprise_keg_store/store = room.stock?.kegs
+		if(!store)
+			continue
+		store.water.add_reagent(/datum/reagent/water, store.water.maximum_volume - store.water.total_volume)
+		SStgui.update_uis(store.stock.post)
+		stocked = TRUE
+	return stocked
+
 /datum/enterprise/proc/describe_keg_store(level, russian)
 	var/keg_cap = get_level_value(keg_caps, level) || 0
 	var/volume = get_level_entry(drink_caps, level)
 	var/slots = get_level_entry(drink_slot_caps, level)
 	if(russian)
-		return "[keg_cap ? "Пустых бочек на складе: до [keg_cap]." : "Пустые бочки здесь пока не хранят."] Напитки из сданных бочек сливаются в общее хранилище до [volume] ед.: пиво и вино[slots ? ", а ещё до [slots] других напитков" : ""]."
-	return "[keg_cap ? "It keeps up to [keg_cap] empty kegs." : "It keeps no empty kegs yet."] Drink from the kegs handed in goes into one store of up to [volume] units: beer and wine[slots ? ", and up to [slots] other drinks" : ""]."
+		return "Алкоголь, слитый сюда, оплачивает город, а выкупает его только персонал, за [ENTERPRISE_BUYOUT_PERCENT]% цены. Хранилище держит до [volume] ед.: пиво и вино[slots ? ", а ещё до [slots] других напитков" : ""]; воды — до [ENTERPRISE_WATER_CAP] ед., она бесплатна. [keg_cap ? "Пустых бочек на складе: до [keg_cap]." : "Пустые бочки здесь пока не хранят."]"
+	return "Alcohol poured in here is paid for by the town, and only the staff buy it out, at [ENTERPRISE_BUYOUT_PERCENT]% of the price. The store holds up to [volume] units: beer and wine[slots ? ", and up to [slots] other drinks" : ""]; water up to [ENTERPRISE_WATER_CAP] units, free. [keg_cap ? "It keeps up to [keg_cap] empty kegs." : "It keeps no empty kegs yet."]"
 
 /datum/enterprise_stock
 	var/datum/enterprise_keg_store/kegs
@@ -27,6 +49,7 @@
 /datum/enterprise_keg_store
 	var/datum/enterprise_stock/stock
 	var/datum/reagents/drinks
+	var/datum/reagents/water
 	var/list/obj/structure/fermentation_keg/kegs = list()
 	var/list/standard_drinks = list(
 		/datum/reagent/consumable/ethanol/beer,
@@ -44,6 +67,7 @@
 /datum/enterprise_keg_store/New(datum/enterprise_stock/stock)
 	src.stock = stock
 	drinks = new(get_drink_cap(), NO_REACT)
+	water = new(ENTERPRISE_WATER_CAP, NO_REACT)
 
 /datum/enterprise_keg_store/Destroy()
 	var/turf/drop = stock?.post ? get_turf(stock.post) : null
@@ -56,6 +80,7 @@
 			qdel(keg)
 	kegs = null
 	QDEL_NULL(drinks)
+	QDEL_NULL(water)
 	stock = null
 	return ..()
 
@@ -95,15 +120,88 @@
 			found += initial(drink.age_path)
 	return standard_types
 
+/datum/enterprise_keg_store/proc/get_unit_prices()
+	var/static/list/unit_prices
+	if(unit_prices)
+		return unit_prices
+	unit_prices = list()
+	for(var/pack_type in SSmerchant.supply_packs)
+		var/datum/supply_pack/pack = SSmerchant.supply_packs[pack_type]
+		var/bottle_type = pack.contains
+		if(islist(bottle_type))
+			var/list/contents = bottle_type
+			bottle_type = length(contents) == 1 ? contents[1] : null
+		if(pack.cost <= 0 || !ispath(bottle_type, /obj/item/reagent_containers))
+			continue
+		var/obj/item/reagent_containers/bottle = new bottle_type
+		var/list/bottled = bottle.reagents?.reagent_list
+		if(length(bottled) == 1)
+			var/datum/reagent/drink = bottled[1]
+			if(drink.volume > 0 && isnull(unit_prices[drink.type]))
+				unit_prices[drink.type] = pack.cost / drink.volume
+		qdel(bottle)
+	for(var/datum/brewing_recipe/recipe_type as anything in subtypesof(/datum/brewing_recipe))
+		if(IS_ABSTRACT(recipe_type))
+			continue
+		var/datum/brewing_recipe/recipe = new recipe_type
+		var/units = recipe.brewed_amount * recipe.per_brew_amount
+		if(!recipe.brewed_item && recipe.sell_value > 0 && units > 0)
+			var/list/products = list(recipe.reagent_to_brew) + recipe.age_times
+			for(var/product in products)
+				if(isnull(unit_prices[product]))
+					unit_prices[product] = recipe.sell_value / units
+		qdel(recipe)
+	return unit_prices
+
+/datum/enterprise_keg_store/proc/get_unit_price(drink_type)
+	if(!ispath(drink_type, /datum/reagent/consumable/ethanol))
+		return 0
+	var/list/prices = get_unit_prices()
+	if(!isnull(prices[drink_type]))
+		return prices[drink_type]
+	var/datum/reagent/drink = GLOB.chemical_reagents_list[drink_type]
+	return drink ? max(drink.price_per_unit, 0) : 0
+
+/datum/enterprise_keg_store/proc/get_draw_cost(drink_type, amount)
+	var/price = get_unit_price(drink_type)
+	if(price <= 0 || amount <= 0)
+		return 0
+	return max(-round(-(amount * price * ENTERPRISE_BUYOUT_PERCENT / 100 - 0.01)), 0)
+
+/datum/enterprise_keg_store/proc/can_afford(mob/user, cost)
+	var/datum/enterprise/enterprise = stock.enterprise
+	if(cost <= 0)
+		return TRUE
+	if(enterprise.is_manager(user))
+		return enterprise.can_pay(user, cost)
+	return enterprise.get_bank_balance(user) >= cost
+
+/datum/enterprise_keg_store/proc/charge(mob/user, cost)
+	var/datum/enterprise/enterprise = stock.enterprise
+	if(cost <= 0)
+		return TRUE
+	if(enterprise.is_manager(user))
+		return enterprise.pay(user, cost, "[enterprise.name] drinks")
+	return enterprise.take_from_account(user, cost)
+
+/datum/enterprise_keg_store/proc/pay_out(mob/user, value)
+	if(value <= 0)
+		return
+	if(!SStreasury.give_money_account(value, user, "[stock.enterprise.name] drinks"))
+		stock.post?.budget2change(value, user)
+
 /datum/enterprise_keg_store/proc/is_standard(drink_type)
 	var/list/standard = get_standard_types()
 	return standard[drink_type] ? TRUE : FALSE
 
-/datum/enterprise_keg_store/proc/get_drink(drink_type)
-	for(var/datum/reagent/drink as anything in drinks.reagent_list)
+/datum/enterprise_keg_store/proc/get_reagent_in(datum/reagents/holder, drink_type)
+	for(var/datum/reagent/drink as anything in holder.reagent_list)
 		if(drink.type == drink_type)
 			return drink
 	return null
+
+/datum/enterprise_keg_store/proc/get_drink(drink_type)
+	return get_reagent_in(drink_type == /datum/reagent/water ? water : drinks, drink_type)
 
 /datum/enterprise_keg_store/proc/count_custom()
 	var/count = 0
@@ -113,7 +211,7 @@
 	return count
 
 /datum/enterprise_keg_store/proc/can_hold(drink_type)
-	if(is_standard(drink_type) || get_drink(drink_type))
+	if(is_standard(drink_type) || get_reagent_in(drinks, drink_type))
 		return TRUE
 	return count_custom() < get_slot_cap()
 
@@ -162,34 +260,59 @@
 			oldest = recipe.age_times[path]
 	return aged
 
-/datum/enterprise_keg_store/proc/pour(obj/structure/fermentation_keg/keg)
-	var/datum/reagents/source = keg.reagents
-	var/brewed_type = (keg.ready_to_bottle && keg.selected_recipe) ? keg.selected_recipe.reagent_to_brew : null
-	var/aged_type = brewed_type ? get_aged_type(keg) : null
+/datum/enterprise_keg_store/proc/pour(datum/reagents/source, list/stayed, list/refused, drain_water, brewed_type, aged_type)
 	drinks.maximum_volume = get_drink_cap()
-	var/list/stayed = list()
+	var/value = 0
 	for(var/datum/reagent/drink as anything in source.reagent_list)
 		var/drink_type = drink.type
 		var/drink_name = drink.name
 		var/volume = drink.volume
-		if(ispath(drink_type, /datum/reagent/water))
-			source.remove_reagent(drink_type, volume)
+		var/list/data = drink.data
+		if(islist(data) && data[ENTERPRISE_STOCK_DATA])
+			refused |= drink_name
+			continue
+		if(drink_type == /datum/reagent/water)
+			var/kept_water = max(min(volume, water.maximum_volume - water.total_volume), 0)
+			if(kept_water > 0)
+				water.add_reagent(drink_type, kept_water)
+			var/removed = drain_water ? volume : kept_water
+			if(removed > 0)
+				source.remove_reagent(drink_type, removed)
+			if(removed < volume)
+				stayed |= drink_name
 			continue
 		var/stored_type = drink_type == brewed_type ? aged_type : drink_type
 		var/amount = can_hold(stored_type) ? min(volume, drinks.maximum_volume - drinks.total_volume) : 0
 		if(amount > 0)
-			drinks.add_reagent(stored_type, amount, copy_drink_data(drink.data))
+			drinks.add_reagent(stored_type, amount, copy_drink_data(data))
 			source.remove_reagent(drink_type, amount)
+			value += amount * get_unit_price(stored_type)
 		if(amount < volume)
 			stayed |= drink_name
-	return stayed
+	return round(value)
+
+/datum/enterprise_keg_store/proc/report_pour(mob/user, value, list/stayed, list/refused, obj/structure/fermentation_keg/keg)
+	var/russian = get_preferred_ui_language(user) == "ru"
+	var/list/lines = list()
+	if(value > 0)
+		lines += russian ? "Город заплатил за напиток [value]." : "The town has paid [value] for the drink."
+	if(length(refused))
+		lines += russian ? "Не принято, это запасы самого заведения: [jointext(refused, ", ")]." : "Not taken, it is the house's own stock: [jointext(refused, ", ")]."
+	if(length(stayed))
+		lines += russian ? "Не поместилось в хранилище: [jointext(stayed, ", ")]." : "No room in the store for: [jointext(stayed, ", ")]."
+	if(keg && !keg.loc)
+		lines += russian ? "Пустая бочка убрана на склад." : "The empty keg is put away."
+	else if(keg && !keg.reagents.total_volume)
+		if(get_keg_cap())
+			lines += russian ? "Для пустой бочки места на складе нет." : "There is no room left for the empty keg."
+		else
+			lines += russian ? "Пустые бочки здесь хранят с первого уровня склада." : "Empty kegs are kept here from the store's first level."
+	if(!length(lines))
+		lines += russian ? "Напиток слит в хранилище." : "The drink is poured into the store."
+	to_chat(user, span_notice(jointext(lines, " ")))
 
 /datum/enterprise_keg_store/proc/store(obj/structure/fermentation_keg/keg, mob/living/user)
 	var/russian = get_preferred_ui_language(user) == "ru"
-	var/datum/enterprise/enterprise = stock.enterprise
-	if(!enterprise.is_staff(user))
-		to_chat(user, span_warning(russian ? "Сдавать бочки на склад может только персонал." : "Only the staff may hand kegs in to the store."))
-		return FALSE
 	if(!is_at_post(keg))
 		to_chat(user, span_warning(russian ? "Подтащите бочку к посту: она должна стоять рядом с ним." : "Bring a keg up to the post: it has to stand right by it."))
 		return FALSE
@@ -200,10 +323,13 @@
 		return FALSE
 	if(QDELETED(src) || !stock || !is_at_post(keg) || is_busy(keg))
 		return FALSE
-	var/list/stayed = pour(keg)
+	var/brewed_type = (keg.ready_to_bottle && keg.selected_recipe) ? keg.selected_recipe.reagent_to_brew : null
+	var/list/stayed = list()
+	var/list/refused = list()
+	var/value = pour(keg.reagents, stayed, refused, TRUE, brewed_type, brewed_type ? get_aged_type(keg) : null)
+	pay_out(user, value)
 	if(keg.reagents.total_volume > 0)
 		keg.update_appearance(UPDATE_OVERLAYS)
-		to_chat(user, span_warning(russian ? "В хранилище поместилось не всё, в бочке осталось: [jointext(stayed, ", ")]." : "Not everything fitted into the store; still in the keg: [jointext(stayed, ", ")]."))
 	else
 		keg.recipe_crop_stocks?.Cut()
 		keg.reset_keg()
@@ -211,21 +337,30 @@
 			keg.pulledby?.stop_pulling()
 			keg.moveToNullspace()
 			kegs += keg
-			to_chat(user, span_notice(russian ? "Напиток слит в хранилище, пустая бочка убрана на склад." : "The drink is poured into the store, and the empty keg is put away."))
-		else if(get_keg_cap())
-			to_chat(user, span_notice(russian ? "Напиток слит в хранилище, но для пустой бочки места на складе нет." : "The drink is poured into the store, but there is no room left for the empty keg."))
-		else
-			to_chat(user, span_notice(russian ? "Напиток слит в хранилище. Пустые бочки здесь хранят с первого уровня склада." : "The drink is poured into the store. Empty kegs are kept here from the store's first level."))
-	log_game("[key_name(user)] handed a keg in to the [enterprise.name] drinks store")
+	report_pour(user, value, stayed, refused, keg)
+	log_game("[key_name(user)] handed a keg in to the [stock.enterprise.name] drinks store and was paid [value]")
+	SStgui.update_uis(stock.post)
+	return TRUE
+
+/datum/enterprise_keg_store/proc/pour_item(obj/item/reagent_containers/tool, mob/living/user)
+	var/russian = get_preferred_ui_language(user) == "ru"
+	if(!tool.reagents?.total_volume)
+		to_chat(user, span_warning(russian ? "Здесь пусто: сливать нечего." : "It is empty: there is nothing to pour."))
+		return FALSE
+	var/before = tool.reagents.total_volume
+	var/list/stayed = list()
+	var/list/refused = list()
+	var/value = pour(tool.reagents, stayed, refused, FALSE)
+	pay_out(user, value)
+	report_pour(user, value, stayed, refused)
+	if(tool.reagents.total_volume >= before)
+		return FALSE
+	log_game("[key_name(user)] poured [tool] into the [stock.enterprise.name] drinks store and was paid [value]")
 	SStgui.update_uis(stock.post)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/take_empty(mob/living/user)
 	var/russian = get_preferred_ui_language(user) == "ru"
-	var/datum/enterprise/enterprise = stock.enterprise
-	if(!enterprise.is_staff(user))
-		to_chat(user, span_warning(russian ? "Брать бочки со склада может только персонал." : "Only the staff may take kegs from the store."))
-		return FALSE
 	var/obj/structure/fermentation_keg/keg = pick_keg()
 	if(!keg)
 		to_chat(user, span_warning(russian ? "На складе нет пустых бочек." : "There are no empty kegs in the store."))
@@ -233,17 +368,19 @@
 	kegs -= keg
 	keg.forceMove(get_turf(user))
 	to_chat(user, span_notice(russian ? "Пустая бочка выкачена со склада." : "An empty keg is rolled out of the store."))
-	log_game("[key_name(user)] took an empty keg from the [enterprise.name] drinks store")
+	log_game("[key_name(user)] took an empty keg from the [stock.enterprise.name] drinks store")
 	SStgui.update_uis(stock.post)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/fill(mob/living/user, drink_type, amount)
 	var/russian = get_preferred_ui_language(user) == "ru"
 	var/datum/enterprise/enterprise = stock.enterprise
-	if(!enterprise.is_staff(user))
-		to_chat(user, span_warning(russian ? "Наливать из хранилища может только персонал." : "Only the staff may draw from the store."))
+	var/datum/reagents/source = drink_type == /datum/reagent/water ? water : drinks
+	var/datum/reagent/drink = get_reagent_in(source, drink_type)
+	if(!drink || !isnum(amount) || amount <= 0)
 		return FALSE
-	if(!get_drink(drink_type) || !isnum(amount) || amount <= 0)
+	if(source == drinks && !enterprise.is_staff(user))
+		to_chat(user, span_warning(russian ? "Выкупать напитки может только персонал таверны; воду берёт кто угодно." : "Only the tavern staff may buy drink out; anyone may draw water."))
 		return FALSE
 	var/obj/structure/fermentation_keg/target = get_brought_keg(user)
 	if(target && (target.selected_recipe || is_busy(target)))
@@ -251,6 +388,10 @@
 		return FALSE
 	if(!target && !pick_keg())
 		to_chat(user, span_warning(russian ? "Нет бочки: подтащите свою к посту или сдайте пустую на склад." : "There is no keg: bring one up to the post or put an empty one into the store."))
+		return FALSE
+	var/cost = get_draw_cost(drink_type, min(amount, drink.volume))
+	if(!can_afford(user, cost))
+		to_chat(user, span_warning(russian ? "Не хватает денег: нужно [cost]." : "There is not enough money: it takes [cost]."))
 		return FALSE
 	if(!do_after(user, ENTERPRISE_KEG_POUR_TIME, target || stock.post))
 		return FALSE
@@ -264,28 +405,46 @@
 		target = pick_keg()
 		if(!target)
 			return FALSE
-	var/datum/reagent/drink = get_drink(drink_type)
+	drink = get_reagent_in(source, drink_type)
 	if(!drink)
 		return FALSE
 	var/poured = min(amount, drink.volume, target.reagents.maximum_volume - target.reagents.total_volume)
 	if(poured <= 0)
 		to_chat(user, span_warning(russian ? "В этой бочке нет места." : "There is no room left in this keg."))
 		return FALSE
+	var/price = get_unit_price(drink_type)
+	cost = get_draw_cost(drink_type, poured)
+	if(!charge(user, cost))
+		to_chat(user, span_warning(russian ? "Не хватает денег: нужно [cost]." : "There is not enough money: it takes [cost]."))
+		return FALSE
 	var/drink_name = drink.name
-	target.reagents.add_reagent(drink_type, poured, copy_drink_data(drink.data))
-	drinks.remove_reagent(drink_type, poured)
+	var/list/data = copy_drink_data(drink.data)
+	if(price > 0)
+		if(isnull(data))
+			data = list()
+		if(islist(data))
+			data[ENTERPRISE_STOCK_DATA] = TRUE
+	target.reagents.add_reagent(drink_type, poured, data)
+	source.remove_reagent(drink_type, poured)
 	if(from_store)
 		kegs -= target
 		target.forceMove(get_turf(user))
 	target.update_appearance(UPDATE_OVERLAYS)
+	var/town_paid = round(poured * price)
+	if(cost && town_paid > cost)
+		SStreasury.log_to_steward("-[town_paid - cost] from treasury ([enterprise.name] drinks)")
 	var/shown = round(poured, 0.1)
-	to_chat(user, span_notice(russian ? "В бочку налито [shown] ед. «[drink_name]»." : "[UNIT_FORM_STRING(shown)] of [drink_name] poured into the keg."))
-	log_game("[key_name(user)] drew [shown] of [drink_type] from the [enterprise.name] drinks store")
+	if(russian)
+		to_chat(user, span_notice("В бочку налито [shown] ед. «[drink_name]»[cost ? ", заплачено [cost]" : ""]."))
+	else
+		to_chat(user, span_notice("[UNIT_FORM_STRING(shown)] of [drink_name] poured into the keg[cost ? " for [cost]" : ""]."))
+	log_game("[key_name(user)] drew [shown] of [drink_type] from the [enterprise.name] drinks store for [cost]")
 	SStgui.update_uis(stock.post)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/get_data(mob/user)
 	prune()
+	var/datum/enterprise/enterprise = stock.enterprise
 	var/list/drink_rows = list()
 	for(var/datum/reagent/drink as anything in drinks.reagent_list)
 		drink_rows += list(list(
@@ -293,6 +452,7 @@
 			"name" = drink.name,
 			"amount" = round(drink.volume, 0.1),
 			"custom" = !is_standard(drink.type),
+			"price" = get_unit_price(drink.type),
 		))
 	return list(
 		"stored" = length(kegs),
@@ -301,8 +461,13 @@
 		"volume_cap" = get_drink_cap(),
 		"custom" = count_custom(),
 		"custom_cap" = get_slot_cap(),
+		"water" = round(water.total_volume, 0.1),
+		"water_cap" = water.maximum_volume,
+		"water_id" = "[/datum/reagent/water]",
 		"keg_volume" = ENTERPRISE_KEG_VOLUME,
-		"can_use" = stock.enterprise.is_staff(user),
+		"share" = ENTERPRISE_BUYOUT_PERCENT,
+		"staff" = enterprise.is_staff(user),
+		"funds" = enterprise.is_manager(user) ? enterprise.book_balance + enterprise.get_bank_balance(user) : enterprise.get_bank_balance(user),
 		"drinks" = drink_rows,
 	)
 

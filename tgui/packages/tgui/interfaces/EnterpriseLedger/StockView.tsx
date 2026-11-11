@@ -16,21 +16,26 @@ import type { KegData, KegDrink, Locale, StockData, StockEntry } from './types';
 import { useIconRefs } from './useIconRefs';
 
 const ICON_SIZE = '32px';
-const DRINKS_HEIGHT = '12em';
+
+const getDrinkCost = (amount: number, price: number, share: number) =>
+  price > 0 ? Math.max(Math.ceil((amount * price * share) / 100 - 0.01), 0) : 0;
 
 type KegRowProps = {
   locale: Locale;
   drink: KegDrink;
-  canUse: boolean;
+  canDraw: boolean;
+  share: number;
+  funds: number;
   kegVolume: number;
   onPour: (id: string, amount: number) => void;
 };
 
 const KegRow = (props: KegRowProps) => {
-  const { locale, drink, canUse, kegVolume, onPour } = props;
+  const { locale, drink, canDraw, share, funds, kegVolume, onPour } = props;
   const limit = Math.max(1, Math.floor(Math.min(drink.amount, kegVolume)));
   const [amount, setAmount] = useState(limit);
   const shown = Math.min(amount, limit);
+  const cost = getDrinkCost(shown, drink.price, share);
 
   return (
     <Stack align="center" mb={0.5}>
@@ -43,7 +48,7 @@ const KegRow = (props: KegRowProps) => {
         )}
       </Stack.Item>
       <Stack.Item color="label">{locale.formatUnits(drink.amount)}</Stack.Item>
-      {canUse && (
+      {canDraw && (
         <>
           <Stack.Item>
             <NumberInput
@@ -56,8 +61,12 @@ const KegRow = (props: KegRowProps) => {
             />
           </Stack.Item>
           <Stack.Item>
-            <Button icon="fill-drip" onClick={() => onPour(drink.id, shown)}>
-              {locale.kegs.fill}
+            <Button
+              icon={cost ? 'coins' : 'fill-drip'}
+              disabled={cost > funds}
+              onClick={() => onPour(drink.id, shown)}
+            >
+              {cost ? locale.formatDrinkCost(cost) : locale.kegs.fill}
             </Button>
           </Stack.Item>
         </>
@@ -69,39 +78,57 @@ const KegRow = (props: KegRowProps) => {
 type KegSectionProps = {
   locale: Locale;
   kegs: KegData;
+  level: number;
 };
 
 const KegSection = (props: KegSectionProps) => {
-  const { locale, kegs } = props;
+  const { locale, kegs, level } = props;
   const { act } = useBackend<StockData>();
   const drinks = kegs.drinks || [];
-  const canUse = !!kegs.can_use;
+  const staff = !!kegs.staff;
   const pour = (id: string, amount: number) => act('fill_keg', { id, amount });
+  const water: KegDrink = {
+    id: kegs.water_id,
+    name: locale.kegs.water,
+    amount: kegs.water,
+    custom: 0,
+    price: 0,
+  };
+  const rowProps = {
+    locale,
+    share: kegs.share,
+    funds: kegs.funds,
+    kegVolume: kegs.keg_volume,
+    onPour: pour,
+  };
 
   return (
     <Section
+      fill
+      scrollable
       title={locale.kegs.title}
       buttons={
-        canUse && (
-          <>
-            <Button icon="arrow-down" onClick={() => act('store_keg')}>
-              {locale.kegs.store}
-            </Button>
-            <Button
-              icon="arrow-up"
-              disabled={!kegs.stored}
-              onClick={() => act('take_keg')}
-            >
-              {locale.kegs.takeEmpty}
-            </Button>
-          </>
-        )
+        <>
+          <Button icon="arrow-down" onClick={() => act('store_keg')}>
+            {locale.kegs.store}
+          </Button>
+          <Button
+            icon="arrow-up"
+            disabled={!kegs.stored}
+            onClick={() => act('take_keg')}
+          >
+            {locale.kegs.takeEmpty}
+          </Button>
+        </>
       }
     >
       <Box color="label" mb={1}>
         {locale.kegs.hint}
       </Box>
       <LabeledList>
+        <LabeledList.Item label={locale.room.level}>
+          {locale.levelNames[level] || level}
+        </LabeledList.Item>
         <LabeledList.Item label={locale.kegs.stored}>
           {kegs.keg_cap
             ? `${kegs.stored} / ${kegs.keg_cap}`
@@ -113,18 +140,27 @@ const KegSection = (props: KegSectionProps) => {
         <LabeledList.Item label={locale.kegs.custom}>
           {`${kegs.custom} / ${kegs.custom_cap}`}
         </LabeledList.Item>
+        <LabeledList.Item label={locale.kegs.water}>
+          {`${kegs.water} / ${kegs.water_cap}`}
+        </LabeledList.Item>
+        {staff && (
+          <LabeledList.Item label={locale.kegs.share}>
+            {locale.formatShare(kegs.share)}
+          </LabeledList.Item>
+        )}
+        {staff && (
+          <LabeledList.Item label={locale.kegs.funds}>
+            {kegs.funds}
+          </LabeledList.Item>
+        )}
       </LabeledList>
-      <Box mt={1} style={{ maxHeight: DRINKS_HEIGHT, overflowY: 'auto' }}>
+      <Box mt={1}>
+        {!!kegs.water && (
+          <KegRow key={water.id} drink={water} canDraw {...rowProps} />
+        )}
         {!drinks.length && <Box color="label">{locale.kegs.empty}</Box>}
         {drinks.map((drink) => (
-          <KegRow
-            key={drink.id}
-            locale={locale}
-            drink={drink}
-            canUse={canUse}
-            kegVolume={kegs.keg_volume}
-            onPour={pour}
-          />
+          <KegRow key={drink.id} drink={drink} canDraw={staff} {...rowProps} />
         ))}
       </Box>
     </Section>
@@ -188,66 +224,74 @@ const StockRow = (props: StockRowProps) => {
   );
 };
 
-export const EnterpriseStockView = (props: { locale: Locale }) => {
+const GoodsView = (props: { locale: Locale }) => {
   const { locale } = props;
   const { act, data } = useBackend<StockData>();
-  useIconRefs();
   const entries = data.entries || [];
+  const buy = (id: string) => act('buy', { id });
+
+  return (
+    <Stack vertical fill>
+      <Stack.Item>
+        <Section title={locale.stock.title}>
+          <Box color="label" mb={1}>
+            {locale.stock.hint}
+          </Box>
+          <LabeledList>
+            <LabeledList.Item label={locale.room.level}>
+              {locale.levelNames[data.level] || data.level}
+            </LabeledList.Item>
+            <LabeledList.Item label={locale.stock.capacity}>
+              {locale.formatCapacity(data.cap)}
+            </LabeledList.Item>
+            {!!data.can_buy && (
+              <LabeledList.Item label={locale.stock.funds}>
+                {data.funds}
+              </LabeledList.Item>
+            )}
+          </LabeledList>
+        </Section>
+      </Stack.Item>
+      <Stack.Item grow>
+        <Section fill scrollable>
+          {!entries.length && <Box color="label">{locale.stock.empty}</Box>}
+          {entries.map((entry) => (
+            <StockRow
+              key={entry.id}
+              locale={locale}
+              entry={entry}
+              cap={data.cap}
+              canBuy={!!data.can_buy}
+              funds={data.funds}
+              onBuy={buy}
+            />
+          ))}
+        </Section>
+      </Stack.Item>
+    </Stack>
+  );
+};
+
+export const EnterpriseStockView = (props: { locale: Locale }) => {
+  const { locale } = props;
+  const { data } = useBackend<StockData>();
+  useIconRefs();
   const kegs = data.kegs;
   const enterpriseName =
     locale.enterpriseNames[data.enterprise] || data.enterprise;
-  const buy = (id: string) => act('buy', { id });
 
   return (
     <Window
       title={`${locale.stock.title}: ${enterpriseName}`}
       width={560}
-      height={kegs ? 760 : 480}
+      height={kegs ? 640 : 480}
     >
       <Window.Content>
-        <Stack vertical fill>
-          <Stack.Item>
-            <Section title={locale.stock.title}>
-              <Box color="label" mb={1}>
-                {locale.stock.hint}
-              </Box>
-              <LabeledList>
-                <LabeledList.Item label={locale.room.level}>
-                  {locale.levelNames[data.level] || data.level}
-                </LabeledList.Item>
-                <LabeledList.Item label={locale.stock.capacity}>
-                  {locale.formatCapacity(data.cap)}
-                </LabeledList.Item>
-                {!!data.can_buy && (
-                  <LabeledList.Item label={locale.stock.funds}>
-                    {data.funds}
-                  </LabeledList.Item>
-                )}
-              </LabeledList>
-            </Section>
-          </Stack.Item>
-          {!!kegs && (
-            <Stack.Item>
-              <KegSection locale={locale} kegs={kegs} />
-            </Stack.Item>
-          )}
-          <Stack.Item grow>
-            <Section fill scrollable>
-              {!entries.length && <Box color="label">{locale.stock.empty}</Box>}
-              {entries.map((entry) => (
-                <StockRow
-                  key={entry.id}
-                  locale={locale}
-                  entry={entry}
-                  cap={data.cap}
-                  canBuy={!!data.can_buy}
-                  funds={data.funds}
-                  onBuy={buy}
-                />
-              ))}
-            </Section>
-          </Stack.Item>
-        </Stack>
+        {kegs ? (
+          <KegSection locale={locale} kegs={kegs} level={data.level} />
+        ) : (
+          <GoodsView locale={locale} />
+        )}
       </Window.Content>
     </Window>
   );

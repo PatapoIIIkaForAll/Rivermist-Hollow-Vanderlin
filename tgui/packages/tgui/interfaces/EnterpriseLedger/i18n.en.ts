@@ -187,7 +187,7 @@ const locale: Locale = {
   },
   kegs: {
     title: 'Kegs and drink',
-    hint: 'Pull a keg up to the post and press "Hand in a keg", or drag it onto the post: its drink goes into the shared store (water is poured away), and the empty keg is put away if there is room. "Pour" fills the keg you are pulling, or else a keg from the store.',
+    hint: 'Use a bottle or a cup on the post, or hand in a keg (pull it up and press "Hand in a keg", or drag it onto the post): the town pays for the alcohol, water is free, and what already belongs to the house is not taken. An empty keg is put away if there is room. Only the staff buy drink out, at 90% of the price; anyone may draw water. Drink is poured into the keg you are pulling, or else into a keg from the store.',
     stored: 'Empty kegs kept',
     volume: 'Drink in store',
     custom: 'Other drinks',
@@ -197,6 +197,9 @@ const locale: Locale = {
     takeEmpty: 'Take an empty keg',
     fill: 'Pour',
     other: 'other',
+    water: 'Water',
+    funds: 'Your money',
+    share: 'You pay',
   },
   formatPremises: (floors, basements, tiles) =>
     `Floors: ${floors}, basement levels: ${basements}, tiles: ${tiles}`,
@@ -218,6 +221,8 @@ const locale: Locale = {
   formatBuy: (cost) => `Buy out for ${cost}`,
   formatCapacity: (cap) => `${cap} of each kind`,
   formatUnits: (amount) => `${amount} ligulae`,
+  formatDrinkCost: (cost) => `Buy out for ${cost}`,
+  formatShare: (share) => `${share}% of the price`,
   formatMorningCame: (kind) => `Already here: ${kind}`,
   formatCalls: (left, max) => `${left} of ${max}`,
   formatGrumbling: (displeasure, max) => `Grumbling: ${displeasure} of ${max}`,

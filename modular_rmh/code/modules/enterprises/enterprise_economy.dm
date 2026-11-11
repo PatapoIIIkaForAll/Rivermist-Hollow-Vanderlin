@@ -149,6 +149,7 @@
 			redraw()
 			var/russian = get_preferred_ui_language(owner) == "ru"
 			to_chat(owner, span_notice(russian ? "Заведение обставлено под мой уровень владельца: [owner_level]." : "The house is furnished as my owner level has earned it: [owner_level]."))
+		stock_house_water(owner_level)
 	write_journal()
 	SStgui.update_uis(src)
 	return TRUE
@@ -310,6 +311,8 @@
 /obj/structure/fake_machine/enterprise_stock/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
 	if(!stock || istype(tool, /obj/item/coin))
 		return NONE
+	if(stock.kegs && istype(tool, /obj/item/reagent_containers/glass))
+		return stock.kegs.pour_item(tool, user) ? ITEM_INTERACT_SUCCESS : ITEM_INTERACT_BLOCKING
 	var/russian = get_preferred_ui_language(user) == "ru"
 	if(HAS_TRAIT(tool, TRAIT_ENTERPRISE_START_STOCK))
 		to_chat(user, span_warning(russian ? "Это уже из запасов самого заведения: такое здесь не принимают." : "This already belongs to the house's own stock: it is not taken here."))

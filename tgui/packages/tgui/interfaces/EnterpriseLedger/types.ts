@@ -161,6 +161,7 @@ export type KegDrink = {
   name: string;
   amount: number;
   custom: BooleanLike;
+  price: number;
 };
 
 export type KegData = {
@@ -170,8 +171,13 @@ export type KegData = {
   volume_cap: number;
   custom: number;
   custom_cap: number;
+  water: number;
+  water_cap: number;
+  water_id: string;
   keg_volume: number;
-  can_use: BooleanLike;
+  share: number;
+  staff: BooleanLike;
+  funds: number;
   drinks: KegDrink[];
 };
 
@@ -343,6 +349,9 @@ export type Locale = {
     takeEmpty: string;
     fill: string;
     other: string;
+    water: string;
+    funds: string;
+    share: string;
   };
   formatPremises: (floors: number, basements: number, tiles: number) => string;
   formatFloor: (number: number) => string;
@@ -362,6 +371,8 @@ export type Locale = {
   formatBuy: (cost: number) => string;
   formatCapacity: (cap: number) => string;
   formatUnits: (amount: number) => string;
+  formatDrinkCost: (cost: number) => string;
+  formatShare: (share: number) => string;
   formatMorningCame: (kind: string) => string;
   formatCalls: (left: number, max: number) => string;
   formatGrumbling: (displeasure: number, max: number) => string;
