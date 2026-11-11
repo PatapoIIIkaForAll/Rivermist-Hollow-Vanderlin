@@ -44,10 +44,11 @@
 	SStreasury.bank_accounts[payer] -= cost
 	return TRUE
 
-/datum/enterprise/proc/new_day()
+/datum/enterprise/proc/new_day(forced)
 	collect_patron_rent()
 	earned_today = 0
 	rested_today = list()
+	start_guest_day(forced)
 	SStgui.update_uis(src)
 
 #define ENTERPRISE_SAVE_NAME "enterprises"

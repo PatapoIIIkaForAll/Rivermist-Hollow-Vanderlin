@@ -1,5 +1,5 @@
 /mob/living/simple_animal/enterprise_patron
-	name = "patron"
+	name = "traveller"
 	desc = "A traveller after a meal and a bed."
 	maxHealth = 100
 	health = 100
@@ -7,7 +7,6 @@
 	faction = list(FACTION_TOWN)
 	wander = FALSE
 	ai_controller = /datum/ai_controller/enterprise_patron
-	var/outfit_type = /datum/outfit/farmer_p
 	var/datum/enterprise/enterprise
 	var/datum/enterprise_room/lodging
 	var/datum/enterprise_seating/table_set
@@ -68,16 +67,47 @@
 
 /mob/living/simple_animal/enterprise_patron/Initialize(mapload)
 	. = ..()
-	apply_dynamic_human_appearance(src, outfit_type)
+	dress()
 
 /mob/living/simple_animal/enterprise_patron/Destroy()
 	vacate()
 	seat = null
 	origin = null
-	if(enterprise)
-		enterprise.patrons -= src
-		enterprise = null
+	forget_enterprise()
 	return ..()
+
+/mob/living/simple_animal/enterprise_patron/death(gibbed)
+	leave_seat()
+	vacate()
+	forget_enterprise()
+	. = ..()
+	if(!QDELETED(src))
+		transform = transform.Turn(90)
+
+/mob/living/simple_animal/enterprise_patron/Bump(atom/bumped)
+	. = ..()
+	if(istype(bumped, /obj/structure/door))
+		open_door(bumped)
+
+/mob/living/simple_animal/enterprise_patron/proc/open_door(obj/structure/door/door)
+	if(QDELETED(door) || door.door_opened || door.switching_states || !door.anchored || door.locked())
+		return FALSE
+	INVOKE_ASYNC(door, TYPE_PROC_REF(/obj/structure/door, SwitchState), FALSE, src)
+	door.bump_close_later(src)
+	return TRUE
+
+/obj/structure/door/CanAStarPass(ID, to_dir, datum/requester)
+	. = ..()
+	if(!. && anchored && !locked() && istype(requester, /mob/living/simple_animal/enterprise_patron))
+		return TRUE
+
+/mob/living/simple_animal/enterprise_patron/proc/forget_enterprise()
+	if(!enterprise)
+		return
+	var/datum/enterprise/visited = enterprise
+	enterprise = null
+	visited.patrons -= src
+	visited.guests_changed()
 
 /mob/living/simple_animal/enterprise_patron/proc/visit(datum/enterprise/visited)
 	if(enterprise)
@@ -171,6 +201,7 @@
 	walk_until = 0
 	stop_walking()
 	leave_seat()
+	enterprise?.guests_changed()
 
 /mob/living/simple_animal/enterprise_patron/proc/remark(kind)
 	var/list/choices = lines[kind]
@@ -201,6 +232,7 @@
 	stop_walking()
 	leave_seat()
 	free_table()
+	enterprise?.guests_changed()
 
 /mob/living/simple_animal/enterprise_patron/proc/take_offence(mob/living/offender)
 	if(leaving)
@@ -227,6 +259,7 @@
 		if(ENTERPRISE_PATRON_GOAL_ROOM)
 			sit_down()
 			stay_until = leaves_at
+	enterprise?.guests_changed()
 
 /mob/living/simple_animal/enterprise_patron/proc/sit_down()
 	var/obj/structure/wanted = seat?.resolve()
@@ -242,33 +275,11 @@
 	if(!leaving)
 		next_goal()
 
-/mob/living/simple_animal/enterprise_patron/vagrant
-	name = "wanderer"
-	outfit_type = /datum/outfit/vagrant
-	goals = list(
-		ENTERPRISE_PATRON_GOAL_BAR,
-	)
-
-/mob/living/simple_animal/enterprise_patron/merchant
-	name = "travelling merchant"
-	outfit_type = /datum/outfit/waterdeep_merchant
-	goals = list(
-		ENTERPRISE_PATRON_GOAL_TABLE,
-		ENTERPRISE_PATRON_GOAL_ROOM,
-	)
-
-/mob/living/simple_animal/enterprise_patron/sellsword
-	name = "sellsword"
-	outfit_type = /datum/outfit/adventurer_fighter/sellsword_hireling
-	goals = list(
-		ENTERPRISE_PATRON_GOAL_BAR,
-		ENTERPRISE_PATRON_GOAL_TABLE,
-	)
-
 /datum/ai_controller/enterprise_patron
 	movement_delay = 0.5 SECONDS
 	max_target_distance = 300
-	ai_movement = /datum/ai_movement/hybrid_pathing
+	can_idle = FALSE
+	ai_movement = /datum/ai_movement/hybrid_pathing/enterprise_patron
 	idle_behavior = /datum/idle_behavior/nothing
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/enterprise_patron_speak,
@@ -277,6 +288,10 @@
 		/datum/ai_planning_subtree/enterprise_patron/find_table,
 		/datum/ai_planning_subtree/enterprise_patron/find_room,
 	)
+
+/datum/ai_movement/hybrid_pathing/enterprise_patron
+	max_path_distance = 80
+	always_advanced = TRUE
 
 /datum/ai_planning_subtree/enterprise_patron_speak/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/simple_animal/enterprise_patron/patron = controller.pawn
@@ -416,6 +431,9 @@
 		return
 	if(succeeded)
 		patron.arrive()
+	else if(controller.ai_status == AI_STATUS_OFF)
+		patron.goal_stage = ENTERPRISE_PATRON_STAGE_SEEK
+		patron.walk_until = 0
 	else
 		patron.give_up()
 
@@ -501,10 +519,10 @@
 			best_distance = distance
 	return best
 
-/datum/enterprise/proc/summon_patron(patron_type, atom/near)
-	var/turf/entrance = get_exit_turf(near) || get_turf(near)
-	if(!entrance)
+/datum/enterprise/proc/summon_patron(patron_type, turf/entrance)
+	if(!ispath(patron_type, /mob/living/simple_animal/enterprise_patron) || !isturf(entrance))
 		return null
 	var/mob/living/simple_animal/enterprise_patron/patron = new patron_type(entrance)
 	patron.visit(src)
+	guests_changed()
 	return patron

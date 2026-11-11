@@ -4,6 +4,7 @@ import { Stack, Tabs } from 'tgui-core/components';
 import { useBackend } from '../../backend';
 import { Window } from '../../layouts';
 import { DebugPage } from './pages/DebugPage';
+import { GuestsPage } from './pages/GuestsPage';
 import { OverviewPage } from './pages/OverviewPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { PremisesPage } from './pages/PremisesPage';
@@ -17,6 +18,7 @@ type PageDef = {
 
 const PAGES: Record<string, PageDef> = {
   overview: { icon: 'book-open', component: OverviewPage },
+  guests: { icon: 'users', component: GuestsPage },
   premises: { icon: 'map', component: PremisesPage },
   prestige: { icon: 'crown', component: PrestigePage },
   debug: { icon: 'bug', component: DebugPage },

@@ -24,6 +24,27 @@ export type DebugData = {
   patron_kinds: string[];
 };
 
+export type GuestInfo = {
+  id: string;
+  name: string;
+  kind: string;
+  goal: string | null;
+  stage: string;
+  place: string | null;
+  displeasure: number;
+  max_displeasure: number;
+};
+
+export type GuestsData = {
+  calls_left: number;
+  calls_max: number;
+  can_call: BooleanLike;
+  open: BooleanLike;
+  morning_due: BooleanLike;
+  morning_kind: string | null;
+  present: GuestInfo[];
+};
+
 export type Data = {
   name: string;
   map: string | null;
@@ -39,6 +60,7 @@ export type Data = {
   earned_round: number;
   earned_today: number;
   prestige: PrestigeData | null;
+  guests: GuestsData | null;
   debug: DebugData | null;
 };
 
@@ -141,6 +163,7 @@ export type Locale = {
   enterprisePurposes: Record<string, Record<string, string>>;
   purposeUnknown: string;
   levelNames: string[];
+  guestKinds: Record<string, string>;
   labels: {
     yourRole: string;
     roleManager: string;
@@ -216,6 +239,36 @@ export type Locale = {
     prestigeGrade: string;
     prestigeGradeHint: string;
   };
+  guests: {
+    title: string;
+    hint: string;
+    morning: string;
+    morningDue: string;
+    morningNext: string;
+    calls: string;
+    call: string;
+    callStaff: string;
+    callNone: string;
+    callLocked: string;
+    entrance: string;
+    entranceOpen: string;
+    entranceClosed: string;
+    present: string;
+    presentNone: string;
+    who: string;
+    doing: string;
+    mood: string;
+    barStay: string;
+    barWalk: string;
+    tableStay: string;
+    tableWalk: string;
+    roomStay: string;
+    roomWalk: string;
+    leaving: string;
+    idle: string;
+    moodGood: string;
+    moodFedUp: string;
+  };
   debug: {
     title: string;
     note: string;
@@ -256,6 +309,9 @@ export type Locale = {
   formatRent: (rent: number) => string;
   formatBuy: (cost: number) => string;
   formatCapacity: (cap: number) => string;
+  formatMorningCame: (kind: string) => string;
+  formatCalls: (left: number, max: number) => string;
+  formatGrumbling: (displeasure: number, max: number) => string;
 };
 
 export type PageProps = {

@@ -172,6 +172,7 @@
 		"earned_round" = earned_round,
 		"earned_today" = earned_today,
 		"prestige" = owner ? get_prestige_data() : null,
+		"guests" = get_guests_data(user),
 	)
 
 /datum/enterprise/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -212,6 +213,8 @@
 		if("survey_again")
 			survey_again(ui.user)
 			return FALSE
+		if("call_guest")
+			return call_guest(ui.user)
 	return FALSE
 
 /datum/enterprise/ui_close(mob/user)
@@ -284,7 +287,7 @@
 			var/kind = params["kind"]
 			if(!isnum(kind) || kind != round(kind) || kind < 1 || kind > length(patron_types))
 				return FALSE
-			if(!summon_patron(patron_types[kind], user))
+			if(!summon_patron(patron_types[kind], get_exit_turf(user) || get_turf(user)))
 				return FALSE
 			return TRUE
 		if("debug_clear_patrons")
@@ -293,7 +296,7 @@
 			update_static_data_for_all_viewers()
 			return TRUE
 		if("debug_new_day")
-			new_day()
+			new_day(TRUE)
 			return TRUE
 		if("debug_tired")
 			var/mob/living/carbon/human/sleeper = user
@@ -318,8 +321,17 @@
 		/datum/job/tavern_wench,
 		/datum/job/advclass/tavern_wench,
 	)
-	ledger_pages = list("overview", "premises", "prestige", "menu", "staff", "commissions")
+	ledger_pages = list("overview", "guests", "premises", "prestige", "menu", "staff", "commissions")
 	owner_pages = list("premises", "prestige")
+	guest_kinds = list(
+		/mob/living/simple_animal/enterprise_patron = 30,
+		/mob/living/simple_animal/enterprise_patron/labourer = 25,
+		/mob/living/simple_animal/enterprise_patron/sellsword = 15,
+		/mob/living/simple_animal/enterprise_patron/merchant = 12,
+		/mob/living/simple_animal/enterprise_patron/minstrel = 8,
+		/mob/living/simple_animal/enterprise_patron/vagrant = 6,
+		/mob/living/simple_animal/enterprise_patron/noble = 4,
+	)
 	premises_hint = "Place the ledger on an area with tavern_area set."
 	premises_maps = list(
 		"_maps/map_files/hsector/tavern/tavern_0.dmm",
@@ -493,7 +505,7 @@ SUBSYSTEM_DEF(enterprises)
 		return
 	for(var/enterprise_type in enterprises)
 		var/datum/enterprise/enterprise = enterprises[enterprise_type]
-		enterprise.new_day()
+		INVOKE_ASYNC(enterprise, TYPE_PROC_REF(/datum/enterprise, new_day))
 
 /datum/controller/subsystem/enterprises/proc/on_round_end()
 	for(var/enterprise_type in enterprises)

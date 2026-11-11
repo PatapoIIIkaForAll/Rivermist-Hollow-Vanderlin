@@ -1,6 +1,7 @@
 #include "enterprise.dm"
 #include "enterprise_economy.dm"
 #include "enterprise_furnishing.dm"
+#include "enterprise_guests.dm"
 #include "enterprise_lodgers.dm"
 #include "enterprise_map.dm"
 #include "enterprise_patrons.dm"

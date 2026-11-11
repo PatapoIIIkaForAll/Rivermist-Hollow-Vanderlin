@@ -36,6 +36,7 @@
 /datum/enterprise/proc/upkeep()
 	check_tenants()
 	check_patrons()
+	welcome_morning_guest()
 	if(journal_pending)
 		write_journal()
 
