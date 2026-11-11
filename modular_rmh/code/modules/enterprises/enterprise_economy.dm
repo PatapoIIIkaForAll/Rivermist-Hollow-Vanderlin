@@ -137,6 +137,10 @@
 	owner_level = get_prestige_level(owner_earned)
 	if(!welcomed[ckey])
 		welcomed[ckey] = TRUE
+		if(!premises_loaded && (premises_level == owner_level || load_premises(owner_level)))
+			premises_loaded = TRUE
+			var/russian = get_preferred_ui_language(owner) == "ru"
+			to_chat(owner, span_notice(russian ? "Заведение отстроено под мой уровень владельца: [owner_level]." : "The house stands as my owner level has earned it: [owner_level]."))
 		if(grant_owner_rooms(owner_level))
 			redraw()
 	write_journal()
@@ -225,7 +229,7 @@
 	return max(round(entry.price * ENTERPRISE_BUYOUT_PERCENT / 100), 1)
 
 /datum/enterprise_stock/proc/get_price(obj/item/offered)
-	if(!is_type_in_list(offered, goods))
+	if(HAS_TRAIT(offered, TRAIT_ENTERPRISE_START_STOCK) || !is_type_in_list(offered, goods))
 		return 0
 	var/own_price = round(offered.get_real_price())
 	if(own_price > 0)
@@ -300,6 +304,9 @@
 	if(!stock || istype(tool, /obj/item/coin))
 		return NONE
 	var/russian = get_preferred_ui_language(user) == "ru"
+	if(HAS_TRAIT(tool, TRAIT_ENTERPRISE_START_STOCK))
+		to_chat(user, span_warning(russian ? "Это из запасов самого заведения, данных на начало раунда: такое здесь не принимают." : "This is from the house's own stock, given at the start of the round: it is not taken here."))
+		return ITEM_INTERACT_BLOCKING
 	if(!stock.get_price(tool))
 		to_chat(user, span_warning(russian ? "Такое здесь не покупают." : "They do not buy that here."))
 		return ITEM_INTERACT_BLOCKING

@@ -393,6 +393,8 @@
 	return restored
 
 /datum/enterprise_room/proc/get_door_step()
+	var/turf/best
+	var/best_rank = 0
 	for(var/datum/weakref/door_ref as anything in doors)
 		var/obj/structure/door/door = door_ref.resolve()
 		if(QDELETED(door))
@@ -400,10 +402,24 @@
 		var/turf/door_turf = get_turf(door)
 		for(var/direction in GLOB.cardinals)
 			var/turf/outside = get_step(door_turf, direction)
+			if(!outside || isclosedturf(outside))
+				continue
 			var/datum/enterprise_room/beyond = enterprise.get_room(outside)
-			if(beyond && beyond != src)
-				return outside
-	return null
+			if(beyond == src)
+				continue
+			var/rank = 1
+			if(!beyond)
+				if(enterprise.contains(outside))
+					continue
+				rank = 3
+			else if(beyond.kind == ENTERPRISE_ROOM_COMMON)
+				rank = 2
+			if(door.name == name)
+				rank += 4
+			if(rank > best_rank)
+				best = outside
+				best_rank = rank
+	return best
 
 /datum/enterprise_room/proc/get_loose_items()
 	var/list/known = list()

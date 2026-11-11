@@ -10,6 +10,10 @@
 	var/shift_active = FALSE
 	var/list/datum/enterprise_floor/floors = list()
 	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
+	var/list/premises_maps = list()
+	var/premises_level
+	var/premises_loaded = FALSE
+	var/loading_premises = FALSE
 
 /datum/enterprise/Destroy()
 	SStgui.close_uis(src)
@@ -36,6 +40,69 @@
 	claimed_by_z = null
 	SSenterprises.enterprises -= type
 	return ..()
+
+/datum/enterprise/proc/get_plot_turfs()
+	return list()
+
+/datum/enterprise/proc/reset_premises()
+	for(var/viewer_key in viewers.Copy())
+		var/datum/enterprise_viewer/viewer = viewers[viewer_key]
+		hide_floors(viewer.user)
+	for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons.Copy())
+		patron.leave()
+	QDEL_LIST(rooms)
+	guest_rooms.Cut()
+	QDEL_LIST(fixtures)
+	QDEL_LIST(floors)
+	anchors = list()
+	claimed_by_z = list()
+
+/datum/enterprise/proc/load_premises(level)
+	if(loading_premises || !length(premises_maps))
+		return FALSE
+	level = clamp(level, 0, length(premises_maps) - 1)
+	var/map_path = premises_maps[level + 1]
+	var/list/turf/plot = get_plot_turfs()
+	if(!length(plot))
+		log_mapping("Map issue: the [name] has no plot to load [map_path] onto. [premises_hint]")
+		return FALSE
+	var/turf/first = plot[1]
+	var/min_x = first.x
+	var/max_x = first.x
+	var/min_y = first.y
+	var/max_y = first.y
+	var/min_z = first.z
+	for(var/turf/member as anything in plot)
+		min_x = min(min_x, member.x)
+		max_x = max(max_x, member.x)
+		min_y = min(min_y, member.y)
+		max_y = max(max_y, member.y)
+		min_z = min(min_z, member.z)
+	var/datum/map_template/template = new(map_path, "[name] premises, owner level [level]")
+	if(template.width != max_x - min_x + 1 || template.height != max_y - min_y + 1)
+		log_mapping("Map issue: [map_path] is [template.width]x[template.height] tiles, but the [name] plot is [max_x - min_x + 1]x[max_y - min_y + 1]. The premises were left as mapped.")
+		return FALSE
+	loading_premises = TRUE
+	reset_premises()
+	for(var/turf/member as anything in plot)
+		for(var/obj/thing in member)
+			if(istype(thing, /obj/effect/landmark))
+				continue
+#ifdef TAVERN_TEST
+			if(istype(thing, /obj/structure/throne) || istype(thing, /obj/structure/fake_machine/titan))
+				continue
+#endif
+			qdel(thing)
+	var/loaded = template.load(locate(min_x, min_y, min_z))
+	loading_premises = FALSE
+	if(!loaded)
+		log_mapping("Map issue: [map_path] could not be loaded for the [name].")
+		return FALSE
+	premises_level = level
+	log_game("[name] premises loaded from [map_path] at [min_x],[min_y],[min_z]")
+	for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in ledgers)
+		claim_premises(ledger)
+	return TRUE
 
 /datum/enterprise/proc/is_owner(mob/user)
 	return is_type_in_list(user?.mind?.assigned_role, owner_jobs)
@@ -191,6 +258,12 @@
 			if(grant_owner_rooms(owner_level))
 				redraw()
 			return TRUE
+		if("debug_reload")
+			if(!load_premises(owner_level))
+				return FALSE
+			grant_owner_rooms(owner_level)
+			redraw()
+			return TRUE
 		if("debug_room_level")
 			var/level = params["level"]
 			var/room_id = params["room"]
@@ -253,12 +326,28 @@
 	ledger_pages = list("overview", "premises", "prestige", "menu", "staff", "commissions")
 	owner_pages = list("premises", "prestige")
 	premises_hint = "Place the ledger on an area with tavern_area set."
+	premises_maps = list(
+		"_maps/map_files/hsector/tavern/tavern_0.dmm",
+		"_maps/map_files/hsector/tavern/tavern_1.dmm",
+		"_maps/map_files/hsector/tavern/tavern_2.dmm",
+		"_maps/map_files/hsector/tavern/tavern_3.dmm",
+		"_maps/map_files/hsector/tavern/tavern_4.dmm",
+	)
 	staff_lock_ids = list(ACCESS_INN)
 	owner_keyring = /obj/item/storage/keyring/tavern_keeper
 
 /datum/enterprise/tavern/is_premises_turf(turf/checked)
 	var/area/checked_area = checked.loc
 	return checked_area.tavern_area
+
+/datum/enterprise/tavern/get_plot_turfs()
+	var/list/turf/plot = list()
+	for(var/area/place as anything in GLOB.areas)
+		if(!place.tavern_area)
+			continue
+		for(var/turf/member in place)
+			plot += member
+	return plot
 
 /area/under/town/rmh/basement/tavern
 	tavern_area = TRUE
@@ -333,10 +422,17 @@ SUBSYSTEM_DEF(enterprises)
 	var/keys_ready = FALSE
 
 /datum/controller/subsystem/enterprises/Initialize()
+	for(var/enterprise_type in subtypesof(/datum/enterprise))
+		get_enterprise(enterprise_type)
 	for(var/enterprise_type in enterprises)
 		var/datum/enterprise/enterprise = enterprises[enterprise_type]
-		for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
-			enterprise.claim_premises(ledger)
+		var/loaded = FALSE
+#ifdef TAVERN_TEST
+		loaded = enterprise.load_premises(ENTERPRISE_LEVEL_BARE)
+#endif
+		if(!loaded)
+			for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
+				enterprise.claim_premises(ledger)
 		enterprise.recover_journal()
 	keys_ready = TRUE
 	for(var/datum/weakref/key_ref as anything in pending_keys)

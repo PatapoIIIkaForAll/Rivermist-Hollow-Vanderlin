@@ -209,6 +209,19 @@
 			taken += fixture
 	return taken
 
+/datum/enterprise/proc/mark_start_stock(list/turf/fresh)
+	for(var/turf/member as anything in fresh)
+		if(!contains(member))
+			continue
+		for(var/obj/thing in member)
+			mark_stock(thing)
+
+/datum/enterprise/proc/mark_stock(obj/thing)
+	if(isitem(thing))
+		ADD_TRAIT(thing, TRAIT_ENTERPRISE_START_STOCK, REF(src))
+	for(var/obj/inside in thing)
+		mark_stock(inside)
+
 /datum/enterprise/proc/get_adjoining_room(turf/place)
 	var/static/list/kind_ranks = list(
 		ENTERPRISE_ROOM_GUEST = 1,

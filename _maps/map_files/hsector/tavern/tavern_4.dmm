@@ -1,0 +1,8791 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"adO" = (
+/obj/structure/fermentation_keg/random/beer{
+	icon_state = "barrel_tapped_ready";
+	pixel_x = -10;
+	pixel_y = 8
+	},
+/obj/structure/fermentation_keg/random/beer{
+	icon_state = "barrel_tapped_ready";
+	pixel_x = 10;
+	pixel_y = 8
+	},
+/obj/structure/fermentation_keg/random/beer{
+	icon_state = "barrel_tapped_ready";
+	pixel_y = 16
+	},
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"aio" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 9
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/structure/carpet/green,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"aiZ" = (
+/obj/machinery/light/fueled/torchholder/l,
+/turf/open/floor/cobble,
+/area/indoors/town/rmh/tavern)
+"ajF" = (
+/obj/structure/carpet/purple,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"akp" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/chair/stool,
+/obj/structure/fluff/walldeco/customflag{
+	pixel_y = 32;
+	name = "rivermist hollow flag"
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"amw" = (
+/obj/structure/table/wood/reinforced_alter,
+/obj/item/bottle_kit{
+	pixel_y = 11;
+	pixel_x = -4
+	},
+/obj/item/bottle_kit{
+	pixel_y = 6;
+	pixel_x = 12
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 47;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = -7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = 7
+	},
+/obj/item/reagent_containers/glass/bottle{
+	pixel_y = 35;
+	pixel_x = 7
+	},
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"anf" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain_alt,
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = -32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"arh" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain_alt,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"asw" = (
+/obj/structure/fluff/fibermat/round,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"axL" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"aAF" = (
+/obj/effect/decal/carpet/square/black{
+	dir = 4;
+	pixel_x = 22
+	},
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"aBE" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"aCY" = (
+/obj/effect/decal/cobbleedge{
+	dir = 8
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"aET" = (
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"aIL" = (
+/obj/structure/table/wood/plain/alto,
+/obj/structure/carpet/purple,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"aIZ" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain/alto,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"aJi" = (
+/obj/effect/decal/alizeria/decals/wooddecal8,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"aKb" = (
+/obj/effect/decal/carpet/square/black{
+	dir = 4;
+	pixel_x = 17
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"aMl" = (
+/obj/structure/curtain/brown,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"aMq" = (
+/obj/structure/door/green{
+	name = "Room VII";
+	lockid = "roomvii"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"aMw" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal7,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"aMK" = (
+/obj/structure/chair/alizeriadecor/stool2,
+/obj/structure/carpet/purple,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"aMN" = (
+/obj/effect/decal/cobbleedge{
+	dir = 5
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"aPs" = (
+/obj/effect/decal/cobbleedge{
+	dir = 10;
+	pixel_y = 1
+	},
+/obj/structure/table/wood/reinf_long,
+/obj/structure/curtain/black,
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"aQm" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#522f26"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"aSK" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/stairs{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"aUU" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable";
+	dir = 8
+	},
+/obj/effect/decal/borderfall{
+	dir = 8
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"ber" = (
+/obj/structure/fluff/railing/wood/east,
+/obj/structure/fluff/railing/wood,
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/machinery/light/fueled/firebowl/standing{
+	pixel_x = 15;
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"bho" = (
+/obj/effect/decal/cobbleedge{
+	dir = 9
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"bhO" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"blX" = (
+/obj/effect/decal/alizeria/decals/wooddecal8,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"bmv" = (
+/obj/effect/decal/edge{
+	color = "#522f26"
+	},
+/obj/structure/fluff/littlebanners{
+	pixel_y = -20
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"boZ" = (
+/obj/structure/giantfur/small{
+	layer = 2;
+	pixel_x = -19;
+	pixel_y = -19
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"brA" = (
+/obj/effect/decal/carpet{
+	pixel_y = -6
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"brI" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/chair/wood/alt/fancy/chair4{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"brT" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain_alt,
+/obj/machinery/light/fueled/wallfire/candle/weak/l,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"bsW" = (
+/obj/structure/fluff/railing/wood,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"btx" = (
+/turf/closed/wall/mineral/pipe,
+/area/under/town/rmh/basement/tavern)
+"btB" = (
+/obj/structure/fake_machine/scomm{
+	pixel_y = -32;
+	scom_tag = "Tavern - Basement"
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"byP" = (
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/item/paper/scroll{
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/paper/scroll{
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/paper/scroll{
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/paper/scroll{
+	pixel_x = 9;
+	pixel_y = 4
+	},
+/obj/item/paper{
+	pixel_x = -5;
+	pixel_y = -7
+	},
+/obj/item/paper{
+	pixel_x = -5;
+	pixel_y = -7
+	},
+/obj/item/paper{
+	pixel_x = -5;
+	pixel_y = -7
+	},
+/obj/item/paper{
+	pixel_x = -5;
+	pixel_y = -7
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"bCq" = (
+/obj/effect/decal/cobbleedge,
+/obj/item/bin{
+	icon = 'modular_rmh/icons/obj/structures/yashiki.dmi';
+	icon_state = "stack-yashik-preopen";
+	anchored = 1;
+	name = "wood bins";
+	pixel_x = -5;
+	pixel_y = 5
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"bDJ" = (
+/obj/structure/table/wood/reinf_long{
+	pixel_y = 1
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 10
+	},
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"bFW" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"bGw" = (
+/obj/effect/decal/edge{
+	color = "#575757"
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 5
+	},
+/obj/structure/closet/crate/chest/neu_iron,
+/obj/item/kitchen/spoon/iron{
+	pixel_x = 7
+	},
+/obj/item/kitchen/spoon/iron{
+	pixel_x = 7
+	},
+/obj/item/kitchen/spoon/iron{
+	pixel_x = 7
+	},
+/obj/item/kitchen/spoon/iron{
+	pixel_x = 7
+	},
+/obj/item/kitchen/spoon/iron{
+	pixel_x = 7
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 3
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 3
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 3
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 3
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 3
+	},
+/obj/item/kitchen/fork/iron{
+	pixel_x = -9
+	},
+/obj/item/kitchen/fork/iron{
+	pixel_x = -9
+	},
+/obj/item/kitchen/fork/iron{
+	pixel_x = -9
+	},
+/obj/item/kitchen/fork/iron{
+	pixel_x = -9
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -4
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -4
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -4
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -4
+	},
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"bIl" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/obj/machinery/light/fueled/wallfire/candle/weak/l,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"bKm" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 1
+	},
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 9;
+	pixel_y = 2
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"bKX" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/carpet/kover_purple{
+	pixel_y = -8
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"bLf" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/counter/alt,
+/obj/structure/fluff/clutter/books{
+	pixel_y = 6;
+	icon = 'modular_rmh/icons/obj/items/decoration.dmi';
+	icon_state = "clutter_books_alt"
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"bLx" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"bOK" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"bPM" = (
+/obj/structure/table/wood/plain/alto,
+/obj/item/candle/tin/lit{
+	pixel_y = 4
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28,
+/area/indoors/town/rmh/tavern)
+"bRj" = (
+/obj/structure/fermentation_keg/blackgoat,
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"bRZ" = (
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"bUC" = (
+/obj/structure/closet/crate/drawer,
+/obj/machinery/light/fueled/wallfire/candle,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"bUU" = (
+/obj/structure/handcart,
+/turf/open/floor/cobble,
+/area/indoors/town/rmh/tavern)
+"bYo" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/chair/alizeriadecor/stool3,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"bYQ" = (
+/obj/structure/carpet/green,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"ccJ" = (
+/obj/structure/door/stone{
+	name = "Tavern's Basement"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"ciH" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable";
+	dir = 6
+	},
+/obj/effect/decal/borderfall,
+/obj/effect/decal/borderfall{
+	dir = 4
+	},
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"ckq" = (
+/obj/effect/decal/cobbleedge{
+	dir = 8
+	},
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/structure/table/wood/reinf_long{
+	dir = 1
+	},
+/obj/structure/curtain/black,
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"cnl" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"cnI" = (
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"cqC" = (
+/obj/structure/closet/crate/chest/wicker,
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg,/obj/item/reagent_containers/food/snacks/egg)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter,/obj/item/reagent_containers/food/snacks/butter)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese,/obj/item/reagent_containers/food/snacks/cheese)
+	},
+/obj/item/reagent_containers/food/snacks/cheddar,
+/obj/item/reagent_containers/food/snacks/cheddar,
+/obj/item/reagent_containers/food/snacks/cheddar/aged,
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate,/obj/item/reagent_containers/food/snacks/chocolate)
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"cqH" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"cvx" = (
+/obj/structure/carpet/green,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"cBd" = (
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"cFi" = (
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"cGR" = (
+/obj/structure/chair/hotspring_bench/right{
+	dir = 8
+	},
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"cJS" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 6
+	},
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/obj/item/weapon/shield/heater{
+	pixel_y = -32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 9;
+	pixel_y = 2
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"cKr" = (
+/obj/structure/bed/inn,
+/obj/item/bedsheet/pelt,
+/obj/machinery/light/fueled/wallfire/candle/weak{
+	pixel_y = -32
+	},
+/obj/structure/mannequin{
+	pixel_y = 23;
+	anchored = 1;
+	density = 0;
+	pixel_x = -10;
+	dir = 4
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"cLd" = (
+/obj/structure/fake_machine/heraldboard/wall,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"cQh" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable";
+	dir = 8
+	},
+/obj/effect/decal/borderfall{
+	dir = 8
+	},
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"cRc" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"dak" = (
+/obj/structure/chair/wood/alt/chair3,
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"ddY" = (
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"deM" = (
+/obj/structure/mannequin{
+	pixel_y = 32;
+	anchored = 1;
+	density = 0;
+	dir = 1
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"dfb" = (
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/obj/effect/decal/wood/herringbone{
+	dir = 1
+	},
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"dhR" = (
+/obj/structure/table/wood/reinf_long,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"diX" = (
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"djN" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/innie{
+	dir = 8
+	},
+/obj/item/storage/sack{
+	pixel_y = -5;
+	populate_contents = list(/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal,/obj/item/ore/coal);
+	pixel_x = -7
+	},
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"dln" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 6
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/item/reagent_containers/glass/cup/wooden,
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"dlD" = (
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"dox" = (
+/obj/structure/fluff/railing/wood,
+/obj/structure/table/wood/plain_alt,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/item/chessboard_folded{
+	pixel_y = 7
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"dpo" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/item/bedsheet/wool,
+/obj/structure/mannequin/male{
+	density = 0;
+	pixel_x = -10;
+	pixel_y = 25
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"dpK" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"dua" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 8
+	},
+/obj/structure/curtain/redcurtain/dir{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"dwb" = (
+/obj/effect/decal/cobbleedge{
+	dir = 1
+	},
+/obj/structure/fermentation_keg,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"dze" = (
+/obj/machinery/light/fueled/hearth/vertical{
+	dir = 1
+	},
+/obj/structure/fluff/walldeco/painting/castle{
+	pixel_x = -32
+	},
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"dzZ" = (
+/obj/effect/decal/cobbleedge{
+	dir = 5
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"dAW" = (
+/turf/closed/wall/mineral/decostone/cand,
+/area/under/town/rmh/basement/tavern)
+"dCL" = (
+/obj/structure/chair/wood/alt{
+	dir = 8
+	},
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"dED" = (
+/obj/structure/bed/inn/double,
+/obj/item/bedsheet/double_pelt,
+/obj/machinery/light/fueled/wallfire/candle,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"dFw" = (
+/obj/structure/giantfur{
+	layer = 2
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"dHY" = (
+/obj/effect/decal/alizeria/decals/wooddecal8,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"dJD" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/structure/fake_machine/scomm{
+	scom_tag = "Adventurers Guild"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"dLB" = (
+/obj/effect/decal/edge_corner{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"dQo" = (
+/obj/structure/chair/wood/alt/chair3{
+	dir = 1
+	},
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_y = -32
+	},
+/obj/effect/decal/edge{
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"dTJ" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 5
+	},
+/obj/structure/carpet/red,
+/obj/item/candle/tin/lit{
+	pixel_x = -6;
+	pixel_y = 1
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"dTW" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"dWn" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/turf/open/floor/ruinedwood/spiralfade,
+/area/indoors/town/rmh/tavern)
+"dYQ" = (
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"eba" = (
+/obj/structure/closet/crate/drawer{
+	lockid = "groom2"
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"edX" = (
+/obj/effect/decal/carpet/square{
+	dir = 8;
+	pixel_x = 5
+	},
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"eee" = (
+/obj/structure/curtain/black,
+/obj/effect/decal/edge{
+	color = "#575757"
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"egT" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/table/wood/large/corner_new{
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"ehM" = (
+/obj/effect/decal/cobbleedge{
+	dir = 9
+	},
+/obj/structure/fake_machine/stockpile_withdraw{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"eiC" = (
+/turf/closed/wall/mineral/decowood,
+/area/indoors/town/rmh/tavern)
+"epb" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"epF" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/fluff/wallclock,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"eqg" = (
+/obj/structure/table/wood/fancy,
+/obj/item/candle/tin/lit{
+	pixel_y = 10
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"etb" = (
+/obj/effect/decal/edge{
+	color = "#575757"
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie,
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"eth" = (
+/obj/structure/curtain/brown,
+/obj/structure/closet/crate/drawer,
+/obj/item/key/tavern,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"etQ" = (
+/obj/structure/closet/crate/chest/wicker,
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple,/obj/item/reagent_containers/food/snacks/produce/fruit/apple)
+	},
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,/obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear,/obj/item/reagent_containers/food/snacks/produce/fruit/pear)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry,/obj/item/reagent_containers/food/snacks/produce/fruit/strawberry)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum,/obj/item/reagent_containers/food/snacks/produce/fruit/plum)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon,/obj/item/reagent_containers/food/snacks/produce/fruit/lemon)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime,/obj/item/reagent_containers/food/snacks/produce/fruit/lime)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine,/obj/item/reagent_containers/food/snacks/produce/fruit/tangerine)
+	},
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 8
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"ewn" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"eyb" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	color = "#522f26"
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"eBv" = (
+/obj/structure/table/wood/fancy,
+/obj/item/candle/tin/lit{
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"eDj" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"eFm" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"eIw" = (
+/obj/structure/carpet/green,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"eKt" = (
+/obj/structure/door/red{
+	name = "Tavern's Warehouse"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"ePm" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"ePp" = (
+/obj/structure/fake_machine/headeater/r,
+/obj/structure/closet/crate/chest/wickertrunk/red,
+/turf/open/floor/tile/tilerg,
+/area/indoors/town/rmh/tavern)
+"ePL" = (
+/obj/structure/fluff/railing/wood/east,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"eQL" = (
+/obj/machinery/light/fueled/torchholder/r,
+/obj/structure/fermentation_keg,
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"eRz" = (
+/obj/structure/rack/shelf/biggest,
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,/obj/item/reagent_containers/food/snacks/produce/vegetable/onion)
+	},
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato,/obj/item/reagent_containers/food/snacks/produce/vegetable/potato)
+	},
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar,/obj/item/reagent_containers/food/snacks/sugar);
+	pixel_x = -4;
+	pixel_y = 8
+	},
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt,/obj/item/reagent_containers/powder/salt);
+	pixel_x = 5
+	},
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey,/obj/item/reagent_containers/food/snacks/spiderhoney/honey);
+	pixel_y = -6
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"eSF" = (
+/obj/structure/door/window{
+	name = "Tavern"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"eTW" = (
+/obj/effect/decal/borderfall{
+	dir = 1
+	},
+/obj/structure/mannequin/male{
+	density = 0;
+	pixel_y = 15
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"eXF" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/chair/stool,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"eYO" = (
+/obj/effect/decal/cobbleedge{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"fao" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"fdz" = (
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 1
+	},
+/obj/structure/table/wood/reinforced_alter,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 25
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 25
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 25
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 25
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 25
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 25
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 25
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 25
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 27
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 27
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 27
+	},
+/obj/item/plate/clay{
+	pixel_x = -6;
+	pixel_y = 27
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 27
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 27
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 27
+	},
+/obj/item/reagent_containers/glass/bowl/clay{
+	pixel_x = 6;
+	pixel_y = 27
+	},
+/obj/item/tray,
+/obj/item/soap{
+	pixel_x = 7
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 34;
+	pixel_x = -7
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"ffv" = (
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28,
+/area/indoors/town/rmh/tavern)
+"fkB" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/innie{
+	dir = 8
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 8
+	},
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"fkN" = (
+/turf/closed/wall/mineral/stonebrick,
+/area/under/town/rmh/basement/tavern)
+"flb" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"fmN" = (
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"fnC" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/chair/stool,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"fnI" = (
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#575757"
+	},
+/obj/item/bin/washbasin,
+/obj/structure/mirror{
+	pixel_x = -7
+	},
+/obj/effect/decal/cleanable/dirt/cobweb{
+	dir = 1
+	},
+/obj/item/natural/cloth{
+	pixel_x = -5
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"fqJ" = (
+/turf/closed/wall/mineral/wooddark/window,
+/area/indoors/town/rmh/tavern)
+"frj" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/machinery/light/fueled/wallfire/candle/weak/l,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = -32
+	},
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"frZ" = (
+/obj/structure/curtain/black,
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"fvr" = (
+/obj/structure/bars/tough{
+	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg','sound/combat/hits/onstone/wallhit2.ogg','sound/combat/hits/onstone/wallhit3.ogg');
+	icon = 'icons/turf/walls.dmi';
+	icon_state = "fluffstone";
+	name = "suspicious wall";
+	density = 0;
+	opacity = 1
+	},
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"fwp" = (
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/structure/fluff/fibermat/round,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"fxr" = (
+/obj/structure/carpet/red,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"fzf" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"fBs" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/table/wood/counter/alt,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"fEp" = (
+/obj/structure/stairs/stone{
+	dir = 1
+	},
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"fHc" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 1
+	},
+/obj/item/weapon/knife/villager,
+/obj/item/kitchen/rollingpin,
+/obj/item/reagent_containers/peppermill{
+	pixel_x = -8;
+	pixel_y = 13
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/weapon/knife/villager{
+	pixel_x = 5;
+	pixel_y = 1
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"fHk" = (
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"fIP" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"fPn" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 1
+	},
+/area/indoors/town/rmh/tavern)
+"fWd" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/map{
+	dir = 5
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/obj/structure/fluff/walldeco/customflag{
+	pixel_y = 32;
+	name = "rivermist hollow flag"
+	},
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"fXf" = (
+/obj/structure/table/vtable,
+/obj/structure/fluff/walldeco/bigpainting/lake{
+	pixel_x = 0
+	},
+/obj/item/natural/feather,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 8
+	},
+/obj/item/scomstone,
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"gai" = (
+/obj/structure/table/wood/plain/alto,
+/obj/item/reagent_containers/glass/carafe/silver/redwine{
+	pixel_y = 8
+	},
+/obj/structure/carpet/purple,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"gat" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"gbo" = (
+/obj/structure/fluff/railing/border,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"gdr" = (
+/obj/structure/fluff/railing/wood/east,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"gdP" = (
+/obj/effect/decal/edge_corner{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"gft" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"ggn" = (
+/obj/effect/decal/borderfall{
+	pixel_y = -5
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"gjO" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"gks" = (
+/obj/structure/flowerpot/medium{
+	pixel_x = -6
+	},
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/tavern)
+"gkt" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/obj/structure/curtain/redcurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"gmC" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 9
+	},
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"gnP" = (
+/obj/machinery/light/fueled/torchholder/r,
+/turf/open/floor/cobble,
+/area/indoors/town/rmh/tavern)
+"gqK" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/obj/structure/fluff/railing/wood/west,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"grm" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 5
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/structure/fluff/walldeco/painting/crown{
+	pixel_x = 32
+	},
+/obj/structure/fluff/littlebanners,
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"gsK" = (
+/obj/effect/decal/edge_corner{
+	color = "#575757"
+	},
+/obj/machinery/tanningrack,
+/obj/structure/fluff/walldeco/bath/wallpipes/outie,
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"gur" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 4
+	},
+/obj/structure/bed/inn/double,
+/obj/item/bedsheet/fabric_double,
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"guV" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable";
+	dir = 8
+	},
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/item/weapon/shield/heater{
+	pixel_y = 32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/effect/decal/borderfall{
+	dir = 8
+	},
+/obj/structure/fermentation_keg/water{
+	icon_state = "barrel_tapped_ready";
+	pixel_y = 8
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"gvn" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"gvp" = (
+/obj/structure/fluff/railing/corner/south_east,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/structure/fluff/littlebanners{
+	pixel_y = -5
+	},
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"gxp" = (
+/obj/structure/door/red{
+	name = "Kitchen"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"gxJ" = (
+/obj/structure/table/vtable/v2,
+/obj/item/candle/skull/darkskull/lit{
+	pixel_y = 13;
+	pixel_x = 8
+	},
+/obj/effect/decal/edge_corner{
+	color = "#7a684b";
+	dir = 1
+	},
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"gxT" = (
+/obj/structure/door/green{
+	name = "Room I";
+	lockid = "roomi"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"gxU" = (
+/obj/structure/chair/wood/alt/chair_noble/purple{
+	dir = 8
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"gyf" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"gzV" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/pelt,
+/obj/machinery/light/fueled/wallfire/candle/l,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"gBZ" = (
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/structure/fake_machine/heraldboard/wall{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"gDc" = (
+/obj/structure/chair/stool/crafted,
+/obj/structure/giantfur/small{
+	layer = 2;
+	pixel_y = -32;
+	pixel_x = -32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28,
+/area/indoors/town/rmh/tavern)
+"gEJ" = (
+/obj/structure/fake_machine/vendor/inn_rmh{
+	name = "TAVERN ROOMS"
+	},
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/tavern)
+"gGP" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"gHc" = (
+/obj/structure/fluff/railing/wood,
+/obj/machinery/light/fueled/firebowl/standing{
+	pixel_x = -10;
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"gHq" = (
+/obj/effect/decal/edge_corner{
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#522f26"
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"gHM" = (
+/obj/machinery/light/fueled/hearth/horizontal{
+	pixel_y = 6
+	},
+/obj/machinery/light/fueled/oven/south,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"gJv" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain/alto,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"gLS" = (
+/obj/structure/stairs,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"gMo" = (
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"gQd" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"gUk" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/tile/checker_green,
+/area/indoors/town/rmh/tavern)
+"gUx" = (
+/obj/structure/closet/crate/drawer{
+	lockid = "groom3"
+	},
+/obj/machinery/light/fueled/wallfire/candle,
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"hbo" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/closet/crate/chest/neu,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"hdB" = (
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 4
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"hfv" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"hij" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 8
+	},
+/obj/structure/curtain/bounty/dir{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"hna" = (
+/obj/structure/closet/crate/drawer{
+	lockid = "groom1"
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"hnE" = (
+/obj/effect/decal/cobbleedge{
+	dir = 6
+	},
+/obj/machinery/light/fueled/torchholder/c,
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"hou" = (
+/obj/effect/decal/cobbleedge{
+	dir = 10
+	},
+/obj/structure/fermentation_keg/redwine,
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"hoU" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"hrW" = (
+/obj/structure/chair/stool,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"hst" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"hvg" = (
+/obj/structure/fermentation_keg,
+/obj/machinery/light/fueled/torchholder/l,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"hBa" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/pelt,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"hCu" = (
+/obj/machinery/light/fueled/torchholder,
+/turf/closed/wall/mineral/stonebrick,
+/area/under/town/rmh/basement/tavern)
+"hEp" = (
+/turf/closed/wall/mineral/wooddark/slitted,
+/area/indoors/town/rmh/tavern)
+"hIm" = (
+/obj/machinery/light/fueled/hearth/vertical,
+/obj/structure/fluff/walldeco/alizeriapaintings/strange{
+	pixel_x = -32
+	},
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"hIG" = (
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"hIM" = (
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/item/weapon/shield/heater{
+	pixel_y = 32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"hLI" = (
+/turf/open/floor/cobble,
+/area/indoors/town/rmh/tavern)
+"hMU" = (
+/obj/structure/stairs{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"hNo" = (
+/obj/machinery/light/fueled/wallfire/candle/l,
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 6
+	},
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = -32
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"hOb" = (
+/obj/structure/chair/wood/alt/chair3,
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"hOA" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"hQZ" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/alizeria/decals/wooddecal6,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"hRa" = (
+/obj/structure/closet/crate/chest/neu,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"hSp" = (
+/obj/machinery/light/fueled/wallfire{
+	pixel_y = 32
+	},
+/turf/open/floor/tile/tilerg,
+/area/indoors/town/rmh/tavern)
+"hSH" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 6
+	},
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"hZL" = (
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 4
+	},
+/obj/structure/fake_machine/mail/r{
+	mailtag = "Tavern"
+	},
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"ibT" = (
+/obj/machinery/light/fueled/hearth/vertical{
+	dir = 4
+	},
+/obj/structure/trophy/deer{
+	pixel_y = 0;
+	pixel_x = -32
+	},
+/obj/item/reagent_containers/glass/bucket/pot,
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"idg" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/table/wood/large/corner_new{
+	dir = 9
+	},
+/obj/structure/fluff/walldeco/customflag{
+	pixel_y = 32;
+	name = "rivermist hollow flag"
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"iil" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/chair/stool,
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"iip" = (
+/obj/structure/fermentation_keg/redwine,
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"imj" = (
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh/tavern)
+"inN" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/mannequin/male{
+	density = 0;
+	pixel_x = -10;
+	pixel_y = 25
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"ioV" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/structure/fluff/wallclock,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"irb" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 12;
+	pixel_x = 4
+	},
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = 32
+	},
+/obj/structure/mannequin/male{
+	density = 0;
+	dir = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"isg" = (
+/obj/structure/stairs/stone/cw,
+/obj/structure/lever/wall{
+	redstone_id = "innshutter";
+	pixel_x = 32
+	},
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"isM" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"ivk" = (
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"ivz" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"iwo" = (
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"ixz" = (
+/obj/structure/table/wood/reinforced_alter,
+/obj/structure/fake_machine/stockpile_withdraw,
+/obj/structure/fluff/millstone{
+	pixel_y = 18;
+	pixel_x = -6
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"iyc" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"iHJ" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/mannequin/male{
+	density = 0;
+	dir = 4;
+	pixel_x = -10
+	},
+/obj/machinery/light/fueled/wallfire/candle/weak/l,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"iKb" = (
+/obj/structure/fluff/walldeco/alizeria/plants7{
+	pixel_y = -32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"iMG" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"iQD" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/fluff/littlebanners{
+	pixel_y = -12
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"iRj" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/vtable,
+/obj/structure/rack/rogue/shelf/alizeria/shelf1,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"iXs" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/table/wood/plain/alto,
+/obj/structure/mirror{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"iYk" = (
+/obj/structure/window/openclose/reinforced,
+/obj/structure/curtain/bounty/dir,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"jdM" = (
+/obj/structure/door/fancy{
+	name = "Guild Master's Chambers"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/gaffer,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"jfu" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"jgk" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"jgY" = (
+/obj/structure/stairs/stone,
+/obj/structure/fluff/walldeco/bath/wallpipes{
+	dir = 8;
+	pixel_y = -32
+	},
+/obj/structure/fluff/railing/wood/west,
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"jhN" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/borderfall{
+	dir = 1
+	},
+/obj/structure/rack/shelf/biggest,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"jhO" = (
+/obj/structure/rack/shelf/biggest,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"jjd" = (
+/obj/structure/bed/wool,
+/obj/item/bedsheet/fabric,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"jjx" = (
+/obj/structure/chair/hotspring_bench/left{
+	dir = 8
+	},
+/obj/structure/fluff/walldeco/customflag{
+	pixel_y = 32;
+	name = "rivermist hollow flag"
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"jmY" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/machinery/light/fueled/wallfire/candle/weak/l,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"jnl" = (
+/obj/structure/mannequin{
+	anchored = 1;
+	density = 0;
+	pixel_x = -9;
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"jnK" = (
+/obj/structure/meathook,
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"joL" = (
+/obj/structure/table/wood/plain_alt,
+/obj/item/reagent_containers/glass/cup/steel{
+	pixel_x = 9;
+	pixel_y = 10
+	},
+/obj/item/candle/tin/lit{
+	pixel_x = -5;
+	pixel_y = 1
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"jAb" = (
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"jCg" = (
+/obj/structure/mannequin{
+	pixel_y = 32;
+	anchored = 1;
+	density = 0;
+	dir = 1
+	},
+/obj/structure/chair/stool/crafted,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"jCX" = (
+/obj/structure/chair/stool,
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/structure/call_bell/tavern{
+	dir = 1;
+	pixel_y = 23;
+	pixel_x = 1
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"jFM" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/closet/crate/chest/neu{
+	pixel_y = 17;
+	anchored = 1
+	},
+/obj/machinery/light/fueled/wallfire/candle/weak/r,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"jHE" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/tile/diamond,
+/area/under/town/rmh/basement/tavern)
+"jIl" = (
+/obj/structure/carpet/green,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"jJb" = (
+/turf/closed/wall/mineral/craftstone,
+/area/under/town/rmh/basement/tavern)
+"jJQ" = (
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = -32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/large/corner_new{
+	dir = 5
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"jKJ" = (
+/obj/structure/questboard/guild,
+/turf/closed/wall/mineral/wooddark/window,
+/area/indoors/town/rmh/tavern)
+"jLd" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/obj/structure/fluff/littlebanners{
+	pixel_y = -2
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"jNq" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"jOB" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/wool,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"jPb" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/machinery/light/fueled/wallfire/candle/weak/r,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"jPu" = (
+/obj/structure/mannequin{
+	anchored = 1;
+	density = 0;
+	pixel_x = 8;
+	dir = 8
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf1{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"jRo" = (
+/obj/structure/fermentation_keg/water,
+/turf/open/floor/cobble,
+/area/indoors/town/rmh/tavern)
+"jTq" = (
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"jUb" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/table/wood/large/corner_new{
+	dir = 9
+	},
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"jVg" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/fluff/fibermat/square,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"jVW" = (
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"jWo" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"jZn" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"kbV" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"kbZ" = (
+/obj/structure/rack/shelf/biggest,
+/obj/item/storage/sack,
+/obj/item/storage/sack,
+/obj/item/storage/sack,
+/obj/item/storage/sack,
+/obj/effect/decal/cobbleedge{
+	dir = 4
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"kcx" = (
+/obj/structure/door/window{
+	name = "Tavern"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"khR" = (
+/obj/structure/stairs{
+	dir = 4
+	},
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 7
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"kmJ" = (
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"krk" = (
+/obj/structure/chair/wood/alt{
+	dir = 4
+	},
+/obj/structure/giantfur/small{
+	layer = 2
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"kyg" = (
+/obj/item/reagent_containers/glass/bucket/wooden/alter{
+	dropshrink = 0;
+	anchored = 1;
+	name = "flower bucket";
+	pixel_y = -1
+	},
+/obj/structure/flora/junglebush/large{
+	pixel_y = 2;
+	pixel_x = -17
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"kAj" = (
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28,
+/area/indoors/town/rmh/tavern)
+"kEt" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"kGS" = (
+/obj/effect/decal/edge{
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#522f26"
+	},
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"kIc" = (
+/obj/effect/decal/cobbleedge{
+	dir = 6
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"kIv" = (
+/obj/structure/table/wood/fancy,
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = 4;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"kKJ" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"kPR" = (
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"kVM" = (
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 1
+	},
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"kXp" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"kYq" = (
+/obj/structure/bars/passage/shutter{
+	redstone_id = "innshutter"
+	},
+/obj/structure/table/wood/reinforced,
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"laM" = (
+/obj/structure/door/red{
+	name = "Counter's Backdoor"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"lcT" = (
+/obj/structure/fermentation_keg,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"ldX" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/fluff/clutter/shrub/red,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"lli" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/mannequin/male{
+	density = 0;
+	dir = 4;
+	pixel_x = -10
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"lnw" = (
+/obj/structure/door/window{
+	name = "Alcohol Storage"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"loc" = (
+/obj/structure/chair/stool,
+/obj/structure/rack/rogue/shelf/alizeria/shelf1,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"lpB" = (
+/obj/effect/decal/cobbleedge{
+	dir = 1
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"luG" = (
+/obj/effect/decal/borderfall{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"lxi" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/tile/diamond,
+/area/under/town/rmh/basement/tavern)
+"lyd" = (
+/obj/structure/table/wood/fancy,
+/obj/item/plate/clay{
+	pixel_x = -2
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -9
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"lyR" = (
+/obj/structure/giantfur{
+	layer = 2;
+	pixel_y = -29;
+	pixel_x = -11
+	},
+/obj/structure/fluff/pillow{
+	pixel_y = -8;
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"lAO" = (
+/obj/structure/chair/wood/alt{
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"lBk" = (
+/obj/structure/door/viewport{
+	dir = 4;
+	name = "Still Room"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"lBT" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/giantfur/small{
+	pixel_x = 9;
+	pixel_y = -9;
+	layer = 2.7
+	},
+/obj/machinery/light/fueled/wallfire{
+	pixel_x = -32
+	},
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"lCz" = (
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"lEz" = (
+/turf/closed/wall/mineral/wooddark/deco{
+	dir = 8
+	},
+/area/under/town/rmh/basement/tavern)
+"lKa" = (
+/obj/structure/bed/inn/double,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/double_pelt,
+/obj/structure/carpet/red,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"lMD" = (
+/obj/effect/decal/edge_corner{
+	color = "#7a684b"
+	},
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/effect/mapping_helpers/access/locker,
+/obj/effect/mapping_helpers/access/keyset/town/gaffer,
+/obj/item/rmh_waystone_chunk/empty,
+/obj/item/rmh_waystone_chunk/empty,
+/obj/item/storage/keyring/adventurers_guild,
+/obj/item/storage/keyring/adventurers_guild,
+/obj/item/storage/keyring/innkeep,
+/obj/item/key/guildroomi,
+/obj/item/key/guildroomii,
+/obj/item/key/guildroomiii,
+/obj/item/key/guildroomiii,
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"lPi" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 5
+	},
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#3b3b3b"
+	},
+/obj/structure/carpet/green,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"mav" = (
+/obj/structure/door/green{
+	name = "Room V";
+	lockid = "roomv"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"mdF" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/rack/rogue/shelf/alizeria/shelf1{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"meo" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"mgo" = (
+/obj/structure/fluff/railing/border/east,
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"mma" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 4
+	},
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"moc" = (
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = -32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"moE" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"moS" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable"
+	},
+/obj/effect/decal/borderfall,
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"mqP" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"mrj" = (
+/obj/machinery/light/fueledstreet/orange/wall{
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"msJ" = (
+/obj/structure/fermentation_keg/sourwine,
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"mtw" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 8
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"mtM" = (
+/obj/structure/fluff/railing/wood,
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"mua" = (
+/obj/effect/decal/alizeria/decals/wooddecal6,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"mvh" = (
+/obj/effect/decal/carpet/square{
+	pixel_y = -7
+	},
+/obj/machinery/light/fueled/wallfire/candle,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"mvM" = (
+/obj/machinery/light/fueled/wallfire/candle/l,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = -32
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf1,
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/obj/item/carvedgem/shell/fancyvase{
+	pixel_y = 42;
+	pixel_x = 7
+	},
+/obj/item/quest_compass{
+	pixel_x = -7;
+	pixel_y = 32
+	},
+/obj/item/quest_compass{
+	pixel_x = -7;
+	pixel_y = 32
+	},
+/obj/item/quest_compass{
+	pixel_x = -7;
+	pixel_y = 32
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"mvY" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/obj/structure/well{
+	icon = 'icons/obj/structures/rotation_devices/water_vent.dmi';
+	icon_state = "pipevent";
+	dir = 8;
+	density = 0;
+	name = "water tap"
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes{
+	pixel_y = 0;
+	pixel_x = 32;
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"mwr" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"mwX" = (
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 4
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/obj/item/reagent_containers/glass/bucket/pot{
+	pixel_x = 28;
+	pixel_y = -2
+	},
+/obj/item/cooking/pan{
+	pixel_x = 39;
+	pixel_y = -1
+	},
+/obj/item/cooking/pan{
+	pixel_x = 39;
+	pixel_y = -1
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 9
+	},
+/obj/item/reagent_containers/peppermill{
+	pixel_x = 30;
+	pixel_y = 10
+	},
+/obj/item/reagent_containers/glass/bucket/pot{
+	pixel_x = 28;
+	pixel_y = -2
+	},
+/obj/item/reagent_containers/glass/bucket/wooden/alter{
+	pixel_y = -8;
+	pixel_x = -9
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"mxn" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 4
+	},
+/obj/structure/chair/wood/alt/fancy/chair5{
+	dir = 8
+	},
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"mym" = (
+/turf/open/floor/tile/tilerg,
+/area/indoors/town/rmh/tavern)
+"mzM" = (
+/obj/effect/decal/edge_corner{
+	color = "#522f26"
+	},
+/obj/structure/flora/grass/crawlvines{
+	pixel_y = -32
+	},
+/obj/structure/fluff/walldeco/alizeria/plants6{
+	pixel_y = -32
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"mCd" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/structure/fake_machine/vendor{
+	pixel_y = -32;
+	max_merchandise = 30;
+	lockids = list("tavern");
+	name = "KITCHEN'S PEDDLER";
+	density = 0
+	},
+/obj/structure/carpet/green,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"mEY" = (
+/obj/structure/stairs/stone{
+	dir = 4
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"mGe" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/fluff/walldeco/bigpainting/relic{
+	pixel_x = -48
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"mHe" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/structure/chair/stool,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"mKb" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"mKq" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
+	},
+/obj/structure/fluff/walldeco/painting/castle{
+	pixel_x = 32
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"mNm" = (
+/obj/structure/chair/wood/alt/chair3,
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"mPd" = (
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 8
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"mQe" = (
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 7
+	},
+/turf/open/openspace,
+/area/indoors/town/rmh/tavern)
+"mSH" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"mTq" = (
+/obj/structure/fluff/railing/wood/west,
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"mTQ" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/chair/alizeriadecor/stool1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"mVp" = (
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#522f26"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/fluff/littlebanners{
+	pixel_y = -16
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"mVK" = (
+/turf/open/floor/tile/checker_green,
+/area/indoors/town/rmh/tavern)
+"mYe" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/item/bedsheet/wool,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"nba" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"nha" = (
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"niQ" = (
+/obj/structure/chair/wood/alt{
+	dir = 8
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"njc" = (
+/obj/effect/decal/alizeria/decals/wooddecal7,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"nkZ" = (
+/obj/structure/table/wood/plain,
+/obj/item/candle/tin/lit{
+	pixel_y = 13;
+	pixel_x = -5
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"nld" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"nnZ" = (
+/obj/structure/door/fancy{
+	name = "Guild's Room - I";
+	lockid = "groom1"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"nqw" = (
+/obj/structure/closet/crate/chest/wicker,
+/obj/item/natural/cloth{
+	pixel_x = -5
+	},
+/obj/item/broom,
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"nsq" = (
+/obj/structure/door/green{
+	name = "Room II";
+	lockid = "roomii"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"ntd" = (
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"nuy" = (
+/obj/structure/chair/wood/alt/chair_noble/purple{
+	dir = 1
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"nuH" = (
+/obj/structure/chair/hotspring_bench/left{
+	dir = 8
+	},
+/obj/machinery/light/fueled/wallfire/candle/l,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = -32
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"nxr" = (
+/obj/structure/chair/hotspring_bench/left{
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"nDc" = (
+/obj/structure/giantfur/small{
+	pixel_x = -11;
+	pixel_y = -20;
+	layer = 2.7
+	},
+/obj/structure/fluff/walldeco/painting/castle{
+	pixel_x = -32
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"nEK" = (
+/obj/structure/fake_machine/contractledger{
+	plane = -9;
+	pixel_y = -1
+	},
+/turf/closed/wall/mineral/wooddark/window,
+/area/indoors/town/rmh/tavern)
+"nJJ" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/pelt,
+/obj/machinery/light/fueled/wallfire/candle/l,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"nKl" = (
+/obj/structure/mannequin{
+	pixel_y = 23;
+	anchored = 1;
+	density = 0;
+	pixel_x = -8
+	},
+/obj/structure/carpet/purple,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"nQk" = (
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/obj/structure/mannequin{
+	anchored = 1;
+	density = 0;
+	pixel_x = 9;
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"nUf" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"nVk" = (
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"nVl" = (
+/obj/effect/decal/edge_corner{
+	color = "#522f26"
+	},
+/obj/structure/fluff/wallclock/l,
+/obj/structure/fluff/littlebanners{
+	pixel_y = -28
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"nZe" = (
+/obj/effect/decal/carpet/kover_darkred{
+	pixel_y = -16;
+	pixel_x = -8
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"obZ" = (
+/obj/effect/decal/carpet/square{
+	pixel_y = -6
+	},
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"ocG" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/tile/checker_green,
+/area/indoors/town/rmh/tavern)
+"omx" = (
+/obj/structure/fluff/railing/corner/south_east,
+/obj/machinery/light/fueled/wallfire/candle/l,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"onZ" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"ops" = (
+/turf/template_noop,
+/area/template_noop)
+"orf" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"otl" = (
+/turf/open/floor/carpet,
+/area/under/town/rmh/basement/tavern)
+"otp" = (
+/obj/structure/closet/crate/chest/crate,
+/obj/item/reagent_containers/food/snacks/meat/poultry,
+/obj/item/reagent_containers/food/snacks/meat/poultry,
+/obj/item/reagent_containers/food/snacks/meat/poultry,
+/obj/item/reagent_containers/food/snacks/meat/poultry,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/meat/steak,
+/obj/item/reagent_containers/food/snacks/fat,
+/obj/item/reagent_containers/food/snacks/fat,
+/obj/item/reagent_containers/food/snacks/fat,
+/obj/item/reagent_containers/food/snacks/fat,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"ovb" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"owG" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/turf/open/floor/tile/checker_green,
+/area/indoors/town/rmh/tavern)
+"owZ" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/bin/water,
+/obj/structure/fluff/fibermat/square,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"oAW" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"oBy" = (
+/obj/machinery/light/fueled/wallfire/candle/l,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = -32
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"oEc" = (
+/obj/effect/decal/carpet/kover_darkred{
+	dir = 4;
+	pixel_x = 16
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"oHn" = (
+/turf/closed/wall/mineral/craftstone,
+/area/indoors/town/rmh/tavern)
+"oIH" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"oLN" = (
+/obj/effect/decal/alizeria/decals/wooddecal7,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"oLS" = (
+/obj/structure/chair/wood/alt/chair_noble,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"oLZ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"oMs" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable";
+	dir = 10
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"oQU" = (
+/obj/structure/fluff/railing/wood/east,
+/obj/structure/fluff/railing/wood/west,
+/turf/closed/wall/mineral/wooddark/end,
+/area/indoors/town/rmh/tavern)
+"oXq" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/fake_machine/scomm{
+	scom_tag = "Tavern - 2nd Floor"
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"oXx" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"oZL" = (
+/obj/structure/door/green{
+	name = "Room IX";
+	lockid = "roomix"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"paY" = (
+/obj/structure/rack/shelf/biggest,
+/obj/item/storage/hip/headhook,
+/obj/item/storage/hip/headhook/royal,
+/obj/item/storage/hip/headhook/bronze,
+/turf/open/floor/tile/tilerg,
+/area/indoors/town/rmh/tavern)
+"poS" = (
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/item/weapon/shield/heater{
+	pixel_y = 32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/fluff/clutter/shrub/red{
+	pixel_y = 2
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"pxY" = (
+/obj/structure/closet/crate/chest/neu_fancy,
+/obj/structure/fluff/walldeco/painting/flower{
+	pixel_y = 32
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"pAv" = (
+/obj/structure/chair/stool,
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"pGq" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/fermentation_keg/random/water,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"pKf" = (
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/obj/item/weapon/shield/heater{
+	pixel_y = -32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"pNc" = (
+/obj/structure/closet/crate/chest{
+	base_icon_state = "woodchestalt";
+	color = "#8f7f62";
+	icon_state = "woodchestalt";
+	name = "Spare keys";
+	lockid = "tavern"
+	},
+/obj/item/key/roomiv{
+	lockid = "roomv";
+	name = "room V key"
+	},
+/obj/item/key/roomiv,
+/obj/item/key/roomiii,
+/obj/item/key/roomii,
+/obj/item/key/roomi,
+/obj/item/key/roomi,
+/obj/item/key/roomii,
+/obj/item/key/roomiii,
+/obj/item/key/roomiv,
+/obj/item/key/roomv,
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"pRo" = (
+/obj/structure/door/fancy{
+	name = "Guild's Room - III";
+	lockid = "groom3"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28,
+/area/indoors/town/rmh/tavern)
+"pTo" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/bed/inn,
+/obj/item/bedsheet/wool,
+/turf/open/floor/ruinedwood/spiralfade,
+/area/indoors/town/rmh/tavern)
+"pUd" = (
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"pYN" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"pYP" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/chair/stool,
+/turf/open/floor/ruinedwood/spiralfade,
+/area/indoors/town/rmh/tavern)
+"pZX" = (
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = -32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/table/wood/large/corner_new{
+	dir = 6
+	},
+/obj/item/plate/dirty,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"qbv" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/table/wood/counter/end/right,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"qej" = (
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#522f26"
+	},
+/obj/item/storage/sack{
+	pixel_y = 16;
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/oat,/obj/item/reagent_containers/food/snacks/produce/grain/wheat,/obj/item/reagent_containers/food/snacks/produce/grain/oat);
+	pixel_x = -7
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"qeW" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"qfu" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"qfL" = (
+/turf/closed/wall/mineral/wooddark/end,
+/area/indoors/town/rmh/tavern)
+"qgK" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"qhr" = (
+/obj/structure/rack/shelf/biggest,
+/obj/item/natural/saddle{
+	pixel_x = -4
+	},
+/obj/item/rope,
+/obj/item/rope,
+/turf/open/floor/cobble,
+/area/indoors/town/rmh/tavern)
+"qhI" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"qii" = (
+/obj/structure/chair/wood/alt/chair3{
+	dir = 8
+	},
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"qjg" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"qrt" = (
+/obj/effect/decal/carpet/kover_darkred{
+	pixel_y = 8
+	},
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"qsa" = (
+/obj/effect/decal/edge{
+	color = "#522f26"
+	},
+/obj/structure/fluff/littlebanners{
+	pixel_y = -24
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"qxk" = (
+/obj/effect/decal/carpet/square,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"qyj" = (
+/obj/structure/chair/stool/crafted,
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"qBw" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet,
+/area/under/town/rmh/basement/tavern)
+"qCc" = (
+/obj/effect/decal/edge_corner{
+	color = "#575757"
+	},
+/obj/machinery/light/fueled/torchholder{
+	dir = 1
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 9
+	},
+/turf/open/floor/cobble,
+/area/under/town/rmh/basement/tavern)
+"qEF" = (
+/obj/structure/table/wood/plain/alto,
+/obj/item/candle/tin/lit{
+	pixel_y = 4
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"qEY" = (
+/obj/structure/stairs/cwdown{
+	dir = 1
+	},
+/obj/structure/fluff/railing/corner{
+	dir = 9
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"qFS" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"qHW" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/carpet/red,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"qOm" = (
+/obj/structure/fluff/littlebanners{
+	pixel_y = -3
+	},
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"qRQ" = (
+/obj/structure/well{
+	icon = 'icons/obj/structures/rotation_devices/water_vent.dmi';
+	icon_state = "pipevent";
+	dir = 4;
+	density = 0;
+	name = "water tap"
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/innie{
+	dir = 10
+	},
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"qSU" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/mannequin/male{
+	density = 0;
+	dir = 8;
+	pixel_x = 10
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"qWa" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/checker_green,
+/area/indoors/town/rmh/tavern)
+"qWw" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"qZH" = (
+/obj/structure/fluff/railing/wood/east{
+	pixel_x = 6
+	},
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#522f26"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"rax" = (
+/obj/structure/door/fancy{
+	name = "Guild Assistent's Chambers"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/gaffer,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"rcz" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = 32
+	},
+/obj/structure/table/vtable/v2,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"rfo" = (
+/obj/structure/flowerpot{
+	pixel_y = -5;
+	pixel_x = -4;
+	color = "#45aed1"
+	},
+/obj/structure/flora/grass/herb/salvia{
+	pixel_x = -6;
+	pixel_y = 5
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"rhN" = (
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/structure/table/wood/plain/alto,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/item/instrument/harp,
+/obj/item/carvedgem/shell/statue{
+	pixel_y = 37;
+	pixel_x = 6
+	},
+/obj/structure/flora/grass/herb/benedictus{
+	pixel_x = -6;
+	pixel_y = 38
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"rlf" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 9
+	},
+/obj/item/reagent_containers/glass/cup/wooden,
+/obj/structure/fluff/littlebanners{
+	pixel_y = -8
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"rlN" = (
+/obj/structure/door/green{
+	name = "Room VI";
+	lockid = "roomvi"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"rnt" = (
+/obj/structure/rack,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/item/grown/log/tree/small{
+	pixel_x = -5;
+	pixel_y = -5
+	},
+/obj/item/natural/bundle/stick{
+	amount = 10;
+	pixel_y = -6;
+	pixel_x = 8
+	},
+/obj/item/natural/bundle/stick{
+	amount = 10;
+	pixel_y = -6;
+	pixel_x = 12
+	},
+/obj/item/natural/bundle/stick{
+	amount = 10;
+	pixel_y = -6;
+	pixel_x = 8
+	},
+/obj/item/natural/bundle/stick{
+	amount = 10;
+	pixel_y = -6;
+	pixel_x = 12
+	},
+/obj/item/grown/log/tree/small{
+	pixel_x = -5;
+	pixel_y = -5
+	},
+/obj/item/grown/log/tree/small{
+	pixel_x = -5;
+	pixel_y = -5
+	},
+/obj/item/grown/log/tree/small{
+	pixel_x = -5;
+	pixel_y = -5
+	},
+/obj/item/grown/log/tree/small{
+	pixel_x = -5;
+	pixel_y = -5
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"rnL" = (
+/obj/structure/giantfur/small{
+	pixel_y = -16
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"rnY" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/closet/crate/crafted_closet/dark,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"rpu" = (
+/obj/structure/fluff/railing/border/east,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"rpN" = (
+/obj/structure/door/fancy{
+	name = "Adventure Guild's Office"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/gaffer,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"rrl" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/obj/structure/curtain/bounty/dir{
+	open = 0;
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"rty" = (
+/obj/structure/questboard/tavern,
+/turf/closed/wall/mineral/wooddark/window,
+/area/indoors/town/rmh/tavern)
+"rtZ" = (
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/item/weapon/shield/heater{
+	pixel_y = 32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"rAn" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable";
+	dir = 6
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"rAy" = (
+/obj/structure/chair/hotspring_bench/right{
+	dir = 4
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"rCS" = (
+/obj/item/bin/washbasin{
+	pixel_y = 19;
+	density = 0
+	},
+/obj/machinery/light/fueled/wallfire/candle/weak/r,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"rIz" = (
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#575757"
+	},
+/obj/item/ration,
+/obj/item/ration,
+/obj/item/ration,
+/obj/item/ration,
+/obj/item/ration,
+/obj/item/ration,
+/obj/item/ration,
+/obj/item/paper{
+	pixel_y = 15;
+	pixel_x = -9
+	},
+/obj/item/paper{
+	pixel_y = 15;
+	pixel_x = -9
+	},
+/obj/item/paper{
+	pixel_y = 15;
+	pixel_x = -9
+	},
+/obj/item/paper{
+	pixel_y = 15;
+	pixel_x = -9
+	},
+/obj/item/paper{
+	pixel_y = 15;
+	pixel_x = -9
+	},
+/obj/item/natural/feather{
+	pixel_y = 10;
+	pixel_x = 6
+	},
+/obj/item/natural/feather{
+	pixel_y = 10;
+	pixel_x = 6
+	},
+/obj/item/natural/feather{
+	pixel_y = 10;
+	pixel_x = 6
+	},
+/obj/item/flint,
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"rJb" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"rMw" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/spiralfade,
+/area/indoors/town/rmh/tavern)
+"rVj" = (
+/obj/structure/table/wood/reinf_long,
+/obj/item/tray,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"rZS" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"saq" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"sas" = (
+/obj/effect/decal/edge{
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"sfK" = (
+/obj/structure/door/green{
+	name = "Room IV";
+	lockid = "roomiv"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"siF" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"sjO" = (
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"son" = (
+/turf/closed/wall/mineral/decorstone,
+/area/indoors/town/rmh/tavern)
+"sox" = (
+/obj/structure/bed/inn/double,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/double_pelt,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"spK" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"ssq" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"str" = (
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"svd" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/chair/wood/alt/fancy/chair4,
+/obj/machinery/light/fueled/wallfire/candle/weak/l,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"swE" = (
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/item/weapon/shield/heater{
+	pixel_y = 32;
+	anchored = 1;
+	name = "wall shield"
+	},
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/structure/rack/shelf/big,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"syD" = (
+/obj/structure/stairs{
+	dir = 4
+	},
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"sEq" = (
+/obj/structure/chair/alizeriadecor/stool1,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"sEH" = (
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"sFV" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/table/wood/large/corner_new{
+	dir = 8
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"sGO" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"sIZ" = (
+/obj/machinery/light/fueled/hearth/horizontal{
+	dir = 1;
+	pixel_y = 6
+	},
+/obj/machinery/light/fueled/oven/south,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/tavern)
+"sKw" = (
+/turf/open/openspace,
+/area/indoors/town/rmh/tavern)
+"sMr" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"sNr" = (
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/obj/item/candle/tin{
+	pixel_y = 30;
+	pixel_x = 7
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"sOq" = (
+/obj/effect/decal/alizeria/decals/wooddecal6,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"sQB" = (
+/obj/structure/bed/inn/double,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/double_pelt,
+/turf/open/floor/ruinedwood/herringbone_clear,
+/area/indoors/town/rmh/tavern)
+"sTq" = (
+/obj/structure/fluff/walldeco/alizeria/plants7{
+	pixel_y = -32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"sTN" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 1
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = -2;
+	pixel_x = 5
+	},
+/obj/structure/fluff/littlebanners{
+	pixel_y = -4
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"sWG" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain_alt,
+/obj/item/candle/tin/lit{
+	pixel_y = 12;
+	pixel_x = 4
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"sWY" = (
+/obj/effect/decal/cobbleedge{
+	dir = 9
+	},
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"sXI" = (
+/obj/structure/curtain/bounty/dir{
+	dir = 1
+	},
+/turf/open/floor/tile/checkeralt,
+/area/under/town/rmh/basement/tavern)
+"sYE" = (
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#575757"
+	},
+/obj/item/storage/meatbag{
+	pixel_x = 4;
+	pixel_y = 8
+	},
+/obj/item/storage/belt/pouch{
+	pixel_x = -9;
+	pixel_y = -5
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 8
+	},
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"tgX" = (
+/turf/closed/wall/mineral/decostone/cand,
+/area/indoors/town/rmh/tavern)
+"tho" = (
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"thV" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/machinery/light/fueled/wallfire/candle,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"tln" = (
+/obj/structure/table/vtable,
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/item/candle/tin/lit{
+	pixel_y = 13;
+	pixel_x = -5
+	},
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 9;
+	pixel_y = 2
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/brick,
+/area/under/town/rmh/basement/tavern)
+"toA" = (
+/obj/effect/decal/cobbleedge{
+	dir = 10
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"tpA" = (
+/obj/structure/carpet/green,
+/obj/machinery/light/fueled/wallfire/candle/r,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = 32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"tpC" = (
+/obj/structure/closet/crate/drawer,
+/obj/item/key/tavern,
+/obj/item/key/tavern,
+/obj/item/key/tavern,
+/obj/item/key/tavern,
+/obj/item/key/tavern,
+/obj/structure/mirror{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/carpet,
+/area/under/town/rmh/basement/tavern)
+"tpM" = (
+/obj/effect/decal/borderfall{
+	pixel_y = -5
+	},
+/obj/structure/bookcase/fancy/random_recipes{
+	pixel_x = -32;
+	density = 0;
+	opacity = 0
+	},
+/obj/structure/chair/alizeriadecor/stool3,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"tqP" = (
+/obj/structure/table/wood/large/corner_new,
+/obj/effect/decal/carpet/kover_black{
+	pixel_y = -8;
+	pixel_x = 5
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"ttK" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/closet/crate/chest/neu_iron,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"tue" = (
+/obj/structure/bed/inn,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/item/bedsheet/wool,
+/obj/structure/mannequin/male{
+	density = 0;
+	pixel_y = 27
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"twK" = (
+/obj/structure/fluff/walldeco/painting/moon{
+	pixel_y = 32
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"tBD" = (
+/obj/structure/door/fancy{
+	name = "Guild's Room - I";
+	lockid = "groom1"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"tBY" = (
+/obj/structure/stairs/cw{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"tBZ" = (
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"tDv" = (
+/obj/item/bin/washbasin{
+	pixel_y = 19;
+	density = 0
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"tER" = (
+/turf/open/floor/metal/barograte,
+/area/under/town/rmh/basement/tavern)
+"tGN" = (
+/turf/closed/wall/mineral/stone,
+/area/indoors/town/rmh/tavern)
+"tMR" = (
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"tNc" = (
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"tQt" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"tQP" = (
+/obj/structure/fluff/fibermat/square,
+/turf/open/floor/tile/tilerg,
+/area/indoors/town/rmh/tavern)
+"tRg" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/obj/structure/curtain/bounty/dir{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"tTw" = (
+/obj/structure/fluff/steamvent,
+/obj/machinery/light/fueledstreet/orange/wall,
+/turf/open/floor/metal/barograte,
+/area/under/town/rmh/basement/tavern)
+"tYZ" = (
+/obj/item/bin/water,
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"uaH" = (
+/obj/structure/window/openclose/reinforced,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"ubq" = (
+/obj/structure/fermentation_keg/gronmead,
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"ubP" = (
+/turf/closed/wall/mineral/wooddark/deco{
+	dir = 4
+	},
+/area/under/town/rmh/basement/tavern)
+"ujw" = (
+/obj/effect/decal/cobbleedge{
+	dir = 8
+	},
+/obj/structure/well{
+	icon = 'icons/obj/structures/rotation_devices/water_vent.dmi';
+	icon_state = "pipevent";
+	dir = 8;
+	density = 0;
+	name = "water tap"
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes{
+	pixel_y = 0;
+	pixel_x = 32;
+	dir = 1
+	},
+/obj/structure/fermentation_keg,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"uka" = (
+/obj/structure/stairs/ccw,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood4,
+/area/indoors/town/rmh/tavern)
+"ukT" = (
+/obj/structure/fluff/walldeco/bigpainting/lake,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"ulm" = (
+/obj/structure/chair/stool,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"uml" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/closet/crate/crafted_closet/inn/south,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"unN" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/chair/stool,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"upl" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 4
+	},
+/area/indoors/town/rmh/tavern)
+"upT" = (
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 23;
+	pixel_y = -3
+	},
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 23;
+	pixel_y = -3
+	},
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 38;
+	pixel_y = 7
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"upZ" = (
+/obj/structure/closet/crate/chest,
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip)
+	},
+/obj/item/storage/sack{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage)
+	},
+/obj/item/storage/handbasket{
+	populate_contents = list(/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle,/obj/item/reagent_containers/food/snacks/cooked/truffle)
+	},
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#575757"
+	},
+/obj/machinery/light/fueled/wallfire/candle/l,
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"urU" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 4
+	},
+/obj/effect/decal/carpet/kover_purple{
+	dir = 4;
+	pixel_x = -13
+	},
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"uvc" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/rack/rogue/shelf/alizeria/shelf1{
+	pixel_y = 26
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 34;
+	pixel_x = -8
+	},
+/obj/item/carvedgem/shell/bust{
+	pixel_y = 37;
+	pixel_x = 8
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"uvU" = (
+/obj/structure/door/viewport{
+	dir = 1;
+	name = "Tavern's Basement"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"uwB" = (
+/obj/structure/fluff/walldeco/customflag{
+	pixel_y = 32;
+	name = "rivermist hollow flag"
+	},
+/turf/open/openspace,
+/area/indoors/town/rmh/tavern)
+"uxX" = (
+/obj/structure/fluff/pillow{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"uBp" = (
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/structure/fluff/railing/wood/west,
+/obj/structure/giantfur{
+	layer = 2
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"uCw" = (
+/obj/structure/fluff/walldeco/bath/wallpipes/innie{
+	dir = 8
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 8
+	},
+/obj/structure/bars/grille,
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"uEf" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"uGC" = (
+/obj/structure/table/wood/plain/alto,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/machinery/light/fueled/wallfire/candle,
+/obj/structure/fluff/clutter/books,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"uIU" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"uJK" = (
+/obj/structure/fermentation_keg/distiller,
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"uKL" = (
+/obj/structure/fluff/walldeco/bath/wallpipes{
+	layer = 2.8
+	},
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/structure/rack/shelf/big,
+/obj/structure/flowerpot{
+	pixel_y = 20;
+	pixel_x = -4;
+	color = "#45aed1"
+	},
+/obj/structure/flora/grass/herb/rosa{
+	pixel_y = 30;
+	pixel_x = -6
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"uSn" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/machinery/light/fueled/wallfire/candle{
+	pixel_y = -32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"uUE" = (
+/obj/structure/fluff/littlebanners{
+	pixel_y = -4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"uZw" = (
+/obj/structure/chair/hotspring_bench/right{
+	dir = 8
+	},
+/obj/structure/fluff/walldeco/customflag{
+	pixel_y = 32;
+	name = "rivermist hollow flag"
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"vag" = (
+/obj/structure/door/green{
+	name = "Room III";
+	lockid = "roomiii"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"vbi" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/fake_machine/scomm/l{
+	scom_tag = "Tavern - Keeper"
+	},
+/turf/open/floor/tile/diamond,
+/area/under/town/rmh/basement/tavern)
+"vbt" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"vbG" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/obj/structure/curtain/browncurtain/dir{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"vjf" = (
+/turf/closed/wall/mineral/stonebrick,
+/area/indoors/town/rmh/tavern)
+"vjt" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
+	},
+/obj/structure/carpet/red,
+/obj/item/reagent_containers/glass/cup/wooden,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"vjO" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 1
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"vqY" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"vty" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"vvH" = (
+/obj/structure/bed/inn,
+/obj/item/bedsheet/pelt,
+/obj/machinery/light/fueled/wallfire/candle/weak,
+/obj/structure/mannequin{
+	pixel_y = 23;
+	anchored = 1;
+	density = 0;
+	pixel_x = -9;
+	dir = 4
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"vxr" = (
+/obj/structure/chair/stool,
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"vAX" = (
+/obj/structure/door/red{
+	name = "Shed"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"vDx" = (
+/obj/structure/chair/stool,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"vDK" = (
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"vHn" = (
+/obj/structure/chair/wood/alt/chair3{
+	dir = 1
+	},
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"vHu" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/bed/inn,
+/obj/item/bedsheet/wool,
+/obj/effect/decal/carpet/kover_black{
+	dir = 4;
+	pixel_y = 7;
+	pixel_x = 14
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"vIO" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/table/wood/counter/end,
+/obj/structure/call_bell/adventurers_guild/small{
+	pixel_x = -6;
+	pixel_y = 11
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"vKz" = (
+/obj/effect/decal/cobbleedge{
+	dir = 9
+	},
+/obj/machinery/light/fueled/torchholder/r,
+/turf/open/floor/ruinedwood/spiral,
+/area/under/town/rmh/basement/tavern)
+"vKC" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 8
+	},
+/area/indoors/town/rmh/tavern)
+"vMp" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 8
+	},
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"vNY" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/tavern)
+"vPV" = (
+/obj/structure/bed/inn/double,
+/obj/item/bedsheet/double_pelt,
+/obj/structure/rack/rogue/shelf/alizeria/shelf2{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"vQr" = (
+/obj/structure/window/openclose/reinforced,
+/obj/structure/curtain/greencurtain/dir,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"vQK" = (
+/obj/structure/chair/wood/alt/chair3{
+	dir = 4
+	},
+/obj/structure/carpet/red,
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"vSI" = (
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#522f26"
+	},
+/obj/structure/fake_machine/scomm/r{
+	scom_tag = "Tavern - Kitchen"
+	},
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"vUq" = (
+/obj/structure/carpet/green,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"vVg" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"vZW" = (
+/obj/structure/bookcase/fancy/random_recipes{
+	pixel_x = -32;
+	density = 0;
+	opacity = 0
+	},
+/obj/structure/table/wood/plain/alto,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"waE" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"wbh" = (
+/obj/structure/door/violet{
+	name = "Tavern Owner's Room"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"wbM" = (
+/obj/structure/table/wood/plain/alto,
+/obj/item/candle/tin/lit{
+	pixel_y = 4
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh/tavern)
+"wdf" = (
+/obj/machinery/light/fueled/wallfire/candle/r,
+/turf/open/openspace,
+/area/indoors/town/rmh/tavern)
+"wdz" = (
+/turf/open/floor/tile,
+/area/under/town/rmh/basement/tavern)
+"wgs" = (
+/obj/structure/fake_machine/atm,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"whJ" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/mannequin/male{
+	density = 0;
+	dir = 4;
+	pixel_x = -10
+	},
+/obj/structure/giantfur/small{
+	layer = 2
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"wju" = (
+/obj/effect/decal/cobbleedge{
+	dir = 6
+	},
+/obj/structure/table/wood/reinforced_alter,
+/obj/item/weapon/knife/cleaver{
+	pixel_x = 12;
+	pixel_y = 30
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf1,
+/obj/item/reagent_containers/glass/bucket/wooden/alter,
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"wmw" = (
+/obj/structure/bed/inn/double,
+/obj/item/bedsheet/double_pelt,
+/obj/structure/curtain/brown,
+/turf/open/floor/carpet,
+/area/under/town/rmh/basement/tavern)
+"wrE" = (
+/obj/structure/table/wood/large_new{
+	icon_state = "alt_largetable"
+	},
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"wtJ" = (
+/obj/structure/fluff/walldeco/alizeria/plants2{
+	pixel_x = -32
+	},
+/obj/effect/decal/edge_corner{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"wvB" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/wood/plain_alt,
+/obj/effect/decal/carpet/kover_black{
+	dir = 4;
+	pixel_y = 7;
+	pixel_x = 14
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/turf/open/floor/ruinedwood/spiral,
+/area/indoors/town/rmh/tavern)
+"wvL" = (
+/obj/structure/closet/crate/chest/old_crate,
+/obj/item/reagent_containers/food/snacks/meat/salami,
+/obj/item/reagent_containers/food/snacks/meat/salami,
+/obj/item/reagent_containers/food/snacks/hardtack,
+/obj/item/reagent_containers/food/snacks/hardtack,
+/obj/item/reagent_containers/food/snacks/saltfish,
+/obj/item/reagent_containers/food/snacks/saltfish,
+/obj/item/reagent_containers/food/snacks/cooked/coppiette,
+/obj/item/reagent_containers/food/snacks/cooked/coppiette,
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#575757"
+	},
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 4
+	},
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"wzh" = (
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 8
+	},
+/obj/item/storage/handbasket{
+	pixel_y = 15;
+	pixel_x = -5
+	},
+/obj/item/storage/handbasket{
+	pixel_y = -10;
+	pixel_x = 10
+	},
+/obj/item/storage/sack,
+/obj/structure/fluff/walldeco/bath/wallpipes/outie{
+	dir = 6
+	},
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"wBz" = (
+/obj/structure/chair/stool/crafted,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29,
+/area/indoors/town/rmh/tavern)
+"wDL" = (
+/obj/structure/stairs/ccwdown{
+	dir = 4
+	},
+/turf/open/floor/tile/tilerg,
+/area/indoors/town/rmh/tavern)
+"wEP" = (
+/obj/structure/door/fancy{
+	name = "Tavern"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"wGy" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/closet/crate/chest/old_crate,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"wHs" = (
+/obj/structure/stairs,
+/obj/item/weapon/shield/heater{
+	anchored = 1;
+	name = "wall shield";
+	pixel_x = -32
+	},
+/obj/machinery/light/fueled/wallfire/candle/l,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"wIa" = (
+/obj/structure/door/weak/bolt{
+	dir = 1;
+	name = "gates"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"wJP" = (
+/obj/structure/bed/inn/double,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/item/bedsheet/fabric_double,
+/obj/effect/decal/carpet/square{
+	pixel_y = -10
+	},
+/obj/structure/fluff/walldeco/painting/skull{
+	pixel_y = 32
+	},
+/turf/open/floor/tile/checker_green,
+/area/indoors/town/rmh/tavern)
+"wKm" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/table/wood/large/corner_new{
+	dir = 5
+	},
+/obj/machinery/light/fueled/wallfire/candle/weak/r,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"wTE" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"wXF" = (
+/obj/structure/door/fancy{
+	name = "Staff's Room"
+	},
+/obj/effect/mapping_helpers/access/keyset/town/inn,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"xfE" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/table/wood/plain_alt,
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"xfQ" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"xfZ" = (
+/obj/structure/table/vtable/v2,
+/obj/structure/fluff/walldeco/painting/castle{
+	pixel_y = 32
+	},
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/natural/feather,
+/obj/item/natural/feather,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/tile/diamond,
+/area/under/town/rmh/basement/tavern)
+"xgq" = (
+/obj/structure/bookcase/random_recipes{
+	density = 0;
+	opacity = 0;
+	pixel_y = -32
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"xhq" = (
+/turf/open/floor/blocks/stonered,
+/area/indoors/town/rmh/tavern)
+"xlv" = (
+/obj/structure/chair/wood/alt/fancy/chair5,
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"xmA" = (
+/obj/structure/chair/wood/alt/chair3,
+/obj/effect/decal/carpet{
+	pixel_y = -11;
+	pixel_x = 9
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"xnD" = (
+/turf/open/floor/cobble/alt,
+/area/under/town/rmh/basement/tavern)
+"xnV" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/chair/alizeriadecor/stool1,
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_x = 32
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood29{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"xop" = (
+/obj/structure/table/wood/large/corner_new{
+	dir = 10
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/item/candle/tin/lit{
+	pixel_y = 1;
+	pixel_x = 4
+	},
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"xsN" = (
+/obj/structure/fluff/steamvent,
+/turf/open/floor/metal/barograte,
+/area/under/town/rmh/basement/tavern)
+"xuc" = (
+/obj/structure/closet/crate/drawer{
+	lockid = "groom3"
+	},
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"xud" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 8
+	},
+/obj/structure/curtain/redcurtain/dir{
+	dir = 8
+	},
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"xuC" = (
+/obj/structure/table/wood/reinforced_alter,
+/obj/item/reagent_containers/glass/bucket/wooden/alter{
+	pixel_y = 16;
+	pixel_x = 3
+	},
+/obj/structure/rack/rogue/shelf/alizeria/shelf2,
+/turf/open/floor/metal,
+/area/under/town/rmh/basement/tavern)
+"xxj" = (
+/turf/closed/wall/mineral/wooddark/horizontal,
+/area/indoors/town/rmh/tavern)
+"xyZ" = (
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 16
+	},
+/obj/structure/fake_machine/enterprise_ledger/tavern,
+/turf/open/floor/blocks/stonered/tiny,
+/area/indoors/town/rmh/tavern)
+"xAs" = (
+/obj/structure/bed/inn,
+/obj/item/bedsheet/wool,
+/turf/open/floor/carpet/red,
+/area/indoors/town/rmh/tavern)
+"xAy" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#522f26"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/brick,
+/area/under/town/rmh/basement/tavern)
+"xBy" = (
+/obj/effect/decal/edge{
+	color = "#7a684b";
+	dir = 8
+	},
+/obj/machinery/light/fueled/wallfire/candle/l,
+/turf/open/floor/sandstone,
+/area/indoors/town/rmh/tavern)
+"xDI" = (
+/obj/structure/curtain/black,
+/obj/effect/decal/edge{
+	color = "#575757"
+	},
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"xHe" = (
+/obj/structure/curtain/black,
+/turf/open/floor/concrete,
+/area/under/town/rmh/basement/tavern)
+"xJZ" = (
+/obj/structure/fermentation_keg/avarrice,
+/turf/open/floor/wood,
+/area/under/town/rmh/basement/tavern)
+"xKa" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"xLd" = (
+/obj/structure/fluff/walldeco/alizeria/plants8{
+	pixel_y = -32
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"xMn" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood28{
+	color = "#b3afaf"
+	},
+/area/indoors/town/rmh/tavern)
+"xMo" = (
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/structure/table/map{
+	dir = 6
+	},
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+"xRn" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/machinery/light/fueled/torchholder/r,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/tavern)
+"xTP" = (
+/obj/effect/decal/cobbleedge{
+	dir = 1
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/tavern)
+"xUp" = (
+/obj/machinery/light/fueled/torchholder/l,
+/turf/open/floor/cobblerock,
+/area/under/town/rmh/basement/tavern)
+"xVT" = (
+/obj/effect/decal/edge_corner{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/tile/harem2,
+/area/indoors/town/rmh/tavern)
+"xYh" = (
+/obj/structure/chair/wood/alt/chair3{
+	dir = 1
+	},
+/obj/structure/bookcase/random{
+	opacity = 0;
+	density = 0;
+	pixel_y = -32
+	},
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#522f26"
+	},
+/turf/open/floor/tile/diamond,
+/area/indoors/town/rmh/tavern)
+"xYp" = (
+/obj/effect/decal/borderfall{
+	dir = 1;
+	pixel_y = 8
+	},
+/obj/structure/fluff/walldeco/alizeria/plants7{
+	pixel_y = 32
+	},
+/turf/open/floor/tile/brick,
+/area/indoors/town/rmh/tavern)
+"xZB" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/mannequin/male{
+	density = 0;
+	pixel_y = 25
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/herringbone,
+/area/indoors/town/rmh/tavern)
+"xZH" = (
+/obj/structure/door/weak/bolt{
+	dir = 4;
+	name = "Lavatory"
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/tavern)
+"xZS" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"yaS" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/turned,
+/area/indoors/town/rmh/tavern)
+"yfR" = (
+/obj/structure/door/green{
+	name = "Room VIII";
+	lockid = "roomviii"
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/tavern)
+
+(1,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(2,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(3,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(4,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(5,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(6,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+btx
+btx
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(7,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fkN
+fkN
+jJb
+jJb
+btx
+fkN
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(8,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+dAW
+jJb
+jJb
+fkN
+fkN
+amw
+uJK
+djN
+qRQ
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(9,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+jJb
+vvH
+nDc
+cKr
+jJb
+tTw
+tER
+tER
+xsN
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(10,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+jJb
+eth
+aMl
+eth
+jJb
+xuC
+uJK
+uCw
+fkB
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(11,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+jJb
+nkZ
+ulm
+wdz
+fkN
+jJb
+jJb
+jJb
+lBk
+fkN
+jJb
+jJb
+fkN
+jJb
+jJb
+fkN
+ops
+"}
+(12,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fkN
+loc
+diX
+qrt
+wXF
+fEp
+dYQ
+xUp
+lpB
+xDI
+hvg
+bRj
+msJ
+xJZ
+dwb
+jJb
+ops
+"}
+(13,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fkN
+iwo
+tho
+nqw
+jJb
+ckq
+aPs
+tYZ
+dzZ
+eee
+diX
+diX
+diX
+diX
+eYO
+uvU
+ops
+"}
+(14,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+dAW
+fkN
+jJb
+jJb
+fkN
+jnK
+kIc
+kPR
+btB
+fkN
+adO
+diX
+hCu
+lcT
+aMN
+fkN
+ops
+"}
+(15,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+jJb
+bCq
+kPR
+jJb
+wju
+kPR
+sWY
+aCY
+frZ
+diX
+diX
+diX
+diX
+diX
+uvU
+ops
+"}
+(16,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+jJb
+hnE
+sWY
+ccJ
+kPR
+ehM
+eQL
+ivk
+frZ
+vKz
+ujw
+hou
+iip
+ubq
+jJb
+ops
+"}
+(17,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fvr
+kPR
+mEY
+fkN
+jJb
+jJb
+jJb
+lnw
+fkN
+jJb
+btx
+fkN
+jJb
+jJb
+fkN
+ops
+"}
+(18,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+fkN
+jJb
+jJb
+jJb
+fkN
+jJb
+jJb
+fkN
+sYE
+wzh
+etQ
+qCc
+jJb
+btx
+btx
+ops
+ops
+ops
+ops
+ops
+"}
+(19,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+jJb
+dfb
+lBT
+wdz
+sXI
+lxi
+vbi
+wbh
+kVM
+xnD
+xnD
+etb
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(20,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+jJb
+otl
+qBw
+saq
+lEz
+tln
+xAy
+jJb
+fdz
+xnD
+ivk
+bGw
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(21,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+jJb
+wmw
+tpC
+pNc
+ubP
+xfZ
+jHE
+jJb
+fnI
+hdB
+mwX
+wvL
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(22,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+fkN
+jJb
+jJb
+jJb
+jJb
+jJb
+jJb
+fkN
+jJb
+xHe
+jJb
+jJb
+fkN
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(23,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+dAW
+upZ
+mPd
+gsK
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(24,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fkN
+rIz
+hZL
+jgY
+jJb
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(25,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fkN
+fkN
+jJb
+jJb
+fkN
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(26,1,1) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+
+(1,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+son
+son
+son
+oHn
+vjf
+kXp
+fao
+vjf
+ops
+"}
+(2,1,2) = {"
+oHn
+oHn
+oHn
+oHn
+oHn
+oHn
+oHn
+ops
+ops
+ops
+ops
+ops
+ops
+vjf
+vjf
+oHn
+dze
+ibT
+hIm
+oHn
+oBy
+vQK
+pAv
+kyg
+vjf
+"}
+(3,1,2) = {"
+oHn
+fXf
+vMp
+xBy
+vMp
+lMD
+oHn
+oHn
+oHn
+oHn
+mvM
+xVT
+mGe
+mqP
+wHs
+vjf
+fmN
+hfv
+dFw
+nVl
+dak
+gmC
+vjt
+vHn
+wTE
+"}
+(4,1,2) = {"
+oHn
+gxJ
+mxn
+urU
+mma
+gur
+oHn
+wDL
+mym
+rpN
+bKX
+orf
+vIO
+gMo
+fzf
+mtM
+oLS
+joL
+nuy
+qsa
+pAv
+dTJ
+hSH
+vHn
+fao
+"}
+(5,1,2) = {"
+oHn
+nKl
+ajF
+hIG
+hIG
+oHn
+oHn
+tgX
+hSp
+oHn
+dJD
+xlv
+fBs
+njc
+hIG
+dox
+axL
+gxU
+cFi
+bmv
+str
+qii
+pAv
+pKf
+vjf
+"}
+(6,1,2) = {"
+oHn
+aIL
+aMK
+hIG
+asw
+jdM
+mym
+tQP
+mym
+oHn
+wgs
+mrj
+nEK
+obZ
+mua
+ber
+axL
+cFi
+waE
+mVp
+uEf
+mzM
+hEp
+fao
+ops
+"}
+(7,1,2) = {"
+oHn
+gai
+ajF
+tMR
+xgq
+oHn
+mym
+ePp
+paY
+oHn
+qfu
+xlv
+bLf
+dHY
+hst
+qeW
+aQm
+waE
+waE
+iQD
+waE
+sas
+wEP
+ops
+ops
+"}
+(8,1,2) = {"
+ops
+ops
+ops
+ops
+oHn
+oHn
+rpN
+oHn
+oHn
+tgX
+cLd
+orf
+qbv
+vqY
+hst
+qeW
+axL
+cFi
+xmA
+rlf
+aBE
+dQo
+eiC
+ops
+ops
+"}
+(9,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+oHn
+byP
+nVk
+siF
+ePL
+gdr
+jKJ
+sjO
+vty
+hOb
+sTN
+tqP
+dQo
+eiC
+ops
+ops
+"}
+(10,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+oHn
+vNY
+mtw
+vjf
+uKL
+lAO
+krk
+moE
+gdP
+mNm
+grm
+dln
+xYh
+eiC
+ops
+ops
+"}
+(11,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vjf
+swE
+bKm
+bDJ
+ddY
+aio
+gEJ
+xxj
+xxj
+xxj
+vNY
+ops
+ops
+"}
+(12,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+upl
+xYp
+dCL
+niQ
+xhq
+lPi
+rZS
+jLd
+hNo
+wtJ
+kcx
+ops
+ops
+"}
+(13,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+wEP
+eIw
+ddY
+xhq
+qgK
+gft
+ddY
+qOm
+qxk
+nld
+oQU
+ops
+ops
+"}
+(14,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+wEP
+eIw
+xhq
+qgK
+gft
+qgK
+gft
+uUE
+xhq
+nld
+kcx
+ops
+ops
+"}
+(15,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vKC
+jCX
+vDx
+vxr
+vDx
+xhq
+tNc
+gvp
+mgo
+mKb
+wTE
+ops
+ops
+"}
+(16,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+guV
+cQh
+aUU
+cQh
+rty
+nld
+vNY
+vVg
+syD
+eiC
+ops
+ops
+"}
+(17,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+wrE
+xyZ
+aAF
+vDx
+moS
+mCd
+vjf
+tBY
+qEY
+eiC
+ops
+ops
+"}
+(18,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vQr
+mTq
+gft
+qgK
+gft
+ciH
+nld
+vNY
+xxj
+xxj
+vNY
+xxj
+vNY
+"}
+(19,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+laM
+upT
+gBZ
+jhO
+ivz
+fHk
+fwp
+imj
+qhr
+aiZ
+dLB
+vAX
+ops
+"}
+(20,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+eKt
+imj
+imj
+vNY
+xxj
+xxj
+xxj
+kYq
+vNY
+gxp
+vNY
+kbZ
+bUU
+toA
+xxj
+ops
+"}
+(21,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+bFW
+hoU
+rnt
+imj
+vjf
+ixz
+qej
+sGO
+sGO
+gHq
+imj
+oMs
+xTP
+hLI
+wIa
+ops
+"}
+(22,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fqJ
+otp
+kmJ
+eRz
+imj
+vjf
+sIZ
+eyb
+fHc
+rVj
+kGS
+vNY
+rAn
+hLI
+hLI
+wIa
+ops
+"}
+(23,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fqJ
+pUd
+kmJ
+cqC
+imj
+vjf
+gHM
+qZH
+qhI
+mvY
+vSI
+gxp
+bho
+gnP
+jRo
+vjf
+ops
+"}
+(24,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+sEH
+xRn
+dlD
+imj
+vjf
+vjf
+sKw
+isg
+vjf
+vjf
+vNY
+xxj
+vNY
+xxj
+vNY
+ops
+"}
+(25,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+xxj
+xxj
+vNY
+ops
+vjf
+vjf
+vjf
+vjf
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(26,1,2) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+
+(1,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+rrl
+xxj
+rrl
+vNY
+ops
+"}
+(2,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+vNY
+xxj
+ops
+vNY
+qfL
+sQB
+gJv
+sox
+fPn
+vNY
+"}
+(3,1,3) = {"
+tGN
+tGN
+xxj
+xxj
+tgX
+tGN
+tGN
+tGN
+tgX
+vNY
+xxj
+xxj
+xxj
+vNY
+uwB
+gLS
+jfu
+bOK
+xxj
+bIl
+blX
+edX
+lCz
+svd
+tRg
+"}
+(4,1,3) = {"
+tGN
+uGC
+vDK
+mwr
+vjf
+vZW
+tpM
+mQe
+tGN
+eiC
+tue
+aIZ
+hBa
+imj
+xxj
+vNY
+rtZ
+jVg
+gxT
+cRc
+hrW
+pYN
+pYN
+gyf
+imj
+"}
+(5,1,3) = {"
+tGN
+rnY
+dpK
+gGP
+vjf
+nZe
+ggn
+khR
+tGN
+xxj
+thV
+aKb
+jTq
+iHJ
+wGy
+xxj
+xZS
+gvn
+xxj
+ioV
+sFV
+mKq
+iil
+ewn
+tRg
+"}
+(6,1,3) = {"
+tGN
+pxY
+rnL
+hIG
+rax
+hIG
+hIG
+uSn
+tgX
+xxj
+idg
+irb
+xnV
+kKJ
+gGP
+vag
+eDj
+iKb
+vNY
+xxj
+xxj
+xxj
+xxj
+xxj
+vNY
+"}
+(7,1,3) = {"
+tGN
+sNr
+hIG
+hIG
+vjf
+twK
+hIG
+tQt
+tGN
+vNY
+xxj
+xxj
+xxj
+xxj
+xxj
+vNY
+akp
+xLd
+imj
+gzV
+arh
+jOB
+anf
+nJJ
+imj
+"}
+(8,1,3) = {"
+tGN
+bUC
+jjd
+nQk
+vjf
+hIG
+hIG
+ldX
+tGN
+imj
+iRj
+vHu
+brT
+jgk
+ttK
+xxj
+uvc
+gvn
+xxj
+inN
+aET
+lyR
+oLZ
+xMn
+xxj
+"}
+(9,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+eiC
+xud
+eiC
+tgX
+imj
+rcz
+bYo
+gat
+mdF
+epb
+sfK
+xZS
+iMG
+nsq
+dTW
+uxX
+oLZ
+oLZ
+egT
+tRg
+"}
+(10,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+imj
+hij
+vNY
+xxj
+xxj
+vNY
+rtZ
+gvn
+xxj
+jFM
+qSU
+qSU
+eXF
+wKm
+xxj
+"}
+(11,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+nUf
+whJ
+xxj
+oXq
+iMG
+vNY
+xxj
+xxj
+xxj
+xxj
+xxj
+vNY
+"}
+(12,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+iYk
+jNq
+mSH
+mav
+eDj
+cnI
+hoU
+pGq
+jJQ
+pZX
+moc
+brI
+xxj
+"}
+(13,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+mYe
+xfE
+xxj
+eDj
+vbt
+gQd
+vUq
+vUq
+jIl
+jIl
+xfQ
+spK
+"}
+(14,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+xxj
+vNY
+ukT
+gQd
+sOq
+cvx
+bYQ
+bYQ
+tpA
+oIH
+xxj
+"}
+(15,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+mHe
+sWG
+xxj
+xZS
+gQd
+owZ
+vNY
+vVg
+khR
+vNY
+xZH
+vNY
+"}
+(16,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+iYk
+hOA
+sMr
+rlN
+xZS
+gQd
+rfo
+imj
+uwB
+khR
+imj
+tDv
+imj
+"}
+(17,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+dpo
+hbo
+xxj
+epF
+vbt
+sTq
+vNY
+xxj
+xxj
+xxj
+xxj
+vNY
+"}
+(18,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+xxj
+vNY
+rtZ
+kmJ
+yaS
+aMq
+lli
+pYP
+wvB
+pTo
+xxj
+"}
+(19,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+kcx
+meo
+fIP
+fIP
+aJi
+kmJ
+xop
+xxj
+dWn
+jPb
+rMw
+nba
+tRg
+"}
+(20,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+jWo
+imj
+xxj
+gks
+rhN
+xKa
+oLN
+boZ
+kmJ
+cJS
+vNY
+xxj
+xxj
+xxj
+xxj
+vNY
+"}
+(21,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+fWd
+xMo
+isM
+xxj
+xxj
+vNY
+hIM
+vbt
+vbt
+yaS
+yfR
+jmY
+qHW
+lKa
+frj
+xxj
+"}
+(22,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vQr
+ocG
+gUk
+tBZ
+aSK
+cqH
+oZL
+iyc
+bLx
+bLx
+aMw
+xxj
+xZB
+fxr
+fxr
+unN
+gkt
+"}
+(23,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+wJP
+mVK
+ntd
+eTW
+rJb
+vNY
+qfL
+xZH
+vKC
+hRa
+imj
+oAW
+fnC
+jUb
+onZ
+xxj
+"}
+(24,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+eiC
+owG
+qWa
+ssq
+luG
+mTQ
+imj
+rCS
+hIG
+imj
+flb
+vNY
+imj
+dua
+imj
+xxj
+vNY
+"}
+(25,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+eiC
+uml
+kEt
+qWw
+jhN
+iXs
+imj
+vNY
+hij
+vNY
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(26,1,3) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+eiC
+eiC
+imj
+mtw
+imj
+vNY
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+
+(1,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(2,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(3,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(4,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(5,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(6,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(7,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(8,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(9,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(10,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(11,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(12,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(13,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(14,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(15,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+xxj
+xxj
+fao
+eSF
+fao
+xxj
+vNY
+ops
+ops
+"}
+(16,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+nuH
+rAy
+uIU
+jZn
+hIG
+gHc
+sKw
+imj
+ops
+ops
+"}
+(17,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fao
+eBv
+lyd
+hQZ
+ovb
+hIG
+bsW
+hMU
+xxj
+ops
+ops
+"}
+(18,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+uZw
+nxr
+ePm
+bhO
+hIG
+hIG
+hIG
+wTE
+ops
+ops
+"}
+(19,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+vNY
+xxj
+vNY
+poS
+hIG
+hIG
+oXx
+xxj
+ops
+ops
+"}
+(20,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+jjx
+rAy
+kbV
+gqK
+hIG
+hIG
+gLS
+imj
+ops
+ops
+"}
+(21,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fao
+kIv
+eqg
+qFS
+gjO
+hIG
+hIG
+uBp
+imj
+ops
+ops
+"}
+(22,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+cGR
+nxr
+qjg
+nba
+hIG
+vjO
+dhR
+tGN
+ops
+ops
+"}
+(23,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+vNY
+xxj
+vNY
+hIG
+sEq
+nha
+ops
+ops
+ops
+"}
+(24,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+flb
+imj
+vNY
+ops
+ops
+ops
+"}
+(25,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(26,1,4) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+
+(1,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(2,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(3,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(4,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(5,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(6,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(7,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(8,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(9,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(10,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(11,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(12,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(13,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}
+(14,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+eiC
+eiC
+vbG
+eiC
+eiC
+eiC
+xxj
+vNY
+ops
+"}
+(15,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+eba
+wBz
+qEF
+imj
+jCg
+wbM
+imj
+ops
+"}
+(16,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+dED
+brA
+wBz
+imj
+mvh
+hna
+eFm
+ops
+"}
+(17,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+xxj
+vNY
+deM
+jAb
+imj
+jVW
+vPV
+eiC
+ops
+"}
+(18,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+xxj
+nnZ
+vNY
+tBD
+xxj
+eiC
+ops
+"}
+(19,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+uaH
+bRZ
+oEc
+omx
+rpu
+cnl
+wTE
+ops
+"}
+(20,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+fao
+bRZ
+bRZ
+gbo
+wdf
+uka
+imj
+ops
+"}
+(21,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+xxj
+pRo
+xxj
+vNY
+xxj
+vNY
+ops
+"}
+(22,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+vNY
+kAj
+ffv
+ffv
+imj
+ops
+ops
+ops
+"}
+(23,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+gUx
+jnl
+gDc
+xuc
+cBd
+imj
+ops
+ops
+ops
+"}
+(24,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+imj
+xAs
+qyj
+bPM
+xAs
+jPu
+imj
+ops
+ops
+ops
+"}
+(25,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+vNY
+xxj
+eiC
+dua
+eiC
+xxj
+vNY
+ops
+ops
+ops
+"}
+(26,1,5) = {"
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+ops
+"}

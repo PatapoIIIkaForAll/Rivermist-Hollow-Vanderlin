@@ -223,6 +223,7 @@ export type Locale = {
     bank: string;
     ownerLevel: string;
     grant: string;
+    reload: string;
     rooms: string;
     allRooms: string;
     patrons: string;

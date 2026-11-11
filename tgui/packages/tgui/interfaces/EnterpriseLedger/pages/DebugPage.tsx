@@ -161,6 +161,13 @@ export const DebugPage = (props: PageProps) => {
         <Button ml={1} icon="door-open" onClick={() => act('debug_grant')}>
           {locale.debug.grant}
         </Button>
+        <Button
+          icon="hammer"
+          color="average"
+          onClick={() => act('debug_reload')}
+        >
+          {locale.debug.reload}
+        </Button>
       </Section>
       <Section title={locale.debug.patrons}>
         <Box mb={1}>

@@ -118,6 +118,7 @@ const locale: Locale = {
     bank: 'My bank account',
     ownerLevel: 'Owner level',
     grant: 'Give the rooms of this owner level',
+    reload: 'Load the tavern of this owner level anew',
     rooms: 'Room levels',
     allRooms: 'All rooms',
     patrons: 'Lodgers (NPC)',

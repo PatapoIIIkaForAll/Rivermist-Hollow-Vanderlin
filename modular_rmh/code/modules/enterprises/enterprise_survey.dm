@@ -21,6 +21,8 @@
 	return floor ? floor.contains(location) : FALSE
 
 /datum/enterprise/proc/claim_premises(atom/anchor)
+	if(loading_premises)
+		return FALSE
 	var/turf/origin = get_turf(anchor)
 	if(!origin || !is_premises_turf(origin))
 		log_mapping("Map issue: [anchor] ([anchor.type]) at [AREACOORD(anchor)] is outside the [name] premises. [premises_hint]")
@@ -60,6 +62,7 @@
 		floor.set_turfs(claimed)
 	scan_rooms()
 	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
+	mark_start_stock(fresh)
 	furnish_rooms()
 	for(var/datum/enterprise_fixture/fixture as anything in taken)
 		fixture.apply_level(max(fixture.room ? fixture.room.level : ENTERPRISE_LEVEL_BARE, ENTERPRISE_LEVEL_WOOD))
@@ -233,7 +236,7 @@
 		if(istype(thing, /obj/structure/door))
 			if(length(get_door_lock_ids(thing)))
 				return thing
-		else if(istype(thing, /obj/structure/table))
+		else if(istype(thing, /obj/structure/table) || istype(thing, /obj/structure/curtain))
 			has_table = TRUE
 	return has_table ? ROOM_CELL_TABLE : ROOM_CELL_OPEN
 
@@ -435,6 +438,16 @@
 		candidates = candidates.Copy()
 		for(var/index in 2 to length(all_sides))
 			candidates &= all_sides[index]
+		if(!length(candidates))
+			var/list/doors_by_room = list()
+			var/most_doors = 0
+			for(var/list/datum/enterprise_room/door_rooms as anything in all_sides)
+				for(var/datum/enterprise_room/side as anything in door_rooms)
+					doors_by_room[side]++
+					most_doors = max(most_doors, doors_by_room[side])
+			for(var/datum/enterprise_room/side as anything in doors_by_room)
+				if(doors_by_room[side] == most_doors)
+					candidates += side
 		var/datum/enterprise_room/chosen
 		for(var/datum/enterprise_room/candidate as anything in candidates)
 			if(!chosen || length(candidate.lock_doors) < length(chosen.lock_doors) \
