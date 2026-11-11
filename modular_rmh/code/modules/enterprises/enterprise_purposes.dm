@@ -2,7 +2,9 @@
 	abstract_type = /datum/enterprise_room_template
 	var/id
 	var/name
+	var/name_ru
 	var/priority = 100
+	var/grouped = FALSE
 
 /datum/enterprise_room_template/proc/matches(datum/enterprise_room/room)
 	return FALSE
@@ -22,10 +24,21 @@
 /datum/enterprise_room_template/guest_room
 	id = ENTERPRISE_PURPOSE_GUEST_ROOM
 	name = "Guest room"
+	name_ru = "Жилая комната"
 	priority = 10
+	var/list/needs = list(
+		/obj/structure/bed,
+		/obj/structure/closet,
+		/obj/structure/curtain,
+	)
 
 /datum/enterprise_room_template/guest_room/matches(datum/enterprise_room/room)
-	return room.kind == ENTERPRISE_ROOM_GUEST
+	if(room.kind != ENTERPRISE_ROOM_GUEST)
+		return FALSE
+	for(var/need in needs)
+		if(!room.count_listed(need))
+			return FALSE
+	return TRUE
 
 /datum/enterprise_room_template/guest_room/get_effect(datum/enterprise_room/room, level, russian)
 	var/datum/enterprise/enterprise = room.enterprise
@@ -47,35 +60,43 @@
 		to_chat(sleeper, span_warning(russian ? "На счёте нет [price] за ночлег: отдых будет обычным." : "My account cannot cover the [price] for the night: this will be an ordinary rest."))
 		return FALSE
 	enterprise.earn(price)
-	if(room.damaged)
+	if(!room.is_in_order())
 		to_chat(sleeper, span_warning(russian ? "За ночлег со счёта списано [price], но в комнате чего-то нет на месте или что-то сломано: отдых обычный." : "The night has cost me [price] from my account, but something in the room is gone or broken: this was an ordinary rest."))
 		return TRUE
 	enterprise.give_rest_buff(sleeper, room.level)
 	to_chat(sleeper, span_notice(russian ? "За ночлег со счёта списано [price]." : "The night has cost me [price] from my account."))
 	return TRUE
 
-/datum/enterprise_room_template/kitchen
-	id = ENTERPRISE_PURPOSE_KITCHEN
-	name = "Kitchen"
-	priority = 20
-	var/list/appliances = list(
-		/obj/machinery/light/fueled/oven,
-		/obj/machinery/light/fueled/hearth,
+/datum/enterprise_room_template/horny_room
+	id = ENTERPRISE_PURPOSE_HORNY_ROOM
+	name = "Horny Room"
+	name_ru = "Horny Room"
+	priority = 15
+	var/list/signs = list(
+		/obj/structure/bondage,
+		/obj/structure/stripper_pole,
 	)
 
-/datum/enterprise_room_template/kitchen/matches(datum/enterprise_room/room)
-	for(var/appliance in appliances)
-		if(room.count_fixtures(appliance))
+/datum/enterprise_room_template/horny_room/matches(datum/enterprise_room/room)
+	for(var/sign in signs)
+		if(room.count_listed(sign))
 			return TRUE
 	return FALSE
+
+/datum/enterprise_room_template/horny_room/get_effect(datum/enterprise_room/room, level, russian)
+	if(level > ENTERPRISE_MAX_LEVEL)
+		return null
+	return russian ? "Особых эффектов пока нет." : "No special effects yet."
 
 /datum/enterprise_room_template/staff_quarters
 	id = ENTERPRISE_PURPOSE_STAFF_QUARTERS
 	name = "Staff quarters"
-	priority = 30
+	name_ru = "Комната персонала"
+	priority = 20
+	grouped = TRUE
 
 /datum/enterprise_room_template/staff_quarters/matches(datum/enterprise_room/room)
-	return room.kind == ENTERPRISE_ROOM_SERVICE && room.beds > 0
+	return room.kind == ENTERPRISE_ROOM_SERVICE && room.count_listed(/obj/structure/bed)
 
 /datum/enterprise_room_template/staff_quarters/get_effect(datum/enterprise_room/room, level, russian)
 	var/datum/enterprise/enterprise = room.enterprise
@@ -92,7 +113,7 @@
 	var/datum/enterprise/enterprise = room.enterprise
 	if(!enterprise.is_staff(sleeper) || room.level < ENTERPRISE_LEVEL_WOOD)
 		return FALSE
-	if(!room.damaged)
+	if(room.is_in_order())
 		enterprise.give_rest_buff(sleeper, room.level)
 	var/bonus = enterprise.get_staff_bonus()
 	if(SStreasury.give_money_account(bonus, sleeper, "[enterprise.name] wages"))
@@ -100,10 +121,39 @@
 		to_chat(sleeper, span_notice(russian ? "За день работы на счёт пришло [bonus]." : "The day's work has brought [bonus] to my account."))
 	return TRUE
 
+/datum/enterprise_room_template/kitchen
+	id = ENTERPRISE_PURPOSE_KITCHEN
+	name = "Kitchen"
+	name_ru = "Кухня"
+	priority = 30
+	grouped = TRUE
+	var/list/appliances = list(
+		/obj/machinery/light/fueled/oven,
+		/obj/machinery/light/fueled/hearth,
+	)
+	var/list/tools = list(
+		/obj/item/weapon/knife,
+	)
+
+/datum/enterprise_room_template/kitchen/matches(datum/enterprise_room/room)
+	var/cooks = FALSE
+	for(var/appliance in appliances)
+		if(room.count_listed(appliance))
+			cooks = TRUE
+			break
+	if(!cooks)
+		return FALSE
+	for(var/tool in tools)
+		if(room.count_listed(tool))
+			return TRUE
+	return FALSE
+
 /datum/enterprise_room_template/storage
 	id = ENTERPRISE_PURPOSE_STORAGE
 	name = "Storage"
-	priority = 40
+	name_ru = "Склад"
+	priority = 45
+	grouped = TRUE
 	var/list/stores = list(
 		/obj/structure/rack,
 		/obj/structure/closet,
@@ -114,16 +164,28 @@
 		/obj/item/reagent_containers/powder/salt,
 		/obj/item/reagent_containers/powder/flour,
 	)
+	var/list/door_words = list("storage", "warehouse", "shed", "pantry", "склад", "кладов", "сарай")
 	var/post_name = "food buying post"
 	var/post_desc = "Food is bought here. What is taken is paid for on the spot."
 
 /datum/enterprise_room_template/storage/matches(datum/enterprise_room/room)
-	if(room.count_fixtures(/obj/structure/chair))
+	if(room.count_listed(/obj/structure/chair) || room.count_listed(/obj/structure/bed))
 		return FALSE
 	var/stores_found = 0
 	for(var/store in stores)
-		stores_found += room.count_fixtures(store)
-	return stores_found >= stores_needed
+		stores_found += room.count_listed(store)
+	if(stores_found >= stores_needed)
+		return TRUE
+	return stores_found && (room.holds_any(goods) || is_named_for(room.name))
+
+/datum/enterprise_room_template/storage/proc/is_named_for(room_name)
+	if(!room_name)
+		return FALSE
+	var/lowered = LOWER_TEXT(room_name)
+	for(var/word in door_words)
+		if(findtext(lowered, word))
+			return TRUE
+	return FALSE
 
 /datum/enterprise_room_template/storage/get_effect(datum/enterprise_room/room, level, russian)
 	var/datum/enterprise/enterprise = room.enterprise
@@ -135,50 +197,46 @@
 		: "The buying post at the door holds [cap] of each kind of goods."
 
 /datum/enterprise_room_template/storage/on_survey(datum/enterprise_room/room)
-	if(room.stock)
+	if(room.stock || room.leader)
 		return
-	var/turf/outside = room.get_door_step()
-	if(!outside)
+	var/datum/enterprise/enterprise = room.enterprise
+	var/list/spot = enterprise.find_post_spot(room)
+	if(!spot)
 		return
-	var/datum/enterprise_stock/stock = new(room.enterprise, room, goods)
-	var/obj/structure/fake_machine/enterprise_stock/post = new(outside)
+	var/datum/enterprise_stock/stock = new(enterprise, room, goods)
+	var/obj/structure/fake_machine/enterprise_stock/post = new(spot[1])
 	post.name = post_name
 	post.desc = post_desc
+	post.pixel_x = spot[2]
+	post.pixel_y = spot[3]
 	post.stock = stock
 	stock.post = post
 	room.stock = stock
-	for(var/direction in GLOB.cardinals)
-		if(!isclosedturf(get_step(outside, direction)))
-			continue
-		if(direction & (NORTH | SOUTH))
-			post.pixel_y = direction == NORTH ? ICON_SIZE_Y : -ICON_SIZE_Y
-		else
-			post.pixel_x = direction == EAST ? ICON_SIZE_X : -ICON_SIZE_X
-		break
 
 /datum/enterprise_room_template/storage/drinks
 	id = ENTERPRISE_PURPOSE_DRINK_STORAGE
 	name = "Drinks storage"
-	priority = 35
+	name_ru = "Склад напитков"
+	priority = 40
 	stores = list(
 		/obj/structure/fermentation_keg,
 	)
 	goods = list(
 		/obj/item/reagent_containers/glass/bottle,
 	)
+	door_words = list("drink", "alcohol", "cellar", "wine", "brew", "напит", "алкогол", "погреб", "вин")
 	post_name = "drinks buying post"
 	post_desc = "Bottled drink is bought here. What is taken is paid for on the spot."
 
-/datum/enterprise_room_template/storage/drinks/matches(datum/enterprise_room/room)
-	return !room.beds && ..()
-
 /datum/enterprise_room_template/service_hall
 	id = ENTERPRISE_PURPOSE_SERVICE_HALL
-	name = "Service hall"
+	name = "Hall"
+	name_ru = "Зал"
 	priority = 100
+	grouped = TRUE
 
 /datum/enterprise_room_template/service_hall/matches(datum/enterprise_room/room)
-	return TRUE
+	return room.kind == ENTERPRISE_ROOM_COMMON
 
 /datum/enterprise_room_template/service_hall/get_effect(datum/enterprise_room/room, level, russian)
 	var/datum/enterprise/enterprise = room.enterprise
@@ -195,10 +253,71 @@
 /datum/enterprise_room_template/service_hall/on_meal(datum/enterprise_room/room, mob/living/eater, datum/enterprise_seating/seating)
 	var/datum/enterprise/enterprise = room.enterprise
 	var/mood_type = enterprise.get_level_value(enterprise.meal_moods, seating.get_level())
-	if(!mood_type || room.damaged)
+	if(!mood_type || !room.is_in_order())
 		return FALSE
 	eater.add_stress(mood_type)
 	return TRUE
+
+/datum/enterprise/proc/find_post_spot(datum/enterprise_room/storage)
+	var/obj/structure/door/door = find_storage_door()
+	if(door)
+		for(var/list/spot as anything in get_wall_spots(door))
+			if(!(locate(/obj/structure/fake_machine/enterprise_stock) in spot[1]))
+				return spot
+	var/turf/outside = storage.get_door_step()
+	if(!outside)
+		return null
+	var/list/spot = list(outside, 0, 0)
+	for(var/direction in GLOB.cardinals)
+		if(!isclosedturf(get_step(outside, direction)))
+			continue
+		if(direction & (NORTH | SOUTH))
+			spot[3] = direction == NORTH ? ICON_SIZE_Y : -ICON_SIZE_Y
+		else
+			spot[2] = direction == EAST ? ICON_SIZE_X : -ICON_SIZE_X
+		break
+	return spot
+
+/datum/enterprise/proc/find_storage_door()
+	var/obj/structure/door/best
+	var/best_stores = -1
+	for(var/datum/enterprise_room/room as anything in rooms)
+		var/datum/enterprise_room_template/storage/template = room.template
+		if(!istype(template))
+			continue
+		var/stores = 0
+		for(var/store in template.stores)
+			stores += room.count_listed(store)
+		if(stores <= best_stores)
+			continue
+		for(var/datum/weakref/door_ref as anything in room.doors)
+			var/obj/structure/door/door = door_ref.resolve()
+			if(!QDELETED(door) && get_outside_step(door))
+				best = door
+				best_stores = stores
+				break
+	return best
+
+/datum/enterprise/proc/get_wall_spots(obj/structure/door/door)
+	var/list/spots = list()
+	var/turf/door_turf = get_turf(door)
+	var/turf/outside = get_outside_step(door)
+	if(!outside)
+		return spots
+	var/out_dir = get_dir(door_turf, outside)
+	var/back_x = 0
+	var/back_y = 0
+	if(out_dir & (NORTH | SOUTH))
+		back_y = out_dir == NORTH ? -ICON_SIZE_Y : ICON_SIZE_Y
+	else
+		back_x = out_dir == EAST ? -ICON_SIZE_X : ICON_SIZE_X
+	for(var/side in list(turn(out_dir, 90), turn(out_dir, -90)))
+		var/turf/wall = get_step(door_turf, side)
+		var/turf/front = wall ? get_step(wall, out_dir) : null
+		if(!isclosedturf(wall) || !front || isclosedturf(front) || contains(front) || front.is_blocked_turf(TRUE))
+			continue
+		spots += list(list(front, back_x, back_y))
+	return spots
 
 /datum/enterprise
 	var/list/rested_today = list()
@@ -276,7 +395,7 @@
 	var/datum/weakref/who = WEAKREF(sleeper)
 	if(rested_today[who])
 		return FALSE
-	check_rooms(list(room))
+	check_rooms(room.get_members())
 	if(!room.template.on_rest(room, sleeper))
 		return FALSE
 	rested_today[who] = TRUE
@@ -299,5 +418,5 @@
 	if(patron && patron != eater)
 		patron.take_offence(eater)
 		return FALSE
-	check_rooms(list(room))
+	check_rooms(room.get_members())
 	return room.template.on_meal(room, eater, seating)

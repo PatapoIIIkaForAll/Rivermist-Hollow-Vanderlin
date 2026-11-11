@@ -23,6 +23,7 @@ const locale: Locale = {
     service_hall: 'Service room',
     staff_quarters: 'Staff quarters',
     kitchen: 'Kitchen',
+    horny_room: 'Horny Room',
   },
   enterprisePurposes: {
     tavern: {
@@ -90,6 +91,7 @@ const locale: Locale = {
     about: 'Room',
     purpose: 'Purpose',
     floor: 'Floor',
+    parts: 'Made of',
     size: 'Size',
     beds: 'Beds',
     level: 'Level',

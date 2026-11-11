@@ -60,34 +60,60 @@ const getFloorLabels = (locale: Locale, floors: FloorInfo[]) => {
   });
 };
 
+type LegendEntry = {
+  room: RoomInfo;
+  grouped: boolean;
+  beds: number;
+  damaged: number;
+};
+
+const getLegendEntries = (
+  rooms: RoomInfo[],
+  z: number | null,
+  damaged: Record<string, number>,
+) => {
+  const teams: Record<number, RoomInfo[]> = {};
+  for (const room of rooms) {
+    teams[room.group] = teams[room.group] || [];
+    teams[room.group].push(room);
+  }
+  const shown: Record<number, boolean> = {};
+  const entries: LegendEntry[] = [];
+  for (const room of rooms) {
+    if (room.z !== z || shown[room.group]) {
+      continue;
+    }
+    shown[room.group] = true;
+    const team = teams[room.group];
+    entries.push({
+      room,
+      grouped: team.length > 1,
+      beds: team.reduce((sum, member) => sum + member.beds, 0),
+      damaged: team.reduce((sum, member) => sum + (damaged[member.id] || 0), 0),
+    });
+  }
+  return entries;
+};
+
 type LegendRowProps = {
   locale: Locale;
   enterprise: string;
-  room: RoomInfo;
+  entry: LegendEntry;
   occupant: string | undefined;
-  damaged: number | undefined;
   highlighted: boolean;
   onHover: (id: number) => void;
   onOpen: (id: number) => void;
 };
 
 const LegendRow = (props: LegendRowProps) => {
-  const {
-    locale,
-    enterprise,
-    room,
-    occupant,
-    damaged,
-    highlighted,
-    onHover,
-    onOpen,
-  } = props;
-  const details = [
-    getPurposeLabel(locale, enterprise, room.purpose),
-    locale.levelNames[room.level] || `${room.level}`,
-  ];
-  if (room.beds) {
-    details.push(locale.formatBeds(room.beds));
+  const { locale, enterprise, entry, occupant, highlighted, onHover, onOpen } =
+    props;
+  const { room, grouped, beds, damaged } = entry;
+  const purpose = getPurposeLabel(locale, enterprise, room.purpose);
+  const details = grouped ? [] : [purpose];
+  details.push(locale.levelNames[room.level] || `${room.level}`);
+  if (beds) {
+    details.push(locale.formatBeds(beds));
   }
   if (occupant) {
     details.push(occupant);
@@ -111,7 +137,7 @@ const LegendRow = (props: LegendRowProps) => {
           <Icon name={getPurposeIcon(room.purpose)} />
         </Stack.Item>
         <Stack.Item grow>
-          <Box bold>{room.name}</Box>
+          <Box bold>{grouped ? purpose : room.name}</Box>
           <Box color="label">{details.join(' · ')}</Box>
           {!!damaged && <Box color="bad">{locale.formatDamaged(damaged)}</Box>}
         </Stack.Item>
@@ -124,9 +150,9 @@ const Legend = (props: { locale: Locale }) => {
   const { locale } = props;
   const { act, data } = useBackend<Data>();
   const [hoveredId, setHoveredId] = useState(0);
-  const rooms = (data.rooms || []).filter((room) => room.z === data.viewed_z);
   const occupants = data.occupants || {};
   const damaged = data.damaged || {};
+  const entries = getLegendEntries(data.rooms || [], data.viewed_z, damaged);
   const sendHover = useHoverSender((id) => act('hover_room', { room: id }));
 
   const hover = (id: number) => {
@@ -140,16 +166,15 @@ const Legend = (props: { locale: Locale }) => {
       <Box color="label" mb={1}>
         {locale.labels.legendHint}
       </Box>
-      {!rooms.length && <Box color="label">{locale.labels.legendEmpty}</Box>}
-      {rooms.map((room) => (
+      {!entries.length && <Box color="label">{locale.labels.legendEmpty}</Box>}
+      {entries.map((entry) => (
         <LegendRow
-          key={room.id}
+          key={entry.room.id}
           locale={locale}
           enterprise={data.name}
-          room={room}
-          occupant={occupants[room.id]}
-          damaged={damaged[room.id]}
-          highlighted={room.id === hoveredId}
+          entry={entry}
+          occupant={occupants[entry.room.id]}
+          highlighted={entry.room.id === hoveredId}
           onHover={hover}
           onOpen={open}
         />

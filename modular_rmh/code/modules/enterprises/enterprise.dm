@@ -215,7 +215,7 @@
 				var/datum/enterprise_room/room = get_room_by_id(room_id)
 				if(!room)
 					return FALSE
-				changed = list(room)
+				changed = room.get_members()
 			for(var/datum/enterprise_room/target as anything in changed)
 				target.set_level(level)
 			redraw()

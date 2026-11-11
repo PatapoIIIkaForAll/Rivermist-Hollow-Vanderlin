@@ -488,7 +488,7 @@
 	var/list/datum/enterprise_room/found = list()
 	for(var/lock_id in guest_rooms)
 		var/datum/enterprise_room/room = guest_rooms[lock_id]
-		if(!room.tenant_name && !room.get_patron())
+		if(!room.tenant_name && !room.get_patron() && room.get_purpose() == ENTERPRISE_PURPOSE_GUEST_ROOM)
 			found += room
 	return length(found) ? pick(found) : null
 

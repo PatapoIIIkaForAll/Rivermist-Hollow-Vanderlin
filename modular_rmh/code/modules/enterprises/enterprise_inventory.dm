@@ -36,7 +36,10 @@
 
 /datum/enterprise_fixture/proc/is_in(obj/found, datum/enterprise_room/room)
 	var/turf/place = get_turf(found)
-	return place == home || (place && room.enterprise.get_room(place) == room)
+	if(place == home)
+		return TRUE
+	var/datum/enterprise_room/found_in = place ? room.enterprise.get_room(place) : null
+	return found_in && found_in.get_leader() == room.get_leader()
 
 /datum/enterprise_fixture/proc/get_present(datum/enterprise_room/room)
 	var/obj/found = get_thing()
@@ -151,15 +154,16 @@
 /datum/enterprise_room/proc/take_loose(fixture_type)
 	if(!loose_cache)
 		loose_cache = list()
-		for(var/turf/member as anything in turfs)
-			for(var/obj/thing in member)
-				if(thing.invisibility || enterprise.is_bound(thing) || !enterprise.is_fixture(thing))
-					continue
-				var/list/same = loose_cache[thing.type]
-				if(!same)
-					same = list()
-					loose_cache[thing.type] = same
-				same += thing
+		for(var/datum/enterprise_room/part as anything in get_members())
+			for(var/turf/member as anything in part.turfs)
+				for(var/obj/thing in member)
+					if(thing.invisibility || enterprise.is_bound(thing) || !enterprise.is_fixture(thing))
+						continue
+					var/list/same = loose_cache[thing.type]
+					if(!same)
+						same = list()
+						loose_cache[thing.type] = same
+					same += thing
 	var/list/same = loose_cache[fixture_type]
 	if(!length(same))
 		return null
@@ -183,19 +187,37 @@
 	damaged = new_damaged
 	return changed
 
+/datum/enterprise_room/proc/get_team_damage()
+	var/total = 0
+	for(var/datum/enterprise_room/member as anything in get_members())
+		total += member.damage
+	return total
+
+/datum/enterprise_room/proc/is_in_order()
+	for(var/datum/enterprise_room/member as anything in get_members())
+		if(member.damaged)
+			return FALSE
+	return TRUE
+
 /datum/enterprise_room/proc/get_repair_cost()
-	return damage * ENTERPRISE_REPAIR_BOOK_MULTIPLIER
+	return get_team_damage() * ENTERPRISE_REPAIR_BOOK_MULTIPLIER
 
 /datum/enterprise_room/proc/get_account_repair_cost()
-	return damage * ENTERPRISE_REPAIR_ACCOUNT_MULTIPLIER
+	return get_team_damage() * ENTERPRISE_REPAIR_ACCOUNT_MULTIPLIER
 
 /datum/enterprise_room/proc/describe_damage()
+	var/list/totals = list()
+	var/list/names = list()
+	for(var/datum/enterprise_room/member as anything in get_members())
+		for(var/fixture_type in member.inventory)
+			var/datum/enterprise_fixture_group/group = member.inventory[fixture_type]
+			var/count = group.get_damaged()
+			if(count)
+				totals[fixture_type] += count
+				names[fixture_type] = group.name
 	var/list/lines = list()
-	for(var/fixture_type in inventory)
-		var/datum/enterprise_fixture_group/group = inventory[fixture_type]
-		var/count = group.get_damaged()
-		if(count)
-			lines += "[group.name] ×[count]"
+	for(var/fixture_type in totals)
+		lines += "[names[fixture_type]] ×[totals[fixture_type]]"
 	return jointext(lines, ", ")
 
 /datum/enterprise_room/proc/count_fixtures(fixture_type)
@@ -205,6 +227,25 @@
 			var/datum/enterprise_fixture_group/group = inventory[group_type]
 			found += length(group.items) - group.missing - group.misplaced
 	return found
+
+/datum/enterprise_room/proc/count_listed(fixture_type)
+	var/found = 0
+	for(var/group_type in inventory)
+		if(ispath(group_type, fixture_type))
+			var/datum/enterprise_fixture_group/group = inventory[group_type]
+			found += length(group.items)
+	return found
+
+/datum/enterprise_room/proc/holds_any(list/types)
+	for(var/turf/member as anything in turfs)
+		for(var/obj/thing in member)
+			if(is_type_in_list(thing, types))
+				return TRUE
+			if(istype(thing, /obj/structure/closet))
+				for(var/obj/inner in thing)
+					if(is_type_in_list(inner, types))
+						return TRUE
+	return FALSE
 
 /datum/enterprise_room/proc/get_interior(atom_type)
 	var/list/obj/found = list()
@@ -321,7 +362,7 @@
 		return FALSE
 	var/list/redrawn = list()
 	for(var/datum/enterprise_room/room as anything in changed)
-		SStgui.update_uis(room)
+		SStgui.update_uis(room.get_leader())
 		if(room.z in redrawn)
 			continue
 		redrawn += room.z
@@ -331,12 +372,13 @@
 	return TRUE
 
 /datum/enterprise/proc/check_intact(mob/user, datum/enterprise_room/room)
-	check_rooms(list(room))
-	if(!room.damaged)
+	check_rooms(room.get_members())
+	if(room.is_in_order())
 		return TRUE
 	var/russian = get_preferred_ui_language(user) == "ru"
+	var/title = room.get_title(russian)
 	var/lacking = room.describe_damage()
 	to_chat(user, span_warning(russian \
-		? "Комнату «[room.name]» нельзя улучшить, пока в ней чего-то нет на месте или что-то сломано: [lacking]. Сначала верните вещи или почините её." \
-		: "[room.name] cannot be upgraded while anything in it is gone, out of place or broken: [lacking]. Bring the things back or repair it first."))
+		? "Комнату «[title]» нельзя улучшить, пока в ней чего-то нет на месте или что-то сломано: [lacking]. Сначала верните вещи или почините её." \
+		: "[title] cannot be upgraded while anything in it is gone, out of place or broken: [lacking]. Bring the things back or repair it first."))
 	return FALSE

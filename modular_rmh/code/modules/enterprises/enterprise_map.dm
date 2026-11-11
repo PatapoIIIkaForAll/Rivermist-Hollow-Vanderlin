@@ -220,11 +220,13 @@
 	highlighted = lit
 	highlight.overlays.Cut()
 	var/datum/enterprise_floor/floor = lit ? enterprise.get_floor(lit.z) : null
-	if(!floor || !lit.outline)
+	if(!floor)
 		return
 	highlight.pixel_x = floor.get_pixel_x()
 	highlight.pixel_y = floor.get_pixel_y()
-	highlight.overlays += lit.outline
+	for(var/datum/enterprise_room/member as anything in lit.get_members())
+		if(member.z == floor.z && member.outline)
+			highlight.overlays += member.outline
 
 /datum/enterprise_viewer/proc/close_menu()
 	if(length(buttons))
@@ -235,7 +237,7 @@
 
 /datum/enterprise_viewer/proc/open_menu(datum/enterprise_room/room)
 	close_menu()
-	enterprise.check_rooms(list(room))
+	enterprise.check_rooms(room.get_members())
 	if(QDELETED(src))
 		return
 	var/datum/enterprise_floor/floor = enterprise.get_floor(room.z)

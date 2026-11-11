@@ -174,6 +174,10 @@
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.check_inventory()
 		room.furnish(templates)
+		if(room.kind == ENTERPRISE_ROOM_GUEST && room.get_purpose() != ENTERPRISE_PURPOSE_GUEST_ROOM)
+			var/turf/first = room.turfs[1]
+			log_mapping("Map issue: [room.name] at [AREACOORD(first)] has the lock of a guest room but lacks a bed, a wardrobe or curtains, so it is not let as one.")
+	group_rooms()
 
 /datum/enterprise
 	var/list/upgrade_costs = list(0, 2000, 5000, 10000)
@@ -228,15 +232,33 @@
 			found += room
 	return found
 
-/datum/enterprise/proc/raise_random_rooms(list/datum/enterprise_room/pool, amount, level, apply = TRUE)
-	var/list/datum/enterprise_room/candidates = list()
+/datum/enterprise/proc/raise_team(datum/enterprise_room/room, level, apply = TRUE)
+	for(var/datum/enterprise_room/member as anything in room.get_members())
+		member.raise_level(level, apply)
+
+/datum/enterprise/proc/get_leaders(list/datum/enterprise_room/pool)
+	var/list/datum/enterprise_room/leaders = list()
 	for(var/datum/enterprise_room/room as anything in pool)
-		if(room.level < level)
-			candidates += room
-	for(var/step in 1 to min(amount, length(candidates)))
-		var/datum/enterprise_room/chosen = pick(candidates)
-		candidates -= chosen
-		chosen.set_level(level, apply)
+		leaders |= room.get_leader()
+	return leaders
+
+/datum/enterprise/proc/get_random_order(list/pool)
+	var/list/order = list()
+	var/list/left = pool.Copy()
+	while(length(left))
+		var/picked = pick(left)
+		left -= picked
+		order += picked
+	return order
+
+/datum/enterprise/proc/raise_rooms(list/datum/enterprise_room/order, amount, level, apply = TRUE)
+	for(var/datum/enterprise_room/room as anything in order)
+		if(amount <= 0)
+			return
+		if(room.level >= level)
+			continue
+		raise_team(room, level, apply)
+		amount--
 
 /datum/enterprise/proc/grant_owner_rooms(owner_level, apply = TRUE)
 	if(owner_level < 1)
@@ -244,24 +266,28 @@
 	var/base = owner_level >= 3 ? ENTERPRISE_LEVEL_IRON : ENTERPRISE_LEVEL_WOOD
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.raise_level(base, apply)
-	var/list/datum/enterprise_room/guest_list = get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_GUEST_ROOM))
-	var/list/datum/enterprise_room/stores = get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_STORAGE, ENTERPRISE_PURPOSE_DRINK_STORAGE))
+	var/list/datum/enterprise_room/living = get_leaders(get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_STAFF_QUARTERS)))
+	living += get_random_order(get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_GUEST_ROOM)))
+	var/list/datum/enterprise_room/stores = get_leaders(get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_STORAGE, ENTERPRISE_PURPOSE_DRINK_STORAGE)))
 	switch(owner_level)
 		if(2)
-			raise_random_rooms(guest_list, 3, ENTERPRISE_LEVEL_IRON, apply)
-			for(var/datum/enterprise_room/store as anything in stores)
-				store.raise_level(ENTERPRISE_LEVEL_IRON, apply)
+			raise_rooms(living, 3, ENTERPRISE_LEVEL_IRON, apply)
+			raise_rooms(stores, length(stores), ENTERPRISE_LEVEL_IRON, apply)
 		if(3)
-			raise_random_rooms(stores, 1, ENTERPRISE_LEVEL_SILVER, apply)
+			raise_rooms(get_random_order(stores), 1, ENTERPRISE_LEVEL_SILVER, apply)
 		if(4 to INFINITY)
-			raise_random_rooms(guest_list, 3, ENTERPRISE_LEVEL_SILVER, apply)
-			for(var/datum/enterprise_room/store as anything in stores)
-				store.raise_level(ENTERPRISE_LEVEL_SILVER, apply)
+			raise_rooms(living, 3, ENTERPRISE_LEVEL_SILVER, apply)
+			raise_rooms(stores, length(stores), ENTERPRISE_LEVEL_SILVER, apply)
 	return TRUE
 
 /datum/enterprise/proc/redraw(datum/enterprise_room/changed)
 	if(changed)
-		get_floor(changed.z)?.take_picture(FALSE)
+		var/list/redrawn = list()
+		for(var/datum/enterprise_room/member as anything in changed.get_members())
+			if(member.z in redrawn)
+				continue
+			redrawn += member.z
+			get_floor(member.z)?.take_picture(FALSE)
 	else
 		for(var/datum/enterprise_floor/floor as anything in floors)
 			floor?.take_picture(FALSE)
@@ -271,9 +297,11 @@
 		SStgui.update_uis(room)
 
 /datum/enterprise/proc/upgrade_room(mob/user, datum/enterprise_room/room, with_grade)
+	room = room?.get_leader()
 	if(QDELETED(room) || room.enterprise != src || !can_run_rooms(user))
 		return FALSE
 	var/russian = get_preferred_ui_language(user) == "ru"
+	var/title = room.get_title(russian)
 	if(room.level >= ENTERPRISE_MAX_LEVEL || !check_intact(user, room))
 		return FALSE
 	var/target = room.level + 1
@@ -289,8 +317,8 @@
 		var/yes = russian ? "Улучшить" : "Upgrade"
 		var/no = russian ? "Отмена" : "Cancel"
 		var/question = russian \
-			? "Улучшить комнату «[room.name]» до уровня [target] за [cost]? Деньги спишутся из книги, а чего не хватит — с вашего счёта." \
-			: "Upgrade [room.name] to level [target] for [cost]? The money comes from the ledger, and what it lacks from your account."
+			? "Улучшить комнату «[title]» до уровня [target] за [cost]? Деньги спишутся из книги, а чего не хватит — с вашего счёта." \
+			: "Upgrade [title] to level [target] for [cost]? The money comes from the ledger, and what it lacks from your account."
 		if(tgui_alert(user, question, russian ? "Улучшение" : "Upgrade", list(yes, no)) != yes)
 			return FALSE
 		if(QDELETED(room) || QDELETED(user) || room.enterprise != src || !can_run_rooms(user) || room.level + 1 != target)
@@ -301,8 +329,9 @@
 			to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
 			return FALSE
 		save_grade(target)
-	room.set_level(target)
-	to_chat(user, span_notice(russian ? "Комната «[room.name]» теперь уровня [target]." : "[room.name] is now level [target]."))
+	for(var/datum/enterprise_room/member as anything in room.get_members())
+		member.set_level(target)
+	to_chat(user, span_notice(russian ? "Комната «[title]» теперь уровня [target]." : "[title] is now level [target]."))
 	redraw(room)
 	return TRUE
 
@@ -310,9 +339,10 @@
 	return is_owner(user) && ui_status(user, GLOB.physical_state) == UI_INTERACTIVE
 
 /datum/enterprise/proc/room_action(mob/user, datum/enterprise_room/room, action)
+	room = room?.get_leader()
 	if(QDELETED(room) || room.enterprise != src || !can_run_rooms(user))
 		return
-	check_rooms(list(room))
+	check_rooms(room.get_members())
 	switch(action)
 		if(ENTERPRISE_ROOM_ACTION_UPGRADE)
 			room.show_page(user, ENTERPRISE_ROOM_PAGE_UPGRADE)
@@ -322,9 +352,11 @@
 			INVOKE_ASYNC(src, PROC_REF(repair_room), user, room)
 
 /datum/enterprise/proc/repair_room(mob/user, datum/enterprise_room/room)
+	room = room.get_leader()
 	var/russian = get_preferred_ui_language(user) == "ru"
-	if(!room.damage)
-		to_chat(user, span_notice(russian ? "В комнате «[room.name]» всё на месте." : "Everything in [room.name] is in its place."))
+	var/title = room.get_title(russian)
+	if(!room.get_team_damage())
+		to_chat(user, span_notice(russian ? "В комнате «[title]» всё на месте." : "Everything in [title] is in its place."))
 		return FALSE
 	var/book_cost = room.get_repair_cost()
 	if(book_balance >= book_cost)
@@ -340,17 +372,17 @@
 	var/yes = russian ? "Починить" : "Repair"
 	var/no = russian ? "Отмена" : "Cancel"
 	var/question = russian \
-		? "В книге нет [book_cost]. Починить комнату «[room.name]» со своего счёта за [account_cost]?" \
-		: "The ledger does not hold [book_cost]. Repair [room.name] from your own account for [account_cost]?"
+		? "В книге нет [book_cost]. Починить комнату «[title]» со своего счёта за [account_cost]?" \
+		: "The ledger does not hold [book_cost]. Repair [title] from your own account for [account_cost]?"
 	if(tgui_alert(user, question, russian ? "Починка" : "Repairs", list(yes, no)) != yes)
 		return FALSE
 	if(QDELETED(room) || QDELETED(user) || room.enterprise != src || !can_run_rooms(user))
 		return FALSE
-	check_rooms(list(room))
+	check_rooms(room.get_members())
 	if(room.get_account_repair_cost() != account_cost)
 		to_chat(user, span_warning(russian \
-			? "Пока вы решали, в комнате «[room.name]» что-то изменилось. Попробуйте ещё раз." \
-			: "While you were deciding, something changed in [room.name]. Try again."))
+			? "Пока вы решали, в комнате «[title]» что-то изменилось. Попробуйте ещё раз." \
+			: "While you were deciding, something changed in [title]. Try again."))
 		return FALSE
 	if(get_bank_balance(user) < account_cost)
 		to_chat(user, span_warning(russian ? "Не хватает средств: нужно [account_cost] на счёте." : "There is not enough money: it takes [account_cost] from the account."))
@@ -360,9 +392,11 @@
 	return finish_repair(user, room, account_cost)
 
 /datum/enterprise/proc/finish_repair(mob/user, datum/enterprise_room/room, cost)
-	room.repair()
+	for(var/datum/enterprise_room/member as anything in room.get_members())
+		member.repair()
 	var/russian = get_preferred_ui_language(user) == "ru"
-	to_chat(user, span_notice(russian ? "Комната «[room.name]» приведена в порядок за [cost]." : "[room.name] has been put back in order for [cost]."))
+	var/title = room.get_title(russian)
+	to_chat(user, span_notice(russian ? "Комната «[title]» приведена в порядок за [cost]." : "[title] has been put back in order for [cost]."))
 	redraw(room)
 	return TRUE
 
@@ -402,47 +436,80 @@
 	)
 
 /datum/enterprise_room/proc/get_contents_data()
+	var/list/lines = list()
+	for(var/datum/enterprise_room/member as anything in get_members())
+		for(var/fixture_type in member.inventory)
+			var/datum/enterprise_fixture_group/group = member.inventory[fixture_type]
+			var/list/line = lines[fixture_type]
+			if(!line)
+				line = describe_type(fixture_type)
+				line["id"] = "[fixture_type]"
+				line["name"] = group.name
+				line["count"] = 0
+				line["missing"] = 0
+				line["misplaced"] = 0
+				line["broken"] = 0
+				lines[fixture_type] = line
+			line["count"] += length(group.items)
+			line["missing"] += group.missing
+			line["misplaced"] += group.misplaced
+			line["broken"] += group.broken
 	var/list/contents_data = list()
-	for(var/fixture_type in inventory)
-		var/datum/enterprise_fixture_group/group = inventory[fixture_type]
-		var/list/line = describe_type(fixture_type)
-		line["id"] = "[fixture_type]"
-		line["name"] = group.name
-		line["count"] = length(group.items)
-		line["missing"] = group.missing
-		line["misplaced"] = group.misplaced
-		line["broken"] = group.broken
-		contents_data += list(line)
+	for(var/fixture_type in lines)
+		contents_data += list(lines[fixture_type])
 	return contents_data
 
 /datum/enterprise_room/proc/get_upgrades_data()
 	var/list/upgrades_data = list()
 	if(level >= ENTERPRISE_MAX_LEVEL)
 		return upgrades_data
-	for(var/fixture_type in inventory)
-		var/datum/enterprise_fixture_group/group = inventory[fixture_type]
-		var/next_type = group.family?.get_tier(level + 1)
-		if(!next_type || next_type == fixture_type)
-			continue
-		upgrades_data += list(list(
-			"id" = "[fixture_type]",
-			"count" = length(group.items),
-			"from" = describe_type(fixture_type),
-			"to" = describe_type(next_type),
-		))
+	var/list/lines = list()
+	for(var/datum/enterprise_room/member as anything in get_members())
+		for(var/fixture_type in member.inventory)
+			var/datum/enterprise_fixture_group/group = member.inventory[fixture_type]
+			var/next_type = group.family?.get_tier(level + 1)
+			if(!next_type || next_type == fixture_type)
+				continue
+			var/list/line = lines[fixture_type]
+			if(!line)
+				line = list(
+					"id" = "[fixture_type]",
+					"count" = 0,
+					"from" = describe_type(fixture_type),
+					"to" = describe_type(next_type),
+				)
+				lines[fixture_type] = line
+			line["count"] += length(group.items)
+	for(var/fixture_type in lines)
+		upgrades_data += list(lines[fixture_type])
 	return upgrades_data
 
 /datum/enterprise_room/ui_data(mob/user)
 	var/russian = get_preferred_ui_language(user) == "ru"
-	var/datum/enterprise_floor/floor = enterprise.get_floor(z)
+	var/list/datum/enterprise_room/team = get_members()
+	var/tiles = 0
+	var/bed_count = 0
+	var/seating_count = 0
+	var/list/floor_numbers = list()
+	var/list/part_names = list()
+	for(var/datum/enterprise_room/member as anything in team)
+		tiles += length(member.turfs)
+		bed_count += member.beds
+		seating_count += length(member.seatings)
+		var/datum/enterprise_floor/floor = enterprise.get_floor(member.z)
+		floor_numbers |= floor?.basement ? 0 : enterprise.get_floor_number(member.z)
+		if(length(team) > 1)
+			part_names += member.name
 	return list(
 		"enterprise" = enterprise.name,
 		"name" = name,
 		"kind" = kind,
 		"purpose" = template?.id,
-		"floor" = floor?.basement ? 0 : enterprise.get_floor_number(z),
-		"tiles" = length(turfs),
-		"beds" = beds,
+		"grouped" = length(team) > 1,
+		"parts" = part_names,
+		"floors" = floor_numbers,
+		"tiles" = tiles,
+		"beds" = bed_count,
 		"page" = shown_pages[REF(user)] || ENTERPRISE_ROOM_PAGE_INFO,
 		"page_seq" = page_seq,
 		"level" = level,
@@ -453,7 +520,7 @@
 		"can_grade" = enterprise.can_spend_grade(level + 1),
 		"funds" = enterprise.book_balance + enterprise.get_bank_balance(user),
 		"rent" = enterprise.get_rest_price(src),
-		"seatings" = length(seatings),
+		"seatings" = seating_count,
 		"contents" = get_contents_data(),
 		"upgrades" = get_upgrades_data(),
 		"repair_cost" = get_repair_cost(),

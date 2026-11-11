@@ -135,7 +135,8 @@
 
 	var/list/label_overlays = list()
 	for(var/datum/enterprise_room/room as anything in rooms)
-		if(!room.name || (room.kind != ENTERPRISE_ROOM_GUEST && length(room.turfs) < ENTERPRISE_ROOM_LABEL_MIN_TILES))
+		var/label_text = room.get_map_label()
+		if(!label_text)
 			continue
 		var/turf/first = room.turfs[1]
 		var/room_min_x = first.x
@@ -150,7 +151,7 @@
 		var/mutable_appearance/label = mutable_appearance()
 		label.plane = RUNECHAT_PLANE
 		label.appearance_flags = RESET_COLOR | RESET_ALPHA
-		label.maptext = MAPTEXT_CENTER(room.name)
+		label.maptext = MAPTEXT_CENTER(label_text)
 		label.maptext_width = (room_max_x - room_min_x + 1) * ICON_SIZE_X
 		label.maptext_height = ICON_SIZE_Y
 		label.pixel_x = (room_min_x - min_x) * ICON_SIZE_X
@@ -231,6 +232,8 @@
 	var/list/obj/structure/door/lock_doors = list()
 	var/list/datum/enterprise_room/links = list()
 	var/datum/enterprise_room/merged_into
+	var/datum/enterprise_room/leader
+	var/list/datum/enterprise_room/members
 
 /datum/enterprise_room/New(z, datum/enterprise/enterprise)
 	src.z = z
@@ -253,6 +256,8 @@
 	lock_doors = null
 	links = null
 	merged_into = null
+	leader = null
+	members = null
 	shown_pages = null
 	tenant = null
 	tenant_key = null
@@ -264,6 +269,58 @@
 	while(current.merged_into)
 		current = current.merged_into
 	return current
+
+/datum/enterprise_room/proc/get_leader()
+	return leader || src
+
+/datum/enterprise_room/proc/get_members()
+	var/datum/enterprise_room/head = leader || src
+	return head.members || list(head)
+
+/datum/enterprise_room/proc/get_title(russian)
+	if(template?.grouped && (leader || members))
+		return russian ? template.name_ru : template.name
+	return name
+
+/datum/enterprise_room/proc/get_map_label()
+	if(!leader && !members)
+		if(!name || (kind != ENTERPRISE_ROOM_GUEST && length(turfs) < ENTERPRISE_ROOM_LABEL_MIN_TILES))
+			return null
+		return name
+	for(var/datum/enterprise_room/member as anything in get_members())
+		if(member != src && member.z == z && length(member.turfs) > length(turfs))
+			return null
+	return template?.name
+
+/datum/enterprise/proc/group_rooms()
+	var/list/teams = list()
+	for(var/datum/enterprise_room/room as anything in rooms)
+		if(!room.template?.grouped)
+			continue
+		var/list/team = teams[room.template.id]
+		if(!team)
+			team = list()
+			teams[room.template.id] = team
+		team += room
+	for(var/purpose_id in teams)
+		var/list/datum/enterprise_room/team = teams[purpose_id]
+		if(length(team) < 2)
+			continue
+		var/datum/enterprise_room/head = team[1]
+		var/top_level = ENTERPRISE_LEVEL_BARE
+		for(var/datum/enterprise_room/member as anything in team)
+			top_level = max(top_level, member.level)
+			if(length(member.turfs) > length(head.turfs))
+				head = member
+		head.members = team
+		for(var/datum/enterprise_room/member as anything in team)
+			if(member != head)
+				member.leader = head
+				if(member.stock && !head.stock)
+					head.stock = member.stock
+					head.stock.storage = head
+					member.stock = null
+			member.set_level(top_level)
 
 /datum/enterprise_room/proc/link_with(datum/enterprise_room/other)
 	if(other == src)

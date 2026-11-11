@@ -1,4 +1,6 @@
 #define ENTERPRISE_SURVEY_COOLDOWN (10 SECONDS)
+#define PREMISES_TAKEN 1
+#define PREMISES_REFUSED 2
 
 /datum/enterprise
 	var/list/turf/anchors = list()
@@ -106,9 +108,12 @@
 /datum/enterprise/proc/scan_premises(turf/origin)
 	var/list/found_by_z = new /list(world.maxz)
 	var/alist/seen = alist()
-	seen[origin] = TRUE
+	var/alist/judged = alist()
+	var/list/area/joined = list()
+	seen[origin] = PREMISES_TAKEN
 	var/list/turf/queue = list(origin)
 	var/position = 1
+	var/looked = 0
 	while(position <= length(queue))
 		var/turf/current = queue[position]
 		position++
@@ -117,20 +122,65 @@
 			found = list()
 			found_by_z[current.z] = found
 		found += current
-		scan_neighbour(GET_TURF_ABOVE(current), seen, queue)
-		scan_neighbour(GET_TURF_BELOW(current), seen, queue)
+		scan_neighbour(GET_TURF_ABOVE(current), seen, queue, joined)
+		scan_neighbour(GET_TURF_BELOW(current), seen, queue, joined)
 		for(var/direction in GLOB.alldirs)
-			scan_neighbour(get_step(current, direction), seen, queue)
+			scan_neighbour(get_step(current, direction), seen, queue, joined)
+		if(position > length(queue))
+			var/from = looked + 1
+			looked = length(queue)
+			for(var/index in from to looked)
+				look_out_from(queue[index], seen, queue, joined, judged)
 	return found_by_z
 
-/datum/enterprise/proc/scan_neighbour(turf/neighbour, alist/seen, list/turf/queue)
-	if(!neighbour || seen[neighbour])
+/datum/enterprise/proc/scan_neighbour(turf/neighbour, alist/seen, list/turf/queue, list/area/joined)
+	if(!neighbour)
 		return
-	seen[neighbour] = TRUE
-	if(is_premises_turf(neighbour))
+	var/mark = seen[neighbour]
+	if(mark == PREMISES_TAKEN || (mark == PREMISES_REFUSED && !(neighbour.loc in joined)))
+		return
+	if(is_premises_turf(neighbour) || (neighbour.loc in joined))
+		seen[neighbour] = PREMISES_TAKEN
 		queue += neighbour
+	else
+		seen[neighbour] = PREMISES_REFUSED
+
+/datum/enterprise/proc/look_out_from(turf/start, alist/seen, list/turf/queue, list/area/joined, alist/judged)
+	for(var/direction in GLOB.cardinals)
+		var/turf/ahead = start
+		for(var/step in 1 to ENTERPRISE_ZONE_REACH)
+			ahead = get_step(ahead, direction)
+			if(!ahead)
+				break
+			if(seen[ahead] == PREMISES_TAKEN)
+				continue
+			var/area/place = ahead.loc
+			if(!is_premises_turf(ahead) && !(place in joined))
+				if(isnull(judged[place]))
+					judged[place] = joins_premises(place, ahead.z)
+					if(judged[place])
+						joined += place
+				if(!judged[place])
+					continue
+			seen[ahead] = PREMISES_TAKEN
+			queue += ahead
+
+/datum/enterprise/proc/joins_premises(area/place, z)
+	var/datum/enterprise_room_template/horny_room/horny = locate() in get_room_templates()
+	if(!horny)
+		return FALSE
+	var/list/turf/inside = place.get_turfs_by_zlevel(z)
+	if(!length(inside) || length(inside) > ENTERPRISE_JOINED_AREA_MAX)
+		return FALSE
+	for(var/turf/member as anything in inside)
+		for(var/obj/thing in member)
+			if(is_type_in_list(thing, horny.signs))
+				return TRUE
+	return FALSE
 
 #undef ENTERPRISE_SURVEY_COOLDOWN
+#undef PREMISES_TAKEN
+#undef PREMISES_REFUSED
 
 #define ROOM_CELL_OPEN 1
 #define ROOM_CELL_BARRIER 2
@@ -156,12 +206,18 @@
 	return rooms[id]
 
 /datum/enterprise/proc/get_rooms_data()
-	var/list/rooms_data = list()
+	var/alist/ids = alist()
 	var/id = 0
+	for(var/datum/enterprise_room/room as anything in rooms)
+		id++
+		ids[room] = id
+	var/list/rooms_data = list()
+	id = 0
 	for(var/datum/enterprise_room/room as anything in rooms)
 		id++
 		rooms_data += list(list(
 			"id" = id,
+			"group" = ids[room.get_leader()],
 			"name" = room.name,
 			"kind" = room.kind,
 			"z" = room.z,

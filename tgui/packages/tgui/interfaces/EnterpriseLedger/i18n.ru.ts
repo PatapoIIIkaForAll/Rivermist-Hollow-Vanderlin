@@ -23,6 +23,7 @@ const locale: Locale = {
     service_hall: 'Комната обслуживания',
     staff_quarters: 'Жилая комната персонала',
     kitchen: 'Кухня',
+    horny_room: 'Horny Room',
   },
   enterprisePurposes: {
     tavern: {
@@ -89,6 +90,7 @@ const locale: Locale = {
     about: 'Комната',
     purpose: 'Назначение',
     floor: 'Этаж',
+    parts: 'Состоит из',
     size: 'Размер',
     beds: 'Кровати',
     level: 'Уровень',

@@ -198,10 +198,17 @@ const InfoPage = (props: RoomPageProps) => {
               {getPurposeLabel(locale, data.enterprise, data.purpose)}
             </LabeledList.Item>
             <LabeledList.Item label={locale.room.floor}>
-              {data.floor
-                ? locale.formatFloor(data.floor)
-                : locale.labels.basement}
+              {(data.floors || [])
+                .map((floor) =>
+                  floor ? locale.formatFloor(floor) : locale.labels.basement,
+                )
+                .join(', ')}
             </LabeledList.Item>
+            {!!data.grouped && (
+              <LabeledList.Item label={locale.room.parts}>
+                {(data.parts || []).join(', ')}
+              </LabeledList.Item>
+            )}
             <LabeledList.Item label={locale.room.size}>
               {locale.formatTiles(data.tiles)}
             </LabeledList.Item>
@@ -376,7 +383,11 @@ export const EnterpriseRoomView = (props: { locale: Locale }) => {
   };
 
   return (
-    <Window title={`${data.name} — ${purpose}`} width={540} height={660}>
+    <Window
+      title={data.grouped ? purpose : `${data.name} — ${purpose}`}
+      width={540}
+      height={660}
+    >
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>

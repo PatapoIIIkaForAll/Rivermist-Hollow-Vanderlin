@@ -73,6 +73,7 @@ export type RoomKind = 'guest' | 'service' | 'common';
 
 export type RoomInfo = {
   id: number;
+  group: number;
   name: string;
   kind: RoomKind;
   z: number;
@@ -125,7 +126,9 @@ export type RoomData = {
   name: string;
   kind: RoomKind;
   purpose: string | null;
-  floor: number;
+  grouped: BooleanLike;
+  parts: string[];
+  floors: number[];
   tiles: number;
   beds: number;
   page: RoomPage;
@@ -217,6 +220,7 @@ export type Locale = {
     about: string;
     purpose: string;
     floor: string;
+    parts: string;
     size: string;
     beds: string;
     level: string;
