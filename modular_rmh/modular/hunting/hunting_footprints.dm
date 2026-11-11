@@ -403,11 +403,13 @@
 		return
 
 	var/probability = track_creation_prob(new_turf)
-	if(!probability || !prob(probability))
+	var/ordinary = probability && prob(probability)
+	var/datum/enterprise_theft/theft = enterprise_theft?.roll_track(src, new_turf)
+	if(!ordinary && !theft)
 		return
 
 	var/obj/effect/skill_tracker/footprint/old_track = locate() in new_turf
-	var/obj/effect/skill_tracker/footprint/new_track = new(new_turf, new_turf)
+	var/obj/effect/skill_tracker/footprint/new_track = theft ? theft.make_track(new_turf, ordinary) : new(new_turf, new_turf)
 	if(old_track)
 		new_track.overwrites = old_track.overwrites + 1
 		qdel(old_track)

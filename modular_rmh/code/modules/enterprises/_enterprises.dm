@@ -10,3 +10,4 @@
 #include "enterprise_purposes.dm"
 #include "enterprise_room.dm"
 #include "enterprise_survey.dm"
+#include "enterprise_theft.dm"
