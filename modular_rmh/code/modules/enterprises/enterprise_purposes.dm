@@ -82,17 +82,20 @@
 /datum/enterprise_room_template/guest_room/on_rest(datum/enterprise_room/room, mob/living/carbon/human/sleeper)
 	var/datum/enterprise/enterprise = room.enterprise
 	var/russian = get_preferred_ui_language(sleeper) == "ru"
-	var/price = enterprise.get_rest_price(room)
-	if(!enterprise.take_from_account(sleeper, price))
-		to_chat(sleeper, span_warning(russian ? "На счёте нет [price] за ночлег: отдых будет обычным." : "My account cannot cover the [price] for the night: this will be an ordinary rest."))
+	var/datum/weakref/who = WEAKREF(sleeper)
+	var/paid = enterprise.night_fees[who] || 0
+	var/due = max(enterprise.get_rest_price(room) - paid, 0)
+	if(!enterprise.take_from_account(sleeper, due))
+		to_chat(sleeper, span_warning(russian ? "На счёте нет [due] за ночлег: отдых будет обычным." : "My account cannot cover the [due] for the night: this will be an ordinary rest."))
 		return FALSE
-	enterprise.earn(price)
+	if(due)
+		enterprise.earn(due)
+		enterprise.night_fees[who] = paid + due
+		to_chat(sleeper, span_notice(russian ? "За ночлег со счёта списано [due]." : "The night has cost me [due] from my account."))
 	if(!room.is_in_order())
-		to_chat(sleeper, span_warning(russian ? "За ночлег со счёта списано [price], но в комнате чего-то нет на месте или что-то сломано: отдых обычный." : "The night has cost me [price] from my account, but something in the room is gone or broken: this was an ordinary rest."))
-		return TRUE
-	enterprise.give_rest_buff(sleeper, room.level)
-	to_chat(sleeper, span_notice(russian ? "За ночлег со счёта списано [price]." : "The night has cost me [price] from my account."))
-	return TRUE
+		to_chat(sleeper, span_warning(russian ? "В комнате чего-то нет на месте или что-то сломано: отдых обычный. За эту ночь уже заплачено." : "Something in the room is gone or broken: this was an ordinary rest. The night is already paid for."))
+		return FALSE
+	return enterprise.give_rest_buff(sleeper, room.level)
 
 /datum/enterprise_room_template/horny_room
 	id = ENTERPRISE_PURPOSE_HORNY_ROOM
@@ -148,13 +151,12 @@
 	var/datum/enterprise/enterprise = room.enterprise
 	if(!enterprise.is_staff(sleeper) || room.level < ENTERPRISE_LEVEL_WOOD)
 		return FALSE
-	if(room.is_in_order())
-		enterprise.give_rest_buff(sleeper, room.level)
-	var/bonus = enterprise.get_staff_bonus()
-	if(SStreasury.give_money_account(bonus, sleeper, "[enterprise.name] wages"))
-		var/russian = get_preferred_ui_language(sleeper) == "ru"
-		to_chat(sleeper, span_notice(russian ? "За день работы на счёт пришло [bonus]." : "The day's work has brought [bonus] to my account."))
-	return TRUE
+	var/russian = get_preferred_ui_language(sleeper) == "ru"
+	enterprise.pay_staff_share(sleeper, russian)
+	if(!room.is_in_order())
+		to_chat(sleeper, span_warning(russian ? "В комнате чего-то нет на месте или что-то сломано: отдых обычный, без прибавок." : "Something in the room is gone or broken: this was an ordinary rest, with nothing more."))
+		return FALSE
+	return enterprise.give_rest_buff(sleeper, room.level)
 
 /datum/enterprise_room_template/kitchen
 	id = ENTERPRISE_PURPOSE_KITCHEN
@@ -312,23 +314,16 @@
 /datum/enterprise
 	var/alist/terrace_turfs = alist()
 
-/datum/enterprise_room_template/terrace
+/datum/enterprise_room_template/service_hall/terrace
 	id = ENTERPRISE_PURPOSE_TERRACE
 	name = "Terrace"
 	name_ru = "Терраса"
 	priority = 5
-	grouped = TRUE
-	seats_patrons = TRUE
 
-/datum/enterprise_room_template/terrace/matches(datum/enterprise_room/room)
+/datum/enterprise_room_template/service_hall/terrace/matches(datum/enterprise_room/room)
 	return room.terrace
 
-/datum/enterprise_room_template/terrace/get_effect(datum/enterprise_room/room, level, russian)
-	if(level > ENTERPRISE_MAX_LEVEL)
-		return null
-	return russian ? "Особых эффектов пока нет." : "No special effects yet."
-
-/datum/enterprise_room_template/terrace/claim_outside(datum/enterprise/enterprise, list/found_by_z, alist/seen)
+/datum/enterprise_room_template/service_hall/terrace/claim_outside(datum/enterprise/enterprise, list/found_by_z, alist/seen)
 	var/list/turf/claimed = list()
 	var/alist/judged = alist()
 	for(var/list/turf/found as anything in found_by_z)
@@ -348,9 +343,11 @@
 		enterprise.terrace_turfs[member] = TRUE
 	return claimed
 
-/datum/enterprise_room_template/terrace/proc/fill_terrace(turf/open/first, alist/seen, alist/judged)
+/datum/enterprise_room_template/service_hall/terrace/proc/fill_terrace(turf/open/first, alist/seen, alist/judged)
 	var/area/place = first.loc
 	var/list/turf/open/region = list(first)
+	if(!place?.outdoors)
+		return refuse_terrace(region, judged)
 	judged[first] = region
 	var/fenced = FALSE
 	var/position = 1
@@ -379,13 +376,13 @@
 				return refuse_terrace(region, judged)
 	return fenced ? region : refuse_terrace(region, judged)
 
-/datum/enterprise_room_template/terrace/proc/refuse_terrace(list/turf/region, alist/judged)
+/datum/enterprise_room_template/service_hall/terrace/proc/refuse_terrace(list/turf/region, alist/judged)
 	var/static/list/refused = list()
 	for(var/turf/member as anything in region)
 		judged[member] = refused
 	return list()
 
-/datum/enterprise_room_template/terrace/proc/holds_terrace(turf/open/place)
+/datum/enterprise_room_template/service_hall/terrace/proc/holds_terrace(turf/open/place)
 	if(isopenspace(place))
 		return FALSE
 	for(var/obj/structure/thing in place)
@@ -393,7 +390,7 @@
 			return FALSE
 	return TRUE
 
-/datum/enterprise_room_template/terrace/proc/blocks_terrace(turf/origin, turf/target, direction)
+/datum/enterprise_room_template/service_hall/terrace/proc/blocks_terrace(turf/origin, turf/target, direction)
 	for(var/obj/structure/fluff/railing/railing in origin)
 		if(railing.dir & direction)
 			return TRUE
@@ -403,64 +400,10 @@
 			return TRUE
 	return FALSE
 
-/datum/enterprise/proc/find_post_spot(datum/enterprise_room/storage)
-	var/obj/structure/door/door = find_storage_door()
-	if(door)
-		for(var/list/spot as anything in get_wall_spots(door))
-			if(!(locate(/obj/structure/fake_machine/enterprise_stock) in spot[1]))
-				return spot
-	var/turf/outside = storage.get_door_step()
-	if(!outside)
-		return null
-	var/list/spot = list(outside, 0, 0)
-	for(var/direction in GLOB.cardinals)
-		if(!isclosedturf(get_step(outside, direction)))
-			continue
-		if(direction & (NORTH | SOUTH))
-			spot[3] = direction == NORTH ? ICON_SIZE_Y : -ICON_SIZE_Y
-		else
-			spot[2] = direction == EAST ? ICON_SIZE_X : -ICON_SIZE_X
-		break
-	return spot
-
-/datum/enterprise/proc/find_storage_door()
-	var/obj/structure/door/best
-	var/best_stores = -1
-	for(var/datum/enterprise_room/room as anything in rooms)
-		var/stores = room.template?.get_store_count(room)
-		if(isnull(stores) || stores <= best_stores)
-			continue
-		for(var/datum/weakref/door_ref as anything in room.doors)
-			var/obj/structure/door/door = door_ref.resolve()
-			if(!QDELETED(door) && get_outside_step(door))
-				best = door
-				best_stores = stores
-				break
-	return best
-
-/datum/enterprise/proc/get_wall_spots(obj/structure/door/door)
-	var/list/spots = list()
-	var/turf/door_turf = get_turf(door)
-	var/turf/outside = get_outside_step(door)
-	if(!outside)
-		return spots
-	var/out_dir = get_dir(door_turf, outside)
-	var/back_x = 0
-	var/back_y = 0
-	if(out_dir & (NORTH | SOUTH))
-		back_y = out_dir == NORTH ? -ICON_SIZE_Y : ICON_SIZE_Y
-	else
-		back_x = out_dir == EAST ? -ICON_SIZE_X : ICON_SIZE_X
-	for(var/side in list(turn(out_dir, 90), turn(out_dir, -90)))
-		var/turf/wall = get_step(door_turf, side)
-		var/turf/front = wall ? get_step(wall, out_dir) : null
-		if(!isclosedturf(wall) || !front || isclosedturf(front) || contains(front) || front.is_blocked_turf(TRUE))
-			continue
-		spots += list(list(front, back_x, back_y))
-	return spots
-
 /datum/enterprise
 	var/list/rested_today = list()
+	var/list/night_fees = list()
+	var/list/staff_shares = list()
 	var/list/rest_stats = list(
 		"Endurance +1, Constitution +1",
 		"Strength +1, Endurance +1",
@@ -524,6 +467,17 @@
 
 /datum/enterprise/proc/get_staff_bonus()
 	return clamp(round(earned_today * ENTERPRISE_STAFF_BONUS_SHARE), ENTERPRISE_STAFF_BONUS_MIN, ENTERPRISE_STAFF_BONUS_MAX)
+
+/datum/enterprise/proc/pay_staff_share(mob/living/carbon/human/sleeper, russian)
+	var/datum/weakref/who = WEAKREF(sleeper)
+	if(staff_shares[who])
+		return FALSE
+	var/bonus = get_staff_bonus()
+	if(!SStreasury.give_money_account(bonus, sleeper, "[name] wages"))
+		return FALSE
+	staff_shares[who] = TRUE
+	to_chat(sleeper, span_notice(russian ? "За день работы на счёт пришло [bonus]." : "The day's work has brought [bonus] to my account."))
+	return TRUE
 
 /datum/enterprise/proc/handle_rest(mob/living/carbon/human/sleeper)
 	var/datum/enterprise_room/room = get_room(sleeper)

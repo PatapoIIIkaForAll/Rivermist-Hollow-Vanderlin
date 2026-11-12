@@ -4,6 +4,11 @@ import { Box, Button, Input, Section, Stack, TextArea } from 'tgui-core/componen
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
 import { sanitizeHTML } from '../sanitize';
+import {
+  type BoardOrder,
+  type BoardOrderEntry,
+  BoardOrders,
+} from './EnterpriseLedger/BoardOrders';
 
 type BoardTask = {
   ref: string;
@@ -48,6 +53,8 @@ type Data = {
   staff_names: string[];
   tasks: BoardTask[];
   history: HistoryEntry[];
+  orders?: BoardOrder[];
+  order_log?: BoardOrderEntry[];
 };
 
 const SLOT_SIZE = 3;
@@ -74,6 +81,7 @@ const STRINGS = {
     at: 'at',
     tabNotices: 'Notices',
     tabHistory: 'History',
+    tabOrders: 'Orders',
     historyEmpty: 'Nothing signed off yet.',
     signedBy: 'Signed by',
     ownCap: 'own notices up',
@@ -98,6 +106,7 @@ const STRINGS = {
     at: 'в',
     tabNotices: 'Задания',
     tabHistory: 'История',
+    tabOrders: 'Заказы',
     historyEmpty: 'Пока ничего не подписано.',
     signedBy: 'Подписал',
     ownCap: 'своих объявлений висит',
@@ -309,8 +318,9 @@ export const QuestBoard = () => {
   const t = STRINGS[data.lang === 'ru' ? 'ru' : 'en'];
   const tasks = data.tasks || [];
   const history = data.history || [];
+  const hasOrders = !!data.orders;
 
-  const [tab, setTab] = useState<'notices' | 'history'>('notices');
+  const [tab, setTab] = useState<'notices' | 'history' | 'orders'>('notices');
   const [page, setPage] = useState(0);
   const [fading, setFading] = useState(false);
   const [editingRef, setEditingRef] = useState<string | null>(null);
@@ -350,7 +360,7 @@ export const QuestBoard = () => {
         <div className="QuestBoard__Root">
           <div className="QuestBoard__LocationName">{data.location_name}</div>
 
-          {!!data.is_role && (
+          {(!!data.is_role || hasOrders) && (
             <Stack className="QuestBoard__Tabs">
               <Stack.Item>
                 <Button
@@ -360,18 +370,36 @@ export const QuestBoard = () => {
                   {t.tabNotices}
                 </Button>
               </Stack.Item>
-              <Stack.Item>
-                <Button
-                  selected={tab === 'history'}
-                  onClick={() => setTab('history')}
-                >
-                  {t.tabHistory}
-                </Button>
-              </Stack.Item>
+              {hasOrders && (
+                <Stack.Item>
+                  <Button
+                    selected={tab === 'orders'}
+                    onClick={() => setTab('orders')}
+                  >
+                    {t.tabOrders}
+                  </Button>
+                </Stack.Item>
+              )}
+              {!!data.is_role && (
+                <Stack.Item>
+                  <Button
+                    selected={tab === 'history'}
+                    onClick={() => setTab('history')}
+                  >
+                    {t.tabHistory}
+                  </Button>
+                </Stack.Item>
+              )}
             </Stack>
           )}
 
-          {tab === 'history' ? (
+          {tab === 'orders' && hasOrders ? (
+            <BoardOrders
+              lang={data.lang}
+              orders={data.orders || []}
+              log={data.order_log || []}
+            />
+          ) : tab === 'history' && !!data.is_role ? (
             <div className="QuestBoard__HistoryList">
               {history.length === 0 && (
                 <Box className="QuestBoard__Empty">{t.historyEmpty}</Box>

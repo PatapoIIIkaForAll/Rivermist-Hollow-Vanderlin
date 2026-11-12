@@ -98,6 +98,14 @@
   color: hsl(120, 45%, 55%) !important;
 }
 
+.QuestBoard__HistoryList .QuestBoard__OrderServed {
+  color: hsl(120, 45%, 55%);
+}
+
+.QuestBoard__HistoryList .QuestBoard__OrderFailed {
+  color: hsl(0, 55%, 60%);
+}
+
 .QuestBoard__Signature--staff {
   color: #1a1a1a !important;
   background: rgba(200, 190, 170, 0.5);

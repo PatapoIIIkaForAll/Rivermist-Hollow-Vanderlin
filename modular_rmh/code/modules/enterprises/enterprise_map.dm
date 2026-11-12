@@ -8,6 +8,7 @@
 	layer = 1
 	alpha = 0
 	mouse_opacity = MOUSE_OPACITY_OPAQUE
+	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 	blockscharging = TRUE
 	del_on_map_removal = FALSE
 	var/datum/enterprise/enterprise
@@ -42,6 +43,7 @@
 	appearance_flags = PIXEL_SCALE
 	mouse_opacity = MOUSE_OPACITY_ICON
 	mouse_over_pointer = MOUSE_HAND_POINTER
+	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 	blockscharging = TRUE
 	del_on_map_removal = FALSE
 	var/datum/enterprise_room/room

@@ -29,6 +29,9 @@
 	QDEL_LIST(patrons)
 	furnishing_by_type = null
 	rested_today = null
+	night_fees = null
+	staff_shares = null
+	order_log = null
 	owner_ref = null
 	QDEL_NULL(map_catcher)
 	QDEL_LIST(map_plane_masters)

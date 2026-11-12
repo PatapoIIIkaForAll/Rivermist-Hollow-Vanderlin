@@ -58,6 +58,8 @@
 /datum/enterprise/proc/new_day()
 	earned_today = 0
 	rested_today = list()
+	night_fees = list()
+	staff_shares = list()
 	start_guest_day()
 	SStgui.update_uis(src)
 
@@ -406,3 +408,76 @@
 	playsound(src, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 	enterprise.funds_changed()
 	return FALSE
+
+/datum/enterprise/proc/find_post_spot(datum/enterprise_room/storage)
+	var/obj/structure/door/door = find_storage_door()
+	var/list/spots = door ? get_wall_spots(door) : list()
+	var/turf/outside = door ? get_outside_step(door) : storage.get_door_step()
+	if(outside)
+		spots += get_step_spots(outside)
+	for(var/list/spot as anything in spots)
+		if(is_post_spot_free(spot))
+			return spot
+	return null
+
+/datum/enterprise/proc/is_post_spot_free(list/spot)
+	for(var/obj/structure/fake_machine/enterprise_stock/post in spot[1])
+		if(post.pixel_x == spot[2] && post.pixel_y == spot[3])
+			return FALSE
+	return TRUE
+
+/datum/enterprise/proc/find_storage_door()
+	var/obj/structure/door/best
+	var/best_stores = -1
+	for(var/datum/enterprise_room/room as anything in rooms)
+		var/stores = room.template?.get_store_count(room)
+		if(isnull(stores) || stores <= best_stores)
+			continue
+		for(var/datum/weakref/door_ref as anything in room.doors)
+			var/obj/structure/door/door = door_ref.resolve()
+			if(!QDELETED(door) && get_outside_step(door))
+				best = door
+				best_stores = stores
+				break
+	return best
+
+/datum/enterprise/proc/get_wall_spots(obj/structure/door/door)
+	var/list/spots = list()
+	var/list/cramped = list()
+	var/turf/door_turf = get_turf(door)
+	var/turf/outside = get_outside_step(door)
+	if(!outside)
+		return spots
+	var/out_dir = get_dir(door_turf, outside)
+	var/back_x = 0
+	var/back_y = 0
+	if(out_dir & (NORTH | SOUTH))
+		back_y = out_dir == NORTH ? -ICON_SIZE_Y : ICON_SIZE_Y
+	else
+		back_x = out_dir == EAST ? -ICON_SIZE_X : ICON_SIZE_X
+	for(var/side in list(turn(out_dir, 90), turn(out_dir, -90)))
+		var/turf/wall = get_step(door_turf, side)
+		var/turf/front = wall ? get_step(wall, out_dir) : null
+		if(!isclosedturf(wall) || !front || isclosedturf(front) || isopenspace(front) || contains(front))
+			continue
+		if(front.is_blocked_turf(TRUE))
+			cramped += list(list(front, back_x, back_y))
+		else
+			spots += list(list(front, back_x, back_y))
+	return spots + cramped
+
+/datum/enterprise/proc/get_step_spots(turf/outside)
+	var/list/spots = list()
+	for(var/direction in GLOB.cardinals)
+		if(!isclosedturf(get_step(outside, direction)))
+			continue
+		var/offset_x = 0
+		var/offset_y = 0
+		if(direction & (NORTH | SOUTH))
+			offset_y = direction == NORTH ? ICON_SIZE_Y : -ICON_SIZE_Y
+		else
+			offset_x = direction == EAST ? ICON_SIZE_X : -ICON_SIZE_X
+		spots += list(list(outside, offset_x, offset_y))
+	if(!length(spots))
+		spots += list(list(outside, 0, 0))
+	return spots

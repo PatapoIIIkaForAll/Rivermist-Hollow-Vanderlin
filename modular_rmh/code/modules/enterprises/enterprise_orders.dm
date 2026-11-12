@@ -242,6 +242,7 @@
 	var/datum/enterprise/house = enterprise
 	var/paid = round(bill * ENTERPRISE_ORDER_PRICE_MULTIPLIER)
 	log_game("[house.name]: [eater.name] ate [dish_name][drunk ? " with [drink_name]" : ""] and paid [paid].")
+	house.log_order(src, TRUE, paid)
 	eater.remark_order(ENTERPRISE_PATRON_LINE_ORDER_THANKS)
 	eater.end_order()
 	house.earn(paid)
@@ -255,6 +256,7 @@
 	var/datum/enterprise/house = enterprise
 	var/stays = prob(get_stay_chance())
 	log_game("[house.name]: [waiter.name] waited in vain for [dish_name] and [stays ? "stayed on" : "left"].")
+	house.log_order(src, FALSE, 0)
 	waiter.remark_order(ENTERPRISE_PATRON_LINE_ORDER_LATE)
 	waiter.end_order()
 	if(stays)

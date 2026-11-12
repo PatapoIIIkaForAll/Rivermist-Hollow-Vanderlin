@@ -19,6 +19,7 @@
 	maptext_width = ENTERPRISE_MENU_BUTTON_WIDTH
 	maptext_height = ENTERPRISE_MENU_BUTTON_HEIGHT
 	mouse_over_pointer = MOUSE_HAND_POINTER
+	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 	blockscharging = TRUE
 	del_on_map_removal = FALSE
 	var/action
