@@ -19,6 +19,7 @@
 	var/list/atom/movable/screen/enterprise_picture/picture
 	var/list/atom/movable/screen/enterprise_zone/zones
 	var/list/used_planes
+	var/picture_stale = TRUE
 
 /datum/enterprise_floor/New(z, datum/enterprise/enterprise)
 	src.z = z
@@ -78,13 +79,14 @@
 		return null
 	return room_cells[cell_index(checked)]
 
-/datum/enterprise_floor/proc/get_atoms(atom_type)
-	var/list/found = list()
-	for(var/turf/member as anything in turfs)
-		for(var/atom/movable/thing as anything in member)
-			if(istype(thing, atom_type))
-				found += thing
-	return found
+/datum/enterprise_floor/proc/mark_stale(rooms_changed = FALSE)
+	picture_stale = TRUE
+	if(rooms_changed)
+		QDEL_LIST(zones)
+
+/datum/enterprise_floor/proc/ensure_picture()
+	if(picture_stale || !picture || !zones)
+		take_picture(!zones)
 
 /datum/enterprise_floor/proc/get_screen_x()
 	return enterprise.frame_pad_x + 1 + (min_x - enterprise.frame_min_x)
@@ -165,6 +167,7 @@
 		picture += labels
 	if(with_zones || !zones)
 		mark_zones()
+	picture_stale = FALSE
 	enterprise.update_plane_masters()
 
 /datum/enterprise_floor/proc/note_planes(atom/source)
@@ -188,7 +191,6 @@
 			square.pixel_x = (member.x - min_x) * ICON_SIZE_X
 			square.pixel_y = (member.y - min_y) * ICON_SIZE_Y
 			shape += square
-		room.shape = shape
 		var/mutable_appearance/outline = new
 		outline.overlays = shape
 		room.outline = outline
@@ -205,13 +207,13 @@
 	var/datum/enterprise_room_template/template
 	var/level = ENTERPRISE_LEVEL_BARE
 	var/lock_id
+	var/uid
 	var/name
 	var/z
 	var/beds = 0
 	var/list/turf/turfs = list()
 	var/list/datum/weakref/doors = list()
 	var/list/datum/enterprise_seating/seatings = list()
-	var/list/mutable_appearance/shape
 	var/mutable_appearance/outline
 
 	var/datum/weakref/tenant
@@ -251,7 +253,6 @@
 	turfs = null
 	doors = null
 	inventory = null
-	shape = null
 	outline = null
 	lock_doors = null
 	links = null
@@ -337,6 +338,8 @@
 	links = null
 
 /datum/enterprise_room/proc/inherit(datum/enterprise_room/former)
+	if(!uid)
+		uid = former.uid
 	level = max(level, former.level)
 	if(former.tenant_name && !tenant_name)
 		tenant = former.tenant

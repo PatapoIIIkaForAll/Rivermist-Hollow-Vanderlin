@@ -154,26 +154,31 @@
 	group.items += item
 
 /datum/enterprise_room/proc/take_loose(fixture_type)
-	if(!loose_cache)
-		loose_cache = list()
+	var/datum/enterprise_room/head = get_leader()
+	if(!head.loose_cache)
+		var/list/cache = list()
+		head.loose_cache = cache
 		for(var/datum/enterprise_room/part as anything in get_members())
 			for(var/turf/member as anything in part.turfs)
 				for(var/obj/thing in member)
 					if(thing.invisibility || enterprise.is_bound(thing) || !enterprise.is_fixture(thing))
 						continue
-					var/list/same = loose_cache[thing.type]
+					var/list/same = cache[thing.type]
 					if(!same)
 						same = list()
-						loose_cache[thing.type] = same
+						cache[thing.type] = same
 					same += thing
-	var/list/same = loose_cache[fixture_type]
+	var/list/same = head.loose_cache[fixture_type]
 	if(!length(same))
 		return null
 	var/obj/found = same[length(same)]
 	same.len--
 	return found
 
-/datum/enterprise_room/proc/check_inventory()
+/datum/enterprise_room/proc/check_inventory(keep_loose = FALSE)
+	var/datum/enterprise_room/head = get_leader()
+	if(!keep_loose)
+		head.loose_cache = null
 	var/changed = FALSE
 	var/new_damage = 0
 	var/new_damaged = 0
@@ -184,7 +189,8 @@
 		var/count = group.get_damaged()
 		new_damaged += count
 		new_damage += count * group.value
-	loose_cache = null
+	if(!keep_loose)
+		head.loose_cache = null
 	damage = new_damage
 	damaged = new_damaged
 	return changed
@@ -328,6 +334,31 @@
 /datum/enterprise
 	var/alist/fixture_refs = alist()
 	var/list/pressed = list()
+	var/fixtures_waiting = FALSE
+
+/datum/enterprise/proc/record_round_start()
+	if(length(claimed_by_z))
+		return FALSE
+	var/turf/spot = find_ledger_spot()
+	if(!spot)
+		return FALSE
+	claimed_by_z = scan_premises(spot)
+	build_floors()
+	var/list/turf/found = list()
+	for(var/list/turf/level as anything in claimed_by_z)
+		if(level)
+			found += level
+	fixtures_waiting = length(take_fixtures(found)) > 0
+	mark_start_stock(found)
+	return TRUE
+
+/datum/enterprise/proc/drop_stray_fixtures()
+	for(var/datum/enterprise_fixture/item as anything in fixtures.Copy())
+		if(contains(item.home))
+			continue
+		bind_fixture(item, null)
+		fixtures -= item
+		qdel(item)
 
 /datum/enterprise/proc/bind_fixture(datum/enterprise_fixture/item, obj/thing)
 	if(item.thing)
@@ -357,18 +388,21 @@
 
 /datum/enterprise/proc/check_rooms(list/datum/enterprise_room/checked)
 	var/list/datum/enterprise_room/changed = list()
+	var/list/datum/enterprise_room/heads = list()
 	for(var/datum/enterprise_room/room as anything in checked)
-		if(room.check_inventory())
+		heads |= room.get_leader()
+	for(var/datum/enterprise_room/head as anything in heads)
+		head.loose_cache = null
+	for(var/datum/enterprise_room/room as anything in checked)
+		if(room.check_inventory(TRUE))
 			changed += room
+	for(var/datum/enterprise_room/head as anything in heads)
+		head.loose_cache = null
 	if(!length(changed))
 		return FALSE
-	var/list/redrawn = list()
 	for(var/datum/enterprise_room/room as anything in changed)
 		SStgui.update_uis(room.get_leader())
-		if(room.z in redrawn)
-			continue
-		redrawn += room.z
-		get_floor(room.z)?.take_picture(FALSE)
+		get_floor(room.z)?.mark_stale()
 	refresh_viewers()
 	SStgui.update_uis(src)
 	return TRUE

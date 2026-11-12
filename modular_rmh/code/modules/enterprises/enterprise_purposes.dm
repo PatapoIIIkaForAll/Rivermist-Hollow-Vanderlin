@@ -5,9 +5,23 @@
 	var/name_ru
 	var/priority = 100
 	var/grouped = FALSE
+	var/claims_kind
+	var/lodges_patrons = FALSE
+	var/grant_group
+	var/grant_rank = 1
+	var/grant_shuffled = FALSE
 
 /datum/enterprise_room_template/proc/matches(datum/enterprise_room/room)
 	return FALSE
+
+/datum/enterprise_room_template/proc/report_unmatched(datum/enterprise_room/room)
+	return
+
+/datum/enterprise_room_template/proc/joins_premises(list/turf/inside)
+	return FALSE
+
+/datum/enterprise_room_template/proc/get_store_count(datum/enterprise_room/room)
+	return null
 
 /datum/enterprise_room_template/proc/get_effect(datum/enterprise_room/room, level, russian)
 	return null
@@ -26,6 +40,11 @@
 	name = "Guest room"
 	name_ru = "Жилая комната"
 	priority = 10
+	claims_kind = ENTERPRISE_ROOM_GUEST
+	lodges_patrons = TRUE
+	grant_group = ENTERPRISE_GRANT_LIVING
+	grant_rank = 2
+	grant_shuffled = TRUE
 	var/list/needs = list(
 		/obj/structure/bed,
 		/obj/structure/closet,
@@ -39,6 +58,10 @@
 		if(!room.count_listed(need))
 			return FALSE
 	return TRUE
+
+/datum/enterprise_room_template/guest_room/report_unmatched(datum/enterprise_room/room)
+	var/turf/first = room.turfs[1]
+	log_mapping("Map issue: [room.name] at [AREACOORD(first)] has the lock of a guest room but lacks a bed, a wardrobe or curtains, so it is not let as one.")
 
 /datum/enterprise_room_template/guest_room/get_effect(datum/enterprise_room/room, level, russian)
 	var/datum/enterprise/enterprise = room.enterprise
@@ -83,6 +106,13 @@
 			return TRUE
 	return FALSE
 
+/datum/enterprise_room_template/horny_room/joins_premises(list/turf/inside)
+	for(var/turf/member as anything in inside)
+		for(var/obj/thing in member)
+			if(is_type_in_list(thing, signs))
+				return TRUE
+	return FALSE
+
 /datum/enterprise_room_template/horny_room/get_effect(datum/enterprise_room/room, level, russian)
 	if(level > ENTERPRISE_MAX_LEVEL)
 		return null
@@ -94,6 +124,7 @@
 	name_ru = "Комната персонала"
 	priority = 20
 	grouped = TRUE
+	grant_group = ENTERPRISE_GRANT_LIVING
 
 /datum/enterprise_room_template/staff_quarters/matches(datum/enterprise_room/room)
 	return room.kind == ENTERPRISE_ROOM_SERVICE && room.count_listed(/obj/structure/bed)
@@ -154,6 +185,7 @@
 	name_ru = "Склад"
 	priority = 45
 	grouped = TRUE
+	grant_group = ENTERPRISE_GRANT_STORES
 	var/list/stores = list(
 		/obj/structure/rack,
 		/obj/structure/closet,
@@ -178,6 +210,12 @@
 	if(stores_found >= stores_needed)
 		return TRUE
 	return stores_found && (room.holds_any(goods) || is_named_for(room.name))
+
+/datum/enterprise_room_template/storage/get_store_count(datum/enterprise_room/room)
+	var/found = 0
+	for(var/store in stores)
+		found += room.count_listed(store)
+	return found
 
 /datum/enterprise_room_template/storage/proc/is_named_for(room_name)
 	if(!room_name)
@@ -258,7 +296,10 @@
 /datum/enterprise_room_template/service_hall/on_meal(datum/enterprise_room/room, mob/living/eater, datum/enterprise_seating/seating)
 	var/datum/enterprise/enterprise = room.enterprise
 	var/mood_type = enterprise.get_level_value(enterprise.meal_moods, seating.get_level())
-	if(!mood_type || !room.is_in_order())
+	if(!mood_type)
+		return FALSE
+	enterprise.check_rooms(room.get_members())
+	if(!room.is_in_order())
 		return FALSE
 	eater.add_stress(mood_type)
 	return TRUE
@@ -287,13 +328,8 @@
 	var/obj/structure/door/best
 	var/best_stores = -1
 	for(var/datum/enterprise_room/room as anything in rooms)
-		var/datum/enterprise_room_template/storage/template = room.template
-		if(!istype(template))
-			continue
-		var/stores = 0
-		for(var/store in template.stores)
-			stores += room.count_listed(store)
-		if(stores <= best_stores)
+		var/stores = room.template?.get_store_count(room)
+		if(isnull(stores) || stores <= best_stores)
 			continue
 		for(var/datum/weakref/door_ref as anything in room.doors)
 			var/obj/structure/door/door = door_ref.resolve()
@@ -411,7 +447,7 @@
 	if(room)
 		room.note_visit(sleeper)
 
-/datum/enterprise/proc/handle_meal(mob/living/eater)
+/datum/enterprise/proc/handle_meal(mob/living/eater, first_bite = TRUE)
 	var/obj/structure/chair/seat = eater.buckled
 	if(!istype(seat))
 		return FALSE
@@ -423,5 +459,6 @@
 	if(patron && patron != eater)
 		patron.take_offence(eater)
 		return FALSE
-	check_rooms(room.get_members())
+	if(!first_bite)
+		return FALSE
 	return room.template.on_meal(room, eater, seating)

@@ -410,7 +410,7 @@
 	var/taken = 0
 	for(var/lock_id in guest_rooms)
 		var/datum/enterprise_room/room = guest_rooms[lock_id]
-		if(room.get_purpose() != ENTERPRISE_PURPOSE_GUEST_ROOM)
+		if(!room.template?.lodges_patrons)
 			continue
 		total++
 		if(room.get_patron())

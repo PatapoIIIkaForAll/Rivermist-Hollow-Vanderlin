@@ -5,6 +5,7 @@
 /datum/enterprise
 	var/list/turf/anchors = list()
 	var/list/claimed_by_z = list()
+	var/room_uid_seq = 0
 	COOLDOWN_DECLARE(survey_cooldown)
 
 /datum/enterprise/proc/is_premises_turf(turf/checked)
@@ -34,7 +35,7 @@
 	var/list/turf/fresh
 	var/list/turf/claimed_level = origin.z <= length(claimed_by_z) ? claimed_by_z[origin.z] : null
 	if(claimed_level && (origin in claimed_level))
-		if(contains(origin))
+		if(length(rooms) && contains(origin))
 			return TRUE
 	else
 		fresh = list()
@@ -51,7 +52,7 @@
 	survey(fresh)
 	return TRUE
 
-/datum/enterprise/proc/survey(list/turf/fresh)
+/datum/enterprise/proc/build_floors()
 	if(length(floors) < length(claimed_by_z))
 		floors.len = length(claimed_by_z)
 	for(var/z in 1 to length(claimed_by_z))
@@ -63,19 +64,25 @@
 			floor = new(z, src)
 			floors[z] = floor
 		floor.set_turfs(claimed)
+
+/datum/enterprise/proc/survey(list/turf/fresh)
+	build_floors()
 	scan_rooms()
+	if(fixtures_waiting)
+		drop_stray_fixtures()
 	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
 	if(!SSticker.HasRoundStarted())
 		mark_start_stock(fresh)
 	furnish_rooms()
-	if(length(taken))
+	if(length(taken) || fixtures_waiting)
+		fixtures_waiting = FALSE
 		for(var/datum/enterprise_room/room as anything in rooms)
 			room.apply_inventory_level(max(room.level, ENTERPRISE_LEVEL_WOOD))
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.template?.on_survey(room)
 	update_map_frame()
 	for(var/datum/enterprise_floor/floor as anything in floors)
-		floor?.take_picture()
+		floor?.mark_stale(TRUE)
 	refresh_viewers()
 	update_static_data_for_all_viewers()
 
@@ -170,16 +177,12 @@
 			queue += ahead
 
 /datum/enterprise/proc/joins_premises(area/place, z)
-	var/datum/enterprise_room_template/horny_room/horny = locate() in get_room_templates()
-	if(!horny)
-		return FALSE
 	var/list/turf/inside = place.get_turfs_by_zlevel(z)
 	if(!length(inside) || length(inside) > ENTERPRISE_JOINED_AREA_MAX)
 		return FALSE
-	for(var/turf/member as anything in inside)
-		for(var/obj/thing in member)
-			if(is_type_in_list(thing, horny.signs))
-				return TRUE
+	for(var/datum/enterprise_room_template/template as anything in get_room_templates())
+		if(template.joins_premises(inside))
+			return TRUE
 	return FALSE
 
 #undef ENTERPRISE_SURVEY_COOLDOWN
@@ -205,23 +208,20 @@
 	return floor ? floor.get_room(location) : null
 
 /datum/enterprise/proc/get_room_by_id(id)
-	if(!isnum(id) || id != round(id) || id < 1 || id > length(rooms))
+	if(!isnum(id))
 		return null
-	return rooms[id]
+	for(var/datum/enterprise_room/room as anything in rooms)
+		if(room.uid == id)
+			return room
+	return null
 
 /datum/enterprise/proc/get_rooms_data()
-	var/alist/ids = alist()
-	var/id = 0
-	for(var/datum/enterprise_room/room as anything in rooms)
-		id++
-		ids[room] = id
 	var/list/rooms_data = list()
-	id = 0
 	for(var/datum/enterprise_room/room as anything in rooms)
-		id++
+		var/datum/enterprise_room/head = room.get_leader()
 		rooms_data += list(list(
-			"id" = id,
-			"group" = ids[room.get_leader()],
+			"id" = room.uid,
+			"group" = head.uid,
 			"name" = room.name,
 			"kind" = room.kind,
 			"z" = room.z,
@@ -233,21 +233,17 @@
 
 /datum/enterprise/proc/get_occupants_data()
 	var/list/occupants = list()
-	var/id = 0
 	for(var/datum/enterprise_room/room as anything in rooms)
-		id++
 		var/occupant = room.get_occupant_name()
 		if(occupant)
-			occupants["[id]"] = occupant
+			occupants["[room.uid]"] = occupant
 	return occupants
 
 /datum/enterprise/proc/get_damaged_data()
 	var/list/damaged_data = list()
-	var/id = 0
 	for(var/datum/enterprise_room/room as anything in rooms)
-		id++
 		if(room.damaged)
-			damaged_data["[id]"] = room.damaged
+			damaged_data["[room.uid]"] = room.damaged
 	return damaged_data
 
 /datum/enterprise/proc/get_own_lock_ids()
@@ -374,6 +370,9 @@
 		var/datum/enterprise_room/heir = length(old_room.turfs) ? get_room(old_room.turfs[1]) : null
 		if(heir)
 			heir.inherit(old_room)
+	for(var/datum/enterprise_room/room as anything in rooms)
+		if(!room.uid)
+			room.uid = ++room_uid_seq
 	QDEL_LIST(former)
 	for(var/datum/enterprise_room/pocket as anything in pockets)
 		if(!(pocket in rooms))

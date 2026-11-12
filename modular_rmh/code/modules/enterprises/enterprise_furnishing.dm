@@ -182,9 +182,9 @@
 	var/list/datum/enterprise_room_template/templates = get_room_templates()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.furnish(templates)
-		if(room.kind == ENTERPRISE_ROOM_GUEST && room.get_purpose() != ENTERPRISE_PURPOSE_GUEST_ROOM)
-			var/turf/first = room.turfs[1]
-			log_mapping("Map issue: [room.name] at [AREACOORD(first)] has the lock of a guest room but lacks a bed, a wardrobe or curtains, so it is not let as one.")
+		for(var/datum/enterprise_room_template/template as anything in templates)
+			if(template.claims_kind && template.claims_kind == room.kind && room.template != template)
+				template.report_unmatched(room)
 	group_rooms()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.check_inventory()
@@ -236,22 +236,28 @@
 		return ENTERPRISE_BARE_REST_PRICE
 	return get_level_value(rest_prices, room.level) || 0
 
-/datum/enterprise/proc/get_rooms_by_purpose(list/purposes)
-	var/list/datum/enterprise_room/found = list()
-	for(var/datum/enterprise_room/room as anything in rooms)
-		if(room.get_purpose() in purposes)
-			found += room
-	return found
+/datum/enterprise/proc/get_grant_order(group)
+	var/list/datum/enterprise_room_template/pending = list()
+	for(var/datum/enterprise_room_template/template as anything in get_room_templates())
+		if(template.grant_group == group)
+			pending += template
+	var/list/datum/enterprise_room/order = list()
+	while(length(pending))
+		var/datum/enterprise_room_template/first = pending[1]
+		for(var/datum/enterprise_room_template/template as anything in pending)
+			if(template.grant_rank < first.grant_rank)
+				first = template
+		pending -= first
+		var/list/datum/enterprise_room/found = list()
+		for(var/datum/enterprise_room/room as anything in rooms)
+			if(room.template == first)
+				found |= room.get_leader()
+		order += first.grant_shuffled ? get_random_order(found) : found
+	return order
 
 /datum/enterprise/proc/raise_team(datum/enterprise_room/room, level, apply = TRUE)
 	for(var/datum/enterprise_room/member as anything in room.get_members())
 		member.raise_level(level, apply)
-
-/datum/enterprise/proc/get_leaders(list/datum/enterprise_room/pool)
-	var/list/datum/enterprise_room/leaders = list()
-	for(var/datum/enterprise_room/room as anything in pool)
-		leaders |= room.get_leader()
-	return leaders
 
 /datum/enterprise/proc/get_random_order(list/pool)
 	var/list/order = list()
@@ -277,9 +283,8 @@
 	var/base = owner_level >= 3 ? ENTERPRISE_LEVEL_IRON : ENTERPRISE_LEVEL_WOOD
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.raise_level(base, apply)
-	var/list/datum/enterprise_room/living = get_leaders(get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_STAFF_QUARTERS)))
-	living += get_random_order(get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_GUEST_ROOM)))
-	var/list/datum/enterprise_room/stores = get_leaders(get_rooms_by_purpose(list(ENTERPRISE_PURPOSE_STORAGE, ENTERPRISE_PURPOSE_DRINK_STORAGE)))
+	var/list/datum/enterprise_room/living = get_grant_order(ENTERPRISE_GRANT_LIVING)
+	var/list/datum/enterprise_room/stores = get_grant_order(ENTERPRISE_GRANT_STORES)
 	switch(owner_level)
 		if(2)
 			raise_rooms(living, 3, ENTERPRISE_LEVEL_IRON, apply)
@@ -293,15 +298,11 @@
 
 /datum/enterprise/proc/redraw(datum/enterprise_room/changed)
 	if(changed)
-		var/list/redrawn = list()
 		for(var/datum/enterprise_room/member as anything in changed.get_members())
-			if(member.z in redrawn)
-				continue
-			redrawn += member.z
-			get_floor(member.z)?.take_picture(FALSE)
+			get_floor(member.z)?.mark_stale()
 	else
 		for(var/datum/enterprise_floor/floor as anything in floors)
-			floor?.take_picture(FALSE)
+			floor?.mark_stale()
 	refresh_viewers()
 	update_static_data_for_all_viewers()
 	for(var/datum/enterprise_room/room as anything in rooms)

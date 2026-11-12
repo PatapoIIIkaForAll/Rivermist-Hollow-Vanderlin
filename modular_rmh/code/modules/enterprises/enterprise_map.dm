@@ -409,6 +409,7 @@
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
 	if(viewer?.z == z)
 		return FALSE
+	floor.ensure_picture()
 	if(!viewer)
 		viewer = new(src, user)
 		viewers[user.ckey] = viewer
@@ -466,6 +467,7 @@
 			drop_viewer(viewer_key)
 			open_premises(user)
 			continue
+		floor.ensure_picture()
 		viewer.show(floor)
 		viewer.set_view(viewer.scale, viewer.shift_x, viewer.shift_y)
 
