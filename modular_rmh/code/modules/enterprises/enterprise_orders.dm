@@ -417,9 +417,24 @@
 	return (taken + 1) * 2 <= total
 
 /datum/enterprise/proc/is_order_dish(obj/item/reagent_containers/food/snacks/dish)
-	if(ispath(dish, /obj/item/reagent_containers/food/snacks/badrecipe) || (initial(dish.foodtype) & RAW))
+	var/static/list/unfinished = list(
+		/obj/item/reagent_containers/food/snacks/badrecipe,
+		/obj/item/reagent_containers/food/snacks/foodbase,
+		/obj/item/reagent_containers/food/snacks/raw_pie,
+		/obj/item/reagent_containers/food/snacks/raw_tart,
+		/obj/item/reagent_containers/food/snacks/dough_base,
+	)
+	if(!ispath(dish, /obj/item/reagent_containers/food/snacks) || is_path_in_list(dish, unfinished) || (initial(dish.foodtype) & RAW))
 		return FALSE
 	return !ispath(initial(dish.eat_effect), /datum/status_effect/debuff/uncookedfood)
+
+/datum/enterprise/proc/get_cooked_dishes()
+	var/list/cooked = list()
+	for(var/datum/container_craft/recipe as anything in subtypesof(/datum/container_craft))
+		cooked |= initial(recipe.output)
+	for(var/datum/repeatable_crafting_recipe/cooking/recipe as anything in subtypesof(/datum/repeatable_crafting_recipe/cooking))
+		cooked |= initial(recipe.output)
+	return cooked
 
 /datum/enterprise/proc/get_order_dish_price(dish_type)
 	return round(SSmerchant.get_item_base_value(dish_type))
@@ -428,9 +443,7 @@
 	if(order_dishes)
 		return order_dishes
 	order_dishes = list()
-	if(!length(GLOB.selectable_foods))
-		GLOB.selectable_foods = get_global_selectable_foods()
-	for(var/obj/item/reagent_containers/food/snacks/dish as anything in GLOB.selectable_foods)
+	for(var/obj/item/reagent_containers/food/snacks/dish as anything in get_cooked_dishes())
 		if(!is_order_dish(dish) || get_order_dish_price(dish) <= 0)
 			continue
 		var/tier = "[clamp(initial(dish.faretype) - 1, 0, ENTERPRISE_ORDER_TOP_TIER)]"

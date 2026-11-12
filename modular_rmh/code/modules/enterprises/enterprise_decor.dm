@@ -1,8 +1,30 @@
-#define ENTERPRISE_BED_DRAPE_SHIFT 16
 #define ENTERPRISE_BED_OUTLINE "enterprise_bed_outline"
 
 /datum/enterprise
 	var/alist/bare_floors = alist()
+
+/obj/structure/bed
+	var/enterprise_drapes
+	var/enterprise_drapes_drawn = FALSE
+
+/obj/structure/bed/update_overlays()
+	. = ..()
+	if(enterprise_drapes)
+		. += mutable_appearance('icons/obj/watercloset.dmi', "[enterprise_drapes]-[enterprise_drapes_drawn ? "closed" : "open"]", ABOVE_MOB_LAYER, GAME_PLANE_UPPER)
+
+/obj/structure/bed/attack_hand(mob/living/user)
+	if(!enterprise_drapes || user.m_intent == MOVE_INTENT_SNEAK)
+		return ..()
+	user.changeNext_move(CLICK_CD_FAST)
+	enterprise_drapes_drawn = !enterprise_drapes_drawn
+	playsound(src, 'sound/foley/rustle2.ogg', 40, TRUE, -3)
+	update_appearance(UPDATE_OVERLAYS)
+	return TRUE
+
+/obj/structure/bed/examine(mob/user)
+	. = ..()
+	if(enterprise_drapes)
+		. += span_info(get_preferred_ui_language(user) == "ru" ? "Шторы задёргиваются и раздвигаются кликом по кровати пустой рукой." : "Click the bed with an empty hand to draw or part the drapes.")
 
 /datum/enterprise_room/proc/show_level()
 	dress_beds()
@@ -32,23 +54,20 @@
 		enterprise.set_bare_floor(member, bare && covered)
 
 /datum/enterprise/proc/dress_bed(obj/structure/bed/bed, level)
-	var/static/mutable_appearance/purple_drape
-	var/static/mutable_appearance/red_drape
-	if(!purple_drape)
-		purple_drape = mutable_appearance('icons/obj/watercloset.dmi', "curtain_purple-open")
-		purple_drape.pixel_y = ENTERPRISE_BED_DRAPE_SHIFT
-		red_drape = mutable_appearance('icons/obj/watercloset.dmi', "curtain_red-open")
-		red_drape.pixel_y = ENTERPRISE_BED_DRAPE_SHIFT
-	bed.cut_overlay(purple_drape)
-	bed.cut_overlay(red_drape)
+	var/drapes
 	bed.remove_filter(ENTERPRISE_BED_OUTLINE)
 	switch(level)
 		if(ENTERPRISE_LEVEL_SILVER)
-			bed.add_overlay(purple_drape)
+			drapes = "curtain_purple"
 			bed.add_filter(ENTERPRISE_BED_OUTLINE, 1, outline_filter(1, "#3c1f5a59"))
 		if(ENTERPRISE_LEVEL_GOLD to INFINITY)
-			bed.add_overlay(red_drape)
+			drapes = "curtain_red"
 			bed.add_filter(ENTERPRISE_BED_OUTLINE, 1, outline_filter(1, "#d4af3759"))
+	if(bed.enterprise_drapes == drapes)
+		return
+	bed.enterprise_drapes = drapes
+	bed.enterprise_drapes_drawn = FALSE
+	bed.update_appearance(UPDATE_OVERLAYS)
 
 /datum/enterprise/proc/set_bare_floor(turf/open/floor/member, bare)
 	var/static/mutable_appearance/rough
@@ -74,5 +93,4 @@
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.show_level()
 
-#undef ENTERPRISE_BED_DRAPE_SHIFT
 #undef ENTERPRISE_BED_OUTLINE
