@@ -15,6 +15,7 @@
 	return FALSE
 
 /datum/enterprise/proc/get_floor(z)
+	RETURN_TYPE(/datum/enterprise_floor)
 	if(z < 1 || z > length(floors))
 		return null
 	return floors[z]

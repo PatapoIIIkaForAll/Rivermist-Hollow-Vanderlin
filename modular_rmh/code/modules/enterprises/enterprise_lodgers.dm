@@ -60,7 +60,8 @@
 		var/datum/enterprise_room/room = guest_rooms[lock_id]
 		if(!room.tenant_name)
 			continue
-		if(QDELETED(room.tenant_key?.resolve()))
+		var/obj/item/key/room_key = room.tenant_key?.resolve()
+		if(QDELETED(room_key))
 			room.end_tenancy()
 			continue
 		if(limit && world.time - room.tenant_seen > limit)

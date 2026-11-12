@@ -399,6 +399,7 @@
 	map_catcher.fill_rect(1, 1, frame_width, frame_height)
 
 /datum/enterprise/proc/get_viewer(mob/user)
+	RETURN_TYPE(/datum/enterprise_viewer)
 	return user?.ckey ? viewers[user.ckey] : null
 
 /datum/enterprise/proc/show_floor(mob/user, z)

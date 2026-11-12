@@ -285,7 +285,8 @@
 				doors |= WEAKREF(replacement)
 				enterprise.exit_doors = null
 	for(var/datum/weakref/door_ref as anything in doors)
-		if(QDELETED(door_ref.resolve()))
+		var/obj/structure/door/door = door_ref.resolve()
+		if(QDELETED(door))
 			doors -= door_ref
 	check_inventory()
 	return restored
