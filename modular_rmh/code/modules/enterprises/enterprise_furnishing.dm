@@ -76,6 +76,30 @@
 		/obj/machinery/light/fueled/wallfire/candle/goldcandle,
 	)
 
+/datum/enterprise_furnishing/candle
+	kinds = list(
+		/obj/item/candle,
+		/obj/item/candle/yellow,
+	)
+	tiers = list(
+		/obj/item/candle/tin,
+		/obj/item/candle/tin,
+		/obj/item/candle/silver,
+		/obj/item/candle/gold,
+	)
+
+/datum/enterprise_furnishing/lit_candle
+	kinds = list(
+		/obj/item/candle/lit,
+		/obj/item/candle/yellow/lit,
+	)
+	tiers = list(
+		/obj/item/candle/tin/lit,
+		/obj/item/candle/tin/lit,
+		/obj/item/candle/silver/lit,
+		/obj/item/candle/gold/lit,
+	)
+
 /datum/enterprise_furnishing/mirror
 	tiers = list(
 		/obj/structure/mirror,

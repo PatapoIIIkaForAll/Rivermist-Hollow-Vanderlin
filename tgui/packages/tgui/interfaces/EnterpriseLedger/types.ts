@@ -64,7 +64,6 @@ export type Data = {
   is_staff: BooleanLike;
   shift_active: BooleanLike;
   viewed_z: number | null;
-  map_scale: number | null;
   frame: number[] | null;
   book_balance: number;
   earned_round: number;

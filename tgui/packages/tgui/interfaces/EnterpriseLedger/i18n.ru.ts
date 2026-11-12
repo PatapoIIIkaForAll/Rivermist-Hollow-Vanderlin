@@ -24,6 +24,7 @@ const locale: Locale = {
     staff_quarters: 'Жилая комната персонала',
     kitchen: 'Кухня',
     horny_room: 'Horny Room',
+    terrace: 'Терраса',
   },
   enterprisePurposes: {
     tavern: {

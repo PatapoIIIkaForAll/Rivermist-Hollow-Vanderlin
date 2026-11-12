@@ -18,6 +18,7 @@
 	var/list/datum/enterprise_room/room_cells
 	var/list/atom/movable/screen/enterprise_picture/picture
 	var/list/atom/movable/screen/enterprise_zone/zones
+	var/list/atom/movable/screen/enterprise_label/labels
 	var/list/used_planes
 	var/picture_stale = TRUE
 
@@ -28,6 +29,7 @@
 /datum/enterprise_floor/Destroy()
 	QDEL_LIST(picture)
 	QDEL_LIST(zones)
+	QDEL_LIST(labels)
 	enterprise = null
 	used_planes = null
 	turfs = null
@@ -114,28 +116,27 @@
 	var/origin_y = get_pixel_y()
 
 	for(var/row in 0 to height - 1)
-		var/list/strip_overlays = list()
+		var/list/by_dir = list()
 		for(var/column in 0 to width - 1)
 			if(!mask[row * width + column + 1])
 				continue
 			var/turf/member = locate(min_x + column, min_y + row, z)
 			var/offset = column * ICON_SIZE_X
-			strip_overlays += copy_appearance(member, offset)
-			note_planes(member)
+			add_to_strip(by_dir, member, offset)
 			for(var/obj/thing in member)
 				if(thing.invisibility || istype(thing, /obj/effect))
 					continue
-				strip_overlays += copy_appearance(thing, offset)
-				note_planes(thing)
-		if(!length(strip_overlays))
-			continue
-		var/atom/movable/screen/enterprise_picture/strip = new
-		strip.pixel_x = origin_x
-		strip.pixel_y = origin_y + row * ICON_SIZE_Y
-		strip.overlays = strip_overlays
-		picture += strip
+				add_to_strip(by_dir, thing, offset)
+		for(var/facing in by_dir)
+			var/atom/movable/screen/enterprise_picture/strip = new
+			strip.dir = text2num(facing)
+			strip.pixel_x = origin_x
+			strip.pixel_y = origin_y + row * ICON_SIZE_Y
+			strip.overlays = by_dir[facing]
+			picture += strip
 
-	var/list/label_overlays = list()
+	QDEL_LIST(labels)
+	labels = list()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		var/label_text = room.get_map_label()
 		if(!label_text)
@@ -150,25 +151,25 @@
 			room_max_x = max(room_max_x, member.x)
 			room_min_y = min(room_min_y, member.y)
 			room_max_y = max(room_max_y, member.y)
-		var/mutable_appearance/label = mutable_appearance()
-		label.plane = RUNECHAT_PLANE
-		label.appearance_flags = RESET_COLOR | RESET_ALPHA
-		label.maptext = MAPTEXT_CENTER(label_text)
-		label.maptext_width = (room_max_x - room_min_x + 1) * ICON_SIZE_X
-		label.maptext_height = ICON_SIZE_Y
-		label.pixel_x = (room_min_x - min_x) * ICON_SIZE_X
-		label.pixel_y = (round((room_min_y + room_max_y) / 2) - min_y) * ICON_SIZE_Y
-		label_overlays += label
-	if(length(label_overlays))
-		var/atom/movable/screen/enterprise_picture/labels = new
-		labels.pixel_x = origin_x
-		labels.pixel_y = origin_y
-		labels.overlays = label_overlays
-		picture += labels
+		var/label_width = (room_max_x - room_min_x + 1) * ICON_SIZE_X
+		var/label_x = origin_x + (room_min_x - min_x) * ICON_SIZE_X + label_width / 2
+		var/label_y = origin_y + (round((room_min_y + room_max_y) / 2) - min_y) * ICON_SIZE_Y + ICON_SIZE_Y / 2
+		var/atom/movable/screen/enterprise_label/label = new
+		label.place(label_text, label_x, label_y, label_width)
+		labels += label
 	if(with_zones || !zones)
 		mark_zones()
 	picture_stale = FALSE
 	enterprise.update_plane_masters()
+
+/datum/enterprise_floor/proc/add_to_strip(list/by_dir, atom/source, offset)
+	var/facing = "[source.dir]"
+	var/list/strip_overlays = by_dir[facing]
+	if(!strip_overlays)
+		strip_overlays = list()
+		by_dir[facing] = strip_overlays
+	strip_overlays += copy_appearance(source, offset)
+	note_planes(source)
 
 /datum/enterprise_floor/proc/note_planes(atom/source)
 	used_planes |= source.plane
@@ -229,6 +230,7 @@
 	var/page_seq = 0
 
 	var/enclosed = TRUE
+	var/terrace = FALSE
 	var/kept = FALSE
 	var/name_weight = 0
 	var/list/obj/structure/door/lock_doors = list()
@@ -384,6 +386,7 @@
 	level = new_level
 	if(apply)
 		apply_inventory_level(level)
+		show_level()
 	return TRUE
 
 /datum/enterprise_room/proc/raise_level(new_level, apply = TRUE)

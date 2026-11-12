@@ -10,6 +10,7 @@
 	var/grant_group
 	var/grant_rank = 1
 	var/grant_shuffled = FALSE
+	var/seats_patrons = FALSE
 
 /datum/enterprise_room_template/proc/matches(datum/enterprise_room/room)
 	return FALSE
@@ -19,6 +20,9 @@
 
 /datum/enterprise_room_template/proc/joins_premises(list/turf/inside)
 	return FALSE
+
+/datum/enterprise_room_template/proc/claim_outside(datum/enterprise/enterprise, list/found_by_z, alist/seen)
+	return list()
 
 /datum/enterprise_room_template/proc/get_store_count(datum/enterprise_room/room)
 	return null
@@ -277,6 +281,7 @@
 	name_ru = "Зал"
 	priority = 100
 	grouped = TRUE
+	seats_patrons = TRUE
 
 /datum/enterprise_room_template/service_hall/matches(datum/enterprise_room/room)
 	return room.kind == ENTERPRISE_ROOM_COMMON
@@ -303,6 +308,100 @@
 		return FALSE
 	eater.add_stress(mood_type)
 	return TRUE
+
+/datum/enterprise
+	var/alist/terrace_turfs = alist()
+
+/datum/enterprise_room_template/terrace
+	id = ENTERPRISE_PURPOSE_TERRACE
+	name = "Terrace"
+	name_ru = "Терраса"
+	priority = 5
+	grouped = TRUE
+	seats_patrons = TRUE
+
+/datum/enterprise_room_template/terrace/matches(datum/enterprise_room/room)
+	return room.terrace
+
+/datum/enterprise_room_template/terrace/get_effect(datum/enterprise_room/room, level, russian)
+	if(level > ENTERPRISE_MAX_LEVEL)
+		return null
+	return russian ? "Особых эффектов пока нет." : "No special effects yet."
+
+/datum/enterprise_room_template/terrace/claim_outside(datum/enterprise/enterprise, list/found_by_z, alist/seen)
+	var/list/turf/claimed = list()
+	var/alist/judged = alist()
+	for(var/list/turf/found as anything in found_by_z)
+		if(!found)
+			continue
+		for(var/turf/open/start in found)
+			if(locate(/obj/structure/window) in start)
+				continue
+			for(var/direction in GLOB.cardinals)
+				var/turf/open/ahead = get_step(start, direction)
+				if(!istype(ahead) || judged[ahead] || seen[ahead] == ENTERPRISE_PREMISES_TAKEN)
+					continue
+				if(blocks_terrace(start, ahead, direction) || !holds_terrace(ahead))
+					continue
+				claimed += fill_terrace(ahead, seen, judged)
+	for(var/turf/member as anything in claimed)
+		enterprise.terrace_turfs[member] = TRUE
+	return claimed
+
+/datum/enterprise_room_template/terrace/proc/fill_terrace(turf/open/first, alist/seen, alist/judged)
+	var/area/place = first.loc
+	var/list/turf/open/region = list(first)
+	judged[first] = region
+	var/fenced = FALSE
+	var/position = 1
+	while(position <= length(region))
+		var/turf/open/current = region[position]
+		position++
+		for(var/direction in GLOB.cardinals)
+			var/turf/ahead = get_step(current, direction)
+			if(!ahead)
+				return refuse_terrace(region, judged)
+			var/list/met = judged[ahead]
+			if(met)
+				if(met != region)
+					return refuse_terrace(region, judged)
+				continue
+			if(seen[ahead] == ENTERPRISE_PREMISES_TAKEN)
+				continue
+			if(blocks_terrace(current, ahead, direction) || (locate(/obj/structure/stairs) in ahead))
+				fenced = TRUE
+				continue
+			if(!istype(ahead, /turf/open) || ahead.loc != place || !holds_terrace(ahead))
+				continue
+			judged[ahead] = region
+			region += ahead
+			if(length(region) > ENTERPRISE_TERRACE_MAX)
+				return refuse_terrace(region, judged)
+	return fenced ? region : refuse_terrace(region, judged)
+
+/datum/enterprise_room_template/terrace/proc/refuse_terrace(list/turf/region, alist/judged)
+	var/static/list/refused = list()
+	for(var/turf/member as anything in region)
+		judged[member] = refused
+	return list()
+
+/datum/enterprise_room_template/terrace/proc/holds_terrace(turf/open/place)
+	if(isopenspace(place))
+		return FALSE
+	for(var/obj/structure/thing in place)
+		if(istype(thing, /obj/structure/stairs) || istype(thing, /obj/structure/window) || istype(thing, /obj/structure/door))
+			return FALSE
+	return TRUE
+
+/datum/enterprise_room_template/terrace/proc/blocks_terrace(turf/origin, turf/target, direction)
+	for(var/obj/structure/fluff/railing/railing in origin)
+		if(railing.dir & direction)
+			return TRUE
+	var/backwards = REVERSE_DIR(direction)
+	for(var/obj/structure/fluff/railing/railing in target)
+		if(railing.dir & backwards)
+			return TRUE
+	return FALSE
 
 /datum/enterprise/proc/find_post_spot(datum/enterprise_room/storage)
 	var/obj/structure/door/door = find_storage_door()

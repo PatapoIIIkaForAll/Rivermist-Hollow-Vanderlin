@@ -312,10 +312,46 @@
 		/datum/ai_planning_subtree/enterprise_patron/find_room,
 	)
 
+/datum/ai_controller/enterprise_patron/get_expected_ai_status()
+	. = ..()
+	if(. != AI_STATUS_OFF || !able_to_run || QDELETED(pawn))
+		return
+	var/mob/living/patron = pawn
+	if(!patron.client && patron.stat < UNCONSCIOUS)
+		return AI_STATUS_ON
+
 /datum/ai_movement/hybrid_pathing/enterprise_patron
-	max_path_distance = 80
+	max_path_distance = ENTERPRISE_PATRON_PATH_REACH
 	max_pathing_attempts = 3
 	always_advanced = TRUE
+
+/datum/ai_movement/hybrid_pathing/enterprise_patron/process(delta_time)
+	var/list/datum/ai_controller/ready = list()
+	for(var/datum/ai_controller/controller as anything in moving_controllers)
+		if(COOLDOWN_FINISHED(controller, movement_cooldown))
+			ready[controller] = get_turf(controller.pawn)
+	. = ..()
+	for(var/datum/ai_controller/controller as anything in ready)
+		var/mob/living/simple_animal/enterprise_patron/patron = controller.pawn
+		if(istype(patron) && (controller in moving_controllers) && get_turf(patron) == ready[controller] && controller.can_move())
+			patron.step_through(controller)
+
+/mob/living/simple_animal/enterprise_patron/proc/step_through(datum/ai_controller/controller)
+	var/turf/here = loc
+	var/list/turf/path = controller.movement_path
+	var/turf/next_step = length(path) ? path[1] : null
+	if(!isturf(here) || !next_step || next_step.z != here.z || get_dist(here, next_step) != 1)
+		return FALSE
+	var/minimum_distance = controller.max_target_distance
+	for(var/datum/ai_behavior/behavior as anything in controller.current_behaviors)
+		minimum_distance = min(minimum_distance, behavior.required_distance)
+	if(get_dist(src, controller.current_movement_target) <= minimum_distance)
+		return FALSE
+	open_door(locate(/obj/structure/door) in next_step)
+	if(!Move(next_step, get_dir(here, next_step)) || loc != next_step)
+		return FALSE
+	path.Cut(1, 2)
+	return TRUE
 
 /datum/ai_planning_subtree/enterprise_patron_speak/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	var/mob/living/simple_animal/enterprise_patron/patron = controller.pawn
@@ -460,7 +496,6 @@
 		patron.arrive()
 	else if(controller.ai_status == AI_STATUS_OFF)
 		patron.goal_stage = ENTERPRISE_PATRON_STAGE_SEEK
-		patron.walk_until = 0
 	else
 		patron.give_up()
 
@@ -478,12 +513,19 @@
 /datum/enterprise/proc/find_seating(bar, list/claimed, mob/living/asking)
 	var/list/datum/enterprise_seating/found = list()
 	for(var/datum/enterprise_room/room as anything in rooms)
+		if(!room.template?.seats_patrons)
+			continue
 		for(var/datum/enterprise_seating/seating as anything in room.seatings)
 			if(seating.is_bar() != bar || !seating.get_free_chair(claimed, asking))
 				continue
 			if(bar || seating.is_free())
 				found += seating
-	return length(found) ? pick(found) : null
+	var/mob/living/simple_animal/enterprise_patron/walker = asking
+	for(var/attempt in 1 to min(length(found), ENTERPRISE_PATRON_SEAT_TRIES))
+		var/datum/enterprise_seating/seating = pick_n_take(found)
+		if(!istype(walker) || walker.can_walk_to(seating.get_free_chair(claimed, asking)))
+			return seating
+	return null
 
 /datum/enterprise/proc/find_free_room()
 	if(!has_patron_room_left())

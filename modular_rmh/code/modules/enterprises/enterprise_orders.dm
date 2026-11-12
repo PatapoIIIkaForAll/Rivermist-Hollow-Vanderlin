@@ -508,17 +508,31 @@
 	return best
 
 /datum/enterprise/proc/get_note_stand(turf/table_turf, atom/near)
-	var/turf/best
-	var/best_rank = INFINITY
+	var/list/turf/spots = list()
 	for(var/direction in GLOB.cardinals)
 		var/turf/spot = get_step(table_turf, direction)
-		if(!spot || isclosedturf(spot) || !contains(spot) || spot.is_blocked_turf(TRUE) || (locate(/obj/structure/table) in spot))
+		if(!spot || isclosedturf(spot) || !contains(spot) || spot.is_blocked_turf(FALSE) || (locate(/obj/structure/table) in spot))
 			continue
-		var/rank = get_dist(spot, near) + ((locate(/obj/structure/chair) in spot) ? ENTERPRISE_ORDER_CHAIR_PENALTY : 0)
-		if(rank < best_rank)
-			best = spot
-			best_rank = rank
-	return best
+		spots[spot] = get_dist(spot, near) + ((locate(/obj/structure/chair) in spot) ? ENTERPRISE_ORDER_CHAIR_PENALTY : 0)
+	var/mob/living/simple_animal/enterprise_patron/walker = near
+	while(length(spots))
+		var/turf/best
+		for(var/turf/spot as anything in spots)
+			if(!best || spots[spot] < spots[best])
+				best = spot
+		if(!istype(walker) || walker.can_walk_to(best))
+			return best
+		spots -= best
+	return null
+
+/mob/living/simple_animal/enterprise_patron/proc/can_walk_to(atom/target)
+	var/turf/start = get_turf(src)
+	var/turf/end = get_turf(target)
+	if(!start || !end)
+		return FALSE
+	if(start == end)
+		return TRUE
+	return length(AStar(src, end, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d), ENTERPRISE_PATRON_PATH_REACH, ENTERPRISE_PATRON_PATH_REACH, 0)) > 0
 
 /datum/enterprise/proc/make_order(mob/living/simple_animal/enterprise_patron/patron, morning)
 	var/turf/table_turf = find_note_table()

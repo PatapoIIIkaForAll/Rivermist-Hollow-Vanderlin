@@ -8,6 +8,7 @@ export const PURPOSE_ICONS: Record<string, string> = {
   staff_quarters: 'users',
   kitchen: 'utensils',
   horny_room: 'heart',
+  terrace: 'sun',
 };
 
 export const getPurposeIcon = (purpose: string | null) =>

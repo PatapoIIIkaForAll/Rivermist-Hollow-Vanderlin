@@ -81,6 +81,7 @@
 	replacement.dir = found.dir
 	replacement.pixel_x = found.pixel_x
 	replacement.pixel_y = found.pixel_y
+	room.enterprise.mark_stock(replacement)
 	qdel(found)
 	return replacement
 
@@ -280,6 +281,7 @@
 				continue
 			var/obj/replacement = item.make_new()
 			enterprise.bind_fixture(item, replacement)
+			enterprise.mark_stock(replacement)
 			restored++
 			if(istype(replacement, /obj/structure/door))
 				doors |= WEAKREF(replacement)
@@ -288,6 +290,7 @@
 		var/obj/structure/door/door = door_ref.resolve()
 		if(QDELETED(door))
 			doors -= door_ref
+	show_level()
 	check_inventory()
 	return restored
 

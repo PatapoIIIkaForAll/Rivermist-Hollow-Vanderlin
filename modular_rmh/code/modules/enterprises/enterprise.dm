@@ -116,7 +116,6 @@
 		"is_staff" = is_staff(user),
 		"shift_active" = shift_active,
 		"viewed_z" = get_viewer(user)?.z,
-		"map_scale" = get_viewer(user)?.scale,
 		"book_balance" = book_balance,
 		"earned_round" = earned_round,
 		"earned_today" = earned_today,
@@ -151,8 +150,10 @@
 				ui.send_update()
 			return FALSE
 		if("reset_view")
-			if(reset_view(ui.user))
-				ui.send_update()
+			reset_view(ui.user)
+			return FALSE
+		if("map_fit")
+			set_map_fit(ui.user, params["fit"])
 			return FALSE
 		if("hide_floors")
 			hide_floors(ui.user)

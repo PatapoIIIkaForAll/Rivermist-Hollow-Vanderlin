@@ -1,4 +1,5 @@
 #include "enterprise.dm"
+#include "enterprise_decor.dm"
 #include "enterprise_economy.dm"
 #include "enterprise_furnishing.dm"
 #include "enterprise_guests.dm"
@@ -12,3 +13,4 @@
 #include "enterprise_room.dm"
 #include "enterprise_survey.dm"
 #include "enterprise_theft.dm"
+#include "enterprise_viewer.dm"

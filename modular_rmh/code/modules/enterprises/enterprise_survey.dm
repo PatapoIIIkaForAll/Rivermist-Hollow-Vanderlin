@@ -1,6 +1,4 @@
 #define ENTERPRISE_SURVEY_COOLDOWN (10 SECONDS)
-#define PREMISES_TAKEN 1
-#define PREMISES_REFUSED 2
 
 /datum/enterprise
 	var/list/turf/anchors = list()
@@ -81,6 +79,7 @@
 			room.apply_inventory_level(max(room.level, ENTERPRISE_LEVEL_WOOD))
 	for(var/datum/enterprise_room/room as anything in rooms)
 		room.template?.on_survey(room)
+	refresh_decor()
 	update_map_frame()
 	for(var/datum/enterprise_floor/floor as anything in floors)
 		floor?.mark_stale(TRUE)
@@ -122,7 +121,7 @@
 	var/alist/seen = alist()
 	var/alist/judged = alist()
 	var/list/area/joined = list()
-	seen[origin] = PREMISES_TAKEN
+	seen[origin] = ENTERPRISE_PREMISES_TAKEN
 	var/list/turf/queue = list(origin)
 	var/position = 1
 	var/looked = 0
@@ -143,19 +142,27 @@
 			looked = length(queue)
 			for(var/index in from to looked)
 				look_out_from(queue[index], seen, queue, joined, judged)
+	for(var/datum/enterprise_room_template/template as anything in get_room_templates())
+		for(var/turf/extra as anything in template.claim_outside(src, found_by_z, seen))
+			seen[extra] = ENTERPRISE_PREMISES_TAKEN
+			var/list/turf/found = found_by_z[extra.z]
+			if(found)
+				found += extra
+			else
+				found_by_z[extra.z] = list(extra)
 	return found_by_z
 
 /datum/enterprise/proc/scan_neighbour(turf/neighbour, alist/seen, list/turf/queue, list/area/joined)
 	if(!neighbour)
 		return
 	var/mark = seen[neighbour]
-	if(mark == PREMISES_TAKEN || (mark == PREMISES_REFUSED && !(neighbour.loc in joined)))
+	if(mark == ENTERPRISE_PREMISES_TAKEN || (mark == ENTERPRISE_PREMISES_REFUSED && !(neighbour.loc in joined)))
 		return
 	if(is_premises_turf(neighbour) || (neighbour.loc in joined))
-		seen[neighbour] = PREMISES_TAKEN
+		seen[neighbour] = ENTERPRISE_PREMISES_TAKEN
 		queue += neighbour
 	else
-		seen[neighbour] = PREMISES_REFUSED
+		seen[neighbour] = ENTERPRISE_PREMISES_REFUSED
 
 /datum/enterprise/proc/look_out_from(turf/start, alist/seen, list/turf/queue, list/area/joined, alist/judged)
 	for(var/direction in GLOB.cardinals)
@@ -164,7 +171,7 @@
 			ahead = get_step(ahead, direction)
 			if(!ahead)
 				break
-			if(seen[ahead] == PREMISES_TAKEN)
+			if(seen[ahead] == ENTERPRISE_PREMISES_TAKEN)
 				continue
 			var/area/place = ahead.loc
 			if(!is_premises_turf(ahead) && !(place in joined))
@@ -174,7 +181,7 @@
 						joined += place
 				if(!judged[place])
 					continue
-			seen[ahead] = PREMISES_TAKEN
+			seen[ahead] = ENTERPRISE_PREMISES_TAKEN
 			queue += ahead
 
 /datum/enterprise/proc/joins_premises(area/place, z)
@@ -187,8 +194,6 @@
 	return FALSE
 
 #undef ENTERPRISE_SURVEY_COOLDOWN
-#undef PREMISES_TAKEN
-#undef PREMISES_REFUSED
 
 #define ROOM_CELL_OPEN 1
 #define ROOM_CELL_BARRIER 2
@@ -313,7 +318,7 @@
 		var/datum/enterprise_room/target
 		for(var/datum/enterprise_room/other as anything in pocket.links)
 			other = other.resolve()
-			if(other != pocket && (!target || length(other.turfs) > length(target.turfs)))
+			if(other != pocket && other.terrace == pocket.terrace && (!target || length(other.turfs) > length(target.turfs)))
 				target = other
 		if(!target)
 			continue
@@ -395,6 +400,7 @@
 		pockets += pocket
 		owners[start_cell] = pocket
 		pocket.turfs += start
+		pocket.terrace = !!terrace_turfs[start]
 
 		var/position = 1
 		while(position <= length(pocket.turfs))
@@ -422,6 +428,10 @@
 				if(kind == ROOM_CELL_BARRIER)
 					continue
 				if(kind == ROOM_CELL_OPEN || kind == ROOM_CELL_TABLE)
+					if(!terrace_turfs[neighbour] != !pocket.terrace)
+						if(other)
+							pocket.link_with(other)
+						continue
 					if(other && other != pocket)
 						if(on_table || kind == ROOM_CELL_TABLE)
 							pocket.link_with(other)

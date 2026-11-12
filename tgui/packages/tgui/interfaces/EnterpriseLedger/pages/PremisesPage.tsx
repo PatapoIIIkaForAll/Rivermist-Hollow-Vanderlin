@@ -20,6 +20,8 @@ const HOVER_DELAY = 250;
 const HOVER_BUDGET = 40;
 const HOVER_BUDGET_WINDOW = 60000;
 const ICON_PIXELS = 32;
+const FIT_DELAY = 250;
+const FIT_EPSILON = 0.001;
 
 const useHoverSender = (send: (id: number) => void) => {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -182,20 +184,21 @@ const Legend = (props: { locale: Locale }) => {
 type MapViewProps = {
   mapId: string;
   frame: number[] | null;
-  scale: number;
+  onFit: (fit: number) => void;
 };
 
 const MapView = (props: MapViewProps) => {
-  const { mapId, frame, scale } = props;
+  const { mapId, frame, onFit } = props;
   const box = useRef<HTMLDivElement>(null);
   const frameWidth = frame?.[0] || 0;
   const frameHeight = frame?.[1] || 0;
 
   useEffect(() => {
-    const apply = () => {
+    let sent = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const report = () => {
       const rect = box.current?.getBoundingClientRect();
-      if (!rect || !frameWidth || !frameHeight || scale <= 1) {
-        Byond.winset(mapId, { zoom: 0, 'zoom-mode': 'normal' });
+      if (!rect || !frameWidth || !frameHeight) {
         return;
       }
       const ratio = window.devicePixelRatio || 1;
@@ -203,15 +206,22 @@ const MapView = (props: MapViewProps) => {
         (rect.width * ratio) / (frameWidth * ICON_PIXELS),
         (rect.height * ratio) / (frameHeight * ICON_PIXELS),
       );
-      Byond.winset(mapId, {
-        zoom: fit > 0 ? fit * scale : 0,
-        'zoom-mode': 'distort',
-      });
+      if (fit > 0 && Math.abs(fit - sent) > FIT_EPSILON) {
+        sent = fit;
+        onFit(fit);
+      }
     };
-    apply();
-    window.addEventListener('resize', apply);
-    return () => window.removeEventListener('resize', apply);
-  }, [mapId, scale, frameWidth, frameHeight]);
+    const onResize = () => {
+      clearTimeout(timer);
+      timer = setTimeout(report, FIT_DELAY);
+    };
+    report();
+    window.addEventListener('resize', onResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [mapId, frameWidth, frameHeight]);
 
   return (
     <div ref={box} style={{ width: '100%', height: '100%' }}>
@@ -294,7 +304,7 @@ export const PremisesPage = (props: PageProps) => {
                   key={data.map}
                   mapId={data.map}
                   frame={data.frame}
-                  scale={data.map_scale || 1}
+                  onFit={(fit) => act('map_fit', { fit })}
                 />
               )}
             </Stack.Item>
