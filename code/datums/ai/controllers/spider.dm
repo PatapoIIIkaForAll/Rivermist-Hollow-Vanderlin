@@ -6,7 +6,7 @@
 	horny_pref_family_flag = HORNY_MOB_TYPE_SPIDERS
 
 	blackboard = list(
-		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic()
+		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic/spider()
 	)
 
 	idle_behavior = /datum/idle_behavior/idle_random_walk
@@ -26,7 +26,7 @@
 	planning_subtrees = build_spider_subtrees()
 	return ..()
 
-/// The kind's lead, the shared habits, its attacks, melee, food, then its tail.
+/// The kind's lead, the shared habits, its attacks, melee, leaving cocoons, food, then its tail.
 /datum/ai_controller/spider_base/proc/build_spider_subtrees()
 	var/list/subtrees = list()
 	if(lead_subtrees)
@@ -44,6 +44,8 @@
 	if(attack_subtrees)
 		subtrees += attack_subtrees
 	subtrees += /datum/ai_planning_subtree/basic_melee_attack_subtree/agile
+	// Nothing better to do: walk away from an occupied cocoon before foraging.
+	subtrees += /datum/ai_planning_subtree/spider_disperse
 	subtrees += food_finder
 	if(tail_subtrees)
 		subtrees += tail_subtrees
@@ -56,7 +58,7 @@
 		BB_HOME_PATH = /obj/structure/spider/nest,
 		BB_TARGET_HELD_ITEM = /obj/item/reagent_containers/food/snacks/meat,
 
-		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic/allow_items/not_holding_item(),
+		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic/allow_items/not_holding_item/spider(),
 		BB_PET_TARGETING_DATUM = new /datum/targetting_datum/basic/not_friends(),
 	)
 
@@ -73,3 +75,18 @@
 		/datum/ai_planning_subtree/find_valid_home,
 		/datum/ai_planning_subtree/enter_exit_home,
 	)
+
+/// Spiders leave a cocooned victim, and one who just got out, alone.
+/datum/targetting_datum/basic/spider
+
+/datum/targetting_datum/basic/spider/can_horny(mob/living/living_mob, atom/the_target)
+	if(spider_hunt_spares(the_target))
+		return FALSE
+	return ..()
+
+/datum/targetting_datum/basic/allow_items/not_holding_item/spider
+
+/datum/targetting_datum/basic/allow_items/not_holding_item/spider/can_horny(mob/living/living_mob, atom/the_target)
+	if(spider_hunt_spares(the_target))
+		return FALSE
+	return ..()

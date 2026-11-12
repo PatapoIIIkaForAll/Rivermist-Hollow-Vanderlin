@@ -208,6 +208,7 @@
 /obj/item/clothing/shoes/courtphysician/female
 	name = "sanguine heels"
 	desc = "Leather heels, the solemn tap of these bears grim news, or salvation."
+	heeled = TRUE
 	icon_state = "docheels"
 	item_state = "docheels"
 	icon = 'icons/roguetown/clothing/courtphys.dmi'

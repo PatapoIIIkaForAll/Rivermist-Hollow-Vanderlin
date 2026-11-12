@@ -1591,6 +1591,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>I don't want to harm [target]!</span>")
 		return FALSE
+	if(user.spares_ally(target, TRUE))
+		return FALSE
 	if(target.check_block())
 		target.visible_message("<span class='warning'>[target] blocks [user]'s attack!</span>", \
 						"<span class='danger'>I block [user]'s attack!</span>", "<span class='hear'>I hear a swoosh!</span>", COMBAT_MESSAGE_RANGE, user)
@@ -1826,6 +1828,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		return
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>I don't want to harm [target]!</span>")
+		return FALSE
+	if(user.spares_ally(target, TRUE))
 		return FALSE
 	if(HAS_TRAIT(user, TRAIT_FLOORED))
 		return FALSE

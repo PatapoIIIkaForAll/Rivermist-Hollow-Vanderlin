@@ -55,6 +55,13 @@
 		keys_held.Cut(1,2)
 
 	keys_held[_key] = TRUE
+	// Consume rotation keys while posing; keyLoop repeats them while held.
+	if(mob.is_pixel_shifting())
+		var/rotation_angle = pixel_rotation_key_angle(_key)
+		if(rotation_angle)
+			step_pixel_rotation(rotation_angle)
+			return
+
 	var/movement = movement_keys[_key]
 	if(!(next_move_dir_sub & movement) && !keys_held["Ctrl"])
 		next_move_dir_add |= movement
@@ -102,7 +109,7 @@
 
 	keys_held -= _key
 	var/movement = movement_keys[_key]
-	if(!(next_move_dir_add & movement))
+	if(!(next_move_dir_add & movement) && !(mob?.is_pixel_shifting() && pixel_rotation_key_angle(_key)))
 		next_move_dir_sub |= movement
 
 	var/list/click_data

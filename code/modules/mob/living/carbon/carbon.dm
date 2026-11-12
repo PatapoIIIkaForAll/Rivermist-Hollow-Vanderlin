@@ -1345,15 +1345,29 @@
 	. = ..()
 	if(!.)
 		return
-	if(mouth?.muteinmouth)
+	if(is_speech_muffled())
 		return FALSE
-	if(mouth_blocked)
-		return FALSE
-	for(var/obj/item/grabbing/grab in grabbedby)
-		if(grab.sublimb_grabbed == BODY_ZONE_PRECISE_MOUTH)
-			return FALSE
 	if(istype(loc, /turf/open/water) && body_position == LYING_DOWN)
 		return FALSE
+
+/mob/living/carbon/can_voice_words()
+	. = ..()
+	if(!.)
+		return
+	if(istype(loc, /turf/open/water) && body_position == LYING_DOWN)
+		return FALSE
+	// A missing tongue silences only bodies that are built with one.
+	var/list/species_organs = dna?.species?.organs
+	if(species_organs && species_organs[ORGAN_SLOT_TONGUE] && !getorganslot(ORGAN_SLOT_TONGUE))
+		return FALSE
+
+/mob/living/carbon/is_speech_muffled()
+	if(is_muzzled() || mouth?.muteinmouth || mouth_blocked)
+		return TRUE
+	for(var/obj/item/grabbing/grab in grabbedby)
+		if(grab.sublimb_grabbed == BODY_ZONE_PRECISE_MOUTH)
+			return TRUE
+	return FALSE
 
 /mob/living/carbon/proc/try_skin_burn(reaction_volume)
 	var/list/covered_zones = get_covered_body_zones()

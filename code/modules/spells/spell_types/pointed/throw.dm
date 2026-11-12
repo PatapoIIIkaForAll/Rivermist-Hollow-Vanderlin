@@ -43,6 +43,14 @@
 
 	return TRUE
 
+/datum/action/cooldown/spell/throw_target/is_hostile_to(atom/cast_on)
+	return TRUE
+
+/datum/action/cooldown/spell/throw_target/before_cast(atom/cast_on)
+	. = ..()
+	if(owner?.spares_ally(owner.pulling, TRUE))
+		return . | SPELL_CANCEL_CAST
+
 /datum/action/cooldown/spell/throw_target/cast(atom/target_atom)
 	. = ..()
 	owner.face_atom(target_atom)
@@ -55,6 +63,8 @@
 	if(user.body_position == LYING_DOWN || HAS_TRAIT(owner, TRAIT_IMMOBILIZED))
 		return FALSE
 
+	if(owner?.spares_ally(owner.pulling))
+		return FALSE
 	if(QDELETED(owner.pulling) || !isliving(owner.pulling))
 		return FALSE
 
@@ -81,7 +91,7 @@
 	animate(owner, pixel_x = base_x, pixel_y = base_y, time = 0.2 SECONDS)
 
 /datum/action/cooldown/spell/throw_target/proc/do_throw(atom/target_atom, mob/living/victim)
-	if(!victim || QDELETED(victim))
+	if(!victim || QDELETED(victim) || owner?.spares_ally(victim))
 		return
 
 	var/turf/target_turf = get_turf(target_atom)
@@ -104,7 +114,7 @@
 		span_warning("You hurl [victim] at [target_atom]!"))
 
 /datum/action/cooldown/spell/throw_target/proc/throw_impact(mob/living/victim)
-	if(!victim || QDELETED(victim))
+	if(!victim || QDELETED(victim) || owner?.spares_ally(victim))
 		return
 
 	victim.adjustBruteLoss(15, damage_type = BCLASS_BLUNT)
@@ -119,7 +129,7 @@
 
 	var/turf/landing_turf = get_turf(victim)
 	for(var/mob/living/bystander in landing_turf)
-		if(bystander == victim)
+		if(bystander == victim || owner?.spares_ally(bystander))
 			continue
 
 		bystander.adjustBruteLoss(10, damage_type = BCLASS_BLUNT)

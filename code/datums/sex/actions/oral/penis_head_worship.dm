@@ -51,7 +51,7 @@
 			target_arousal = 1.8
 			target_pain = 0.4
 			target_orgasm = 1.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "roughly sucks and grinds [user.p_their()] tongue over"
 			target_arousal = 2
 			target_pain = 1.5

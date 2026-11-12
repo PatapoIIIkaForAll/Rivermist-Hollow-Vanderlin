@@ -162,6 +162,8 @@
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("I don't want to harm [src]!"))
 		return TRUE
+	if(user.spares_ally(src, TRUE))
+		return TRUE
 	var/datum/intent/bite/bitten = new()
 	if(checkdefense(bitten, user))
 		return TRUE

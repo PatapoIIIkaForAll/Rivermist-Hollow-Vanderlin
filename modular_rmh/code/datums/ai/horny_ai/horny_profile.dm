@@ -179,7 +179,7 @@ GLOBAL_LIST_EMPTY(horny_family_profiles)
 
 // --- Acts ----------------------------------------------------------------------------------------
 
-/// Whether [hunter] is worked up enough to lay: eggs stored, a willing host, and arousal from ordinary acts first.
+/// Whether [hunter] is ready to lay: eggs stored, a willing host with room, and arousal from ordinary acts first.
 /proc/horny_egg_lay_ready(mob/living/hunter, mob/living/target)
 	var/datum/component/ovipositor/ovipositor = get_working_ovipositor(hunter)
 	if(!ovipositor || ovipositor.eggs_stored <= 0)
@@ -187,11 +187,21 @@ GLOBAL_LIST_EMPTY(horny_family_profiles)
 	if(!target_allows_mob_erp_action(hunter, target, /datum/erp_preference/boolean/allow_mob_oviposition))
 		return FALSE
 	// A victim wrapped in a cocoon is held and warmed by the silk; the lay needs no warm-up act.
-	if(istype(target.loc, /obj/structure/spider/cocoon))
-		return TRUE
-	var/list/arousal_data = list()
-	SEND_SIGNAL(hunter, COMSIG_SEX_GET_AROUSAL, arousal_data)
-	return (arousal_data["arousal"] || 0) >= HORNY_EGG_LAY_AROUSAL
+	if(!istype(target.loc, /obj/structure/spider/cocoon))
+		var/list/arousal_data = list()
+		SEND_SIGNAL(hunter, COMSIG_SEX_GET_AROUSAL, arousal_data)
+		if((arousal_data["arousal"] || 0) < HORNY_EGG_LAY_AROUSAL)
+			return FALSE
+	// A full host keeps the hunter in its ordinary act.
+	for(var/slot in list(ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS, BODY_ZONE_PRECISE_MOUTH))
+		if(horny_egg_hole_has_room(hunter, target, slot))
+			return TRUE
+	return FALSE
+
+/// TRUE when [target]'s [slot] hole can take one of [hunter]'s eggs right now.
+/proc/horny_egg_hole_has_room(mob/living/hunter, mob/living/target, slot)
+	var/datum/component/ovipositor/ovipositor = get_working_ovipositor(hunter)
+	return ovipositor?.has_room_for_egg(ovipositor.get_receiver_for_hole(target, slot))
 
 /// A hole slick enough to take eggs; the ordinary act before this is the lube-up.
 /proc/horny_egg_hole_ready(mob/living/target, slot)
@@ -200,20 +210,21 @@ GLOBAL_LIST_EMPTY(horny_family_profiles)
 		return TRUE
 	return hole.get_orifice().get_dryness_multiplier() < ORIFICE_DRY_WARNING_MULT
 
-/// Egg acts for a worked-up hunter; TRUE when it added any, and then nothing else is on the table.
+/// Egg acts into holes with room; TRUE when it added any, and then nothing else is on the table.
 /datum/horny_family_profile/proc/add_egg_act_choices(list/weighted_actions, mob/living/hunter, mob/living/target)
 	if(!horny_egg_lay_ready(hunter, target))
 		return FALSE
 	var/added = FALSE
-	if(target.getorganslot(ORGAN_SLOT_VAGINA) && npc_penetration_can_fit(hunter, target, ORGAN_SLOT_VAGINA) && horny_egg_hole_ready(target, ORGAN_SLOT_VAGINA))
+	if(target.getorganslot(ORGAN_SLOT_VAGINA) && npc_penetration_can_fit(hunter, target, ORGAN_SLOT_VAGINA) && horny_egg_hole_ready(target, ORGAN_SLOT_VAGINA) && horny_egg_hole_has_room(hunter, target, ORGAN_SLOT_VAGINA))
 		add_weighted_horny_ai_choice(weighted_actions, /datum/sex_action/npc/npc_vaginal_sex/lay_eggs, 4)
 		added = TRUE
-	if(npc_penetration_can_fit(hunter, target, ORGAN_SLOT_ANUS) && horny_egg_hole_ready(target, ORGAN_SLOT_ANUS))
+	if(npc_penetration_can_fit(hunter, target, ORGAN_SLOT_ANUS) && horny_egg_hole_ready(target, ORGAN_SLOT_ANUS) && horny_egg_hole_has_room(hunter, target, ORGAN_SLOT_ANUS))
 		add_weighted_horny_ai_choice(weighted_actions, /datum/sex_action/npc/npc_anal_sex/lay_eggs, 3)
 		added = TRUE
-	if(!added)
+	if(!added && horny_egg_hole_has_room(hunter, target, BODY_ZONE_PRECISE_MOUTH))
 		add_weighted_horny_ai_choice(weighted_actions, /datum/sex_action/npc/npc_throat_sex/lay_eggs, 2)
-	return TRUE
+		added = TRUE
+	return added
 
 /// Adds this family's act types to a weighted list, heavier entries more likely.
 /datum/horny_family_profile/proc/add_act_choices(list/weighted_actions, mob/living/hunter, mob/living/target)
@@ -738,6 +749,10 @@ GLOBAL_LIST_EMPTY(horny_family_profiles)
 	)
 
 /datum/horny_family_profile/tentacles/add_act_choices(list/weighted_actions, mob/living/hunter, mob/living/target)
+	// A burrow tentacle's kind may pick its own acts; only an ovipositor kind reaches the egg acts.
+	var/datum/tentacle_kind/kind = get_tentacle_kind_of(hunter)
+	if(kind?.add_act_choices(src, weighted_actions, hunter, target))
+		return
 	if(add_egg_act_choices(weighted_actions, hunter, target))
 		return
 	if(hunter.getorganslot(ORGAN_SLOT_PENIS))
@@ -1105,7 +1120,7 @@ GLOBAL_LIST_EMPTY(horny_family_profiles)
 	)
 
 /datum/horny_family_profile/tentacles/get_act_words(mob/living/user, mob/living/target)
-	return list(
+	var/list/words = list(
 		"part" = "slick tentacle",
 		"article" = "a",
 		"their" = "its",
@@ -1135,6 +1150,10 @@ GLOBAL_LIST_EMPTY(horny_family_profiles)
 			"body_rub" = "slime dragging on skin",
 		),
 	)
+	// Burrow tentacle kinds swap in words of their own: feelers, beads, a pointed head.
+	var/datum/tentacle_kind/kind = get_tentacle_kind_of(user)
+	kind?.adjust_act_words(words, user, target)
+	return words
 
 /datum/horny_family_profile/maneaters/get_act_words(mob/living/user, mob/living/target)
 	return list(

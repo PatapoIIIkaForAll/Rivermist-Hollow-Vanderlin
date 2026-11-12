@@ -421,6 +421,8 @@
 			return 1.3
 		if(SEX_FORCE_EXTREME)
 			return 1.6
+		if(SEX_FORCE_UNRELENTING)
+			return 1.9
 	return 1
 
 /// Speed scaling for gape strain, shared with the pain table.
@@ -432,6 +434,8 @@
 			return SEX_SPEED_PAIN_MULT_HIGH
 		if(SEX_SPEED_EXTREME)
 			return SEX_SPEED_PAIN_MULT_EXTREME
+		if(SEX_SPEED_UNRELENTING)
+			return SEX_SPEED_PAIN_MULT_UNRELENTING
 	return SEX_SPEED_PAIN_MULT_MID
 
 /// One adaptation step toward [girth]; returns the new current girth.

@@ -122,11 +122,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	return "<span data-component=\"RollTooltip\" data-html=\"[html_encode(tooltip)]\" data-dice=\"[html_encode(jointext(throws, "|"))]\" data-labels=\"[html_encode(jointext(safe_labels, "|"))]\" data-sides=\"[sides]\" data-outcome=\"[outcome_class]\" data-outcomes=\"[jointext(outcome_classes, "|")]\" data-stats=\"[html_encode(jointext(throw_stats || list(), "|"))]\" data-footers=\"[html_encode(jointext(safe_footers, "|"))]\" class=\"tooltip\">[roll_outcome_span(outcome, "<b>[label]</b>", critical)]</span>"
 
 /mob/living/proc/announce_roll(chat_message, runechat, show_name = TRUE)
-	var/styled_name = "<b>[src]</b>"
-	var/mob/living/carbon/human/human = ishuman(src) ? src : null
-	if(human?.voice_color)
-		styled_name = "<span style='color:#[human.voice_color];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[src]</b></span>"
-	var/message = show_name ? "[styled_name] [chat_message]" : chat_message
+	var/message = show_name ? "[get_emote_name_html()] [chat_message]" : chat_message
 
 	log_message(chat_message, LOG_EMOTE)
 	var/turf/our_turf = get_turf(src)
@@ -436,7 +432,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_strength_roll()
 	set name = "Roll Strength"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_STR, intentional = TRUE)
 
@@ -472,7 +468,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_perception_roll()
 	set name = "Roll Perception"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_PER, intentional = TRUE)
 
@@ -505,7 +501,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_intelligence_roll()
 	set name = "Roll Intelligence"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_INT, intentional = TRUE)
 
@@ -540,7 +536,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
 	set name = "Roll Constitution"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_CON, intentional = TRUE)
 
@@ -573,7 +569,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_endurance_roll()
 	set name = "Roll Endurance"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_END, intentional = TRUE)
 
@@ -610,7 +606,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_speed_roll()
 	set name = "Roll Speed"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_SPD, intentional = TRUE)
 
@@ -642,7 +638,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_fortune_roll()
 	set name = "Roll Fortune"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(STATKEY_LCK, intentional = TRUE)
 
@@ -682,7 +678,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /mob/living/carbon/human/verb/emote_charisma_roll()
 	set name = "Roll Charisma"
-	set category = "Emotes"
+	set category = "Emotes.Rolling"
 
 	emote(ROLL_STAT_CHARISMA, intentional = TRUE)
 

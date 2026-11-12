@@ -189,134 +189,65 @@
 	if(linked_client) // So make sure we don't go further than this without one I guess
 		browser_slop()
 
+/// Wraps body markup in the page shell of the class picker windows.
+/datum/class_select_handler/proc/menu_page(body_html)
+	return {"<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='UTF-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<link rel='stylesheet' type='text/css' href='[SSassets.transport.get_asset_url("role_pick_menu.css")]'>
+</head>
+<body>
+[body_html]
+</body>
+</html>"}
+
+/datum/class_select_handler/proc/class_pick_entry(datum/job/advclass/class_datum, href_params, extra_class = "")
+	return "<a class='rp-pick [extra_class]' href='byond://?src=\ref[src];[href_params]'><span class='rp-pick-name'>[class_datum.title]</span></a>"
+
 /datum/class_select_handler/proc/browser_slop()
 	if(!linked_client)
 		return
-	SSassets.transport.send_assets(linked_client, list("try4_border.png", "try4.png", "slop_menustyle2.css"))
-	//Opening tags and empty head
-	var/data = {"
-	<!DOCTYPE html>
-	<html lang='en'>
-	<head>
-		<meta charset='UTF-8'>
-		<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'/>
-		<meta http-equiv='Content-Type' content='text/html; <meta charset='UTF-8'>'/>
-		<style>
-			@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
-			@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
-			@import url('https://fonts.googleapis.com/css2?family=Charm:wght@700&display=swap');
-			body {
-				background-color: rgb(31, 20, 24);
-				background:
-					url('[SSassets.transport.get_asset_url("try4_border.png")]'),
-					url('[SSassets.transport.get_asset_url("try4.png")]');
-				background-repeat: no-repeat;
-				background-attachment: fixed;
-				background-size: 100% 100%;
-			}
-		</style>
-		<link rel='stylesheet' type='text/css' href='[SSassets.transport.get_asset_url("slop_menustyle2.css")]'>
-	</head>
-	<body>
-		<div id='top_handwriting'> The stars align... </div>
-		<div id='class_select_box_div'>
-	"}
+	SSassets.transport.send_assets(linked_client, list("role_pick_menu.css"))
+	var/list/entries = list()
+	for(var/datum/job/advclass/datums in rolled_classes)
+		if(showing_combat_classes && !(CTAG_PILGRIM in datums.category_tags))
+			continue
+		entries += class_pick_entry(datums, "class_selected=1;selected_class=\ref[datums];")
 
+	var/list/special_entries = list()
+	for(var/datum/job/advclass/datums in special_session_queue)
+		special_entries += class_pick_entry(datums, "special_selected=1;selected_special=\ref[datums];", "rp-special")
 
-	if(!showing_combat_classes)
-		for(var/datum/job/advclass/datums in rolled_classes)
-			var/plus_str = ""
-			data += {"
-			<div class='class_bar_div'>
-				<a class='vagrant' href='byond://?src=\ref[src];class_selected=1;selected_class=\ref[datums];'>
-					<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>
-					[datums.title]
-					<span id='green_plussa'>[plus_str]</span>
-					<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>
-				</a>
-			</div>
-	"}
+	var/list/body = list()
+	body += "<div class='rp'>"
+	body += "<div class='rp-frame rp-head'><div class='rp-title'>Choose your class</div><div class='rp-sub'>Click a class to read about it.</div></div>"
+	body += "<div class='rp-frame rp-body'><div class='rp-list'>"
+	body += entries
+	if(length(special_entries))
+		body += "<div class='rp-ornament'>Special</div>"
+		body += special_entries
+	if(!length(entries) && !length(special_entries))
+		body += "<div class='rp-empty'>No class is open to you.</div>"
+	body += "</div></div>"
+	body += "</div>"
 
-	if(special_session_queue && special_session_queue.len)
-		for(var/datum/job/advclass/datums in special_session_queue)
-			data += {"
-			<div class='class_bar_div'>
-				<a class='vagrant' href='byond://?src=\ref[src];special_selected=1;selected_special=\ref[datums];'>
-					<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>
-					[datums.title]
-					<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>
-				</a>
-			</div>
-	"}
-
-	if(showing_combat_classes)
-		for(var/datum/job/advclass/datums in rolled_classes)
-			if(!(CTAG_PILGRIM in datums.category_tags))
-				continue
-			var/plus_str = ""
-			data += {"
-			<div class='class_bar_div'>
-				<a class='vagrant' href='byond://?src=\ref[src];class_selected=1;selected_class=\ref[datums];'>
-					<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>
-					[datums.title]
-					<span id='green_plussa'>[plus_str]</span>
-					<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>
-				</a>
-			</div>
-	"}
-
-	data += {"
-		</div> <!-- end of class_select_box_div -->
-	</body>
-	</html>
-	"}
-
-
-	linked_client << browse(data, "window=class_handler_main;size=330x430;can_close=0;can_minimize=0;can_maximize=0;can_resize=0;titlebar=0;border=0")
+	linked_client << browse(menu_page(body.Join()), "window=class_handler_main;size=360x480;can_close=0;can_minimize=0;can_maximize=0;can_resize=0;titlebar=0;border=0")
 
 /datum/class_select_handler/proc/class_select_slop()
-	SSassets.transport.send_assets(linked_client, list("try4_border.png", "try4.png", "slop_menustyle2.css"))
-	var/data = {"
-	<!DOCTYPE html> <!-- Add doctype to ensure proper rendering -->
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta title="viewport" content="width=device-width, initial-scale=1.0">
-		<style>
-			@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
-			@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
-			@import url('https://fonts.googleapis.com/css2?family=Charm&display=swap');
-			body {
-				background-color: rgb(31, 20, 24);
-				background:
-					url('[SSassets.transport.get_asset_url("try4_border.png")]'),
-					url('[SSassets.transport.get_asset_url("try4.png")]');
-				background-repeat: no-repeat;
-				background-attachment: fixed;
-				background-size: 100% 100%;
-			}
-		</style>
-		<link rel='stylesheet' type='text/css' href='[SSassets.transport.get_asset_url("slop_menustyle2.css")]'>
-	</head>
-	<body>
-		<div id="button_div">
-			<span class="title_shit">Class Name:</span>
-			<span class="post_title_shit">[cur_picked_class.title]</span><br>
-			<span class="title_shit">Description:</span>
-			<span class="post_title_shit">[cur_picked_class.tutorial]</span>
-		</div>
+	SSassets.transport.send_assets(linked_client, list("role_pick_menu.css"))
+	var/list/body = list()
+	body += "<div class='rp'>"
+	body += "<div class='rp-frame rp-head'><div class='rp-title'>[cur_picked_class.title]</div></div>"
+	body += "<div class='rp-frame rp-body'><div class='rp-desc'>[cur_picked_class.tutorial]</div></div>"
+	body += "<div class='rp-foot'>"
+	body += "<a class='rp-main' href='byond://?src=\ref[src];yes_to_class_select=1;special_class=0;'>Take this class</a>"
+	body += "<a class='rp-back' href='byond://?src=\ref[src];no_to_class_select=1'>Back to the list</a>"
+	body += "</div>"
+	body += "</div>"
 
-		<div id='button_div'>
-			<a class='class_desc_YES_LINK' href='byond://?src=\ref[src];yes_to_class_select=1;special_class=0;'>This is my background</a><br>
-			<a class='bottom_buttons' href='byond://?src=\ref[src];no_to_class_select=1'>I reject this background</a>
-		</div>
-	</body>
-	</html>
-
-	"}
-
-	linked_client << browse(data, "window=class_select_yea;size=610x300;can_close=0;can_minimize=0;can_maximize=0;can_resize=0;titlebar=0;border=0")
+	linked_client << browse(menu_page(body.Join()), "window=class_select_yea;size=560x420;can_close=0;can_minimize=0;can_maximize=0;can_resize=0;titlebar=0;border=0")
 
 /datum/class_select_handler/Topic(href, href_list)
 	. = ..()

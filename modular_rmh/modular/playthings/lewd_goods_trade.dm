@@ -343,6 +343,17 @@
 	cost = 60
 	contains = /obj/item/clothing/undies/chastity/intersex
 
+// Harnesses spawn their buckle key beside them, so the key rides in the same crate.
+/datum/supply_pack/luxury/intimate/strapon_harness
+	name = "Strap-on Harness"
+	cost = 20
+	contains = /obj/item/strapon_harness
+
+/datum/supply_pack/luxury/intimate/strapon_harness_double
+	name = "Double-Ended Strap-on Harness"
+	cost = 30
+	contains = /obj/item/strapon_harness/double
+
 // ---- Boat traders ----
 
 // Packs are orderable everywhere; pools pick what boats carry, and every pack must sit in one.
@@ -413,6 +424,7 @@
 
 /datum/world_faction/zalad_traders/New()
 	uncommon_pool += list(
+		/datum/supply_pack/luxury/intimate/strapon_harness,
 		/datum/supply_pack/luxury/intimate/paddle,
 		/datum/supply_pack/luxury/intimate/flogger,
 		/datum/supply_pack/luxury/bondage/muzzle_brown,
@@ -422,6 +434,7 @@
 		/datum/supply_pack/luxury/bondage/shackles_brown,
 	)
 	rare_pool += list(
+		/datum/supply_pack/luxury/intimate/strapon_harness_double,
 		/datum/supply_pack/luxury/intimate/plug_gold,
 		/datum/supply_pack/luxury/intimate/beads_gold,
 		/datum/supply_pack/luxury/bondage/harnessgag_brown,
@@ -430,6 +443,7 @@
 	)
 	exotic_pool += list(
 		/datum/supply_pack/luxury/intimate/portal_set,
+		/datum/supply_pack/luxury/intimate/hypnosis_pendulum,
 		/datum/supply_pack/luxury/bondage/muzzle_black,
 		/datum/supply_pack/luxury/bondage/ballgag_black,
 		/datum/supply_pack/luxury/bondage/ringgag_black,

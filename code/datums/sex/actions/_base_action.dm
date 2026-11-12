@@ -158,6 +158,8 @@
 	var/list/uses_user_organs
 	/// Target organ slots this action works on; see uses_user_organs.
 	var/list/uses_target_organs
+	/// Panel refusal text set when worn armor failed a reach check, or null.
+	var/tmp/armor_refusal
 
 /datum/sex_action/Destroy()
 	if(action_user)
@@ -499,6 +501,8 @@
 			return 2.25
 		if(SEX_SPEED_EXTREME)
 			return 3
+		if(SEX_SPEED_UNRELENTING)
+			return 3.75
 	return 1.5
 
 /datum/sex_action/proc/get_stamina_cost_multiplier()
@@ -511,6 +515,8 @@
 			return 2.0
 		if(SEX_FORCE_EXTREME)
 			return 2.5
+		if(SEX_FORCE_UNRELENTING)
+			return 3.0
 	return 1.5
 
 /**
@@ -611,10 +617,21 @@
 
 /// Brutal handling can snag the receiver's bare stockings.
 /datum/sex_action/proc/strain_legwear(mob/living/receiver)
-	if(force < SEX_FORCE_EXTREME || !ishuman(receiver) || !prob(SEX_LEGWEAR_SNAG_CHANCE))
+	if(!ishuman(receiver) || !prob(get_legwear_snag_chance()))
 		return
 	var/mob/living/carbon/human/human_receiver = receiver
-	human_receiver.get_exposed_legwear()?.snag(SEX_LEGWEAR_SNAG_DAMAGE, SLASH)
+	human_receiver.get_exposed_legwear()?.snag(get_legwear_snag_damage(), SLASH)
+
+/// Per-cycle percent chance that this force snags bare stockings.
+/datum/sex_action/proc/get_legwear_snag_chance()
+	if(force >= SEX_FORCE_UNRELENTING)
+		return SEX_LEGWEAR_SNAG_CHANCE_UNRELENTING
+	if(force >= SEX_FORCE_EXTREME)
+		return SEX_LEGWEAR_SNAG_CHANCE
+	return 0
+
+/datum/sex_action/proc/get_legwear_snag_damage()
+	return force >= SEX_FORCE_UNRELENTING ? SEX_LEGWEAR_SNAG_DAMAGE_UNRELENTING : SEX_LEGWEAR_SNAG_DAMAGE
 
 /datum/sex_action/proc/stop_runtime()
 	scene?.stop_action(src)
@@ -672,6 +689,8 @@
 			oxyloss_multiplier = 0.5
 		if(SEX_FORCE_EXTREME)
 			oxyloss_multiplier = 1.0
+		if(SEX_FORCE_UNRELENTING)
+			oxyloss_multiplier = 1.5
 	oxyloss_amt *= oxyloss_multiplier
 	if(oxyloss_amt <= 0 || affected_target.getOxyLoss() > 30)
 		return
@@ -685,6 +704,10 @@
 /datum/sex_action/proc/considered_limp(mob/living/limper)
 	if(QDELETED(limper))
 		return TRUE
+	// A strapon toy is always hard.
+	var/obj/item/organ/genitals/penis/penis = limper.getorganslot(ORGAN_SLOT_PENIS)
+	if(penis?.is_false_organ())
+		return FALSE
 	var/list/arousal_data = list()
 	SEND_SIGNAL(limper, COMSIG_SEX_GET_AROUSAL, arousal_data)
 	return arousal_data["arousal"] < VISIBLE_AROUSAL_THRESHOLD
@@ -699,6 +722,8 @@
 			return pick(list("roughly", "carelessly", "forcefully", "fervently", "fiercely"))
 		if(SEX_FORCE_EXTREME)
 			return pick(list("brutally", "violently", "relentlessly", "savagely", "mercilessly"))
+		if(SEX_FORCE_UNRELENTING)
+			return pick(list("unrelentingly", "ferociously", "furiously", "without pause", "without mercy"))
 
 /datum/sex_action/proc/spanify_force(string)
 	string = add_through_clothes_suffix(string)
@@ -709,14 +734,14 @@
 			return "<span class='love_mid'>[string]</span>"
 		if(SEX_FORCE_HIGH)
 			return "<span class='love_high'>[string]</span>"
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			return "<span class='love_extreme'>[string]</span>"
 
 /datum/sex_action/proc/get_force_sound()
 	switch(force)
 		if(SEX_FORCE_LOW, SEX_FORCE_MID)
 			return pick(SEX_SOUNDS_SLOW)
-		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
+		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			return pick(SEX_SOUNDS_HARD)
 
 /// TRUE when this action may be used on yourself even though it normally needs a partner.
@@ -799,6 +824,10 @@
 		return FALSE
 	return SEND_SIGNAL(user, COMSIG_SEX_TRY_KNOT, target, force, src)
 
+/// Keeps the panel refusal line for armor on [target] that stopped [actor].
+/datum/sex_action/proc/note_armor_refusal(mob/living/target, mob/living/actor)
+	armor_refusal = target == actor ? "My armor is in the way." : "[target]'s armor is in the way."
+
 /datum/sex_action/proc/check_location_accessible(mob/living/user, mob/living/target, location = BODY_ZONE_CHEST, grabs = TRUE, skipundies = TRUE)
 	var/obj/item/bodypart/bodypart = target.get_bodypart(location)
 	var/self_target = FALSE
@@ -818,11 +847,17 @@
 			return FALSE
 
 	// The holes window asks the same question, so the garment rule lives on the mob.
-	if(target.get_sex_covering_garment(location))
+	var/mob/living/actor = action_user || user
+	if(target.get_sex_covering_garment(location, actor))
+		note_armor_refusal(target, actor)
 		return FALSE
 
 	if(location == BODY_ZONE_PRECISE_MOUTH)
-		return target.has_mouth() && target.mouth_is_free()
+		if(target.mouth_is_free(actor))
+			return TRUE
+		if(target.mouth_is_free(actor, ignore_armor = TRUE))
+			note_armor_refusal(target, actor)
+		return FALSE
 
 	if(!bodypart)
 		if(iscarbon(target))

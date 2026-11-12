@@ -102,6 +102,9 @@
 		return FALSE
 	if(target.buckled || !can_see(hunter, target, HORNY_LASH_RANGE))
 		return FALSE
+	// No tug of war: a held target, or one a packmate works on next to it, stays put.
+	if(horny_hold_is_spoken_for(hunter, target) || horny_packmate_works_on(hunter, target))
+		return FALSE
 	controller.set_blackboard_key(BB_HORNY_LASH_COOLDOWN, world.time + HORNY_LASH_COOLDOWN)
 	hunter.face_atom(target)
 	horny_jolt(hunter, target)
@@ -113,6 +116,18 @@
 	if(closer && !closer.density && step_towards(target, hunter))
 		target.felt_visible_message(span_danger(profile.get_lash_message(hunter, target)), null, span_hear("I hear a wet lash and a stumble."))
 	return TRUE
+
+/// TRUE when a packmate next to the target holds it or has it as its horny or combat target.
+/proc/horny_packmate_works_on(mob/living/hunter, mob/living/target)
+	for(var/mob/living/mate in orange(1, target))
+		if(mate == hunter || mate.stat == DEAD || !hunter.kidnap_is_packmate(mate))
+			continue
+		if(mate.pulling == target)
+			return TRUE
+		var/datum/ai_controller/mate_controller = mate.ai_controller
+		if(mate_controller?.blackboard[BB_BASIC_MOB_CURRENT_HORNY_TARGET] == target || mate_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET] == target)
+			return TRUE
+	return FALSE
 
 /// Angered hunters throw their trap at a target they cannot reach; web spitters spit. TRUE when something flew.
 /proc/horny_throw_trap(mob/living/hunter, mob/living/target, datum/ai_controller/controller, datum/horny_family_profile/profile)

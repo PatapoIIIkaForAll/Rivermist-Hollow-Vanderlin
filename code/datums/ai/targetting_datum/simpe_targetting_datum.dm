@@ -354,6 +354,10 @@
 	// A captive who has steeled themselves (the "Refuse Advances" opt-out) is off-limits to horny mobs.
 	if(HAS_TRAIT(the_target, TRAIT_DEFEAT_REFUSE_ADVANCES))
 		return FALSE
+	// Someone just freed from a cocoon or a lair keeps their grace from every horny mob.
+	var/mob/living/spared = the_target
+	if(istype(spared) && world.time < spared.kidnap_protected_until)
+		return FALSE
 	if(issimple(living_mob))
 		var/mob/living/simple_animal/attacker = living_mob
 		if(attacker.binded == TRUE)

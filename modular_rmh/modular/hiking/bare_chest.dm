@@ -88,6 +88,8 @@
 	organ_visibility = null
 	var/mob/living/carbon/human/wearer = parent
 	if(istype(wearer) && !QDELETED(wearer))
+		// A torn top keeps the breasts shown after the emote lets go.
+		wearer.refresh_torn_top_exposure()
 		wearer.regenerate_icons()
 
 /datum/component/bared_chest/proc/on_release(datum/source)

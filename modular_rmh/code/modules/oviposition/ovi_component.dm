@@ -63,15 +63,19 @@
 /datum/component/ovipositor/proc/handle_life(seconds)
 	SIGNAL_HANDLER
 
+	// A full store grows nothing, so the egg after a lay starts from scratch.
+	if(eggs_stored >= get_max_stored_eggs())
+		if(egg_stage || COOLDOWN_FINISHED(src, egg_timer))
+			egg_stage = 0
+			COOLDOWN_START(src, egg_timer, get_egg_stage_time())
+		return
+
 	if(COOLDOWN_FINISHED(src, egg_timer))
 		egg_stage += 1
 		egg_stage = min(2, egg_stage)
 		COOLDOWN_START(src, egg_timer, get_egg_stage_time())
 
 	if(egg_stage == 2)
-		if(eggs_stored >= get_max_stored_eggs())
-			COOLDOWN_START(src, egg_timer, get_egg_stage_time())
-			return
 		var/obj/item/organ/genitals/penis/ovipositor/ovipositor = parent
 		if(ovipositor?.resource_dependent_yield)
 			var/cost = get_oviposition_nutrient_cost(ovipositor.ovi_egg_type, ovipositor.egg_scale, ovipositor.egg_traits, get_clutch_size())
@@ -95,6 +99,7 @@
 	stage_time *= get_oviposition_capacity_interval_multiplier(get_clutch_size())
 	stage_time *= sanitize_oviposition_scale(ovipositor.egg_scale)
 	stage_time *= get_oviposition_trait_interval_multiplier(ovipositor.egg_traits)
+	stage_time *= ovipositor.egg_stage_time_multiplier
 
 	if(ovipositor.resource_dependent_yield && carrier)
 		var/nutriment = carrier.get_reagent_amount(/datum/reagent/consumable/nutriment)
@@ -156,7 +161,7 @@
 				if(receiver_owner != carrier)
 					to_chat(carrier, span_warning("[receiver_owner]'s body is still recovering from too many recent births and rejects another implantation."))
 				return FALSE
-		if(rush_eggs(receiver, force))
+		if(rush_eggs(receiver, force, get_rush_cap(action)))
 			return TRUE
 
 	return lay_egg(get_turf(carrier))
@@ -262,7 +267,7 @@
 			)
 			if(receiver.owner != carrier)
 				to_chat(receiver.owner, span_love("[carrier] [third_person_action] my [host.get_oviposition_location_name()]!"))
-			if(started_growing)
+			if(started_growing == OVI_EGG_GROWTH_STARTED)
 				if(plants_maneater_seed)
 					to_chat(receiver.owner, span_love("The planted seed in my [host.get_oviposition_location_name()] immediately begins to grow."))
 				else
@@ -294,6 +299,21 @@
 	if(host_owner != carrier && !target_allows_mob_erp_action(carrier, host_owner, /datum/erp_preference/boolean/allow_mob_oviposition))
 		return "[host_owner] will not take my eggs."
 	return null
+
+/// TRUE when [receiver] has room for one more egg, by the same routing and fit a lay uses.
+/datum/component/ovipositor/proc/has_room_for_egg(obj/item/organ/receiver, force = FALSE)
+	if(!receiver?.owner || !receiver.supports_oviposition_pregnancy())
+		return FALSE
+	var/obj/item/oviposition_egg/egg = create_egg()
+	if(!egg)
+		return FALSE
+	var/obj/item/organ/host = receiver.get_oviposition_receiver(egg, force) || receiver
+	var/fit_result = SEND_SIGNAL(host, COMSIG_BODYSTORAGE_CHECK_FIT, egg, STORAGE_LAYER_DEEP, force)
+	qdel(egg)
+	switch(fit_result)
+		if(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_OK_OVERRIDE, INSERT_FEEDBACK_ALMOST_FULL)
+			return TRUE
+	return FALSE
 
 /// Lays one egg into [receiver] by the hole's own routing; the egg, or null with last_lay_reason set.
 /datum/component/ovipositor/proc/lay_one_egg(obj/item/organ/receiver, force = FALSE)
@@ -351,11 +371,17 @@
 	eggs_stored = max(0, eggs_stored - 1)
 	return egg
 
-/// The climax rush: up to a clutch into [receiver] at once. How many went in.
-/datum/component/ovipositor/proc/rush_eggs(obj/item/organ/receiver, force = FALSE)
+/// Most eggs a climax in [action] rushes: fewer once the act laid its cap.
+/datum/component/ovipositor/proc/get_rush_cap(datum/sex_action/action)
+	if(action?.eggs_laid_this_act >= LAY_EGG_ACT_CAP)
+		return LAY_EGG_RUSH_CAP_AFTER_CAP
+	return LAY_EGG_RUSH_CAP
+
+/// The climax rush: up to [cap] eggs of a clutch into [receiver] at once. How many went in.
+/datum/component/ovipositor/proc/rush_eggs(obj/item/organ/receiver, force = FALSE, cap = LAY_EGG_RUSH_CAP)
 	var/count = 0
 	var/share_sum = 0
-	var/clutch = min(eggs_stored, get_clutch_size())
+	var/clutch = min(eggs_stored, get_clutch_size(), cap)
 	for(var/i in 1 to clutch)
 		var/obj/item/oviposition_egg/egg = lay_one_egg(receiver, force)
 		if(!egg)

@@ -533,7 +533,7 @@
 	var/mob/living/aimed_mob = isliving(landing) ? landing : null
 	var/zone = aimed_mob ? aim.resolve_zone(aimed_mob, drift_steps) : null
 	var/obj/item/clothing/shoes/heels/heels = aim.get_worn_heels(aimed_mob, zone)
-	var/into_mouth = zone == PENIS_AIM_MOUTH && aimed_mob.mouth_is_free()
+	var/into_mouth = zone == PENIS_AIM_MOUTH && aimed_mob.mouth_is_free(cloth_blocks = TRUE)
 	if(zone == PENIS_AIM_MOUTH && !into_mouth)
 		zone = FLUID_COAT_FACE
 	var/whose = aimed_mob ? get_aim_whose(aimed_mob, is_follow_up ? climaxer : aimer) : null

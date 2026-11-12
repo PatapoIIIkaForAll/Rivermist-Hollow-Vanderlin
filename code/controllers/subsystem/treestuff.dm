@@ -7,6 +7,7 @@ SUBSYSTEM_DEF(treesetup)
 
 /datum/controller/subsystem/treesetup/Initialize(timeofday)
 	InitializeTrees()
+	InitializeRandomDungeonEntrances()
 	return ..()
 
 /datum/controller/subsystem/treesetup/proc/InitializeTrees()

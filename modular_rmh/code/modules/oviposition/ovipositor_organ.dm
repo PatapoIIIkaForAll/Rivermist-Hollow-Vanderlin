@@ -13,6 +13,8 @@
 	var/egg_scale = OVI_EGG_DEFAULT_SCALE
 	var/list/egg_traits = list()
 	var/resource_dependent_yield = FALSE
+	/// Scales the egg growth time; creatures grow eggs slower than players.
+	var/egg_stage_time_multiplier = 1
 
 /obj/item/organ/genitals/penis/ovipositor/Insert(mob/living/M, special, drop_if_replaced, new_zone = null)
 	. = ..()
@@ -110,12 +112,25 @@
 		component?.eggs_stored = clamp(round(stored), 0, component.get_max_stored_eggs())
 	return ovipositor
 
-/// Creatures spawn gravid: a spider carries most of a full store and rushes four at a climax.
+/// A creature's ovipositor: spawns gravid with a small store that regrows slower than a player's.
+/proc/ensure_creature_ovipositor(mob/living/owner, egg_type, clutch, capacity, stored)
+	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = ensure_typed_ovipositor(owner, egg_type, clutch, capacity, stored)
+	if(ovipositor)
+		ovipositor.egg_stage_time_multiplier = OVI_CREATURE_STAGE_TIME_MULTIPLIER
+	return ovipositor
+
+// Creature stores as clutch, capacity, stored.
 /proc/ensure_spider_ovipositor(mob/living/owner)
-	return ensure_typed_ovipositor(owner, OVI_EGG_SPIDER, 4, 10, 8)
+	return ensure_creature_ovipositor(owner, OVI_EGG_SPIDER, 2, 5, 3)
 
 /proc/ensure_bog_bug_ovipositor(mob/living/owner)
-	return ensure_typed_ovipositor(owner, OVI_EGG_BOG_BUG, 3, 8, 6)
+	return ensure_creature_ovipositor(owner, OVI_EGG_BOG_BUG, 2, 4, 2)
+
+/proc/ensure_tentacle_ovipositor(mob/living/owner)
+	return ensure_creature_ovipositor(owner, OVI_EGG_TENTACLE, 1, 4, 2)
+
+/proc/ensure_maneater_ovipositor(mob/living/owner)
+	return ensure_creature_ovipositor(owner, OVI_EGG_MANEATER, 1, 2, 1)
 
 /proc/get_oviposition_egg_type_option_name(option)
 	switch(option)

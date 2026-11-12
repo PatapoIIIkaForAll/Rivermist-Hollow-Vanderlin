@@ -194,6 +194,10 @@
 		if(istype(toy))
 			take_lube_from(toy.get_lube_reagents(FALSE))
 		return
+	// A toy in a worn harness keeps its own lube as well as the wearer's groin coat.
+	var/obj/item/dildo/strapon_toy = penetrator?.get_strapon_toy()
+	if(strapon_toy)
+		take_lube_from(strapon_toy.get_lube_reagents(FALSE))
 	var/datum/component/fluid_coated/coated = penetrator?.GetComponent(/datum/component/fluid_coated)
 	if(!coated)
 		return
@@ -272,7 +276,7 @@
 			return FALSE
 		visible_message(span_notice("[src] slicks \the [toy] with something from \the [container]."), span_notice("I slick \the [toy] with something from \the [container]."))
 		return TRUE
-	if(!mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		to_chat(src, span_warning("My mouth is not free to spit."))
 		return FALSE
 	if(coat.total_volume + SPIT_LUBE_UNITS > coat.maximum_volume)
@@ -313,7 +317,7 @@
 	var/mob/living/owner = hole?.get_owner()
 	if(!owner)
 		return FALSE
-	if(!mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		to_chat(src, span_warning("My mouth is not free to spit."))
 		return FALSE
 	if(hole.add_lube(/datum/reagent/consumable/saliva, SPIT_LUBE_UNITS, src) <= 0)

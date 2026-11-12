@@ -9,14 +9,28 @@
 					continue
 				return equipped_item
 
-/// The first worn garment heavy enough to keep sex acts off [location], or null; light clothes never count.
-/mob/living/proc/get_sex_covering_garment(location = BODY_ZONE_CHEST)
+/// TRUE for armor heavier than light that keeps hands off what it covers; clothes never do.
+/obj/item/clothing/proc/blocks_sex_reach()
+	return armor_class > AC_LIGHT && !allow_erp_equipped && !genital_access
+
+/// The worn armor keeping [actor] off [location], or null. A null actor means the strict answer: armor blocks.
+/mob/living/proc/get_sex_covering_garment(location = BODY_ZONE_CHEST, mob/living/actor)
 	for(var/obj/item/clothing/garment in get_equipped_items())
-		if(garment.armor_class <= AC_LIGHT || garment.allow_erp_equipped || garment.genital_access)
+		if(!garment.blocks_sex_reach())
 			continue
 		if(location in cover_flags2body_zones(garment.body_parts_covered))
-			return garment
+			return allows_reach_under_armor(actor) ? null : garment
 	return null
+
+/// TRUE when this mob lets player [actor], itself included, reach under its armor; mobs always strip it first.
+/mob/living/proc/allows_reach_under_armor(mob/living/actor)
+	if(!actor?.is_player_sex_actor())
+		return FALSE
+	return get_cached_erp_pref(/datum/erp_preference/boolean/allow_reach_under_armor) == TRUE
+
+/// TRUE when a player drives this mob; AI-run mobs have no client.
+/mob/living/proc/is_player_sex_actor()
+	return !!client
 
 /obj/item/clothing/armor
 	flags_inv = HIDEBOOB|HIDEBELLY|HIDEUNDIESTOP|HIDEUNDIESBOT|HIDECLOSEBODY

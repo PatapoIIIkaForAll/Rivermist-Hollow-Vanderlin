@@ -46,6 +46,8 @@
 	do_freeze(frozen_guy)
 
 /datum/action/cooldown/spell/beam/beam_of_frost/proc/do_freeze(mob/living/victim, extra_modifer = 1)
+	if(owner?.spares_ally(victim))
+		return
 	if(LAZYACCESS(hit_targets, victim))
 		return
 

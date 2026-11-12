@@ -390,6 +390,8 @@
 		feeling_carrier.feel_birth_passage(share, opening)
 
 	laid = TRUE
+	// The floor hatch still counts toward the limit of the body that carried it.
+	egg.birth_carrier_ref = WEAKREF(laying_carrier)
 	egg.forceMove(location)
 	refresh_container()
 	return TRUE
@@ -487,9 +489,26 @@
 	if(isliving(hatch_result))
 		var/mob/living/hatchling = hatch_result
 		finalize_living_hatch(player, hatchling)
+	credit_hatch(carrier)
 
 	playsound(egg, 'sound/effects/wounds/splatter.ogg', 70, TRUE)
 	qdel(egg)
+
+/// TRUE when this egg hatches into a creature, which counts toward the carrier's birth limit.
+/datum/component/pregnancy/proc/spawns_offspring()
+	return is_oviposition_offspring_type(hatch_result_type)
+
+/// Counts a creature hatch for the body that carried the egg: its host now, or the one who laid it.
+/datum/component/pregnancy/proc/credit_hatch(mob/living/known_carrier)
+	if(!spawns_offspring())
+		return FALSE
+	var/mob/living/carbon/credited = known_carrier
+	if(!istype(credited))
+		credited = egg?.birth_carrier_ref?.resolve()
+	if(!istype(credited))
+		return FALSE
+	credited.record_oviposition_birth()
+	return TRUE
 
 /datum/component/pregnancy/proc/poll_hatch_candidate(mob/user)
 	var/poll_message = "Do you want to play as [mother_name ? "[mother_name]'s" : "someone's"] offspring?[egg_name ? " Their name will be [egg_name]." : ""]"
@@ -562,6 +581,7 @@
 	if(istype(hatchling_brain))
 		hatchling_brain.set_ai_status(AI_STATUS_OFF)
 	holder.AddComponent(/datum/component/internal_womb_hatchling, hatch_container, hatch_carrier, location_name, egg.get_inside_behaviour_type(), egg.internal_contraction_message, egg.internal_birth_message)
+	credit_hatch(hatch_carrier)
 
 	var/hatch_message = egg.internal_hatch_message || egg.get_hatch_message()
 	if(hatch_message)
@@ -599,6 +619,7 @@
 			if(istype(hatch_item, /obj/item/natural/worms/leech/erotic))
 				var/obj/item/natural/worms/leech/erotic/leech = hatch_item
 				leech.on_hatched_inside_host(hatch_container, hatch_carrier, target_layer)
+			credit_hatch(hatch_carrier)
 			playsound(hatch_carrier, 'sound/effects/wounds/splatter.ogg', 70, TRUE)
 			qdel(egg)
 			return TRUE
@@ -607,6 +628,7 @@
 	if(drop_location)
 		hatch_item.forceMove(drop_location)
 		to_chat(hatch_carrier, span_warning("[hatch_item] hatches from [egg], but there is no room for it inside my [location_name]."))
+		credit_hatch(hatch_carrier)
 	else
 		qdel(hatch_item)
 	qdel(egg)
@@ -971,8 +993,6 @@
 	var/datum/ai_controller/freed_brain = freed?.ai_controller
 	if(istype(freed_brain) && !freed.client)
 		freed_brain.set_ai_status(AI_STATUS_ON)
-	if(!silent && iscarbon(carrier))
-		var/mob/living/carbon/birth_carrier = carrier
-		birth_carrier.record_oviposition_birth()
+	// The hatch already counted toward the birth limit; the birth itself does not.
 	qdel(holder)
 	return TRUE

@@ -548,6 +548,8 @@
 		var/obj/item/organ/genitals/filling_organ/vagina/strapon_vag = mob.getorganslot(ORGAN_SLOT_VAGINA)
 		if(strapon_vag?.reagents)
 			strapon_vag.produce_climax_fluid()
+		// A worn harness may empty its bulb, or pump the release, through the toy.
+		mob.on_strapon_climax(action, target)
 		after_ejaculation(FALSE, parent, target, action, action_initiator, action_target, action_performer)
 		return
 	var/obj/item/organ/genitals/filling_organ/testicles/climax_testes = mob.getorganslot(ORGAN_SLOT_TESTICLES)
@@ -1092,6 +1094,8 @@
 			return PAIN_COOLDOWN_HIGH
 		if(SEX_FORCE_EXTREME)
 			return PAIN_COOLDOWN_EXTREME
+		if(SEX_FORCE_UNRELENTING)
+			return PAIN_COOLDOWN_UNRELENTING
 	return PAIN_COOLDOWN
 
 /// Receiver is always told. Only the room line and partner cue are probability-gated, against spam.
@@ -1176,6 +1180,11 @@
 				return 2.0
 			else
 				return 0.8
+		if(SEX_FORCE_UNRELENTING)
+			if(giving)
+				return 2.4
+			else
+				return 0.6
 	return 1.2
 
 /datum/component/arousal/proc/get_force_pain_multiplier(passed_force)
@@ -1188,6 +1197,8 @@
 			return SEX_FORCE_PAIN_MULT_HIGH
 		if(SEX_FORCE_EXTREME)
 			return SEX_FORCE_PAIN_MULT_EXTREME
+		if(SEX_FORCE_UNRELENTING)
+			return SEX_FORCE_PAIN_MULT_UNRELENTING
 	return SEX_FORCE_PAIN_MULT_MID
 
 /datum/component/arousal/proc/get_speed_pain_multiplier(passed_speed)
@@ -1200,6 +1211,8 @@
 			return SEX_SPEED_PAIN_MULT_HIGH
 		if(SEX_SPEED_EXTREME)
 			return SEX_SPEED_PAIN_MULT_EXTREME
+		if(SEX_SPEED_UNRELENTING)
+			return SEX_SPEED_PAIN_MULT_UNRELENTING
 	return SEX_SPEED_PAIN_MULT_MID
 
 /// An aroused body takes the same act far better than a cold one. Applied to the receiver's own arousal.
@@ -1246,6 +1259,11 @@
 				return 1.5
 			else
 				return 1
+		if(SEX_FORCE_UNRELENTING)
+			if(giving)
+				return 2.0
+			else
+				return 1.2
 	return 0.8
 
 /datum/component/arousal/proc/handle_statuses()

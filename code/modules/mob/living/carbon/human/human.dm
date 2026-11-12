@@ -2,6 +2,10 @@
 	. = ..()
 	if(!user)
 		return
+	// An aggressive hold turns a chest or groin middle-click into tearing the top or the hem.
+	if((user.zone_selected == BODY_ZONE_CHEST || user.zone_selected == BODY_ZONE_PRECISE_GROIN) && is_tear_grabbed_by(user))
+		try_tear_clothes(user, user.zone_selected)
+		return
 	var/obj/item/held_item = user.get_active_held_item()
 	if(!user.cmode && held_item && held_item.get_sharpness() && held_item.wlength == WLENGTH_SHORT)
 		if(user.zone_selected == BODY_ZONE_CHEST)

@@ -209,48 +209,44 @@
 	return null
 
 /datum/preferences/proc/can_add_quirk(quirk_type)
-	if(!ispath(quirk_type, /datum/quirk))
-		return FALSE
+	return isnull(quirk_refusal_reason(quirk_type))
 
-	// Check if already have this quirk
+/// Plain sentence saying why this character cannot take quirk_type, or null when it can.
+/datum/preferences/proc/quirk_refusal_reason(quirk_type)
+	var/datum/quirk/singleton = ispath(quirk_type, /datum/quirk) ? GLOB.quirk_singletons[quirk_type] : null
+	if(!singleton)
+		return "That quirk does not exist."
 	if(quirk_type in quirks)
-		return FALSE
-
-	var/datum/quirk/new_quirk = quirk_type
-
-	// Check if quirk is available for this character
-	var/datum/quirk/temp_quirk = new quirk_type()
-	if(!temp_quirk.is_available(src))
-		qdel(temp_quirk)
-		return FALSE
-	qdel(temp_quirk)
-
-	// Check boon limit
-	if(initial(new_quirk.quirk_category) == QUIRK_POSITIVE)
-		if(count_boons_in_list() >= MAX_POSITIVE)
-			return FALSE
-
-	// Check point balance
+		return "You already have [singleton.name]."
+	if(!singleton.is_available(src))
+		return quirk_unavailable_reason(singleton)
+	if(singleton.quirk_category == QUIRK_POSITIVE && count_boons_in_list() >= MAX_POSITIVE)
+		return "You cannot take more than [MAX_POSITIVE] positive quirks."
 	var/balance = calculate_quirk_balance()
-	if(initial(new_quirk.point_value) < 0) // Costs points
-		if(balance + initial(new_quirk.point_value) < 0)
-			return FALSE
+	if(singleton.point_value < 0 && balance + singleton.point_value < 0)
+		return "Not enough quirk points: [singleton.name] costs [-singleton.point_value], you have [balance]."
+	for(var/existing_type in quirks)
+		var/datum/quirk/existing = GLOB.quirk_singletons[existing_type]
+		if((existing_type in singleton.incompatible_quirks) || (existing && (quirk_type in existing.incompatible_quirks)))
+			return "[singleton.name] conflicts with [existing ? existing.name : "a quirk you have"]."
+	return null
 
-	// Check incompatibilities
-	var/datum/quirk/singleton = GLOB.quirk_singletons[new_quirk]
-	var/list/incompatible = singleton.incompatible_quirks
-	for(var/quirk_type_existing in quirks)
-		if(quirk_type_existing in incompatible)
-			return FALSE
-		var/datum/quirk/existing_singleton = GLOB.quirk_singletons[quirk_type_existing]
-		var/list/existing_incompatible = existing_singleton.incompatible_quirks
-		if(quirk_type in existing_incompatible)
-			return FALSE
+/// Names the failed age or species gate of is_available(); other gates get a general line.
+/datum/preferences/proc/quirk_unavailable_reason(datum/quirk/singleton)
+	var/age = read_preference(/datum/preference/choiced/age)
+	if((length(singleton.allowed_ages) && !(age in singleton.allowed_ages)) || (age in singleton.blocked_ages))
+		return "[singleton.name] is not available at your character's age."
+	var/species_type = pref_species?.type
+	if((length(singleton.allowed_species) && !(species_type in singleton.allowed_species)) || (species_type in singleton.blocked_species))
+		return "[singleton.name] is not available to the [pref_species.name] species."
+	return "[singleton.name] does not fit your character's current setup."
 
-	return TRUE
-
-/datum/preferences/proc/add_quirk(quirk_type, custom_value = null)
-	if(!can_add_quirk(quirk_type))
+/// Adds quirk_type; when refused, tells user why in chat.
+/datum/preferences/proc/add_quirk(quirk_type, custom_value = null, mob/user = null)
+	var/refusal = quirk_refusal_reason(quirk_type)
+	if(refusal)
+		if(user)
+			to_chat(user, span_warning(refusal))
 		return FALSE
 	quirks += quirk_type
 	if(custom_value)
@@ -438,7 +434,8 @@
 		var/is_selected = FALSE
 		if(quirk_type in quirks)
 			is_selected = TRUE
-		var/can_add = can_add_quirk(quirk_type)
+		var/refusal = is_selected ? null : quirk_refusal_reason(quirk_type)
+		var/can_add = isnull(refusal)
 
 		var/card_classes = "quirk-card [category_class]"
 		if(is_selected)
@@ -457,7 +454,7 @@
 		if(is_selected)
 			dat += "<div class='quirk-status'>Selected</div>"
 		else if(!can_add)
-			dat += "<div class='quirk-status disabled-text'>Cannot add</div>"
+			dat += "<div class='quirk-status disabled-text'>[html_encode(refusal)]</div>"
 		dat += "</div>"
 
 	dat += "</div>"
@@ -598,8 +595,8 @@
 	if(href_list["quirk_add"])
 		var/quirk_ref = locate(href_list["quirk_add"])
 		if(quirk_ref && ispath(quirk_ref, /datum/quirk))
-			prefs.add_quirk(quirk_ref)
-			prefs.open_quirk_menu(usr)
+			if(prefs.add_quirk(quirk_ref, user = usr))
+				prefs.open_quirk_menu(usr)
 		return TRUE
 
 	if(href_list["quirk_remove"])

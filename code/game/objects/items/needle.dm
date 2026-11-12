@@ -97,6 +97,10 @@
 		to_chat(user, span_warning("[src] cannot be used to repair [I]!"))
 		return ITEM_INTERACT_BLOCKING
 
+	var/obj/item/clothing/torn_garment = I
+	if(istype(torn_garment) && torn_garment.has_clothing_tears())
+		return mend_clothing_tears(torn_garment, user)
+
 	var/armor_value = 0
 	var/skill_level = GET_MOB_SKILL_VALUE(user, I.sewrepair)
 	for(var/key in ARMOR_LIST_ALL)

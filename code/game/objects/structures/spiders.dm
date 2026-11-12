@@ -57,12 +57,15 @@
 			static_debris = list(/obj/item/natural/silk = 1)
 	. = ..()
 
-#define SPIDER_COCOON_BREAKOUT_BASE (1 MINUTES)
-#define SPIDER_COCOON_BREAKOUT_PER_EGG (15 SECONDS)
-#define SPIDER_COCOON_BREAKOUT_MAX (3 MINUTES)
+#define SPIDER_COCOON_BREAKOUT_BASE (30 SECONDS)
+#define SPIDER_COCOON_BREAKOUT_PER_EGG (5 SECONDS)
+#define SPIDER_COCOON_BREAKOUT_MAX (2 MINUTES)
 /// A victim who gets out is left alone this long, so an escape is an escape.
 #define SPIDER_COCOON_ESCAPE_GRACE (10 MINUTES)
 #define SPIDER_COCOON_SEALED_INTEGRITY 80
+
+/// Cocoons with someone alive inside; spiders keep their distance from these.
+GLOBAL_LIST_EMPTY(occupied_spider_cocoons)
 
 /obj/structure/spider/cocoon
 	name = "cocoon"
@@ -72,6 +75,8 @@
 	max_integrity = 40
 	/// Pumped full of eggs and sealed; no spider comes back to it.
 	var/brooded = FALSE
+	/// Occupants struggling out right now.
+	var/list/escapers
 
 /obj/structure/spider/cocoon/Initialize(mapload, ...)
 	. = ..()
@@ -97,13 +102,30 @@
 	var/turf/drop_turf = get_turf(src)
 	for(var/atom/movable/inside as anything in contents)
 		inside.forceMove(drop_turf)
+	GLOB.occupied_spider_cocoons -= src
+	escapers = null
 	return ..()
+
+/obj/structure/spider/cocoon/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	. = ..()
+	if(!isliving(arrived))
+		return
+	GLOB.occupied_spider_cocoons |= src
+	add_verb(arrived, /mob/living/proc/escape_cocoon)
+	to_chat(arrived, span_notice("I can struggle out of the silk: Escape Cocoon in the IC tab, or click the silk alert."))
 
 /obj/structure/spider/cocoon/Exited(atom/movable/gone, atom/newLoc)
 	. = ..()
 	if(isliving(gone))
 		var/mob/living/escaped = gone
 		escaped.kidnap_protected_until = max(escaped.kidnap_protected_until, world.time + SPIDER_COCOON_ESCAPE_GRACE)
+		if(escaped.stat != DEAD)
+			escaped.apply_status_effect(/datum/status_effect/cocoon_grace)
+			to_chat(escaped, span_notice("I am out of the silk. For [DisplayTimeText(SPIDER_COCOON_ESCAPE_GRACE)], spiders and other lustful creatures will not try to take me."))
+		LAZYREMOVE(escapers, escaped)
+		remove_verb(escaped, /mob/living/proc/escape_cocoon)
+		if(!(locate(/mob/living) in contents))
+			GLOB.occupied_spider_cocoons -= src
 
 /obj/structure/spider/cocoon/deconstruct(disassembled)
 	var/turf/T = get_turf(src)
@@ -113,15 +135,63 @@
 	return ..()
 
 /obj/structure/spider/cocoon/container_resist(mob/living/user)
+	start_escape(user)
+
+/// The one breakout: Resist, the verb and the alert all start it. FALSE when none started.
+/obj/structure/spider/cocoon/proc/start_escape(mob/living/user)
+	if(!isliving(user) || user.loc != src || LAZYFIND(escapers, user))
+		return FALSE
+	if(user.stat != CONSCIOUS)
+		return FALSE
+	if(user.doing())
+		to_chat(user, span_warning("I am busy with something else."))
+		return FALSE
+	LAZYADD(escapers, user)
+	if(user.surrendering)
+		stop_yielding(user)
 	var/breakout_time = get_breakout_time(user)
 	user.changeNext_move(CLICK_CD_BREAKOUT)
 	user.last_special = world.time + CLICK_CD_BREAKOUT
 	to_chat(user, "<span class='notice'>I struggle against the tight bonds... (This will take about [DisplayTimeText(breakout_time)].)</span>")
 	visible_message("<span class='notice'>I see something struggling and writhing in \the [src]!</span>")
-	if(do_after(user, breakout_time, src))
-		if(!user || user.stat != CONSCIOUS || user.loc != src)
-			return
-		qdel(src)
+	INVOKE_ASYNC(src, PROC_REF(struggle_out), user, breakout_time)
+	return TRUE
+
+/// Binds, a knockout or a stun do not stop it; leaving, sleep or death do.
+/obj/structure/spider/cocoon/proc/struggle_out(mob/living/user, breakout_time)
+	var/freed = do_after(user, breakout_time, src, IGNORE_HELD_ITEM | IGNORE_USER_DIR_CHANGE | IGNORE_INCAPACITATED, extra_checks = CALLBACK(src, PROC_REF(can_keep_struggling), user))
+	if(QDELETED(src))
+		return
+	LAZYREMOVE(escapers, user)
+	if(QDELETED(user) || user.loc != src)
+		return
+	if(!freed || user.stat != CONSCIOUS)
+		to_chat(user, span_warning("The silk holds."))
+		return
+	visible_message(span_warning("[user] tears free of \the [src]!"))
+	qdel(src)
+
+/obj/structure/spider/cocoon/proc/can_keep_struggling(mob/living/user)
+	return user.loc == src && user.stat == CONSCIOUS
+
+/// Struggling out ends a yield, the same way rescinding it does.
+/obj/structure/spider/cocoon/proc/stop_yielding(mob/living/user)
+	user.surrendering = FALSE
+	if(!user.had_pacifist)
+		REMOVE_TRAIT(user, TRAIT_PACIFISM, TRAIT_GENERIC)
+	user.had_pacifist = FALSE
+	to_chat(user, span_notice("I stop yielding and fight the silk."))
+
+/// Only offered while wound inside a cocoon.
+/mob/living/proc/escape_cocoon()
+	set name = "Escape Cocoon"
+	set category = "IC"
+
+	var/obj/structure/spider/cocoon/cocoon = loc
+	if(!istype(cocoon))
+		remove_verb(src, /mob/living/proc/escape_cocoon)
+		return
+	cocoon.start_escape(src)
 
 /obj/structure/spider/cocoon/examine(mob/user)
 	. = ..()
@@ -130,6 +200,7 @@
 	var/mob/living/carbon/victim = get_wrapped_victim()
 	if(victim)
 		. += span_love(get_silk_glimpse(victim))
+		. += span_notice("Whoever is inside can struggle out: Escape Cocoon in the IC tab, or the silk alert.")
 
 /// The living carbon wound up inside, or null.
 /obj/structure/spider/cocoon/proc/get_wrapped_victim()
@@ -199,6 +270,38 @@
 		if(zone2covered(zone, garment.body_parts_covered))
 			return TRUE
 	return FALSE
+
+/// Shows the grace after leaving a cocoon: lustful creatures leave the mob be until it runs out.
+/datum/status_effect/cocoon_grace
+	id = "cocoon_grace"
+	duration = SPIDER_COCOON_ESCAPE_GRACE
+	tick_interval = 10 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/buff/cocoon_grace
+
+/datum/status_effect/cocoon_grace/on_creation(mob/living/new_owner, duration_override, ...)
+	. = ..()
+	update_grace_text()
+
+/datum/status_effect/cocoon_grace/tick()
+	update_grace_text()
+
+/// The alert names the time left, read from the same stamp the targeting checks.
+/datum/status_effect/cocoon_grace/proc/update_grace_text()
+	if(!linked_alert || !owner)
+		return
+	var/left = max(0, owner.kidnap_protected_until - world.time)
+	linked_alert.desc = "Spiders and other lustful creatures will not try to take me for [DisplayTimeText(left, 10)] more. A spider I fought may still bite."
+
+/atom/movable/screen/alert/status_effect/buff/cocoon_grace
+	name = "Free of the silk"
+	desc = "Spiders and other lustful creatures will not try to take me for a while."
+
+/atom/movable/screen/alert/status_effect/buff/cocoon_grace/Click(location, control, params)
+	if(LAZYACCESS(params2list(params), SHIFT_CLICKED))
+		return ..()
+	if(usr == mob_viewer)
+		to_chat(usr, span_notice(desc))
 
 #undef SPIDER_COCOON_BREAKOUT_BASE
 #undef SPIDER_COCOON_BREAKOUT_PER_EGG

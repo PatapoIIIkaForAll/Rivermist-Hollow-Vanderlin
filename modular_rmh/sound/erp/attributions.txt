@@ -59,3 +59,7 @@ No Attribution by the pack.
 bed_creak_slow1-4.ogg, bed_creak_fast1-4.ogg, ride_wet_soft1-3.ogg, ride_wet_hard1-3.ogg, floorboard1.ogg,
 floorboard2.ogg are by SquishSuccubus (@SquishSuccubus), from "Wooden Bed Creak", "Riding Wet" and
 "Wood Impact Floorboards" in the SquishSuccubus All-In-One pack.
+
+strap_buckle1.ogg, strap_buckle2.ogg, strap_buckle3.ogg are by Joao_Janz (Freesound), from "Clothes & Fabrics Pack #1"
+(Leather Belt set, CC0). leather_creak1.ogg, leather_creak2.ogg, leather_creak3.ogg are from the pack's
+"Pleather Creak Soft 1" set, marked No Attribution by the pack.

@@ -126,6 +126,7 @@
 	data["stomach"] = build_stomach()
 	data["ovipositor"] = build_ovipositor()
 	data["labour"] = build_labour()
+	data["births"] = owner.get_oviposition_birth_status()
 	return data
 
 /datum/hole_status_menu/proc/build_labour()
@@ -669,7 +670,7 @@
 	if(owner.stat != CONSCIOUS || owner.incapacitated())
 		return FALSE
 	// The panel's rules: only armor above light is in the way, and a worn device seals the slot.
-	if(owner.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN) || owner.is_organ_slot_blocked(ORGAN_SLOT_PENIS))
+	if(owner.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, owner) || owner.is_organ_slot_blocked(ORGAN_SLOT_PENIS))
 		to_chat(owner, span_warning("I cannot get my ovipositor free for that."))
 		return FALSE
 	var/obj/item/oviposition_egg/egg = ovipositor_component.lay_one_egg_on_floor()
