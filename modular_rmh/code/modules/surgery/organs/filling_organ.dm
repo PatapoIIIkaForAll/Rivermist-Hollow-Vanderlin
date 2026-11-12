@@ -119,30 +119,152 @@
 	var/oviposition_lay_action = "lay"
 
 /mob/living/carbon
-	/// Completed internal hatchling births, stored as world.time values for the rolling implantation limit.
+	/// world.time of each creature hatched from an egg or embryo this body carried, oldest first.
 	var/list/recent_oviposition_births
 	/// Prevents repeated implantation attempts from spamming the recovery warning.
 	var/next_oviposition_birth_limit_warning = 0
 
-/// Returns whether another egg or embryo may be implanted under the rolling birth limit.
+/obj/item/oviposition_egg
+	/// When the birth limit held this egg dormant; 0 while it is free to grow.
+	var/gestation_held_since = 0
+	/// Growth arguments a held egg keeps for when it wakes.
+	var/datum/weakref/held_father_ref
+	var/held_hatch_result_type
+	var/held_fertilized = FALSE
+	var/list/held_father_features
+	var/held_father_name
+	/// Who carried this egg until it was laid; a hatch on the floor counts for them.
+	var/datum/weakref/birth_carrier_ref
+
+/// TRUE when an egg hatching into [hatch_type] makes a creature, not a snack.
+/proc/is_oviposition_offspring_type(hatch_type)
+	return ispath(hatch_type, /atom/movable) && !ispath(hatch_type, /obj/item/reagent_containers/food)
+
+/// Implants always land; past the birth limit they lie dormant, see can_start_oviposition_gestation().
 /mob/living/carbon/proc/can_receive_oviposition_implant(show_feedback = FALSE)
+	return TRUE
+
+/// Drops births older than the window; how many are left.
+/mob/living/carbon/proc/prune_oviposition_births()
 	var/birth_cutoff = world.time - OVIPOSITION_BIRTH_LIMIT_WINDOW
 	while(length(recent_oviposition_births) && recent_oviposition_births[1] <= birth_cutoff)
 		recent_oviposition_births.Cut(1, 2)
+	return length(recent_oviposition_births)
 
-	if(length(recent_oviposition_births) < OVIPOSITION_BIRTH_LIMIT)
+/// Creature eggs growing inside this body; each holds a birth-limit slot until it hatches.
+/mob/living/carbon/proc/count_oviposition_gestations()
+	. = 0
+	for(var/obj/item/organ/organ as anything in internal_organs)
+		if(!organ.supports_oviposition_pregnancy())
+			continue
+		for(var/obj/item/oviposition_egg/egg as anything in organ.get_oviposition_eggs(TRUE))
+			var/datum/component/pregnancy/pregnancy = egg.get_pregnancy_component()
+			if(!pregnancy.laid && pregnancy.spawns_offspring())
+				.++
+
+/// Whether another creature egg or embryo may start growing: recent births plus growing ones stay under the limit.
+/mob/living/carbon/proc/can_start_oviposition_gestation(show_feedback = FALSE)
+	var/births = prune_oviposition_births()
+	var/taken = births + count_oviposition_gestations()
+	if(taken < OVIPOSITION_BIRTH_LIMIT)
 		return TRUE
 
 	if(show_feedback && world.time >= next_oviposition_birth_limit_warning)
-		var/unlock_birth_index = length(recent_oviposition_births) - OVIPOSITION_BIRTH_LIMIT + 1
-		var/time_until_recovered = recent_oviposition_births[unlock_birth_index] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time
-		to_chat(src, span_warning("My body is still recovering from so many recent births. It cannot accept another egg or embryo for [DisplayTimeText(time_until_recovered)]."))
 		next_oviposition_birth_limit_warning = world.time + 1 MINUTES
+		var/unlock_birth_index = taken - OVIPOSITION_BIRTH_LIMIT + 1
+		if(unlock_birth_index <= births)
+			var/time_until_recovered = recent_oviposition_births[unlock_birth_index] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time
+			to_chat(src, span_warning("My body is still recovering from so many recent pregnancies. Nothing new will grow in me for [DisplayTimeText(time_until_recovered)]."))
+		else
+			to_chat(src, span_warning("My body is still recovering from so many recent pregnancies. Nothing new will grow in me for a while yet."))
 	return FALSE
 
-/// Records a successfully completed internal hatchling birth for the rolling implantation limit.
+/// The birth limit as the holes window shows it: counts, free slots, and seconds until slots free.
+/mob/living/carbon/proc/get_oviposition_birth_status()
+	var/births = prune_oviposition_births()
+	var/growing = count_oviposition_gestations()
+	var/list/status = list(
+		"limit" = OVIPOSITION_BIRTH_LIMIT,
+		"births" = births,
+		"growing" = growing,
+		"held" = length(get_held_oviposition_eggs()),
+		"free" = max(0, OVIPOSITION_BIRTH_LIMIT - births - growing),
+		"next_free_seconds" = 0,
+		"clear_seconds" = 0,
+	)
+	// Only births age out; growing eggs free their slot when they hatch.
+	if(births)
+		status["next_free_seconds"] = round(max(0, recent_oviposition_births[1] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time) / 10)
+		status["clear_seconds"] = round(max(0, recent_oviposition_births[births] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time) / 10)
+	return status
+
+/// The one place a hatched creature counts toward the rolling birth limit.
 /mob/living/carbon/proc/record_oviposition_birth()
 	LAZYADD(recent_oviposition_births, world.time)
+
+/// Eggs in this body that the birth limit holds dormant, each to the organ holding it.
+/mob/living/carbon/proc/get_held_oviposition_eggs()
+	. = list()
+	for(var/obj/item/organ/organ as anything in internal_organs)
+		if(!organ.supports_oviposition_pregnancy())
+			continue
+		for(var/obj/item/oviposition_egg/egg as anything in organ.get_oviposition_eggs(FALSE))
+			if(egg.gestation_held_since)
+				.[egg] = organ
+
+/// Checks again later for held eggs; the soonest a slot frees by age, at most a minute away.
+/mob/living/carbon/proc/schedule_held_oviposition_check()
+	var/delay = OVIPOSITION_HELD_EGG_RECHECK
+	if(prune_oviposition_births())
+		delay = min(delay, recent_oviposition_births[1] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time)
+	addtimer(CALLBACK(src, PROC_REF(wake_held_oviposition_eggs)), max(1 SECONDS, delay), TIMER_UNIQUE)
+
+/// Starts the oldest held eggs while the limit has room; rechecks while any still wait. How many woke.
+/mob/living/carbon/proc/wake_held_oviposition_eggs()
+	var/list/held = get_held_oviposition_eggs()
+	if(!length(held))
+		return 0
+	var/woken = 0
+	while(stat != DEAD && length(held) && can_start_oviposition_gestation())
+		var/obj/item/oviposition_egg/oldest = held[1]
+		for(var/obj/item/oviposition_egg/egg as anything in held)
+			if(egg.gestation_held_since < oldest.gestation_held_since)
+				oldest = egg
+		var/obj/item/organ/host = held[oldest]
+		held -= oldest
+		if(host.wake_held_oviposition_egg(oldest))
+			woken++
+	if(length(held))
+		schedule_held_oviposition_check()
+	return woken
+
+/// Keeps [egg] dormant under the birth limit, with what it needs to start growing later.
+/obj/item/oviposition_egg/proc/hold_gestation(mob/living/father, hatch_result_type, fertilized, list/father_features, father_name)
+	if(gestation_held_since)
+		return
+	gestation_held_since = world.time
+	held_father_ref = father ? WEAKREF(father) : null
+	held_hatch_result_type = hatch_result_type
+	held_fertilized = fertilized || !isnull(father) || LAZYLEN(father_features)
+	held_father_features = LAZYLEN(father_features) ? father_features.Copy() : get_oviposition_parent_features(father)
+	held_father_name = father_name || father?.real_name
+
+/obj/item/oviposition_egg/proc/clear_gestation_hold()
+	gestation_held_since = 0
+	held_father_ref = null
+	held_hatch_result_type = null
+	held_fertilized = FALSE
+	held_father_features = null
+	held_father_name = null
+
+/// Starts a held egg with the arguments it was laid with; one that cannot start stays a plain dormant egg.
+/obj/item/organ/proc/wake_held_oviposition_egg(obj/item/oviposition_egg/egg)
+	var/mob/living/father = egg.held_father_ref?.resolve()
+	if(start_oviposition_egg_growth(egg, father, egg.held_hatch_result_type, egg.held_fertilized, egg.held_father_features, egg.held_father_name, FALSE) != OVI_EGG_GROWTH_STARTED)
+		egg.clear_gestation_hold()
+		return FALSE
+	to_chat(owner, span_love("The dormant [egg.name] in my [get_oviposition_location_name()] stirs and begins to grow."))
+	return TRUE
 
 /// Ends every active pregnancy after a successful resurrection rune rescue.
 /// Embryo sacs are destroyed, while ordinary eggs remain implanted but dormant.
@@ -154,6 +276,9 @@
 		if(istype(filling) && filling.pregnant)
 			filling.clear_conventional_pregnancy()
 			ended_pregnancy = TRUE
+		// Eggs the birth limit held stay dormant for good too.
+		for(var/obj/item/oviposition_egg/held_egg as anything in organ.get_oviposition_eggs(FALSE))
+			held_egg.clear_gestation_hold()
 		var/list/growing_eggs = organ.get_oviposition_eggs(TRUE)
 		if(!length(growing_eggs))
 			continue
@@ -997,7 +1122,8 @@
 				count += 1
 	return count
 
-/obj/item/organ/proc/start_oviposition_egg_growth(obj/item/oviposition_egg/egg, mob/living/father = null, hatch_result_type = null, fertilized = FALSE, list/father_features = null, father_name = null)
+/// OVI_EGG_GROWTH_STARTED, OVI_EGG_GROWTH_HELD when the birth limit keeps it dormant (unless [hold_when_limited] is off), or FALSE.
+/obj/item/organ/proc/start_oviposition_egg_growth(obj/item/oviposition_egg/egg, mob/living/father = null, hatch_result_type = null, fertilized = FALSE, list/father_features = null, father_name = null, hold_when_limited = TRUE)
 	if(!owner)
 		return FALSE
 	if(!egg || !is_oviposition_egg(egg) || egg.has_pregnancy())
@@ -1007,18 +1133,29 @@
 	if(!hatch_result_type)
 		hatch_result_type = egg.get_hatch_result_type()
 
+	if(iscarbon(owner) && is_oviposition_offspring_type(hatch_result_type))
+		var/mob/living/carbon/carbon_owner = owner
+		if(!carbon_owner.can_start_oviposition_gestation(hold_when_limited))
+			if(!hold_when_limited)
+				return FALSE
+			egg.hold_gestation(father, hatch_result_type, fertilized, father_features, father_name)
+			carbon_owner.schedule_held_oviposition_check()
+			return OVI_EGG_GROWTH_HELD
+
+	egg.clear_gestation_hold()
 	var/mob/living/egg_mother = egg.get_oviposition_mother(owner)
 	egg.AddComponent(/datum/component/pregnancy, egg_mother, father, hatch_result_type, fertilized, father_features, father_name)
-	return TRUE
+	return OVI_EGG_GROWTH_STARTED
 
 /obj/item/organ/proc/fertilize_oviposition_egg(mob/living/father = null, hatch_result_type = null, list/father_features = null, father_name = null)
 	if(!owner)
 		return null
 
+	// Over the birth limit a creature egg stays unfertilized; the seed may take later.
 	for(var/obj/item/oviposition_egg/egg as anything in get_oviposition_eggs(FALSE))
 		if(!egg.requires_fertilization())
 			continue
-		if(start_oviposition_egg_growth(egg, father, hatch_result_type, TRUE, father_features, father_name))
+		if(start_oviposition_egg_growth(egg, father, hatch_result_type, TRUE, father_features, father_name, FALSE))
 			return egg
 
 	return null
@@ -1036,7 +1173,7 @@
 /obj/item/organ/proc/can_attempt_impregnation(allow_embryo_pregnancy = FALSE)
 	return FALSE
 
-/obj/item/organ/proc/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE)
+/obj/item/organ/proc/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE, show_feedback = FALSE)
 	return FALSE
 
 /obj/item/organ/proc/try_start_fertilization_embryo_pregnancy(mob/living/father = null, allow_embryo_pregnancy = FALSE, hatch_result_type = null, list/father_features = null, father_name = null)
@@ -1077,13 +1214,13 @@
 			return TRUE
 
 		for(var/obj/item/oviposition_egg/egg as anything in hosted_eggs)
-			if(!egg.requires_fertilization() && start_oviposition_egg_growth(egg, father, null, FALSE, father_features, father_name))
+			if(!egg.requires_fertilization() && start_oviposition_egg_growth(egg, father, null, FALSE, father_features, father_name, FALSE))
 				return TRUE
 
 	// Do not silently fall back to conventional pregnancy when a requested embryo implantation is birth-limited.
 	if(allow_embryo_pregnancy && spawn_embryo_on_fertilization && supports_oviposition_pregnancy() && iscarbon(owner))
 		var/mob/living/carbon/carbon_owner = owner
-		if(!carbon_owner.can_receive_oviposition_implant(TRUE))
+		if(!carbon_owner.can_start_oviposition_gestation(TRUE))
 			return FALSE
 
 	if(try_start_fertilization_embryo_pregnancy(father, allow_embryo_pregnancy, embryo_hatch_result_type, father_features, father_name))
@@ -1142,21 +1279,24 @@
 	else
 		conventional_pregnancy_timer = null
 
-/obj/item/organ/genitals/filling_organ/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE)
+/obj/item/organ/genitals/filling_organ/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE, show_feedback = FALSE)
 	if(!fertility || !owner || owner.stat == DEAD)
 		return FALSE
 	if(!allow_embryo_pregnancy || !spawn_embryo_on_fertilization || !supports_oviposition_pregnancy())
 		return FALSE
-	if(iscarbon(owner))
-		var/mob/living/carbon/carbon_owner = owner
-		if(!carbon_owner.can_receive_oviposition_implant())
-			return FALSE
 	if(fertilization_embryo_limit <= 0)
 		return FALSE
-	return (count_internal_hatching_eggs() + count_internal_womb_hatchlings()) < fertilization_embryo_limit
+	if((count_internal_hatching_eggs() + count_internal_womb_hatchlings()) >= fertilization_embryo_limit)
+		return FALSE
+	// An embryo never waits dormant: over the birth limit it does not start at all.
+	if(iscarbon(owner))
+		var/mob/living/carbon/carbon_owner = owner
+		if(!carbon_owner.can_start_oviposition_gestation(show_feedback))
+			return FALSE
+	return TRUE
 
 /obj/item/organ/genitals/filling_organ/try_start_fertilization_embryo_pregnancy(mob/living/father = null, allow_embryo_pregnancy = FALSE, hatch_result_type = null, list/father_features = null, father_name = null)
-	if(!can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy))
+	if(!can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy, TRUE))
 		return FALSE
 
 	var/embryo_hatch_result_type = hatch_result_type || fertilization_embryo_hatch_result_type
@@ -1172,7 +1312,7 @@
 	var/fit_result = SEND_SIGNAL(src, COMSIG_BODYSTORAGE_TRY_INSERT, embryo, STORAGE_LAYER_DEEP)
 	switch(fit_result)
 		if(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_OK_OVERRIDE, INSERT_FEEDBACK_ALMOST_FULL)
-			if(start_oviposition_egg_growth(embryo, father, embryo_hatch_result_type, TRUE, father_features, father_name))
+			if(start_oviposition_egg_growth(embryo, father, embryo_hatch_result_type, TRUE, father_features, father_name, FALSE))
 				return TRUE
 
 	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_TRY_REMOVE, embryo, STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_INTERNAL)

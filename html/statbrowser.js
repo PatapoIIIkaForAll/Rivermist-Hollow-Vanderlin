@@ -922,6 +922,8 @@ var EMOTE_TAB = "Emotes";
 var emote_page = "all";
 var emote_favourites = [];
 var emote_customs = []; // [{ id, name }]
+// Emote groups drawn after the alphabetical ones, in this order
+var EMOTE_TRAILING_GROUPS = ["Rolling"];
 var STAR_SVG =
   '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.75 5.82 6.37.74-4.73 4.36 1.27 6.3L12 16.9l-5.66 3.12 1.27-6.3-4.73-4.36 6.37-.74z"/></svg>';
 var EDIT_SVG =
@@ -1095,10 +1097,13 @@ function draw_emote_panel(cat) {
       );
     })(entry.command, is_favourite);
   }
-  // Verbs without a sub-category go first, without a heading
+  // Verbs without a sub-category go first, without a heading; trailing groups go last
   order.sort(function (a, b) {
     if (a === "") return -1;
     if (b === "") return 1;
+    var a_last = EMOTE_TRAILING_GROUPS.indexOf(a);
+    var b_last = EMOTE_TRAILING_GROUPS.indexOf(b);
+    if (a_last != b_last) return a_last - b_last;
     return a < b ? -1 : a > b ? 1 : 0;
   });
   for (var g = 0; g < order.length; g++) {

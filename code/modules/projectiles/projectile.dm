@@ -484,6 +484,8 @@
 		var/mob/M = firer
 		if((target == firer) || (target in firer.buckled_mobs) || (istype(M) && (M.buckled == target)))
 			return FALSE
+		if(istype(M) && M.spares_ally(target))
+			return FALSE
 	if(target.density)		//This thing blocks projectiles, hit it regardless of layer/mob stuns/etc.
 		// :((
 		// Snowflake for arcshot because fuck shit

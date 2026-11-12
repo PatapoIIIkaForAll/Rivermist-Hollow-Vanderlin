@@ -4,6 +4,7 @@
 		"try4.png" = 'icons/roguetown/misc/try4.png',
 		"try4_border.png" = 'icons/roguetown/misc/try4_border.png',
 		"slop_menustyle2.css" = 'html/browser/slop_menustyle2.css',
+		"role_pick_menu.css" = 'html/browser/role_pick_menu.css',
 		"gragstar.gif" = 'icons/roguetown/misc/gragstar.gif'
 	)
 

@@ -12,6 +12,9 @@
 	cooldown_time = 2 MINUTES
 	spell_cost = 100
 
+/datum/action/cooldown/spell/charm/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/charm/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

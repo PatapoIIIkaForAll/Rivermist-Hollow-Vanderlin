@@ -46,7 +46,29 @@
 		return face_name
 	if(id_name != if_none)
 		return id_name
-	return if_none || "Unknown"
+	// Callers that ask for their own blank value test for it; everyone else gets body words.
+	if(if_none == "Unknown")
+		return get_descriptor_name() || if_none
+	return if_none
+
+/// "Tall Thug": the trait and stature descriptors of a person whose face is hidden.
+/mob/living/carbon/proc/get_descriptor_name()
+	var/trait_word = get_descriptor_word(MOB_DESCRIPTOR_SLOT_TRAIT)
+	var/stature_word = get_descriptor_word(MOB_DESCRIPTOR_SLOT_STATURE)
+	if(trait_word && stature_word)
+		return "[trait_word] [stature_word]"
+	return trait_word || stature_word
+
+/// The capitalized plain word of the descriptor in this slot, or null when the slot is empty.
+/mob/living/proc/get_descriptor_word(descriptor_slot)
+	var/desc_type = get_descriptor_of_slot(descriptor_slot, mob_descriptors)
+	if(!desc_type)
+		return
+	var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(desc_type)
+	if(!descriptor.can_describe(src))
+		return
+	var/word = descriptor.get_description(src)
+	return word ? capitalize(word) : null
 
 /// Returns "Unknown" if facially disfigured and real_name if not. Useful for setting name when Fluacided or when updating a human's name variable
 /mob/living/carbon/proc/get_face_name(if_no_face = "Unknown", list/html_tags, include_honoraries=TRUE)

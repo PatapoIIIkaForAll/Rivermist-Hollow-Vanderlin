@@ -509,7 +509,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(!user.mouth_is_free())
+	if(!user.mouth_is_free(user))
 		return FALSE
 	if(check_sex_lock(user, BODY_ZONE_PRECISE_MOUTH))
 		return FALSE

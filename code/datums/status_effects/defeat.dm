@@ -14,6 +14,7 @@
 	var/struggle_offer_at = 0
 	var/struggle_auto_at = 0
 	var/datum/action/innate/defeat_struggle_up/struggle_action
+	var/obj/effect/yield_indicator/yield_indicator
 
 /datum/status_effect/defeat_knockout/tick()
 	if(owner && !QDELETED(owner) && !owner.GetComponent(/datum/component/kidnap_captivity))
@@ -25,6 +26,8 @@
 	. = ..()
 	if(!.)
 		return
+	yield_indicator = new
+	owner.vis_contents += yield_indicator
 	ADD_TRAIT(owner, TRAIT_NODEATH, TRAIT_STATUS_EFFECT(id))
 	ADD_TRAIT(owner, TRAIT_NOSOFTCRIT, TRAIT_STATUS_EFFECT(id))
 	ADD_TRAIT(owner, TRAIT_NOHARDCRIT, TRAIT_STATUS_EFFECT(id))
@@ -131,6 +134,9 @@
 	to_chat(owner, span_warning("No one is coming. You could yet drag yourself up - but your body will pay dearly for it. Use <b>Struggle to Your Feet</b> when you are ready to try."))
 
 /datum/status_effect/defeat_knockout/on_remove()
+	if(owner)
+		owner.vis_contents -= yield_indicator
+	QDEL_NULL(yield_indicator)
 	if(self_recover_timer)
 		deltimer(self_recover_timer)
 		self_recover_timer = null

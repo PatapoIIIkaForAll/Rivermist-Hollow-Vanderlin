@@ -13,6 +13,9 @@
 	cooldown_time = 60 SECONDS
 	spell_cost = 20
 
+/datum/action/cooldown/spell/pressure/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/pressure/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

@@ -20,9 +20,8 @@
 	var/dildo_material
 	var/shape_choice
 	var/size_choice
-	var/mob/living/carbon/human/wearer
-	var/obj/item/organ/genitals/penis/strapon
-	slot_flags = ITEM_SLOT_BELT
+	// Worn only through a strap-on harness, which seats the toy in its ring.
+	slot_flags = NONE
 
 /obj/item/dildo/New()
 	. = ..()
@@ -34,25 +33,6 @@
 		return
 	if(can_custom)
 		customize(user)
-
-/obj/item/dildo/equipped(mob/user, slot, initial = FALSE)
-	if(slot == ITEM_SLOT_BELT)
-		var/mob/living/carbon/human/U = user
-		if(strapon)
-			var/obj/item/organ/genitals/penis/penis = U.getorganslot(ORGAN_SLOT_PENIS)
-			if(!penis)
-				penis = strapon
-				wearer = U
-				penis.Insert(U)
-	. = ..()
-
-/obj/item/dildo/dropped(mob/user, silent = FALSE) //called when belt removed so we can use it to remove the strapon
-	if(wearer) // so males who already have a penis dont get their dicks removed
-		// Only pull out our own strapon; the wearer may have gained a real penis since.
-		if(strapon && wearer.getorganslot(ORGAN_SLOT_PENIS) == strapon)
-			strapon.Remove(wearer)
-		wearer = null
-	. = ..()
 
 /obj/item/dildo/proc/customize(mob/living/user)
 	if(!can_custom)
@@ -76,37 +56,12 @@
 	// Storage bulk follows the girth of the chosen size.
 	body_storage_bulk = max(1, round(get_insert_girth() / ORIFICE_BULK_PER_CM))
 	update_appearance()
-	update_strapon()
 	can_custom = FALSE
 	return TRUE
 
-/obj/item/dildo/proc/update_strapon()
-	var/obj/item/organ/genitals/penis/temp = new /obj/item/organ/genitals/penis
-	temp.name = name
-	icon_state = "dildo_[dildo_type]_[dildo_size]"
-	switch(dildo_type)
-		if("knotted")
-			temp.penis_type = PENIS_TYPE_KNOTTED
-		if("human")
-			temp.penis_type = PENIS_TYPE_PLAIN
-		if("flared")
-			temp.penis_type = PENIS_TYPE_EQUINE
-	// Strapon length in centimetres by dildo size.
-	switch(dildo_size)
-		if("small")
-			temp.length_cm = 11
-		if("medium")
-			temp.length_cm = 15
-		if("big", "huge")
-			temp.length_cm = 19
-	temp.organ_size = get_penis_visual_size(temp.get_length_cm())
-	temp.always_hard = TRUE
-	temp.strapon = TRUE
-	strapon = temp
-
 /obj/item/dildo/update_appearance()
 	. = ..()
-	icon_state = "dildo_[dildo_type]_[dildo_size]"
+	icon_state = get_toy_icon_state()
 	name = "[dildo_size] [dildo_type] [dildo_material] dildo"
 	desc = "To quench the woman's thirst."
 

@@ -90,8 +90,8 @@
 	var/portal_twitch_text = "twitches, hips jerking at some unseen touch."
 
 /datum/sex_action/portal_base/proc/get_portal_shake_strength()
-	var/static/list/by_force = list(0.5, 1, 1.5, 2)
-	return by_force[clamp(force, SEX_FORCE_LOW, SEX_FORCE_EXTREME) - SEX_FORCE_LOW + 1]
+	var/static/list/by_force = list(0.5, 1, 1.5, 2, 2.5)
+	return by_force[clamp(force, SEX_FORCE_LOW, SEX_FORCE_UNRELENTING) - SEX_FORCE_LOW + 1]
 
 /// The wearer shakes, and people beside them sometimes see a twitch; the portal user already reads their own lines.
 /datum/sex_action/portal_base/proc/portal_touch_feedback(mob/living/user, mob/living/carbon/human/wearer, kind = "portal")

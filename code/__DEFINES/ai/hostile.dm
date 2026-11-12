@@ -77,6 +77,14 @@
 #define BB_SPIDER_BROOD_EGGS_BEFORE "BB_spider_brood_eggs_before"
 /// Lay acts that took no egg this brood; they are not tried again.
 #define BB_SPIDER_BROOD_REFUSED "BB_spider_brood_refused"
+/// The occupied cocoon a spider keeps away from, and the world.time that ends.
+#define BB_SPIDER_SHUNNED_COCOON "BB_spider_shunned_cocoon"
+#define BB_SPIDER_SHUNNED_UNTIL "BB_spider_shunned_until"
+/// world.time until a spider that cannot leave its cocoon makes no idle noise.
+#define BB_SPIDER_HUSHED_UNTIL "BB_spider_hushed_until"
+/// The turf a spider walks to away from a cocoon, and the world.time it first set out.
+#define BB_SPIDER_DISPERSE_TURF "BB_spider_disperse_turf"
+#define BB_SPIDER_DISPERSE_SINCE "BB_spider_disperse_since"
 /// world.time of the hunter's last web spit; a fall on the web soon after presents the target.
 #define BB_HORNY_WEB_SPAT_AT "BB_horny_web_spat_at"
 /// world.time until which a webbed, fallen target lies presented: the bear-down needs no roll.

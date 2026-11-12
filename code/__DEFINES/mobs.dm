@@ -374,6 +374,13 @@
 #define GRAB_PIXEL_SHIFT_PASSIVE 6
 #define GRAB_PIXEL_SHIFT_AGGRESSIVE 12
 
+/// Largest lean in degrees from upright while standing; lying down spins freely.
+#define PIXEL_ROTATION_STANDING_LIMIT 30
+/// STR above the target's CON needed to tip a standing person past the lean limit.
+#define PIXEL_LIFT_STRENGTH_MARGIN 3
+/// Lift points per full body height of difference; a dwarf against a human gives 2.
+#define PIXEL_LIFT_HEIGHT_POINTS 10
+
 #define PULL_PRONE_SLOWDOWN 2
 #define HUMAN_CARRY_SLOWDOWN 0
 

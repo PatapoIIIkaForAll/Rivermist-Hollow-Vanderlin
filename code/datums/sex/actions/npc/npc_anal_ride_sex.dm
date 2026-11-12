@@ -84,13 +84,14 @@
 	playsound(target, get_force_sound(), used_sex_volume, TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target)
 
+	// The rider's hole takes the strain; the cock under them feels no pain.
 	if(considered_limp(target))
-		perform_sex_action(target, user, 1.2, 4, 1.2)
+		perform_sex_action(user, target, 1.2, 4, 1.2)
 	else
-		perform_sex_action(target, user, 2.4, 9, 2.4)
+		perform_sex_action(user, target, 2.4, 9, 2.4)
 	handle_passive_ejaculation()
 
-	perform_sex_action(user, target, 2, 4, 2)
+	perform_sex_action(target, user, 2, 0, 2)
 
 /datum/sex_action/npc/npc_anal_ride_sex/compose_perform_lines(mob/living/user, mob/living/target, stage, variant)
 	var/cock = get_penis_word(target)

@@ -113,6 +113,9 @@
 	if(succeeded && target && controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] == target)
 		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
 		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+	// The wrapper walks off and leaves the cocoon be.
+	if(succeeded && istype(target?.loc, /obj/structure/spider/cocoon))
+		spider_shun_cocoon(controller, target.loc)
 	controller.clear_blackboard_key(target_key)
 	controller.clear_blackboard_key(BB_SPIDER_SATED_WITH)
 
@@ -156,6 +159,12 @@
 	var/mob/living/carbon/victim = cocoon.get_wrapped_victim()
 	if(!victim || world.time < victim.kidnap_protected_until || !victim.allows_player_erp_while_disconnected())
 		return FALSE
+	if(HAS_TRAIT(victim, TRAIT_DEFEAT_REFUSE_ADVANCES))
+		return FALSE
+	if(should_apply_mob_erp_target_pref(spider, victim))
+		var/datum/targetting_datum/targeting = spider.ai_controller?.blackboard[BB_TARGETTING_DATUM]
+		if(!targeting?.is_horny_pref_target(spider, victim))
+			return FALSE
 	if(!target_allows_mob_erp_action(spider, victim, /datum/erp_preference/boolean/allow_mob_oviposition))
 		return FALSE
 	return victim.can_receive_oviposition_implant()
@@ -219,6 +228,9 @@
 	var/obj/structure/spider/cocoon/cocoon = controller.blackboard[cocoon_key]
 	var/mob/living/carbon/victim = cocoon?.get_wrapped_victim()
 	if(QDELETED(cocoon) || cocoon.brooded || !victim)
+		finish_action(controller, FALSE, cocoon_key)
+		return
+	if(!spider_can_brood(pawn, cocoon))
 		finish_action(controller, FALSE, cocoon_key)
 		return
 	if(get_dist(pawn, cocoon) > 1)
@@ -315,6 +327,7 @@
 		return
 	pawn.visible_message(span_warning("[pawn] spins more silk over [cocoon] and seals it."))
 	to_chat(victim, span_love("[pawn] seals the silk over my hips."))
+	spider_shun_cocoon(pawn.ai_controller, cocoon)
 
 /datum/ai_behavior/spider_brood/finish_action(datum/ai_controller/controller, succeeded, cocoon_key)
 	. = ..()

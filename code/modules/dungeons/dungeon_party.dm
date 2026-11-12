@@ -661,7 +661,7 @@
 	var/datum/party/party = get_party()
 	if(party && !(ckey(petitioner.ckey) in party.members))
 		if(!join_party(petitioner, party))
-			to_chat(petitioner, span_warning("You cannot join this expedition while bound to another party."))
+			to_chat(petitioner, span_warning("You cannot join this expedition: its party is full, or you are in another party."))
 			return FALSE
 	add_run_member(petitioner)
 	// Actually descending consumes any remembered approval, whichever path got

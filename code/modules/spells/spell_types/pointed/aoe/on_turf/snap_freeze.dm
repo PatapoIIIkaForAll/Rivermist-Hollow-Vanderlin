@@ -29,6 +29,8 @@
 	new /obj/effect/temp_visual/snap_freeze(victim)
 	playsound(victim, 'sound/combat/newstuck.ogg', 80, TRUE)
 	for(var/mob/living/L in victim)
+		if(owner?.spares_ally(L))
+			continue
 		if(L.can_block_magic(MAGIC_RESISTANCE))
 			L.visible_message(span_warning("The ice fades away around [L]."))
 			playsound(L, 'sound/magic/magic_nulled.ogg', 100)

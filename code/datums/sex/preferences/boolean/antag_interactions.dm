@@ -14,12 +14,6 @@
 	default_value = TRUE
 	category = "Antagonists"
 
-/datum/erp_preference/boolean/dream_visitable
-	name = "Dreams Can Be Visited"
-	description = "Whether lewd antagonists can visit your dreams"
-	default_value = TRUE
-	category = "Antagonists"
-
 /datum/erp_preference/boolean/antag_pregnancy
 	name = "Antagonist Pregnancy"
 	description = "Whether antagonists, such as a gnoll pack holding you captive, can impregnate you through their rites"

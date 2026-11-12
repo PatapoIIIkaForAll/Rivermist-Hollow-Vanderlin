@@ -218,16 +218,16 @@
 		if(istype(passenger, /obj/item/mob_holder/internal_womb))
 			return "It clings to me too tightly to push out yet."
 		return "That one is too deep, or too much a part of me, to push out."
-	return get_passage_block_reason(passenger, container)
+	return get_passage_block_reason(passenger, container, src)
 
-/// What the body itself puts in the way out, or null: clothes, a worn device, a plug, a penetration, size.
-/mob/living/carbon/human/proc/get_passage_block_reason(obj/item/passenger, obj/item/organ/container)
+/// What the body puts in the way out for [actor], or null: armor, a worn device, a plug, a penetration, size.
+/mob/living/carbon/human/proc/get_passage_block_reason(obj/item/passenger, obj/item/organ/container, mob/living/actor)
 	var/obj/item/organ/genitals/filling_organ/canal = container.get_birth_canal()
 	if(!istype(canal) || !canal.orifice_type)
 		return null
 	// The panel's rules: only armor above light keeps hands off, and a worn device seals its slot.
-	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
-		return "My clothes are in the way."
+	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, actor))
+		return "My armor is in the way."
 	if(is_organ_slot_blocked(canal.slot))
 		return "Something worn seals the way out."
 	var/datum/component/body_storage/passage = canal.GetComponent(/datum/component/body_storage)
@@ -345,7 +345,7 @@
 		return istype(passenger, /obj/item/mob_holder/internal_womb) ? "It clings too tightly to bring up." : "That one is too much a part of me to bring up."
 	if(get_passenger_birth_girth(passenger) > OVI_RETCH_MAX_GIRTH)
 		return "It is too big to bring up. It will have to go the other way."
-	if(!has_mouth() || !mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		return "My mouth is not free."
 	return null
 

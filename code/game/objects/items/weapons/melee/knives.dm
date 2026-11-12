@@ -511,7 +511,7 @@
 
 			human_user.copy_physical_features(target)
 			to_chat(user, span_purple("I take on a new face.."))
-			ADD_TRAIT(target, TRAIT_DISFIGURED, TRAIT_GENERIC)
+			target.lose_face_to_thief()
 
 			return
 

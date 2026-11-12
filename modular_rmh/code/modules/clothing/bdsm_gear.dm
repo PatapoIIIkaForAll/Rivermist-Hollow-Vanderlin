@@ -21,7 +21,6 @@
 	var/fastened = TRUE
 	var/can_lower = TRUE
 	var/drool_chance = BDSM_GAG_DROOL_CHANCE
-	var/muffled_words = "Mmf..."
 
 /obj/item/clothing/face/bdsm_gag/Initialize(mapload, ...)
 	. = ..()
@@ -61,14 +60,10 @@
 	wearer.update_inv_wear_mask()
 	update_appearance()
 
+// Say() turns gagged speech into mumbling; the gag only adds drool.
 /obj/item/clothing/face/bdsm_gag/handle_speech(mob/living/carbon/wearer, list/speech_args)
 	if(!fastened || !istype(wearer) || wearer.wear_mask != src)
 		return
-	var/original_words = speech_args[SPEECH_MESSAGE]
-	if(!original_words)
-		return
-	to_chat(wearer, span_notice("You try to say: \"[original_words]\""))
-	speech_args[SPEECH_MESSAGE] = muffled_words
 	if(drool_chance && prob(drool_chance))
 		INVOKE_ASYNC(wearer, TYPE_PROC_REF(/mob, emote), "drool")
 
@@ -94,12 +89,10 @@
 /obj/item/clothing/face/bdsm_gag/muzzle/black
 	name = "black leather muzzle"
 	icon_state = "black_muzzle"
-	muffled_words = "Mmph..."
 
 /obj/item/clothing/face/bdsm_gag/muzzle/brown
 	name = "brown leather muzzle"
 	icon_state = "brown_muzzle"
-	muffled_words = "Mmph..."
 
 /obj/item/clothing/face/bdsm_gag/ball
 	abstract_type = /obj/item/clothing/face/bdsm_gag/ball
@@ -120,7 +113,6 @@
 	desc = "A strapped ring that leaves the mouth open while making clear speech difficult."
 	flags_cover = NONE
 	body_parts_covered = FACE
-	muffled_words = "Ah... nnh..."
 	drool_chance = 20
 	abstract_type = /obj/item/clothing/face/bdsm_gag/ring
 
@@ -150,8 +142,7 @@
 	name = "brown harness gag"
 	icon_state = "brown_harnessgag"
 
-// A gag suppresses ordinary vocal speech in the base code. Its own speech
-// handler substitutes an audible muffled phrase, so allow that narrow case.
+// A fastened gag still lets voice through for muffled emotes; say() mumbles it.
 /mob/living/carbon/human/can_speak_vocal(message)
 	var/obj/item/clothing/face/bdsm_gag/gag = wear_mask
 	if(!istype(gag) || !gag.fastened)
@@ -170,8 +161,7 @@
 			return FALSE
 	return TRUE
 
-// General speech checks and voice packs should still see a gagged person as
-// unable to speak clearly. Say() uses can_speak_vocal() and the gag's handler.
+// General speech checks and voice packs see a gagged person as unable to speak clearly.
 /mob/living/carbon/human/can_speak(message)
 	var/obj/item/clothing/face/bdsm_gag/gag = wear_mask
 	if(istype(gag) && gag.fastened)

@@ -157,6 +157,12 @@
 		if("idle")
 			return pick('sound/vo/mobs/spider/idle (1).ogg','sound/vo/mobs/spider/idle (2).ogg','sound/vo/mobs/spider/idle (3).ogg','sound/vo/mobs/spider/idle (4).ogg')
 
+/// Beside a cocoon it cannot leave, the spider makes no idle noise.
+/mob/living/simple_animal/hostile/retaliate/spider/emote(act, m_type = null, message = null, intentional = FALSE, forced = FALSE, targetted = FALSE, custom_me = FALSE)
+	if(spider_mutes_emote(src, act, intentional))
+		return
+	return ..()
+
 /mob/living/simple_animal/hostile/retaliate/spider/taunted(mob/user)
 	emote("aggro")
 	return

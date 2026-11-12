@@ -259,9 +259,27 @@
 		return pickweight(weighted_regular_clothes)
 	return null
 
+/// Share of strips where a tearable cloth garment is torn open and left on instead.
+#define HORNY_STRIP_TEAR_CHANCE 30
+
+/// The zone a strip would tear on this garment, the hem first since strips go for the groin, or null.
+/proc/horny_strip_tear_zone(obj/item/item)
+	var/obj/item/clothing/garment = item
+	if(!istype(garment))
+		return null
+	if(garment.can_tear_hem())
+		return BODY_ZONE_PRECISE_GROIN
+	if(garment.can_tear_top())
+		return BODY_ZONE_CHEST
+	return null
+
+/// TRUE when this strip tears the garment instead; armour has no tear zone, so it always comes off.
+/proc/horny_rolls_strip_tear(obj/item/item, chance = HORNY_STRIP_TEAR_CHANCE)
+	return !isnull(horny_strip_tear_zone(item)) && prob(chance)
+
 /// Tugs one piece off over strip_delay, with a chance to damage it and the stockings beneath.
-/// The piece when it came off, TRUE when it only tried, FALSE when there was nothing to pull.
-/proc/horny_strip_target(mob/living/hunter, mob/living/carbon/human/target, strip_delay, damage_chance = 0, damage_ratio = 0, include_mouth_cover = TRUE, allow_regular_clothes = FALSE)
+/// The piece when it came off or was torn open, TRUE when it only tried, FALSE when there was nothing to pull.
+/proc/horny_strip_target(mob/living/hunter, mob/living/carbon/human/target, strip_delay, damage_chance = 0, damage_ratio = 0, include_mouth_cover = TRUE, allow_regular_clothes = FALSE, tear_chance = HORNY_STRIP_TEAR_CHANCE)
 	var/obj/item/stripped_item = horny_pick_strip_target(hunter, target, include_mouth_cover, allow_regular_clothes)
 	if(!stripped_item)
 		return FALSE
@@ -276,6 +294,14 @@
 		return TRUE
 	if(QDELETED(stripped_item) || stripped_item.loc != target)
 		return TRUE
+	if(target != hunter && horny_rolls_strip_tear(stripped_item, tear_chance))
+		var/obj/item/clothing/torn = stripped_item
+		var/tear_zone = horny_strip_tear_zone(torn)
+		var/torn_name = torn.name
+		if(torn.tear_open_at(tear_zone))
+			var/where = tear_zone == BODY_ZONE_CHEST ? "open at the chest" : "at the hem"
+			target.felt_visible_message(span_danger("[hunter] tears [target]'s [torn_name] [where] and leaves it on!"), span_userdanger("[hunter] tears my [torn_name] [where]!"))
+			return torn
 	if(!target.dropItemToGround(stripped_item, force = FALSE, silent = FALSE))
 		return TRUE
 

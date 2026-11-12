@@ -203,8 +203,8 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 /obj/item/clothing/undies/chastity/pre_lock_interact(mob/living/user)
 	if(!wearer)
 		return TRUE
-	if(!get_location_accessible(wearer, BODY_ZONE_PRECISE_GROIN))
-		to_chat(user, span_warning("[user == wearer ? "My" : "[wearer]'s"] groin is covered."))
+	if(wearer.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, user))
+		to_chat(user, span_warning("[user == wearer ? "My" : "[wearer]'s"] armor is in the way."))
 		return FALSE
 	return TRUE
 

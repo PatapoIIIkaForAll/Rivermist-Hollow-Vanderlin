@@ -393,7 +393,7 @@ GLOBAL_LIST_INIT(reverse_slave_phrases_translations, list(
 			action_type = /datum/sex_action/masturbate/penis
 		scene_controller.try_start_action(action_type)
 		scene_controller.set_current_force(SEX_FORCE_HIGH)
-		scene_controller.set_current_speed(SEX_SPEED_MAX)
+		scene_controller.set_current_speed(SEX_SPEED_EXTREME)
 		return TRUE
 
 	// Orgasm — forced climax.

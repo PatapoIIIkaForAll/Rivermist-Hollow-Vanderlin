@@ -164,6 +164,19 @@
 	TEST_ASSERT(!findtext(tentacle_start["room"], "cock"), "The tentacle start does not say cock: [tentacle_start["room"]]")
 	check_jerk(allocate(/datum/sex_action/tentacle_jerk), tentacle, victim)
 
+	var/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/small/burrow = allocate(/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/small)
+	burrow.emerge_from_ground()
+	for(var/kind_type in subtypesof(/datum/tentacle_kind))
+		burrow.tentacle_kind_type = kind_type
+		burrow.apply_tentacle_kind()
+		var/datum/tentacle_kind/kind = burrow.get_tentacle_kind()
+		TEST_ASSERT_EQUAL(kind?.type, kind_type, "Test setup: the burrow tentacle takes [kind_type].")
+		var/list/kind_acts = ispath(kind_type, /datum/tentacle_kind/feeler) ? list(/datum/sex_action/npc/npc_feeler_caress) : tentacle_acts
+		for(var/act_type in kind_acts)
+			for(var/problem in check_act(make_act(act_type), burrow, victim, !ispath(act_type, /datum/sex_action/npc/npc_throat_sex) && !ispath(act_type, /datum/sex_action/npc/npc_feeler_caress)))
+				TEST_FAIL("[kind_type] [problem]")
+		check_jerk(allocate(/datum/sex_action/tentacle_jerk), burrow, victim)
+
 	var/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/maneater/tendril = allocate(/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/maneater)
 	var/list/maneater_acts = list(
 		/datum/sex_action/npc/npc_vaginal_sex/tentacle/maneater,

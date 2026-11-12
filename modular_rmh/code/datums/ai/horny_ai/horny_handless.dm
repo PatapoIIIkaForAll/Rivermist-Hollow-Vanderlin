@@ -68,7 +68,8 @@
 		target.felt_visible_message(span_danger(profile.get_hold_message(hunter, target)), null, span_hear("I hear a violent struggle."))
 		return TRUE
 
-	if(target.pulledby && target.pulledby != hunter && target.pulledby.grab_state >= GRAB_AGGRESSIVE)
+	// An aggressive hold, a packmate's or a fellow hunter's is never pulled loose.
+	if(horny_hold_is_spoken_for(hunter, target))
 		return FALSE
 	if(TIMER_COOLDOWN_RUNNING(target, "broke_free"))
 		return FALSE

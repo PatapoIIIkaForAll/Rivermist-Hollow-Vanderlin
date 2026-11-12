@@ -1,10 +1,13 @@
-// Laying eggs as an act: the ovipositor seats itself and the clutch comes one egg per cycle.
+// Laying eggs as an act: the ovipositor seats itself, then an egg comes every few cycles up to a cap.
 
 #define LAY_EGG_DO_TIME (6 SECONDS)
 #define LAY_EGG_STAMINA 0.6
-/// The layer's pleasure per egg: a spider's eight-egg store climaxes around the fifth, so the rush has eggs left.
+/// The layer's pleasure per egg: with the wait trickle, a capped act climaxes around its last egg.
 #define LAY_EGG_LAYER_AROUSAL 3.5
 #define LAY_EGG_LAYER_CLIMAX 7
+/// The layer's pleasure on a cycle between eggs.
+#define LAY_EGG_WAIT_AROUSAL 1
+#define LAY_EGG_WAIT_CLIMAX 1
 /// The host's pleasure per egg at full share; the fit decides the share.
 #define LAY_EGG_HOST_AROUSAL 6
 #define LAY_EGG_HOST_CLIMAX 4
@@ -43,6 +46,11 @@
 	/// Eggs this act has laid, and whether its first swell has shown.
 	var/eggs_laid_this_act = 0
 	var/lay_egg_swelled = FALSE
+	/// Cycles since the swell or the last egg, and wait lines shown this act.
+	var/lay_wait_cycles = 0
+	var/lay_wait_lines = 0
+	/// The act laid its last egg for now; later cycles only wait for it to end.
+	var/lay_egg_spent = FALSE
 
 /// The organ eggs go into for this act's hole on [target].
 /datum/sex_action/proc/get_lay_receiver(mob/living/user, mob/living/target)
@@ -74,22 +82,33 @@
 		return ", and it burns"
 	return ""
 
-/// One beat of laying into [target]: the first swell, then an egg per cycle. FALSE once the act must stop.
+/// One lay beat into [target]: the swell, then an egg every few cycles. FALSE once the act must stop.
 /datum/sex_action/proc/run_lay_egg_beat(mob/living/user, mob/living/target)
 	var/datum/component/ovipositor/ovipositor = get_working_ovipositor(user)
 	if(!ovipositor)
 		stop_runtime()
+		return FALSE
+	// Spent: the finale's spurts still run, then the act stops.
+	if(lay_egg_spent)
 		return FALSE
 	if(!lay_egg_swelled)
 		lay_egg_swelled = TRUE
 		show_lay_lines(user, target, "swell", 0)
 		perform_sex_action(user, target, LAY_EGG_SWELL_AROUSAL, 0, LAY_EGG_SWELL_CLIMAX)
 		return TRUE
+	lay_wait_cycles++
+	if(lay_wait_cycles < LAY_EGG_CYCLES_PER_EGG)
+		run_lay_wait_beat(user, target)
+		return TRUE
+	lay_wait_cycles = 0
 	var/obj/item/oviposition_egg/egg = ovipositor.lay_one_egg(get_lay_receiver(user, target), force >= SEX_FORCE_HIGH)
 	if(!egg)
 		if(ovipositor.last_lay_reason)
 			to_chat(user, span_warning(ovipositor.last_lay_reason))
-		stop_runtime()
+		if(eggs_laid_this_act)
+			end_lay_act(user, target)
+		else
+			stop_runtime()
 		return FALSE
 	eggs_laid_this_act++
 	var/share = ovipositor.last_lay_share
@@ -99,9 +118,44 @@
 		perform_sex_action(target, user, LAY_EGG_HOST_AROUSAL * share, 0, LAY_EGG_HOST_CLIMAX * share)
 	if(ovipositor.eggs_stored <= 0)
 		show_lay_lines(user, target, "spent", 0)
-		stop_runtime()
+		end_lay_act(user, target)
+		return FALSE
+	if(eggs_laid_this_act >= LAY_EGG_ACT_CAP)
+		show_lay_lines(user, target, "capped", 0)
+		end_lay_act(user, target)
 		return FALSE
 	return TRUE
+
+/// The wait line due this cycle: "settle" right after an egg, "twitch" mid-wait, else null.
+/datum/sex_action/proc/get_lay_wait_beat()
+	if(lay_wait_cycles == 1 && eggs_laid_this_act)
+		return "settle"
+	if(lay_wait_cycles == round(LAY_EGG_CYCLES_PER_EGG / 2))
+		return "twitch"
+	return null
+
+/// A cycle between eggs: a small trickle for the layer and now and then a line for the host.
+/datum/sex_action/proc/run_lay_wait_beat(mob/living/user, mob/living/target)
+	var/beat = get_lay_wait_beat()
+	if(beat)
+		lay_wait_lines++
+		show_lay_lines(user, target, beat, 0)
+	perform_sex_action(user, target, LAY_EGG_WAIT_AROUSAL, 0, LAY_EGG_WAIT_CLIMAX)
+
+/// Ends a lay act that laid its last egg for now; an AI layer climaxes as the finale.
+/datum/sex_action/proc/end_lay_act(mob/living/user, mob/living/target)
+	lay_egg_spent = TRUE
+	if(climaxes_at_lay_end() && !just_climaxed && !stop_after_spurts)
+		var/datum/component/arousal/arousal = user.GetComponent(/datum/component/arousal)
+		if(arousal?.can_climax())
+			arousal.ejaculate(src, user, target, TRUE, user)
+	// A climax that stops the act ends it after its spurts; anything else ends it now.
+	if(!just_climaxed && !stop_after_spurts)
+		stop_runtime()
+
+/// TRUE when the layer climaxes once the act is spent, so an AI hunt ends sated.
+/datum/sex_action/proc/climaxes_at_lay_end()
+	return FALSE
 
 /// One beat of laying onto the floor. FALSE once the act must stop.
 /datum/sex_action/proc/run_lay_floor_beat(mob/living/user)
@@ -133,13 +187,20 @@
 		return FALSE
 	return TRUE
 
-/// Words for a beat of laying into [target]: "seat", "swell", "egg", "spent", "withdraw".
+/// Words for a beat of laying into [target]: "seat", "swell", "settle", "twitch", "egg", "spent", "capped", "withdraw".
 /datum/sex_action/proc/show_lay_lines(mob/living/user, mob/living/target, beat, share)
 	var/part = get_lay_part(user)
 	var/word = get_lay_egg_word(user)
 	var/one = get_lay_egg_phrase(user)
 	var/hole = get_lay_hole_word(user, target)
 	switch(beat)
+		if("settle")
+			to_chat(target, span_love("The [word] settles deep in my [get_lay_rest_word(hole)]."))
+		if("twitch")
+			to_chat(target, span_love("Something twitches inside me."))
+		if("capped")
+			user.visible_message(span_warning("[user]'s [part] stills in [target]'s [hole]."), span_love("My [part] is spent for now."))
+			to_chat(target, span_love("[user]'s [part] stills in my [hole]."))
 		if("seat")
 			user.visible_message(span_warning("[user] pushes [user.p_their()] [part] into [target]'s [hole]."), span_love("I push my [part] into [target]'s [hole]."))
 			to_chat(target, span_love("[user]'s [part] pushes into my [hole]."))
@@ -170,12 +231,16 @@
 			return "ass"
 	return "throat"
 
+/// Where a laid egg rests, for the settle line: the throat's eggs go down to the belly.
+/datum/sex_action/proc/get_lay_rest_word(hole)
+	return hole_id == BODY_ZONE_PRECISE_MOUTH ? "belly" : hole
+
 // ---- The panel acts ----
 
 /datum/sex_action/sex/lay_eggs
 	abstract_type = /datum/sex_action/sex/lay_eggs
 	name = "Lay eggs"
-	description = "Seat your ovipositor and lay your clutch into them, one egg at a time."
+	description = "Seat your ovipositor and lay up to three eggs into them, one every few thrusts."
 	do_time = LAY_EGG_DO_TIME
 	stamina_cost = LAY_EGG_STAMINA
 	knot_on_finish = FALSE
@@ -211,6 +276,9 @@
 		return FALSE
 	eggs_laid_this_act = 0
 	lay_egg_swelled = FALSE
+	lay_wait_cycles = 0
+	lay_wait_lines = 0
+	lay_egg_spent = FALSE
 	// Still pressing at the opening: nothing went in yet.
 	if(orifice_pressing)
 		return .
@@ -359,7 +427,11 @@
 	if(!has_egg_to_lay(user))
 		return FALSE
 	var/datum/component/ovipositor/ovipositor = get_working_ovipositor(user)
-	return isnull(ovipositor.get_lay_block_reason(get_lay_receiver(user, target)))
+	var/obj/item/organ/receiver = get_lay_receiver(user, target)
+	if(ovipositor.get_lay_block_reason(receiver))
+		return FALSE
+	// A full hole refuses the act, so the hunt picks an ordinary one instead.
+	return ovipositor.has_room_for_egg(receiver, force >= SEX_FORCE_HIGH)
 
 /datum/sex_action/npc/proc/lay_start_lines(mob/living/user, mob/living/target)
 	var/list/words = get_act_words(user, target)
@@ -387,11 +459,18 @@
 		var/victim_hole = get_act_hole(partner, climaxer)
 		return act_lines("[climaxer]'s [victim_hole] clenches around [partner]'s [part]!", "I shake as my [victim_hole] clenches around [partner]'s [part]!", "I hear a shaky moan.")
 	var/hole = get_act_hole(climaxer, partner)
-	var/word = get_lay_egg_word(climaxer)
 	var/into = get_lay_direction()
+	// The finale of an emptied store has nothing left to pump.
+	if(!has_egg_to_lay(climaxer))
+		return act_lines("[climaxer] goes rigid deep in [partner]'s [hole]!", "[climaxer] goes rigid deep in my [hole]!", "I hear a wet pulse.")
+	var/word = get_lay_egg_word(climaxer)
 	return act_lines("[climaxer] goes rigid and pumps its [word]s [into] [partner]'s [hole]!", "[climaxer] goes rigid and pumps its [word]s [into] my [hole]!", "I hear a wet pulse.")
 
-/// The NPC beat: one egg per cycle, and each egg feeds the hunter's lust.
+/// The AI's lay act climaxes when spent, so the hunt ends sated with the rush as the finale.
+/datum/sex_action/npc/climaxes_at_lay_end()
+	return TRUE
+
+/// The NPC beat: an egg every few cycles, and each egg feeds the hunter's lust.
 /datum/sex_action/npc/proc/run_npc_lay_beat(mob/living/user, mob/living/target)
 	act_cycles++
 	var/before = eggs_laid_this_act
@@ -399,13 +478,19 @@
 	if(eggs_laid_this_act > before)
 		user.ai_controller?.add_horny_lust(HORNY_LUST_PER_CLENCH)
 
-/// The NPC's lines for a lay beat: "swell", "egg" or "spent"; null for any other beat.
+/// The NPC's lines for a lay beat: "swell", "settle", "twitch", "egg", "spent" or "capped"; null for any other.
 /datum/sex_action/npc/proc/get_npc_lay_lines(mob/living/user, mob/living/target, beat, share)
 	var/part = get_lay_part(user)
 	var/hole = get_act_hole(user, target)
 	switch(beat)
 		if("swell")
 			return act_lines("[user]'s [part] swells inside [target]'s [hole].", "[user]'s [part] swells inside my [hole].", "I hear a wet shift.")
+		if("settle")
+			return act_lines("[user] holds still in [target]'s [hole].", "The [get_lay_egg_word(user)] settles deep in my [get_lay_rest_word(hole)].", null)
+		if("twitch")
+			return act_lines("[user]'s [part] throbs in [target]'s [hole].", "Something twitches inside me.", null)
+		if("capped")
+			return act_lines("[user]'s [part] stills in [target]'s [hole].", "[user]'s [part] stills in my [hole].", "I hear a wet shift.")
 		if("egg")
 			var/one = get_lay_egg_phrase(user)
 			var/into = get_lay_direction()
@@ -502,6 +587,8 @@
 #undef LAY_EGG_STAMINA
 #undef LAY_EGG_LAYER_AROUSAL
 #undef LAY_EGG_LAYER_CLIMAX
+#undef LAY_EGG_WAIT_AROUSAL
+#undef LAY_EGG_WAIT_CLIMAX
 #undef LAY_EGG_HOST_AROUSAL
 #undef LAY_EGG_HOST_CLIMAX
 #undef LAY_EGG_SWELL_AROUSAL

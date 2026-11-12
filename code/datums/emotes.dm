@@ -143,8 +143,9 @@
 	var/obfuscated_msg = null
 	if(!nomsg)
 		user.log_message(msg, LOG_EMOTE)
-		obfuscated_msg = "<b>[user]</b> [stars(msg)]"
-		msg = "<b>[user]</b> " + msg
+		var/name_html = user.get_emote_name_html()
+		obfuscated_msg = "[name_html] [stars(msg)]"
+		msg = "[name_html] " + msg
 
 	var/pitch = 1 //bespoke vary system so deep voice/high voiced humans
 	if(isliving(user))
@@ -177,6 +178,23 @@
 			user.audible_message(msg, runechat_message = runechat_msg_to_use)
 		else
 			send_visible_emote_message(user, user, msg, runechat_message = runechat_msg_to_use, intentional = intentional, obfuscated_message = obfuscated_msg, obfuscated_runechat_message = obfuscated_runechat_msg_to_use)
+
+/// Bold name that starts an emote line, in the voice colour when there is one.
+/mob/proc/get_emote_name_html()
+	var/name_color = get_emote_name_color()
+	if(!name_color)
+		return "<b>[src]</b>"
+	return "<span style='color:#[name_color];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[src]</b></span>"
+
+/// Colour for the emote name, or null for plain text.
+/mob/proc/get_emote_name_color()
+	return voicecolor_override
+
+/// A hidden face shows a descriptor name, so the voice colour must not give the person away.
+/mob/living/carbon/human/get_emote_name_color()
+	if(!get_face_name(""))
+		return null
+	return voicecolor_override || voice_color
 
 /mob/living/proc/get_emote_pitch()
 	return clamp(voice_pitch, 0.5, 2)

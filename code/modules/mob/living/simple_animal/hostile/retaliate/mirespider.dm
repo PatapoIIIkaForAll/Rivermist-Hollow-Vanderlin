@@ -90,6 +90,12 @@
 		if("idle")
 			return pick('sound/vo/mobs/spider/idle (1).ogg','sound/vo/mobs/spider/idle (2).ogg','sound/vo/mobs/spider/idle (3).ogg','sound/vo/mobs/spider/idle (4).ogg')
 
+/// Beside a cocoon it cannot leave, the spider makes no idle noise.
+/mob/living/simple_animal/hostile/retaliate/mirespider/emote(act, m_type = null, message = null, intentional = FALSE, forced = FALSE, targetted = FALSE, custom_me = FALSE)
+	if(spider_mutes_emote(src, act, intentional))
+		return
+	return ..()
+
 /mob/living/simple_animal/hostile/retaliate/mirespider/taunted(mob/user)
 	emote("aggro")
 	return
@@ -220,6 +226,11 @@
 	AddElement(/datum/element/spider_habits, 35)
 	// I'll replace this with something better later. Stopgap for now to make killing them more than just a nuisance.
 
+/mob/living/simple_animal/hostile/mirespider_lurker/emote(act, m_type = null, message = null, intentional = FALSE, forced = FALSE, targetted = FALSE, custom_me = FALSE)
+	if(spider_mutes_emote(src, act, intentional))
+		return
+	return ..()
+
 /mob/living/simple_animal/hostile/mirespider_lurker/AttackingTarget(mob/living/passed_target)
 	. = ..()
 	var/mob/living/bitten = passed_target || target
@@ -300,6 +311,11 @@
 
 /datum/intent/simple/bite/mirespider_paralytic
 	clickcd = CLICK_CD_MELEE * 1.1
+
+/mob/living/simple_animal/hostile/mirespider_paralytic/emote(act, m_type = null, message = null, intentional = FALSE, forced = FALSE, targetted = FALSE, custom_me = FALSE)
+	if(spider_mutes_emote(src, act, intentional))
+		return
+	return ..()
 
 /mob/living/simple_animal/hostile/mirespider_paralytic/AttackingTarget(mob/living/passed_target)
 	. = ..()

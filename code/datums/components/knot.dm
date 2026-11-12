@@ -83,6 +83,11 @@
 	if(!check_knot_penis_type())
 		return FALSE
 
+	// A toy knot is always hard enough to tie.
+	var/obj/item/organ/genitals/penis/penis = user.getorganslot(ORGAN_SLOT_PENIS)
+	if(penis?.is_false_organ())
+		return TRUE
+
 	var/list/arousal_data = list()
 	SEND_SIGNAL(user, COMSIG_SEX_GET_AROUSAL, arousal_data)
 	if(arousal_data["arousal"] < VISIBLE_AROUSAL_THRESHOLD)
@@ -142,7 +147,7 @@
 /datum/component/knotting/proc/handle_knot_force_effects(mob/living/user, mob/living/target, force_level)
 	if(force_level > SEX_FORCE_MID)
 		var/datum/component/arousal/target_arousal = target.GetComponent(/datum/component/arousal)
-		if(force_level == SEX_FORCE_EXTREME)
+		if(force_level >= SEX_FORCE_EXTREME)
 			//target.apply_damage(30, BRUTE, BODY_ZONE_CHEST)
 			target_arousal?.try_do_pain_effect(PAIN_HIGH_EFFECT, FALSE)
 		else
@@ -445,7 +450,8 @@
 		var/datum/component/arousal/btm_arousal = btm.GetComponent(/datum/component/arousal)
 		btm_arousal?.try_do_pain_effect(PAIN_MILD_EFFECT, FALSE)
 
-/datum/component/knotting/proc/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
+/// Ends the tie; [spill] FALSE keeps the hole's contents in, for a knot that stays lodged inside.
+/datum/component/knotting/proc/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE, spill = TRUE)
 	var/mob/living/top = knotted_owner
 	var/mob/living/btm = knotted_recipient
 	var/obj/item/organ/genitals/filling_organ/affected_hole = knotted_hole_ref?.resolve()
@@ -454,7 +460,7 @@
 	if(affected_hole && !QDELETED(affected_hole))
 		UnregisterSignal(affected_hole, list(COMSIG_ORGAN_REMOVED, COMSIG_PARENT_QDELETING))
 		REMOVE_TRAIT(affected_hole, TRAIT_PASSIVE_LEAK_BLOCKED, REF(src))
-		if(istype(btm) && !QDELETED(btm) && affected_hole.reagents?.total_volume)
+		if(spill && istype(btm) && !QDELETED(btm) && affected_hole.reagents?.total_volume)
 			var/turf/release_turf = get_turf(btm)
 			if(release_turf)
 				var/release_amount = min(KNOT_RELEASE_SPILL_AMOUNT, affected_hole.reagents.total_volume)

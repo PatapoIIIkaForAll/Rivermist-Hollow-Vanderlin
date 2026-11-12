@@ -17,6 +17,12 @@
 	cooldown_time = 30 SECONDS
 	spell_cost = 50
 
+/datum/action/cooldown/spell/ocean_embrace/is_hostile_to(atom/cast_on)
+	if(!isliving(cast_on))
+		return FALSE
+	var/mob/living/victim = cast_on
+	return (victim.mob_biotypes & MOB_UNDEAD) && !victim.mind?.has_antag_datum(/datum/antagonist/vampire/lord)
+
 /datum/action/cooldown/spell/ocean_embrace/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

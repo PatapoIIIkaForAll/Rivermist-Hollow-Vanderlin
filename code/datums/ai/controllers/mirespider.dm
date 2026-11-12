@@ -104,8 +104,17 @@
 
 /atom/movable/screen/alert/status_effect/buff/healing/spider_cocoon
 	name = "Spider loogies"
-	desc = "Arachnid weave is stitching some of my wounds up slowly."
+	desc = "Arachnid weave is stitching some of my wounds up slowly. While I am inside a cocoon, click here to struggle out."
 	icon_state = "buff"
+
+/atom/movable/screen/alert/status_effect/buff/healing/spider_cocoon/Click(location, control, params)
+	if(LAZYACCESS(params2list(params), SHIFT_CLICKED))
+		return ..()
+	if(usr != mob_viewer || !isliving(mob_viewer))
+		return
+	var/obj/structure/spider/cocoon/cocoon = mob_viewer.loc
+	if(istype(cocoon))
+		cocoon.start_escape(mob_viewer)
 
 #define COCOON_FILTER "cocoon_glow"
 

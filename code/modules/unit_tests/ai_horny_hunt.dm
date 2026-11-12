@@ -856,3 +856,63 @@
 	TEST_ASSERT(findtext(line, "left arm") && findtext(line, "[partner]"), "Onlookers read who was grabbed and where: [line]")
 	var/own = profile.get_grab_message(goblin, partner, "mouth", TRUE)
 	TEST_ASSERT(findtext(own, "mouth") && findtext(own, " me") && !findtext(own, "[partner]"), "The victim's own line is in the first person: [own]")
+
+/// The brood takes the hunt's consent gates: family prefs, the refuse opt-out and the oviposition pref.
+/datum/unit_test/ai_horny_hunt/spider_brood_respects_consent
+
+/datum/unit_test/ai_horny_hunt/spider_brood_respects_consent/Run()
+	var/mob/living/simple_animal/hostile/retaliate/mirespider/spider = allocate(/mob/living/simple_animal/hostile/retaliate/mirespider)
+	spider.gender = MALE
+	var/mob/living/carbon/human/victim = allocate(/mob/living/carbon/human)
+	var/obj/structure/spider/cocoon/cocoon = allocate(/obj/structure/spider/cocoon)
+	cocoon.wrap(victim)
+	TEST_ASSERT_EQUAL(victim.loc, cocoon, "Test setup: the victim is inside the cocoon.")
+
+	victim.set_cached_erp_preferences(list(
+		/datum/erp_preference/bitflag/horny_mobs = HORNY_MOBS_TAG_MALES,
+		/datum/erp_preference/bitflag/horny_mob_types = HORNY_MOB_TYPE_SPIDERS,
+		/datum/erp_preference/boolean/allow_mob_oviposition = TRUE,
+	))
+	TEST_ASSERT(spider_can_brood(spider, cocoon), "A consenting victim in an open cocoon can be brooded.")
+
+	victim.set_cached_erp_preferences(list(
+		/datum/erp_preference/bitflag/horny_mobs = HORNY_MOBS_TAG_MALES,
+		/datum/erp_preference/bitflag/horny_mob_types = HORNY_MOB_TYPE_HUMANOIDS,
+		/datum/erp_preference/boolean/allow_mob_oviposition = TRUE,
+	))
+	TEST_ASSERT(!spider_can_brood(spider, cocoon), "A victim whose family prefs exclude spiders cannot be brooded.")
+
+	victim.set_cached_erp_preferences(list(
+		/datum/erp_preference/bitflag/horny_mobs = NONE,
+		/datum/erp_preference/bitflag/horny_mob_types = HORNY_MOB_TYPE_SPIDERS,
+		/datum/erp_preference/boolean/allow_mob_oviposition = TRUE,
+	))
+	TEST_ASSERT(!spider_can_brood(spider, cocoon), "A victim with horny mobs off entirely cannot be brooded.")
+
+	victim.set_cached_erp_preferences(list(
+		/datum/erp_preference/bitflag/horny_mobs = HORNY_MOBS_TAG_MALES,
+		/datum/erp_preference/bitflag/horny_mob_types = HORNY_MOB_TYPE_SPIDERS,
+		/datum/erp_preference/boolean/allow_mob_oviposition = FALSE,
+	))
+	TEST_ASSERT(!spider_can_brood(spider, cocoon), "The oviposition pref still gates the brood.")
+
+	victim.set_cached_erp_preferences(list(
+		/datum/erp_preference/bitflag/horny_mobs = HORNY_MOBS_TAG_MALES,
+		/datum/erp_preference/bitflag/horny_mob_types = HORNY_MOB_TYPE_SPIDERS,
+		/datum/erp_preference/boolean/allow_mob_oviposition = TRUE,
+	))
+	ADD_TRAIT(victim, TRAIT_DEFEAT_REFUSE_ADVANCES, KIDNAP_TRAIT)
+	TEST_ASSERT(!spider_can_brood(spider, cocoon), "A victim who refused advances cannot be brooded.")
+	REMOVE_TRAIT(victim, TRAIT_DEFEAT_REFUSE_ADVANCES, KIDNAP_TRAIT)
+	TEST_ASSERT(spider_can_brood(spider, cocoon), "Lifting the refusal lets the brood again.")
+
+/// An NPC captive has no prefs to consult; the brood is unchanged for them.
+/datum/unit_test/ai_horny_hunt/spider_brood_allows_prefless_victims
+
+/datum/unit_test/ai_horny_hunt/spider_brood_allows_prefless_victims/Run()
+	var/mob/living/simple_animal/hostile/retaliate/mirespider/spider = allocate(/mob/living/simple_animal/hostile/retaliate/mirespider)
+	var/mob/living/carbon/human/victim = allocate(/mob/living/carbon/human)
+	var/obj/structure/spider/cocoon/cocoon = allocate(/obj/structure/spider/cocoon)
+	cocoon.wrap(victim)
+	TEST_ASSERT(!victim.cached_erp_preferences, "Test setup: the victim has no cached prefs.")
+	TEST_ASSERT(spider_can_brood(spider, cocoon), "A prefless NPC captive can be brooded, as before.")

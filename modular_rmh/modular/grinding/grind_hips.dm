@@ -315,7 +315,7 @@
 	if(cmode)
 		to_chat(src, span_warning("Not in the middle of a fight."))
 		return FALSE
-	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
+	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, src))
 		to_chat(src, span_warning("My armor is in the way."))
 		return FALSE
 	var/obj/item/grind_hips/hips = new(null, src)

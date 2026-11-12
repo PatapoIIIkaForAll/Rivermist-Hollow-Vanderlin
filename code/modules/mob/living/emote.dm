@@ -1407,3 +1407,168 @@
 	else
 		to_chat(user, "<span class='warning'>You're incapable of slapping in your current state.</span>")
 */
+
+// ............... Finger snaps ..................
+/datum/emote/living/snap
+	key = "snap"
+	key_third_person = "snaps"
+	message = "finger snaps!"
+	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+	hands_use_check = TRUE
+	muzzle_ignore = TRUE
+	sound = 'modular_rmh/sound/emotes/fsnap1.ogg'
+
+/mob/living/carbon/human/verb/emote_snap()
+	set name = "Snap"
+	set category = "Emotes.Noises"
+	emote("snap", intentional = TRUE)
+
+/datum/emote/living/snap/twice
+	key = "snap2"
+	key_third_person = "snaps twice"
+	message = "finger snaps twice!"
+	sound = 'modular_rmh/sound/emotes/fsnap2.ogg'
+
+/mob/living/carbon/human/verb/emote_snap2()
+	set name = "Snap Twice"
+	set category = "Emotes.Noises"
+	emote("snap2", intentional = TRUE)
+
+/datum/emote/living/snap/thrice
+	key = "snap3"
+	key_third_person = "snaps thrice"
+	message = "finger snaps thrice!"
+	sound = 'modular_rmh/sound/emotes/fsnap3.ogg'
+
+/mob/living/carbon/human/verb/emote_snap3()
+	set name = "Snap Thrice"
+	set category = "Emotes.Noises"
+	emote("snap3", intentional = TRUE)
+
+/datum/emote/living/stomp
+	key = "stomp"
+	key_third_person = "stomps"
+	message = "stomps!"
+	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+	muzzle_ignore = TRUE
+	sound = 'modular_rmh/sound/emotes/stomp.ogg'
+
+/datum/emote/living/stomp/can_run_emote(mob/living/user, status_check = TRUE, intentional)
+	. = ..()
+	if(!.)
+		return
+	// A stomp needs the feet under you.
+	if(user.body_position != STANDING_UP)
+		return FALSE
+
+/mob/living/carbon/human/verb/emote_stomp()
+	set name = "Stomp"
+	set category = "Emotes.Noises"
+	emote("stomp", intentional = TRUE)
+
+/datum/emote/living/warcry
+	key = "warcry"
+	key_third_person = "warcries"
+	message = "lets out an inspiring battle cry!"
+	message_muffled = "makes a muffled shout!"
+	emote_type = EMOTE_AUDIBLE
+
+/mob/living/carbon/human/verb/emote_warcry()
+	set name = "Warcry"
+	set category = "Emotes.Noises"
+	emote("warcry", intentional = TRUE)
+
+/datum/emote/living/hmph
+	key = "hmph"
+	key_third_person = "hmphs"
+	message = "hmphs."
+	message_muffled = "makes a muffled hmph."
+	emote_type = EMOTE_AUDIBLE
+
+/mob/living/carbon/human/verb/emote_hmph()
+	set name = "Hmph"
+	set category = "Emotes.Noises"
+	emote("hmph", intentional = TRUE)
+
+/datum/emote/living/strain
+	key = "strain"
+	key_third_person = "strains"
+	message = "strains themselves!"
+	message_muffled = "strains with a muffled grunt!"
+	emote_type = EMOTE_AUDIBLE
+
+/mob/living/carbon/human/verb/emote_strain()
+	set name = "Strain"
+	set category = "Emotes.Noises"
+	emote("strain", intentional = TRUE)
+
+/mob/living/carbon/human/verb/emote_sniff()
+	set name = "Sniff"
+	set category = "Emotes.Noises"
+	emote("sniff", intentional = TRUE)
+
+/datum/emote/living/eye_roll
+	key = "eye_roll"
+	key_third_person = "rolls their eyes"
+	message = "rolls their eyes."
+	emote_type = EMOTE_VISIBLE
+
+/mob/living/carbon/human/verb/emote_eye_roll()
+	set name = "Eye Roll"
+	set category = "Emotes.Silent"
+	emote("eye_roll", intentional = TRUE)
+
+/datum/emote/living/squint
+	key = "squint"
+	key_third_person = "squints"
+	message = "squints their eyes."
+	emote_type = EMOTE_VISIBLE
+
+/mob/living/carbon/human/verb/emote_squint()
+	set name = "Squint"
+	set category = "Emotes.Silent"
+	emote("squint", intentional = TRUE)
+
+/datum/emote/living/lick
+	key = "lick"
+	key_third_person = "licks"
+	message = "licks their lips."
+	message_param = "licks %t."
+	emote_type = EMOTE_VISIBLE
+
+/mob/living/carbon/human/verb/emote_lick()
+	set name = "Lick"
+	set category = "Emotes.Silent"
+	emote("lick", intentional = TRUE, targetted = TRUE)
+
+#define FLIP_EMOTE_DURATION (0.7 SECONDS)
+
+/datum/emote/living/flip
+	key = "flip"
+	key_third_person = "flips"
+	message = "does a flip!"
+	emote_type = EMOTE_VISIBLE
+	restraint_check = TRUE
+	incapacitated_check = TRUE
+
+/datum/emote/living/flip/can_run_emote(mob/living/user, status_check = TRUE, intentional)
+	. = ..()
+	if(!.)
+		return
+	// The spin rides on the standing transform; lying or buckled bodies keep their own.
+	if(user.body_position != STANDING_UP || user.buckled || user.IsImmobilized())
+		return FALSE
+
+/datum/emote/living/flip/run_emote(mob/living/user, params, type_override, intentional, targetted)
+	. = ..()
+	if(!.)
+		return
+	user.SpinAnimation(FLIP_EMOTE_DURATION, 1)
+	user.Immobilize(FLIP_EMOTE_DURATION)
+
+/mob/living/carbon/human/verb/emote_flip()
+	set name = "Flip"
+	set category = "Emotes.Silent"
+	emote("flip", intentional = TRUE)
+
+#undef FLIP_EMOTE_DURATION

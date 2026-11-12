@@ -66,13 +66,14 @@
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
 
+	// The rider's hole takes the strain; the cock under them feels no pain.
 	if(considered_limp(target))
-		perform_sex_action(target, user, 1.2, 3, 1.2)
+		perform_sex_action(user, target, 1.2, 3, 1.2)
 	else
-		perform_sex_action(target, user, 2.4, 7, 2.4)
+		perform_sex_action(user, target, 2.4, 7, 2.4)
 	handle_passive_ejaculation(target)
 
-	perform_sex_action(user, target, 2, 4, 3)
+	perform_sex_action(target, user, 2, 0, 3)
 
 /datum/sex_action/npc/npc_vaginal_ride_sex/compose_perform_lines(mob/living/user, mob/living/target, stage, variant)
 	var/cock = get_penis_word(target)

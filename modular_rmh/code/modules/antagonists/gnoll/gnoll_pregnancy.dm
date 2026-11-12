@@ -98,7 +98,7 @@
 	return TRUE
 
 /proc/get_gnoll_ritual_womb(mob/living/carbon/human/carrier)
-	if(!istype(carrier) || !carrier.can_receive_oviposition_implant())
+	if(!istype(carrier) || !carrier.can_start_oviposition_gestation())
 		return null
 	var/obj/item/organ/genitals/filling_organ/womb/womb = carrier.get_womb()
 	if(!istype(womb) || !womb.fertility || !womb.supports_oviposition_pregnancy() || length(womb.get_oviposition_eggs()) || womb.count_internal_womb_hatchlings())

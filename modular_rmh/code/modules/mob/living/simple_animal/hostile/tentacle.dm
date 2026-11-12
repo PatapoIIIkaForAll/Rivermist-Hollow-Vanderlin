@@ -34,10 +34,10 @@
 /mob/living/simple_animal/hostile/retaliate/tentacle
 	name = "writhing tentacle mass"
 	desc = "A restless knot of slick, searching tentacles moving with unsettling purpose."
-	icon = 'modular_rmh/icons/mob/monster/tentacles.dmi'
-	icon_state = "tentacles"
-	icon_living = "tentacles"
-	icon_dead = "tentacles_dead"
+	icon = 'modular_rmh/icons/mob/monster/tentacles_grey.dmi'
+	icon_state = "roamer"
+	icon_living = "roamer"
+	icon_dead = "roamer_dead"
 
 	faction = list("tentacles")
 	gender = MALE
@@ -84,13 +84,42 @@
 
 	emote_see = list("slowly coils in on itself", "tastes the air with a questing tip", "ripples across the ground")
 
+	/// Palette that never changes. Null takes the palette of the ground.
+	var/fixed_palette = null
+	/// FALSE for full-colour sprites that take no palette.
+	var/uses_palette = TRUE
+	/// Whether a step onto other ground changes the palette.
+	var/retint_on_move = TRUE
+	/// Name of the palette applied now.
+	var/tmp/current_palette
+
 /mob/living/simple_animal/hostile/retaliate/tentacle/Initialize(mapload)
 	. = ..()
+	refresh_tentacle_palette()
 	AddElement(/datum/element/ai_retaliate)
-	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = ensure_typed_ovipositor(src, OVI_EGG_TENTACLE, 2, 6, 4)
+	// A tentacle that takes a kind gets its organs from the kind instead.
+	if(will_take_tentacle_kind())
+		return
+	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = ensure_tentacle_ovipositor(src)
 	if(ovipositor)
 		ovipositor.name = "egg-bearing tentacle"
 		ovipositor.desc = "A sensitive, prehensile tentacle adapted to carry and lay soft eggs."
+
+/// Applies the fixed palette or the palette of the ground below. Does nothing when the palette is unchanged.
+/mob/living/simple_animal/hostile/retaliate/tentacle/proc/refresh_tentacle_palette(fade = 0)
+	if(!uses_palette)
+		return
+	var/palette = fixed_palette || tentacle_palette_for_turf(get_turf(src))
+	if(palette == current_palette)
+		return
+	current_palette = palette
+	apply_tentacle_palette(palette, fade)
+
+/mob/living/simple_animal/hostile/retaliate/tentacle/Moved(atom/OldLoc, Dir, Forced = FALSE)
+	. = ..()
+	if(!retint_on_move || stat == DEAD || !isturf(loc) || loc == OldLoc)
+		return
+	refresh_tentacle_palette(1 SECONDS)
 
 /mob/living/simple_animal/hostile/retaliate/tentacle/simple_limb_hit(zone)
 	if(!zone)
@@ -149,7 +178,7 @@
 
 /datum/sex_action/npc/npc_vaginal_sex/tentacle
 	name = "Tentacle vagina"
-	description = "Work an egg-bearing tentacle into their vagina."
+	description = "Work a slick tentacle into their vagina."
 
 /datum/sex_action/npc/npc_vaginal_sex/tentacle/shows_on_menu(mob/living/user, mob/living/target)
 	return istype(user, /mob/living/simple_animal/hostile/retaliate/tentacle) && !is_maneater_tendril(user) && user != target
@@ -209,7 +238,7 @@
 
 /datum/sex_action/npc/npc_anal_sex/tentacle
 	name = "Tentacle anus"
-	description = "Work an egg-bearing tentacle into their anus."
+	description = "Work a slick tentacle into their anus."
 
 /datum/sex_action/npc/npc_anal_sex/tentacle/shows_on_menu(mob/living/user, mob/living/target)
 	return istype(user, /mob/living/simple_animal/hostile/retaliate/tentacle) && !is_maneater_tendril(user) && user != target
@@ -269,7 +298,7 @@
 
 /datum/sex_action/npc/npc_throat_sex/tentacle
 	name = "Tentacle throat"
-	description = "Ease an egg-bearing tentacle into their mouth."
+	description = "Ease a slick tentacle into their mouth."
 
 /datum/sex_action/npc/npc_throat_sex/tentacle/shows_on_menu(mob/living/user, mob/living/target)
 	return istype(user, /mob/living/simple_animal/hostile/retaliate/tentacle) && !is_maneater_tendril(user) && user != target
@@ -349,7 +378,15 @@
 	. = ..()
 	show_act_lines(compose_start_lines(user, target), user, target, "warning")
 
+/// The hunter's kind lines for a beat, or null for the default ones.
+/datum/sex_action/tentacle_jerk/proc/get_kind_jerk_lines(beat, mob/living/hunter, mob/living/victim)
+	var/datum/tentacle_kind/kind = get_tentacle_kind_of(hunter)
+	return kind?.get_jerk_lines(src, beat, hunter, victim)
+
 /datum/sex_action/tentacle_jerk/compose_start_lines(mob/living/user, mob/living/target)
+	var/list/kind_lines = get_kind_jerk_lines("start", user, target)
+	if(kind_lines)
+		return kind_lines
 	return act_lines(
 		"[user] coils a slick tentacle around [target]'s cock.",
 		"[user] coils a slick tentacle around my cock.",
@@ -365,6 +402,9 @@
 	handle_passive_ejaculation(target)
 
 /datum/sex_action/tentacle_jerk/compose_perform_lines(mob/living/user, mob/living/target, stage, variant)
+	var/list/kind_lines = get_kind_jerk_lines("middle", user, target)
+	if(kind_lines)
+		return kind_lines
 	return act_lines(
 		"[user] [get_generic_force_adjective()] milks [target]'s cock with a rippling tentacle.",
 		"[user] milks my cock with a rippling tentacle.",
@@ -372,6 +412,9 @@
 	)
 
 /datum/sex_action/tentacle_jerk/get_climax_lines(mob/living/climaxer, mob/living/partner, flipped)
+	var/list/kind_lines = flipped ? get_kind_jerk_lines("victim climax", partner, climaxer) : get_kind_jerk_lines("climax", climaxer, partner)
+	if(kind_lines)
+		return kind_lines
 	if(flipped)
 		return act_lines(
 			"[climaxer] bucks and spills into [partner]'s coiling tentacle!",
@@ -393,6 +436,9 @@
 	show_act_lines(compose_finish_lines(user, target), user, target, "warning")
 
 /datum/sex_action/tentacle_jerk/compose_finish_lines(mob/living/user, mob/living/target)
+	var/list/kind_lines = get_kind_jerk_lines("finish", user, target)
+	if(kind_lines)
+		return kind_lines
 	return act_lines(
 		"[user] unwinds its tentacle from [target]'s cock.",
 		"[user] unwinds its tentacle from my cock.",
