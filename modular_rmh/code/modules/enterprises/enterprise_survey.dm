@@ -8,6 +8,9 @@
 	COOLDOWN_DECLARE(survey_cooldown)
 
 /datum/enterprise/proc/is_premises_turf(turf/checked)
+	return is_premises_area(checked.loc)
+
+/datum/enterprise/proc/is_premises_area(area/place)
 	return FALSE
 
 /datum/enterprise/proc/get_floor(z)
@@ -62,7 +65,8 @@
 		floor.set_turfs(claimed)
 	scan_rooms()
 	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
-	mark_start_stock(fresh)
+	if(!SSticker.HasRoundStarted())
+		mark_start_stock(fresh)
 	furnish_rooms()
 	if(length(taken))
 		for(var/datum/enterprise_room/room as anything in rooms)

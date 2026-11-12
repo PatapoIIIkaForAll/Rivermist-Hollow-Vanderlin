@@ -293,7 +293,9 @@
 	var/datum/enterprise_room/room = menu_room
 	close_menu()
 	var/mob/user = get_user()
-	if(room && user && (action == ENTERPRISE_ROOM_ACTION_INFO || enterprise.press(user, action)))
+	if(!room || !user || !enterprise.can_run_rooms(user))
+		return
+	if(action != ENTERPRISE_ROOM_ACTION_REPAIR || enterprise.press(user, action))
 		enterprise.room_action(user, room, action)
 
 /datum/enterprise
@@ -416,6 +418,9 @@
 	return TRUE
 
 /datum/enterprise/proc/open_premises(mob/user)
+	var/datum/enterprise_viewer/viewer = get_viewer(user)
+	if(viewer && get_floor(viewer.z))
+		return FALSE
 	var/datum/enterprise_floor/chosen
 	for(var/datum/enterprise_floor/floor as anything in floors)
 		if(!floor)
@@ -429,7 +434,7 @@
 
 /datum/enterprise/proc/zoom_view(mob/user, direction, params)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
-	if(viewer?.zoom(direction, params))
+	if(viewer && can_run_rooms(user) && viewer.zoom(direction, params))
 		SStgui.update_user_uis(user, src)
 
 /datum/enterprise/proc/reset_view(mob/user)
@@ -476,7 +481,7 @@
 
 /datum/enterprise/proc/open_room_menu(mob/user, datum/enterprise_room/room)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
-	if(viewer && room.z == viewer.z && is_owner(user))
+	if(viewer && room.z == viewer.z && can_run_rooms(user))
 		viewer.open_menu(room)
 
 /datum/enterprise/proc/close_room_menu(mob/user)

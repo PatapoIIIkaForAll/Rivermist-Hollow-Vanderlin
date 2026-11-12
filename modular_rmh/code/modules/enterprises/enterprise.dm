@@ -280,9 +280,8 @@
 	staff_lock_ids = list(ACCESS_INN)
 	owner_keyring = /obj/item/storage/keyring/tavern_keeper
 
-/datum/enterprise/tavern/is_premises_turf(turf/checked)
-	var/area/checked_area = checked.loc
-	return checked_area.tavern_area
+/datum/enterprise/tavern/is_premises_area(area/place)
+	return place?.tavern_area
 
 /datum/enterprise/tavern/place_ledger()
 	if(length(ledgers))
@@ -379,6 +378,7 @@ SUBSYSTEM_DEF(enterprises)
 		get_enterprise(enterprise_type)
 	for(var/enterprise_type in enterprises)
 		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		enterprise.mark_round_start_stock()
 		for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
 			enterprise.claim_premises(ledger)
 		enterprise.recover_journal()
@@ -478,6 +478,12 @@ SUBSYSTEM_DEF(enterprises)
 	if(enterprise)
 		enterprise.handle_meal(eater)
 
+/datum/controller/subsystem/enterprises/proc/note_door_lock(obj/structure/door/door)
+	for(var/enterprise_type in enterprises)
+		var/datum/enterprise/enterprise = enterprises[enterprise_type]
+		if(enterprise.is_exit_door(door))
+			enterprise.guests_changed()
+
 /datum/status_effect/debuff/sleepytime/on_remove()
 	. = ..()
 	if(ishuman(owner) && !QDELETED(owner) && owner.IsSleeping())
@@ -495,3 +501,11 @@ SUBSYSTEM_DEF(enterprises)
 /obj/item/key/Initialize(mapload)
 	. = ..()
 	SSenterprises.note_key(src)
+
+/obj/structure/door/on_lock(mob/living/user, obj/item, silent = FALSE)
+	. = ..()
+	SSenterprises.note_door_lock(src)
+
+/obj/structure/door/on_unlock(mob/living/user, obj/item, silent = FALSE)
+	. = ..()
+	SSenterprises.note_door_lock(src)

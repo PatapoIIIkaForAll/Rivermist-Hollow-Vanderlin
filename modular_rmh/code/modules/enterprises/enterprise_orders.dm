@@ -7,6 +7,7 @@
 /obj/item/paper/enterprise_order/show_paper_hud(mob/user)
 	if(info == text_en || info == text_ru)
 		info = get_preferred_ui_language(user) == "ru" ? text_ru : text_en
+		updateinfolinks()
 	return ..()
 
 /obj/effect/enterprise_meal_bar
@@ -75,6 +76,7 @@
 	paper.text_en = get_note_text(FALSE)
 	paper.text_ru = get_note_text(TRUE)
 	paper.info = paper.text_en
+	paper.updateinfolinks()
 	paper.update_appearance(UPDATE_ICON_STATE)
 	note = WEAKREF(paper)
 	patron.remark_order(ENTERPRISE_PATRON_LINE_ORDER_NOTE)
@@ -356,7 +358,7 @@
 		patron.tend_order()
 		return SUBTREE_RETURN_FINISH_PLANNING
 	var/datum/enterprise_order/order = patron.meal_order
-	if(patron.goal_stage == ENTERPRISE_PATRON_STAGE_WALK && order?.state == ENTERPRISE_ORDER_STATE_NOTE && get_dist(patron, order.note_table) <= 1)
+	if(patron.goal_stage == ENTERPRISE_PATRON_STAGE_WALK && order?.state == ENTERPRISE_ORDER_STATE_NOTE && patron.z == order.note_table?.z && get_dist(patron, order.note_table) <= 1)
 		patron.goal_stage = ENTERPRISE_PATRON_STAGE_SEEK
 		patron.walk_until = 0
 		patron.stop_walking()

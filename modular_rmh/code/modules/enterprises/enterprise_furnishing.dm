@@ -124,6 +124,14 @@
 		for(var/obj/thing in member)
 			mark_stock(thing)
 
+/datum/enterprise/proc/mark_round_start_stock()
+	for(var/area/place as anything in GLOB.areas)
+		if(!is_premises_area(place))
+			continue
+		for(var/turf/member as anything in place.get_turfs_from_all_zlevels())
+			for(var/obj/thing in member)
+				mark_stock(thing)
+
 /datum/enterprise/proc/mark_stock(obj/thing)
 	if(isitem(thing))
 		ADD_TRAIT(thing, TRAIT_ENTERPRISE_START_STOCK, REF(src))
@@ -173,12 +181,14 @@
 		room?.add_fixture(item)
 	var/list/datum/enterprise_room_template/templates = get_room_templates()
 	for(var/datum/enterprise_room/room as anything in rooms)
-		room.check_inventory()
 		room.furnish(templates)
 		if(room.kind == ENTERPRISE_ROOM_GUEST && room.get_purpose() != ENTERPRISE_PURPOSE_GUEST_ROOM)
 			var/turf/first = room.turfs[1]
 			log_mapping("Map issue: [room.name] at [AREACOORD(first)] has the lock of a guest room but lacks a bed, a wardrobe or curtains, so it is not let as one.")
 	group_rooms()
+	for(var/datum/enterprise_room/room as anything in rooms)
+		room.check_inventory()
+		room.beds = room.count_fixtures(/obj/structure/bed)
 
 /datum/enterprise
 	var/list/upgrade_costs = list(0, 2000, 5000, 10000)

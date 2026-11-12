@@ -35,14 +35,16 @@ const useHoverSender = (send: (id: number) => void) => {
       if (sentId.current === id) {
         return;
       }
-      const now = Date.now();
-      if (now - budget.current.since > HOVER_BUDGET_WINDOW) {
-        budget.current = { since: now, used: 0 };
+      if (id) {
+        const now = Date.now();
+        if (now - budget.current.since > HOVER_BUDGET_WINDOW) {
+          budget.current = { since: now, used: 0 };
+        }
+        if (budget.current.used >= HOVER_BUDGET) {
+          return;
+        }
+        budget.current.used += 1;
       }
-      if (budget.current.used >= HOVER_BUDGET) {
-        return;
-      }
-      budget.current.used += 1;
       sentId.current = id;
       send(id);
     }, HOVER_DELAY);
@@ -293,7 +295,7 @@ export const PremisesPage = (props: PageProps) => {
               </Tabs>
             </Stack.Item>
             <Stack.Item grow>
-              {!!data.map && (
+              {!!data.map && interactive && (
                 <MapView
                   key={data.map}
                   mapId={data.map}

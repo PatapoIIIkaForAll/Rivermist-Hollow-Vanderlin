@@ -262,6 +262,12 @@
 /datum/enterprise/proc/can_receive_guests()
 	return length(rooms) && length(guest_kinds)
 
+/datum/enterprise/proc/is_exit_door(obj/structure/door/door)
+	for(var/datum/weakref/door_ref as anything in exit_doors)
+		if(door_ref.resolve() == door)
+			return TRUE
+	return FALSE
+
 /datum/enterprise/proc/get_entrance_turf(open_only = FALSE)
 	if(isnull(exit_doors))
 		find_exit_doors()

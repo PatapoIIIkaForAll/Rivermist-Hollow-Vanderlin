@@ -236,8 +236,12 @@
 /datum/enterprise_stock/proc/get_buyout_price(datum/enterprise_stock_entry/entry)
 	return max(round(entry.price * ENTERPRISE_BUYOUT_PERCENT / 100), 1)
 
+/datum/enterprise_stock/proc/is_leftover(obj/item/offered)
+	var/obj/item/reagent_containers/food/snacks/food = offered
+	return istype(food) && (food.bitecount > 0 || food.slices_num < initial(food.slices_num))
+
 /datum/enterprise_stock/proc/get_price(obj/item/offered)
-	if(HAS_TRAIT(offered, TRAIT_ENTERPRISE_START_STOCK) || !is_type_in_list(offered, goods))
+	if(HAS_TRAIT(offered, TRAIT_ENTERPRISE_START_STOCK) || !is_type_in_list(offered, goods) || is_leftover(offered))
 		return 0
 	var/own_price = round(offered.get_real_price())
 	if(own_price > 0)
@@ -304,6 +308,7 @@
 
 /obj/structure/fake_machine/enterprise_stock/Destroy()
 	if(stock)
+		stock.kegs?.drop_kegs(get_turf(src))
 		stock.post = null
 		stock = null
 	return ..()
@@ -316,6 +321,9 @@
 	var/russian = get_preferred_ui_language(user) == "ru"
 	if(HAS_TRAIT(tool, TRAIT_ENTERPRISE_START_STOCK))
 		to_chat(user, span_warning(russian ? "Это уже из запасов самого заведения: такое здесь не принимают." : "This already belongs to the house's own stock: it is not taken here."))
+		return ITEM_INTERACT_BLOCKING
+	if(stock.is_leftover(tool))
+		to_chat(user, span_warning(russian ? "Надкусанное и начатое здесь не покупают." : "Food that has been bitten or cut into is not bought here."))
 		return ITEM_INTERACT_BLOCKING
 	if(!stock.get_price(tool))
 		to_chat(user, span_warning(russian ? "Такое здесь не покупают." : "They do not buy that here."))
@@ -360,7 +368,7 @@
 		"level" = stock.storage ? stock.storage.level : ENTERPRISE_LEVEL_BARE,
 		"cap" = stock.get_cap(),
 		"can_buy" = enterprise.is_manager(user),
-		"funds" = enterprise.book_balance + enterprise.get_bank_balance(user),
+		"funds" = enterprise.is_manager(user) ? enterprise.book_balance + enterprise.get_bank_balance(user) : 0,
 		"entries" = stock.get_entries_data(),
 		"kegs" = stock.kegs?.get_data(user),
 	)

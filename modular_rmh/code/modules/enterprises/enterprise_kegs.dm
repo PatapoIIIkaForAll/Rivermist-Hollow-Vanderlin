@@ -13,14 +13,53 @@
 			return TRUE
 	return FALSE
 
+/proc/enterprise_mark_reagent(datum/reagent/drink)
+	if(isnull(drink.data))
+		drink.data = list()
+	if(islist(drink.data))
+		drink.data[ENTERPRISE_STOCK_DATA] = TRUE
+
+/proc/enterprise_is_house_reagent(datum/reagent/drink)
+	return islist(drink?.data) && drink.data[ENTERPRISE_STOCK_DATA]
+
+/proc/enterprise_mark_house_reagents(datum/reagents/holder, list/drink_types)
+	for(var/datum/reagent/drink as anything in holder?.reagent_list)
+		if(drink.type in drink_types)
+			enterprise_mark_reagent(drink)
+
+/datum/reagent/consumable/ethanol/age_beer()
+	var/datum/reagents/aging_in = holder
+	var/aged_type = age_path
+	var/house = enterprise_is_house_reagent(src)
+	. = ..()
+	if(house && aging_in && aged_type)
+		enterprise_mark_house_reagents(aging_in, list(aged_type))
+
+/obj/structure/fermentation_keg/proc/get_house_brew_types()
+	if(!selected_recipe)
+		return null
+	if(!enterprise_is_house_reagent(reagents.get_reagent(selected_recipe.reagent_to_brew)))
+		return null
+	return list(selected_recipe.reagent_to_brew) + selected_recipe.age_times
+
+/obj/structure/fermentation_keg/try_filling(mob/user, obj/item/reagent_containers/container)
+	var/list/house_types = get_house_brew_types()
+	. = ..()
+	if(length(house_types))
+		enterprise_mark_house_reagents(container?.reagents, house_types)
+
+/obj/structure/fermentation_keg/MouseDrop_T(atom/over, mob/living/user)
+	var/obj/structure/fermentation_keg/origin = over
+	var/list/house_types = istype(origin) ? origin.get_house_brew_types() : null
+	. = ..()
+	if(length(house_types))
+		enterprise_mark_house_reagents(reagents, house_types)
+
 /datum/enterprise/proc/mark_house_drink(obj/thing)
 	if(!thing.reagents || istype(thing, /obj/item/reagent_containers/food))
 		return
 	for(var/datum/reagent/drink as anything in thing.reagents.reagent_list)
-		if(isnull(drink.data))
-			drink.data = list()
-		if(islist(drink.data))
-			drink.data[ENTERPRISE_STOCK_DATA] = TRUE
+		enterprise_mark_reagent(drink)
 
 /datum/enterprise/proc/stock_house_water(owner_level)
 	if(owner_level < ENTERPRISE_HOUSE_WATER_LEVEL)
@@ -70,7 +109,14 @@
 	water = new(ENTERPRISE_WATER_CAP, NO_REACT)
 
 /datum/enterprise_keg_store/Destroy()
-	var/turf/drop = stock?.post ? get_turf(stock.post) : null
+	drop_kegs(stock?.post ? get_turf(stock.post) : null)
+	kegs = null
+	QDEL_NULL(drinks)
+	QDEL_NULL(water)
+	stock = null
+	return ..()
+
+/datum/enterprise_keg_store/proc/drop_kegs(turf/drop)
 	for(var/obj/structure/fermentation_keg/keg as anything in kegs)
 		if(QDELETED(keg))
 			continue
@@ -78,11 +124,7 @@
 			keg.forceMove(drop)
 		else
 			qdel(keg)
-	kegs = null
-	QDEL_NULL(drinks)
-	QDEL_NULL(water)
-	stock = null
-	return ..()
+	kegs.Cut()
 
 /datum/enterprise_keg_store/proc/get_level()
 	return stock.storage ? stock.storage.level : ENTERPRISE_LEVEL_BARE
@@ -268,7 +310,7 @@
 		var/drink_name = drink.name
 		var/volume = drink.volume
 		var/list/data = drink.data
-		if(islist(data) && data[ENTERPRISE_STOCK_DATA])
+		if(enterprise_is_house_reagent(drink))
 			refused |= drink_name
 			continue
 		if(drink_type == /datum/reagent/water)
@@ -326,8 +368,11 @@
 	var/brewed_type = (keg.ready_to_bottle && keg.selected_recipe) ? keg.selected_recipe.reagent_to_brew : null
 	var/list/stayed = list()
 	var/list/refused = list()
+	var/volume_before = keg.reagents.total_volume
 	var/value = pour(keg.reagents, stayed, refused, TRUE, brewed_type, brewed_type ? get_aged_type(keg) : null)
 	pay_out(user, value)
+	if(keg.selected_recipe && keg.reagents.total_volume < volume_before)
+		keg.sellprice = initial(keg.sellprice)
 	if(keg.reagents.total_volume > 0)
 		keg.update_appearance(UPDATE_OVERLAYS)
 	else

@@ -196,12 +196,10 @@
 		if(viewer == pointer || !viewer.mind || viewer.stat)
 			continue
 		var/had = known_by[viewer]
-		if(!had)
-			add_knower(viewer, knowledge)
-		else
-			known_by[viewer] = max(had, knowledge)
-			if(!can_see_track(viewer))
-				restore_image_for(viewer)
+		var/image/shown = had ? knower_images?[viewer] : null
+		if(shown && viewer.client)
+			viewer.client.images -= shown
+		add_knower(viewer, max(had, knowledge))
 		LAZYSET(shown_to, viewer, TRUE)
 		var/russian = get_preferred_ui_language(viewer) == "ru"
 		to_chat(viewer, span_notice(russian ? "[pointer] показывает мне след." : "[pointer] shows me a track."))

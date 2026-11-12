@@ -199,13 +199,13 @@
 	return keeps_kegs ? enterprise.describe_keg_store(level, russian) : effect
 
 /datum/enterprise_room_template/storage/on_survey(datum/enterprise_room/room)
-	if(room.stock || room.leader)
+	if(room.stock?.post || room.leader)
 		return
 	var/datum/enterprise/enterprise = room.enterprise
 	var/list/spot = enterprise.find_post_spot(room)
 	if(!spot)
 		return
-	var/datum/enterprise_stock/stock = new(enterprise, room, goods)
+	var/datum/enterprise_stock/stock = room.stock || new(enterprise, room, goods)
 	var/obj/structure/fake_machine/enterprise_stock/post = new(spot[1])
 	post.name = post_name
 	post.desc = post_desc
@@ -214,7 +214,7 @@
 	post.stock = stock
 	stock.post = post
 	room.stock = stock
-	if(keeps_kegs)
+	if(keeps_kegs && !stock.kegs)
 		stock.kegs = new /datum/enterprise_keg_store(stock)
 
 /datum/enterprise_room_template/storage/drinks

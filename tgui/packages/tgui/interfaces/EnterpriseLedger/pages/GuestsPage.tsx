@@ -81,6 +81,9 @@ const getCallBlock = (locale: Locale, guests: GuestsData) => {
   if (guests.calls_left <= 0) {
     return locale.guests.callNone;
   }
+  if (!guests.open) {
+    return locale.guests.callLocked;
+  }
   return null;
 };
 

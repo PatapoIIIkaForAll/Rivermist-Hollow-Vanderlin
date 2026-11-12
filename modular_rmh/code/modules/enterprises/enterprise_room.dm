@@ -287,8 +287,9 @@
 		if(!name || (kind != ENTERPRISE_ROOM_GUEST && length(turfs) < ENTERPRISE_ROOM_LABEL_MIN_TILES))
 			return null
 		return name
-	for(var/datum/enterprise_room/member as anything in get_members())
-		if(member != src && member.z == z && length(member.turfs) > length(turfs))
+	var/list/datum/enterprise_room/team = get_members()
+	for(var/datum/enterprise_room/member as anything in team)
+		if(member != src && member.z == z && (length(member.turfs) > length(turfs) || (length(member.turfs) == length(turfs) && team.Find(member) < team.Find(src))))
 			return null
 	return template?.name
 
@@ -320,6 +321,7 @@
 					head.stock = member.stock
 					head.stock.storage = head
 					member.stock = null
+		for(var/datum/enterprise_room/member as anything in team)
 			member.set_level(top_level)
 
 /datum/enterprise_room/proc/link_with(datum/enterprise_room/other)
@@ -354,7 +356,6 @@
 		stock.storage = src
 
 /datum/enterprise_room/proc/furnish(list/datum/enterprise_room_template/templates)
-	beds = count_fixtures(/obj/structure/bed)
 	template = null
 	var/marked = get_marked_purpose()
 	for(var/datum/enterprise_room_template/candidate as anything in templates)
@@ -538,7 +539,11 @@
 		return
 	for(var/datum/enterprise_fixture/fixture as anything in chairs)
 		var/obj/structure/chair/seat = fixture.get_thing()
-		for(var/mob/living/simple_animal/enterprise_patron/sitter in seat?.buckled_mobs)
+		if(!seat)
+			continue
+		for(var/mob/living/simple_animal/enterprise_patron/sitter in room.enterprise.patrons)
+			if(sitter.buckled != seat && sitter.seat?.resolve() != seat)
+				continue
 			var/goal = sitter.get_goal()
 			if(goal == ENTERPRISE_PATRON_GOAL_TABLE || goal == ENTERPRISE_PATRON_GOAL_ORDER)
 				sitter.take_seat(src)
