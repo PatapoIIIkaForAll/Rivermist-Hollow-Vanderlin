@@ -5,6 +5,10 @@
 #define GESTURE_DURATION (2 SECONDS)
 #define GESTURE_Y_OFFSET 20
 
+/mob/living
+	/// One gesture at a time: spam inside the duration shows nothing new.
+	COOLDOWN_DECLARE(gesture_cooldown)
+
 /mob/living/proc/show_gesture(mob/target, gesture, y_offset = GESTURE_Y_OFFSET)
 	var/list/viewers = list()
 	if(client)
@@ -12,9 +16,15 @@
 	if(target?.client)
 		viewers |= target.client
 	if(!length(viewers))
-		return
+		return null
+	return play_gesture(viewers, gesture, y_offset)
 
-	var/image/gesture_image = image(GESTURE_ICON, src, gesture, ABOVE_ALL_MOB_LAYER)
+/// Shows the gesture to the clients for its duration; returns the image, or null while one still plays.
+/mob/living/proc/play_gesture(list/viewers, gesture, y_offset = GESTURE_Y_OFFSET, gesture_icon = GESTURE_ICON)
+	if(!COOLDOWN_FINISHED(src, gesture_cooldown))
+		return null
+	COOLDOWN_START(src, gesture_cooldown, GESTURE_DURATION)
+	var/image/gesture_image = image(gesture_icon, src, gesture, ABOVE_ALL_MOB_LAYER)
 	// Above lighting, so a gesture made in the dark can still be read.
 	gesture_image.plane = ABOVE_LIGHTING_PLANE
 	gesture_image.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
@@ -23,6 +33,16 @@
 		var/mob/living/carbon/carbon_self = src
 		carbon_self.apply_offset(gesture_image, OFFSET_HEAD)
 	flick_overlay(gesture_image, viewers, GESTURE_DURATION)
+	return gesture_image
+
+/obj/effect/yield_indicator
+	icon = 'modular_rmh/icons/mob/yield.dmi'
+	icon_state = "yield"
+	layer = ABOVE_ALL_MOB_LAYER
+	plane = ABOVE_LIGHTING_PLANE
+	pixel_y = GESTURE_Y_OFFSET
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
 
 /// Patrons whose followers answer a taunt with the middle finger.
 GLOBAL_LIST_INIT(rude_taunt_patrons, typecacheof(list(

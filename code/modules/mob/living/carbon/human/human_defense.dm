@@ -710,7 +710,7 @@
 				affecting.receive_damage(acidity, 2*acidity)
 				emote("scream")
 				dna?.species.go_bald(src)
-				ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
+				acid_scar_face()
 
 		update_damage_overlays()
 

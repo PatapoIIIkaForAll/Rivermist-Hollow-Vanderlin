@@ -41,7 +41,7 @@
 	if(!penis)
 		return
 	var/list/zone_weights = list(FLUID_COAT_FACE = 4, FLUID_COAT_CHEST = 3, FLUID_COAT_BELLY = 2)
-	if(target.mouth_is_free())
+	if(target.mouth_is_free(cloth_blocks = TRUE))
 		zone_weights[PENIS_AIM_MOUTH] = 1
 	penis.get_climax_aim().set_target(target, pickweight(zone_weights), user)
 

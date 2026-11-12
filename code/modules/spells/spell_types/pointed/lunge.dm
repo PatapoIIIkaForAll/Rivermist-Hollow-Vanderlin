@@ -11,6 +11,9 @@
 	self_cast_possible = FALSE
 	var/target_range = 6
 
+/datum/action/cooldown/spell/lunge/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/lunge/can_cast_spell(feedback)
 	. = ..()
 	if(!.)
@@ -105,6 +108,8 @@
 	qdel(owner.GetComponent(/datum/component/after_image))
 
 /datum/action/cooldown/spell/lunge/proc/lunge_end(atom/hit_atom, turf/target_turf)
+	if(QDELETED(hit_atom) || owner?.spares_ally(hit_atom))
+		return
 	// Am I next to my target to start giving the effects?
 	if(!owner.Adjacent(hit_atom))
 		return

@@ -276,7 +276,7 @@
 			return FALSE
 		visible_message(span_notice("[src] slicks \the [toy] with something from \the [container]."), span_notice("I slick \the [toy] with something from \the [container]."))
 		return TRUE
-	if(!mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		to_chat(src, span_warning("My mouth is not free to spit."))
 		return FALSE
 	if(coat.total_volume + SPIT_LUBE_UNITS > coat.maximum_volume)
@@ -317,7 +317,7 @@
 	var/mob/living/owner = hole?.get_owner()
 	if(!owner)
 		return FALSE
-	if(!mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		to_chat(src, span_warning("My mouth is not free to spit."))
 		return FALSE
 	if(hole.add_lube(/datum/reagent/consumable/saliva, SPIT_LUBE_UNITS, src) <= 0)

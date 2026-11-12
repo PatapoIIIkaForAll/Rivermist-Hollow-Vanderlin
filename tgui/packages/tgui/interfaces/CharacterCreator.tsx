@@ -306,6 +306,8 @@ type CreatorData = {
   voice_type: string;
   voice_color: string;
   voice_pack: string;
+  speech_bark: string;
+  speech_moans: Booleanish;
   moan_selection: string;
   selected_accent: string;
   loadout_catalog: LoadoutCatalogEntry[];
@@ -4315,6 +4317,9 @@ export const CharacterCreator = () => {
                   </>,
                   () => doPref('voice', 'input'),
                 )}
+                {kvButton(L.speechBark, text(data.speech_bark), () =>
+                  doPref('speech_bark', 'input'),
+                )}
                 <div className="cc-kv-label">{L.voicePack}</div>
                 <div className="cc-row">
                   <Btn
@@ -4341,6 +4346,11 @@ export const CharacterCreator = () => {
                     doPref('moanpreview', 'input'),
                   )}
                 </div>
+                {kvButton(
+                  L.speechMoans,
+                  data.speech_moans ? L.on : L.off,
+                  () => doPref('speech_moans', 'input'),
+                )}
               </div>
               <div className="cc-grow" />
               <Btn
@@ -4759,6 +4769,11 @@ export const CharacterCreator = () => {
     },
     { key: 'lobby_music', action: 'lobby_music', label: 'lobby_music' },
     { key: 'hear_midis', action: 'hear_midis', label: 'hear_midis' },
+    {
+      key: 'hear_speech_barks',
+      action: 'hear_speech_barks',
+      label: 'hear_speech_barks',
+    },
     { key: 'ambience', action: 'ambience', label: 'ambience' },
     {
       key: 'background_music',
@@ -4800,7 +4815,13 @@ export const CharacterCreator = () => {
     },
     {
       title: 'audio',
-      keys: ['lobby_music', 'hear_midis', 'ambience', 'background_music'],
+      keys: [
+        'lobby_music',
+        'hear_midis',
+        'hear_speech_barks',
+        'ambience',
+        'background_music',
+      ],
     },
     { title: 'round', keys: ['allow_midround_antag', 'be_voice'] },
   ];

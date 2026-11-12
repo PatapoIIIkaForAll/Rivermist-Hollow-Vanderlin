@@ -526,7 +526,7 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 
 	var/list/data = list(
 		// Identity
-		"character_name" = obscured ? "Unknown" : char_name,
+		"character_name" = obscured ? (holder?.name || "Unknown") : char_name,
 		"headshot" = headshot,
 		"nsfw_headshot" = nsfw_headshot,
 		"obscured" = obscured ? TRUE : FALSE,

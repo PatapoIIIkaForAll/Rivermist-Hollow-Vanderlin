@@ -121,25 +121,64 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define SEX_SPEED_MID 2
 #define SEX_SPEED_HIGH 3
 #define SEX_SPEED_EXTREME 4
+/// Fifth and highest speed; the panel names it Furious, since level four is already Unrelenting.
+#define SEX_SPEED_UNRELENTING 5
 
-#define SEX_SPEEDS list(SEX_SPEED_LOW, SEX_SPEED_MID, SEX_SPEED_HIGH, SEX_SPEED_EXTREME)
+#define SEX_SPEEDS list(SEX_SPEED_LOW, SEX_SPEED_MID, SEX_SPEED_HIGH, SEX_SPEED_EXTREME, SEX_SPEED_UNRELENTING)
 
 #define SEX_SPEED_MIN 1
-#define SEX_SPEED_MAX 4
+#define SEX_SPEED_MAX 5
 
 #define SEX_FORCE_LOW 1
 #define SEX_FORCE_MID 2
 #define SEX_FORCE_HIGH 3
 #define SEX_FORCE_EXTREME 4
+/// Fifth and highest force, above Brutal; the panel names it Unrelenting.
+#define SEX_FORCE_UNRELENTING 5
 
-#define SEX_FORCES list(SEX_FORCE_LOW, SEX_FORCE_MID, SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
+#define SEX_FORCES list(SEX_FORCE_LOW, SEX_FORCE_MID, SEX_FORCE_HIGH, SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 
 #define SEX_FORCE_MIN 1
-#define SEX_FORCE_MAX 4
+#define SEX_FORCE_MAX 5
 
 /// Per-cycle chance and damage for brutal force snagging the receiver's bare stockings.
 #define SEX_LEGWEAR_SNAG_CHANCE 15
 #define SEX_LEGWEAR_SNAG_DAMAGE 6
+/// The same at unrelenting force.
+#define SEX_LEGWEAR_SNAG_CHANCE_UNRELENTING 25
+#define SEX_LEGWEAR_SNAG_DAMAGE_UNRELENTING 9
+
+// Impact marks: spanks and lashes leave fading, examine-only marks on the struck spot.
+#define IMPACT_MARK_NONE 0
+#define IMPACT_MARK_FAINT 1
+#define IMPACT_MARK_RED 2
+#define IMPACT_MARK_BRUISED 3
+#define IMPACT_MARK_MAX IMPACT_MARK_BRUISED
+/// Strike score (force level + tool tier + Strength bonus) a mark level needs.
+#define IMPACT_MARK_SCORE_FAINT 2
+#define IMPACT_MARK_SCORE_RED 4
+#define IMPACT_MARK_SCORE_BRUISED 6
+/// Strength counts from this base, one score point per step above or below it.
+#define IMPACT_MARK_STRENGTH_BASE 10
+#define IMPACT_MARK_STRENGTH_STEP 5
+/// Tool tiers: a bare hand or soft flogger, a strap, paddle or crop, a whip or cane.
+#define IMPACT_TOOL_HAND 0
+#define IMPACT_TOOL_STRAP 1
+#define IMPACT_TOOL_WHIP 2
+/// How long each mark level shows before it fades one level.
+#define IMPACT_MARK_FADE_FAINT (10 MINUTES)
+#define IMPACT_MARK_FADE_RED (20 MINUTES)
+#define IMPACT_MARK_FADE_BRUISED (40 MINUTES)
+/// Least time between two sates from making or taking marks, by mark level; heavier marks sate sooner.
+#define IMPACT_MARK_SATE_COOLDOWN_FAINT (15 MINUTES)
+#define IMPACT_MARK_SATE_COOLDOWN_RED (10 MINUTES)
+#define IMPACT_MARK_SATE_COOLDOWN_BRUISED (5 MINUTES)
+/// Least time between two sates from examining marks.
+#define IMPACT_MARK_EXAMINE_SATE_COOLDOWN (5 MINUTES)
+// Indexes into one impact mark entry.
+#define IMPACT_MARK_LEVEL 1
+#define IMPACT_MARK_BY_TOOL 2
+#define IMPACT_MARK_TIME 3
 
 #define SEX_MANUAL_AROUSAL_DEFAULT 1
 #define SEX_MANUAL_AROUSAL_UNAROUSED 2
@@ -165,12 +204,14 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define SEX_FORCE_PAIN_MULT_MID 0.75
 #define SEX_FORCE_PAIN_MULT_HIGH 2.0
 #define SEX_FORCE_PAIN_MULT_EXTREME 4.0
+#define SEX_FORCE_PAIN_MULT_UNRELENTING 6.0
 
 /// Speed pain steps. Secondary to force; speed sharpens what force already causes.
 #define SEX_SPEED_PAIN_MULT_LOW 0.8
 #define SEX_SPEED_PAIN_MULT_MID 1.0
 #define SEX_SPEED_PAIN_MULT_HIGH 1.25
 #define SEX_SPEED_PAIN_MULT_EXTREME 1.5
+#define SEX_SPEED_PAIN_MULT_UNRELENTING 1.75
 
 /// How much the receiver's own arousal softens incoming pain, by arousal band.
 #define SEX_PAIN_READINESS_UNAROUSED 1.4
@@ -199,6 +240,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 /// Harder force earns faster feedback, so top settings read as continuous.
 #define PAIN_COOLDOWN_HIGH (4 SECONDS)
 #define PAIN_COOLDOWN_EXTREME (2.5 SECONDS)
+#define PAIN_COOLDOWN_UNRELENTING (1.5 SECONDS)
 
 #define LOW_ORGASM_THRESHOLD_GAIN 4
 #define MED_ORGASM_THRESHOLD_GAIN 6

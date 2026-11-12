@@ -108,8 +108,13 @@
 	return line ? list(span_info(line)) : list()
 
 /mob/living/carbon/human/proc/get_body_lipstick_mark_lines(mob/user, list/P)
+	. = list()
 	var/line = get_lipstick_mark_line(user, P, FALSE)
-	return line ? list(line) : list()
+	if(line)
+		. += line
+	var/impact_line = get_impact_mark_line(user, P)
+	if(impact_line)
+		. += impact_line
 
 /// Sentences a body adds after the descriptors it shows; used holds described spots and spent wordings.
 /mob/living/proc/get_descriptor_marks(list/shown_descriptors, mob/watcher, list/used, trust_shown = FALSE)

@@ -12,7 +12,6 @@
 	dyeable = TRUE
 	ported_clothing = TRUE
 	misc_flags = CRAFTING_TEST_EXCLUDE
-	var/stepnoise_flag = null
 
 /obj/item/clothing/shoes/footwraps
 	name = "cloth footwraps"

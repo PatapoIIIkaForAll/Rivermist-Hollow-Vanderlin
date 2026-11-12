@@ -162,7 +162,6 @@
 	mob_overlay_icon = 'modular_rmh/icons/clothing/onmob/spider_silk_onmob.dmi'
 	color = SPIDER_SILK_COLOUR
 	can_lower = FALSE
-	muffled_words = "Mmmf..."
 	strip_delay = 3 SECONDS
 	slipouttime = 20 SECONDS
 	sellprice = 0

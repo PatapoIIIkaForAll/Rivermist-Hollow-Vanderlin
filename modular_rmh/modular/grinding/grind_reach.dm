@@ -244,12 +244,12 @@
 		return "[partner] is away and does not allow this."
 	if(!adjacent_or_closet(partner))
 		return "[partner.p_theyre(TRUE)] too far away."
-	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
+	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, src))
 		return "My armor is in the way."
 	var/spot = resolve_grind_spot(partner, zone)
 	if(!spot)
 		return get_grind_seat() ? "I can't grind against anyone sitting down." : "I can't reach [partner] from here."
-	if(partner.get_sex_covering_garment(get_grind_spot_body_zone(spot)))
+	if(partner.get_sex_covering_garment(get_grind_spot_body_zone(spot), src))
 		return "[partner.p_their(TRUE)] armor is in the way."
 	return null
 

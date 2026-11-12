@@ -65,14 +65,14 @@
 
 // ---- Slaps ----
 
-/// A slap for [kind] by force: spanks soft to a crack, flat claps for breasts and pussy, the ball slap; old foley otherwise.
+/// A slap for [kind] by force: spanks soft to hard, belt-punish smacks at high force and up, flat claps for breasts and pussy, the ball slap; old foley otherwise.
 /datum/sex_action/proc/get_slap_sound(kind = "spank")
 	switch(kind)
 		if("spank")
-			if(force >= SEX_FORCE_EXTREME)
-				return pick('modular_rmh/sound/erp/crack1.ogg', 'modular_rmh/sound/erp/crack2.ogg')
 			if(force >= SEX_FORCE_HIGH)
-				return pick('modular_rmh/sound/erp/spank_hard1.ogg', 'modular_rmh/sound/erp/spank_hard2.ogg', 'modular_rmh/sound/erp/spank_hard3.ogg')
+				return pick('modular_rmh/sound/effects/slap1.ogg', 'modular_rmh/sound/effects/slap2.ogg')
+			if(force >= SEX_FORCE_MID)
+				return pick('modular_rmh/sound/erp/spank_hard1.ogg', 'modular_rmh/sound/erp/spank_hard3.ogg')
 			return pick('modular_rmh/sound/erp/spank_soft1.ogg', 'modular_rmh/sound/erp/spank_soft2.ogg', 'modular_rmh/sound/erp/spank_soft3.ogg')
 		if("clap")
 			if(force >= SEX_FORCE_EXTREME)

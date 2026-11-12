@@ -23,7 +23,7 @@
 	data["scene_claims"] = get_scene_claims_ui_data()
 
 	var/list/status_lines = list()
-	for(var/line in user.return_character_information())
+	for(var/line in user.return_character_information(status_follows_examine()))
 		if(line)
 			status_lines += line
 	data["status_lines"] = status_lines
@@ -45,6 +45,8 @@
 		"auto_clench" = !!user.wants_auto_clench(),
 		"can_hold_it_in" = user.can_hold_fluids_in(),
 		"hold_it_in" = user.is_holding_fluids_in(),
+		"reach_under_armor" = user.get_cached_erp_pref(/datum/erp_preference/boolean/allow_reach_under_armor) == TRUE,
+		"status_follows_examine" = status_follows_examine(),
 	)
 	data["zone_options"] = get_zone_options_ui_data()
 	data["actions"] = get_actions_ui_data()
@@ -82,11 +84,12 @@
 
 /datum/sex_scene_controller/proc/get_scene_participants_ui_data()
 	var/list/participants_out = list()
+	var/examine_rule = status_follows_examine()
 	for(var/mob/living/participant as anything in scene?.participants)
 		if(!participant || QDELETED(participant))
 			continue
 		var/list/status_lines = list()
-		for(var/line in participant.return_character_information())
+		for(var/line in participant.return_character_information(examine_rule))
 			if(line)
 				status_lines += line
 		participants_out += list(list(
@@ -177,6 +180,7 @@
 			"name" = action.name,
 			"active" = FALSE,
 			"can_perform" = can_start,
+			"refusal" = can_start ? null : action.armor_refusal,
 			"user_zones" = action.user_menu_zone_mask,
 			"target_zones" = action.target_menu_zone_mask,
 			"fit_hint" = target ? action.get_orifice_fit_hint(user, target) : null,
@@ -262,6 +266,34 @@
 				categories_out += list(list("name" = category["name"], "kinks" = kinks_out))
 		out["their_kinks"] = categories_out
 	return out
+
+/// Flips the user's armor reach consent and writes it to the character.
+/datum/sex_scene_controller/proc/toggle_reach_under_armor()
+	var/allowed = flip_panel_pref(/datum/erp_preference/boolean/allow_reach_under_armor)
+	if(isnull(allowed))
+		return FALSE
+	var/message = allowed ? "Players may now reach under my armor." : "My armor keeps everyone out again."
+	to_chat(user, span_notice(message))
+	return TRUE
+
+/// Flips a boolean ERP pref of the user and writes it to the character; the new value, or null without prefs.
+/datum/sex_scene_controller/proc/flip_panel_pref(pref_type)
+	var/datum/preferences/prefs = user?.client?.prefs
+	if(!prefs)
+		return null
+	var/datum/erp_preference/pref = new pref_type()
+	var/value = !pref.get_value(prefs)
+	pref.set_value(prefs, value)
+	prefs.save_erp_preferences()
+	return value
+
+/// TRUE unless the viewing user switched the status lines to the older coverage rule.
+/datum/sex_scene_controller/proc/status_follows_examine()
+	var/datum/preferences/prefs = user?.client?.prefs
+	if(!prefs)
+		return TRUE
+	var/datum/erp_preference/pref = new /datum/erp_preference/boolean/panel_status_follows_examine()
+	return pref.get_value(prefs) != FALSE
 
 /// Applies the Kinks tab draft to the user's prefs, writes the slot's ERP block and refreshes the cache.
 /datum/sex_scene_controller/proc/save_own_kinks(list/changes)
@@ -388,6 +420,10 @@
 		if("toggle_hold_it_in")
 			user.toggle_holding_fluids_in()
 			return TRUE
+		if("toggle_reach_under_armor")
+			return toggle_reach_under_armor()
+		if("toggle_status_follows_examine")
+			return !isnull(flip_panel_pref(/datum/erp_preference/boolean/panel_status_follows_examine))
 		if("swap_side")
 			user.swap_lying_direction()
 			return TRUE

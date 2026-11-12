@@ -159,6 +159,12 @@
 	var/mob/living/carbon/victim = cocoon.get_wrapped_victim()
 	if(!victim || world.time < victim.kidnap_protected_until || !victim.allows_player_erp_while_disconnected())
 		return FALSE
+	if(HAS_TRAIT(victim, TRAIT_DEFEAT_REFUSE_ADVANCES))
+		return FALSE
+	if(should_apply_mob_erp_target_pref(spider, victim))
+		var/datum/targetting_datum/targeting = spider.ai_controller?.blackboard[BB_TARGETTING_DATUM]
+		if(!targeting?.is_horny_pref_target(spider, victim))
+			return FALSE
 	if(!target_allows_mob_erp_action(spider, victim, /datum/erp_preference/boolean/allow_mob_oviposition))
 		return FALSE
 	return victim.can_receive_oviposition_implant()
@@ -222,6 +228,9 @@
 	var/obj/structure/spider/cocoon/cocoon = controller.blackboard[cocoon_key]
 	var/mob/living/carbon/victim = cocoon?.get_wrapped_victim()
 	if(QDELETED(cocoon) || cocoon.brooded || !victim)
+		finish_action(controller, FALSE, cocoon_key)
+		return
+	if(!spider_can_brood(pawn, cocoon))
 		finish_action(controller, FALSE, cocoon_key)
 		return
 	if(get_dist(pawn, cocoon) > 1)

@@ -99,7 +99,7 @@ GLOBAL_LIST_INIT(lipstick_mark_spots, list(
 	if(!ishuman(receiver) || !can_leave_lipstick())
 		return FALSE
 	var/mob/living/carbon/human/marked = receiver
-	if(!marked.can_take_lipstick_mark(spot))
+	if(!marked.can_take_lipstick_mark(spot, src))
 		return FALSE
 	return marked.add_lipstick_mark(spot, lip_color, lip_alpha, kind, src)
 
@@ -164,11 +164,11 @@ GLOBAL_LIST_INIT(lipstick_mark_spots, list(
 	return LIPSTICK_ART_ORGAN
 
 /// Lips reach a spot through what the sex panel lets through; heavy armour and worn devices stop them.
-/mob/living/carbon/human/proc/can_take_lipstick_mark(spot)
+/mob/living/carbon/human/proc/can_take_lipstick_mark(spot, mob/living/actor)
 	if(!has_lipstick_spot(spot))
 		return FALSE
 	var/list/spot_data = GLOB.lipstick_mark_spots[spot]
-	if(get_sex_covering_garment(spot_data["cover"]))
+	if(get_sex_covering_garment(spot_data["cover"], actor))
 		return FALSE
 	var/organ_slot = spot_data["organ"]
 	if(organ_slot && is_organ_slot_blocked(organ_slot))

@@ -484,7 +484,7 @@
 	if(!. || forced == (user == target))
 		return FALSE
 	var/mob/living/sucker = get_sucker(user, target)
-	return sucker.mouth_is_free() && !!get_toy(user, target)
+	return sucker.mouth_is_free(action_user || user) && !!get_toy(user, target)
 
 /datum/sex_action/toy_suck/can_continue(mob/living/user, mob/living/target)
 	. = ..()

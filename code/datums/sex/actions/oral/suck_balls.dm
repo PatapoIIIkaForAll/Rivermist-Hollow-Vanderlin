@@ -57,7 +57,7 @@
 			arousal_amt = 1.5
 			pain_amt = 1.8
 			orgasm_amt = 1
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "roughly sucks and tugs at"
 			arousal_amt = 1.3
 			pain_amt = 3.8

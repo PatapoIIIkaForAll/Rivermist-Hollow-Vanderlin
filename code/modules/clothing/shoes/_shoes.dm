@@ -40,6 +40,10 @@
 	var/chained = 0
 	abstract_type = /obj/item/clothing/shoes
 	var/polished = 0
+	/// Heeled shoes play heel steps, cost Speed and can trip a running wearer.
+	var/heeled = FALSE
+	/// TRUE while the heel effects are on the wearer.
+	var/heel_effects_active = FALSE
 
 /obj/item/clothing/shoes/Initialize(mapload, ...)
 	. = ..()
@@ -75,6 +79,8 @@
 				user.add_stress(/datum/stress_event/shiny_shoes)
 			else if(polished == 2)
 				user.add_stress(/datum/stress_event/extra_shiny_shoes)
+	if(heeled && (slot & ITEM_SLOT_SHOES))
+		start_heel_effects(user)
 
 /obj/item/clothing/shoes/proc/restore_offsets(mob/user)
 	equipped_before_drop = FALSE
@@ -84,6 +90,7 @@
 /obj/item/clothing/shoes/dropped(mob/user)
 	if(offset && equipped_before_drop)
 		restore_offsets(user)
+	stop_heel_effects(user)
 	. = ..()
 
 /obj/item/clothing/shoes/update_clothes_damaged_state(damaging = TRUE)

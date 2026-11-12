@@ -782,7 +782,7 @@ GLOBAL_VAR_INIT(strapon_lock_serial, 0)
 	if(!istype(hole))
 		return
 	// The holes window's rules decide whether it fits; the harness only does the pushing.
-	var/reason = wearer.get_hole_access_block_reason(hole) || wearer.get_toy_insert_block_reason(hole, inner_plug)
+	var/reason = wearer.get_hole_access_block_reason(hole, wearer) || wearer.get_toy_insert_block_reason(hole, inner_plug)
 	if(reason)
 		to_chat(wearer, span_warning("The inner plug does not go in. [reason]"))
 		return

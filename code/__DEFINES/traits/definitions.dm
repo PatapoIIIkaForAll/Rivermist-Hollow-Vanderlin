@@ -115,6 +115,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_TAINTED_LUX "tainted_lux"
 /// Crafting is 10% faster
 #define TRAIT_QUICK_HANDS "quick_hands"
+/// Heeled shoes cost no Speed and never trip
+#define TRAIT_HEEL_WALKER "heel_walker"
 /// Immunity to stunning effects
 #define TRAIT_STUNIMMUNE "stun_immunity"
 /// Stun duration reduced (unused)

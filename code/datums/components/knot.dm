@@ -147,7 +147,7 @@
 /datum/component/knotting/proc/handle_knot_force_effects(mob/living/user, mob/living/target, force_level)
 	if(force_level > SEX_FORCE_MID)
 		var/datum/component/arousal/target_arousal = target.GetComponent(/datum/component/arousal)
-		if(force_level == SEX_FORCE_EXTREME)
+		if(force_level >= SEX_FORCE_EXTREME)
 			//target.apply_damage(30, BRUTE, BODY_ZONE_CHEST)
 			target_arousal?.try_do_pain_effect(PAIN_HIGH_EFFECT, FALSE)
 		else

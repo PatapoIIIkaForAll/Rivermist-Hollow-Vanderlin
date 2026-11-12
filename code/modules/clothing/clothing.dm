@@ -142,6 +142,7 @@
 			. += span_notice("It has one torn sleeve.")
 		else
 			. += span_notice("Both its sleeves have been torn!")
+	. += get_tear_examine_lines()
 	if(wet)
 		var/list/t = wet.get_examine_text()
 		if(t)
@@ -156,6 +157,10 @@
 /obj/item/clothing/MiddleClick(mob/living/user, list/modifiers)
 	..()
 	if(!istype(user))
+		return
+	// Chest and groin tear the top or the hem; sleeves answer to the arm and leg zones.
+	if(!LAZYACCESS(modifiers, ALT_CLICKED) && loc == user && (user.zone_selected == BODY_ZONE_CHEST || user.zone_selected == BODY_ZONE_PRECISE_GROIN))
+		try_self_tear(user, user.zone_selected)
 		return
 	if(nodismemsleeves)
 		return
@@ -331,6 +336,9 @@
 	..()
 	if(!istype(user))
 		return
+	if(torn_top && ishuman(user))
+		var/mob/living/carbon/human/wearer = user
+		wearer.update_torn_top_state(src)
 	for(var/trait in clothing_traits)
 		REMOVE_CLOTHING_TRAIT(user, trait)
 	if(hoodtype)
@@ -510,6 +518,9 @@ BLIND     // can't see anything
 	..()
 	if(!istype(user))
 		return
+	if(torn_top && ishuman(user))
+		var/mob/living/carbon/human/wearer = user
+		wearer.update_torn_top_state()
 	if(slot_flags & slot) //Was equipped to a valid slot for this item?
 		for(var/trait in clothing_traits)
 			ADD_CLOTHING_TRAIT(user, trait)

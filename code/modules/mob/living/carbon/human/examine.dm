@@ -222,6 +222,7 @@
 /mob/living/carbon/human/get_examine_body(mob/user, list/P, list/examine_list)
 	. = get_body_description_lines(user)
 	. += ..()
+	. += get_torn_clothes_examine_lines(P)
 	var/list/organ_desc = list()
 	var/show_undie_desc = FALSE
 	var/list/arousal_data = list()

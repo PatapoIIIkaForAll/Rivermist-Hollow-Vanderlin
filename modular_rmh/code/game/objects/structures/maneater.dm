@@ -349,8 +349,8 @@
 			var/action_type = pick_n_take(action_choices)
 			if(scene_controller.try_start_action(action_type, "ai"))
 				break
-		scene_controller.set_current_force(rand(SEX_FORCE_MID, SEX_FORCE_MAX))
-		scene_controller.set_current_speed(rand(SEX_SPEED_MID, SEX_SPEED_MAX))
+		scene_controller.set_current_force(rand(SEX_FORCE_MID, SEX_FORCE_EXTREME))
+		scene_controller.set_current_speed(rand(SEX_SPEED_MID, SEX_SPEED_EXTREME))
 
 	visible_message(span_warningbig("[src]'s flowering vines close around [victim] and begin drawing them toward its maw!"))
 	to_chat(victim, span_userdanger("The maneater's vines hold you and start to take your clothes off, one piece at a time. Its throat opens below you. It will not swallow you while you still have clothes on, and not before [DisplayTimeText(swallow_time)] have passed. Get free!"))

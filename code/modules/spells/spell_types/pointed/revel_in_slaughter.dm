@@ -16,6 +16,9 @@
 	cooldown_time = 5 MINUTES
 	spell_cost = 70
 
+/datum/action/cooldown/spell/revel_in_slaughter/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/revel_in_slaughter/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

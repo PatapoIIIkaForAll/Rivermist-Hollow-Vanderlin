@@ -25,6 +25,18 @@
 		return
 	REMOVE_TRAIT(owner, TRAIT_LIGHT_STEP, "[type]")
 
+/datum/quirk/positive/heel_walker
+	name = "Heel Walker"
+	desc = "You are used to heeled shoes. They do not lower your Speed and you never trip in them."
+	point_value = -1
+
+/datum/quirk/positive/heel_walker/on_spawn()
+	ADD_TRAIT(owner, TRAIT_HEEL_WALKER, "[type]")
+
+/datum/quirk/positive/heel_walker/on_remove()
+	if(owner)
+		REMOVE_TRAIT(owner, TRAIT_HEEL_WALKER, "[type]")
+
 /datum/quirk/positive/quick_learner
 	name = "Quick Learner"
 	desc = "You pick up new skills faster than most. Your mind is sharp and eager to learn."

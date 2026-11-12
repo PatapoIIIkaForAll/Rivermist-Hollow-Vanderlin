@@ -143,7 +143,7 @@
 	var/hazard = get_grind_hazard(thing)
 	if(hazard)
 		return hazard
-	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
+	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, src))
 		return "My armor is in the way."
 	var/obj/seat = get_grind_seat()
 	if(seat && thing != seat)

@@ -9,6 +9,8 @@
 			used = getfsilenced(soundin)
 	if(!used)
 		switch(soundin)
+			if("giggle")
+				used = list('sound/vo/female/elf/giggle (1).ogg', 'sound/vo/female/elf/giggle (2).ogg')
 			if("breathgasp")
 				used = list('sound/vo/female/elf/breathgasp (1).ogg','sound/vo/female/elf/breathgasp (2).ogg')
 			if("fatigue")

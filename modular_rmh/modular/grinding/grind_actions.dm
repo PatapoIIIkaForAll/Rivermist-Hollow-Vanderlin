@@ -523,7 +523,7 @@
 	. = ..()
 	if(!. || user != target || !can_hump_pillow(user))
 		return FALSE
-	if(user.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
+	if(user.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, user))
 		return FALSE
 	return !is_crotch_claimed(user)
 
@@ -623,7 +623,7 @@
 	. = ..()
 	if(!. || user != target || !grind_thing || grind_thing != user.get_grind_seat())
 		return FALSE
-	if(user.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
+	if(user.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, user))
 		return FALSE
 	return !is_crotch_claimed(user)
 

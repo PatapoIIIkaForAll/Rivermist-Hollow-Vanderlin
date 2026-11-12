@@ -30,18 +30,29 @@
 /mob/living/carbon/human/proc/GetSpecialVoice()
 	return special_voice
 
-/mob/living/carbon/human/get_alt_name()
-	var/face_name = get_face_name("")
-	var/voice_name = GetVoice()
-	if(face_name != voice_name)
-		// This isn't accurate purposely
-		var/appendage = "Figure"
-		switch(client?.prefs?.read_preference(/datum/preference/choiced/voice_type))
-			if(VOICE_TYPE_FEM)
-				appendage = "Woman"
-			if(VOICE_TYPE_MASC)
-				appendage = "Man"
-		return "Unknown [appendage]"
+/// The voice name strangers hear when the face does not match the voice; force skips that check.
+/mob/living/carbon/human/get_alt_name(force = FALSE)
+	if(!force && get_face_name("") == GetVoice())
+		return
+	return get_voice_descriptor_name()
+
+/// "Deep-voiced Woman": the voice descriptor and the voice gender, or "Unknown Woman" without one.
+/mob/living/carbon/human/proc/get_voice_descriptor_name()
+	var/voice_gender = "Figure"
+	switch(voice_type)
+		if(VOICE_TYPE_FEM)
+			voice_gender = "Woman"
+		if(VOICE_TYPE_MASC)
+			voice_gender = "Man"
+		if(null)
+			if(gender == FEMALE)
+				voice_gender = "Woman"
+			else if(gender == MALE)
+				voice_gender = "Man"
+	var/voice_word = get_descriptor_word(MOB_DESCRIPTOR_SLOT_VOICE)
+	if(!voice_word)
+		return "Unknown [voice_gender]"
+	return "[voice_word]-voiced [voice_gender]"
 
 /mob/living/carbon/human/proc/forcesay(list/append) //this proc is at the bottom of the file because quote fuckery makes notepad++ cri
 	if(stat == CONSCIOUS)
@@ -77,6 +88,7 @@
 /mob/living/carbon/human/send_speech(message, message_range = 6, obj/source = src, bubble_type = bubble_icon, list/spans, datum/language/message_language=null, list/message_mods = list(), original_message)
 	. = ..()
 	send_voice(message, message_mods)
+	queue_speech_barks(message, message_range, message_mods)
 
 /mob/living/carbon/human/proc/send_voice(message, list/message_mods)
 	if(!length(message))
@@ -87,9 +99,8 @@
 	if(!H)
 		return
 
-	//If high arousal - moan
-	var/datum/component/arousal/A = H.GetComponent(/datum/component/arousal)
-	if(A.arousal >= 40)
+	//If high arousal - moan, for speakers who turned it on
+	if(H.should_speech_moan())
 		H.emote(H.can_speak() ? "sexmoanlight" : "sexmoangag", intentional = FALSE)
 		return
 	// --------------------------
