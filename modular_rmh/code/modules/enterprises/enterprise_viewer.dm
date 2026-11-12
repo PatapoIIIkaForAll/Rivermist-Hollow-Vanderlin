@@ -296,15 +296,16 @@
 		room_max_y = max(room_max_y, member.y)
 	var/centre_x = floor.get_pixel_x() + ((room_min_x + room_max_x) / 2 - floor.min_x + 0.5) * ICON_SIZE_X + shift_x
 	var/centre_y = floor.get_pixel_y() + ((room_min_y + room_max_y) / 2 - floor.min_y + 0.5) * ICON_SIZE_Y + shift_y
-	var/half_width = ENTERPRISE_MENU_BUTTON_WIDTH / 2 / scale
-	var/half_stack = ((length(actions) - 1) * ENTERPRISE_MENU_BUTTON_STEP + ENTERPRISE_MENU_BUTTON_HEIGHT) / 2 / scale
+	var/factor = menu_factor()
+	var/half_width = ENTERPRISE_MENU_BUTTON_WIDTH / 2 / factor
+	var/half_stack = ((length(actions) - 1) * ENTERPRISE_MENU_BUTTON_STEP + ENTERPRISE_MENU_BUTTON_HEIGHT) / 2 / factor
 	var/frame_x = enterprise.frame_width * ICON_SIZE_X / 2
 	var/frame_y = enterprise.frame_height * ICON_SIZE_Y / 2
 	centre_x = clamp(centre_x, frame_x - frame_x / scale + half_width, frame_x + frame_x / scale - half_width)
 	centre_y = clamp(centre_y, frame_y - frame_y / scale + half_stack, frame_y + frame_y / scale - half_stack)
 	var/russian = get_preferred_ui_language(get_user()) == "ru"
-	var/matrix/shrink = scale == 1 ? null : matrix(1 / scale, 0, 0, 0, 1 / scale, 0)
-	var/button_y = centre_y + half_stack - ENTERPRISE_MENU_BUTTON_HEIGHT / 2 / scale
+	var/matrix/shrink = factor == 1 ? null : matrix(1 / factor, 0, 0, 0, 1 / factor, 0)
+	var/button_y = centre_y + half_stack - ENTERPRISE_MENU_BUTTON_HEIGHT / 2 / factor
 	for(var/action in actions)
 		var/atom/movable/screen/enterprise_menu_button/button = new
 		button.assigned_map = enterprise.map_key
@@ -318,9 +319,12 @@
 		button.set_position(1 + tile_x, 1 + tile_y, left - tile_x * ICON_SIZE_X, bottom - tile_y * ICON_SIZE_Y)
 		if(shrink)
 			button.transform = shrink
-		button_y -= ENTERPRISE_MENU_BUTTON_STEP / scale
+		button_y -= ENTERPRISE_MENU_BUTTON_STEP / factor
 		buttons += button
 	add_to_screen(buttons)
+
+/datum/enterprise_viewer/proc/menu_factor()
+	return scale * (fit > 0 ? fit : 1)
 
 /datum/enterprise_viewer/proc/choose(action)
 	var/datum/enterprise_room/room = menu_room

@@ -435,11 +435,16 @@
 			continue
 		for(var/datum/weakref/door_ref as anything in room.doors)
 			var/obj/structure/door/door = door_ref.resolve()
-			if(!QDELETED(door) && get_outside_step(door))
+			if(!QDELETED(door) && opens_to_street(door))
 				best = door
 				best_stores = stores
 				break
 	return best
+
+/datum/enterprise/proc/opens_to_street(obj/structure/door/door)
+	var/turf/outside = get_outside_step(door)
+	var/area/place = outside?.loc
+	return place?.outdoors
 
 /datum/enterprise/proc/get_wall_spots(obj/structure/door/door)
 	var/list/spots = list()

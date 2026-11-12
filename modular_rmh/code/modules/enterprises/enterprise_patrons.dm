@@ -12,6 +12,9 @@
 	var/datum/enterprise_room/lodging
 	var/datum/enterprise_seating/table_set
 	var/datum/weakref/seat
+	var/obj/item/key/room_key
+	var/datum/weakref/key_vendor
+	var/list/key_entry
 	var/turf/origin
 	var/leaves_at = 0
 	var/list/requests = list()
@@ -96,7 +99,7 @@
 		open_door(locate(/obj/structure/door) in ahead)
 
 /mob/living/simple_animal/enterprise_patron/proc/open_door(obj/structure/door/door)
-	if(QDELETED(door) || door.door_opened || door.switching_states || !door.anchored || door.locked())
+	if(QDELETED(door) || door.door_opened || door.switching_states || !door.anchored || (door.locked() && !has_key_for(door)))
 		return FALSE
 	INVOKE_ASYNC(door, TYPE_PROC_REF(/obj/structure/door, SwitchState), FALSE, src)
 	door.bump_close_later(src)
@@ -104,13 +107,38 @@
 
 /obj/structure/door/CanAStarPass(ID, to_dir, datum/requester)
 	. = ..()
-	if(!. && istype(requester, /mob/living/simple_animal/enterprise_patron) && anchored && !locked())
-		return TRUE
+	if(!. && istype(requester, /mob/living/simple_animal/enterprise_patron) && anchored)
+		var/mob/living/simple_animal/enterprise_patron/patron = requester
+		if(!locked() || patron.has_key_for(src))
+			return TRUE
 
 /obj/structure/door/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
-	if(!. && istype(mover, /mob/living/simple_animal/enterprise_patron) && anchored && !locked())
-		return TRUE
+	if(!. && istype(mover, /mob/living/simple_animal/enterprise_patron) && anchored)
+		var/mob/living/simple_animal/enterprise_patron/patron = mover
+		if(!locked() || patron.has_key_for(src))
+			return TRUE
+
+/mob/living/simple_animal/enterprise_patron/proc/has_key_for(obj/structure/door/door)
+	var/datum/lock/key/key_lock = door?.lock
+	return istype(key_lock) && !QDELETED(room_key) && room_key.loc == src && key_lock.check_access(room_key)
+
+/mob/living/simple_animal/enterprise_patron/proc/return_room_key()
+	var/obj/item/key/key = room_key
+	var/obj/structure/fake_machine/vendor/vendor = key_vendor?.resolve()
+	var/list/entry = key_entry
+	room_key = null
+	key_vendor = null
+	key_entry = null
+	if(QDELETED(key) || key.loc != src)
+		return FALSE
+	if(QDELETED(vendor))
+		key.forceMove(get_turf(src))
+		return FALSE
+	key.forceMove(vendor)
+	vendor.held_items[key] = entry || list("NAME" = key.name, "PRICE" = 0)
+	vendor.update_appearance(UPDATE_OVERLAYS)
+	return TRUE
 
 /mob/living/simple_animal/enterprise_patron/proc/forget_enterprise()
 	if(!enterprise)
@@ -133,10 +161,11 @@
 		return FALSE
 	if(lodging)
 		lodging.patron = null
+	return_room_key()
 	lodging = wanted
 	wanted.patron = WEAKREF(src)
 	wanted.patron_until = leaves_at
-	wanted.set_doors_locked(FALSE)
+	wanted.set_doors_locked(!!enterprise?.take_room_key(wanted, src))
 	enterprise?.guests_changed()
 	return TRUE
 
@@ -163,6 +192,7 @@
 			lodging.set_doors_locked(TRUE)
 		lodging = null
 		enterprise?.guests_changed()
+	return_room_key()
 	free_table()
 
 /mob/living/simple_animal/enterprise_patron/proc/get_rent_due()

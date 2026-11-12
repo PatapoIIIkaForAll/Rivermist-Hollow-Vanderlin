@@ -72,7 +72,10 @@
 
 /datum/enterprise_fixture/proc/swap_to(obj/new_type, datum/enterprise_room/room)
 	var/obj/found = get_present(room)
+	var/obj/old_type = fixture_type
+	var/facing = found ? found.dir : (dir || initial(old_type.dir))
 	fixture_type = new_type
+	dir = facing != initial(new_type.dir) ? facing : null
 	if(name)
 		name = null
 	if(!found || !isturf(found.loc))

@@ -14,7 +14,6 @@
 	var/width = 0
 	var/height = 0
 	var/list/mask
-	var/list/foreign_mask
 	var/list/datum/enterprise_room/rooms = list()
 	var/list/datum/enterprise_room/room_cells
 	var/list/atom/movable/screen/enterprise_picture/picture
@@ -35,12 +34,11 @@
 	used_planes = null
 	turfs = null
 	mask = null
-	foreign_mask = null
 	rooms = null
 	room_cells = null
 	return ..()
 
-/datum/enterprise_floor/proc/set_turfs(list/turf/new_turfs, list/turf/foreign)
+/datum/enterprise_floor/proc/set_turfs(list/turf/new_turfs)
 	turfs = new_turfs
 	room_cells = null
 	var/turf/first = turfs[1]
@@ -48,7 +46,7 @@
 	min_y = first.y
 	var/max_x = first.x
 	var/max_y = first.y
-	for(var/turf/member as anything in length(foreign) ? turfs + foreign : turfs)
+	for(var/turf/member as anything in turfs)
 		min_x = min(min_x, member.x)
 		min_y = min(min_y, member.y)
 		max_x = max(max_x, member.x)
@@ -58,11 +56,6 @@
 	mask = new /list(width * height)
 	for(var/turf/member as anything in turfs)
 		mask[(member.y - min_y) * width + (member.x - min_x) + 1] = TRUE
-	foreign_mask = null
-	if(length(foreign))
-		foreign_mask = new /list(width * height)
-		for(var/turf/member as anything in foreign)
-			foreign_mask[(member.y - min_y) * width + (member.x - min_x) + 1] = TRUE
 
 /datum/enterprise_floor/proc/set_rooms(list/datum/enterprise_room/new_rooms)
 	rooms = new_rooms
@@ -124,21 +117,17 @@
 
 	for(var/row in 0 to height - 1)
 		var/list/by_dir = list()
-		var/list/dim_by_dir = list()
 		for(var/column in 0 to width - 1)
-			var/cell = row * width + column + 1
-			var/list/target = mask[cell] ? by_dir : (foreign_mask?[cell] ? dim_by_dir : null)
-			if(!target)
+			if(!mask[row * width + column + 1])
 				continue
 			var/turf/member = locate(min_x + column, min_y + row, z)
 			var/offset = column * ICON_SIZE_X
-			add_to_strip(target, member, offset)
+			add_to_strip(by_dir, member, offset)
 			for(var/obj/thing in member)
 				if(thing.invisibility || istype(thing, /obj/effect))
 					continue
-				add_to_strip(target, thing, offset)
+				add_to_strip(by_dir, thing, offset)
 		add_strips(by_dir, row, origin_x, origin_y)
-		add_strips(dim_by_dir, row, origin_x, origin_y, ENTERPRISE_FOREIGN_TINT)
 
 	QDEL_LIST(labels)
 	labels = list()
@@ -167,13 +156,12 @@
 	picture_stale = FALSE
 	enterprise.update_plane_masters()
 
-/datum/enterprise_floor/proc/add_strips(list/by_dir, row, origin_x, origin_y, tint)
+/datum/enterprise_floor/proc/add_strips(list/by_dir, row, origin_x, origin_y)
 	for(var/facing in by_dir)
 		var/atom/movable/screen/enterprise_picture/strip = new
 		strip.dir = text2num(facing)
 		strip.pixel_x = origin_x
 		strip.pixel_y = origin_y + row * ICON_SIZE_Y
-		strip.color = tint
 		strip.overlays = by_dir[facing]
 		picture += strip
 
@@ -283,6 +271,7 @@
 	return ..()
 
 /datum/enterprise_room/proc/resolve()
+	RETURN_TYPE(/datum/enterprise_room)
 	var/datum/enterprise_room/current = src
 	while(current.merged_into)
 		current = current.merged_into
@@ -534,17 +523,16 @@
 	return !get_patron()
 
 /datum/enterprise_seating/proc/is_bar()
-	var/stools = 0
-	for(var/datum/enterprise_fixture/fixture as anything in chairs)
-		if(ispath(fixture.fixture_type, /obj/structure/chair/stool))
-			stools++
-	return stools >= 2 && stools * 2 >= length(chairs)
+	for(var/datum/enterprise_fixture/fixture as anything in tables)
+		if(ispath(fixture.fixture_type, /obj/structure/table/wood/counter) || ispath(fixture.fixture_type, /obj/structure/table/wood/bar))
+			return TRUE
+	return FALSE
 
 /datum/enterprise_seating/proc/get_free_chair(list/claimed, mob/living/asking)
 	var/list/obj/structure/chair/free = list()
 	for(var/datum/enterprise_fixture/fixture as anything in chairs)
 		var/obj/structure/chair/seat = fixture.get_present(room)
-		if(!seat || length(seat.buckled_mobs) || (seat in claimed) || is_stood_on(seat, asking))
+		if(!seat || !seat.can_buckle || length(seat.buckled_mobs) || (seat in claimed) || is_stood_on(seat, asking))
 			continue
 		free += seat
 	return length(free) ? pick(free) : null

@@ -2,6 +2,7 @@
 	COOLDOWN_DECLARE(upkeep_cooldown)
 	var/list/mob/living/simple_animal/enterprise_patron/patrons = list()
 	var/list/exit_doors
+	var/list/datum/weakref/key_vendors
 
 /datum/enterprise/proc/get_key_room(obj/item/key/key)
 	for(var/lock_id in key.get_access())
@@ -32,6 +33,38 @@
 			room.end_tenancy()
 		return
 	room.let_to(equipper, key)
+
+/datum/enterprise/proc/get_key_vendors()
+	var/list/obj/structure/fake_machine/vendor/found = list()
+	for(var/datum/weakref/vendor_ref as anything in key_vendors)
+		var/obj/structure/fake_machine/vendor/vendor = vendor_ref.resolve()
+		if(!QDELETED(vendor))
+			found += vendor
+	if(length(found))
+		return found
+	key_vendors = list()
+	for(var/datum/enterprise_floor/floor as anything in floors)
+		for(var/turf/member as anything in floor?.turfs)
+			for(var/obj/structure/fake_machine/vendor/vendor in member)
+				found += vendor
+				key_vendors += WEAKREF(vendor)
+	return found
+
+/datum/enterprise/proc/take_room_key(datum/enterprise_room/room, mob/living/simple_animal/enterprise_patron/holder)
+	if(!room.lock_id)
+		return null
+	for(var/obj/structure/fake_machine/vendor/vendor as anything in get_key_vendors())
+		for(var/obj/item/key/key in vendor.held_items)
+			if(!(room.lock_id in key.get_access()))
+				continue
+			holder.key_entry = vendor.held_items[key]
+			vendor.held_items -= key
+			vendor.update_appearance(UPDATE_OVERLAYS)
+			key.forceMove(holder)
+			holder.room_key = key
+			holder.key_vendor = WEAKREF(vendor)
+			return key
+	return null
 
 /datum/enterprise/proc/get_time_away(mob/living/who)
 	if(!who)

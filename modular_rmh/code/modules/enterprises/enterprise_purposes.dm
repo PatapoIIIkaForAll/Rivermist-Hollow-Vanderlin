@@ -255,6 +255,7 @@
 	post.desc = post_desc
 	post.pixel_x = spot[2]
 	post.pixel_y = spot[3]
+	log_game("[enterprise.name]: the [post_name] stands at [AREACOORD(post)].")
 	post.stock = stock
 	stock.post = post
 	room.stock = stock

@@ -267,34 +267,25 @@
 		if(!floor)
 			continue
 		var/list/turf/kept_turfs = list()
-		var/list/turf/foreign = list()
 		for(var/turf/member as anything in floor.turfs)
 			var/datum/enterprise_room/pocket = floor.room_cells[floor.cell_index(member)]
 			if(pocket)
-				pocket = pocket.resolve()
-				if(pocket.kept)
+				if(pocket.resolve().kept)
 					kept_turfs += member
-				else
-					foreign += member
 				continue
-			foreign += member
 			for(var/direction in GLOB.alldirs)
 				var/turf/neighbour = get_step(member, direction)
 				if(!neighbour || !floor.contains(neighbour))
 					continue
 				var/datum/enterprise_room/near = floor.room_cells[floor.cell_index(neighbour)]
-				if(!near)
-					continue
-				near = near.resolve()
-				if(near.kept)
-					foreign -= member
+				if(near && near.resolve().kept)
 					kept_turfs += member
 					break
 		if(!length(kept_turfs))
 			floors[z] = null
 			qdel(floor)
 			continue
-		floor.set_turfs(kept_turfs, foreign)
+		floor.set_turfs(kept_turfs)
 		floor.basement = is_basement_floor(floor)
 
 /datum/enterprise/proc/name_rooms(list/door_sides)

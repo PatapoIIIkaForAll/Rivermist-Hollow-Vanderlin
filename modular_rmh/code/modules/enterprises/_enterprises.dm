@@ -6,6 +6,7 @@
 #include "enterprise_guests.dm"
 #include "enterprise_inventory.dm"
 #include "enterprise_kegs.dm"
+#include "enterprise_ladders.dm"
 #include "enterprise_lodgers.dm"
 #include "enterprise_map.dm"
 #include "enterprise_orders.dm"
