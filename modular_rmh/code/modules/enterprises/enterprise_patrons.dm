@@ -6,6 +6,7 @@
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	faction = list(FACTION_TOWN)
 	wander = FALSE
+	cmode = FALSE
 	ai_controller = /datum/ai_controller/enterprise_patron
 	var/datum/enterprise/enterprise
 	var/datum/enterprise_room/lodging

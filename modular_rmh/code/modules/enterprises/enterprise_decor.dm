@@ -19,9 +19,17 @@
 				enterprise.dress_bed(bed, level)
 
 /datum/enterprise_room/proc/update_bare_floor()
+	var/static/list/laid = list(
+		FOOTSTEP_WOOD = TRUE,
+		FOOTSTEP_FLOOR = TRUE,
+		FOOTSTEP_STONE = TRUE,
+		FOOTSTEP_CARPET = TRUE,
+		FOOTSTEP_PLATING = TRUE,
+	)
 	var/bare = level < ENTERPRISE_LEVEL_WOOD
 	for(var/turf/open/floor/member in turfs)
-		enterprise.set_bare_floor(member, bare && member.footstep == FOOTSTEP_WOOD)
+		var/covered = terrace ? member.footstep == FOOTSTEP_WOOD : laid[member.footstep]
+		enterprise.set_bare_floor(member, bare && covered)
 
 /datum/enterprise/proc/dress_bed(obj/structure/bed/bed, level)
 	var/static/mutable_appearance/purple_drape
