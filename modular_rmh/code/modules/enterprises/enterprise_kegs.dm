@@ -162,11 +162,11 @@
 			found += initial(drink.age_path)
 	return standard_types
 
-/datum/enterprise_keg_store/proc/get_unit_prices()
-	var/static/list/unit_prices
-	if(unit_prices)
-		return unit_prices
-	unit_prices = list()
+/proc/enterprise_drink_entries()
+	var/static/list/entries
+	if(entries)
+		return entries
+	entries = list()
 	for(var/pack_type in SSmerchant.supply_packs)
 		var/datum/supply_pack/pack = SSmerchant.supply_packs[pack_type]
 		var/bottle_type = pack.contains
@@ -179,30 +179,38 @@
 		var/list/bottled = bottle.reagents?.reagent_list
 		if(length(bottled) == 1)
 			var/datum/reagent/drink = bottled[1]
-			if(drink.volume > 0 && isnull(unit_prices[drink.type]))
-				unit_prices[drink.type] = pack.cost / drink.volume
+			if(drink.volume > 0)
+				entries += list(list(drink.type, pack.cost / drink.volume, list(drink.type)))
 		qdel(bottle)
 	for(var/datum/brewing_recipe/recipe_type as anything in subtypesof(/datum/brewing_recipe))
 		if(IS_ABSTRACT(recipe_type))
 			continue
 		var/datum/brewing_recipe/recipe = new recipe_type
 		var/units = recipe.brewed_amount * recipe.per_brew_amount
-		if(!recipe.brewed_item && recipe.sell_value > 0 && units > 0)
+		if(!recipe.brewed_item)
+			var/price = (recipe.sell_value > 0 && units > 0) ? recipe.sell_value / units : 0
 			var/list/products = list(recipe.reagent_to_brew) + recipe.age_times
-			for(var/product in products)
-				if(isnull(unit_prices[product]))
-					unit_prices[product] = recipe.sell_value / units
+			for(var/index in 1 to length(products))
+				entries += list(list(products[index], price, products.Copy(index)))
 		qdel(recipe)
-	return unit_prices
+	return entries
 
-/datum/enterprise_keg_store/proc/get_unit_price(drink_type)
+/proc/enterprise_drink_unit_price(drink_type)
+	var/static/list/unit_prices
 	if(!ispath(drink_type, /datum/reagent/consumable/ethanol))
 		return 0
-	var/list/prices = get_unit_prices()
-	if(!isnull(prices[drink_type]))
-		return prices[drink_type]
+	if(!unit_prices)
+		unit_prices = list()
+		for(var/list/entry as anything in enterprise_drink_entries())
+			if(entry[2] > 0 && isnull(unit_prices[entry[1]]))
+				unit_prices[entry[1]] = entry[2]
+	if(!isnull(unit_prices[drink_type]))
+		return unit_prices[drink_type]
 	var/datum/reagent/drink = GLOB.chemical_reagents_list[drink_type]
 	return drink ? max(drink.price_per_unit, 0) : 0
+
+/datum/enterprise_keg_store/proc/get_unit_price(drink_type)
+	return enterprise_drink_unit_price(drink_type)
 
 /datum/enterprise_keg_store/proc/get_draw_cost(drink_type, amount)
 	var/price = get_unit_price(drink_type)
@@ -223,8 +231,14 @@
 	if(cost <= 0)
 		return TRUE
 	if(enterprise.is_manager(user))
-		return enterprise.pay(user, cost, "[enterprise.name] drinks")
+		return enterprise.pay(user, cost, "[enterprise.name] drinks", FALSE)
 	return enterprise.take_from_account(user, cost)
+
+/datum/enterprise_keg_store/proc/refresh(money_moved)
+	if(money_moved)
+		stock.enterprise.funds_changed()
+	else
+		SStgui.update_uis(stock.post)
 
 /datum/enterprise_keg_store/proc/pay_out(mob/user, value)
 	if(value <= 0)
@@ -384,7 +398,7 @@
 			kegs += keg
 	report_pour(user, value, stayed, refused, keg)
 	log_game("[key_name(user)] handed a keg in to the [stock.enterprise.name] drinks store and was paid [value]")
-	SStgui.update_uis(stock.post)
+	refresh(value > 0)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/pour_item(obj/item/reagent_containers/tool, mob/living/user)
@@ -401,7 +415,7 @@
 	if(tool.reagents.total_volume >= before)
 		return FALSE
 	log_game("[key_name(user)] poured [tool] into the [stock.enterprise.name] drinks store and was paid [value]")
-	SStgui.update_uis(stock.post)
+	refresh(value > 0)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/take_empty(mob/living/user)
@@ -414,7 +428,7 @@
 	keg.forceMove(get_turf(user))
 	to_chat(user, span_notice(russian ? "Пустая бочка выкачена со склада." : "An empty keg is rolled out of the store."))
 	log_game("[key_name(user)] took an empty keg from the [stock.enterprise.name] drinks store")
-	SStgui.update_uis(stock.post)
+	refresh(FALSE)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/fill(mob/living/user, drink_type, amount)
@@ -484,7 +498,7 @@
 	else
 		to_chat(user, span_notice("[UNIT_FORM_STRING(shown)] of [drink_name] poured into the keg[cost ? " for [cost]" : ""]."))
 	log_game("[key_name(user)] drew [shown] of [drink_type] from the [enterprise.name] drinks store for [cost]")
-	SStgui.update_uis(stock.post)
+	refresh(cost > 0)
 	return TRUE
 
 /datum/enterprise_keg_store/proc/get_data(mob/user)
@@ -523,16 +537,19 @@
 		return FALSE
 	switch(action)
 		if("store_keg")
-			return store(get_brought_keg(user), user)
+			store(get_brought_keg(user), user)
+			return FALSE
 		if("take_keg")
-			return take_empty(user)
+			take_empty(user)
+			return FALSE
 	var/drink_type = text2path("[params["id"]]")
 	var/amount = params["amount"]
 	if(istext(amount))
 		amount = text2num(amount)
 	if(!ispath(drink_type, /datum/reagent) || !isnum(amount))
 		return FALSE
-	return fill(user, drink_type, round(amount, 0.1))
+	fill(user, drink_type, round(amount, 0.1))
+	return FALSE
 
 /obj/structure/fake_machine/enterprise_stock/MouseDrop_T(atom/dropping, mob/living/user)
 	if(!stock?.kegs || !istype(dropping, /obj/structure/fermentation_keg) || !istype(user))

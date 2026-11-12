@@ -91,7 +91,6 @@
 
 /datum/enterprise_order/proc/start_waiting()
 	deadline = world.time + enterprise.get_order_wait()
-	patron.stay_until = deadline
 	watch()
 	enterprise.guests_changed()
 	check_served()
@@ -206,7 +205,6 @@
 /datum/enterprise_order/proc/start_meal(obj/item/reagent_containers/food/snacks/dish, obj/item/reagent_containers/cup)
 	state = ENTERPRISE_ORDER_STATE_MEAL
 	meal_until = world.time + ENTERPRISE_ORDER_MEAL_TIME
-	patron.stay_until = meal_until
 	bill += dish_price
 	qdel(dish)
 	if(cup)
@@ -393,7 +391,6 @@
 /datum/enterprise
 	var/list/order_dishes
 	var/list/order_drinks
-	var/list/order_drink_prices
 	var/list/order_drink_families
 
 /datum/enterprise/proc/get_order_max_tier()
@@ -443,11 +440,9 @@
 /datum/enterprise/proc/get_order_drink_tier(datum/reagent/consumable/drink_type)
 	return clamp(initial(drink_type.quality), 0, ENTERPRISE_ORDER_TOP_TIER)
 
-/datum/enterprise/proc/note_order_drink(datum/reagent/consumable/drink_type, list/family, unit_price)
+/datum/enterprise/proc/note_order_drink(datum/reagent/consumable/drink_type, list/family)
 	if(!ispath(drink_type, /datum/reagent/consumable/ethanol) || drink_type == /datum/reagent/consumable/ethanol)
 		return
-	if(isnull(order_drink_prices[drink_type]) && unit_price > 0)
-		order_drink_prices[drink_type] = unit_price
 	var/list/known = order_drink_families[drink_type]
 	if(known)
 		order_drink_families[drink_type] = known | family
@@ -462,42 +457,13 @@
 	if(order_drinks)
 		return order_drinks
 	order_drinks = list()
-	order_drink_prices = list()
 	order_drink_families = list()
-	for(var/pack_type in SSmerchant.supply_packs)
-		var/datum/supply_pack/pack = SSmerchant.supply_packs[pack_type]
-		var/bottle_type = pack.contains
-		if(islist(bottle_type))
-			var/list/contents = bottle_type
-			bottle_type = length(contents) == 1 ? contents[1] : null
-		if(pack.cost <= 0 || !ispath(bottle_type, /obj/item/reagent_containers))
-			continue
-		var/obj/item/reagent_containers/bottle = new bottle_type
-		var/list/bottled = bottle.reagents?.reagent_list
-		if(length(bottled) == 1)
-			var/datum/reagent/drink = bottled[1]
-			if(drink.volume > 0)
-				note_order_drink(drink.type, list(drink.type), pack.cost / drink.volume)
-		qdel(bottle)
-	for(var/datum/brewing_recipe/recipe_type as anything in subtypesof(/datum/brewing_recipe))
-		if(IS_ABSTRACT(recipe_type))
-			continue
-		var/datum/brewing_recipe/recipe = new recipe_type
-		var/units = recipe.brewed_amount * recipe.per_brew_amount
-		if(!recipe.brewed_item)
-			var/list/products = list(recipe.reagent_to_brew) + recipe.age_times
-			for(var/index in 1 to length(products))
-				note_order_drink(products[index], products.Copy(index), units > 0 ? recipe.sell_value / units : 0)
-		qdel(recipe)
+	for(var/list/entry as anything in enterprise_drink_entries())
+		note_order_drink(entry[1], entry[3])
 	return order_drinks
 
 /datum/enterprise/proc/get_order_drink_price(drink_type)
-	get_order_drinks()
-	var/price = order_drink_prices[drink_type]
-	if(!isnull(price))
-		return price
-	var/datum/reagent/drink = GLOB.chemical_reagents_list[drink_type]
-	return drink ? max(drink.price_per_unit, 0) : 0
+	return enterprise_drink_unit_price(drink_type)
 
 /datum/enterprise/proc/pick_by_tier(list/pool, tier)
 	for(var/lower = tier, lower >= 0, lower--)
@@ -577,8 +543,10 @@
 	order.wish = get_order_drink_tier(drink) >= ENTERPRISE_ORDER_WISH_TIER
 	return order
 
-/datum/enterprise/proc/send_lodgers_to_order(forced)
-	var/chance = forced ? 100 : owner_level * ENTERPRISE_ORDER_MORNING_CHANCE
+/datum/enterprise/proc/send_lodgers_to_order()
+	return call_lodgers_to_order(owner_level * ENTERPRISE_ORDER_MORNING_CHANCE)
+
+/datum/enterprise/proc/call_lodgers_to_order(chance)
 	if(chance <= 0)
 		return 0
 	var/count = 0

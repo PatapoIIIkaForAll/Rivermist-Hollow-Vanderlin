@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   Box,
   Button,
@@ -16,7 +16,6 @@ import { getPurposeIcon, getPurposeLabel } from '../purposes';
 import type { Data, FloorInfo, Locale, PageProps, RoomInfo } from '../types';
 
 const LEGEND_WIDTH = '17em';
-const LEGEND_HOVER_COLOR = 'rgba(255, 217, 160, 0.16)';
 const HOVER_DELAY = 250;
 const HOVER_BUDGET = 40;
 const HOVER_BUDGET_WINDOW = 60000;
@@ -24,12 +23,17 @@ const ICON_PIXELS = 32;
 
 const useHoverSender = (send: (id: number) => void) => {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const wantedId = useRef(0);
   const sentId = useRef(0);
   const budget = useRef({ since: 0, used: 0 });
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
   return (id: number) => {
+    if (wantedId.current === id) {
+      return;
+    }
+    wantedId.current = id;
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       if (sentId.current === id) {
@@ -102,14 +106,12 @@ type LegendRowProps = {
   enterprise: string;
   entry: LegendEntry;
   occupant: string | undefined;
-  highlighted: boolean;
   onHover: (id: number) => void;
   onOpen: (id: number) => void;
 };
 
 const LegendRow = (props: LegendRowProps) => {
-  const { locale, enterprise, entry, occupant, highlighted, onHover, onOpen } =
-    props;
+  const { locale, enterprise, entry, occupant, onHover, onOpen } = props;
   const { room, grouped, beds, damaged } = entry;
   const purpose = getPurposeLabel(locale, enterprise, room.purpose);
   const details = grouped ? [] : [purpose];
@@ -122,15 +124,14 @@ const LegendRow = (props: LegendRowProps) => {
   }
 
   return (
-    <div
-      style={{
-        cursor: 'pointer',
-        padding: '0.4em 0.5em',
-        marginBottom: '0.25em',
-        borderRadius: '0.25em',
-        backgroundColor: highlighted ? LEGEND_HOVER_COLOR : undefined,
-      }}
-      onMouseEnter={() => onHover(room.id)}
+    <Button
+      fluid
+      color="transparent"
+      px={1}
+      py={0.8}
+      lineHeight={1.25}
+      style={{ whiteSpace: 'normal' }}
+      onMouseOver={() => onHover(room.id)}
       onMouseLeave={() => onHover(0)}
       onClick={() => onOpen(room.id)}
     >
@@ -144,23 +145,17 @@ const LegendRow = (props: LegendRowProps) => {
           {!!damaged && <Box color="bad">{locale.formatDamaged(damaged)}</Box>}
         </Stack.Item>
       </Stack>
-    </div>
+    </Button>
   );
 };
 
 const Legend = (props: { locale: Locale }) => {
   const { locale } = props;
   const { act, data } = useBackend<Data>();
-  const [hoveredId, setHoveredId] = useState(0);
   const occupants = data.occupants || {};
   const damaged = data.damaged || {};
   const entries = getLegendEntries(data.rooms || [], data.viewed_z, damaged);
-  const sendHover = useHoverSender((id) => act('hover_room', { room: id }));
-
-  const hover = (id: number) => {
-    setHoveredId(id);
-    sendHover(id);
-  };
+  const hover = useHoverSender((id) => act('hover_room', { room: id }));
   const open = (id: number) => act('open_room', { room: id });
 
   return (
@@ -176,7 +171,6 @@ const Legend = (props: { locale: Locale }) => {
           enterprise={data.name}
           entry={entry}
           occupant={occupants[entry.room.id]}
-          highlighted={entry.room.id === hoveredId}
           onHover={hover}
           onOpen={open}
         />

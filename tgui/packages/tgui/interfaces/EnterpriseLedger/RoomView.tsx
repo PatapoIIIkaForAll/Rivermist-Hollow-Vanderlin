@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Section,
   Stack,
   Tabs,
+  TimeDisplay,
 } from 'tgui-core/components';
 
 import { useBackend } from '../../backend';
@@ -27,7 +28,6 @@ import { useIconRefs } from './useIconRefs';
 const ICON_SIZE = '32px';
 const DECISECONDS_IN_HOUR = 36000;
 const DECISECONDS_IN_MINUTE = 600;
-const COUNTDOWN_STEP = 15000;
 
 type RoomPageProps = {
   locale: Locale;
@@ -127,24 +127,16 @@ const getStay = (locale: Locale, timeLeft: number | null) => {
 
 const StayLeft = (props: { locale: Locale; timeLeft: number | null }) => {
   const { locale, timeLeft } = props;
-  const [since, setSince] = useState(Date.now());
-  const [now, setNow] = useState(Date.now());
-
-  useEffect(() => {
-    setSince(Date.now());
-    setNow(Date.now());
-    if (timeLeft === null || timeLeft === undefined) {
-      return;
-    }
-    const timer = setInterval(() => setNow(Date.now()), COUNTDOWN_STEP);
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-
   if (timeLeft === null || timeLeft === undefined) {
     return <>{getStay(locale, null)}</>;
   }
-  const passed = Math.floor((now - since) / 100);
-  return <>{getStay(locale, Math.max(timeLeft - passed, 0))}</>;
+  return (
+    <TimeDisplay
+      auto="down"
+      value={timeLeft}
+      format={(value) => getStay(locale, value)}
+    />
+  );
 };
 
 const TenantDetails = (props: { locale: Locale; tenant: TenantInfo }) => {

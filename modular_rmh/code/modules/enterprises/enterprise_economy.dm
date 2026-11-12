@@ -19,6 +19,9 @@
 
 /datum/enterprise/proc/funds_changed()
 	SStgui.update_uis(src)
+	push_room_windows()
+
+/datum/enterprise/proc/push_room_windows()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		SStgui.update_uis(room)
 		if(room.stock?.post)
@@ -27,7 +30,7 @@
 /datum/enterprise/proc/can_pay(mob/user, cost)
 	return book_balance + get_bank_balance(user) >= cost
 
-/datum/enterprise/proc/pay(mob/user, cost, reason)
+/datum/enterprise/proc/pay(mob/user, cost, reason, update = TRUE)
 	cost = round(cost)
 	if(cost <= 0)
 		return TRUE
@@ -39,7 +42,8 @@
 	if(from_bank)
 		SStreasury.bank_accounts[user] -= from_bank
 		SStreasury.log_to_steward("-[from_bank] from [user.real_name] ([reason])")
-	funds_changed()
+	if(update)
+		funds_changed()
 	return TRUE
 
 /datum/enterprise/proc/take_from_account(mob/payer, cost)
@@ -51,10 +55,10 @@
 	SStreasury.bank_accounts[payer] -= cost
 	return TRUE
 
-/datum/enterprise/proc/new_day(forced)
+/datum/enterprise/proc/new_day()
 	earned_today = 0
 	rested_today = list()
-	start_guest_day(forced)
+	start_guest_day()
 	SStgui.update_uis(src)
 
 #define ENTERPRISE_SAVE_NAME "enterprises"
@@ -339,7 +343,7 @@
 		budget2change(price, user)
 	playsound(src, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 	to_chat(user, span_notice(russian ? "Принято. Мне заплатили [price]." : "Taken. I have been paid [price]."))
-	SStgui.update_uis(src)
+	stock.enterprise.funds_changed()
 	return ITEM_INTERACT_SUCCESS
 
 /obj/structure/fake_machine/enterprise_stock/attack_hand(mob/living/user)
@@ -374,9 +378,8 @@
 	)
 
 /obj/structure/fake_machine/enterprise_stock/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	. = ..()
-	if(.)
-		return
+	if(..())
+		return FALSE
 	if(!stock)
 		return FALSE
 	var/mob/user = ui.user
@@ -391,7 +394,7 @@
 		return FALSE
 	var/russian = get_preferred_ui_language(user) == "ru"
 	var/cost = stock.get_buyout_price(entry)
-	if(!enterprise.pay(user, cost, "[enterprise.name] stock"))
+	if(!enterprise.pay(user, cost, "[enterprise.name] stock", FALSE))
 		to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
 		return FALSE
 	stock.give(item_type)
@@ -401,4 +404,5 @@
 	if(!user.put_in_hands(bought))
 		bought.forceMove(get_turf(user))
 	playsound(src, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-	return TRUE
+	enterprise.funds_changed()
+	return FALSE

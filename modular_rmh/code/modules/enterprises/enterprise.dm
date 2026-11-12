@@ -151,8 +151,9 @@
 				ui.send_update()
 			return FALSE
 		if("reset_view")
-			reset_view(ui.user)
-			return TRUE
+			if(reset_view(ui.user))
+				ui.send_update()
+			return FALSE
 		if("hide_floors")
 			hide_floors(ui.user)
 			return FALSE
@@ -215,7 +216,7 @@
 		if("debug_grant")
 			if(grant_owner_rooms(owner_level))
 				redraw()
-			return TRUE
+			return FALSE
 		if("debug_room_level")
 			var/level = params["level"]
 			var/room_id = params["room"]
@@ -230,7 +231,7 @@
 			for(var/datum/enterprise_room/target as anything in changed)
 				target.set_level(level)
 			redraw()
-			return TRUE
+			return FALSE
 		if("debug_patron")
 			var/list/patron_types = typesof(/mob/living/simple_animal/enterprise_patron)
 			var/kind = params["kind"]
@@ -243,22 +244,24 @@
 			for(var/mob/living/simple_animal/enterprise_patron/patron as anything in patrons.Copy())
 				patron.leave()
 			update_static_data_for_all_viewers()
-			return TRUE
+			return FALSE
 		if("debug_new_day")
-			new_day(TRUE)
-			return TRUE
+			new_day()
+			if(!morning_guest_kind)
+				admit_morning_guest()
+			return FALSE
 		if("debug_evening")
 			collect_rent()
-			return TRUE
+			return FALSE
 		if("debug_orders")
-			send_lodgers_to_order(TRUE)
-			return TRUE
+			call_lodgers_to_order(100)
+			return FALSE
 		if("debug_tired")
 			var/mob/living/carbon/human/sleeper = user
 			if(!istype(sleeper))
 				return FALSE
 			sleeper.apply_status_effect(/datum/status_effect/debuff/sleepytime)
-			return TRUE
+			return FALSE
 	return null
 #endif
 
@@ -381,6 +384,7 @@ SUBSYSTEM_DEF(enterprises)
 	var/keys_ready = FALSE
 
 /datum/controller/subsystem/enterprises/Initialize()
+	enterprise_drink_entries()
 	for(var/enterprise_type in subtypesof(/datum/enterprise))
 		get_enterprise(enterprise_type)
 	for(var/enterprise_type in enterprises)

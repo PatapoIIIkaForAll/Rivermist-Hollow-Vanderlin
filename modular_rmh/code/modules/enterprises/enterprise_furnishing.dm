@@ -305,8 +305,7 @@
 			floor?.mark_stale()
 	refresh_viewers()
 	update_static_data_for_all_viewers()
-	for(var/datum/enterprise_room/room as anything in rooms)
-		SStgui.update_uis(room)
+	push_room_windows()
 
 /datum/enterprise/proc/upgrade_room(mob/user, datum/enterprise_room/room, with_grade)
 	room = room?.get_leader()
@@ -337,7 +336,7 @@
 			return FALSE
 		if(!check_intact(user, room))
 			return FALSE
-		if(!pay(user, cost, "[name] room upgrade"))
+		if(!pay(user, cost, "[name] room upgrade", FALSE))
 			to_chat(user, span_warning(russian ? "Денег не хватает: нужно [cost]." : "There is not enough money: it takes [cost]."))
 			return FALSE
 		save_grade(target)
@@ -373,7 +372,6 @@
 	var/book_cost = room.get_repair_cost()
 	if(book_balance >= book_cost)
 		book_balance -= book_cost
-		funds_changed()
 		return finish_repair(user, room, book_cost)
 	var/account_cost = room.get_account_repair_cost()
 	if(get_bank_balance(user) < account_cost)
@@ -416,7 +414,6 @@
 	shown_pages[REF(user)] = page
 	page_seq++
 	ui_interact(user)
-	SStgui.update_uis(src)
 
 /datum/enterprise_room/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -541,9 +538,8 @@
 	)
 
 /datum/enterprise_room/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	. = ..()
-	if(.)
-		return
+	if(..())
+		return FALSE
 	switch(action)
 		if("set_page")
 			var/page = params["page"]

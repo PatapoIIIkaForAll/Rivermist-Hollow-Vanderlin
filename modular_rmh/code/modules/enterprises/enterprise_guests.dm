@@ -289,20 +289,23 @@
 			best_rank = rank
 	return best
 
-/datum/enterprise/proc/start_guest_day(forced)
+/datum/enterprise/proc/start_guest_day()
 	guest_calls_left = ENTERPRISE_GUEST_CALLS
 	morning_guest_due = TRUE
 	morning_guest_kind = null
 	morning_guest_locked = FALSE
-	welcome_morning_guest(forced)
+	welcome_morning_guest()
 	send_lodgers_to_order()
 
-/datum/enterprise/proc/welcome_morning_guest(forced)
+/datum/enterprise/proc/welcome_morning_guest()
 	if(!morning_guest_due || !SSticker.HasRoundStarted())
 		return null
-	if(!forced && GLOB.tod != "dawn")
+	if(GLOB.tod != "dawn")
 		morning_guest_due = FALSE
 		return null
+	return admit_morning_guest()
+
+/datum/enterprise/proc/admit_morning_guest()
 	if(!can_receive_guests())
 		return null
 	var/turf/entrance = get_entrance_turf(TRUE)

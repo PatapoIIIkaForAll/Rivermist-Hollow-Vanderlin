@@ -441,8 +441,10 @@
 
 /datum/enterprise/proc/reset_view(mob/user)
 	var/datum/enterprise_viewer/viewer = get_viewer(user)
-	if(viewer)
-		viewer.set_view(1, 0, 0)
+	if(!viewer || (viewer.scale == 1 && !viewer.shift_x && !viewer.shift_y))
+		return FALSE
+	viewer.set_view(1, 0, 0)
+	return TRUE
 
 /datum/enterprise/proc/hide_floors(mob/user)
 	drop_viewer(user?.ckey)
