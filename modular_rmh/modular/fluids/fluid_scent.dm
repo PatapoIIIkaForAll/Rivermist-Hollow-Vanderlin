@@ -72,6 +72,9 @@ GLOBAL_LIST_EMPTY(fluid_scent_marks)
 	SEND_SIGNAL(target, COMSIG_SEX_GET_AROUSAL, arousal_data)
 	if(arousal_data["arousal"] >= AROUSAL_EDGING_THRESHOLD)
 		notes += "thick with arousal"
+	var/marker_name = target.get_scent_mark_name()
+	if(marker_name)
+		notes += "marked with [marker_name]'s scent"
 	if(!length(notes))
 		return ""
 	return ", [english_list(notes)],"

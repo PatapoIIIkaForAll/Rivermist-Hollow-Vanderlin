@@ -229,7 +229,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/Lore_Primer.txt"))
 		ready = PLAYER_NOT_READY
 		return FALSE
 
-	var/this_is_like_playing_right = alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No")
+	var/this_is_like_playing_right = alert(src,"Watch the round as a spirit? Ghost-role calls can still reach you, and the skull button returns you to the lobby.[get_spectate_rejoin_warning(client)]","Spectate","Yes","No")
 
 	if(QDELETED(src) || !src.client || this_is_like_playing_right != "Yes")
 		ready = PLAYER_NOT_READY
@@ -251,12 +251,15 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/Lore_Primer.txt"))
 	observer.key = key
 	observer.client = client
 	observer.set_ghost_appearance()
-	observer.mind = mind
+	// The lobby mind is deleted below, so the spectator must not keep it.
 	if(observer.client && observer.client.prefs)
 		observer.real_name = observer.client.prefs.read_preference(/datum/preference/text/real_name)
 		observer.name = observer.real_name
 	observer.stop_sound_channel(CHANNEL_LOBBYMUSIC)
-	QDEL_NULL(mind)
+	// The observer now carries this mind; deleting it would leave a null assigned_role for its next body.
+	if(mind)
+		mind.current = null
+		mind = null
 	qdel(src)
 	return TRUE
 
@@ -354,9 +357,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/Lore_Primer.txt"))
 	if(is_race_banned(client.ckey, player_prefs.pref_species.id))
 		return JOB_UNAVAILABLE_RACE_BANNED
 
-	if(job.banned_leprosy && is_misc_banned(client.ckey, BAN_MISC_LEPROSY))
-		return JOB_UNAVAILABLE_BANNED
-
 	if(job.banned_lunatic && is_misc_banned(client.ckey, BAN_MISC_LUNATIC))
 		return JOB_UNAVAILABLE_BANNED
 
@@ -389,6 +389,8 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/Lore_Primer.txt"))
 /mob/dead/new_player/proc/AttemptLateSpawn(rank)
 	if(!client?.prefs?.defeat_introduction_complete)
 		client?.prefs?.show_choices(src)
+		return FALSE
+	if(spectate_rejoin_blocked(client))
 		return FALSE
 	var/error = IsJobUnavailable(rank, TRUE)
 	if(error != JOB_AVAILABLE)
@@ -456,6 +458,8 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/Lore_Primer.txt"))
 /mob/dead/new_player/proc/LateChoices()
 	if(!client?.prefs?.defeat_introduction_complete)
 		client?.prefs?.show_choices(src)
+		return
+	if(spectate_rejoin_blocked(client))
 		return
 	var/list/dat = list("<div class='notice' style='font-style: normal; font-size: 14px; margin-bottom: 2px; padding-bottom: 0px'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time, 1)]</div>")
 	for(var/datum/job/prioritized_job in SSjob.prioritized_jobs)

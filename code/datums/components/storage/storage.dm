@@ -947,7 +947,8 @@
 			close(M)
 
 /datum/component/storage/proc/signal_take_obj(datum/source, atom/movable/AM, new_loc, force = FALSE)
-	if(!(AM in real_location()))
+	// A deleting item stays listed until late in its Destroy; taking it would forceMove a qdeling atom.
+	if(QDELING(AM) || !(AM in real_location()))
 		return FALSE
 	return remove_from_storage(AM, new_loc)
 

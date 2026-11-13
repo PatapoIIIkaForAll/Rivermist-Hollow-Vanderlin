@@ -1,6 +1,6 @@
 
 /datum/sex_action/hole_storage/anus_store
-	name = "Store items in anus"
+	name = "Stuff ass"
 	hole_id = ORGAN_SLOT_ANUS
 
 /datum/sex_action/hole_storage/anus_store/shows_on_menu(mob/living/user, mob/living/target)
@@ -20,7 +20,7 @@
 	var/obj/item/dildo = user.get_active_held_item()
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_GROIN, TRUE))
 		return FALSE
-	if(!dildo)
+	if(QDELETED(dildo))
 		return FALSE
 	if(check_sex_lock(target, ORGAN_SLOT_ANUS, null, dildo))
 		return FALSE
@@ -39,7 +39,10 @@
 		target_organ = target.getorganslot(hole_id)
 		user.visible_message(span_warning("[user] starts inserting \the [dildo] in [target]'s ass..."))
 
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), sex_volume, TRUE, ignore_walls = FALSE)
+	// The hole sets the pace: the same time the holes window would take for this toy.
+	time_toy_insert_cycle(target_organ, dildo)
+
+	play_toy_reach_sound(target_organ, target, sex_volume)
 
 
 /datum/sex_action/hole_storage/anus_store/on_perform(mob/living/user, mob/living/target)
@@ -53,17 +56,27 @@
 			target_organ = target.getorganslot(hole_id)
 
 	var/obj/item/dildo = user.get_active_held_item()
-	if(!dildo)
+	if(QDELETED(dildo))
 		stop_runtime()
 		return
 	var/use_force = (force >= SEX_FORCE_HIGH)
+	// The shared slip roll: a tight, dry fit fumbles unless forced; the next cycle tries again.
+	var/obj/item/organ/genitals/filling_organ/hole = target_organ
+	if(istype(hole) && hole.roll_toy_insert_slip(dildo, use_force))
+		if(self)
+			to_chat(user, spanify_force("\The [dildo] slips from my grip and will not go in. It wants a slicker ass, or more force."))
+		else
+			user.visible_message(spanify_force("\The [dildo] slips from my grip and will not go into [target]'s ass."))
+		return
+	// The feel is judged before the insert widens the opening to the toy.
+	var/feel = istype(hole) ? hole.get_hole_feel("insert") : ""
 	var/success = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_INSERT, dildo, STORAGE_LAYER_INNER, use_force)
 	switch(success)
 		if(INSERT_FEEDBACK_OK)
 			if(self)
-				to_chat(user, spanify_force("I stuff \the [dildo] in my ass..."))
+				to_chat(user, spanify_force("I stuff \the [dildo] in my ass[feel]..."))
 			else
-				user.visible_message(spanify_force("I stuff \the [dildo] in [target]'s ass..."))
+				user.visible_message(spanify_force("I stuff \the [dildo] in [target]'s ass[feel]..."))
 		if(INSERT_FEEDBACK_OK_FORCE)
 			if(prob(15))
 				var/stuffed_res = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_SWAP_LAYERS_RAND, STORAGE_LAYER_INNER, STORAGE_LAYER_DEEP, use_force)
@@ -104,9 +117,9 @@
 		if(INSERT_FEEDBACK_TRY_FORCE)
 			pain_amt += 3
 			if(self)
-				to_chat(user, spanify_force("I feel like \the [dildo] might fit if I just use more force."))
+				to_chat(user, spanify_force("I feel like \the [dildo] might fit with more force, or something slick."))
 			else
-				user.visible_message(spanify_force("I feel like \the [dildo] might fit in [target]'s ass if I just use more force."))
+				user.visible_message(spanify_force("I feel like \the [dildo] might fit in [target]'s ass with more force, or something slick."))
 		if(INSERT_FEEDBACK_BLOCKED)
 			if(self)
 				to_chat(user, spanify_force("My ass is blocked."))
@@ -124,11 +137,11 @@
 
 	user.update_inv_hands()
 	user.update_a_intents()
-	perform_sex_action(user, target, 0.5, pain_amt, 0.5)
+	perform_sex_action(target, user, 0.5, pain_amt, 0.5)
 	handle_passive_ejaculation()
 
 /datum/sex_action/hole_storage/anus_remove
-	name = "Remove items from anus"
+	name = "Empty ass"
 	hole_id = ORGAN_SLOT_ANUS
 
 /datum/sex_action/hole_storage/anus_remove/shows_on_menu(mob/living/user, mob/living/target)
@@ -164,8 +177,10 @@
 		target_organ = target.getorganslot(hole_id)
 		user.visible_message(span_warning("[user] starts removing items from [target]'s ass..."))
 
+	// Pick the first item now so the first cycle already takes the holes window's time for it.
+	pending_toy = choose_toy_to_reach(target_organ, STORAGE_LAYER_INNER)
 
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), sex_volume, TRUE, ignore_walls = FALSE)
+	play_toy_reach_sound(target_organ, target, sex_volume)
 
 
 /datum/sex_action/hole_storage/anus_remove/on_perform(mob/living/user, mob/living/target)
@@ -180,32 +195,49 @@
 		else
 			target_organ = target.getorganslot(hole_id)
 
-	var/list/interactable_items = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL)
-	var/obj/item/removed_item = length(interactable_items) ? pick(interactable_items) : null
-	if(removed_item && !SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_REMOVE, removed_item, STORAGE_LAYER_INNER, BODYSTORAGE_REMOVE_MANUAL))
-		removed_item = null
-	if(!removed_item)
+	var/obj/item/organ/genitals/filling_organ/hole = target_organ
+	var/obj/item/removed_item = toy_still_in_reach(hole, pending_toy, STORAGE_LAYER_INNER) ? pending_toy : choose_toy_to_reach(hole, STORAGE_LAYER_INNER)
+	pending_toy = null
+	if(!removed_item || !istype(hole))
 		to_chat(user, spanify_force("I couldn't find anything inside..."))
 		stop_runtime()
 		return
+	// The shared grip roll: the same odds, slips and passage the holes window gives.
+	var/feel = hole.get_hole_feel("withdraw")
+	switch(hole.resolve_toy_removal(removed_item, STORAGE_LAYER_INNER, user))
+		if(TOY_REMOVE_SLIPPED_DEEPER)
+			if(self)
+				to_chat(user, spanify_force("\The [removed_item] slips from my fingers and deeper into my ass, past where I can reach."))
+			else
+				user.visible_message(spanify_force("\The [removed_item] slips from my fingers and deeper into [target]'s ass."))
+			pending_toy = choose_toy_to_reach(hole, STORAGE_LAYER_INNER)
+			return
+		if(TOY_REMOVE_NO_GRIP)
+			to_chat(user, spanify_force("I can't get a grip on \the [removed_item]..."))
+			pending_toy = removed_item
+			return
+		if(TOY_REMOVE_STUCK)
+			to_chat(user, spanify_force("\The [removed_item] will not come."))
+			stop_runtime()
+			return
 	if(user.get_active_held_item())
 		user.visible_message(spanify_force("The [removed_item] falls down on the floor..."))
 		removed_item.doMove(get_turf(user))
 	else
 		if(self)
-			to_chat(user, spanify_force("I fish out the [removed_item] from my ass..."))
+			to_chat(user, spanify_force("I fish out the [removed_item] from my ass[feel]..."))
 		else
-			user.visible_message(spanify_force("I fish out the [removed_item] from [target]'s ass..."))
+			user.visible_message(spanify_force("I fish out the [removed_item] from [target]'s ass[feel]..."))
 		removed_item.doMove(get_turf(user))
 		user.put_in_active_hand(removed_item)
-	perform_sex_action(user, target, 0.5, pain_amt, 0.5)
+	perform_sex_action(target, user, 0.5, pain_amt, 0.5)
 	handle_passive_ejaculation()
+	pending_toy = choose_toy_to_reach(hole, STORAGE_LAYER_INNER)
 
 
 /datum/sex_action/hole_storage/anus_remove_deep
-	name = "Push out items from deep inside ass"
+	name = "Deep-empty ass"
 	hole_id = ORGAN_SLOT_ANUS
-	do_time = 100
 	var/fail_counter = 0
 	var/list/stored_items_layer
 
@@ -239,11 +271,13 @@
 	. = ..()
 	target_organ = user.getorganslot(hole_id)
 	stored_items_layer = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL)
+	// Pick the first item now so the first push already takes the holes window's time for it.
+	pending_toy = choose_toy_to_reach(target_organ, STORAGE_LAYER_DEEP)
 
 	to_chat(user, span_warning("I brace myself and start pushing out items from deep inside my ass..."))
 
 
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), sex_volume, TRUE, ignore_walls = FALSE)
+	play_toy_reach_sound(target_organ, target, sex_volume)
 
 
 /datum/sex_action/hole_storage/anus_remove_deep/on_perform(mob/living/user, mob/living/target)
@@ -253,32 +287,33 @@
 	if(!target_organ)
 		target_organ = target.getorganslot(hole_id)
 
-	stored_items_layer = target_organ.get_body_storage_items_for_interaction(STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL)
-
+	var/obj/item/organ/genitals/filling_organ/hole = target_organ
+	var/obj/item/removed_item = toy_still_in_reach(hole, pending_toy, STORAGE_LAYER_DEEP) ? pending_toy : choose_toy_to_reach(hole, STORAGE_LAYER_DEEP)
+	pending_toy = null
 
 	target.adjust_stamina(15)
 	target.adjust_energy(-20)
 
 	to_chat(user, spanify_force("I *squeeze* my ass and try to push..."))
-	if(prob(30))
-		if(stored_items_layer.len)
+	if(!removed_item || !istype(hole))
+		to_chat(user, span_love("...But nothing comes out, and I finally feel empty."))
+		stop_runtime()
+		return
+	// The shared push roll: deep items come hard, a flared base or lube helps, and they pass the opening.
+	var/feel = hole.get_hole_feel("withdraw")
+	switch(hole.resolve_toy_removal(removed_item, STORAGE_LAYER_DEEP, user))
+		if(TOY_REMOVE_NO_GRIP, TOY_REMOVE_SLIPPED_DEEPER)
 			to_chat(user, span_love("...But nothing comes out, yet I can still feel it in there."))
+			pending_toy = removed_item
 			return
-		else
-			to_chat(user, span_love("...But nothing comes out, and I finally feel empty."))
+		if(TOY_REMOVE_STUCK)
+			to_chat(user, spanify_force("...But \the [removed_item] will not come."))
 			stop_runtime()
 			return
 
-	var/obj/item/removed_item = length(stored_items_layer) ? pick(stored_items_layer) : null
-	if(removed_item && !SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_REMOVE, removed_item, STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_MANUAL))
-		removed_item = null
-	if(!removed_item)
-		to_chat(user, spanify_force("There was nothing inside."))
-		stop_runtime()
-		return
-
-	user.visible_message("<span class='love_mid'>[user] tenses up and pushes [removed_item] out of their ass.</span>", "<span class='love_mid'>With some effort, I push out [removed_item].</span>")
+	user.visible_message("<span class='love_mid'>[user] tenses up and pushes [removed_item] out of their ass.</span>", "<span class='love_mid'>With some effort, I push out [removed_item][feel].</span>")
 	removed_item.doMove(get_turf(user))
 
-	perform_sex_action(user, target, 0.5, pain_amt, 0.5)
+	perform_sex_action(target, user, 0.5, pain_amt, 0.5)
 	handle_passive_ejaculation()
+	pending_toy = choose_toy_to_reach(hole, STORAGE_LAYER_DEEP)

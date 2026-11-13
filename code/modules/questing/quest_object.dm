@@ -84,9 +84,9 @@
 	var/list/user_scrolls = find_quest_scrolls(user)
 	for(var/obj/item/paper/scroll/quest/scroll in user_scrolls)
 		var/datum/quest/user_quest = scroll.assigned_quest
-		if(user_quest && (user_quest.quest_type in list(QUEST_HUNT, QUEST_CLEAR_OUT, QUEST_RAID, QUEST_BOSS)) && istype(parent, user_quest.target_mob_type))
+		if(istype(user_quest, /datum/quest/kill) && istype(parent, user_quest.target_mob_type))
 			examine_list += span_notice("This looks like the target of your quest: [user_quest.title]!")
-			if(Q.target_spawn_area != get_area(get_turf(src)))
+			if(Q.target_spawn_area && Q.target_spawn_area != get_area_name(parent))
 				examine_list += span_notice("It was last reported in the [Q.target_spawn_area] area, however.")
 			break
 
@@ -154,12 +154,17 @@
 	if(completion_counted)
 		return FALSE
 
-	var/datum/quest/Q = quest_ref.resolve()
-	if(!Q || Q.complete || Q.being_destroyed || !Q.quest_receiver_reference || !istype(target_mob, Q.target_mob_type))
+	var/datum/quest/kill/Q = quest_ref.resolve()
+	if(!Q || Q.complete || Q.being_destroyed || !istype(target_mob, Q.target_mob_type))
 		return FALSE
 
 	completion_counted = TRUE
 	target_mob.remove_filter(outline_filter_id)
+	// Nobody holds an unclaimed board posting yet, so a lost target shrinks it instead of counting.
+	if(!Q.quest_receiver_reference && SSquestboard?.is_posted(Q))
+		Q.on_posted_target_lost(target_mob)
+		qdel(src)
+		return FALSE
 	Q.remove_tracked_atom(target_mob)
 	Q.progress_current++
 	Q.on_progress_update()
@@ -181,7 +186,7 @@
 		return FALSE
 
 	var/datum/quest/Q = quest_ref.resolve()
-	if(!Q || Q.complete || !istype(target_mob, Q.target_mob_type))
+	if(!Q || Q.complete || Q.being_destroyed || !istype(target_mob, Q.target_mob_type))
 		return FALSE
 
 	maybe_drop_boss_ring(target_mob)

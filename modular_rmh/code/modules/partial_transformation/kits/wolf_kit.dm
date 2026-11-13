@@ -50,6 +50,7 @@
 		var/obj/item/organ/genitals/penis/new_penis = replacement
 		var/obj/item/organ/genitals/penis/old_penis = original
 		new_penis.organ_size = old_penis.organ_size
+		new_penis.length_cm = old_penis.length_cm
 
 /datum/action/cooldown/spell/undirected/partial_transformation/moonkissed
 	name = "Embrace the Moon's Kiss"

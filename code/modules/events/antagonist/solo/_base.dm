@@ -23,7 +23,13 @@
 	var/round_started = SSticker.HasRoundStarted()
 	var/midround_antag_pref_arg = round_started ? FALSE : TRUE
 
-	var/list/candidates = SSgamemode.get_candidates(antag_flag, antag_flag, observers = TRUE, midround_antag_pref = midround_antag_pref_arg, restricted_roles = restricted_roles)
+	// Prompted picks ask first, so they may use the role-call pool, which includes lobby players.
+	if(!prompted_picking)
+		return trim_candidates(SSgamemode.get_candidates(antag_flag, antag_flag, observers = TRUE, midround_antag_pref = midround_antag_pref_arg, restricted_roles = restricted_roles))
+	var/list/candidates = list()
+	for(var/mob/dead/ghost as anything in get_ghost_poll_pool())
+		if(!ghost.mind?.picking && !is_banned_from(ghost.ckey, list(antag_flag)))
+			candidates += ghost
 	return trim_candidates(candidates)
 
 /datum/round_event_control/antagonist/solo/canSpawnEvent(players_amt, gamemode, fake_check)
@@ -245,6 +251,7 @@
 	if(transfer_prefs)
 		ghost_player.client.prefs.safe_transfer_prefs_to(new_character)
 	new_character.dna.update_dna_identity()
+	ghost_player.leave_lobby_for_role()
 	new_character.key = ghost_player.key
 	SEND_SOUND(new_character, sound(null))
 

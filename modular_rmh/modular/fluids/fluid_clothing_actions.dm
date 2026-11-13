@@ -1,7 +1,7 @@
 /// Licks the fluid soaked into the clothes a partner is wearing.
 /datum/sex_action/lick_soaked_clothes
 	abstract_type = /datum/sex_action/lick_soaked_clothes
-	name = "Lick their wet clothes"
+	name = "Lick clothes"
 	description = "Suck the fluid out of the soaked clothes they are wearing."
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	check_same_tile = FALSE
@@ -63,12 +63,12 @@
 	return human_target.get_soaked_cover(stain_zone)
 
 /datum/sex_action/lick_soaked_clothes/crotch
-	name = "Lick their wet crotch"
+	name = "Lick crotch"
 	description = "Suck the fluid out of the soaked clothes over their crotch."
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 
 /datum/sex_action/lick_soaked_clothes/chest
-	name = "Lick their wet chest"
+	name = "Lick chest"
 	description = "Suck the fluid out of the soaked clothes over their chest."
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	stain_zone = FLUID_STAIN_CHEST
@@ -128,7 +128,7 @@
 		add_sex_lock(rubbed, ORGAN_SLOT_VAGINA, null, FALSE)
 
 /datum/sex_action/garment_pleasure/self
-	name = "Pleasure myself with a garment"
+	name = "Rub garment"
 	description = "Rub the garment in your hand against yourself; your climax soaks into it."
 
 /datum/sex_action/garment_pleasure/self/shows_on_menu(mob/living/user, mob/living/target)
@@ -180,7 +180,7 @@
 	lock_genitals(user)
 
 /datum/sex_action/garment_pleasure/other
-	name = "Pleasure them with a garment"
+	name = "Garment rubbing"
 	description = "Rub the garment in your hand against them; their climax soaks into it."
 
 /datum/sex_action/garment_pleasure/other/shows_on_menu(mob/living/user, mob/living/target)

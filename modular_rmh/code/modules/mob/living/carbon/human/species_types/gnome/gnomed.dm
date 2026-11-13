@@ -120,12 +120,15 @@
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/genitals/penis/human,
 		/datum/customizer/organ/genitals/vagina/human,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/human,
 		/datum/customizer/organ/genitals/belly/human,
 		/datum/customizer/organ/genitals/butt/human,
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/genitals/testicles/human,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 	)
 
 	body_markings = list(
@@ -180,11 +183,10 @@
 		"Black-Blue"      = SKIN_TONE_DROW_BLACK_BLUE,      // #2F2F38
 		"Very Pale"       = SKIN_TONE_DROW_VERY_PALE,       // #fff0e9
 		"Light Purple"    = SKIN_TONE_DROW_LIGHT_PURPLE,    // #a191a1
-		"Mid Purple"      = SKIN_TONE_DROW_MID_PURPLE,      // #897489
-		"Dark Purple"     = SKIN_TONE_DROW_DARK_PURPLE,     // #5f5f70
-		"Depth Grey-Blue" = SKIN_TONE_DROW_DEPTH_GREY_BLUE, // #5f5f70
-		"Pink"            = SKIN_TONE_DROW_PINK,            // #897489
-		"Very Pale"		  = SKIN_COLOR_DROW_PALE,	       // #fff0e9
+		"Mid Purple"      = SKIN_TONE_DROW_MID_PURPLE,      // #7b6680
+		"Dark Purple"     = SKIN_TONE_DROW_DARK_PURPLE,     // #4f4256
+		"Depth Grey-Blue" = SKIN_TONE_DROW_DEPTH_GREY_BLUE, // #4a5163
+		"Pink"            = SKIN_TONE_DROW_PINK,            // #a07f92
 	))
 
 /datum/species/gnome/deep/on_species_gain(mob/living/carbon/C, datum/species/old_species)

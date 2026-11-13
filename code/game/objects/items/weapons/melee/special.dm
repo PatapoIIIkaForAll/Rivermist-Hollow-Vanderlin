@@ -76,10 +76,10 @@
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
 			var/title
-			if(HU.mind?.assigned_role.parent_job)
+			if(HU.mind?.assigned_role?.parent_job)
 				title = HU.mind?.assigned_role.parent_job.title
 			else
-				title = HU.mind?.assigned_role.title
+				title = HU.mind?.assigned_role?.title
 
 			user.visible_message("<span class='warning'>[user] points [src] at [target].</span>")
 
@@ -147,7 +147,7 @@
 	. = ..()
 
 /datum/intent/mace/smash/stunner/afterchange()
-	var/obj/item/weapon/mace/stunmace/I = get_master_mob()
+	var/obj/item/weapon/mace/stunmace/I = get_master_item()
 	if(I)
 		if(I.on)
 			hitsound = list('sound/items/stunmace_hit (1).ogg','sound/items/stunmace_hit (2).ogg')

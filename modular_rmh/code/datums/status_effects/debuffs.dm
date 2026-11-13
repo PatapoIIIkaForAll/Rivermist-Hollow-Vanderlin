@@ -157,7 +157,7 @@
 	. = ..()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human = owner
-		human.add_quirk(/datum/quirk/vice/addiction/lovefiend)
+		human.add_quirk(/datum/quirk/negative/addiction/lovefiend)
 	owner.add_stress(/datum/stress_event/nympho_addiction)
 
 /datum/status_effect/debuff/nympho_addiction/on_remove()
@@ -655,8 +655,8 @@
 	duration = 3 MINUTES
 
 /atom/movable/screen/alert/status_effect/debuff/mob_fucked
-	name = "Violated"
-	desc = "You were pinned down, roughed up and fucked - you are in no condition to fight, run while you can. They don't want to hurt you - for now."
+	name = "Spent"
+	desc = "Your legs are unsteady and your body remembers the weight on it. Fighting will come hard for a while."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
 	icon_state = "violated_f"
 

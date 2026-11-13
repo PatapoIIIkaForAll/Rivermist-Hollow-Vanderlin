@@ -1,5 +1,5 @@
 /datum/repeatable_crafting_recipe/sigdry
-	name = "westleach zig"
+	name = "westleach cigarette"
 	output = /obj/item/clothing/face/cigarette/rollie/nicotine
 	starting_atom = /obj/item/reagent_containers/food/snacks/produce/dry_westleach
 	requirements = list(
@@ -8,12 +8,12 @@
 	attacked_atom = /obj/item/reagent_containers/food/snacks/produce/dry_westleach
 
 	craft_time = 10 SECONDS
-	crafting_message = "starts rolling a westleach zig"
+	crafting_message = "starts rolling a westleach cigarette"
 	craftdiff = 0
 	subtypes_allowed = TRUE
 
 /datum/repeatable_crafting_recipe/sigsweet
-	name = "swampweed zig"
+	name = "swampweed cigarette"
 	output = /obj/item/clothing/face/cigarette/rollie/cannabis
 	starting_atom = /obj/item/reagent_containers/food/snacks/produce/swampweed_dried
 	requirements = list(
@@ -22,7 +22,7 @@
 	attacked_atom = /obj/item/reagent_containers/food/snacks/produce/swampweed_dried
 
 	craft_time = 10 SECONDS
-	crafting_message = "starts rolling a swampweed zig"
+	crafting_message = "starts rolling a swampweed cigarette"
 	craftdiff = 0
 	subtypes_allowed = TRUE
 

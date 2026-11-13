@@ -81,9 +81,9 @@
 				if(stress2give == /datum/stress_event/viewdismember)
 					if(HAS_TRAIT(CA, TRAIT_STEELHEARTED))
 						continue
-					if(CA.has_quirk(/datum/quirk/vice/addiction/sadist))
+					if(CA.has_quirk(/datum/quirk/negative/addiction/sadist))
 						CA.add_stress(/datum/stress_event/viewdismembermaniac)
-						CA.sate_addiction(/datum/quirk/vice/addiction/sadist)
+						CA.sate_addiction(/datum/quirk/negative/addiction/sadist)
 						continue
 					if(CA.gender == FEMALE)
 						CA.add_stress(/datum/stress_event/fviewdismember)
@@ -201,7 +201,7 @@
 		was_owner.dropItemToGround(owner.get_item_for_held_index(held_index), force = TRUE)
 		was_owner.hand_bodyparts[held_index] = null
 	was_owner.remove_bodypart(src)
-	owner = null
+	set_owner(null) // RMH EDIT - a bare owner = null left trait signals on the old owner
 	update_icon_dropped()
 	was_owner.update_health_hud() //update the healthdoll
 	was_owner.update_body()
@@ -471,6 +471,7 @@
 		var/mob/living/carbon/human/H = C
 		H.lip_style = lip_style
 		H.lip_color = lip_color
+		H.lip_alpha = lip_alpha
 	if(real_name)
 		C.real_name = real_name
 	real_name = ""
@@ -503,6 +504,7 @@
 		return
 	limb = newBodyPart(limb_zone, 0, 0)
 	if(limb)
+		SEND_SIGNAL(src, COMSIG_CARBON_LIMB_REGENERATED, limb)
 		limb.attach_limb(src, TRUE)
 		if(!silent)
 			visible_message(span_green("[src]'s [limb] regenerates!"), span_green("My [limb] regenerates!"), vision_distance = COMBAT_MESSAGE_RANGE)

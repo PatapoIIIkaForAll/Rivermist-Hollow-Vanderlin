@@ -1,6 +1,8 @@
+import { useEffect, useMemo, useState } from 'react';
+import { resolveAsset } from '../assets';
 import { useBackend } from '../backend';
 import { useLocalState } from '../backend';
-import { Box, Button, DmIcon, Icon, Input, Stack, Tooltip } from 'tgui-core/components';
+import { Box, DmIcon, Icon, Input } from 'tgui-core/components';
 import { Window } from '../layouts';
 
 interface IconData {
@@ -290,12 +292,123 @@ interface Recipe {
   hydration_req?: number;
 }
 
+// RMH EDITED START - entries come from the recipe_book_db asset, fetched once per window
+// A zero-based index into the recipe db, or an inline entry the db lacks (per-reader learned recipes).
+type RecipeRef = number | Recipe;
+
 interface RecipeBookData {
   book_name: string;
   book_desc: string;
-  recipes: Recipe[];
-  linked_recipes: Recipe[];
+  recipe_ids: RecipeRef[];
+  linked_ids: RecipeRef[];
 }
+
+const RECIPE_DB_ASSET = 'recipe_book_db.json';
+
+// Pooled tgui windows keep this across book opens; the url changes when the db does.
+const recipeDbCache: { url?: string; entries?: Recipe[]; request?: Promise<Recipe[]> } = {};
+
+const fetchRecipeDb = async (url: string): Promise<Recipe[]> => {
+  // On a slow first open the asset can still be arriving, so retry for about half a minute.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return await response.json();
+    } catch {
+      // Retried below.
+    }
+    if (attempt >= 30) throw new Error(`Could not load ${url}`);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+};
+
+const loadRecipeDb = (url: string): Promise<Recipe[]> => {
+  if (recipeDbCache.url !== url || !recipeDbCache.request) {
+    const request = fetchRecipeDb(url);
+    recipeDbCache.url = url;
+    recipeDbCache.entries = undefined;
+    recipeDbCache.request = request;
+    request.then(
+      (entries) => {
+        if (recipeDbCache.request === request) recipeDbCache.entries = entries;
+      },
+      () => {
+        if (recipeDbCache.request === request) recipeDbCache.request = undefined;
+      },
+    );
+  }
+  return recipeDbCache.request!;
+};
+
+const useRecipeDb = (): { db?: Recipe[]; failed: boolean } => {
+  const url = resolveAsset(RECIPE_DB_ASSET);
+  const db = recipeDbCache.url === url ? recipeDbCache.entries : undefined;
+  const [, setLoads] = useState(0);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    if (db) return;
+    let active = true;
+    loadRecipeDb(url).then(
+      () => active && setLoads((loads) => loads + 1),
+      () => active && setFailed(true),
+    );
+    return () => {
+      active = false;
+    };
+  }, [url, db]);
+  return { db, failed };
+};
+
+const resolveRecipes = (db: Recipe[], refs: RecipeRef[]): Recipe[] =>
+  refs.map((ref) => (typeof ref === 'number' ? db[ref] : ref)).filter(Boolean);
+
+// Same lookup tables the book always built, now only when the book or db changes.
+const buildRecipeIndex = (db: Recipe[] | undefined, recipeIds: RecipeRef[], linkedIds: RecipeRef[]) => {
+  const recipes = db ? resolveRecipes(db, recipeIds) : [];
+  const linked_recipes = db ? resolveRecipes(db, linkedIds) : [];
+  const allRecipes = [...recipes, ...linked_recipes];
+  const recipeMultiMap = new Map<string, Recipe[]>();
+  const addToMultiMap = (key: string, r: Recipe) => {
+    if (!recipeMultiMap.has(key)) recipeMultiMap.set(key, []);
+    const existing = recipeMultiMap.get(key)!;
+    if (!existing.includes(r)) existing.push(r);
+  };
+
+  const essencePrecursorIndex = new Map<string, Recipe[]>();
+
+  for (const r of allRecipes) {
+    if (r.type === 'natural_precursor') {
+      if (r.yield_names) {
+        for (const ename of r.yield_names) {
+          const key = ename.toLowerCase();
+          if (!essencePrecursorIndex.has(key)) essencePrecursorIndex.set(key, []);
+          essencePrecursorIndex.get(key)!.push(r);
+        }
+      }
+      continue;
+    }
+    if (r.type === 'essence_combination' && r.output_name) {
+      const key = r.output_name.toLowerCase();
+      if (!essencePrecursorIndex.has(key)) essencePrecursorIndex.set(key, []);
+      essencePrecursorIndex.get(key)!.push(r);
+    }
+    if (r.name) addToMultiMap(r.name.toLowerCase(), r);
+    if (r.output_name) addToMultiMap(r.output_name.toLowerCase(), r);
+    if (r._output_path) addToMultiMap(r._output_path, r);
+  }
+
+  const recipeLookup = new Map<string, Recipe>();
+  const recipePickerMap = new Map<string, Recipe[]>(); // keys with >1 result
+  for (const [key, entries] of recipeMultiMap) {
+    if (entries.length === 1) {
+      recipeLookup.set(key, entries[0]);
+    } else {
+      recipePickerMap.set(key, entries);
+    }
+  }
+  return { recipes, allRecipes, recipeLookup, recipePickerMap, essencePrecursorIndex };
+};
+// RMH EDITED END
 
 const Sprite = (props: { icon?: string; icon_state?: string; size?: number }) => {
   const { icon, icon_state, size = 2 } = props;
@@ -1620,47 +1733,14 @@ const Sidebar = (props: {
 
 export const RecipeBook = (props: any, context: any) => {
   const { data } = useBackend<RecipeBookData>();
-  const { book_name, recipes = [], linked_recipes = [] } = data;
-  const allRecipes = [...recipes, ...linked_recipes];
-  const recipeMultiMap = new Map<string, Recipe[]>();
-  const addToMultiMap = (key: string, r: Recipe) => {
-    if (!recipeMultiMap.has(key)) recipeMultiMap.set(key, []);
-    const existing = recipeMultiMap.get(key)!;
-    if (!existing.includes(r)) existing.push(r);
-  };
-
-  const essencePrecursorIndex = new Map<string, Recipe[]>();
-
-  for (const r of allRecipes) {
-    if (r.type === 'natural_precursor') {
-      if (r.yield_names) {
-        for (const ename of r.yield_names) {
-          const key = ename.toLowerCase();
-          if (!essencePrecursorIndex.has(key)) essencePrecursorIndex.set(key, []);
-          essencePrecursorIndex.get(key)!.push(r);
-        }
-      }
-      continue;
-    }
-    if (r.type === 'essence_combination' && r.output_name) {
-      const key = r.output_name.toLowerCase();
-      if (!essencePrecursorIndex.has(key)) essencePrecursorIndex.set(key, []);
-      essencePrecursorIndex.get(key)!.push(r);
-    }
-    if (r.name) addToMultiMap(r.name.toLowerCase(), r);
-    if (r.output_name) addToMultiMap(r.output_name.toLowerCase(), r);
-    if (r._output_path) addToMultiMap(r._output_path, r);
-  }
-
-  const recipeLookup = new Map<string, Recipe>();
-  const recipePickerMap = new Map<string, Recipe[]>(); // keys with >1 result
-  for (const [key, entries] of recipeMultiMap) {
-    if (entries.length === 1) {
-      recipeLookup.set(key, entries[0]);
-    } else {
-      recipePickerMap.set(key, entries);
-    }
-  }
+  //RMH EDITED START - entries resolved from the shared db asset; lookup tables memoized
+  const { book_name, recipe_ids = [], linked_ids = [] } = data;
+  const { db, failed } = useRecipeDb();
+  const { recipes, allRecipes, recipeLookup, recipePickerMap, essencePrecursorIndex } = useMemo(
+    () => buildRecipeIndex(db, recipe_ids, linked_ids),
+    [db, recipe_ids, linked_ids],
+  );
+  //RMH EDITED END
 
   const [selectedRecipe, setSelectedRecipe] = useLocalState<Recipe | null>('rb_selected', null);
   const [history, setHistory] = useLocalState<Recipe[]>('rb_history', []);
@@ -1681,6 +1761,20 @@ export const RecipeBook = (props: any, context: any) => {
     setHistory(h);
     setSelectedRecipe(prev || null);
   };
+
+  //RMH EDITED START - the db arrives as an asset, so the first open in a window waits for it
+  if (!db) {
+    return (
+      <Window title={book_name} width={820} height={600}>
+        <Window.Content>
+          <Box style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--rb-text-muted)', fontStyle: 'italic' }}>
+            {failed ? 'The pages would not load. Close the book and open it again.' : 'Opening the book…'}
+          </Box>
+        </Window.Content>
+      </Window>
+    );
+  }
+  //RMH EDITED END
 
   return (
     <Window title={book_name} width={820} height={600}>

@@ -264,7 +264,7 @@
 	. = list()
 	if(stat < UNCONSCIOUS && isliving(user))
 		var/mob/living/living_user = user
-		if(living_user.has_quirk(/datum/quirk/vice/wanted) && user != src)
+		if(living_user.has_quirk(/datum/quirk/negative/wanted) && user != src)
 			user.add_stress(/datum/stress_event/hunted)
 
 
@@ -359,9 +359,6 @@
 	// Maniac, higher up than others
 	if(HAS_TRAIT(src, TRAIT_MANIAC_AWOKEN))
 		LAZYADDASSOCLIST(examine_list, EXAMINE_SECT_FACE, span_big(span_phobia("THE WORLD TWISTS! MANIAC!")))
-	// Leper
-	if(HAS_TRAIT(src, TRAIT_LEPROSY))
-		. += span_necrosis("A LEPER...")
 	// Fat
 	if(HAS_TRAIT(src, TRAIT_FAT))
 		. += span_boldnotice("[P[THEYRE]] obese!")
@@ -452,13 +449,6 @@
 
 /// General miscellaneous stuff that's typically good to know about someone.
 /mob/living/carbon/proc/get_examine_warnings(mob/user, list/P, list/examine_list)
-	//var/self_inspect = user == src
-	//var/pl = self_inspect ? "" : p_s()
-	//var/mob/dead/observer/O = isobserver(user) ? user : null
-	var/mob/living/L = isliving(user) ? user : null
-	//var/mob/living/carbon/C = iscarbon(user) ? user : null
-	//var/mob/living/carbon/human/H = ishuman(user) ? user : null
-
 	. = list()
 
 	//Cuffs
@@ -478,9 +468,6 @@
 	var/fire_str
 	if(on_fire)
 		fire_str = span_boldwarning("on fire!")
-		if(L?.has_quirk(/datum/quirk/vice/addiction/pyromaniac)) // living only
-			fire_str += span_boldred(" IT'S BEAUTIFUL!")
-			L.sate_addiction(/datum/quirk/vice/addiction/pyromaniac)
 	else if(fire_stacks + divine_fire_stacks > 0)
 		fire_str += "covered in something flammable."
 	else if(fire_stacks < 0 && !on_fire)
@@ -553,6 +540,8 @@
 
 	if(has_status_effect(/datum/status_effect/defeat_knockout))
 		. += span_boldwarning("[P[THEYRE]] defeated and unable to rise.")
+	else if(has_status_effect(/datum/status_effect/mob_horny_knockout))
+		. += span_boldwarning("[P[THEYRE]] spent and senseless. A gentle hand could bring [P[THEM]] round.")
 
 	// Health statuses
 	if(stat == DEAD || (HAS_TRAIT(src, TRAIT_FAKEDEATH)))
@@ -572,10 +561,10 @@
 	//The Nymphomaniac Underground
 	if(isliving(user))
 		var/mob/living/living_user = user
-		if((!appears_dead) && stat == CONSCIOUS && src.has_quirk(/datum/quirk/vice/addiction/lovefiend))
-			var/datum/quirk/vice/addiction/bonercheck = src.get_quirk(/datum/quirk/vice/addiction/lovefiend)
+		if((!appears_dead) && stat == CONSCIOUS && src.has_quirk(/datum/quirk/negative/addiction/lovefiend))
+			var/datum/quirk/negative/addiction/bonercheck = src.get_quirk(/datum/quirk/negative/addiction/lovefiend)
 			if((bonercheck) && (bonercheck.sated == 0))
-				if(living_user.has_quirk(/datum/quirk/vice/addiction/lovefiend)) //Takes one to know one
+				if(living_user.has_quirk(/datum/quirk/negative/addiction/lovefiend)) //Takes one to know one
 					switch(rand(1,5))
 						if(1)
 							. += span_love("I can sense [P[THEIR]] <B>need</B> for fun...")
@@ -599,7 +588,7 @@
 							. += span_love("[P[THEYRE]] restless, for some reason.")
 
 	// Blood volume
-	if(!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS))
+	if(!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS) && !is_bloodless())
 		var/blood_lvl_msg
 		switch(blood_volume)
 			if(-INFINITY to BLOOD_VOLUME_SURVIVE)

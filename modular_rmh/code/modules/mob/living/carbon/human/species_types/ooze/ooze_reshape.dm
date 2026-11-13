@@ -111,7 +111,7 @@
 	apply_markings_to_body_parts(body.dna.body_markings, body)
 
 	var/list/draft_organs = get_organ_dna_list()
-	var/list/cosmetic_slots = list(ORGAN_SLOT_EYES, ORGAN_SLOT_PENIS, ORGAN_SLOT_TESTICLES, ORGAN_SLOT_BREASTS, ORGAN_SLOT_VAGINA, ORGAN_SLOT_BELLY, ORGAN_SLOT_BUTT, ORGAN_SLOT_TAIL, ORGAN_SLOT_TAIL_FEATURE, ORGAN_SLOT_SNOUT, ORGAN_SLOT_EARS, ORGAN_SLOT_HORNS, ORGAN_SLOT_FRILLS, ORGAN_SLOT_WINGS, ORGAN_SLOT_NECK_FEATURE)
+	var/list/cosmetic_slots = list(ORGAN_SLOT_EYES, ORGAN_SLOT_PENIS, ORGAN_SLOT_TESTICLES, ORGAN_SLOT_BREASTS, ORGAN_SLOT_WOMB, ORGAN_SLOT_VAGINA, ORGAN_SLOT_BELLY, ORGAN_SLOT_BUTT, ORGAN_SLOT_TAIL, ORGAN_SLOT_TAIL_FEATURE, ORGAN_SLOT_SNOUT, ORGAN_SLOT_EARS, ORGAN_SLOT_HORNS, ORGAN_SLOT_FRILLS, ORGAN_SLOT_WINGS, ORGAN_SLOT_NECK_FEATURE)
 	for(var/slot in cosmetic_slots)
 		var/datum/organ_dna/organ_dna = draft_organs[slot]
 		var/list/old_organs = body.getorganslotlist(slot)
@@ -214,7 +214,7 @@
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreferencesMenu", "Reshape Body", 1298, 874)
+		ui = new(user, src, "CharacterCreator", "Reshape Body", 1180, 800)
 		ui.set_autoupdate(FALSE)
 		ui.open()
 	character_setup_ensure_view(user, ui)

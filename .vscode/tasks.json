@@ -156,6 +156,69 @@
         },
 
         {
+            "type": "process",
+            "command": "tools/build/build.sh",
+            "args": ["--force-tgui"],
+            "windows": {
+                "command": ".\\tools\\build\\build.bat",
+                "args": ["--force-tgui"]
+            },
+            "options": {
+                "env": {
+                    "DM_EXE": "${config:dreammaker.byondPath}"
+                }
+            },
+            "problemMatcher": [
+                "$dreammaker",
+                "$tsc",
+                "$eslint-stylish"
+            ],
+            "group": {
+                "kind": "build"
+            },
+            "dependsOn": "dm: reparse",
+            "label": "Build All (force TGUI rebuild)"
+        },
+
+        {
+            "type": "process",
+            "command": "tools/build/build.sh",
+            "args": ["clean"],
+            "windows": {
+                "command": ".\\tools\\build\\build.bat",
+                "args": ["clean"]
+            },
+            "problemMatcher": [],
+            "label": "Clean build outputs"
+        },
+
+        {
+            "type": "process",
+            "command": "tools/build/build.sh",
+            "args": ["--force-tgui"],
+            "windows": {
+                "command": ".\\tools\\build\\build.bat",
+                "args": ["--force-tgui"]
+            },
+            "options": {
+                "env": {
+                    "DM_EXE": "${config:dreammaker.byondPath}"
+                }
+            },
+            "problemMatcher": [
+                "$dreammaker",
+                "$tsc",
+                "$eslint-stylish"
+            ],
+            "group": {
+                "kind": "build"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": ["dm: reparse", "Clean build outputs"],
+            "label": "Build All (full DME + TGUI rebuild)"
+        },
+
+        {
             "command": "${command:dreammaker.reparse}",
             "group": "build",
             "label": "dm: reparse"

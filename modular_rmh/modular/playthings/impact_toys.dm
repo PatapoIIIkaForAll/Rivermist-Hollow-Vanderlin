@@ -21,6 +21,8 @@
 	/// What the struck person feels, for their own chat.
 	var/impact_feel = "a bright sting"
 	var/list/impact_sounds = list('modular_rmh/sound/effects/slap1.ogg', 'modular_rmh/sound/effects/slap2.ogg')
+	/// How hard its marks land, from IMPACT_TOOL_HAND to IMPACT_TOOL_WHIP.
+	var/impact_mark_tier = IMPACT_TOOL_STRAP
 
 /obj/item/impact_toy/riding_crop
 	name = "riding crop"
@@ -49,10 +51,11 @@
 	impact_arousal = 1.5
 	impact_verb = "flogs"
 	impact_feel = "a shower of light stings"
+	impact_mark_tier = IMPACT_TOOL_HAND
 
 /datum/sex_action/impact_play
 	parent_type = /datum/sex_action/held_item_zone
-	name = "Strike selected area with a held toy"
+	name = "Impact play"
 	description = "Use a held crop, paddle or flogger on the body zone selected on your combat doll."
 	action_item_type = /obj/item/impact_toy
 	check_same_tile = FALSE
@@ -122,6 +125,9 @@
 	playsound(target, pick(toy.impact_sounds), 35 + force * 5, TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(target, user, arousal_amt, pain_amt, arousal_amt * 0.5)
 	handle_passive_ejaculation(target)
+	if(ishuman(target))
+		var/mob/living/carbon/human/struck = target
+		struck.take_impact_mark(user, selected_zone, force, toy)
 	if(force >= SEX_FORCE_HIGH)
 		to_chat(target, span_warning("My [get_struck_area()] throbs with [toy.impact_feel]."))
 	else if(prob(20))

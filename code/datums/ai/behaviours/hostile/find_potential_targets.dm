@@ -5,13 +5,13 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 
 /datum/ai_behavior/find_potential_targets
 	action_cooldown = 2 SECONDS
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 	/// How far can we see stuff?
 	var/vision_range = 9
 
-/datum/ai_behavior/find_potential_targets/setup(datum/ai_controller/controller, ...)
-	if(controller.blackboard[BB_FIND_TARGETS_FIELD(type)])
-		return FALSE
-	return ..()
+/datum/ai_behavior/find_potential_targets/has_live_detection_field(datum/ai_controller/controller)
+	var/datum/field = controller.blackboard[BB_FIND_TARGETS_FIELD(type)]
+	return !QDELETED(field)
 
 /datum/ai_behavior/find_potential_targets/get_cooldown(datum/ai_controller/cooldown_for)
 	if(cooldown_for.blackboard[BB_FIND_TARGETS_FIELD(type)])
@@ -59,7 +59,7 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 			continue
 		if(!(living_target.alpha <= 100 || living_target.rogue_sneaking))
 			continue
-		var/extra_chance = (living_mob.health <= living_mob.maxHealth * 50) ? 30 : 0 // if we're below half health, we're way more alert
+		var/extra_chance = living_mob.get_npc_sneak_alert_bonus()
 		if (!living_mob.npc_detect_sneak(living_target, extra_chance))
 			filtered_targets -= living_target
 

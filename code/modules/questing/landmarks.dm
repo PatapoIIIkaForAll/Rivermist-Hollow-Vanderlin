@@ -23,21 +23,27 @@
 	var/list/possible_turfs = list()
 
 	for(var/turf/open/floor/T in view(7, src))
-		if(T.density || istransparentturf(T))
-			continue
-
-		for(var/obj/O in get_turf(T))
-			if(O.density) //No more spawning in metal bars or trees...
-				continue
-
-		if(get_area(T) != get_area(src)) // Keep the quest clustered around its chosen landmark.
-			continue
-
-		possible_turfs += T
+		if(is_valid_spawn_turf(T))
+			possible_turfs += T
 
 	return length(possible_turfs) ? pick(possible_turfs) : get_turf(src)
 
+/obj/effect/landmark/quest_spawner/proc/is_valid_spawn_turf(turf/T)
+	if(T.density || istransparentturf(T))
+		return FALSE
+	if(get_area(T) != get_area(src)) // Keep the quest clustered around its chosen landmark.
+		return FALSE
+	for(var/obj/O in T)
+		if(O.density) //No more spawning in metal bars or trees...
+			return FALSE
+	return TRUE
+
 /obj/effect/landmark/quest_spawner/proc/supports_contract_type(contract_type)
+	if(islist(contract_type))
+		for(var/listed_type in contract_type)
+			if(listed_type in contract_types)
+				return TRUE
+		return FALSE
 	return contract_type in contract_types
 
 /obj/effect/landmark/quest_spawner/proc/supports_contract_tier(contract_tier)

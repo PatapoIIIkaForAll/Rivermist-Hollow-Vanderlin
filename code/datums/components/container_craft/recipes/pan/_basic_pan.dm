@@ -119,6 +119,7 @@
 	wildcard_requirements = list(/obj/item/neuFarm/seed = 1)
 	output = /obj/item/reagent_containers/food/snacks/roastseeds
 	cooked_smell = /datum/pollutant/food/roasted_seeds
+	craft_priority = FALSE // Seed-specific roasts, like pumpkin seeds, go first.
 
 /datum/container_craft/pan/egg
 	name = "Fried Egg"

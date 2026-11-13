@@ -3,6 +3,7 @@
 /// Must be kept up to date with the contents of hostile_machines
 /datum/ai_behavior/find_potential_horny_targets
 	action_cooldown = 5 SECONDS
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 	/// How far can we see stuff?
 	var/vision_range = 9
 
@@ -11,10 +12,12 @@
 		return 60 SECONDS
 	return ..()
 
+/datum/ai_behavior/find_potential_horny_targets/has_live_detection_field(datum/ai_controller/controller)
+	var/datum/field = controller.blackboard[BB_FIND_HORNY_TARGETS_FIELD(type)]
+	return !QDELETED(field)
+
 /datum/ai_behavior/find_potential_horny_targets/setup(datum/ai_controller/controller, target_key, targetting_datum_key)
 	. = ..()
-	if(controller.blackboard[BB_FIND_HORNY_TARGETS_FIELD(type)])
-		return FALSE
 	var/mob/living/basic_mob = controller.pawn
 	if(!basic_mob)
 		return FALSE

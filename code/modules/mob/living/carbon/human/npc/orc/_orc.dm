@@ -27,6 +27,7 @@
 				/datum/pet_command/protect_owner,
 				/datum/pet_command/aggressive,
 				/datum/pet_command/calm,
+				/datum/pet_command/pet_breed_other,
 			)
 	AddComponent(/datum/component/obeys_commands, pet_commands)
 
@@ -136,7 +137,8 @@
 
 /mob/living/carbon/human/species/orc/proc/configure_mind()
 	if(!mind)
-		mind = new /datum/mind(src)
+		// No key: a keyed mind looks like a logged-off player, and ERP refuses those.
+		mind = new /datum/mind()
 	mind.current = src
 	attributes.add_sheet(/datum/attribute_holder/sheet/job/orc_npc/configure_mind)
 

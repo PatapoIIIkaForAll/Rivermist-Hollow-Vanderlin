@@ -1,0 +1,10 @@
+Pictures for the "View holes" window.
+
+Source: RJW Menstruation Cycle, a RimWorld mod by lutepickle
+https://gitgud.io/lutepickle/rjw_menstruation/
+Folders used: 1.6/Textures/Womb, Womb/Insect_Egged, Fetus (Default), Genitals (Vagina, Anal), Breasts.
+
+The downloaded copy ships no license file; check the project page before redistributing.
+Womb pictures are cut to 128 px and every file is packed to a 128-colour palette by
+F:/ss13 dev/hole_art_generator/build_hole_art.py (outside the repo). The rear frames are split
+into anus-only steps plus two vagina overlays (closed slit, and the gape from Anal02).

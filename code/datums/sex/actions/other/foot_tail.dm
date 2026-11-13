@@ -65,12 +65,12 @@
 	user.visible_message(span_warning("[user] uncurls [user.p_their()] tail from [target]'s [genital_name]."))
 
 /datum/sex_action/tailjob/penis
-	name = "Tease their cock with your tail"
+	name = "Tail-tease cock"
 	target_organ_slot = ORGAN_SLOT_PENIS
 	genital_name = "cock"
 
 /datum/sex_action/tailjob/vagina
-	name = "Tease their pussy with your tail"
+	name = "Tail-tease pussy"
 	target_organ_slot = ORGAN_SLOT_VAGINA
 	genital_name = "pussy"
 
@@ -127,18 +127,18 @@
 	user.visible_message(span_warning("[user] takes [user.p_their()] feet off [target]'s [genital_name]."))
 
 /datum/sex_action/footjob_intimate/penis
-	name = "Rub their cock with your feet"
+	name = "Foot-rub cock"
 	target_organ_slot = ORGAN_SLOT_PENIS
 	genital_name = "cock"
 
 /datum/sex_action/footjob_intimate/vagina
-	name = "Rub their pussy with your feet"
+	name = "Foot-rub pussy"
 	target_organ_slot = ORGAN_SLOT_VAGINA
 	genital_name = "pussy"
 
 // --- 3. Grind foot against vagina (vagina-specific by nature) ---
 /datum/sex_action/foot_grind_vagina
-	name = "Grind your foot against their pussy"
+	name = "Foot-grind pussy"
 	user_menu_zone_mask = SEX_UI_ZONE_LEGS
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 	check_same_tile = FALSE
@@ -236,11 +236,11 @@
 	user.visible_message(span_warning("[user] eases away from [target]'s feet."))
 
 /datum/sex_action/use_their_feet/penis
-	name = "Rub their feet against your cock"
+	name = "Fuck feet"
 	user_organ_slot = ORGAN_SLOT_PENIS
 	genital_name = "cock"
 
 /datum/sex_action/use_their_feet/vagina
-	name = "Rub their feet against your pussy"
+	name = "Ride feet"
 	user_organ_slot = ORGAN_SLOT_VAGINA
 	genital_name = "pussy"

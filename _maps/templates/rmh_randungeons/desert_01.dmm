@@ -15,7 +15,6 @@
 /area/under/rmh_desert/pyramid)
 "aT" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem,
@@ -45,7 +44,6 @@
 /area/under/rmh_desert/pyramid)
 "bH" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -69,7 +67,6 @@
 /area/under/rmh_desert/pyramid)
 "cx" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/four,
@@ -83,7 +80,6 @@
 /area/under/rmh_desert/pyramid)
 "dg" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -126,7 +122,6 @@
 "en" = (
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /turf/open/floor/concrete,
@@ -147,7 +142,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/sandstone_tile,
@@ -169,7 +163,6 @@
 /area/under/rmh_desert/pyramid)
 "fx" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/railing/corner{
@@ -179,12 +172,10 @@
 /area/under/rmh_desert/pyramid)
 "fB" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /obj/structure/fluff/railing/corner/south_east,
@@ -214,7 +205,6 @@
 /area/under/rmh_desert/pyramid)
 "hg" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -257,8 +247,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/five,
 /area/under/rmh_desert/pyramid)
@@ -284,7 +273,6 @@
 /area/under/rmh_desert/pyramid)
 "jb" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone,
@@ -301,7 +289,6 @@
 /area/under/rmh_desert/pyramid)
 "jv" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/borderfall{
@@ -316,14 +303,12 @@
 /area/under/rmh_desert/pyramid)
 "jT" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /turf/open/floor/tile,
 /area/under/rmh_desert/pyramid)
 "ke" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/railing/corner/north_east,
@@ -341,7 +326,6 @@
 	pixel_x = -18
 	},
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -357,8 +341,7 @@
 "lJ" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/pyramid)
@@ -391,7 +374,6 @@
 /area/under/rmh_desert/pyramid)
 "np" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/two,
@@ -452,7 +434,6 @@
 /area/under/rmh_desert/pyramid)
 "py" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/effect/decal/borderfall{
@@ -494,12 +475,10 @@
 /area/under/rmh_desert/pyramid)
 "rC" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/corner/south_west,
@@ -514,7 +493,6 @@
 /area/under/rmh_desert/pyramid)
 "rL" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -554,7 +532,6 @@
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /obj/structure/fluff/railing/corner/north_east,
@@ -563,8 +540,7 @@
 "tM" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/six,
 /area/under/rmh_desert/pyramid)
@@ -583,7 +559,6 @@
 /area/under/rmh_desert/pyramid)
 "uV" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile,
@@ -615,8 +590,7 @@
 "wg" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/pressure_plate{
 	redstone_id = "Desertdoor4";
@@ -731,7 +705,6 @@
 /area/under/rmh_desert/pyramid)
 "Bh" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/stone_tile/block,
@@ -745,7 +718,6 @@
 /area/under/rmh_desert/pyramid)
 "BA" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -755,7 +727,6 @@
 "BN" = (
 /obj/structure/stone_tile/block,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/five,
@@ -810,19 +781,16 @@
 "Em" = (
 /obj/effect/decal/edge{
 	dir = 10;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem,
 /area/under/rmh_desert/pyramid)
 "EK" = (
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/sandstone_tile,
@@ -830,8 +798,7 @@
 "EQ" = (
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem,
 /area/under/rmh_desert/pyramid)
@@ -851,8 +818,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/two,
 /area/under/rmh_desert/pyramid)
@@ -883,7 +849,6 @@
 /area/under/rmh_desert/pyramid)
 "GP" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/six,
@@ -947,7 +912,6 @@
 "Js" = (
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /turf/open/floor/tile,
@@ -963,14 +927,12 @@
 "JH" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/pyramid)
 "Ko" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem,
@@ -997,7 +959,6 @@
 	pixel_y = 8
 	},
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /turf/open/floor/concrete,
@@ -1005,7 +966,6 @@
 "KI" = (
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /turf/open/floor/sandstone,
@@ -1055,7 +1015,6 @@
 /area/under/rmh_desert/pyramid)
 "Lx" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -1108,7 +1067,6 @@
 /area/under/rmh_desert/pyramid)
 "NU" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone,
@@ -1123,8 +1081,7 @@
 "Of" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem,
 /area/under/rmh_desert/pyramid)
@@ -1133,7 +1090,6 @@
 /area/under/rmh_desert/pyramid)
 "OK" = (
 /obj/effect/decal/borderfall{
-	pixel_y = 0;
 	dir = 8;
 	pixel_x = -8
 	},
@@ -1141,7 +1097,6 @@
 /area/under/rmh_desert/pyramid)
 "OS" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -1232,7 +1187,6 @@
 /area/under/rmh_desert/pyramid)
 "Tu" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/five,

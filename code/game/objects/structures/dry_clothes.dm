@@ -33,7 +33,7 @@
 	if(!drying_timer && !has_wet_items)
 		// Start loop
 		drying_timer = addtimer(CALLBACK(src, PROC_REF(process_drying)), 10 SECONDS, TIMER_STOPPABLE)
-	usr.nobles_seen_servant_work()
+	usr?.nobles_seen_servant_work()
 
 
 /obj/structure/dryclothes/proc/on_item_removed(datum/source, obj/item/I)
@@ -43,7 +43,7 @@
 	if(!length(STR.contents()))
 		if(drying_timer)
 			drying_timer = null
-	usr.nobles_seen_servant_work()
+	usr?.nobles_seen_servant_work()
 
 /obj/structure/dryclothes/proc/process_drying()
 

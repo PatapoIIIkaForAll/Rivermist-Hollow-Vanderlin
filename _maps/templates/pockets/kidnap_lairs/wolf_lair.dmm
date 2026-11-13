@@ -38,7 +38,6 @@
 /obj/structure/flora/grass/crawlvines,
 /obj/effect/decal/cleanable/debris/stone,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -75,7 +74,6 @@
 /area/pocket_dimension)
 "jq" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -240,6 +238,10 @@
 /obj/structure/flora/crystal,
 /turf/open/floor/dirt,
 /area/pocket_dimension)
+"DG" = (
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/cobblerock,
+/area/pocket_dimension)
 "EY" = (
 /obj/effect/decal/cleanable/debris/stone,
 /mob/living/simple_animal/hostile/werewolf,
@@ -292,6 +294,10 @@
 /mob/living/simple_animal/hostile/retaliate/wolf,
 /turf/open/floor/dirt/road,
 /area/pocket_dimension)
+"NG" = (
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/naturalstone,
+/area/pocket_dimension)
 "OM" = (
 /obj/effect/landmark/distress_spawner/wolfden,
 /turf/open/floor/hay,
@@ -321,7 +327,6 @@
 /area/pocket_dimension)
 "XV" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -394,7 +399,7 @@ Zz
 ZO
 uU
 Dh
-KL
+NG
 rF
 sJ
 sJ
@@ -433,9 +438,9 @@ bC
 dk
 kR
 tX
-KL
+NG
 uU
-Dh
+DG
 er
 sJ
 sJ

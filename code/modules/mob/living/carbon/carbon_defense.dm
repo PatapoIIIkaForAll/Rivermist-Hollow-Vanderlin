@@ -239,6 +239,8 @@
 
 	for(var/zone in bodypart_zone)
 		var/obj/item/bodypart/part = get_bodypart(deprecise_zone(zone))
+		if(!part)
+			continue
 		for(var/datum/injury/injury in part.injuries)
 			injury.adjust_germ_level(add_germs, minimum_germs, maximum_germs)
 
@@ -410,6 +412,9 @@
 			M.visible_message(span_notice("[M] helps [src] back from defeat."), span_notice("I help [src] back from defeat."))
 			return
 		to_chat(M, span_warning("I stop tending to [src]."))
+		return
+
+	if(try_mob_horny_ko_help_up(M))
 		return
 
 //	if(!(mobility_flags & MOBILITY_STAND))

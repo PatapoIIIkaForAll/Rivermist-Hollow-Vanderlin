@@ -19,8 +19,11 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(isautomaton(cast_on))
-		return FALSE
+	if(ishuman(cast_on))
+		var/mob/living/carbon/human/human_target = cast_on
+		var/datum/species/automaton/automaton = human_target.dna?.species
+		if(istype(automaton) && automaton.voice_locked)
+			return FALSE
 	return isliving(cast_on)
 
 /datum/action/cooldown/spell/undirected/list_target/vicious_mimicry/before_cast(mob/living/cast_on)

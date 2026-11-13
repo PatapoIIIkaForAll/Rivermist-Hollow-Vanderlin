@@ -155,7 +155,7 @@
 	target_mind.current = null
 
 /datum/sex_action/unit_test_disconnected_erp
-	name = "Unit Test Disconnected ERP"
+	name = "Disconnect test"
 	check_distance = FALSE
 	stamina_cost = 0
 
@@ -298,3 +298,17 @@
 	qdel(proposal)
 
 	TEST_ASSERT_EQUAL(can_perform, FALSE, "Existing sex sessions should not perform actions with dead targets.")
+
+/// Going back to the lobby means a new character, so the spawn lock must not follow the player there.
+/datum/unit_test/erp_preferences_lobby_lifts_spawn_lock/Run()
+	var/datum/preferences/prefs = allocate(/datum/preferences)
+	prefs.has_spawned = TRUE
+	var/mob/dead/new_player/lobby = allocate(/mob/dead/new_player)
+	var/mob/dead/observer/ghost = allocate(/mob/dead/observer)
+	var/datum/erp_preference/list_choice/vaginal_tightness/creation_pref = new
+
+	TEST_ASSERT_NULL(prefs.get_erp_preference_edit_lock_reason(lobby), "A player back in the lobby should edit ERP preferences again")
+	TEST_ASSERT_NULL(creation_pref.get_edit_lock_reason(lobby, prefs), "Creation-only preferences should be editable again in the lobby")
+	TEST_ASSERT_NOTNULL(prefs.get_erp_preference_edit_lock_reason(ghost), "A ghost whose character is still in the round stays locked")
+	TEST_ASSERT_NOTNULL(creation_pref.get_edit_lock_reason(ghost, prefs), "A ghost keeps creation-only preferences locked")
+	TEST_ASSERT(prefs.has_spawned, "The lobby must not clear has_spawned, which respawn bans read")

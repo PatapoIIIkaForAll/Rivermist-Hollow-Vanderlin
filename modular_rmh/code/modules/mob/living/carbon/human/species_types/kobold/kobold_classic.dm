@@ -78,6 +78,7 @@
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/vagina/animal,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/belly/animal,
 		/datum/customizer/organ/genitals/butt/animal,
 	)
@@ -106,6 +107,7 @@
 	)
 
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/stature,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,

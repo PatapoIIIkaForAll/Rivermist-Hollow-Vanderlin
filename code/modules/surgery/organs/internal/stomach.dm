@@ -81,7 +81,6 @@
 	high_threshold_passed = "<span class='warning'>My guts flares up with constant pain.</span>"
 	high_threshold_cleared = "<span class='info'>The pain in my guts die down for now.</span>"
 	low_threshold_cleared = "<span class='info'>The last bouts of pain in my guts have died out.</span>"
-	stretchable = TRUE
 
 /obj/item/organ/guts/Insert(mob/living/carbon/M, special = FALSE, drop_if_replaced = TRUE, new_zone = null)
 	. = ..()

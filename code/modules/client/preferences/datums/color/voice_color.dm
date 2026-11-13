@@ -13,7 +13,7 @@
 	H.voice_color = value
 
 /datum/preference/color/voice_color/handle_link(datum/preferences/prefs, mob/user)
-	var/new_voice = input(user, "SELECT YOUR HERO'S VOICE COLOR", "THE THROAT","#"+prefs.read_preference(/datum/preference/color/voice_color)) as color|null
+	var/new_voice = tgui_color_picker(user, "SELECT YOUR HERO'S VOICE COLOR", "THE THROAT", sanitize_hexcolor(prefs.read_preference(/datum/preference/color/voice_color), 6, TRUE, "#ffffff"))
 	if(new_voice)
 		if(color_hex2num(new_voice) < 230)
 			to_chat(user, "<font color='red'>This voice color is too dark for mortals.</font>")

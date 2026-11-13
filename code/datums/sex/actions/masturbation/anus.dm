@@ -24,12 +24,14 @@
 
 /datum/sex_action/masturbate/anus/on_perform(mob/living/user, mob/living/target)
 	. = ..()
+	apply_finger_lube(user, user, ORGAN_SLOT_ANUS)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fingers [user.p_their()] butt..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("finger", user, 30, ORGAN_SLOT_ANUS)
 
 	perform_sex_action(user, user, 2, 2, 2)
 	handle_passive_ejaculation()
+	stretch_with_fingers(user, ORGAN_SLOT_ANUS)
 
 /datum/sex_action/masturbate/anus/on_finish(mob/living/user, mob/living/target)
 	. = ..()

@@ -7,7 +7,6 @@
 	count_max = 3
 	minimum_tier = QUEST_TIER_ROUTINE
 	maximum_tier = QUEST_TIER_DANGEROUS
-	base_reward_value = QUEST_BASE_REWARD_HUNT
 
 /datum/quest/kill/hunt/get_title()
 	if(title)

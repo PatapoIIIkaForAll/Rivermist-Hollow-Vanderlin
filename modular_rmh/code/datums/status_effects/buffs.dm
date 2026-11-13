@@ -38,6 +38,9 @@
 		to_chat(C, span_warning("My body shrinking back."))
 		C.resize = (1/1.2)
 		C.update_transform()
+		// Mob deletion removes status effects too, and elements cannot be added to a deleting datum.
+		if(QDELING(C))
+			return
 		C.RemoveElement(/datum/element/footstep, FOOTSTEP_MOB_HEAVY, 1, -2)
 		C.AddElement(/datum/element/footstep, C.footstep_type, 1, -6)
 

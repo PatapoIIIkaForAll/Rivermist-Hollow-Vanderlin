@@ -70,6 +70,7 @@
 		/datum/pet_command/rescue_owner,
 		/datum/pet_command/aggressive,
 		/datum/pet_command/calm,
+		/datum/pet_command/pet_breed_other,
 	)
 	if(!wolf.GetComponent(/datum/component/obeys_commands))
 		wolf.AddComponent(/datum/component/obeys_commands, pet_commands)

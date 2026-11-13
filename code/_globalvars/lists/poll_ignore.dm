@@ -23,6 +23,7 @@
 #define POLL_IGNORE_MAGE_SUMMON "mage_summon"
 #define POLL_IGNORE_SUCCUBUS_SUMMON "succubus_summon"
 #define POLL_IGNORE_STORYTELLERINJECTION "storyteller_injection"
+#define POLL_IGNORE_MOTHBUG "mothbug"
 
 
 GLOBAL_LIST_INIT(poll_ignore_desc, list(
@@ -48,6 +49,7 @@ GLOBAL_LIST_INIT(poll_ignore_desc, list(
 	POLL_IGNORE_NECROMANCER_SKELETON = "Necromancer Skeleton",
 	POLL_IGNORE_MAGE_SUMMON = "Mage Summon",
 	POLL_IGNORE_SUCCUBUS_SUMMON = "Succubus Summon",
+	POLL_IGNORE_MOTHBUG = "Mothbug eggs",
 ))
 GLOBAL_LIST_INIT(poll_ignore, init_poll_ignore())
 

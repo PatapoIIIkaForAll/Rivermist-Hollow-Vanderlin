@@ -90,7 +90,7 @@
 	desc = list("<span class='red'>I think I'm bleeding.</span>","<span class='red'>I'm bleeding.</span>")
 
 /datum/stress_event/bleeding/can_apply(mob/living/user)
-	if(user.has_quirk(/datum/quirk/vice/addiction/masochist))
+	if(user.has_quirk(/datum/quirk/negative/addiction/masochist))
 		return FALSE
 	return TRUE
 
@@ -100,7 +100,7 @@
 	desc = "<span class='red'>THE PAIN!</span>"
 
 /datum/stress_event/painmax/can_apply(mob/living/user)
-	if(user.has_quirk(/datum/quirk/vice/addiction/masochist))
+	if(user.has_quirk(/datum/quirk/negative/addiction/masochist))
 		return FALSE
 	return TRUE
 
@@ -246,7 +246,7 @@
 
 // this is a hell of a lot easier than checking in the moment
 /datum/stress_event/para/str/can_apply(mob/living/user)
-	if(!user.has_quirk(/datum/quirk/vice/paranoid))
+	if(!user.has_quirk(/datum/quirk/negative/paranoid))
 		return FALSE
 	return ..()
 
@@ -292,7 +292,7 @@
 	desc = span_red("I can't see their face! Have they found me!?")
 
 /datum/stress_event/hunted/can_apply(mob/living/user)
-	return user.has_quirk(/datum/quirk/vice/wanted)
+	return user.has_quirk(/datum/quirk/negative/wanted)
 /datum/stress_event/profane // When a non-assassin touches a profane dagger
 	timer = 3 MINUTES
 	stress_change = 2

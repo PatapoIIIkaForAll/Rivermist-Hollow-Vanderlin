@@ -220,7 +220,7 @@ GLOBAL_LIST_EMPTY(cached_armsleeves_flat_icons)
 					var/selected_value = GLOB.colorlist[choice]
 					if(selected_value == "CUSTOM_RGB")
 						var/current_color = smallclothes_preferences[preference_type]||"#FFFFFF"
-						var/new_color = input(user, "Select color:", "Custom Color", current_color) as color|null
+						var/new_color = tgui_color_picker(user, "Select color:", "Custom Color", sanitize_hexcolor(current_color, 6, TRUE, "#ffffff"))
 						if(new_color)
 							smallclothes_preferences[preference_type] = sanitize_hexcolor(new_color, include_crunch=1)
 					else
@@ -240,7 +240,7 @@ GLOBAL_LIST_EMPTY(cached_armsleeves_flat_icons)
 					var/selected_value = GLOB.colorlist[choice]
 					if(selected_value == "CUSTOM_RGB")
 						var/current_color = smallclothes_preferences[preference_type]||"#FFFFFF"
-						var/new_color = input(user, "Select color:", "Custom Color", current_color) as color|null
+						var/new_color = tgui_color_picker(user, "Select color:", "Custom Color", sanitize_hexcolor(current_color, 6, TRUE, "#ffffff"))
 						if(new_color)
 							smallclothes_preferences[preference_type] = sanitize_hexcolor(new_color, include_crunch=1)
 					else

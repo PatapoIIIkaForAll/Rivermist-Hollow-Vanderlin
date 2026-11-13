@@ -1,7 +1,7 @@
-// RMH - Клеймо: branding iron and letter kit.
+// RMH - Branding: branding iron and letter kit.
 // Ported from Twilight Axis (sprites, letter kit, anvil recipes) and merged with
 // our rules: the target must be helpless or restrained, the zone must be bare,
-// and a limb can only carry one brand.
+// and each skin spot can only carry one brand.
 
 /obj/item/branding_letters
 	name = "branding letter kit"
@@ -131,53 +131,48 @@
 	return TRUE
 
 /obj/item/branding_iron/attack(mob/living/target, mob/living/user, list/modifiers)
-	if(!heated || !iscarbon(target))
+	if(!heated || !ishuman(target))
 		return ..()
 
-	var/mob/living/carbon/patient = target
+	var/mob/living/carbon/human/patient = target
 
 	if(!is_held_still(patient, user))
 		to_chat(user, span_warning("[patient] would need to be restrained or helpless to hold still for this."))
 		return
 
-	var/target_zone = user.zone_selected
-	var/obj/item/bodypart/limb = patient.get_bodypart(check_zone(target_zone))
-	if(!limb)
-		to_chat(user, span_warning("There is nothing to brand there!"))
+	var/brand_zone = patient.pick_brand_zone(user, user.zone_selected)
+	if(!brand_zone || !heated || QDELETED(patient))
 		return
-	if(limb.brand_text)
-		to_chat(user, span_warning("[patient] is already branded there."))
-		return
-	if(!get_location_accessible(patient, target_zone))
-		to_chat(user, span_warning("The clothing is in the way!"))
-		return
+	var/zone_name = tattoo_zone_name(brand_zone)
 
-	user.visible_message(span_warning("[user] starts pressing the red-hot branding iron against [patient]'s [parse_zone(target_zone)]..."), \
-		span_warning("I take aim to brand [patient]'s [parse_zone(target_zone)]..."))
+	user.visible_message(span_warning("[user] starts pressing the red-hot branding iron against [patient]'s [zone_name]..."), \
+		span_warning("I take aim to brand [patient]'s [zone_name]..."))
 
 	if(!do_after(user, brand_time, patient))
 		return
 	// Re-check everything: do_after only watches the user's own position, so the
 	// victim can break free, walk off or pull armour on in the meantime.
-	if(!heated || QDELETED(patient) || QDELETED(limb) || limb != patient.get_bodypart(limb.body_zone) || limb.brand_text)
+	if(!heated || QDELETED(patient))
 		return
 	if(!user.Adjacent(patient) || !is_held_still(patient, user))
 		to_chat(user, span_warning("[patient] broke away!"))
 		return
-	if(!get_location_accessible(patient, target_zone))
-		to_chat(user, span_warning("The clothing is in the way!"))
+	var/problem = patient.brand_zone_problem(brand_zone, user)
+	if(problem)
+		to_chat(user, span_warning(problem))
+		return
+	var/brand_text = uppertext(current_text)
+	if(!patient.add_skin_brand(brand_zone, brand_text))
 		return
 
 	user.do_attack_animation(patient)
-	user.visible_message(span_danger("[user] presses the red-hot branding iron against [patient]'s [parse_zone(target_zone)] with a loud hiss!"), \
-		span_userdanger("I forcefully press the branding iron against [patient]'s [parse_zone(target_zone)], searing the mark!"))
+	user.visible_message(span_danger("[user] presses the red-hot branding iron against [patient]'s [zone_name] with a loud hiss!"), \
+		span_userdanger("I forcefully press the branding iron against [patient]'s [zone_name], searing the mark!"))
 	playsound(patient, 'modular_rmh/sound/items/steamrelease.ogg', 60, TRUE)
 	patient.emote("scream")
 
-	limb.brand_text = current_text
-	limb.brand_zone = target_zone
-	patient.apply_damage(brand_damage, BURN, limb.body_zone)
-	log_combat(user, patient, "branded", src, "text: [current_text]")
+	patient.apply_damage(brand_damage, BURN, tattoo_zone_limb(brand_zone))
+	log_combat(user, patient, "branded", src, "text: [brand_text]")
 	user.changeNext_move(CLICK_CD_MELEE * 1.5)
 	cool_down()
 

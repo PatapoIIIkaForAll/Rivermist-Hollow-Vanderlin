@@ -4,6 +4,8 @@
 	. = ..()
 	switch(M.used_intent.type)
 		if(INTENT_HELP)
+			if(try_mob_horny_ko_help_up(M))
+				return TRUE
 			if (health > 0)
 				visible_message("<span class='notice'>[M] [response_help_continuous] [src].</span>", \
 								"<span class='notice'>[M] [response_help_continuous] you.</span>", null, null, M)

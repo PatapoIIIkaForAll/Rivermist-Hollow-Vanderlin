@@ -18,7 +18,7 @@
 	storage.max_types = 10
 
 /obj/machinery/essence/infuser/Destroy()
-	STOP_PROCESSING(SSobj, src)
+	STOP_PROCESSING(SSmachines, src)
 	cancel_infusion_timers()
 	if(infusion_target)
 		infusion_target.forceMove(drop_location())
@@ -33,7 +33,7 @@
 	infusion_target = null
 	infusing = FALSE
 	cancel_infusion_timers()
-	STOP_PROCESSING(SSobj, src)
+	STOP_PROCESSING(SSmachines, src)
 	update_appearance(UPDATE_OVERLAYS)
 
 /obj/machinery/essence/infuser/build_allowed_types()
@@ -51,17 +51,22 @@
 
 // Called each tick only while waiting for essences
 /obj/machinery/essence/infuser/process()
+	if(infusing || !current_recipe || !infusion_target)
+		return PROCESS_KILL
 	pull_from_linked(storage)
 	if(recipe_ready())
-		STOP_PROCESSING(SSobj, src)
+		return PROCESS_KILL
 
 // Storage changed hook — check if we just received the last essence we needed
 /obj/machinery/essence/infuser/on_storage_changed(essence_type, amount, added)
 	..()
-	if(!added || infusing)
+	if(infusing)
 		return
 	if(recipe_ready())
-		STOP_PROCESSING(SSobj, src)
+		STOP_PROCESSING(SSmachines, src)
+	else if(!added && current_recipe && infusion_target)
+		// A linked machine drew essence away; poll again to refill.
+		START_PROCESSING(SSmachines, src)
 
 /obj/machinery/essence/infuser/proc/recipe_ready()
 	if(!current_recipe || !infusion_target)
@@ -75,7 +80,7 @@
 	if(infusing || !recipe_ready())
 		return FALSE
 	infusing = TRUE
-	STOP_PROCESSING(SSobj, src) // No more pulling while infusing
+	STOP_PROCESSING(SSmachines, src) // No more pulling while infusing
 	if(network)
 		network.invalidate_cache() // Stop the network routing more essence here
 
@@ -186,13 +191,13 @@
 	push_surplus_to_linked(storage)
 	// Start polling for essences if we don't already have them
 	if(!recipe_ready())
-		START_PROCESSING(SSobj, src)
+		START_PROCESSING(SSmachines, src)
 	to_chat(user, span_info("Recipe selected: [current_recipe.name]"))
 
 /obj/machinery/essence/infuser/proc/clear_recipe(mob/user)
 	if(!current_recipe)
 		return
-	STOP_PROCESSING(SSobj, src)
+	STOP_PROCESSING(SSmachines, src)
 	cancel_infusion_timers()
 	QDEL_NULL(current_recipe)
 	infusing = FALSE
@@ -235,7 +240,7 @@
 			infusion_target = tool
 			to_chat(user, span_info("You place [tool] on [src]."))
 			if(current_recipe && !recipe_ready())
-				START_PROCESSING(SSobj, src)
+				START_PROCESSING(SSmachines, src)
 			update_appearance(UPDATE_OVERLAYS)
 			return ITEM_INTERACT_SUCCESS
 		return ITEM_INTERACT_BLOCKING

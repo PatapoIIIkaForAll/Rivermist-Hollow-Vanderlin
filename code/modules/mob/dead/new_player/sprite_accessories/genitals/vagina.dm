@@ -16,6 +16,13 @@
 		return TRUE
 	return is_human_part_visible(owner, HIDEJUMPSUIT|HIDEUNDIESBOT)
 
+/// A gaping vagina draws the gaping state when the sheet has it; layered states carry the layer suffix.
+/datum/sprite_accessory/genitals/vagina/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
+	var/obj/item/organ/genitals/filling_organ/hole = organ
+	if(istype(hole) && hole.orifice?.gaped && icon_exists(get_icon(organ, bodypart, owner), "gaping_[get_layer_suffix(BODY_ADJ_LOW_LAYER)]"))
+		return "gaping"
+	return ..()
+
 /datum/sprite_accessory/genitals/vagina/human
 	icon_state = "human"
 	name = "Plain"

@@ -3,6 +3,9 @@
 /datum/ai_planning_subtree/use_bandage/SelectBehaviors(datum/ai_controller/controller, delta_time)
 	if(controller.blackboard[BB_HELD_CONSUMABLE] || controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET])
 		return
+	// One bandage per cooldown; queuing it early parks it in the queue for up to 30 seconds.
+	if(controller.behavior_cooldowns[GET_AI_BEHAVIOR(/datum/ai_behavior/apply_bandage)] > world.time)
+		return
 
 	var/datum/component/ai_inventory_manager/inv = controller.get_inventory()
 	if(!inv)
@@ -25,6 +28,7 @@
 
 /datum/ai_behavior/apply_bandage
 	action_cooldown = 30 SECONDS
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 
 /datum/ai_behavior/apply_bandage/perform(delta_time, datum/ai_controller/controller, consumable_key, obj/item/bandage)
 	controller.set_blackboard_key(BB_HELD_CONSUMABLE, bandage)

@@ -70,6 +70,7 @@
 		/datum/supply_pack/seeds/spelt,
 		/datum/supply_pack/seeds/cabbage,
 		/datum/supply_pack/seeds/turnip,
+		/datum/supply_pack/seeds/pumpkin,
 		/datum/supply_pack/luxury/spectacles_onyxa,
 		/datum/supply_pack/jewelry/nosegold,
 		/datum/supply_pack/apparel/engineering_goggles,
@@ -213,7 +214,6 @@
 		/datum/supply_pack/apparel/anklets,
 		/datum/supply_pack/jewelry/nyle,
 		/datum/supply_pack/jewelry/scom,
-		/datum/supply_pack/portals_and_fleshlight
 	)
 
 /datum/world_faction/zalad_traders/initialize_faction_stock()

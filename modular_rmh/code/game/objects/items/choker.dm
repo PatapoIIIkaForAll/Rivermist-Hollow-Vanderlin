@@ -17,16 +17,6 @@
 	salvage_result = /obj/item/natural/cloth
 	slot_flags = ITEM_SLOT_CHOKER | ITEM_SLOT_NECK
 
-/obj/item/clothing/choker/attack(mob/M, mob/user, def_zone)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(!H.underwear)
-			if(!get_location_accessible(H, BODY_ZONE_PRECISE_NECK))
-				return
-			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
-			if(do_after(user, 50, target = H))
-				H.equip_to_slot_if_possible(src, ITEM_SLOT_CHOKER, disable_warning = TRUE)
-
 /obj/item/clothing/choker/emerald
 	name = "emerald choker"
 	desc = "A stylish accessory for your neck. Has a huge emerald in front."

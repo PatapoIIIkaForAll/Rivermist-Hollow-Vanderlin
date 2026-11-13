@@ -183,7 +183,7 @@ GLOBAL_VAR_INIT(sleep_experience_modifier, 1.0)
 	var/multiplier = LAZYACCESS(skill_xp_multipliers, skill_type) || 1.0
 	if(HAS_TRAIT(parent, TRAIT_TUTELAGE))
 		multiplier += 0.05
-	if(parent?.has_quirk(/datum/quirk/boon/quick_learner))
+	if(parent?.has_quirk(/datum/quirk/positive/quick_learner))
 		multiplier += 0.2
 
 	// Catchup multiplier: boost XP when skill is below its default-attribute floor

@@ -61,7 +61,7 @@
 		return FALSE
 	controller.PauseAi(fish_delay)
 	if(!do_after(controller.pawn, fish_delay, target))
-		controller.PauseAi(0)
+		controller.ResumeAi()
 		finish_action(controller, FALSE)
 		return
 	create_fish(controller, target)

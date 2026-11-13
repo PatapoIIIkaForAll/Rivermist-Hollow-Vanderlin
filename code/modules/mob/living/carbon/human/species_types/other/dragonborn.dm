@@ -27,6 +27,10 @@
 	changesource_flags = WABBAJACK
 	limbs_icon_m = 'modular_rmh/icons/mob/bodies/m/mta.dmi'
 	limbs_icon_f = 'modular_rmh/icons/mob/bodies/f/fma.dmi'
+	allowed_body_builds = HUMANOID_BODY_BUILDS
+	default_body_build_m = BODY_BUILD_BROAD
+	default_body_build_f = BODY_BUILD_SLIM
+	body_build_palette = BODY_PALETTE_GREY
 	soundpack_m = /datum/voicepack/male
 	soundpack_f = /datum/voicepack/female
 	order_num = 27
@@ -105,6 +109,7 @@
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/vagina/animal,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/ears/anthro,
 		)
 	body_marking_sets = list(
@@ -140,6 +145,7 @@
 	)
 
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/stature,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,

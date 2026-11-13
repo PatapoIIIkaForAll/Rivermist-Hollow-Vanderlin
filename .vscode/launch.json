@@ -18,6 +18,20 @@
         {
             "type": "byond",
             "request": "launch",
+            "name": "Launch DreamSeeker (force TGUI rebuild)",
+            "preLaunchTask": "Build All (force TGUI rebuild)",
+            "dmb": "${workspaceFolder}/${command:CurrentDMB}"
+        },
+        {
+            "type": "byond",
+            "request": "launch",
+            "name": "Launch DreamSeeker (full DME + TGUI rebuild)",
+            "preLaunchTask": "Build All (full DME + TGUI rebuild)",
+            "dmb": "${workspaceFolder}/${command:CurrentDMB}"
+        },
+        {
+            "type": "byond",
+            "request": "launch",
             "name": "Launch DreamSeeker (low memory mode)",
             "preLaunchTask": "Build All (low memory mode)",
             "dmb": "${workspaceFolder}/${command:CurrentDMB}"

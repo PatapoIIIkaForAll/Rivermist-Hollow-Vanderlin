@@ -61,6 +61,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	var/key
 	/// original name of their mob
 	var/name
+	/// The GLOB.chosen_names entry of this character's body; a body remade for this mind keeps it.
+	var/reserved_name
 	/// replaced name for observers name if set
 	var/ghostname
 	/// the current mob this mind is residing in
@@ -646,7 +648,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 				output += " - [carbon.job]"
 
 			// Get the hunted quirk and display the reason
-			var/datum/quirk/vice/wanted/hunted_quirk = carbon.get_quirk(/datum/quirk/vice/wanted)
+			var/datum/quirk/negative/wanted/hunted_quirk = carbon.get_quirk(/datum/quirk/negative/wanted)
 			if(hunted_quirk && hunted_quirk.customization_value && hunted_quirk.customization_value != "")
 				output += "<br><i>Wanted for: [hunted_quirk.customization_value]</i>"
 			else
@@ -885,7 +887,10 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 /// Setter for the assigned_role job datum.
 /datum/mind/proc/set_assigned_role(datum/job/new_role)
 	if(!istype(new_role))
+		var/requested_role = new_role
 		new_role = ispath(new_role) ? SSjob.GetJobType(new_role) : SSjob.GetJob(new_role)
+		if(!new_role && !isnull(requested_role))
+			stack_trace("set_assigned_role could not resolve [requested_role]; assigned_role becomes null.")
 	if(assigned_role == new_role)
 		return assigned_role
 	. = assigned_role
@@ -941,7 +946,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 		return FALSE
 	amt *= GLOB.sleep_experience_modifier
 
-	if(current.has_quirk(/datum/quirk/boon/quick_learner))
+	if(current.has_quirk(/datum/quirk/positive/quick_learner))
 		amt *= 1.2
 
 	amt *= current.get_skill_exp_multiplier(skill)

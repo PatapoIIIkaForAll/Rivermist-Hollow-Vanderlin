@@ -71,6 +71,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		player = character.client
 	if(!player?.prefs)
 		return
+	// Character Creator places worn and carried loadout items itself.
+	if(player.prefs.character_creator_apply_loadout(character))
+		return
 	for(var/i in 1 to 10)
 		if(isnull(player.prefs.vars["loadout[i]"]))
 			continue

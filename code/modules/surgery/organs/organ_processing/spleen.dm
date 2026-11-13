@@ -30,6 +30,8 @@
 
 /// Blood volume adjust proc
 /mob/living/proc/adjust_bloodvolume(amount, cap)
+	if(amount < 0 && is_bloodless())
+		return FALSE
 	if(cap && amount > 0 && blood_volume >= cap)
 		return TRUE
 	var/adjusted_volume = max(blood_volume + amount, 0)

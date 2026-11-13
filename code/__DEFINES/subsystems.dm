@@ -154,6 +154,7 @@
 #define INIT_ORDER_PATH -50
 #define INIT_ORDER_OW -55
 #define INIT_ORDER_PERSISTENCE -95
+#define INIT_ORDER_RECIPE_BOOKS -96 //RMH EDITED - recipe pages read gameplay subsystems such as SSfishing, so build them late
 #define INIT_ORDER_BAN_CACHE -98
 #define INIT_ORDER_STATPANEL -99
 #define INIT_ORDER_CHAT -100 // Should be last to ensure chat remains smooth during init.

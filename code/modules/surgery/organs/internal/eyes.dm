@@ -139,7 +139,8 @@
 	M.update_sight()
 	M.update_tint()
 
-	if(ishuman(M))
+	// Same gate as Insert: an organ rebuild redraws once when it finishes.
+	if(ishuman(M) && !(M.status_flags & BUILDING_ORGANS))
 		var/mob/living/carbon/human/HMN = M
 		HMN.regenerate_icons()
 

@@ -81,6 +81,7 @@
 		// Livestock - coastal communities
 		/datum/supply_pack/livestock/chicken,
 		/datum/supply_pack/livestock/cat,
+		/datum/supply_pack/livestock/dog,
 		// Camp shelter
 		/datum/supply_pack/tools/camp_tent
 	)
@@ -126,6 +127,7 @@
 		/datum/supply_pack/livestock/cow,
 		/datum/supply_pack/livestock/goat,
 		/datum/supply_pack/livestock/pig,
+		/datum/supply_pack/livestock/dog_pair,
 		// Medical supplies
 		/datum/supply_pack/tools/medical/surgerybag,
 		/datum/supply_pack/tools/medical/prarml,
@@ -199,6 +201,7 @@
 		/datum/supply_pack/luxury/chess,
 		/datum/supply_pack/luxury/spectacles_golden,
 		/datum/supply_pack/luxury/spectacles_monocle,
+		/datum/supply_pack/luxury/heel_elixir,
 		/datum/supply_pack/narcotics/perfume/random,
 		/datum/supply_pack/narcotics/perfume/lavender,
 		/datum/supply_pack/narcotics/perfume/cherry,
@@ -217,6 +220,11 @@
 		/datum/supply_pack/medicine/moon_tea,
 		/datum/supply_pack/medicine/cold_seed,
 		/datum/supply_pack/medicine/seed_sachets,
+		/datum/supply_pack/narcotics/slick_balm,
+		/datum/supply_pack/narcotics/rosewater_salve,
+		/datum/supply_pack/narcotics/yielding_draught,
+		/datum/supply_pack/narcotics/maidens_knot,
+		/datum/supply_pack/narcotics/limber_draught,
 		// Rare restorative - the cure for lingering defeat trauma
 		/datum/supply_pack/tools/medical/mercydraught
 	)
@@ -237,7 +245,6 @@
 		/datum/supply_pack/weapons/ranged/cannon,
 		/datum/supply_pack/apparel/bellcollar,
 		/datum/supply_pack/weapons/ammo/powder,
-		/datum/supply_pack/portals_and_fleshlight,
 		/datum/supply_pack/rogue/wardrobe/suits/stockings_white,
 		/datum/supply_pack/rogue/wardrobe/suits/stockings_black,
 		/datum/supply_pack/rogue/wardrobe/suits/stockings_blue,

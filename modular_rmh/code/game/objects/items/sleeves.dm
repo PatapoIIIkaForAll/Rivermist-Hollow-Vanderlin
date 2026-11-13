@@ -19,18 +19,6 @@
 	salvage_result = /obj/item/natural/cloth
 	slot_flags = ITEM_SLOT_ARMSLEEVES | ITEM_SLOT_WRISTS
 
-/obj/item/clothing/armsleeves/attack(mob/M, mob/user, def_zone)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(!H.armsleeves)
-			if(!get_location_accessible(H, BODY_ZONE_PRECISE_L_HAND))
-				return
-			if(!get_location_accessible(H, BODY_ZONE_PRECISE_R_HAND))
-				return
-			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
-			if(do_after(user, 50, target = H))
-				H.equip_to_slot_if_possible(src, ITEM_SLOT_ARMSLEEVES, disable_warning = TRUE)
-
 /obj/item/clothing/armsleeves/solid_half
 	name = "sheer half-armsleeve"
 	icon_state = "solid-half"

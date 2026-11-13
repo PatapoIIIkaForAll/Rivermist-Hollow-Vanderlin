@@ -29,7 +29,8 @@
 			return
 		var/mob/living/carbon/human/H = C
 		var/obj/item/clothing/cloak/cloak_on_body = null
-		if(ishuman(C))
+		// The cloak slot also holds sashes and vests, which lack is_rain_protective.
+		if(ishuman(C) && istype(H.cloak, /obj/item/clothing/cloak))
 			cloak_on_body = H.cloak
 
 		var/has_hood = istype(C.head, /obj/item/clothing/head/hooded) || istype(C.head, /obj/item/clothing/head/roguehood)
@@ -91,6 +92,8 @@
 /datum/particle_weather/rain/rain_storm/tick()
 	if(!COOLDOWN_FINISHED(src, thunder))
 		return
+	// Started before the attempt so a failed search does not retry every fire.
+	COOLDOWN_START(src, thunder, rand(5, 40) * 1 SECONDS)
 
 	var/lightning_strikes = 1
 	for(var/i = 1 to lightning_strikes)
@@ -123,9 +126,10 @@
 			lightning_destination = pick(turfs)
 
 		else
-			lightning_destination = pick(SSParticleWeather.weathered_turfs)
+			lightning_destination = DEFAULTPICK(SSParticleWeather.weathered_turfs, null)
+			if(!lightning_destination)
+				return
 
 		var/turf/lightning_turf = get_turf(lightning_destination)
 		new /obj/effect/temp_visual/target/lightning(lightning_turf)
-		COOLDOWN_START(src, thunder, rand(5, 40) * 1 SECONDS)
 

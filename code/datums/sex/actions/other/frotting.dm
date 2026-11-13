@@ -40,7 +40,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] frots cocks together with [target]."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("grind", user, 20)
 
 	perform_sex_action(user, target, 1, 4, 1)
 	handle_passive_ejaculation()

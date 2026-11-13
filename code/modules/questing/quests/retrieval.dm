@@ -30,6 +30,10 @@
 	return get_nearest_tracked_atom(reference_turf, TRUE, preferred_atom)
 
 
+/// The rune would carry the goods home for free, so a rescue with them in hand voids the contract.
+/datum/quest/retrieval/fails_on_rune_rescue(mob/living/carbon/rescued)
+	return is_tracked_item_carried_by(rescued)
+
 /datum/quest/retrieval/get_risk_score(turf/target_turf)
 	return requested_tier + max(progress_required - 1, 0)
 

@@ -20,10 +20,10 @@
 		var/mob/living/L = X
 
 		var/title
-		if(L.mind?.assigned_role.parent_job)
+		if(L.mind?.assigned_role?.parent_job)
 			title = L.mind?.assigned_role.parent_job.title
 		else
-			title = L.mind?.assigned_role.title
+			title = L.mind?.assigned_role?.title
 
 		if(title in valid_positions)
 			var/datum/job/J = SSjob.GetJob(title)

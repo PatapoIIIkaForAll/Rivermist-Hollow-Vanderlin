@@ -276,12 +276,9 @@
 	var/datum/team/gnoll/pack = get_pack()
 	return ..() && pack?.has_room() && pack.has_birth_seed() && gnoll_awakening_has_candidates()
 
-/// The awakening polls observers; with none online the goal could never be met.
+/// The awakening polls observers and lobby players; with none available the goal could never be met.
 /proc/gnoll_awakening_has_candidates()
-	for(var/mob/dead/observer/ghost in GLOB.player_list)
-		if(ghost.client)
-			return TRUE
-	return FALSE
+	return length(get_ghost_poll_pool()) > 0
 
 /obj/item/gnoll_trail_charm
 	name = "Gorellik's trail charm"

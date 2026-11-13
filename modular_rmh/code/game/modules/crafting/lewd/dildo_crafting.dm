@@ -101,8 +101,20 @@
 	createditem_extra = 3
 	i_type = "Lewd"
 
-/*/datum/anvil_recipe/glass_plug
-	name = "Glass plug 3x"
-	req_bar = /obj/item/ingot/glass
-	created_item = list(/obj/item/dildo/plug/glass, /obj/item/dildo/plug/glass, /obj/item/dildo/plug/glass)
-	i_type = "General"*/
+// Same bench as the glass beads: an iron mould and a pane of glass.
+/datum/anvil_recipe/glass_plug
+	name = "Glass plug"
+	req_bar = /obj/item/ingot/iron
+	additional_items = list(/obj/item/natural/glass)
+	created_item = /obj/item/dildo/plug/glass
+	i_type = "Lewd"
+
+// Fur bound to a steel plug; fur on a wooden plug makes the tail plug instead.
+/datum/repeatable_crafting_recipe/crafting/bunny_plug
+	name = "bunny plug"
+	output = /obj/item/dildo/plug/bunny
+	requirements = list(/obj/item/dildo/plug/steel = 1, /obj/item/natural/fur = 1)
+	starting_atom = /obj/item/natural/fur
+	attacked_atom = /obj/item/dildo/plug/steel
+	allow_inverse_start = FALSE
+	category = "Lewd"

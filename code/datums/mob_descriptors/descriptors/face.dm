@@ -80,6 +80,18 @@
 /datum/mob_descriptor/face/malformed
 	name = "Malformed"
 
+/datum/mob_descriptor/face/narrow
+	name = "Narrow"
+
+/datum/mob_descriptor/face/emaciated
+	name = "Emaciated"
+
+/datum/mob_descriptor/face/skeletal
+	name = "Skeletal"
+
+/datum/mob_descriptor/face/long
+	name = "Long"
+
 /datum/mob_descriptor/face_exp
 	abstract_type = /datum/mob_descriptor/face_exp
 	suffix = "face"
@@ -199,3 +211,39 @@
 
 /datum/mob_descriptor/face_exp/shy
 	name = "Shy"
+
+/datum/mob_descriptor/face_exp/hardened
+	name = "Hardened"
+
+/datum/mob_descriptor/face_exp/hopeful
+	name = "Hopeful"
+
+/datum/mob_descriptor/face_exp/serene
+	name = "Serene"
+
+/datum/mob_descriptor/face_exp/compassionate
+	name = "Compassionate"
+
+/datum/mob_descriptor/face_exp/odious
+	name = "Odious"
+
+/datum/mob_descriptor/face_exp/selfassured
+	name = "Self-assured"
+
+/datum/mob_descriptor/face_exp/confident
+	name = "Confident"
+
+/datum/mob_descriptor/face_exp/nervous
+	name = "Nervous"
+
+/datum/mob_descriptor/face_exp/worried
+	name = "Worried"
+
+/datum/mob_descriptor/face/custom
+	name = "Custom Face"
+	custom_index = 8
+	custom_prefix_mode = CUSTOM_PREFIX_MODE_ARTICLE
+
+/datum/mob_descriptor/face_exp/custom
+	name = "Custom Expression"
+	custom_index = 9

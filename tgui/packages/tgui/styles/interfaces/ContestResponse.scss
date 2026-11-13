@@ -1,0 +1,63 @@
+@use '../base';
+
+.ContestResponse__Stat {
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: base.rem(2px);
+  font-size: base.rem(22px);
+  font-weight: bold;
+  color: #dcdcb4;
+  margin-bottom: base.rem(8px);
+}
+
+.ContestResponse__Challenger {
+  display: block;
+  text-align: center;
+  font-size: base.rem(13px);
+  color: #bbbbad;
+  margin-bottom: base.rem(2px);
+}
+
+.ContestResponse__Decline {
+  width: 100%;
+  height: base.rem(34px);
+  line-height: base.rem(34px);
+  text-align: center;
+  font-size: base.rem(15px);
+  font-weight: bold;
+  margin-bottom: base.rem(8px);
+}
+
+.ContestResponse__Grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: base.rem(5px);
+}
+
+.ContestResponse__Option {
+  width: 100%;
+  height: base.rem(26px);
+  font-size: base.rem(12px);
+  padding: 0 base.rem(2px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+$gods: (
+  tempus: #c8665c,
+  helm: #9fb4c8,
+  oghma: #8eaee0,
+  lathander: #e8a06a,
+  ilmater: #cdb48a,
+  mask: #a89bc9,
+  tymora: #d8d8e0,
+  sune: #e07a9a,
+);
+
+@each $god, $colour in $gods {
+  .ContestResponse__God--#{$god} {
+    color: $colour;
+  }
+}

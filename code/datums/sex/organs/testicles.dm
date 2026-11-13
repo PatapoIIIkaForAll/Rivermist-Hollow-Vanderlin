@@ -31,17 +31,23 @@
 	accessory_type = /datum/sprite_accessory/none
 
 /obj/item/organ/genitals/filling_organ/testicles/Insert(mob/living/M, special, drop_if_replaced, new_zone = null)
-	set_reagent_to_make(M?.cum || reagent_to_make)
+	set_reagent_to_make(M?.get_cum_mix() || reagent_to_make)
 	. = ..()
 	if(!.)
 		return FALSE
 	add_bodystorage(M, null, /datum/component/body_storage/testicles)
 	sync_cum_source_data()
 
-/obj/item/organ/genitals/filling_organ/testicles/set_reagent_to_make(datum/reagent/new_reagent)
+/// Sterile testicles make sterile seed as the main fluid; mixed-in extras stay.
+/obj/item/organ/genitals/filling_organ/testicles/set_reagent_to_make(fluid)
 	if(!virility)
-		new_reagent = /datum/reagent/consumable/cum/sterile
-	return ..(new_reagent)
+		var/list/mix = normalize_fluid_mix(fluid)
+		var/list/sterile_mix = list(/datum/reagent/consumable/cum/sterile = 1)
+		for(var/i in 2 to length(mix))
+			sterile_mix[mix[i]] = mix[mix[i]]
+		sterile_mix[/datum/reagent/consumable/cum/sterile] = length(mix) ? mix[mix[1]] : 1
+		fluid = sterile_mix
+	return ..(fluid)
 
 /obj/item/organ/genitals/filling_organ/testicles/Remove(mob/living/M, special, drop_if_replaced)
 	. = ..()

@@ -338,6 +338,9 @@ SUBSYSTEM_DEF(familytree)
 	resolving_pending = FALSE
 
 /datum/controller/subsystem/familytree/proc/AddRoyal(mob/living/carbon/human/H, status)
+	// Some callers queue this on a timer, and the royal can be deleted first.
+	if(QDELETED(H) || !H.dna)
+		return
 	if(!ruling_family.housename)
 		ruling_family.housename = "Royal"
 	var/datum/family_member/member = ruling_family.CreateFamilyMember(H)

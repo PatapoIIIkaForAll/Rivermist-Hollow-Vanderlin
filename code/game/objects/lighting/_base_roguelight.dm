@@ -102,11 +102,25 @@
 		SEND_SIGNAL(src, COMSIG_ATOM_HEAT_SOURCE_LIT)
 		return TRUE
 
+/obj/machinery/light/fueled/proc/burns_crossers()
+	return on && crossfire
+
 /obj/machinery/light/fueled/Crossed(atom/movable/AM, oldLoc)
 	..()
-	if(crossfire)
-		if(on)
-			AM.fire_act(1,5)
+	if(AM.throwing && AM.throwing.target_turf != loc)
+		return
+	if(burns_crossers())
+		AM.fire_act(1,5)
+
+/obj/machinery/light/fueled/CanAStarPass(ID, to_dir, requester)
+	if(burns_crossers())
+		var/atom/movable/mover = requester
+		if(!ismovable(mover) || mover.loc != loc)
+			return FALSE
+	return ..()
+
+/obj/machinery/light/fueled/oven/burns_crossers()
+	return FALSE
 
 /obj/machinery/light/fueled/spark_act()
 	fire_act()

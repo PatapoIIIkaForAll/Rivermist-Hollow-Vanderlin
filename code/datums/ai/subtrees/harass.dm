@@ -23,7 +23,7 @@
 	if(controller.blackboard[BB_HUMAN_NPC_COMMITTED_SWING_TOKEN])
 		return
 
-	var/health_frac = pawn.maxHealth ? (pawn.health / pawn.maxHealth) : 1
+	var/health_frac = 1 - pawn.get_ai_hurt_fraction()
 	// Stamina threshold scales down as health drops - the more hurt we are the easier tiredness triggers harass
 	var/effective_stamina_thresh = HARASS_STAMINA_THRESHOLD * health_frac
 	var/should_harass = (health_frac < HARASS_HEALTH_THRESHOLD) || (pawn.stamina > effective_stamina_thresh)

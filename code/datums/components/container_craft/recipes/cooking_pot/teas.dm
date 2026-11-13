@@ -3,32 +3,29 @@
 	abstract_type = /datum/container_craft/cooking/tea
 	pollute_amount = 100
 	finished_smell = /datum/pollutant/food/teas
-	max_optionals = 2
+	max_optionals = 3
 	optional_reagent_requirements = list(/datum/reagent/consumable/milk = 5)
-	optional_requirements = list(/obj/item/reagent_containers/food/snacks/sugar = 1)
+	optional_requirements = list(
+		/obj/item/reagent_containers/food/snacks/sugar = 1,
+		/obj/item/reagent_containers/food/snacks/pumpkin_spice = 1,
+	)
 	used_skill = /datum/attribute/skill/craft/cooking/fine_cuisine
 	requires_fire = FALSE
 
 
 /datum/container_craft/cooking/tea/after_craft(atom/created_output, obj/item/crafter, mob/initiator, list/found_optional_requirements, list/found_optional_wildcards, list/found_optional_reagents, list/removing_items)
 	var/datum/reagent/found_product = crafter.reagents.get_reagent(created_reagent)
-
-	if(!length(found_optional_requirements) && !length(found_optional_reagents))
+	if(!found_product)
 		return
 
-	var/extra_string = " with "
+	var/list/extras = list()
+	for(var/obj/item/extra as anything in found_optional_requirements)
+		extras += initial(extra.name)
+	for(var/datum/reagent/extra as anything in found_optional_reagents)
+		extras += LOWER_TEXT(initial(extra.name))
 
-	var/first_ingredient
-	if(length(found_optional_requirements))
-		extra_string += "sugar"
-		first_ingredient = FALSE
-
-	if(length(found_optional_reagents))
-		if(!first_ingredient)
-			extra_string += " and "
-		extra_string += "milk"
-
-	found_product.name += extra_string
+	if(length(extras))
+		found_product.name += " with [english_list(extras)]"
 
 
 /datum/container_craft/cooking/tea/taraxamint

@@ -363,7 +363,7 @@
 			stop_flying()
 			return
 
-		if(!owner.adjust_stamina(-3))
+		if(!owner.adjust_stamina(3))
 			to_chat(owner, span_warning("You're too exhausted to keep flying!"))
 			stop_flying()
 			return

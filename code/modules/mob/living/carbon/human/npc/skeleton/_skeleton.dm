@@ -59,6 +59,7 @@
 			headdy.sellprice = rand(5,15)
 	for(var/obj/item/bodypart/B as anything in bodyparts)
 		B.skeletonize(FALSE)
+	replace_genitals_with_bones()
 	grant_undead_eyes()
 	update_body()
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
@@ -312,7 +313,8 @@
 
 /mob/living/carbon/human/species/skeleton/npc/warrior/skilled/proc/configure_mind()
 	if(!mind)
-		mind = new /datum/mind(src)
+		// No key: a keyed mind looks like a logged-off player, and ERP refuses those.
+		mind = new /datum/mind()
 	attributes.add_sheet(/datum/attribute_holder/sheet/job/skeleton_npc/warrior/skilled)
 
 /datum/attribute_holder/sheet/job/skeleton_npc/arena

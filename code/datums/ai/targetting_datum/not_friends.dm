@@ -39,7 +39,7 @@
 		return TRUE
 
 ///friends dont care about factions
-/datum/targetting_datum/basic/not_friends/faction_check(mob/living/living_mob, mob/living/the_target)
+/datum/targetting_datum/basic/not_friends/faction_check(mob/living/living_mob, mob/living/the_target, ignore_neutral = FALSE)
 	return FALSE
 
 /datum/targetting_datum/basic/not_friends/attack_closed_turfs

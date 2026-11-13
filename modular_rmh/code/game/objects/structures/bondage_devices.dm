@@ -126,6 +126,44 @@
 	. = ..()
 	M.set_mob_offsets("bed_buckle", _x = 0, _y = 2)
 
+/// Lair shackles: unlatched, so a captive works free in time and a rescuer frees them fast.
+/obj/structure/bondage/chains/lair
+	name = "rusted shackles"
+	desc = "Pitted iron shackles bolted into the stone, worn smooth by many wrists. A captive can work free of them, given time."
+	breakoutextra = 0
+	var/self_escape_time = 45 SECONDS
+	var/rescue_time = 5 SECONDS
+
+/obj/structure/bondage/chains/lair/user_unbuckle_mob(mob/living/buckled_mob, mob/living/user)
+	if(latched)
+		return ..()
+	if(!buckled_mob || buckled_mob.buckled != src || !user || !user.Adjacent(src))
+		return FALSE
+	var/is_self = buckled_mob == user
+	if(is_self)
+		buckled_mob.visible_message(
+			span_warning("[buckled_mob] strains against [src], working at the worn iron!"),
+			span_notice("I begin working free of [src]. I must hold still."),
+			span_hear("I hear chains rattle."),
+		)
+	else
+		buckled_mob.visible_message(
+			span_notice("[user] starts working [buckled_mob] free of [src]!"),
+			span_notice("[user] starts working me free of [src]!"),
+			span_hear("I hear chains rattle."),
+		)
+	if(!do_after(user, is_self ? self_escape_time : rescue_time, src, interaction_key = "lair_shackles_escape"))
+		return FALSE
+	if(QDELETED(src) || QDELETED(buckled_mob) || buckled_mob.buckled != src || !user.Adjacent(src))
+		return FALSE
+	unbuckle_mob(buckled_mob, force = TRUE)
+	buckled_mob.visible_message(
+		span_notice("[buckled_mob] slips free of [src]!"),
+		span_notice("I slip free of [src]!"),
+		span_hear("I hear chains fall slack."),
+	)
+	return TRUE
+
 /obj/structure/bondage/x_pillory
 	name = "x-pillory"
 	desc = "A brutal restraint shaped like a cross."

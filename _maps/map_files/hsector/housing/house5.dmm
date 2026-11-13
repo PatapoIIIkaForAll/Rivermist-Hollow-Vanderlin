@@ -71,9 +71,7 @@
 /turf/closed/wall/mineral/wooddark,
 /area/indoors/town/rmh)
 "T" = (
-/obj/structure/window/openclose/reinforced{
-	dir = 2
-	},
+/obj/structure/window/openclose/reinforced,
 /obj/structure/curtain/green,
 /turf/open/floor/wood,
 /area/indoors/town/rmh)

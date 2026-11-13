@@ -78,10 +78,6 @@
 	/// If TRUE, violent spill paths delete this organ instead of dropping it on the turf.
 	var/delete_on_drop = FALSE
 
-	// For stretching of body storages.
-	var/stretchable = FALSE
-	var/stretched_coefficient = 1
-
 	/// Needs to get processed on next life() tick
 	var/needs_processing = TRUE
 

@@ -89,9 +89,12 @@
 		/datum/customizer/organ/wings/seelie,
 		/datum/customizer/organ/genitals/penis/human,
 		/datum/customizer/organ/genitals/vagina/human,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/human,
 		/datum/customizer/organ/genitals/testicles/human,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 	)
 
 	statsheet_male = /datum/attribute_holder/sheet/job/species/seelie/stats/male

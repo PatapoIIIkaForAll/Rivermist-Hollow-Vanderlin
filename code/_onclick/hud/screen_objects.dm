@@ -121,7 +121,7 @@
 		to_chat(L, "*----*")
 		if(ishuman(usr))
 			var/mob/living/carbon/human/M = usr
-			for(var/datum/quirk/vice/vices in M.quirks)
+			for(var/datum/quirk/negative/vices in M.quirks)
 				to_chat(M, "<span class='info'>[vices.get_desc()]</span>")
 			to_chat(M, "*----*")
 			if(M.mind)
@@ -566,25 +566,29 @@
 		else
 			icon_state = "take[giving]"
 
-/atom/movable/screen/combat_utilities
-	name = "interact / extra items"
-	desc = "Use the upper half to open the interaction panel and the lower half to manage extra items."
-	icon_state = "combat_utilities"
-	icon = 'icons/mob/combat_utilities.dmi'
-	screen_loc = rogueui_def
+/// The heart medallion at the foot of the HUD; invisible over the background art, lit red on hover.
+/atom/movable/screen/interact_heart
+	name = "interact"
+	desc = "Open the interaction panel."
+	icon = 'icons/mob/interact_heart.dmi'
+	icon_state = "interact"
+	screen_loc = rogueui_interact
+	mouse_opacity = MOUSE_OPACITY_OPAQUE
 
-/atom/movable/screen/combat_utilities/Click(location, control, params)
-	var/list/modifiers = params2list(params)
-	var/_y = text2num(LAZYACCESS(modifiers, ICON_Y))
+/atom/movable/screen/interact_heart/Click(location, control, params)
 	var/mob/living/carbon/human/user = hud?.mymob
 	if(user != usr || !user.client)
 		return
-
 	user.playsound_local(user, 'sound/misc/click.ogg', 100)
-	if(_y > 16 && _y <= 32)
-		user.open_interact_panel()
-	else if(_y >= 0 && _y <= 16)
-		user.remove_underwear()
+	user.open_interact_panel()
+
+/atom/movable/screen/interact_heart/MouseEntered(location, control, params)
+	. = ..()
+	icon_state = "interact_hover"
+
+/atom/movable/screen/interact_heart/MouseExited(location, control, params)
+	. = ..()
+	icon_state = "interact"
 
 /atom/movable/screen/cmode
 	name = "combat mode"
@@ -602,7 +606,7 @@
 		var/mob/living/L = usr
 		L.playsound_local(L, 'sound/misc/click.ogg', 100)
 		if(LAZYACCESS(modifiers, RIGHT_CLICK))
-			L.submit()
+			L.toggle_submit()
 		else
 			L.toggle_cmode()
 			update_appearance(UPDATE_ICON_STATE)
@@ -1242,7 +1246,7 @@
 
 /atom/movable/screen/party_member_health/Destroy()
 	if(member)
-		UnregisterSignal(member, COMSIG_MOB_HEALTHHUD_UPDATE)
+		UnregisterSignal(member, list(COMSIG_MOB_HEALTHHUD_UPDATE, COMSIG_PARENT_QDELETING))
 	member = null
 	party = null
 	return ..()
@@ -1250,10 +1254,20 @@
 /atom/movable/screen/party_member_health/proc/set_party_member(mob/mob, datum/party/incoming_party)
 	member = mob
 	party = incoming_party
+	var/current_state = member.hud_used?.bloods?.icon_state
+	if(current_state)
+		icon_state = current_state
 	RegisterSignal(member, COMSIG_MOB_HEALTHHUD_UPDATE, PROC_REF(update_info))
+	RegisterSignal(member, COMSIG_PARENT_QDELETING, PROC_REF(on_member_deleted))
 
-/atom/movable/screen/party_member_health/proc/update_info(incoming_state)
+/atom/movable/screen/party_member_health/proc/update_info(datum/source, incoming_state)
+	SIGNAL_HANDLER
 	icon_state = incoming_state
+
+/atom/movable/screen/party_member_health/proc/on_member_deleted(datum/source)
+	SIGNAL_HANDLER
+	UnregisterSignal(member, list(COMSIG_MOB_HEALTHHUD_UPDATE, COMSIG_PARENT_QDELETING))
+	member = null
 
 
 /atom/movable/screen/party_member_name
@@ -1270,7 +1284,6 @@
 	var/datum/party/party
 
 /atom/movable/screen/party_member_name/proc/set_party_member(mob/mob, datum/party/incoming_party, rank = "Recruit")
-	member = mob
 	party = incoming_party
 	member_key = mob.ckey
 	var/display_name = mob.real_name || mob.name

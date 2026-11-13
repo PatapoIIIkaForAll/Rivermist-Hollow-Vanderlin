@@ -353,8 +353,12 @@
 	speech_commands = list("go home") // Don't get too creative here, people talk about dying pretty often
 
 /datum/pet_command/go_home/execute_action(datum/ai_controller/controller)
-	controller.clear_blackboard_key(BB_ACTIVE_PET_COMMAND)
-	controller.queue_behavior(/datum/ai_behavior/enter_exit_home/no_cooldown)
+	var/obj/structure/home = controller.blackboard[BB_CURRENT_HOME]
+	// Stay active until the pet is inside, so each plan keeps the walk home queued.
+	if(QDELETED(home) || (controller.pawn in home.contents))
+		controller.clear_blackboard_key(BB_ACTIVE_PET_COMMAND)
+		return
+	controller.queue_behavior(/datum/ai_behavior/enter_exit_home/no_cooldown, BB_CURRENT_HOME)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
 /datum/pet_command/home

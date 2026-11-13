@@ -11,41 +11,12 @@
 	metalizer_result = /obj/item/statue/iron/deformed
 	anchored = TRUE
 	hidingspot = TRUE
-	var/mob/living/hiddenguy = null // So we can find them with fixed eye search
 
 /obj/structure/chair/bench/attack_hand(mob/user)
 	if(isliving(user))
 		if(user.m_intent == MOVE_INTENT_SNEAK)
 			hideinside(user)
 			return
-
-/obj/structure/chair/bench/proc/hideinside(mob/living/user)
-	var/sneak_level = GET_MOB_SKILL_VALUE_OLD(user, /datum/attribute/skill/misc/sneaking) || 0
-	var/sneaktime = max(10, 50 - (sneak_level * 10)) // Hard caps at 1 second at Expert and above.
-	if(user.loc == src)
-		unhide(user)
-		return
-	if(occupied)
-		to_chat(user, span_warning("Someone is already hiding in [src]!"))
-		return
-	if(!do_after(user, sneaktime, src))
-		return
-	user.forceMove(src)
-	occupied = TRUE
-	hiddenguy = user
-	to_chat(user, span_warning("I hide in [src]!"))
-
-/obj/structure/chair/bench/proc/unhide(mob/living/user)
-	var/turf/T = get_turf(src)
-	if(!T) return
-	user.forceMove(T)
-	occupied = FALSE
-	hiddenguy = null
-	to_chat(user, span_warning("I come out from \the [src]!"))
-
-/obj/structure/chair/bench/relaymove(mob/user)
-	if(user.loc == src)
-		unhide(user)
 
 /obj/structure/chair/bench/church
 	icon_state = "church_benchleft"

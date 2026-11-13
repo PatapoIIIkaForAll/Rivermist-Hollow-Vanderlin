@@ -180,3 +180,20 @@
 #define DUNGEON_POP_TRADER "trader"
 #define DUNGEON_POP_MYSTERY "mystery"
 #define DUNGEON_POP_WAVES "waves"
+
+// -- Floor bosses and party scaling --
+
+/// Guardian health added per party member beyond the first
+#define DUNGEON_PARTY_HP_PER_MEMBER 0.4
+/// Extra party members that still add guardian health
+#define DUNGEON_PARTY_HP_MAX_EXTRA 4
+/// Defeat-pool damage a humanoid floor boss soaks on floor 1, before floor and party scaling
+#define DUNGEON_BOSS_CARBON_TOUGHNESS 250
+/// Lowest weapon, shield and grappling skill a humanoid floor boss fights with
+#define DUNGEON_BOSS_MIN_COMBAT_SKILL SKILL_LEVEL_EXPERT
+/// Escorts a floor boss brings before counting extra party members
+#define DUNGEON_BOSS_ESCORT_BASE 2
+/// Most escorts a floor boss can bring
+#define DUNGEON_BOSS_ESCORT_MAX 5
+/// Floor-1 damage of a promoted boss's slam
+#define DUNGEON_BOSS_SLAM_DAMAGE 15

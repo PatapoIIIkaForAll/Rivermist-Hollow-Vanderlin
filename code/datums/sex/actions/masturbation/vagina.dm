@@ -28,7 +28,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] strokes [user.p_their()] clit..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("finger", user, 30, ORGAN_SLOT_VAGINA)
 
 	perform_sex_action(user, user, 2, 0, 2)
 

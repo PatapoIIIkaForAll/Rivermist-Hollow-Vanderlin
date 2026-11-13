@@ -64,7 +64,8 @@
 /datum/component/bounded/Destroy()
 	UnregisterSignal(master, list(COMSIG_MOVABLE_MOVED))
 
-	SEND_SIGNAL(parent, COMSIG_TIPS_REMOVE, list(BOUNDED_TIP))
+	if(parent)
+		SEND_SIGNAL(parent, COMSIG_TIPS_REMOVE, list(BOUNDED_TIP))
 	SEND_SIGNAL(master, COMSIG_TIPS_REMOVE, list(BOUNDS_TIP(src)))
 
 	if(vis_radius)
@@ -73,6 +74,11 @@
 
 	master = null
 	return ..()
+
+// RemoveComponent() leaves a live component behind; drop its listeners so it cannot act without a parent.
+/datum/component/bounded/UnregisterFromParent()
+	UnregisterSignal(parent, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED, COMSIG_MOVABLE_PRE_MOVE))
+	UnregisterSignal(master, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
 
 // This proc is called when we are for some reason out of bounds.
 // The default bounds resolution does not take in count density, or etc.

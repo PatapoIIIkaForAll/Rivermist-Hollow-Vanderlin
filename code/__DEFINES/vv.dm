@@ -126,6 +126,7 @@
 #define VV_HK_SET_SPECIES "setspecies"
 #define VV_HK_CORONATE "coronate"
 #define VV_HK_CHANGE_TITLE "change_title"
+#define VV_HK_BREAST_TEST_PANEL "breast_test_panel"
 
 // misc
 #define VV_HK_SPACEVINE_PURGE "spacevine_purge"

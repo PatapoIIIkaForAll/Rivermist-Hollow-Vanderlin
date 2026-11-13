@@ -1,5 +1,5 @@
 /datum/sex_action/penis_head_worship
-	name = "Worship their tip"
+	name = "Worship tip"
 	description = "Focus kisses and tongue-work on the head of their penis."
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
@@ -51,7 +51,7 @@
 			target_arousal = 1.8
 			target_pain = 0.4
 			target_orgasm = 1.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "roughly sucks and grinds [user.p_their()] tongue over"
 			target_arousal = 2
 			target_pain = 1.5

@@ -565,6 +565,7 @@
 		// theres at least one candidate
 		if(LAZYLEN(candidates))
 			var/mob/C = pick(candidates)
+			C.leave_lobby_for_role()
 			target.awaken_summon(user, C.ckey)
 			target.visible_message(span_warning("[target.real_name]'s eyes light up with an intelligence as it awakens fully on this plane."), runechat_message = TRUE)
 			custom_name(user, target)

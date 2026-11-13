@@ -200,7 +200,11 @@
 
 /datum/component/arousal/proc/can_climax()
 	// Add some checks for like curses or something here.
-	if(last_ejaculation_time + ORGASM_COOLDOWN_TIME - clamp(edging_charge, 0, ORGASM_COOLDOWN_TIME - 10) >= world.time)
+	var/mob/living/living_parent = parent
+	var/cooldown = ORGASM_COOLDOWN_TIME * (isliving(living_parent) ? living_parent.get_climax_cooldown_multiplier() : 1)
+	if(cooldown <= 0)
+		return TRUE
+	if(last_ejaculation_time + cooldown - clamp(edging_charge, 0, max(cooldown - 10, 0)) >= world.time)
 		return FALSE
 	return TRUE
 
@@ -223,6 +227,9 @@
 /datum/component/arousal/proc/adjust_orgasm_prog(datum/source, amount)
 	if(orgasm_progress > 0)
 		amount *= arousal_multiplier
+	if(amount > 0 && isliving(parent))
+		var/mob/living/living_parent = parent
+		amount *= living_parent.get_orgasm_speed_multiplier()
 	return set_orgasm_prog(source, orgasm_progress + amount)
 
 /datum/component/arousal/proc/set_arousal(datum/source, amount)
@@ -286,7 +293,7 @@
 	pain_amt = get_scaled_pain(pain_amt, applied_force, applied_speed)
 
 	var/isnymph = FALSE
-	if(HAS_TRAIT(user, TRAIT_NYMPHO_CURSE) || user.has_quirk(/datum/quirk/vice/addiction/lovefiend))
+	if(HAS_TRAIT(user, TRAIT_NYMPHO_CURSE) || user.has_quirk(/datum/quirk/negative/addiction/lovefiend))
 		isnymph = TRUE
 
 	if(user.has_status_effect(/datum/status_effect/debuff/orgasmbroken))
@@ -416,7 +423,7 @@
 							to_chat(devouser, span_info("I feel Viiritri guide me."))*/
 
 	var/isnymph = FALSE
-	if(HAS_TRAIT(user, TRAIT_NYMPHO_CURSE) || user.has_quirk(/datum/quirk/vice/addiction/lovefiend))
+	if(HAS_TRAIT(user, TRAIT_NYMPHO_CURSE) || user.has_quirk(/datum/quirk/negative/addiction/lovefiend))
 		isnymph = TRUE
 	if(user.has_status_effect(/datum/status_effect/debuff/orgasmbroken))
 		if(isnymph)
@@ -528,11 +535,22 @@
 	var/must_flip = !giving
 
 	mob.sex_scene?.handle_pattern_climax(mob, action)
+	apply_orifice_climax_moods(mob, action)
 	playsound(parent, 'sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
 	// Special cases for when the user has a penis but no testicles & for eunuchs
-	if((!mob.getorganslot(ORGAN_SLOT_TESTICLES) && mob.getorganslot(ORGAN_SLOT_PENIS)) || (!mob.getorganslot(ORGAN_SLOT_TESTICLES) && !mob.getorganslot(ORGAN_SLOT_VAGINA)))
-		mob.visible_message(span_love("[mob] climaxes, yet nothing is released!"))
+	if(mob.climaxes_dry())
+		mob.visible_message(span_love(mob.get_dry_climax_message()))
 		after_ejaculation(FALSE, parent, null, action, action_initiator, action_target, action_performer)
+		return
+	// The act's own climax lines would spill from the strapon, so only the wearer's vagina climaxes.
+	if(target && mob.climaxes_behind_strapon(action))
+		mob.visible_message(span_love("[mob] shudders and climaxes, [mob.p_their()] hips bucking behind [mob.p_their()] strapon!"), span_love("I shudder and climax, my hips bucking behind my strapon!"))
+		var/obj/item/organ/genitals/filling_organ/vagina/strapon_vag = mob.getorganslot(ORGAN_SLOT_VAGINA)
+		if(strapon_vag?.reagents)
+			strapon_vag.produce_climax_fluid()
+		// A worn harness may empty its bulb, or pump the release, through the toy.
+		mob.on_strapon_climax(action, target)
+		after_ejaculation(FALSE, parent, target, action, action_initiator, action_target, action_performer)
 		return
 	var/obj/item/organ/genitals/filling_organ/testicles/climax_testes = mob.getorganslot(ORGAN_SLOT_TESTICLES)
 	if(climax_testes?.is_pent_up() && mob.getorganslot(ORGAN_SLOT_PENIS))
@@ -559,8 +577,14 @@
 				vag.produce_climax_fluid()
 		after_ejaculation(FALSE, mob, null, action, action_initiator, action_target, action_performer)
 	else
-		// A climaxer set to finish outside pulls their cock out first and lands on the partner, unless it fails.
-		var/pulled_out = wants_to_finish_outside(action, mob) && try_pull_out(mob, target)
+		// Still pressing at the opening, or a successful pull-out to finish outside, lands the climax outside.
+		var/knot_force_bonus = mob.get_climax_knot_force_bonus(action)
+		var/wants_out = wants_to_finish_outside(action, mob)
+		// A knot force bonus means the climax always knots, so it cannot pull out.
+		if(wants_out && knot_force_bonus > 0)
+			wants_out = FALSE
+			to_chat(mob, span_love("I can't make myself pull out!"))
+		var/pulled_out = action.orifice_pressing || (wants_out && try_pull_out(mob, target))
 		var/return_type = pulled_out ? pull_out_for_climax(action, mob, target) : action.handle_climax_message(mob, target, must_flip)
 		if(!return_type)
 			var/turf/turf = get_turf(mob)
@@ -581,13 +605,21 @@
 
 		var/knot_finished = FALSE
 		if(action.knot_on_finish && !pulled_out) //no idea how to stop other partner from triggering the knotting yet sorry
-			knot_finished = action.try_knot_on_climax(mob, target)
+			knot_finished = try_climax_knot(action, mob, target, knot_force_bonus)
 
 		if(return_type == ORGASM_LOCATION_INTO && ishuman(mob) && ishuman(target))
 			var/mob/living/carbon/human/source_human = mob
 			var/mob/living/carbon/human/target_human = target
 			target_human.handle_werewolf_creampie_conversion(source_human, knot_finished)
 
+/// Ties the climax knot; a force bonus roughens the action's force for this one synchronous call.
+/datum/component/arousal/proc/try_climax_knot(datum/sex_action/action, mob/living/climaxer, mob/living/partner, force_bonus = 0)
+	if(force_bonus <= 0)
+		return action.try_knot_on_climax(climaxer, partner)
+	var/base_force = action.force
+	action.force = clamp(base_force + force_bonus, SEX_FORCE_MIN, SEX_FORCE_MAX)
+	. = action.try_knot_on_climax(climaxer, partner)
+	action.force = base_force
 
 /datum/component/arousal/proc/handle_climax(datum/sex_action/action, climax_type, mob/living/user, mob/living/target, giving, mob/living/action_initiator, mob/living/action_target, atom/action_performer)
 	var/obj/item/organ/genitals/filling_organ/testicles/testes
@@ -826,7 +858,8 @@
 
 	add_orgasm_strain(user)
 
-	if(user.has_penis())
+	// A worn strapon is no penis, so its wearer follows the edging rules for a vagina.
+	if(user.has_real_penis())
 		if(is_spent())
 			to_chat(user, span_warn("This is really starting to hurt my dick!"))
 			user.apply_status_effect(/datum/status_effect/edged_penis_cooldown)
@@ -839,10 +872,13 @@
 
 	set_arousal(parent, arousal * (arousal_falloff_coeff + edging_charge / MAX_EDGING))
 	set_orgasm_prog(parent, 0)
-	SEND_SIGNAL(user, COMSIG_SEX_CLIMAX, action, action_initiator, action_target, action_performer)
+	// The trailing intimate flag marks a climax inside or in the mouth; older handlers ignore it.
+	SEND_SIGNAL(user, COMSIG_SEX_CLIMAX, action, action_initiator, action_target, action_performer, intimate)
+	if(arousal > MAX_AROUSAL / 4)
+		user.play_climax_motion()
 
-	if(user.has_quirk(/datum/quirk/vice/addiction/lovefiend))
-		user.sate_addiction(/datum/quirk/vice/addiction/lovefiend)
+	if(user.has_quirk(/datum/quirk/negative/addiction/lovefiend))
+		user.sate_addiction(/datum/quirk/negative/addiction/lovefiend)
 
 	if(!user.rogue_sneaking && user.alpha > 100) //stealth sex, keep your voice down.
 		if(!user.can_speak())
@@ -1058,6 +1094,8 @@
 			return PAIN_COOLDOWN_HIGH
 		if(SEX_FORCE_EXTREME)
 			return PAIN_COOLDOWN_EXTREME
+		if(SEX_FORCE_UNRELENTING)
+			return PAIN_COOLDOWN_UNRELENTING
 	return PAIN_COOLDOWN
 
 /// Receiver is always told. Only the room line and partner cue are probability-gated, against spam.
@@ -1069,7 +1107,7 @@
 		return
 	last_pain = world.time
 
-	var/masochist = user.has_quirk(/datum/quirk/vice/addiction/masochist)
+	var/masochist = user.has_quirk(/datum/quirk/negative/addiction/masochist)
 	var/self_msg
 	var/observed_msg
 	var/partner_msg
@@ -1111,11 +1149,11 @@
 /// Never cancel the ache early; add_stress resets its timer and it expires on its own.
 /datum/component/arousal/proc/refresh_aching()
 	var/mob/living/user = parent
-	if(user.has_quirk(/datum/quirk/vice/addiction/masochist))
-		user.sate_addiction(/datum/quirk/vice/addiction/masochist)
+	if(user.has_quirk(/datum/quirk/negative/addiction/masochist))
+		user.sate_addiction(/datum/quirk/negative/addiction/masochist)
 		user.add_stress(/datum/stress_event/loinachegood)
 		return
-	if(user.has_quirk(/datum/quirk/vice/addiction/lovefiend))
+	if(user.has_quirk(/datum/quirk/negative/addiction/lovefiend))
 		user.add_stress(/datum/stress_event/loinachegood)
 		return
 	user.add_stress(/datum/stress_event/loinache)
@@ -1142,6 +1180,11 @@
 				return 2.0
 			else
 				return 0.8
+		if(SEX_FORCE_UNRELENTING)
+			if(giving)
+				return 2.4
+			else
+				return 0.6
 	return 1.2
 
 /datum/component/arousal/proc/get_force_pain_multiplier(passed_force)
@@ -1154,6 +1197,8 @@
 			return SEX_FORCE_PAIN_MULT_HIGH
 		if(SEX_FORCE_EXTREME)
 			return SEX_FORCE_PAIN_MULT_EXTREME
+		if(SEX_FORCE_UNRELENTING)
+			return SEX_FORCE_PAIN_MULT_UNRELENTING
 	return SEX_FORCE_PAIN_MULT_MID
 
 /datum/component/arousal/proc/get_speed_pain_multiplier(passed_speed)
@@ -1166,6 +1211,8 @@
 			return SEX_SPEED_PAIN_MULT_HIGH
 		if(SEX_SPEED_EXTREME)
 			return SEX_SPEED_PAIN_MULT_EXTREME
+		if(SEX_SPEED_UNRELENTING)
+			return SEX_SPEED_PAIN_MULT_UNRELENTING
 	return SEX_SPEED_PAIN_MULT_MID
 
 /// An aroused body takes the same act far better than a cold one. Applied to the receiver's own arousal.
@@ -1212,12 +1259,17 @@
 				return 1.5
 			else
 				return 1
+		if(SEX_FORCE_UNRELENTING)
+			if(giving)
+				return 2.0
+			else
+				return 1.2
 	return 0.8
 
 /datum/component/arousal/proc/handle_statuses()
 	var/mob/living/user = parent
 	var/nymph_mod = 0
-	if(HAS_TRAIT(user, TRAIT_NYMPHO_CURSE) || user.has_quirk(/datum/quirk/vice/addiction/lovefiend))
+	if(HAS_TRAIT(user, TRAIT_NYMPHO_CURSE) || user.has_quirk(/datum/quirk/negative/addiction/lovefiend))
 		nymph_mod = ORGASM_STRAIN_NYMPH_THRESHOLD_MOD
 
 	if(user.has_status_effect(/datum/status_effect/debuff/loinspent))
@@ -1248,7 +1300,7 @@
 		if(orgasm_strain >= OVER_THE_TOP_ORGASM_STRAIN_GAIN + nymph_mod)
 			user.apply_status_effect(/datum/status_effect/debuff/nympho_addiction)
 
-	if(user.has_penis())
+	if(user.has_real_penis())
 		if(user.has_status_effect(/datum/status_effect/blue_balls))
 			if(edging_charge <= 20)
 				user.remove_status_effect(/datum/status_effect/blue_balls)
@@ -1296,6 +1348,18 @@
 	if(istype(item, /obj/item/penis_fake)) //it's because of the hole system
 		return
 	adjust_arousal(source, 1)
+
+/// Scales this mob's climax cooldown; 0 or less removes it.
+/mob/living/proc/get_climax_cooldown_multiplier()
+	return 1
+
+/// Scales the orgasm progress this mob gains.
+/mob/living/proc/get_orgasm_speed_multiplier()
+	return 1
+
+/// Force levels added to this mob's climax knot; above 0 the climax also cannot pull out.
+/mob/living/proc/get_climax_knot_force_bonus(datum/sex_action/action)
+	return 0
 
 /datum/stress_event/blue_balls
 	timer = 1.5 MINUTES

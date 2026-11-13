@@ -72,6 +72,12 @@
 #define STASIS_MUTE "stasis"
 #define GENETICS_SPELL "genetics_spell"
 #define EYES_COVERED "eyes_covered"
+/// A detached dullahan head: hearing-sensitive while off the body.
+#define DULLAHAN_HEAD_TRAIT "dullahan_head"
+/// Blindness while a headless dullahan looks through the body instead of the head.
+#define DULLAHAN_BODY_BLIND "dullahan_body_blind"
+/// Blindness while the detached head sits inside a bag, closet or other container.
+#define DULLAHAN_HEAD_STORED_BLIND "dullahan_head_stored_blind"
 #define CULT_EYES "cult_eyes"
 #define TRAIT_SANTA "santa"
 #define SCRYING_ORB "scrying-orb"
@@ -114,3 +120,7 @@
 #define AI_ATTACK_TRAIT "ai_attack_trait"
 /// Trait from mob/living/update_transform()
 #define UPDATE_TRANSFORM_TRAIT "update_transform"
+/// Trait from being promoted to a dungeon floor boss
+#define DUNGEON_BOSS_TRAIT "dungeon_boss"
+/// Trait from /datum/component/table_crawl
+#define TABLE_CRAWL_TRAIT "table_crawl"

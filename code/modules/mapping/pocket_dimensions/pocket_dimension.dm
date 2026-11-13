@@ -204,7 +204,7 @@
 	var/loaded = FALSE
 	if(load_turf)
 		loading = TRUE
-		loaded = template.load(load_turf)
+		loaded = load_layout()
 		loading = FALSE
 	if(!loaded)
 		load_turf = null
@@ -224,6 +224,9 @@
 	refresh_loaded_lighting()
 	touch()
 	return TRUE
+
+/datum/pocket_dimension/proc/load_layout()
+	return template.load(load_turf)
 
 /datum/pocket_dimension/proc/refresh_loaded_lighting()
 	if(!SSlighting.initialized)

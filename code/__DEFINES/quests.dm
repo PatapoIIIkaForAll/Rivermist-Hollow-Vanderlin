@@ -1,6 +1,7 @@
 #define QUEST_GROUP_ERRANDS "Guild Errands"
 #define QUEST_GROUP_BOUNTIES "Bounties"
 #define QUEST_GROUP_COMMISSIONS "Player Commissions"
+#define QUEST_GROUP_CARNAL "Carnal Contracts"
 
 #define QUEST_TIER_ROUTINE 1
 #define QUEST_TIER_RISKY 2
@@ -16,6 +17,14 @@
 #define QUEST_RAID "Raid"
 #define QUEST_BOSS "Boss"
 #define QUEST_CUSTOM "Commission"
+#define QUEST_FLUID_HARVEST "Fluid Harvest"
+#define QUEST_EGG_HARVEST "Clutch Recovery"
+#define QUEST_SATE_MARK "Sate and Mark"
+
+/// Trait source for gear locked onto quest-spawned mobs.
+#define QUEST_SPAWN_LOCK_TRAIT "quest_spawn_lock"
+/// Idle quest mobs walk back when they stray further than this from their landmark.
+#define QUEST_IDLE_LEASH_RANGE 8
 
 #define CUSTOM_QUEST_PLEDGE (1<<0)
 
@@ -31,6 +40,8 @@
 #define QUESTBOARD_POOL_MAX_DEADLY 2
 #define QUESTBOARD_POOL_MAX_LETHAL 1
 #define QUESTBOARD_POOL_MAX_MYTHIC 1
+/// Wait after a Lethal or Mythic posting is claimed before the board posts another of that tier.
+#define QUESTBOARD_HIGH_TIER_REFILL_COOLDOWN (30 MINUTES)
 
 // Regional threat removed when a quest tied to that region is completed.
 #define QUEST_THREAT_REDUCE_ROUTINE 2
@@ -51,12 +62,7 @@
 
 #define QUEST_BASE_REWARD_RETRIEVAL 8
 #define QUEST_BASE_REWARD_COURIER 8
-#define QUEST_BASE_REWARD_HUNT 8
-#define QUEST_BASE_REWARD_CLEAR_OUT 18
-#define QUEST_BASE_REWARD_RAID 28
-#define QUEST_BASE_REWARD_BOSS 40
 
-#define QUEST_KILL_COUNT_REWARD 4
 #define QUEST_CLEAR_OUT_RISK_BONUS 1
 #define QUEST_RAID_RISK_BONUS 3
 #define QUEST_BOSS_RISK_BONUS 5
@@ -80,7 +86,9 @@
 #define QUEST_BOSS_REWARD_RISK_SQUARE_MULTIPLIER 2
 #define QUEST_BOSS_REWARD_RISK_OVERFLOW_START 8
 #define QUEST_BOSS_REWARD_RISK_OVERFLOW_BONUS 15
-#define QUEST_BOSS_REWARD_MAX 2500
+#define QUEST_BOSS_REWARD_MAX 1500
+/// Share of the distance bonus a boss contract receives.
+#define QUEST_BOSS_DISTANCE_BONUS_SCALE 0.5
 
 // ===== Map difficulty and reward modifiers =====
 // Map flag bitfields for mob availability per map
@@ -105,7 +113,8 @@
 #define QUEST_MAP_REWARD_TOWN_SNOW 1.0
 #define QUEST_MAP_REWARD_BOG 1.4
 #define QUEST_MAP_REWARD_DESERT 1.3
-#define QUEST_MAP_REWARD_FROZEN 1.8
+// Frozen landmarks sit far from the ledger, so a base below the bog keeps payouts within 1.25x of it.
+#define QUEST_MAP_REWARD_FROZEN 1.15
 #define QUEST_MAP_REWARD_UNDERDARK 2.5
 #define QUEST_MAP_REWARD_SCALE 2
 
@@ -215,4 +224,52 @@
 	/mob/living/simple_animal/hostile/retaliate/voiddragon/red/tsere = QUEST_MOB_SOLO(1, 17),\
 	/mob/living/simple_animal/hostile/retaliate/minotaur = QUEST_MOB_SOLO(3, 10),\
 	/mob/living/simple_animal/hostile/retaliate/minotaur/axe = QUEST_MOB_SOLO(2, 12),\
+)
+
+// ===== Carnal contracts =====
+/// Carnal contracts the shared board may hold at once.
+#define QUEST_CARNAL_BOARD_MAX 2
+#define QUEST_FLUID_REWARD_MULTIPLIER 1.2
+#define QUEST_FLUID_REWARD_PER_UNIT 0.5
+#define QUEST_EGG_REWARD_MULTIPLIER 1.2
+#define QUEST_EGG_REWARD_PER_EGG 4
+#define QUEST_SATE_REWARD_MULTIPLIER 1.4
+/// Spare ribbons issued on top of one per Sate and Mark target.
+#define QUEST_SATE_SPARE_RIBBONS 1
+
+#define QUEST_FLUID_SEED "seed"
+#define QUEST_FLUID_NECTAR "nectar"
+
+// Every creature here must run the horny AI subtree; the carnal_contract_pools unit test checks it.
+#define QUEST_CARNAL_SATE_LIST list(\
+	/mob/living/simple_animal/hostile/retaliate/bigrat = QUEST_MOB_PACK(8, 2, 1, 3),\
+	/mob/living/simple_animal/hostile/retaliate/wolf = QUEST_MOB_PACK(6, 4, 1, 3),\
+	/mob/living/simple_animal/hostile/retaliate/bobcat = QUEST_MOB_SOLO(5, 4),\
+	/mob/living/simple_animal/hostile/retaliate/spider = QUEST_MOB_PACK(6, 4, 1, 3),\
+	/mob/living/carbon/human/species/goblin/npc = QUEST_MOB_PACK(5, 5, 1, 3),\
+	/mob/living/simple_animal/hostile/retaliate/tentacle = QUEST_MOB_PACK(4, 5, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/spider/mutated = QUEST_MOB_PACK(4, 6, 1, 3),\
+	/mob/living/simple_animal/hostile/retaliate/bogbug = QUEST_MOB_PACK(5, 6, 1, 3),\
+	/mob/living/carbon/human/species/zizombie/npc/peasant = QUEST_MOB_PACK(4, 6, 1, 3),\
+	/mob/living/simple_animal/hostile/retaliate/gator = QUEST_MOB_PACK(3, 7, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/troll/bog = QUEST_MOB_SOLO(3, 8),\
+	/mob/living/simple_animal/hostile/retaliate/minotaur = QUEST_MOB_SOLO(2, 10),\
+)
+// Egg layers only: each one carries a typed ovipositor.
+#define QUEST_CARNAL_EGG_LIST list(\
+	/mob/living/simple_animal/hostile/retaliate/spider = QUEST_MOB_PACK(6, 4, 2, 3),\
+	/mob/living/simple_animal/hostile/retaliate/tentacle = QUEST_MOB_PACK(4, 5, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/spider/mutated = QUEST_MOB_PACK(4, 6, 2, 3),\
+	/mob/living/simple_animal/hostile/retaliate/bogbug = QUEST_MOB_PACK(5, 6, 2, 3),\
+)
+// Simple creatures with their own seed and nectar types (creature_fluids.dm).
+#define QUEST_CARNAL_FLUID_LIST list(\
+	/mob/living/simple_animal/hostile/retaliate/bigrat = QUEST_MOB_PACK(8, 2, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/wolf = QUEST_MOB_PACK(6, 4, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/bobcat = QUEST_MOB_SOLO(5, 4),\
+	/mob/living/simple_animal/hostile/retaliate/spider = QUEST_MOB_PACK(6, 4, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/bogbug = QUEST_MOB_PACK(5, 6, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/gator = QUEST_MOB_PACK(3, 7, 1, 2),\
+	/mob/living/simple_animal/hostile/retaliate/troll/bog = QUEST_MOB_SOLO(3, 8),\
+	/mob/living/simple_animal/hostile/retaliate/minotaur = QUEST_MOB_SOLO(2, 10),\
 )

@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  Dropdown,
-  Section,
-  Stack,
-  Tooltip,
-} from 'tgui-core/components';
 import { useBackend } from '../backend';
+import { Btn, Ornament, Select, Tip } from './CharacterCreator';
+import { characterCreatorStrings } from './CharacterCreator.i18n';
 
 type BadgeOption = {
   name: string;
@@ -48,7 +42,11 @@ const visibleBadgeCategories = [
 ];
 
 export const PreferencesBadges = () => {
-  const { act, data } = useBackend<{ preference_badges: BadgeData }>();
+  const { act, data } = useBackend<{
+    preference_badges: BadgeData;
+    cc_lang?: string;
+  }>();
+  const L = characterCreatorStrings[data.cc_lang === 'ru' ? 'ru' : 'en'].badges;
   const badges = data.preference_badges;
   if (!badges) {
     return null;
@@ -63,133 +61,119 @@ export const PreferencesBadges = () => {
   );
   const setValue = (category: string, value: string | number) =>
     act('pref_badge', { task: 'set', category, value });
+  // The backend label is English, so an unset category shows the translated word.
+  const labelOf = (category: BadgeCategory) =>
+    category.value ? category.label : L.disabled;
 
   return (
-    <Section title="Preference Badges">
-      <Stack align="center" mb={1}>
-        <Stack.Item grow>
-          <Box bold>Show Preference Badges</Box>
-          <Box color="label">
-            Show players&apos; badges above their characters and when examining
-            them.
-          </Box>
-        </Stack.Item>
-        <Stack.Item>
-          <Button
-            icon={badges.show ? 'eye' : 'eye-slash'}
-            selected={!!badges.show}
-            onClick={() => act('pref_badge', { task: 'toggle_view' })}
-          >
-            {badges.show ? 'On' : 'Off'}
-          </Button>
-        </Stack.Item>
-      </Stack>
-      <Stack align="center" mb={1}>
-        <Stack.Item grow>
-          <Box bold>Your Overhead Badge</Box>
-          <Box color="label">
-            Choose one category to display above your character. All enabled
-            categories appear when you are examined.
-          </Box>
-        </Stack.Item>
-        {overhead?.small_icon_class ? (
-          <Stack.Item>
-            <Tooltip content={`${overhead.name}: ${overhead.label}`}>
-              <Box className={overhead.small_icon_class} />
-            </Tooltip>
-          </Stack.Item>
-        ) : null}
-        <Stack.Item basis="35%">
-          <Dropdown
-            fluid
-            selected={overhead?.name ?? 'None'}
-            options={['None', ...categories.map((category) => category.name)]}
-            onSelected={(name) =>
-              setValue(
-                'overhead',
-                categories.find((category) => category.name === name)?.id ??
-                  'none',
-              )
-            }
-          />
-        </Stack.Item>
-      </Stack>
-      {overhead && !overhead.value ? (
-        <Box color="label" mb={1}>
-          Enable a {overhead.name} preference below to display its overhead
-          badge.
-        </Box>
-      ) : null}
-      <Box color="label" mb={1}>
-        Check OOC notes for details about a player&apos;s preferences.
-      </Box>
-      {categories.map((category) => (
-        <Section key={category.id} title={category.name} mb={0.5}>
-          <Stack align="center" mb={0.5}>
-            {category.icon_class ? (
-              <Stack.Item>
-                <Tooltip content={category.label}>
-                  <Box className={category.icon_class} />
-                </Tooltip>
-              </Stack.Item>
-            ) : null}
-            <Stack.Item grow>
-              <Box color="label">{category.description}</Box>
-            </Stack.Item>
-          </Stack>
-          {category.multiple ? (
-            <Box>
-              <Button
-                selected={!category.value}
-                mr={0.5}
-                onClick={() => setValue(category.id, 0)}
-              >
-                Disabled
-              </Button>
-              {category.options.map((option) => (
-                <Button
-                  key={option.value}
-                  selected={!!(category.value & option.value)}
-                  tooltip={option.description || undefined}
-                  mr={0.5}
-                  mb={0.5}
-                  onClick={() =>
-                    setValue(category.id, category.value ^ option.value)
-                  }
-                >
-                  {option.name}
-                </Button>
-              ))}
-            </Box>
-          ) : (
-            <Dropdown
-              fluid
-              selected={category.label}
-              options={[
-                'Disabled',
-                ...category.options.map((option) => option.name),
-              ]}
-              onSelected={(name) =>
-                setValue(
-                  category.id,
-                  category.options.find((option) => option.name === name)
-                    ?.value ?? 0,
-                )
-              }
-            />
-          )}
-          {category.options.find((option) => option.value === category.value)
-            ?.description ? (
-            <Box color="label" mt={0.5}>
-              {
-                category.options.find(
-                  (option) => option.value === category.value,
-                )?.description
-              }
-            </Box>
+    <>
+      <Ornament>{L.title}</Ornament>
+      <div className="cc-kv">
+        <div className="cc-kv-label">{L.show}</div>
+        <Btn
+          className={badges.show ? 'on' : 'off'}
+          icon={badges.show ? 'eye' : 'eye-slash'}
+          title={L.showHint}
+          onClick={() => act('pref_badge', { task: 'toggle_view' })}
+        >
+          {badges.show ? L.on : L.off}
+        </Btn>
+        <div className="cc-kv-label">{L.overhead}</div>
+        <div className="cc-row">
+          {overhead?.small_icon_class ? (
+            <Tip
+              className="cc-pb-icon"
+              title={`${overhead.name}: ${labelOf(overhead)}`}
+              body={overhead.description}
+            >
+              <div className={overhead.small_icon_class} />
+            </Tip>
           ) : null}
-        </Section>
-      ))}
-    </Section>
+          <Select
+            value={overhead?.id ?? 'none'}
+            placeholder={overhead?.name ?? L.none}
+            title={L.overheadHint}
+            options={[
+              { value: 'none', label: L.none },
+              ...categories.map((category) => ({
+                value: category.id,
+                label: category.name,
+              })),
+            ]}
+            onChange={(value) => setValue('overhead', value)}
+          />
+        </div>
+      </div>
+      {overhead && !overhead.value ? (
+        <div className="cc-hint">
+          {L.enableToShow.replace('{name}', overhead.name)}
+        </div>
+      ) : null}
+      <div className="cc-hint">{L.oocNotes}</div>
+      <div className="cc-info-grid cc-pb-grid">
+        {categories.map((category) => {
+          const selected = category.options.find(
+            (option) => option.value === category.value,
+          );
+          return (
+            <div className="cc-info-block" key={category.id}>
+              <div className="cc-info-title cc-pb-title">
+                {category.icon_class ? (
+                  <Tip
+                    className="cc-pb-icon"
+                    title={category.name}
+                    body={labelOf(category)}
+                  >
+                    <div className={category.icon_class} />
+                  </Tip>
+                ) : null}
+                {category.name}
+              </div>
+              <div className="cc-muted cc-pb-text">{category.description}</div>
+              {category.multiple ? (
+                <div className="cc-chips cc-pb-chips">
+                  <Btn
+                    className={category.value ? '' : 'gold'}
+                    onClick={() => setValue(category.id, 0)}
+                  >
+                    {L.disabled}
+                  </Btn>
+                  {category.options.map((option) => (
+                    <Btn
+                      key={option.value}
+                      className={category.value & option.value ? 'gold' : ''}
+                      title={option.description || undefined}
+                      onClick={() =>
+                        setValue(category.id, category.value ^ option.value)
+                      }
+                    >
+                      {option.name}
+                    </Btn>
+                  ))}
+                </div>
+              ) : (
+                <Select
+                  value={String(category.value || 0)}
+                  placeholder={labelOf(category)}
+                  options={[
+                    { value: '0', label: L.disabled },
+                    ...category.options.map((option) => ({
+                      value: String(option.value),
+                      label: option.name,
+                    })),
+                  ]}
+                  onChange={(value) => setValue(category.id, Number(value))}
+                />
+              )}
+              {selected?.description ? (
+                <div className="cc-muted cc-pb-text">
+                  {selected.description}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };

@@ -758,7 +758,7 @@
 	craftdiff = 3
 
 /datum/repeatable_crafting_recipe/crafting/zigbox
-	name = "Empty Zig Box"
+	name = "Empty Cigarette Box"
 	output = /obj/item/storage/fancy/cigarettes/zig/empty
 	requirements = list(
 		/obj/item/paper = 1,

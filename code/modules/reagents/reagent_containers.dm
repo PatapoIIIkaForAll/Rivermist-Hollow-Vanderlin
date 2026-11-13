@@ -631,6 +631,10 @@
 	balloon_alert(user, "transferring [UNIT_FORM_STRING(amount_per_transfer_from_this)].")
 	mode_change_message(user)
 
+/// TRUE when `user` stands where they can feed this mob. Mobs that eat through another atom override it.
+/mob/living/carbon/proc/is_facing_feeder(mob/user)
+	return get_dir(src, user) == dir
+
 /obj/item/reagent_containers/proc/canconsume(mob/eater, mob/user, silent = FALSE)
 	if(!iscarbon(eater))
 		return FALSE
@@ -643,7 +647,7 @@
 	if(C != user)
 		if(isturf(eater.loc))
 			if(C.body_position != LYING_DOWN)
-				if(get_dir(eater, user) != eater.dir)
+				if(!C.is_facing_feeder(user))
 					to_chat(user, "<span class='warning'>I must stand in front of [C.p_them()].</span>")
 					return FALSE
 	if(covered)

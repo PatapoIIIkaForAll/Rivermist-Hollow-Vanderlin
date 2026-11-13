@@ -21,8 +21,9 @@
 	var/list/starts
 
 /datum/round_event_control/skellyinvade/canSpawnEvent(players_amt, gamemode, fake_check)
-	if(!LAZYLEN(GLOB.hauntstart))
+	if(!length(get_invasion_spawn_turfs()))
 		return FALSE
+	. = ..()
 
 /datum/round_event/skellyinvade/setup()
 	announceWhen = rand(announceWhen, announceWhen + 50)
@@ -30,12 +31,8 @@
 //	spawncount = 3 + maxi
 
 /datum/round_event/skellyinvade/start()
-	if(LAZYLEN(GLOB.hauntstart))
-		for(var/i in 1 to spawncount)
-			var/obj/effect/landmark/events/haunts/_T = pick_n_take(GLOB.hauntstart)
-			if(_T)
-				_T = get_turf(_T)
-				if(isfloorturf(_T))
-					new /mob/living/carbon/human/species/skeleton/npc(_T)
-
-	return
+	var/list/spawn_turfs = get_invasion_spawn_turfs()
+	for(var/i in 1 to spawncount)
+		if(!length(spawn_turfs))
+			break
+		new /mob/living/carbon/human/species/skeleton/npc(pick_n_take(spawn_turfs))

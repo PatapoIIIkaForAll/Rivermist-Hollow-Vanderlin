@@ -15,6 +15,7 @@
 	var/lair_created = FALSE
 	var/datum/weakref/lair_entrance_ref
 	var/datum/action/innate/werewolf_lair_scent/lair_scent_action
+	COOLDOWN_DECLARE(nest_rest_cooldown)
 
 /datum/antagonist/werewolf/proc/initialize_werewolf_lair_ability()
 	sync_werewolf_lair_creation_spell()
@@ -266,6 +267,92 @@
 	exit_structure_type = /obj/structure/pocket_dimension_exit/hole
 	lifecycle_policy = POCKET_LIFECYCLE_KEEP_LOADED
 	persistence_mode = POCKET_PERSISTENCE_MOVABLES
+
+/// The lair entrance whose pocket holds [thing], or null outside a werewolf lair.
+/proc/get_werewolf_lair_entrance_holding(atom/thing)
+	var/area/pocket_dimension/pocket_area = get_area(thing)
+	if(!istype(pocket_area))
+		return null
+	var/obj/structure/werewolf_lair_entrance/lair_entrance = pocket_area.linked_pocket?.get_pocket_holder()
+	return istype(lair_entrance) ? lair_entrance : null
+
+/// Lying in a lair nest quiets the restless beast; the rage bonus waits out its cooldown.
+/datum/antagonist/werewolf/proc/rest_in_nest(mob/living/sleeper)
+	clear_transformation_pressure()
+	if(!COOLDOWN_FINISHED(src, nest_rest_cooldown))
+		return FALSE
+	COOLDOWN_START(src, nest_rest_cooldown, WW_NEST_REST_COOLDOWN)
+	var/mob/living/carbon/human/human_sleeper = sleeper
+	if(istype(human_sleeper))
+		human_sleeper.rage_datum?.update_rage(WW_NEST_RAGE_BONUS)
+	to_chat(sleeper, span_notice("I curl into the musk of my nest. The restless beast settles, and my blood runs hot."))
+	return TRUE
+
+/obj/structure/bed/werewolf_nest
+	name = "fur-lined nest"
+	desc = "A hollow of trampled earth lined with shed fur and torn hides. It reeks of wolf."
+	icon = 'icons/obj/bear.dmi'
+	icon_state = "bear"
+	sleepy = 1
+
+/obj/structure/bed/werewolf_nest/Initialize(mapload, ...)
+	. = ..()
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+		COMSIG_ATOM_EXITED = PROC_REF(on_exited),
+	)
+	AddElement(/datum/element/connect_loc, loc_connections)
+	for(var/mob/living/resident in loc)
+		watch_resident(resident)
+
+/obj/structure/bed/werewolf_nest/post_buckle_mob(mob/living/M)
+	. = ..()
+	settle(M)
+
+/obj/structure/bed/werewolf_nest/proc/on_entered(datum/source, atom/movable/arrived)
+	SIGNAL_HANDLER
+	if(isliving(arrived))
+		watch_resident(arrived)
+
+/obj/structure/bed/werewolf_nest/proc/on_exited(datum/source, atom/movable/gone)
+	SIGNAL_HANDLER
+	if(isliving(gone))
+		UnregisterSignal(gone, COMSIG_LIVING_SET_BODY_POSITION)
+
+/// Werewolves on the nest are watched for lying down; everyone else is ignored.
+/obj/structure/bed/werewolf_nest/proc/watch_resident(mob/living/resident)
+	if(!IS_WEREWOLF(resident))
+		return
+	RegisterSignal(resident, COMSIG_LIVING_SET_BODY_POSITION, PROC_REF(on_resident_position), override = TRUE)
+	if(resident.body_position == LYING_DOWN)
+		settle(resident)
+
+/obj/structure/bed/werewolf_nest/proc/on_resident_position(mob/living/source, new_position, old_position)
+	SIGNAL_HANDLER
+	if(new_position == LYING_DOWN)
+		settle(source)
+
+/obj/structure/bed/werewolf_nest/proc/settle(mob/living/sleeper)
+	var/datum/antagonist/werewolf/wolf = IS_WEREWOLF(sleeper)
+	wolf?.rest_in_nest(sleeper)
+
+/obj/structure/werewolf_bone_pile
+	name = "bone pile"
+	desc = "Gnawed bones heaped against the stone, every one cracked open for its marrow."
+	icon = 'icons/roguetown/items/natural.dmi'
+	icon_state = "bonestack2"
+	anchored = TRUE
+	density = FALSE
+
+/obj/structure/werewolf_bone_pile/examine(mob/user)
+	. = ..()
+	var/obj/structure/werewolf_lair_entrance/lair_entrance = get_werewolf_lair_entrance_holding(src)
+	var/datum/antagonist/werewolf/owner_werewolf = lair_entrance?.get_owner_werewolf()
+	if(!owner_werewolf)
+		return
+	var/hunted = owner_werewolf.animals_hunted_in_wolf_form
+	var/slain = owner_werewolf.foes_slain_in_wolf_form
+	. += span_notice("Picked clean here: [hunted] hunted beast[werewolf_plural_suffix(hunted)] and [slain] slain foe[werewolf_plural_suffix(slain)].")
 
 /obj/structure/werewolf_lair_entrance
 	name = "clawed-out lair"

@@ -12,6 +12,9 @@
 	charge_required = FALSE
 	cooldown_time = 45 SECONDS
 
+/datum/action/cooldown/spell/silence_inhumen/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/silence_inhumen/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

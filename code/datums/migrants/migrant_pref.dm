@@ -18,6 +18,8 @@
 	if((new_state == TRUE) && SSmigrants.admin_disabled)
 		to_chat(prefs.parent, span_boldwarning("Migration is disabled!"))
 		return
+	if(new_state == TRUE && spectate_rejoin_blocked(prefs.parent))
+		return
 	role_preferences.Cut()
 	active = new_state
 	if(!silent && prefs.parent)

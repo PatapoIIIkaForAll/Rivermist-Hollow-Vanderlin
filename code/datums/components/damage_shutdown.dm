@@ -1,10 +1,10 @@
 /datum/component/damage_shutdown
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
-	/// Total combined damage (brute + burn) that triggers shutdown. Default: 60.
+	/// Total combined damage (brute + burn) that triggers shutdown.
 	var/shutdown_threshold = 200
-	/// Total combined damage at or below which the mob wakes back up. Default: 20.
-	var/recovery_threshold = 40
+	/// Total combined damage at or below which the mob wakes back up.
+	var/recovery_threshold = 20
 	/// Whether the mob is currently shut down by this component.
 	var/is_shut_down = FALSE
 

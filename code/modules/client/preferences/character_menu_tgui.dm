@@ -45,15 +45,27 @@
 /datum/preferences/var/character_setup_hover_customizer
 /datum/preferences/var/character_setup_view_busy = FALSE
 /datum/preferences/var/character_setup_view_pending = FALSE
+/// Render signature the preview dummy was last dressed from.
+/datum/preferences/var/character_setup_rendered_sig
+/datum/preferences/var/character_setup_render_forced = FALSE
+/// Facing changed with nothing else; only re-measure and turn the main view.
+/datum/preferences/var/character_setup_redraw_dir = FALSE
+/// Hover the dummy currently shows, so a new hover can swap one accessory instead of rebuilding.
+/datum/preferences/var/character_setup_rendered_hover_acc
+/datum/preferences/var/character_setup_rendered_hover_color
+/datum/preferences/var/character_setup_rendered_hover_customizer
 /datum/preferences/var/character_setup_view_shown = FALSE
 /datum/preferences/var/list/character_setup_ui_heavy_cache
 /datum/preferences/var/character_setup_ui_heavy_sig
+/// Counts ui_data builds, so a queued push can tell that a later build already went out.
+/datum/preferences/var/character_setup_data_serial = 0
+/// character_setup_data_serial when the pending push was queued.
+/datum/preferences/var/character_setup_push_serial = 0
+/datum/preferences/var/character_setup_render_cooldown = 0
 
 GLOBAL_LIST_EMPTY(character_setup_chargen_ooc_messages)
 
 GLOBAL_VAR_INIT(character_setup_debug, FALSE)
-GLOBAL_VAR_INIT(character_setup_flat_origin_x, 0)
-GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 
 /proc/character_setup_glog(category, msg)
 	if(!GLOB.character_setup_debug)
@@ -83,11 +95,6 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	if(!x1)
 		return null
 	return list(x1, y1, x2, y2)
-
-/proc/character_setup_push_all_prefs()
-	for(var/client/lobby_client as anything in GLOB.clients)
-		if(lobby_client?.prefs)
-			SStgui.update_uis(lobby_client.prefs)
 
 /datum/preferences/var/list/character_setup_log_counts
 /datum/preferences/var/character_setup_log_action_name = ""
@@ -185,6 +192,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		get_asset_datum(/datum/asset/spritesheet/character_setup_chargen),
 		get_asset_datum(/datum/asset/spritesheet/loadout_items),
 		get_asset_datum(/datum/asset/spritesheet/preference_badges),
+		get_asset_datum(/datum/asset/simple/character_creator),
 	)
 
 /datum/preferences/ui_static_data(mob/user)
@@ -215,7 +223,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 			field = "dye_color"
 		else
 			return FALSE
-	var/new_color = input(user, "Choose color", "Color", he.vars[field]) as color|null
+	var/new_color = tgui_color_picker(user, "Choose color", "Color", sanitize_hexcolor(he.vars[field], 6, TRUE, "#ffffff"))
 	if(new_color)
 		he.vars[field] = sanitize_hexcolor(new_color)
 	return TRUE
@@ -377,10 +385,9 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 
 	var/saved_age = read_preference(/datum/preference/choiced/age)
 	var/saved_name = read_preference(/datum/preference/text/real_name)
+	var/had_mutant_colors = has_mutant_color_preferences()
 	write_preference(/datum/preference/choiced/selected_accent, ACCENT_NONE)
 	set_species_preference(new_species)
-	if(!LAZYLEN(pref_species.allowed_taur_types))
-		write_preference(/datum/preference/choiced/taur_type, null)
 
 	to_chat(user, "<em>[pref_species.name]</em>")
 	if(pref_species.desc)
@@ -393,33 +400,18 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	else if(!(read_preference(/datum/preference/choiced/pronouns) in pref_species.allowed_pronouns))
 		write_preference(/datum/preference/choiced/pronouns, pref_species.allowed_pronouns[1])
 
-	write_preference(/datum/preference/text/real_name, pref_species.random_name(read_preference(/datum/preference/choiced/gender), TRUE))
 	reset_jobs(user)
 	reset_patron(user)
 	reset_culture(user)
-	randomise_appearance_prefs(~(RANDOMIZE_SPECIES))
-	var/list/enabled_genital_customizers = list()
-	for(var/genital_customizer_type in subtypesof(/datum/customizer/organ/genitals))
-		var/datum/customizer_entry/old_entry = get_customizer_entry_for_customizer_type(genital_customizer_type)
-		if(old_entry && !old_entry.disabled)
-			enabled_genital_customizers += genital_customizer_type
-	customizer_entries = list()
-	validate_customizer_entries()
-	reset_all_customizer_accessory_colors()
-	randomize_all_customizer_accessories()
-	write_preference(/datum/preference/choiced/accessory, "Nothing")
-	for(var/genital_customizer_type in enabled_genital_customizers)
-		var/datum/customizer_entry/new_entry = get_customizer_entry_for_customizer_type(genital_customizer_type)
-		if(new_entry)
-			new_entry.disabled = FALSE
+	fit_appearance_to_species(had_mutant_colors)
 
 	var/list/selectable_ages = character_setup_species_display_ages(pref_species)
 	if(saved_age && (saved_age in selectable_ages))
 		write_preference(/datum/preference/choiced/age, saved_age)
 	else if(length(selectable_ages))
 		write_preference(/datum/preference/choiced/age, selectable_ages[1])
-	if(saved_name)
-		write_preference(/datum/preference/text/real_name, saved_name)
+	if(!saved_name)
+		write_preference(/datum/preference/text/real_name, pref_species.random_name(read_preference(/datum/preference/choiced/gender), TRUE))
 
 	update_menu_data(user)
 	return TRUE
@@ -597,14 +589,19 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 
 	var/datum/hud/new_player/lobby_hud = hud_used
 	if(istype(lobby_hud))
-		for(var/atom/movable/screen/lobby/button/ready/ready_button as anything in lobby_hud.static_inventory)
+		for(var/atom/movable/screen/lobby/button/ready/ready_button in lobby_hud.static_inventory)
 			ready_button.ready = (ready == PLAYER_READY_TO_PLAY)
 			ready_button.base_icon_state = ready_button.ready ? "ready" : "not_ready"
 			ready_button.update_appearance(UPDATE_ICON)
 			break
 		SEND_SIGNAL(lobby_hud, COMSIG_HUD_PLAYER_READY_TOGGLE)
-	character_setup_push_all_prefs()
+	character_setup_push_lobby_menus()
 	return TRUE
+
+/// Open lobby menus show the ready count, so every ready toggle refreshes them.
+/proc/character_setup_push_lobby_menus()
+	for(var/mob/dead/new_player/lobby_player as anything in GLOB.new_player_list)
+		lobby_player.client?.prefs?.character_setup_queue_push()
 
 /mob/dead/new_player/proc/character_setup_chargen_join_round()
 	if(!SSticker?.IsRoundInProgress())
@@ -680,6 +677,8 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 			"name" = pref.name,
 			"description" = pref.description,
 		)
+		if(pref.locked_after_spawn && is_erp_spawn_locked(user))
+			entry["lock_reason"] = pref.get_edit_lock_reason(user, src)
 		if(istype(pref, /datum/erp_preference/bitflag))
 			var/datum/erp_preference/bitflag/flag_pref = pref
 			entry["kind"] = "flags"
@@ -750,6 +749,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 // ---- Live data ----
 
 /datum/preferences/ui_data(mob/user)
+	character_setup_data_serial++
 	var/list/data = list()
 	var/real_name = read_preference(/datum/preference/text/real_name)
 	var/gender = read_preference(/datum/preference/choiced/gender)
@@ -785,6 +785,7 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/windowflashing = read_preference(/datum/preference/toggle/windowflashing)
 	var/ambientocclusion = read_preference(/datum/preference/toggle/ambientocclusion)
 	var/auto_fit_viewport = read_preference(/datum/preference/toggle/auto_fit_viewport)
+	var/descriptor_color = read_preference(/datum/preference/toggle/descriptor_color)
 	var/toggles_maptext = read_preference(/datum/preference/bitwise/toggles_maptext)
 	var/pixel_size = read_preference(/datum/preference/numeric/pixel_size)
 	var/scaling_method = read_preference(/datum/preference/choiced/scaling_method)
@@ -886,6 +887,11 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	data["race_title"] = selected_title || "None"
 	data["gender"] = gender_name
 	data["gender_short"] = gender_short
+	var/body_build_id = get_body_build_id()
+	var/datum/body_build/current_build = body_build_id ? GLOB.body_builds[body_build_id] : null
+	data["body_build"] = body_build_id
+	data["body_build_name"] = current_build?.name || "None"
+	data["body_build_options"] = character_setup_body_build_options()
 	data["default_slot"] = default_slot
 
 	data["patron_name"] = patron_name
@@ -929,6 +935,8 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	data["voice_type"] = voice_type || "Default"
 	data["voice_color"] = voice_color ? "#[voice_color]" : "#a0a0a0"
 	data["voice_pack"] = voice_pack || VOICE_PACK_DEFAULT
+	data["speech_bark"] = read_preference(/datum/preference/choiced/speech_bark)
+	data["speech_moans"] = !!read_preference(/datum/preference/toggle/speech_moans)
 	data["moan_selection"] = moan_selection || MOANPACK_TYPE_DEF
 	data["selected_accent"] = selected_accent || "None"
 
@@ -948,64 +956,46 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	var/mob/dead/new_player/new_player
 	if(istype(user, /mob/dead/new_player))
 		new_player = user
-	data["round_player_ready"] = new_player?.ready == PLAYER_READY_TO_PLAY
+	if(new_player && SSticker && SSticker.current_state <= GAME_STATE_PREGAME)
+		var/ready_count = 0
+		for(var/mob/dead/new_player/lobby_player as anything in GLOB.new_player_list)
+			if(lobby_player.ready == PLAYER_READY_TO_PLAY)
+				ready_count++
+		data["round_ready_players"] = ready_count
+		data["round_total_players"] = length(GLOB.new_player_list)
 	data["round_action_label"] = "Unavailable"
 	data["round_action_icon"] = "ban"
 	data["round_action_color"] = null
 	data["round_action_disabled"] = TRUE
 	data["round_action_tooltip"] = "This action is only available in the lobby."
-	if(SSticker)
-		var/time_remaining = SSticker.GetTimeLeft()
-		if(SSticker.HasRoundStarted())
-			data["round_start_status"] = "Round Started"
-			data["round_start_seconds"] = 0
-		else if(SSticker.current_state == GAME_STATE_SETTING_UP)
-			data["round_start_status"] = "Setting Up"
-			data["round_start_seconds"] = 0
-		else if(time_remaining > 0)
-			data["round_start_status"] = "Starts In"
-			data["round_start_seconds"] = max(0, round(time_remaining / 10))
-		else if(time_remaining == -10)
-			data["round_start_status"] = "Delayed"
-			data["round_start_seconds"] = -1
-		else
-			data["round_start_status"] = "Starting Soon"
-			data["round_start_seconds"] = 0
-		data["round_ready_players"] = SSticker.totalPlayersReady
-		data["round_total_players"] = SSticker.totalPlayers
-		if(new_player)
-			if(SSticker.IsRoundInProgress())
-				data["round_action_label"] = "Join Now"
-				data["round_action_icon"] = "sign-in-alt"
+	if(SSticker && new_player)
+		if(SSticker.IsRoundInProgress())
+			data["round_action_label"] = "Join Now"
+			data["round_action_icon"] = "sign-in-alt"
+			data["round_action_color"] = "green"
+			data["round_action_disabled"] = FALSE
+			data["round_action_tooltip"] = "Open late join choices."
+		else if(SSticker.current_state <= GAME_STATE_PREGAME)
+			if(new_player.ready == PLAYER_READY_TO_PLAY)
+				data["round_action_label"] = "Cancel Ready"
+				data["round_action_icon"] = "times"
+				data["round_action_color"] = "bad"
+				data["round_action_disabled"] = !!SSticker.job_change_locked
+				data["round_action_tooltip"] = "Cancel roundstart readiness."
+			else
+				data["round_action_label"] = "Ready"
+				data["round_action_icon"] = "user-check"
 				data["round_action_color"] = "green"
 				data["round_action_disabled"] = FALSE
-				data["round_action_tooltip"] = "Open late join choices."
-			else if(SSticker.current_state <= GAME_STATE_PREGAME)
-				if(new_player.ready == PLAYER_READY_TO_PLAY)
-					data["round_action_label"] = "Cancel Ready"
-					data["round_action_icon"] = "times"
-					data["round_action_color"] = "bad"
-					data["round_action_disabled"] = !!SSticker.job_change_locked
-					data["round_action_tooltip"] = "Cancel roundstart readiness."
-				else
-					data["round_action_label"] = "Ready"
-					data["round_action_icon"] = "user-check"
-					data["round_action_color"] = "green"
-					data["round_action_disabled"] = FALSE
-					data["round_action_tooltip"] = "Ready this character for roundstart."
-			else if(SSticker.current_state == GAME_STATE_SETTING_UP)
-				data["round_action_label"] = "Setting Up"
-				data["round_action_icon"] = "hourglass-half"
-				data["round_action_tooltip"] = "The game is starting."
-			else
-				data["round_action_label"] = "Round Finished"
-				data["round_action_icon"] = "flag-checkered"
-				data["round_action_tooltip"] = "The round has already finished."
-	else
-		data["round_start_status"] = "Unknown"
-		data["round_start_seconds"] = -1
-		data["round_ready_players"] = 0
-		data["round_total_players"] = 0
+				data["round_action_tooltip"] = "Ready this character for roundstart."
+		else if(SSticker.current_state == GAME_STATE_SETTING_UP)
+			data["round_action_label"] = "Setting Up"
+			data["round_action_icon"] = "hourglass-half"
+			data["round_action_tooltip"] = "The game is starting."
+		else
+			data["round_action_label"] = "Round Finished"
+			data["round_action_icon"] = "flag-checkered"
+			data["round_action_tooltip"] = "The round has already finished."
 
 	data["game_prefs"] = list(
 		"hotkeys" = !!hotkeys,
@@ -1016,8 +1006,10 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 		"windowflashing" = !!windowflashing,
 		"lobby_music" = !!(toggles & SOUND_LOBBY),
 		"hear_midis" = !!(toggles & SOUND_MIDI),
+		"hear_speech_barks" = !!read_preference(/datum/preference/toggle/hear_speech_barks),
 		"ambientocclusion" = !!ambientocclusion,
 		"auto_fit_viewport" = !!auto_fit_viewport,
+		"descriptor_color" = !!descriptor_color,
 		"allow_midround_antag" = !!(toggles & MIDROUND_ANTAG),
 		"ambience" = !!(toggles & SOUND_AMBIENCE),
 		"background_music" = !!(toggles & SOUND_SHIP_AMBIENCE),
@@ -1034,11 +1026,11 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 	return data
 
 /datum/preferences/ui_interact(mob/user, datum/tgui/ui)
-	var/window_width = character_setup_preferences_fullscreen ? 7680 : 1298
-	var/window_height = character_setup_preferences_fullscreen ? 4320 : 874
+	var/window_width = character_setup_preferences_fullscreen ? 7680 : 1360
+	var/window_height = character_setup_preferences_fullscreen ? 4320 : 800
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreferencesMenu", "Character Setup", window_width, window_height)
+		ui = new(user, src, "CharacterCreator", "Character Creator", window_width, window_height)
 		ui.set_autoupdate(FALSE)
 		ui.open()
 	character_setup_ensure_view(user, ui)
@@ -1086,6 +1078,9 @@ GLOBAL_VAR_INIT(character_setup_flat_origin_y, 0)
 			var/handled = process_link(user, href_list)
 			if(href_list["preference"] == "finished")
 				ui?.close(FALSE)
+			// Hovers and geometry reports only change the doll, whose new bounds queue their own push.
+			if(href_list["preference"] == "character_setup_hover" || href_list["preference"] == "character_setup_report_geometry")
+				return FALSE
 			return handled || TRUE
 
 		if("set_age")

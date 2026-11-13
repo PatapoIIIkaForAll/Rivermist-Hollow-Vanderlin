@@ -333,7 +333,7 @@ GLOBAL_LIST_EMPTY(gnoll_shrines)
 	if(!carrier.has_erp_pref(/datum/erp_preference/boolean/antag_pregnancy))
 		qdel(src)
 		return FALSE
-	var/obj/item/organ/genitals/filling_organ/vagina/womb = get_gnoll_ritual_womb(carrier)
+	var/obj/item/organ/genitals/filling_organ/womb/womb = get_gnoll_ritual_womb(carrier)
 	if(!womb || !start_gnoll_ritual_pregnancy(carrier, father, pack, womb))
 		return FALSE
 	pack.ritual_carriers += REF(carrier.mind)

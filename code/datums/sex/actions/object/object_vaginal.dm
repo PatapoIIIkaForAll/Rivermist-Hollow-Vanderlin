@@ -1,6 +1,6 @@
 //non dildo items, thank me later for the big funnies and exploits -- vide noir
 /datum/sex_action/object_fuck/object_vaginal
-	name = "Fuck cunt with object"
+	name = "Toy-fuck pussy"
 	var/ouchietext = "owie"
 	do_time = 4 SECONDS //slower on your own but not as much as pussy since this is on your front.
 
@@ -43,6 +43,9 @@
 			to_chat(user, span_info("\the [contdildo] will likely spill inside me."))
 			to_chat(user, span_smallred("I can pump it with <bold>speed</bold> for faster success."))
 
+	// Still pressing at the opening: nothing went in yet, so no entry line or sound.
+	if(orifice_pressing)
+		return .
 	user.visible_message(span_warning("[user] stuffs \the [dildo] in their cunt..."))
 	var/used_sex_volume = sex_volume
 	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
@@ -91,6 +94,11 @@
 
 /datum/sex_action/object_fuck/object_vaginal/on_finish(mob/living/user, mob/living/target)
 	var/obj/item/dildo = selected_toy || get_sextoy_in_hand(user)
+	// The parent clears the pressing state, so read it first.
+	var/was_pressing = orifice_pressing
 	. = ..()
+	if(was_pressing)
+		user.visible_message(span_warning("[user] gives up pressing \the [dildo] against [user.p_their()] cunt."))
+		return
 	user.visible_message(span_warning("[user] pulls \the [dildo] from their cunt."))
 

@@ -34,7 +34,9 @@
 	food_type = list(/obj/item/reagent_containers/food/snacks/produce/grain/wheat,
 					/obj/item/reagent_containers/food/snacks/produce/grain/oat,
 					/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,
-					/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage)
+					/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,
+					/obj/item/reagent_containers/food/snacks/produce/vegetable/pumpkin,
+					/obj/item/reagent_containers/food/snacks/veg/pumpkin_sliced)
 	pooptype = /obj/item/natural/poo/cow
 	tame_chance = 25
 	bonus_tame_chance = 15
@@ -159,7 +161,9 @@
 	food_type = list(/obj/item/reagent_containers/food/snacks/produce/grain/wheat,
 					/obj/item/reagent_containers/food/snacks/produce/grain/oat,
 					/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,
-					/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage)
+					/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,
+					/obj/item/reagent_containers/food/snacks/produce/vegetable/pumpkin,
+					/obj/item/reagent_containers/food/snacks/veg/pumpkin_sliced)
 	pooptype = /obj/item/natural/poo/cow
 
 	base_intents = list(/datum/intent/simple/headbutt)

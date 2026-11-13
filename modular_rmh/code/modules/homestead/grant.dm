@@ -2,7 +2,7 @@
 	name = "Grant Residency"
 	desc = "Offer someone residency."
 	button_icon_state = "recruit_bog"
-	var/quirk_path = /datum/quirk/boon/resident
+	var/quirk_path = /datum/quirk/positive/resident
 
 /datum/action/cooldown/spell/undirected/list_target/grant_resident/get_list_targets(atom/center, conversion_radius = 7)
 	var/list/things = list()

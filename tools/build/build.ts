@@ -54,6 +54,11 @@ export const ForceRecutParameter = new Juke.Parameter({
   name: 'force-recut',
 });
 
+export const ForceTguiParameter = new Juke.Parameter({
+  type: 'boolean',
+  name: 'force-tgui',
+});
+
 export const WarningParameter = new Juke.Parameter({
   type: 'string[]',
   alias: 'W',
@@ -79,15 +84,37 @@ export const DmMapsIncludeTarget = new Juke.Target({
   },
 });
 
+// Bundles packed into the rsc; dm.exe never refreshes them inside an existing rsc.
+const RSC_PACKED_BUNDLES = [
+  'tgui/public/tgui.bundle.js',
+  'tgui/public/tgui.bundle.css',
+  'tgui/public/tgui-panel.bundle.js',
+  'tgui/public/tgui-panel.bundle.css',
+];
+
+const isRscStale = () => {
+  const rsc = `${DME_NAME}.rsc`;
+  if (!fs.existsSync(rsc)) {
+    return false;
+  }
+  const rscTime = fs.statSync(rsc).mtimeMs;
+  return RSC_PACKED_BUNDLES.some(
+    (file) => fs.existsSync(file) && fs.statSync(file).mtimeMs > rscTime,
+  );
+};
+
 export const DmTarget = new Juke.Target({
   parameters: [
     DefineParameter,
     DmVersionParameter,
     WarningParameter,
     NoWarningParameter,
+    CiParameter,
   ],
   dependsOn: ({ get }) => [
-    get(DefineParameter).includes('ALL_TEMPLATES') && DmMapsIncludeTarget
+    get(DefineParameter).includes('ALL_TEMPLATES') && DmMapsIncludeTarget,
+    // CI compiles DM alone; local builds wait so a new bundle reaches the rsc.
+    !get(CiParameter) && TguiTarget,
   ],
   inputs: [
     '_maps/map_files/generic/**',
@@ -105,6 +132,7 @@ export const DmTarget = new Juke.Target({
     'modular_rmh/modular/**',
     `${DME_NAME}.dme`,
     NamedVersionFile,
+    ...RSC_PACKED_BUNDLES,
   ],
   outputs: ({ get }) => {
     if (get(DmVersionParameter)) {
@@ -113,6 +141,17 @@ export const DmTarget = new Juke.Target({
     return [`${DME_NAME}.dmb`, `${DME_NAME}.rsc`];
   },
   executes: async ({ get }) => {
+    if (isRscStale()) {
+      Juke.logger.info('tgui bundle changed, repacking the rsc');
+      try {
+        fs.rmSync(`${DME_NAME}.rsc`);
+      } catch {
+        Juke.logger.error(
+          `Cannot delete ${DME_NAME}.rsc to repack the tgui bundle. Close DreamDaemon and DreamSeeker, then build again.`,
+        );
+        throw new Juke.ExitCode(1);
+      }
+    }
     await DreamMaker(`${DME_NAME}.dme`, {
       defines: ['CBT', ...get(DefineParameter)],
       warningsAsErrors: get(WarningParameter).includes('error'),
@@ -207,8 +246,20 @@ export const TgFontTarget = new Juke.Target({
   },
 });
 
+// Deletes the bundles so rspack must emit them; the dm target then repacks the rsc.
+export const TguiForceCleanTarget = new Juke.Target({
+  executes: async () => {
+    Juke.rm('tgui/public/*.bundle.*');
+  },
+});
+
 export const TguiTarget = new Juke.Target({
-  dependsOn: [BunTarget, BiomeInstallTarget],
+  parameters: [ForceTguiParameter],
+  dependsOn: ({ get }) => [
+    BunTarget,
+    BiomeInstallTarget,
+    get(ForceTguiParameter) && TguiForceCleanTarget,
+  ],
   inputs: [
     'tgui/rspack.config.ts',
     'tgui/**/package.json',

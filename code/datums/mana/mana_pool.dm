@@ -533,7 +533,9 @@
 				to_chat(parent, span_warning("I feel woozy after casting that spell."))
 			if(10 to 30)
 				to_chat(parent, span_danger("I feel sharp pains coursing through my body!"))
-				parent:blood_volume -= backlash_intensity
+				var/mob/living/living_parent = parent
+				if(istype(living_parent))
+					living_parent.adjust_bloodvolume(-backlash_intensity)
 			if(30 to 50)
 				parent.visible_message(span_danger("[parent] collapses as they vomit blood from the recoil."), span_danger("I feel my organs being ripped apart!"))
 				parent:vomit(1, blood = TRUE, stun = FALSE)

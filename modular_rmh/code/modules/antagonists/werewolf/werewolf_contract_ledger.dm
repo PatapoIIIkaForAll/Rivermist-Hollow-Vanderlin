@@ -47,6 +47,9 @@
 /obj/structure/fake_machine/contractledger/antag/is_quest_handler(mob/user)
 	return FALSE
 
+/obj/structure/fake_machine/contractledger/antag/is_contract_broker(mob/user)
+	return FALSE
+
 /obj/structure/fake_machine/contractledger/antag/is_contract_type_allowed_for_user(mob/user, contract_type)
 	return TRUE
 

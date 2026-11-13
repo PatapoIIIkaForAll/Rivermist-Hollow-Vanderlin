@@ -152,6 +152,14 @@
 						SSspatial_grid.add_grid_awareness(location, channel)
 			recursive_contents[channel] |= arrived.important_recursive_contents[channel]
 
+/// Where this movable senses the world from. Mobs that perceive through another atom override it.
+/atom/movable/proc/get_sense_anchor()
+	return src
+
+/// Where this movable's voice sounds play from. Only voice files move with a relayed sense anchor.
+/atom/movable/proc/get_voice_anchor(soundin)
+	return src
+
 ///allows this movable to hear and adds itself to the important_recursive_contents list of itself and every movable loc its in
 /atom/movable/proc/become_hearing_sensitive(trait_source = TRAIT_GENERIC)
 	var/already_hearing_sensitive = HAS_TRAIT(src, TRAIT_HEARING_SENSITIVE)

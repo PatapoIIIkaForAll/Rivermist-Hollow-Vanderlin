@@ -59,7 +59,7 @@
 			if(contract_type in seen_types)
 				continue
 			seen_types += contract_type
-			if(!(contract_type in list(QUEST_HUNT, QUEST_CLEAR_OUT, QUEST_RAID, QUEST_BOSS)))
+			if(!quest_contract_targets_creatures(contract_type))
 				continue
 
 			var/datum/quest/quest_template = ledger_ref.create_quest_for_type(contract_type)

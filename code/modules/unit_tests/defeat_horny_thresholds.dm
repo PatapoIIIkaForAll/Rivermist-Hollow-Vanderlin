@@ -10,9 +10,10 @@
 /datum/unit_test/horny_defeat_threshold_formula
 
 /datum/unit_test/horny_defeat_threshold_formula/Run()
-	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 14, 16), 15, "Player thresholds should average current Constitution and Endurance.")
-	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 1, 1), 10, "Player thresholds should clamp to the lower design bound.")
-	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 30, 30), 20, "Player thresholds should clamp to the upper design bound.")
+	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 14, 16), 7, "Player thresholds should be a quarter of Constitution plus Endurance.")
+	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 20, 20), 10, "An average body should land on the upper bound.")
+	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 1, 1), 5, "Player thresholds should clamp to the lower design bound.")
+	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, TRUE, 30, 30), 10, "Player thresholds should clamp to the upper design bound.")
 	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, FALSE, 10, 10), 2, "Mob thresholds should derive from one tenth of combined base stats.")
 	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, FALSE, 1, 1), 1, "Mob thresholds should clamp to at least one climax.")
 	TEST_ASSERT_EQUAL(horny_defeat_threshold_for_stats(0, FALSE, 30, 30), 3, "Mob thresholds should clamp to at most three climaxes.")
@@ -51,7 +52,7 @@
 	var/datum/component/defeat_monitor/monitor = victim.AddComponent(/datum/component/defeat_monitor)
 
 	monitor.on_climax(victim, null, victim, aggressor, aggressor)
-	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 15, "The first valid climax should cache the current player-stat threshold.")
+	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 7, "The first valid climax should cache the current player-stat threshold.")
 	TEST_ASSERT(!victim.has_status_effect(/datum/status_effect/mob_horny_knockout), "A disconnected body with a mind must stay on the player path.")
 	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_count, 1, "The first valid climax should record exact progress.")
 	TEST_ASSERT(findtext(monitor.horny_defeat_climax_threshold_source, "CON 14, END 16"), "Player progress should explain the encounter-start stats used.")
@@ -60,12 +61,12 @@
 	victim.attributes.raw_attribute_list[STAT_ENDURANCE] = 20
 	victim.attributes.update_attributes()
 	monitor.on_climax(victim, null, victim, aggressor, aggressor)
-	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 15, "Mid-encounter stat changes must not move the cached threshold.")
+	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 7, "Mid-encounter stat changes must not move the cached threshold.")
 	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_count, 2, "A second valid climax should advance the same encounter.")
 
 	monitor.horny_defeat_last_climax_at = world.time - DEFEAT_HORNY_ENCOUNTER_TIMEOUT - 1 SECONDS
 	monitor.on_climax(victim, null, victim, aggressor, aggressor)
-	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 20, "A timeout should start a new encounter from the now-current player stats.")
+	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 10, "A timeout should start a new encounter from the now-current player stats.")
 	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_count, 1, "A timeout should restart exact progress at one.")
 
 /datum/unit_test/horny_defeat_progress_text_is_exact

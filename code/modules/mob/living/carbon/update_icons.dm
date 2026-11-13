@@ -3,9 +3,15 @@
 //IMPORTANT: Multiple animate() calls do not stack well, so try to do them all at once if you can.
 /mob/living/carbon/update_transform()
 	var/matrix/ntransform = matrix(transform) //aka transform.Copy()
+	// Apply posture and scaling without the cosmetic rotation, then put it back on top.
+	ntransform.Turn(-pixel_rotation)
 	var/final_pixel_y = pixel_y
 	var/final_dir = dir
 	var/changed = 0
+	if(pixel_rotation && lying_prev && !lying_angle)
+		// Free spinning while lying down does not survive standing up.
+		pixel_rotation = 0
+		changed++
 	if(lying_angle != lying_prev && rotate_on_lying)
 		changed++
 		ntransform.TurnTo(lying_prev , lying_angle)
@@ -23,6 +29,7 @@
 		resize = RESIZE_DEFAULT_SIZE
 
 	if(changed)
+		ntransform.Turn(pixel_rotation)
 		ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, UPDATE_TRANSFORM_TRAIT)
 		addtimer(TRAIT_CALLBACK_REMOVE(src, TRAIT_NO_FLOATING_ANIM, UPDATE_TRANSFORM_TRAIT), 0.3 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
 		pixel_x = get_standard_pixel_x_offset()
@@ -79,16 +86,8 @@
 	var/list/behindhands = list()
 
 	var/list/offsets
-	var/use_female_sprites = MALE_SPRITES
 	if(species)
-		if(species.sexes)
-			if(gender == FEMALE && !species.swap_female_clothes || gender == MALE && species.swap_male_clothes || gender == MALE && species.swap_male_clothes_but_not_offsets)
-				use_female_sprites = FEMALE_SPRITES
-
-		if(use_female_sprites && !(gender == MALE && species.swap_male_clothes_but_not_offsets))
-			offsets = species.offset_features_f
-		else
-			offsets = species.offset_features_m
+		offsets = get_offset_features()
 
 	for(var/obj/item/I in held_items)
 		if(client && hud_used && hud_used.hud_version != HUD_STYLE_NOHUD)
@@ -118,6 +117,7 @@
 
 		var/mutable_appearance/inhand_overlay
 		var/mutable_appearance/behindhand_overlay
+		var/list/hand_offset = species?.get_held_item_offset(src, get_held_index_of_item(I)) || LAZYACCESS(offsets, OFFSET_HANDS)
 		if(I.experimental_inhand && !hide_experimental)
 			var/used_prop
 			var/list/prop
@@ -146,11 +146,11 @@
 			inhand_overlay = center_image(inhand_overlay, I.inhand_x_dimension, I.inhand_y_dimension)
 			behindhand_overlay = center_image(behindhand_overlay, I.inhand_x_dimension, I.inhand_y_dimension)
 
-			if(LAZYACCESS(offsets, OFFSET_HANDS))
-				inhand_overlay.pixel_x += offsets[OFFSET_HANDS][1]
-				inhand_overlay.pixel_y += offsets[OFFSET_HANDS][2]
-				behindhand_overlay.pixel_x += offsets[OFFSET_HANDS][1]
-				behindhand_overlay.pixel_y += offsets[OFFSET_HANDS][2]
+			if(hand_offset)
+				inhand_overlay.pixel_x += hand_offset[1]
+				inhand_overlay.pixel_y += hand_offset[2]
+				behindhand_overlay.pixel_x += hand_offset[1]
+				behindhand_overlay.pixel_y += hand_offset[2]
 			// Apply taur body offset to adjust rendering height for taurs like jdeer
 			var/obj/item/bodypart/taur/T = get_bodypart(BODY_ZONE_TAUR)
 			if(T && T.body_offset_y)
@@ -175,9 +175,9 @@
 			if(get_held_index_of_item(I) % 2 == 0)
 				icon_file = I.righthand_file
 			inhand_overlay = I.build_worn_icon(age = age, default_layer = HANDS_LAYER, default_icon_file = icon_file, isinhands = TRUE)
-			if(LAZYACCESS(offsets, OFFSET_HANDS))
-				inhand_overlay.pixel_x += offsets[OFFSET_HANDS][1]
-				inhand_overlay.pixel_y += offsets[OFFSET_HANDS][2]
+			if(hand_offset)
+				inhand_overlay.pixel_x += hand_offset[1]
+				inhand_overlay.pixel_y += hand_offset[2]
 			// Apply taur body offset to adjust rendering height for taurs like jdeer
 			var/obj/item/bodypart/taur/T = get_bodypart(BODY_ZONE_TAUR)
 			if(T && T.body_offset_y)
@@ -310,22 +310,7 @@
 	if(handcuffed)
 		var/mutable_appearance/inhand_overlay = mutable_appearance('icons/roguetown/mob/bodies/cuffed.dmi', "[handcuffed.name]up", -HANDCUFF_LAYER)
 		if(ishuman(src))
-			var/mob/living/carbon/human/H = src
-			var/datum/species/species = H.dna?.species
-			var/list/offsets
-			var/use_female_sprites = MALE_SPRITES
-			if(species)
-				if(species.sexes)
-					if(gender == FEMALE && !species.swap_female_clothes || gender == MALE && species.swap_male_clothes || gender == MALE && species.swap_male_clothes_but_not_offsets)
-						use_female_sprites = FEMALE_SPRITES
-				if(use_female_sprites && !(gender == MALE && species.swap_male_clothes_but_not_offsets))
-					offsets = species.offset_features_f
-				else
-					offsets = species.offset_features_m
-
-			if(LAZYACCESS(offsets, OFFSET_HANDS))
-				inhand_overlay.pixel_x += offsets[OFFSET_HANDS][1]
-				inhand_overlay.pixel_y += offsets[OFFSET_HANDS][2]
+			apply_offset(inhand_overlay, OFFSET_HANDS)
 
 		overlays_standing[HANDCUFF_LAYER] = inhand_overlay
 		apply_overlay(HANDCUFF_LAYER)
@@ -432,7 +417,7 @@
 		new_limbs += BP.get_limb_icon()
 	if(new_limbs.len)
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
-		limb_icon_cache[icon_render_key] = new_limbs
+		store_limb_icons(icon_render_key, new_limbs)
 
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()
@@ -470,6 +455,21 @@
 		. += "husk"
 	return jointext(., "-")
 
+
+/// Render keys kept in limb_icon_cache before the oldest are dropped.
+#define LIMB_ICON_CACHE_MAX_KEYS 1000
+/// How many of the oldest keys are dropped at once when the cache is full.
+#define LIMB_ICON_CACHE_EVICT_KEYS 250
+
+/// Keys change with damage, sizes and colours; unbounded, the cache filled the engine's 2^24 image table on long rounds.
+/mob/living/carbon/proc/store_limb_icons(render_key, list/limbs)
+	if(!limb_icon_cache[render_key] && length(limb_icon_cache) >= LIMB_ICON_CACHE_MAX_KEYS)
+		// Associative lists keep insertion order, so the front holds the oldest keys.
+		limb_icon_cache.Cut(1, LIMB_ICON_CACHE_EVICT_KEYS + 1)
+	limb_icon_cache[render_key] = limbs
+
+#undef LIMB_ICON_CACHE_MAX_KEYS
+#undef LIMB_ICON_CACHE_EVICT_KEYS
 
 //change the mob's icon to the one matching its key
 /mob/living/carbon/proc/load_limb_from_cache()

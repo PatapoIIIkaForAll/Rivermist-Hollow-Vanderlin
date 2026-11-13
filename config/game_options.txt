@@ -585,3 +585,9 @@ STARVATION_DAMAGE_PER_TICK 0.1
 
 ## Damage per tick for dying of dehydration
 DEHYDRATION_DAMAGE_PER_TICK 0.1
+
+## Lobby players may spectate the round as observers. Set to 0 to hide the Spectate button.
+LOBBY_SPECTATE 1
+
+## Minutes a spectator must wait after returning to the lobby before joining the round. Admins skip it; 0 disables it.
+SPECTATE_REJOIN_DELAY 5

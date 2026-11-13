@@ -65,7 +65,7 @@
 		return FALSE
 	if(wearer.mind?.assigned_role?.department_flag & CHAPEL)
 		return TRUE
-	return wearer.has_quirk(/datum/quirk/vice/addiction/godfearing) && patron_blesses_chastity(wearer.patron)
+	return wearer.has_quirk(/datum/quirk/negative/addiction/godfearing) && patron_blesses_chastity(wearer.patron)
 
 /obj/item/clothing/undies/chastity/proc/on_worn_sex_action(datum/sex_action_effect_context/context)
 	if(!wearer || context.receiver != wearer || wearer.stat != CONSCIOUS)

@@ -17,6 +17,10 @@
 /datum/ai_behavior/proc/get_cooldown(datum/ai_controller/cooldown_for)
 	return action_cooldown
 
+/// TRUE while this behavior's passive detection field searches in its place.
+/datum/ai_behavior/proc/has_live_detection_field(datum/ai_controller/controller)
+	return FALSE
+
 ///Called by the AI controller when this action is performed
 /datum/ai_behavior/proc/perform(delta_time, datum/ai_controller/controller, ...)
 	controller.behavior_cooldowns[src] = world.time + get_cooldown(controller)

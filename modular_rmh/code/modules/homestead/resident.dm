@@ -9,7 +9,7 @@
 	/datum/job/roguetown/court_agent \
 )
 */
-/datum/quirk/boon/resident
+/datum/quirk/positive/resident
 	name = "Resident"
 	desc = "I'm a resident of Rivermist Hollow. I have an account in the city's treasury and a home in the city."
 	point_value = RESIDENT_COST
@@ -19,18 +19,18 @@
 
 	var/money_given = FALSE
 
-/datum/quirk/boon/resident/on_spawn()
+/datum/quirk/positive/resident/on_spawn()
 	if(gain_text && owner)
 		to_chat(owner, gain_text)
 
-/datum/quirk/boon/resident/on_remove()
+/datum/quirk/positive/resident/on_remove()
 	if(lose_text && owner)
 		to_chat(owner, lose_text)
 
-/datum/quirk/boon/resident/after_job_spawn(datum/job/job)
+/datum/quirk/positive/resident/after_job_spawn(datum/job/job)
 	apply_starting_money()
 
-/datum/quirk/boon/resident/proc/apply_starting_money()
+/datum/quirk/positive/resident/proc/apply_starting_money()
 	if(money_given)
 		return
 	if(!owner || QDELETED(owner))
@@ -57,8 +57,8 @@
 	if(!spawned || QDELETED(spawned))
 		return
 
-	if(!spawned.has_quirk(/datum/quirk/boon/resident))
-		spawned.add_quirk(/datum/quirk/boon/resident)
+	if(!spawned.has_quirk(/datum/quirk/positive/resident))
+		spawned.add_quirk(/datum/quirk/positive/resident)
 
 #undef RESIDENT_BALANCE_MIN
 #undef RESIDENT_BALANCE_MAX

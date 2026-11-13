@@ -26,6 +26,6 @@
 	if(isobj(victim))
 		var/obj/O = victim
 		O.extinguish()
-	else if(ismob(victim))
-		var/mob/living/carbon/M = victim
+	else if(isliving(victim))
+		var/mob/living/M = victim
 		M.ExtinguishMob()

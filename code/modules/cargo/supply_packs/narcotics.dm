@@ -6,17 +6,17 @@
 	abstract_type = /datum/supply_pack/narcotics
 
 /datum/supply_pack/narcotics/sigs
-	name = "Pipe Weed Zig"
+	name = "Pipe Weed Cigarette"
 	cost = 5
 	contains = /obj/item/clothing/face/cigarette/rollie/nicotine
 
 /datum/supply_pack/narcotics/zigbox
-	name = "Zigbox"
+	name = "Cigarette Box"
 	cost = 30
 	contains = /obj/item/storage/fancy/cigarettes/zig
 
 /datum/supply_pack/narcotics/zigboxempt
-	name = "Empty Zigbox"
+	name = "Empty Cigarette Box"
 	cost = 1
 	contains = /obj/item/storage/fancy/cigarettes/zig/empty
 

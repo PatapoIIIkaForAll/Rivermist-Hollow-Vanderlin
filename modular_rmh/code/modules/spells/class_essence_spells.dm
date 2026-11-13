@@ -37,6 +37,7 @@
 	cast_range = 2
 	cooldown_time = 30 SECONDS
 	spell_type = NONE
+	charge_required = FALSE
 
 /datum/action/cooldown/spell/pointed/silence/is_valid_target(atom/cast_on)
 	. = ..()

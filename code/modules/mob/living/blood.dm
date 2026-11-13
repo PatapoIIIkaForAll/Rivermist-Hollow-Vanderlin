@@ -77,6 +77,13 @@
 		bleed_rate += embedded.embedding?.embedded_bloodloss
 	return bleed_rate
 
+/// Bodies without blood, such as constructs and skeletons, have none to lose.
+/mob/living/proc/is_bloodless()
+	return FALSE
+
+/mob/living/carbon/is_bloodless()
+	return (NOBLOOD in dna?.species?.species_traits)
+
 /mob/living/carbon/get_bleed_rate()
 	if(NOBLOOD in dna?.species?.species_traits)
 		return 0

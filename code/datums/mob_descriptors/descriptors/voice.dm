@@ -1,7 +1,8 @@
 /datum/mob_descriptor/voice
 	abstract_type = /datum/mob_descriptor/voice
 	slot = MOB_DESCRIPTOR_SLOT_VOICE
-	verbage = "speaks with"
+	verbage = "%SPEAK%"
+	show_obscured = TRUE
 	prefix = "a"
 	suffix = "voice"
 
@@ -93,3 +94,8 @@
 
 /datum/mob_descriptor/voice/stuttering
 	name = "Stuttering"
+
+/datum/mob_descriptor/voice/custom
+	name = "Custom Voice"
+	custom_index = 11
+	custom_prefix_mode = CUSTOM_PREFIX_MODE_ARTICLE

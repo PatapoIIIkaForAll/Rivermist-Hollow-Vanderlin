@@ -49,8 +49,7 @@
 "p" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -67,9 +66,7 @@
 	},
 /area/indoors/town/rmh)
 "x" = (
-/obj/structure/window/openclose/reinforced{
-	dir = 2
-	},
+/obj/structure/window/openclose/reinforced,
 /obj/structure/fluff/railing/border/west,
 /obj/structure/fluff/railing/border/east,
 /turf/open/floor/ruinedwood,
@@ -79,9 +76,7 @@
 /area/indoors/town/rmh)
 "z" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
@@ -142,8 +137,7 @@
 "K" = (
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/effect/decal/edge{
 	dir = 8;
@@ -179,7 +173,6 @@
 /area/indoors/town/rmh)
 "T" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /obj/effect/decal/edge{
@@ -189,11 +182,8 @@
 /turf/open/floor/tile/brick,
 /area/indoors/town/rmh)
 "U" = (
-/obj/structure/window/openclose/reinforced{
-	dir = 2
-	},
+/obj/structure/window/openclose/reinforced,
 /obj/structure/curtain/dir{
-	dir = 2;
 	color = "#8a6b6b"
 	},
 /turf/open/floor/ruinedwood,

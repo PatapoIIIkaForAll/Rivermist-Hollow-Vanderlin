@@ -30,15 +30,13 @@
 /area)
 "h" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 9
 	},
 /turf/open/floor/cobblerock,
 /area)
 "i" = (
 /obj/effect/decal/cobbleedge{
-	dir = 6;
-	pixel_y = 0
+	dir = 6
 	},
 /obj/item/alch/airdust,
 /turf/open/floor/cobblerock,
@@ -53,10 +51,7 @@
 	pixel_y = -10;
 	pixel_x = 4
 	},
-/obj/effect/decal/cobbleedge{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/effect/decal/cobbleedge,
 /obj/item/natural/fairydust,
 /turf/open/floor/cobblerock,
 /area)
@@ -65,10 +60,7 @@
 /turf/open/floor/cobblerock,
 /area)
 "o" = (
-/obj/effect/decal/cobbleedge{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/effect/decal/cobbleedge,
 /turf/open/floor/cobblerock,
 /area)
 "p" = (
@@ -91,8 +83,7 @@
 /area)
 "C" = (
 /obj/effect/decal/cobbleedge{
-	dir = 5;
-	pixel_y = 0
+	dir = 5
 	},
 /turf/open/floor/cobblerock,
 /area)
@@ -102,8 +93,7 @@
 /area)
 "I" = (
 /obj/effect/decal/cobbleedge{
-	dir = 9;
-	pixel_y = 0
+	dir = 9
 	},
 /turf/open/floor/cobblerock,
 /area)
@@ -119,8 +109,7 @@
 /area)
 "M" = (
 /obj/effect/decal/cobbleedge{
-	dir = 10;
-	pixel_y = 0
+	dir = 10
 	},
 /turf/open/floor/cobblerock,
 /area)
@@ -150,8 +139,7 @@
 /area)
 "U" = (
 /obj/effect/decal/cobbleedge{
-	dir = 5;
-	pixel_y = 0
+	dir = 5
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/cobblerock,

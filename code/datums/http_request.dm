@@ -8,6 +8,8 @@
 	var/url
 	/// If present response body will be saved to this file.
 	var/output_file
+	/// If set, rust_g fails the whole request after this many seconds.
+	var/timeout_seconds
 
 	var/_raw_response
 
@@ -16,7 +18,7 @@
 	if(length(args))
 		src.prepare(arglist(args))
 
-/datum/http_request/proc/prepare(method, url, body = "", list/headers, output_file)
+/datum/http_request/proc/prepare(method, url, body = "", list/headers, output_file, timeout_seconds)
 	if (!length(headers))
 		headers = ""
 	else
@@ -27,6 +29,7 @@
 	src.body = body
 	src.headers = headers
 	src.output_file = output_file
+	src.timeout_seconds = timeout_seconds
 
 /datum/http_request/proc/execute_blocking()
 	_raw_response = rustg_http_request_blocking(method, url, body, headers, build_options())
@@ -44,9 +47,13 @@
 		in_progress = TRUE
 
 /datum/http_request/proc/build_options()
+	var/list/options = list()
 	if(output_file)
-		return json_encode(list("output_filename"=output_file,"body_filename"=null))
-	return null
+		options["output_filename"] = output_file
+		options["body_filename"] = null
+	if(timeout_seconds)
+		options["timeout_seconds"] = timeout_seconds
+	return length(options) ? json_encode(options) : null
 
 /datum/http_request/proc/is_complete()
 	if (isnull(id))
@@ -63,6 +70,15 @@
 		_raw_response = r
 		in_progress = FALSE
 		return TRUE
+
+/// Sleeps until the request finishes or `timeout` deciseconds pass; null on timeout.
+/datum/http_request/proc/wait_for_response(timeout)
+	RETURN_TYPE(/datum/http_response)
+	var/deadline = world.time + timeout
+	UNTIL(is_complete() || world.time >= deadline)
+	if(in_progress)
+		return null
+	return into_response()
 
 /datum/http_request/proc/into_response()
 	var/datum/http_response/R = new()

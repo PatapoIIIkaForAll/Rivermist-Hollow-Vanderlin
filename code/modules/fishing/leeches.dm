@@ -177,7 +177,7 @@
 				user.simple_remove_embedded_object(src)
 			return TRUE
 	else
-		if(user.blood_volume <= LEECH_BLOOD_STOP_THRESHOLD)
+		if(user.blood_volume <= LEECH_BLOOD_STOP_THRESHOLD || user.is_bloodless())
 			if(bodypart)
 				bodypart.remove_embedded_object(src)
 			else

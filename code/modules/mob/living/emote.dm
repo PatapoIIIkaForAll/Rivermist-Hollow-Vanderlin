@@ -54,7 +54,7 @@
 
 /proc/send_prayer(mob/living/follower, prayer, patron_name, bigger = FALSE)
 	var/ident_string = "[follower.key]/([follower.real_name]) (follower of [patron_name])"
-	if(follower.has_quirk(/datum/quirk/vice/addiction/godfearing))
+	if(follower.has_quirk(/datum/quirk/negative/addiction/godfearing))
 		ident_string += "[SPAN_GOD_GENERIC("(GODFEARING)")]"
 	/// Usually I hate not using spans properly, but in this case it's going to make my life easier.
 	var/lowercase_god = "generic"
@@ -140,22 +140,22 @@
 	. = ..()
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
-			if(L.has_quirk(/datum/quirk/vice/addiction/sadist))
-				L.sate_addiction(/datum/quirk/vice/addiction/sadist)
+			if(L.has_quirk(/datum/quirk/negative/addiction/sadist))
+				L.sate_addiction(/datum/quirk/negative/addiction/sadist)
 
 /datum/emote/living/scream/painscream/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
-			if(L.has_quirk(/datum/quirk/vice/addiction/sadist))
-				L.sate_addiction(/datum/quirk/vice/addiction/sadist)
+			if(L.has_quirk(/datum/quirk/negative/addiction/sadist))
+				L.sate_addiction(/datum/quirk/negative/addiction/sadist)
 
 /datum/emote/living/scream/firescream/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
 	if(.)
 		for(var/mob/living/carbon/human/L in viewers(7,user))
-			if(L.has_quirk(/datum/quirk/vice/addiction/sadist))
-				L.sate_addiction(/datum/quirk/vice/addiction/sadist)
+			if(L.has_quirk(/datum/quirk/negative/addiction/sadist))
+				L.sate_addiction(/datum/quirk/negative/addiction/sadist)
 
 /datum/emote/living/aggro
 	key = "aggro"
@@ -691,7 +691,6 @@
 
 /datum/emote/living/kiss/adjacentaction(mob/user, mob/target)
 	. = ..()
-	message_param = initial(message_param) // re
 	if(!user || !target)
 		return
 	if(ishuman(user) && ishuman(target))
@@ -703,27 +702,56 @@
 			to_chat(E, "<span class='warning'>I feel inexplicably repelled!</span>")
 			E.cursed_freak_out()
 
-		var/do_change
-		if(target.loc == user.loc)
-			do_change = TRUE
-		if(!do_change)
-			if(H.pulling == target)
-				do_change = TRUE
-		if(do_change)
-			if(H.zone_selected == BODY_ZONE_PRECISE_MOUTH)
-				message_param = "kisses %t deeply."
-			else if(H.zone_selected == BODY_ZONE_PRECISE_EARS)
-				message_param = "kisses %t on the ear."
-				if(E.dna.species?.id == "elf")
-					if(!E.cmode)
-						to_chat(target, span_love("It tickles..."))
-			else if(H.zone_selected == BODY_ZONE_PRECISE_R_EYE || H.zone_selected == BODY_ZONE_PRECISE_L_EYE)
-				message_param = "kisses %t on the brow."
-			else
-				message_param = "kisses %t on \the [parse_zone(H.zone_selected)]."
+		if(H.zone_selected == BODY_ZONE_PRECISE_EARS && E.dna.species?.id == "elf" && !E.cmode)
+			to_chat(target, span_love("It tickles..."))
+		H.leave_lipstick_kiss(E, H.zone_selected)
 	playsound(target, pick('sound/vo/kiss (1).ogg','sound/vo/kiss (2).ogg'), 100, FALSE, -1)
 	if(user.mind)
 		record_round_statistic(STATS_KISSES_MADE)
+
+// A target name only arrives once adjacentaction ran, so the text follows the kisser's zone.
+/datum/emote/living/kiss/select_param(mob/user, params)
+	return replacetext(get_zone_message(user.zone_selected), "%t", params)
+
+/datum/emote/living/kiss/proc/get_zone_message(zone)
+	switch(zone)
+		if(BODY_ZONE_PRECISE_MOUTH)
+			return "kisses %t on the lips."
+		if(BODY_ZONE_HEAD)
+			return "kisses %t on the cheek."
+		if(BODY_ZONE_PRECISE_SKULL)
+			return "kisses %t on the forehead."
+		if(BODY_ZONE_PRECISE_R_EYE, BODY_ZONE_PRECISE_L_EYE)
+			return "kisses %t on the brow."
+		if(BODY_ZONE_PRECISE_NOSE)
+			return "kisses %t on the tip of the nose."
+		if(BODY_ZONE_PRECISE_EARS)
+			return "kisses %t on the ear."
+		if(BODY_ZONE_PRECISE_NECK)
+			return "kisses %t on the neck."
+		if(BODY_ZONE_CHEST)
+			return "kisses %t on the chest."
+		if(BODY_ZONE_PRECISE_STOMACH)
+			return "kisses %t on the belly."
+		if(BODY_ZONE_PRECISE_GROIN)
+			return "plants a kiss on %t's crotch."
+		if(BODY_ZONE_L_ARM)
+			return "kisses %t along the left arm."
+		if(BODY_ZONE_R_ARM)
+			return "kisses %t along the right arm."
+		if(BODY_ZONE_PRECISE_L_HAND)
+			return "kisses the back of %t's left hand."
+		if(BODY_ZONE_PRECISE_R_HAND)
+			return "kisses the back of %t's right hand."
+		if(BODY_ZONE_L_LEG)
+			return "kisses %t on the left thigh."
+		if(BODY_ZONE_R_LEG)
+			return "kisses %t on the right thigh."
+		if(BODY_ZONE_PRECISE_L_FOOT)
+			return "kisses %t's left foot."
+		if(BODY_ZONE_PRECISE_R_FOOT)
+			return "kisses %t's right foot."
+	return message_param
 
 // ............... L ..................
 /datum/emote/living/laugh
@@ -1411,308 +1439,167 @@
 		to_chat(user, "<span class='warning'>You're incapable of slapping in your current state.</span>")
 */
 
-/datum/emote/living/stat_roll
-	var/delay = 2.5 SECONDS
-	var/list/attempt_message_list
-	var/list/success_message_list
-	var/list/failure_message_list
+// ............... Finger snaps ..................
+/datum/emote/living/snap
+	key = "snap"
+	key_third_person = "snaps"
+	message = "finger snaps!"
+	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+	hands_use_check = TRUE
+	muzzle_ignore = TRUE
+	sound = 'modular_rmh/sound/emotes/fsnap1.ogg'
 
-/datum/emote/living/stat_roll/run_emote(mob/user, params, type_override, intentional = FALSE)
+/mob/living/carbon/human/verb/emote_snap()
+	set name = "Snap"
+	set category = "Emotes.Noises"
+	emote("snap", intentional = TRUE)
+
+/datum/emote/living/snap/twice
+	key = "snap2"
+	key_third_person = "snaps twice"
+	message = "finger snaps twice!"
+	sound = 'modular_rmh/sound/emotes/fsnap2.ogg'
+
+/mob/living/carbon/human/verb/emote_snap2()
+	set name = "Snap Twice"
+	set category = "Emotes.Noises"
+	emote("snap2", intentional = TRUE)
+
+/datum/emote/living/snap/thrice
+	key = "snap3"
+	key_third_person = "snaps thrice"
+	message = "finger snaps thrice!"
+	sound = 'modular_rmh/sound/emotes/fsnap3.ogg'
+
+/mob/living/carbon/human/verb/emote_snap3()
+	set name = "Snap Thrice"
+	set category = "Emotes.Noises"
+	emote("snap3", intentional = TRUE)
+
+/datum/emote/living/stomp
+	key = "stomp"
+	key_third_person = "stomps"
+	message = "stomps!"
+	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+	muzzle_ignore = TRUE
+	sound = 'modular_rmh/sound/emotes/stomp.ogg'
+
+/datum/emote/living/stomp/can_run_emote(mob/living/user, status_check = TRUE, intentional)
 	. = ..()
-	if(.)
-		sleep(delay)
+	if(!.)
+		return
+	// A stomp needs the feet under you.
+	if(user.body_position != STANDING_UP)
+		return FALSE
 
-		var/mob/living/living = user
-		//var/chance_per_point = 5
-		//var/success = FALSE
-		//var/chance = 0
-		var/roll = 0
-		var/bonus = 0
-		var/msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on dice"
-		switch(key)
-			if("strength")
-				/*success = living.stat_roll(STATKEY_STR, chance_per_point)
-				chance = living.get_stat(STATKEY_STR)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_STR)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on strength dice"
-			if("perception")
-				/*uccess = living.stat_roll(STATKEY_PER, chance_per_point)
-				chance = living.get_stat(STATKEY_PER)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_PER)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on perception dice"
-			if("intelligence")
-				/*success = living.stat_roll(STATKEY_INT, chance_per_point)
-				chance = living.get_stat(STATKEY_INT)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_INT)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on intelligence dice"
-			if("constitution")
-				/*success = living.stat_roll(STATKEY_CON, chance_per_point)
-				chance = living.get_stat(STATKEY_CON)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_CON)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on constitution dice"
-			if("endurance")
-				/*success = living.stat_roll(STATKEY_END, chance_per_point)
-				chance = living.get_stat(STATKEY_END)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_END)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on endurance dice"
-			if("speed")
-				/*success = living.stat_roll(STATKEY_SPD, chance_per_point)
-				chance = living.get_stat(STATKEY_SPD)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_SPD)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on speed dice"
-			if("fortune")
-				/*success = living.stat_roll(STATKEY_LCK, chance_per_point)
-				chance = living.get_stat(STATKEY_LCK)*/
-				roll = rand(1,20)
-				bonus = floor((living.get_stat(STATKEY_LCK)-10)/2)
-				msg = "rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on fortune dice"
+/mob/living/carbon/human/verb/emote_stomp()
+	set name = "Stomp"
+	set category = "Emotes.Noises"
+	emote("stomp", intentional = TRUE)
 
+/datum/emote/living/warcry
+	key = "warcry"
+	key_third_person = "warcries"
+	message = "lets out an inspiring battle cry!"
+	message_muffled = "makes a muffled shout!"
+	emote_type = EMOTE_AUDIBLE
 
-		//chance *= chance_per_point
-		/*var/msg = success ? span_green("rolls a [roll][bonus >= 0 ? "+[bonus]" : "[bonus]"] on dice") : span_danger("FAILS and [pick(failure_message_list)] [chance]%")*/
+/mob/living/carbon/human/verb/emote_warcry()
+	set name = "Warcry"
+	set category = "Emotes.Noises"
+	emote("warcry", intentional = TRUE)
 
-		msg = replace_pronoun(user, msg)
+/datum/emote/living/hmph
+	key = "hmph"
+	key_third_person = "hmphs"
+	message = "hmphs."
+	message_muffled = "makes a muffled hmph."
+	emote_type = EMOTE_AUDIBLE
 
-		if(!msg)
-			return
+/mob/living/carbon/human/verb/emote_hmph()
+	set name = "Hmph"
+	set category = "Emotes.Noises"
+	emote("hmph", intentional = TRUE)
 
-		// A COMSIG here would be nice, in my attempts it sadly didn't work out well for the relay.
-		var/atom/movable/emotelocation = user
-		var/mob/living/carbon/human/human
-		if(ishuman(user))
-			human = user
+/datum/emote/living/strain
+	key = "strain"
+	key_third_person = "strains"
+	message = "strains themselves!"
+	message_muffled = "strains with a muffled grunt!"
+	emote_type = EMOTE_AUDIBLE
 
-		/*var/obj/item/organ/dullahan_vision/vision
-		var/datum/species/dullahan/dullahan
-		if(isdullahan(user))
-			dullahan = human.dna.species
-			vision = human.getorganslot(ORGAN_SLOT_HUD)
-			if(dullahan.headless && vision.viewing_head)
-				emotelocation = dullahan.my_head*/
+/mob/living/carbon/human/verb/emote_strain()
+	set name = "Strain"
+	set category = "Emotes.Noises"
+	emote("strain", intentional = TRUE)
 
-		user.log_message(msg, LOG_EMOTE)
-		var/pre_color_msg = msg
-		//if (use_params_for_runechat) // apply puncutation stripping here where appropriate
-		var/static/regex/regex = regex(@"[,.!?]", "g")
-		pre_color_msg = regex.Replace(pre_color_msg, "")
-		pre_color_msg = trim(pre_color_msg, MAX_MESSAGE_LEN)
-		// Checks to see if we're emoting on the body while we have a head, or if we're emoting on the head.
-		if(human && human.voice_color)
-			msg = "<span style='color:#[human.voice_color];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span> " + msg
-		else
-			msg = "<b>[emotelocation]</b> " + msg
-		for(var/mob/M in GLOB.dead_mob_list)
-			if(!M.client || isnewplayer(M))
-				continue
-			var/T = get_turf(emotelocation)
-			if(M.stat == DEAD && M.client && (M.client.prefs?.read_preference(/datum/preference/bitwise/chat_toggles) & CHAT_GHOSTSIGHT) && !(M in viewers(T, null)))
-				M.show_message(msg)
-		var/runechat_msg_to_use = null
-		var/obfuscated_runechat_msg_to_use = null
-		if(show_runechat)
-			runechat_msg_to_use = runechat_msg ? runechat_msg : pre_color_msg
-			obfuscated_runechat_msg_to_use = stars(runechat_msg_to_use)
-		var/speaker_prefix = "<b>[emotelocation]</b>"
-		if(human && human.voice_color)
-			speaker_prefix = "<span style='color:#[human.voice_color];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span>"
-		var/obfuscated_msg = "[speaker_prefix] [stars(pre_color_msg)]"
-		send_visible_emote_message(user, emotelocation, msg, runechat_message = runechat_msg_to_use, intentional = intentional, obfuscated_message = obfuscated_msg, obfuscated_runechat_message = obfuscated_runechat_msg_to_use)
+/mob/living/carbon/human/verb/emote_sniff()
+	set name = "Sniff"
+	set category = "Emotes.Noises"
+	emote("sniff", intentional = TRUE)
 
-/datum/emote/living/stat_roll/select_message_type(mob/user, msg, intentional)
-	return pick(attempt_message_list)
+/datum/emote/living/eye_roll
+	key = "eye_roll"
+	key_third_person = "rolls their eyes"
+	message = "rolls their eyes."
+	emote_type = EMOTE_VISIBLE
 
-/datum/emote/living/stat_roll/strength
-	key = "strength"
-	key_third_person = "str"
-	attempt_message_list = list(
-		"tests their strength...",
-		"puts their back into it...",
-		"begins to flex...",
-	)
+/mob/living/carbon/human/verb/emote_eye_roll()
+	set name = "Eye Roll"
+	set category = "Emotes.Silent"
+	emote("eye_roll", intentional = TRUE)
 
-	success_message_list = list(
-		"is brimming with power!",
-		"is truly beefy!",
-		"shows off their muscle!",
-	)
+/datum/emote/living/squint
+	key = "squint"
+	key_third_person = "squints"
+	message = "squints their eyes."
+	emote_type = EMOTE_VISIBLE
 
-	failure_message_list = list(
-		"is a little wet noodle...",
-		"would lose in an arm wrestling match against a rous...",
-		"should eat more sausage...",
-	)
+/mob/living/carbon/human/verb/emote_squint()
+	set name = "Squint"
+	set category = "Emotes.Silent"
+	emote("squint", intentional = TRUE)
 
-/mob/living/carbon/human/verb/emote_strength_roll()
-	set name = "Roll Strength"
-	set category = "Emotes"
+/datum/emote/living/lick
+	key = "lick"
+	key_third_person = "licks"
+	message = "licks their lips."
+	message_param = "licks %t."
+	emote_type = EMOTE_VISIBLE
 
-	emote("strength", intentional = TRUE)
+/mob/living/carbon/human/verb/emote_lick()
+	set name = "Lick"
+	set category = "Emotes.Silent"
+	emote("lick", intentional = TRUE, targetted = TRUE)
 
-/datum/emote/living/stat_roll/perception
-	key = "perception"
-	key_third_person = "per"
-	attempt_message_list = list(
-		"takes a good, long look...",
-		"focuses in...",
-		"squints...",
-	)
+#define FLIP_EMOTE_DURATION (0.7 SECONDS)
 
-	success_message_list = list(
-		"has eyes like a hawk!",
-		"sees what others don't!",
-		"has perfect 20/20 vision!",
-	)
+/datum/emote/living/flip
+	key = "flip"
+	key_third_person = "flips"
+	message = "does a flip!"
+	emote_type = EMOTE_VISIBLE
+	restraint_check = TRUE
+	incapacitated_check = TRUE
 
-	failure_message_list = list(
-		"is totally oblivious...",
-		"has cataracts in their eyes...",
-		"is blind...",
-	)
+/datum/emote/living/flip/can_run_emote(mob/living/user, status_check = TRUE, intentional)
+	. = ..()
+	if(!.)
+		return
+	// The spin rides on the standing transform; lying or buckled bodies keep their own.
+	if(user.body_position != STANDING_UP || user.buckled || user.IsImmobilized())
+		return FALSE
 
-/mob/living/carbon/human/verb/emote_perception_roll()
-	set name = "Roll Perception"
-	set category = "Emotes"
+/datum/emote/living/flip/run_emote(mob/living/user, params, type_override, intentional, targetted)
+	. = ..()
+	if(!.)
+		return
+	user.SpinAnimation(FLIP_EMOTE_DURATION, 1)
+	user.Immobilize(FLIP_EMOTE_DURATION)
 
-	emote("perception", intentional = TRUE)
+/mob/living/carbon/human/verb/emote_flip()
+	set name = "Flip"
+	set category = "Emotes.Silent"
+	emote("flip", intentional = TRUE)
 
-
-/datum/emote/living/stat_roll/intelligence
-	key = "intelligence"
-	key_third_person = "int"
-	attempt_message_list = list(
-		"thinks hard...",
-		"furrows their brows...",
-		"rubs their chin...",
-	)
-
-	success_message_list = list(
-		"is a genius!",
-		"has a mind sharp as a whip!",
-		"knows what they're doing!",
-	)
-
-	failure_message_list = list(
-		"is as dumb as a rock...",
-		"has an empty head...",
-		"couldn't put 2 and 2 together...",
-	)
-
-/mob/living/carbon/human/verb/emote_intelligence_roll()
-	set name = "Roll Intelligence"
-	set category = "Emotes"
-
-	emote("intelligence", intentional = TRUE)
-
-/datum/emote/living/stat_roll/constitution
-	key = "constitution"
-	key_third_person = "con"
-	attempt_message_list = list(
-		"tests their toughness...",
-		"braces for impact...",
-		"prepares to endure...",
-	)
-
-	success_message_list = list(
-		"doesn't even flinch!",
-		"is solid as an oak!",
-		"is one tough nut to crack!",
-	)
-
-	failure_message_list = list(
-		"has paper skin...",
-		"would be torn to shreds by a light breeze...",
-		"has a glass jaw...",
-	)
-
-/mob/living/carbon/human/verb/emote_constitution_roll()
-	set name = "Roll Constitution"
-	set category = "Emotes"
-
-	emote("constitution", intentional = TRUE)
-
-/datum/emote/living/stat_roll/endurance
-	key = "endurance"
-	key_third_person = "end"
-	attempt_message_list = list(
-		"tests their endurance...",
-		"gathers their courage...",
-		"prepares to use their determination...",
-	)
-
-	success_message_list = list(
-		"proves mighty!",
-		"never gives up!",
-		"persists through anything!",
-	)
-
-	failure_message_list = list(
-		"is a weak willed chicken...",
-		"gives up trying...",
-		"faints when they get a splinter...",
-	)
-
-/mob/living/carbon/human/verb/emote_endurance_roll()
-	set name = "Roll Endurance"
-	set category = "Emotes"
-
-	emote("endurance", intentional = TRUE)
-
-/datum/emote/living/stat_roll/speed
-	key = "speed"
-	key_third_person = "spd"
-	attempt_message_list = list(
-		"prepares their moves...",
-		"starts to get limber...",
-		"tries to get speedy...",
-	)
-
-	success_message_list = list(
-		"is in perfect control!",
-		"is as agile as a cat!",
-		"is very flexible!",
-	)
-
-	failure_message_list = list(
-		"has two left feet...",
-		"trips over themselves...",
-		"is slower than a snail...",
-	)
-
-/mob/living/carbon/human/verb/emote_speed_roll()
-	set name = "Roll Speed"
-	set category = "Emotes"
-
-	emote("speed", intentional = TRUE)
-
-/datum/emote/living/stat_roll/fortune
-	key = "fortune"
-	key_third_person = "for"
-	attempt_message_list = list(
-		"tries their fortune...",
-		"takes a chance...",
-		"prepares to gamble...",
-	)
-
-	success_message_list = list(
-		"could make an arrow turn around and climb back into the bow!",
-		"has a rabbit's paw in their pocket!",
-		"persists through pure luck!",
-	)
-
-	failure_message_list = list(
-		"realizes the game was rigged from the start...",
-		"gets dealt a bad hand...",
-		"has the odds stacked against them...",
-	)
-
-/mob/living/carbon/human/verb/emote_fortune_roll()
-	set name = "Roll Fortune"
-	set category = "Emotes"
-
-	emote("fortune", intentional = TRUE)
+#undef FLIP_EMOTE_DURATION

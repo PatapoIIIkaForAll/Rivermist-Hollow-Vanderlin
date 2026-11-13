@@ -42,6 +42,8 @@
 #define FOOTSTEP_MOB_HUMAN "footstep_human" //Warning: Only works on /mob/living/carbon/human
 #define FOOTSTEP_MOB_SLIME "footstep_slime"
 #define FOOTSTEP_MOB_METAL "footstep_metal"
+/// Heavy beast padding: the turf's barefoot samples, so steps follow the terrain.
+#define FOOTSTEP_MOB_BEAST "footstep_beast"
 
 //heelsteps
 #define HEELSTEP_MOB_HEEL "heelstep_heel"

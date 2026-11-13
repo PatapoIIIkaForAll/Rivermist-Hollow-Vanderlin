@@ -1,6 +1,7 @@
 /datum/ai_behavior/eat_dead_body
 	action_cooldown = 1.5 SECONDS
-	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH
+	// Plans keep running mid-chew, so anything ranked above the meal cancels it at once.
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 
 /datum/ai_behavior/eat_dead_body/setup(datum/ai_controller/controller, target_key, targetting_datum_key, hiding_location_key)
 	. = ..()
@@ -74,8 +75,17 @@
 /datum/ai_behavior/eat_dead_body/finish_action(datum/ai_controller/controller, succeeded, target_key, targetting_datum_key, hiding_location_key)
 	. = ..()
 	if(!succeeded)
+		// Cancelled mid-meal: end the chewing do_after too, so the mob can react at once.
+		var/mob/living/eater = controller.pawn
+		var/atom/meal = controller.blackboard[target_key]
+		if(meal && !QDELETED(eater))
+			eater.stop_doing(meal)
 		controller.clear_blackboard_key(target_key)
 
+
+/datum/ai_behavior/eat_dead_body/bog_troll
+	// Its cancel hook sleeps in hide(), and SelectBehaviors must never sleep, so planning waits for the meal.
+	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH
 
 /datum/ai_behavior/eat_dead_body/bog_troll/finish_action(datum/ai_controller/controller, succeeded, target_key, targetting_datum_key, hiding_location_key)
 	. = ..()

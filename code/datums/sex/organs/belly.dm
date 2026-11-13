@@ -185,7 +185,7 @@
 /datum/component/belly_fullness/proc/on_carrier_organ_changed(datum/source, obj/item/organ/changed_organ, changed_slot, inserted)
 	SIGNAL_HANDLER
 
-	if(!(changed_slot in list(ORGAN_SLOT_GUTS, ORGAN_SLOT_STOMACH, ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS)))
+	if(!(changed_slot in list(ORGAN_SLOT_GUTS, ORGAN_SLOT_STOMACH, ORGAN_SLOT_VAGINA, ORGAN_SLOT_WOMB, ORGAN_SLOT_ANUS)))
 		return
 
 	refresh_tracked_organs(TRUE)
@@ -221,6 +221,7 @@
 	var/list/new_tracked = list(
 		"mouth" = find_mouth_storage_organ(),
 		ORGAN_SLOT_VAGINA = carrier?.getorganslot(ORGAN_SLOT_VAGINA),
+		ORGAN_SLOT_WOMB = carrier?.getorganslot(ORGAN_SLOT_WOMB),
 		ORGAN_SLOT_ANUS = carrier?.getorganslot(ORGAN_SLOT_ANUS),
 	)
 
@@ -335,13 +336,13 @@
 	)
 
 /datum/component/belly_fullness/proc/get_pregnancy_stage()
-	var/obj/item/organ/genitals/filling_organ/womb = tracked_organs[ORGAN_SLOT_VAGINA]
+	var/obj/item/organ/genitals/filling_organ/womb/womb = tracked_organs[ORGAN_SLOT_WOMB]
 	if(!istype(womb) || !womb.pregnant)
 		return 0
 	return womb.conventional_pregnancy_stage
 
 /datum/component/belly_fullness/proc/fluid_fullness_counts_for_organ(obj/item/organ/genitals/filling_organ/filling_organ)
-	if(!istype(filling_organ, /obj/item/organ/genitals/filling_organ/anus) && !istype(filling_organ, /obj/item/organ/genitals/filling_organ/vagina))
+	if(!istype(filling_organ, /obj/item/organ/genitals/filling_organ/anus) && !istype(filling_organ, /obj/item/organ/genitals/filling_organ/vagina) && !istype(filling_organ, /obj/item/organ/genitals/filling_organ/womb))
 		return TRUE
 	if(!carrier)
 		return FALSE

@@ -164,6 +164,39 @@ SUBSYSTEM_DEF(triumphs)
 
 	WRITE_FILE(file, json_encode(data, JSON_PRETTY_PRINT))
 
+/// Path of a player's triumph save.
+/datum/controller/subsystem/triumphs/proc/player_save_path(target_ckey)
+	return "data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json"
+
+/// Writes a player's triumph save through a temp file, so a crash mid-write cannot leave it empty.
+/datum/controller/subsystem/triumphs/proc/write_player_save(target_ckey, list/data)
+	var/path = player_save_path(target_ckey)
+	var/temp_path = "[path].tmp"
+	if(fexists(temp_path))
+		fdel(temp_path)
+	WRITE_FILE(file(temp_path), json_encode(data, JSON_PRETTY_PRINT))
+	if(fexists(path))
+		fdel(path)
+	fcopy(temp_path, path)
+	fdel(temp_path)
+
+/// Decodes a player's triumph save; restores an interrupted write, or resets a missing or unreadable file.
+/datum/controller/subsystem/triumphs/proc/read_player_data(target_ckey)
+	var/path = player_save_path(target_ckey)
+	var/list/data = fexists(path) ? safe_json_decode(file2text(path)) : null
+	if(islist(data))
+		return data
+	// A readable temp file means the last write stopped after the real save was deleted.
+	var/temp_path = "[path].tmp"
+	var/list/temp_data = fexists(temp_path) ? safe_json_decode(file2text(temp_path)) : null
+	if(islist(temp_data))
+		write_player_save(target_ckey, temp_data)
+		return temp_data
+	if(fexists(path))
+		fcopy(path, "[path].corrupt")
+		log_game("TRIUMPHS: [target_ckey]'s triumph save was unreadable; kept as [path].corrupt and reset.")
+	return reset_or_create_data(target_ckey)
+
 /// This occurs when you try to buy a triumph condition and sets it up
 /datum/controller/subsystem/triumphs/proc/attempt_to_buy_triumph_condition(client/C, datum/triumph_buy/ref_datum)
 	if(ref_datum.disabled)
@@ -316,15 +349,9 @@ SUBSYSTEM_DEF(triumphs)
 
 	triumph_amount_cache[target_ckey] = 0
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-
-	if(!fexists(target_file))
-		reset_or_create_data(target_ckey)
-		return 0
-
-	var/list/existing_data = json_decode(file2text(target_file))
+	var/list/existing_data = read_player_data(target_ckey)
 	if(GLOB.triumph_wipe_season != existing_data[TRIUMPH_KEY_SEASON])
-		write_save(target_file, list(TRIUMPH_KEY_SEASON = GLOB.triumph_wipe_season))
+		write_player_save(target_ckey, list(TRIUMPH_KEY_SEASON = GLOB.triumph_wipe_season))
 		return 0
 
 	triumph_amount_cache[target_ckey] = existing_data[TRIUMPH_KEY_AMOUNT]
@@ -335,16 +362,11 @@ SUBSYSTEM_DEF(triumphs)
 	if(!target_ckey)
 		return
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-
-	if(!fexists(target_file))
-		reset_or_create_data(target_ckey)
-
-	var/list/existing_data = json_decode(file2text(target_file))
+	var/list/existing_data = read_player_data(target_ckey)
 
 	existing_data[TRIUMPH_KEY_AMOUNT] = amount
 
-	write_save(target_file, existing_data)
+	write_player_save(target_ckey, existing_data)
 
 /datum/controller/subsystem/triumphs/proc/triumph_adjust(amt, target_ckey)
 	if(!target_ckey)
@@ -363,13 +385,7 @@ SUBSYSTEM_DEF(triumphs)
 	if(!target_ckey)
 		return
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-
-	if(!fexists(target_file))
-		reset_or_create_data(target_ckey)
-		return
-
-	var/list/data = json_decode(file2text(target_file))
+	var/list/data = read_player_data(target_ckey)
 
 	var/list/buy_ids = data[TRIUMPH_KEY_SEASONAL_BUYS]
 
@@ -414,38 +430,27 @@ SUBSYSTEM_DEF(triumphs)
 	if(!target_ckey || !triumph_buy_id)
 		return
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-
-	if(!fexists(target_file))
-		reset_or_create_data(target_ckey)
-
-	var/list/data = json_decode(file2text(target_file))
+	var/list/data = read_player_data(target_ckey)
 
 	if(!LAZYACCESS(data, TRIUMPH_KEY_SEASONAL_BUYS))
 		data[TRIUMPH_KEY_SEASONAL_BUYS] = list()
 
 	data[TRIUMPH_KEY_SEASONAL_BUYS][triumph_buy_id] = seasonal_time_stamp()
 
-	write_save(target_file, data)
+	write_player_save(target_ckey, data)
 
 /// Remove a seasonal buy via id
 /datum/controller/subsystem/triumphs/proc/remove_seasonal_triumph_buy(target_ckey, triumph_buy_id)
 	if(!target_ckey || !triumph_buy_id)
 		return
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-
-	if(!fexists(target_file))
-		reset_or_create_data(target_ckey)
-		return
-
-	var/list/data = json_decode(file2text(target_file))
+	var/list/data = read_player_data(target_ckey)
 	if(!LAZYACCESS(data, TRIUMPH_KEY_SEASONAL_BUYS))
 		return
 
 	data[TRIUMPH_KEY_SEASONAL_BUYS] -= triumph_buy_id
 
-	write_save(target_file, data)
+	write_player_save(target_ckey, data)
 
 /// Activate seasonal buys by reading the save file
 /datum/controller/subsystem/triumphs/proc/activate_seasonal_buys(client/client)
@@ -511,15 +516,14 @@ SUBSYSTEM_DEF(triumphs)
 
 	triumph_amount_cache[target_ckey] = 0
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-
 	var/list/data = list(
 		TRIUMPH_KEY_SEASON = GLOB.triumph_wipe_season,
 		TRIUMPH_KEY_AMOUNT = 0,
 		TRIUMPH_KEY_SEASONAL_BUYS = list(),
 	)
 
-	write_save(target_file, data)
+	write_player_save(target_ckey, data)
+	return data
 
 /datum/controller/subsystem/triumphs/proc/reset_all_data()
 	for(var/client/client as anything in GLOB.clients)
@@ -537,15 +541,10 @@ SUBSYSTEM_DEF(triumphs)
 	if(target_ckey in triumph_amount_cache)
 		triumph_amount_cache[target_ckey] = 0
 
-	var/target_file = file("data/player_saves/[target_ckey[1]]/[target_ckey]/triumphs.json")
-	if(!fexists(target_file))
-		reset_or_create_data(target_ckey)
-		return
-
-	var/list/data = json_decode(file2text(target_file))
+	var/list/data = read_player_data(target_ckey)
 	data[TRIUMPH_KEY_AMOUNT] = 0
 
-	write_save(target_file, data)
+	write_player_save(target_ckey, data)
 
 /datum/controller/subsystem/triumphs/proc/reset_all_triumphs()
 	for(var/client/client as anything in GLOB.clients)

@@ -84,14 +84,21 @@
 	if(QDELETED(src))
 		return FALSE
 	defeat_choice_open = FALSE
-	if(QDELETED(user) || !user.client || user.client != parent || default_slot != selected_slot || !(choice in choices))
+	var/user_present = !QDELETED(user) && user.client && user.client == parent
+	var/answered = user_present && default_slot == selected_slot && (choice in choices)
+	if(answered)
+		set_defeat_mode(choices[choice])
+		save_character()
+	if(introduction)
+		// The introduction asks once. A closed or cancelled prompt keeps the default and never asks again.
+		defeat_introduction_complete = TRUE
+		save_preferences()
+		if(!answered && user_present)
+			to_chat(user, span_notice("Defeat mode stays [defeat_mode_display_name(get_defeat_mode())]. Change it any time under Gameplay > Combat & Defeat."))
+		SStgui.update_uis(src)
+		return TRUE
+	if(!answered)
 		return FALSE
-	if(introduction && !isnewplayer(user))
-		return FALSE
-	set_defeat_mode(choices[choice])
-	save_character()
-	defeat_introduction_complete = TRUE
-	save_preferences()
 	SStgui.update_uis(src)
 	return TRUE
 
@@ -139,7 +146,7 @@
 		var/datum/status_effect/defeat_knockout/knockout = player.has_status_effect(/datum/status_effect/defeat_knockout)
 		if(knockout)
 			if(player.GetComponent(/datum/component/kidnap_captivity))
-				text += "<p><b>Self-recovery suspended:</b> use Captivity Choices for the lair's release options.</p>"
+				text += "<p><b>Self-recovery suspended:</b> use the Captivity button for the lair's release options.</p>"
 			else if(knockout.self_recover_at)
 				text += "<p><b>Intimate self-recovery:</b> [DisplayTimeText(max(0, knockout.self_recover_at - world.time))] remaining.</p>"
 			else if(knockout.struggle_auto_at)
@@ -171,7 +178,7 @@
 	text += "<li><b>Campfire:</b> a lit, fuelled, player-built campfire can recover an adjacent victim in [DisplayTimeText(DEFEAT_CAMPFIRE_PASSIVE_RECOVERY_TIME)], or [DisplayTimeText(DEFEAT_CAMPFIRE_TENDED_RECOVERY_TIME)] with tending. Leaves moderate aftermath.</li></ul>"
 	text += "<p>Ordinary healing and bandaging may stabilize someone without waking them. Moving or being attacked can interrupt a rescue.</p>"
 	text += "<h3>Recovering alone</h3><p>Outside captivity, intimate defeat normally wears off after [DisplayTimeText(DEFEAT_HORNY_SELF_RECOVER_TIME)]. Physical defeat without an available rune offers <b>Struggle to Your Feet</b> after [DisplayTimeText(DEFEAT_KO_ONLY_STRUGGLE_DELAY)] and automatic recovery after [DisplayTimeText(DEFEAT_KO_ONLY_AUTO_RECOVER)]. Struggling adds Convalescence for [DisplayTimeText(DEFEAT_GRIEVOUS_RECOVERY_TIME)]: you cannot fight and walk slowly. Either trauma station can end this sooner; field cures cannot.</p>"
-	text += "<h3>Rune and captivity</h3><p>Knockout + Rune offers return when the rune can answer. The first defeat return is free; later calls use charges and increasing coin and blood costs. Charges recover one per [DisplayTimeText(DEFEAT_RUNE_RECHARGE_TIME)]. Rune return adds backlash. In captivity, use <b>Captivity Choices</b>; ordinary self-recovery is suspended and release follows the lair's rules. Defeat mode does not replace your intimate-interaction preferences.</p>"
+	text += "<h3>Rune and captivity</h3><p>Knockout + Rune offers return when the rune can answer. The first defeat return is free; later calls use charges and increasing coin and blood costs. Charges recover one per [DisplayTimeText(DEFEAT_RUNE_RECHARGE_TIME)]. Rune return adds backlash. In captivity, use the <b>Captivity</b> button: wake up, call the rune, stay, or give the character up. Ordinary self-recovery is suspended and release follows the lair's rules. Defeat mode does not replace your intimate-interaction preferences.</p>"
 	text += "<h3>After waking</h3><p>Waking, healing ordinary wounds, and treating aftermath are different. Light, moderate, and severe ordinary aftermath last 10, 30, and 60 minutes. Repeated untreated trauma normally worsens. <b>Both trauma stations treat both physical and spiritual aftermath, including Convalescence.</b> Click a station to diagnose yourself or a patient beside it. The diagnosis shows each condition, time, price, training and any missing requirement. Hold the supplies in your active hand; payment happens only after successful treatment.</p>"
 	text += "<p><b>Trauma apparatus:</b> without Apprentice Medicine, treatment takes twice as long. Physical treatment costs 1/2/3 bandages by severity; spiritual treatment costs 2/3/4 and takes twice as long. <b>Shrine of solace:</b> without Novice Miracles or holy devotion, treatment takes twice as long. Spiritual treatment costs 1/2/3 silver coins; physical treatment costs 2/4/6 and takes twice as long. Both time penalties stack. Each treatment removes one selected condition.</p>"
 	text += "<p><b>Surgery:</b> a successful Tend Wounds operation can also clear one physical defeat trauma when the surgeon has Apprentice Medicine. It does not treat spiritual aftermath or Convalescence.</p>"

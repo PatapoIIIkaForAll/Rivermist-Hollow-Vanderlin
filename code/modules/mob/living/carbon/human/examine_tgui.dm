@@ -532,7 +532,7 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 
 	var/list/data = list(
 		// Identity
-		"character_name" = obscured ? "Unknown" : char_name,
+		"character_name" = obscured ? (holder?.name || "Unknown") : char_name,
 		"headshot" = headshot,
 		"nsfw_headshot" = nsfw_headshot,
 		"obscured" = obscured ? TRUE : FALSE,
@@ -619,7 +619,7 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 			return TRUE
 
 /datum/examine_panel/ui_close()
-	viewing.client?.tgui_panel?.stop_music()
+	viewing?.client?.tgui_panel?.stop_music()
 	QDEL_NULL(src)
 
 /datum/examine_panel/ui_assets(mob/user)

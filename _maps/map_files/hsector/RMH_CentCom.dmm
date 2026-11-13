@@ -146,20 +146,17 @@
 "aL" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
 "aM" = (
 /obj/structure/table/wood/reinf_long{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/item/dye_pack/cheap{
 	pixel_y = 4;
@@ -318,7 +315,6 @@
 /area/outdoors)
 "bx" = (
 /obj/structure/door/weak/bolt{
-	pixel_y = 0;
 	dir = 4
 	},
 /turf/open/floor/naturalstone,
@@ -329,8 +325,7 @@
 "bz" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 6;
@@ -419,7 +414,6 @@
 /area/indoors)
 "bP" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/hexstone,
@@ -597,7 +591,6 @@
 /area/outdoors/woods_safe)
 "cF" = (
 /obj/structure/table/wood/reinf_long{
-	dir = 2;
 	layer = 2.81;
 	pixel_y = 1
 	},
@@ -641,7 +634,6 @@
 /obj/structure/flora/grass/crawlvines,
 /obj/effect/decal/cleanable/debris/stone,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -668,7 +660,6 @@
 /area/indoors)
 "cU" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/statue/small,
@@ -698,7 +689,6 @@
 	name = "carpet"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -729,7 +719,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "de" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /obj/effect/decal/edge_corner{
@@ -865,9 +854,7 @@
 /area/outdoors/exposed/rmh/manorgarri)
 "dN" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/purple,
 /area/indoors/town/rmh/manor/bath)
@@ -918,7 +905,6 @@
 /area/outdoors/woods_safe)
 "ea" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -1146,9 +1132,7 @@
 "fh" = (
 /obj/structure/fluff/railing/border,
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/cobble,
 /area/outdoors/exposed/rmh/manorgarri)
@@ -1362,11 +1346,9 @@
 /area)
 "gf" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -1500,7 +1482,6 @@
 	dir = 10
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -1627,8 +1608,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
@@ -1866,8 +1846,7 @@
 /area/indoors/town/rmh/manor)
 "ip" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /obj/structure/fake_machine/scomm{
 	pixel_y = -32
@@ -1893,8 +1872,7 @@
 "ix" = (
 /obj/effect/decal/cobbleedge{
 	dir = 10;
-	icon_state = "cobbleedgealt-e";
-	pixel_y = 0
+	icon_state = "cobbleedgealt-e"
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -1924,7 +1902,6 @@
 /area/outdoors)
 "iD" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -2098,8 +2075,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
@@ -2199,7 +2175,6 @@
 "ka" = (
 /obj/structure/flora/grass/crawlvines,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -2254,7 +2229,6 @@
 /area/indoors)
 "kk" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 1
 	},
 /obj/structure/chair/wood/alt,
@@ -2500,7 +2474,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/firebowl/standing/blue{
@@ -2926,7 +2899,6 @@
 /area/outdoors)
 "nr" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 4
 	},
 /obj/effect/decal/edge{
@@ -2941,7 +2913,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -2979,8 +2950,7 @@
 /area/indoors/town/rmh/manor)
 "nD" = (
 /obj/effect/decal/cobbleedge{
-	dir = 9;
-	pixel_y = 0
+	dir = 9
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -3041,16 +3011,12 @@
 /area/outdoors/woods_safe)
 "nY" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
 "nZ" = (
-/obj/effect/decal/cobbleedge{
-	pixel_y = 0;
-	dir = 2
-	},
+/obj/effect/decal/cobbleedge,
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
 "oa" = (
@@ -3071,8 +3037,7 @@
 "oe" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -3086,9 +3051,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -3128,7 +3091,6 @@
 	pixel_x = 32
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/railing/wood,
@@ -3291,7 +3253,6 @@
 /area/outdoors/woods_safe)
 "pb" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -3306,9 +3267,7 @@
 /area/indoors/town/rmh/manor)
 "pd" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -3372,7 +3331,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "po" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -3410,7 +3368,6 @@
 	name = "carpet"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -3452,7 +3409,6 @@
 /area)
 "pD" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /turf/open/floor/blocks,
@@ -3480,7 +3436,6 @@
 "pK" = (
 /obj/structure/fluff/railing/border,
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -3538,11 +3493,9 @@
 /area/indoors/town/rmh/manor)
 "pY" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 10
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -3634,8 +3587,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/table/vtable/v2,
 /obj/item/bedsheet/cloth{
@@ -3672,7 +3624,6 @@
 /area/indoors/cave/rmh_cave/central)
 "qx" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -3876,8 +3827,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "rl" = (
 /obj/structure/fluff/walldeco/chains{
-	icon_state = "chains3";
-	pixel_y = 0
+	icon_state = "chains3"
 	},
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
@@ -3968,7 +3918,6 @@
 /area/outdoors/woods_safe)
 "rM" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 9
 	},
 /obj/structure/table/wood/counter/end,
@@ -4169,8 +4118,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/r,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -4462,9 +4410,7 @@
 /obj/structure/fluff/walldeco/med6{
 	pixel_x = -32
 	},
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "tK" = (
 /turf/open/floor/ruinedwood/alt,
@@ -4686,7 +4632,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -4729,9 +4674,7 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "uW" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
 /area/indoors/town/rmh/manor/basement)
@@ -4761,7 +4704,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/cobbleedge{
@@ -4852,7 +4794,6 @@
 "vv" = (
 /obj/structure/flora/new_shroom/cyan,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -4890,11 +4831,8 @@
 /turf/closed/mineral,
 /area/under/rmh_dungeon/catacombs_church)
 "vJ" = (
-/obj/effect/decal/cobbleedge{
-	dir = 2
-	},
+/obj/effect/decal/cobbleedge,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -4964,9 +4902,7 @@
 /area/indoors/town/rmh/manor)
 "vV" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fluff/pillow/purple,
 /turf/open/floor/tile/diamond/purple,
@@ -4978,8 +4914,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -5064,7 +4999,6 @@
 /area/outdoors)
 "wq" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /obj/structure/table/wood/counter/end/right,
@@ -5122,9 +5056,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/rmh/manor/bath)
 "ww" = (
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "wx" = (
 /turf/open/floor/hexstone,
@@ -5305,7 +5237,6 @@
 /area)
 "xf" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 1
 	},
 /turf/open/floor/blocks,
@@ -5821,7 +5752,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "zk" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 9
 	},
 /obj/effect/decal/edge{
@@ -5879,7 +5809,6 @@
 /area/indoors/town/rmh/manor)
 "zy" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 5
 	},
 /obj/structure/door/iron/bars{
@@ -5896,7 +5825,6 @@
 /area)
 "zE" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/left,
@@ -5906,7 +5834,6 @@
 	dir = 6
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -6069,8 +5996,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Ar" = (
 /obj/effect/decal/cobbleedge{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -6087,8 +6013,7 @@
 "Av" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -6338,7 +6263,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "Bz" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/railing/wood,
@@ -6351,7 +6275,6 @@
 	},
 /obj/structure/table/wood/reinf_long{
 	dir = 8;
-	pixel_y = 0;
 	pixel_x = 3
 	},
 /obj/item/clothing/gloves/fingerless/shadowgloves,
@@ -6381,8 +6304,7 @@
 "BF" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
 /area/indoors/town/rmh/manor/basement)
@@ -6443,8 +6365,7 @@
 "BU" = (
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/center,
 /area/indoors/town/rmh/manor)
@@ -6469,7 +6390,6 @@
 /area/indoors/town/rmh/manor)
 "Cb" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 10
 	},
 /obj/effect/decal/edge{
@@ -6532,7 +6452,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "Cn" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#575757"
 	},
 /turf/open/floor/cobblerock,
@@ -6833,7 +6752,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue{
@@ -6947,7 +6865,6 @@
 /area/indoors/town/vault)
 "Er" = (
 /obj/structure/table/wood/reinf_long{
-	pixel_y = 0;
 	dir = 4
 	},
 /obj/structure/fermentation_keg/water{
@@ -7096,7 +7013,6 @@
 /area/indoors/town/rmh/manor)
 "EZ" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -7107,7 +7023,6 @@
 /area/indoors)
 "Fc" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 5
 	},
 /obj/effect/decal/edge{
@@ -7197,7 +7112,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -7246,7 +7160,6 @@
 /area/outdoors/woods_safe)
 "FK" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -7270,13 +7183,11 @@
 /area/indoors/town/rmh/manor)
 "FO" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -7288,7 +7199,6 @@
 /area/indoors/town/rmh/manor)
 "FQ" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -7357,7 +7267,6 @@
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /obj/structure/fluff/railing/wood,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/left,
@@ -7417,7 +7326,6 @@
 /area/outdoors/woods_safe)
 "Gq" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -7520,7 +7428,6 @@
 	name = "carpet"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -7642,8 +7549,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -7662,9 +7568,7 @@
 /obj/machinery/light/fueled/wallfire/floorcandle/alt{
 	pixel_y = -16
 	},
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "Hr" = (
 /obj/structure/wild_plant/nospread/mushroom/waddle,
@@ -7689,8 +7593,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Hv" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /turf/open/floor/cobblerock,
 /area)
@@ -7764,7 +7667,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/chair/bench/couch/right/lord_primary,
@@ -7882,7 +7784,6 @@
 /area/indoors/town/rmh/manor)
 "Il" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -8039,9 +7940,7 @@
 	icon_state = "borderfall";
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "IX" = (
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -8056,8 +7955,7 @@
 /area/indoors/town/rmh/manor)
 "Jb" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /turf/open/floor/naturalstone,
 /area)
@@ -8071,8 +7969,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Jd" = (
 /obj/structure/fluff/walldeco/chains{
-	icon_state = "chains3";
-	pixel_y = 0
+	icon_state = "chains3"
 	},
 /turf/open/floor/churchrough/green,
 /area)
@@ -8115,8 +8012,7 @@
 "Jq" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fake_machine/stockpile_withdraw,
 /obj/structure/rack/shelf/biggest,
@@ -8188,7 +8084,6 @@
 /area/outdoors/woods_safe)
 "JK" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#575757"
 	},
 /turf/open/floor/hexstone,
@@ -8257,7 +8152,6 @@
 /area/overlord_lair)
 "JW" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 10
 	},
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -8295,7 +8189,6 @@
 /area/outdoors/woods_safe)
 "Kd" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -8323,7 +8216,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -8382,7 +8274,6 @@
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -8507,7 +8398,6 @@
 /area/indoors)
 "KX" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
@@ -8531,7 +8421,6 @@
 /area/indoors)
 "Ld" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -8617,7 +8506,6 @@
 	pixel_x = -18
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/desert/deserttile/tilegreyblu,
@@ -8699,9 +8587,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -9007,7 +8893,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Nj" = (
 /obj/structure/table/wood/reinf_long{
-	pixel_y = 0;
 	dir = 8
 	},
 /obj/item/storage/fancy/pilltin/charcoal{
@@ -9049,7 +8934,6 @@
 /area/indoors)
 "Nw" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/table/map{
@@ -9251,8 +9135,7 @@
 "Oy" = (
 /obj/effect/decal/edge{
 	dir = 4;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/hexstone,
 /area/indoors/town/rmh/manor/basement)
@@ -9366,7 +9249,6 @@
 	pixel_x = -20
 	},
 /obj/structure/fluff/walldeco/bath/wallpipes/outie{
-	dir = 2;
 	pixel_x = 12
 	},
 /obj/structure/bars/grille,
@@ -9513,7 +9395,6 @@
 /area/outdoors/exposed/rmh/manorgarri)
 "Pq" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -9559,7 +9440,6 @@
 "Pw" = (
 /obj/structure/fluff/railing/wood,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/walldeco/customflag{
@@ -9571,7 +9451,6 @@
 "Pz" = (
 /obj/structure/hotspring/border/six,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -9633,9 +9512,7 @@
 /area/indoors/town/rmh/manor/bath)
 "PN" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -9660,7 +9537,6 @@
 "PS" = (
 /obj/structure/bookcase/random/myths,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -9677,7 +9553,6 @@
 /area/outdoors)
 "PY" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -10004,7 +9879,6 @@
 /area/indoors/town/rmh/manor/bath)
 "QZ" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -10285,7 +10159,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Sp" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -10307,7 +10180,6 @@
 /area/indoors)
 "Sv" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/desert/deserttile/tilegreyblu,
@@ -10330,8 +10202,7 @@
 /area/indoors/town/rmh/manor/bath)
 "SA" = (
 /obj/structure/table/wood{
-	icon_state = "tablewood3";
-	pixel_y = 0
+	icon_state = "tablewood3"
 	},
 /obj/item/plate/onyxa{
 	pixel_y = 4
@@ -10372,7 +10243,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/table/map{
@@ -10421,8 +10291,7 @@
 "SM" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -10493,8 +10362,7 @@
 "SX" = (
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/hexstone,
 /area/indoors/town/rmh/manor/basement)
@@ -10504,7 +10372,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/statue{
@@ -10577,7 +10444,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/table/wood/nice/decorated_alt,
@@ -10679,7 +10545,6 @@
 "TC" = (
 /obj/item/natural/rock,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -10750,7 +10615,6 @@
 "TL" = (
 /obj/effect/landmark/start/vampirespawn,
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -11008,8 +10872,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -11050,7 +10913,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Vq" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -11076,7 +10938,6 @@
 /area/indoors/town/rmh/manor)
 "Vr" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -11088,7 +10949,6 @@
 /area/start)
 "Vw" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -11126,7 +10986,6 @@
 /area/indoors/town/rmh/manor/bath)
 "VI" = (
 /obj/structure/door/viewport{
-	dir = 2;
 	name = "Blood Vault"
 	},
 /obj/effect/mapping_helpers/access/keyset/manor/lord{
@@ -11138,7 +10997,6 @@
 /area/indoors/town/rmh/manor/basement)
 "VK" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/right,
@@ -11421,7 +11279,6 @@
 /area/indoors/town/rmh/manor/basement)
 "WS" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/chair/wood{
@@ -11459,8 +11316,7 @@
 /area/indoors/town/vault)
 "Xa" = (
 /obj/effect/decal/cobbleedge{
-	dir = 5;
-	pixel_y = 0
+	dir = 5
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -11549,8 +11405,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/tile/brownbrick,
@@ -11571,7 +11426,6 @@
 /area/indoors)
 "Xq" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -11656,7 +11510,6 @@
 /area/indoors)
 "XU" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -11717,8 +11570,7 @@
 /obj/machinery/light/fueled/wallfire/candle,
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -11847,7 +11699,6 @@
 /area/indoors/town/rmh/manor)
 "YD" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -11960,7 +11811,6 @@
 "YZ" = (
 /obj/structure/table/wood/plain_alt,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -12213,8 +12063,7 @@
 "ZZ" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)

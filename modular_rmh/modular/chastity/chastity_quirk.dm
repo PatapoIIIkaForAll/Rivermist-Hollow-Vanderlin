@@ -3,7 +3,7 @@
 #define CHASTITY_KEY_CARRIED "Carried"
 #define CHASTITY_KEY_LOST "Lost"
 
-/datum/quirk/peculiarity/kept_in_chastity
+/datum/quirk/neutral/kept_in_chastity
 	name = "Kept in Chastity"
 	desc = "You arrive already locked in a chastity device."
 	desc_hint = "Choose the device. It starts locked. Its key is in your pack, or lost if you choose so."
@@ -29,7 +29,7 @@
 		),
 	)
 
-/datum/quirk/peculiarity/kept_in_chastity/is_available(datum/preferences/prefs)
+/datum/quirk/neutral/kept_in_chastity/is_available(datum/preferences/prefs)
 	if(!..())
 		return FALSE
 	if(!prefs)
@@ -37,7 +37,7 @@
 	var/datum/erp_preference/boolean/allow_chastity_play/pref = new
 	return pref.get_value(prefs)
 
-/datum/quirk/peculiarity/kept_in_chastity/after_job_spawn(datum/job/job)
+/datum/quirk/neutral/kept_in_chastity/after_job_spawn(datum/job/job)
 	var/mob/living/carbon/human/human_owner = owner
 	if(!istype(human_owner))
 		return
@@ -65,7 +65,7 @@
 	to_chat(human_owner, span_notice("I am locked in \the [device]. The key is on me."))
 
 /// The chosen device type, or the plain belt when the saved choice is missing or invalid.
-/datum/quirk/peculiarity/kept_in_chastity/proc/get_device_type()
+/datum/quirk/neutral/kept_in_chastity/proc/get_device_type()
 	var/chosen = customization_value
 	if(istext(chosen))
 		chosen = text2path(chosen)
@@ -74,7 +74,7 @@
 	return /obj/item/clothing/undies/chastity/belt
 
 /// Puts [item] in a worn bag, else in hand, else leaves it at the owner's feet.
-/datum/quirk/peculiarity/kept_in_chastity/proc/stow_item(mob/living/carbon/human/human_owner, obj/item/item)
+/datum/quirk/neutral/kept_in_chastity/proc/stow_item(mob/living/carbon/human/human_owner, obj/item/item)
 	if(!item)
 		return
 	for(var/obj/item/storage/storage in human_owner.contents)

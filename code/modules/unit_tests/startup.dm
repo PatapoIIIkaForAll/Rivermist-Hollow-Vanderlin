@@ -30,6 +30,7 @@
 	TEST_ASSERT_EQUAL(snapshot["asset_log"], snapshot["config_log"], "Even non-game logs must be usable during startup.")
 	TEST_ASSERT_EQUAL(GLOB.config_error_log, "[GLOB.log_directory]/config_error.log", "SetupLogs must replace the temporary config path.")
 	TEST_ASSERT_EQUAL(GLOB.character_list_log, "[GLOB.log_directory]/character_list.log", "Keep RMH log filenames.")
+	TEST_ASSERT_NULL(GLOB.early_runtime_logs, "SetupLogs must replay startup runtimes into runtime.log.")
 	TEST_ASSERT(global.config.loaded, "Configuration must be marked loaded before the round starts.")
 
 /datum/unit_test/native_profiler

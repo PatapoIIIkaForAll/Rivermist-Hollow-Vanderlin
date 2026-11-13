@@ -6,6 +6,8 @@
 #define BUSH_CLOTHING_TEAR_MEAGRE 10
 #define BUSH_CLOTHING_TEAR_THORN_WALK 35
 #define BUSH_CLOTHING_TEAR_THORN_RUN 80
+#define BUSH_LEGWEAR_SNAG_WALK 10
+#define BUSH_LEGWEAR_SNAG_WALK_CHANCE 30
 
 // Base Flora
 /obj/structure/flora
@@ -442,7 +444,7 @@
 	if(clothing_damage <= 0 || clothing_chance <= 0 || !prob(clothing_chance))
 		return
 	var/list/clothing_candidates = list()
-	var/obj/item/clothing/socks = H.get_item_by_slot(ITEM_SLOT_SOCKS)
+	var/obj/item/clothing/legwears/socks = H.get_exposed_legwear()
 	if(socks)
 		clothing_candidates[socks] = 6
 	var/obj/item/clothing/pants = H.get_item_by_slot(ITEM_SLOT_PANTS)
@@ -460,9 +462,22 @@
 	if(!length(clothing_candidates))
 		return
 	var/obj/item/clothing/torn_clothing = pickweight(clothing_candidates)
-	torn_clothing.take_damage(clothing_damage, BRUTE, BCLASS_CUT, FALSE)
 	to_chat(H, span_warning("[torn_clothing] catches on \the [src] and tears."))
+	if(torn_clothing == socks)
+		socks.snag(clothing_damage, SLASH)
+	else
+		torn_clothing.take_damage(clothing_damage, BRUTE, BCLASS_CUT, FALSE)
 	return torn_clothing
+
+/// A gentle walk through brush can still snag bare stockings.
+/obj/structure/flora/grass/proc/snag_walking_legwear(mob/living/carbon/human/H)
+	if(!istype(H) || H.m_intent != MOVE_INTENT_WALK || !prob(BUSH_LEGWEAR_SNAG_WALK_CHANCE))
+		return
+	var/obj/item/clothing/legwears/stockings = H.get_exposed_legwear()
+	if(!stockings)
+		return
+	to_chat(H, span_warning("[stockings] snag on \the [src]."))
+	stockings.snag(BUSH_LEGWEAR_SNAG_WALK, SLASH)
 
 /obj/structure/flora/grass/tundra
 	name = "tundra grass"
@@ -517,41 +532,12 @@
 	guaranteed_loot = list(/obj/item/natural/fibers)
 	bonus_loot = list(/obj/item/natural/thorn)
 	hidingspot = TRUE
-	var/mob/living/hiddenguy = null // So we can find them with fixed eye search
 
 /obj/structure/flora/grass/bush/attack_hand(mob/user)
 	if(user.m_intent == MOVE_INTENT_SNEAK)
 		hideinside(user)
 		return
 	. = ..()
-
-/obj/structure/flora/grass/bush/proc/hideinside(mob/living/user)
-	var/sneak_level = GET_MOB_SKILL_VALUE_OLD(user, /datum/attribute/skill/misc/sneaking) || 0
-	var/sneaktime = max(10, 50 - (sneak_level * 10)) // Hard caps at 1 second at Expert and above.
-	if(user.loc == src)
-		unhide(user)
-		return
-	if(occupied)
-		to_chat(user, span_warning("Someone is already hiding in [src]!"))
-		return
-	if(!do_after(user, sneaktime, src))
-		return
-	user.forceMove(src)
-	occupied = TRUE
-	hiddenguy = user
-	to_chat(user, span_warning("I hide in [src]!"))
-
-/obj/structure/flora/grass/bush/proc/unhide(mob/living/user)
-	var/turf/T = get_turf(src)
-	if(!T) return
-	user.forceMove(T)
-	occupied = FALSE
-	hiddenguy = null
-	to_chat(user, span_warning("I come out from [src]!"))
-
-/obj/structure/flora/grass/bush/relaymove(mob/user)
-	if(user.loc == src)
-		unhide(user)
 
 /obj/structure/flora/grass/bush/CanPass(atom/movable/mover, turf/target)
 	if(occupied)
@@ -599,6 +585,8 @@
 		var/was_hard_collision = (H.m_intent == MOVE_INTENT_RUN || H.throwing || H.atom_flags & Z_FALLING || HAS_TRAIT(H, TRAIT_STUMBLE))
 		if(was_hard_collision)
 			apply_bush_collision_effects(H, BUSH_SCRATCH_DAMAGE, BUSH_CLOTHING_TEAR_NORMAL, 70)
+		else
+			snag_walking_legwear(H)
 
 /obj/structure/flora/grass/bush/wall
 	name = "great bush"
@@ -886,6 +874,8 @@
 		L.Immobilize(5)
 		if(L.m_intent == MOVE_INTENT_WALK)
 			L.Immobilize(5)
+			if(ishuman(L))
+				snag_walking_legwear(L)
 		if(L.m_intent == MOVE_INTENT_RUN || HAS_TRAIT(L, TRAIT_STUMBLE))
 			if(!ishuman(L))
 				to_chat(L, span_warning("I'm scratched by the branches."))
@@ -991,3 +981,5 @@
 #undef BUSH_CLOTHING_TEAR_MEAGRE
 #undef BUSH_CLOTHING_TEAR_THORN_WALK
 #undef BUSH_CLOTHING_TEAR_THORN_RUN
+#undef BUSH_LEGWEAR_SNAG_WALK
+#undef BUSH_LEGWEAR_SNAG_WALK_CHANCE

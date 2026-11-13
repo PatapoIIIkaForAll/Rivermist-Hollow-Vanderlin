@@ -11,6 +11,8 @@
 
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/flee_target,
+		// Werewolves share this controller and haul prey to the wolf den; trolls have no lair and skip it.
+		/datum/ai_planning_subtree/kidnap_defeated_prey,
 
 		/datum/ai_planning_subtree/simple_find_horny,
 		/datum/ai_planning_subtree/horny,

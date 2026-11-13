@@ -44,26 +44,9 @@
 	if(!icon_exists_or_scream(icon, icon_state))
 		return
 
-	var/list/offsets
-
-	var/datum/species/species =	dna?.species
-	if(species)
-		var/use_female_sprites = MALE_SPRITES
-		if(species.sexes)
-			if(gender == FEMALE && !species.swap_female_clothes || gender == MALE && species.swap_male_clothes)
-				use_female_sprites = FEMALE_SPRITES
-
-		if(use_female_sprites)
-			offsets = species.offset_features_f
-		else
-			offsets = species.offset_features_m
-
 	var/mutable_appearance/appearance = mutable_appearance(icon, icon_state, layer, appearance_flags = RESET_COLOR)
 	appearance.pixel_y = y_offset
-
-	if(length(offsets) && LAZYACCESS(offsets, OFFSET_HEAD))
-		appearance.pixel_y += offsets[OFFSET_HEAD][1]
-		appearance.pixel_y+= offsets[OFFSET_HEAD][2]
+	apply_offset(appearance, OFFSET_HEAD)
 
 	if(public && sound)
 		playsound(src, sound, 15, FALSE, extrarange = -1, ignore_walls = FALSE)

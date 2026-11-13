@@ -8,6 +8,8 @@
 	var/cosmetic_kind = "title"
 	/// For titles: the suffix text, e.g. "Delver of the Deep"
 	var/title_text
+	/// Won in events only: hidden from the Ledger until owned and never for sale.
+	var/event_only = FALSE
 
 /datum/dungeon_cosmetic/title_delver
 	id = "title_delver"
@@ -42,29 +44,30 @@
 	return null
 
 /mob/living/carbon/human
-	/// The exact dungeon suffix currently appended to name. Kept separate from
-	/// real_name so records, minds, and character identity remain untouched.
+	/// Title shown after the face name by get_face_name(); real_name and records stay untouched.
 	var/tmp/applied_dungeon_title
 
-/// Reconciles the visible dungeon title with this body's current owner's
-/// persistent selection. Only a suffix previously applied here is removed.
-/mob/living/carbon/human/proc/update_dungeon_title()
-	if(applied_dungeon_title)
-		var/old_suffix = ", [applied_dungeon_title]"
-		if(endswith(name, old_suffix))
-			name = copytext(name, 1, length(name) - length(old_suffix) + 1)
-		applied_dungeon_title = null
+/// Title suffix for get_face_name(); Life rebuilds name every tick, so it cannot live in name itself.
+/mob/living/carbon/proc/get_dungeon_title_suffix()
+	return null
 
-	if(!ckey)
-		return
-	var/datum/dungeon_progress/progress = get_dungeon_progress(ckey)
-	if(!progress?.selected_title)
-		return
-	var/datum/dungeon_cosmetic/cosmetic = get_dungeon_cosmetic_by_id(progress.selected_title)
-	if(cosmetic?.title_text)
-		applied_dungeon_title = cosmetic.title_text
-		name = "[name], [applied_dungeon_title]"
-	qdel(cosmetic)
+/mob/living/carbon/human/get_dungeon_title_suffix()
+	return applied_dungeon_title ? ", [applied_dungeon_title]" : null
+
+/// Reconciles the visible dungeon title with this body's current owner's persistent selection.
+/mob/living/carbon/human/proc/update_dungeon_title()
+	applied_dungeon_title = null
+	if(ckey)
+		var/datum/dungeon_progress/progress = get_dungeon_progress(ckey)
+		if(progress?.selected_title)
+			var/datum/dungeon_cosmetic/cosmetic = get_dungeon_cosmetic_by_id(progress.selected_title)
+			applied_dungeon_title = cosmetic?.title_text
+			qdel(cosmetic)
+	name = get_visible_name()
+
+/mob/living/carbon/human/Login()
+	. = ..()
+	update_dungeon_title()
 
 /mob/living/carbon/human/examine(mob/user)
 	. = ..()

@@ -7,6 +7,8 @@
 #define CLENCH_CHANCE_FLOOR 5
 #define CLENCH_CHANCE_CEIL 85
 #define CLENCH_CRIT_FRACTION 0.2
+/// Clench chance multiplier while the clencher gapes open.
+#define CLENCH_GAPED_MULT 0.5
 
 /// Clencher power from raw stat values, scaled by a weight leverage ratio.
 /proc/get_clench_power_from_stats(constitution, strength, leverage = 1)
@@ -48,4 +50,9 @@
 /proc/roll_clench(mob/living/clencher, mob/living/aggressor)
 	var/aggressor_strength = aggressor ? (aggressor.get_stat_level(STATKEY_STR) || 0) : 0
 	var/chance = get_clench_chance(get_clench_power(clencher, aggressor), aggressor_strength)
+	// A gaping opening has little left to clench with.
+	if(clencher?.has_gaped_orifice())
+		chance *= CLENCH_GAPED_MULT
 	return resolve_clench_roll(rand(1, 100), chance)
+
+#undef CLENCH_GAPED_MULT

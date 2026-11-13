@@ -150,7 +150,8 @@
 		return
 
 	var/mob/living/simple_animal/A = new adult_growth(loc)
-	if(tame && !A.tame)
+	// Adults that spawn tame still need the owner handed over.
+	if(tame && (!A.tame || (owner && A.owner != owner)))
 		A.tamed(owner)
 	APPLY_FACTION_AND_ALLIES_FROM(A, src)
 

@@ -18,7 +18,7 @@
 	return "[icon_state]-[clamp(breasts?.organ_size || 1, 1, 5)]"
 
 /datum/sprite_accessory/nipple_clamps/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_SUIT, OFFSET_SUIT)
+	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_BREASTS)
 
 /datum/sprite_accessory/nipple_clamps/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/genitals/filling_organ/breasts/breasts = owner.getorganslot(ORGAN_SLOT_BREASTS)
@@ -59,13 +59,14 @@
 	if(wearer.nipple_clamps)
 		to_chat(user, span_warning("[wearer == user ? "My" : "[wearer]'s"] nipples are already clamped."))
 		return
-	if(!get_location_accessible(wearer, BODY_ZONE_CHEST))
-		to_chat(user, span_warning("The chest needs to be bare first."))
+	var/obj/item/clothing/cover = wearer.get_sex_covering_garment(BODY_ZONE_CHEST, user)
+	if(cover)
+		to_chat(user, span_warning("[cover] is in the way."))
 		return
 	user.visible_message(span_warning("[user] opens [src] over [wearer == user ? user.p_their() : "[wearer]'s"] nipples..."))
 	if(!do_after(user, wearer == user ? 3 SECONDS : 5 SECONDS, target = wearer))
 		return
-	if(wearer.nipple_clamps || !get_location_accessible(wearer, BODY_ZONE_CHEST))
+	if(wearer.nipple_clamps || wearer.get_sex_covering_garment(BODY_ZONE_CHEST, user))
 		return
 	if(!user.temporarilyRemoveItemFromInventory(src))
 		return
@@ -164,7 +165,7 @@
 	add_sex_lock(target, BODY_ZONE_CHEST, null, FALSE)
 
 /datum/sex_action/nipple_clamps/tug
-	name = "Tug their clamp chain"
+	name = "Tug chain"
 	description = "Hook a finger through the chain between their nipple clamps and pull."
 
 /datum/sex_action/nipple_clamps/tug/on_start(mob/living/user, mob/living/target)
@@ -184,7 +185,7 @@
 	user.visible_message(span_warning("[user] lets the chain fall slack against [target]'s chest."))
 
 /datum/sex_action/nipple_clamps/take_off
-	name = "Take off their nipple clamps"
+	name = "Remove clamps"
 	description = "Release their nipple clamps and let the blood rush back."
 
 /datum/sex_action/nipple_clamps/take_off/on_perform(mob/living/user, mob/living/target)

@@ -59,6 +59,7 @@
 /area/pocket_dimension)
 "eG" = (
 /obj/structure/hotspring/border,
+/obj/structure/bondage/chains/lair,
 /turf/open/floor/naturalstone,
 /area/pocket_dimension)
 "eS" = (
@@ -91,7 +92,6 @@
 "fq" = (
 /obj/structure/flora/new_shroom/cyan,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -198,7 +198,6 @@
 "jP" = (
 /obj/structure/flora/grass/crawlvines,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -488,6 +487,11 @@
 /obj/structure/flora/new_shroom/cyansmall,
 /turf/open/floor/naturalstone,
 /area/pocket_dimension)
+"wN" = (
+/obj/item/natural/stone,
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/naturalstone,
+/area/pocket_dimension)
 "wW" = (
 /obj/machinery/light/fueled/firebowl/standing,
 /turf/open/floor/naturalstone,
@@ -557,7 +561,6 @@
 /area/pocket_dimension)
 "zK" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -570,8 +573,7 @@
 /area/pocket_dimension)
 "Aq" = (
 /obj/structure/fluff/walldeco/chains{
-	icon_state = "chains3";
-	pixel_y = 0
+	icon_state = "chains3"
 	},
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
@@ -594,7 +596,6 @@
 "AD" = (
 /obj/structure/hotspring/border/six,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -705,9 +706,14 @@
 /obj/item/clothing/head/helmet/leather/volfhelm,
 /turf/open/floor/naturalstone,
 /area/pocket_dimension)
+"Dh" = (
+/obj/structure/hotspring/border/two,
+/obj/structure/flora/grass/crawlvines,
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/naturalstone,
+/area/pocket_dimension)
 "DE" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -728,6 +734,10 @@
 	},
 /obj/structure/fluff/nest,
 /turf/open/floor/cobble/alt,
+/area/pocket_dimension)
+"DP" = (
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/ruinedwood/darker,
 /area/pocket_dimension)
 "El" = (
 /obj/structure/closet/crate/chest/neu,
@@ -765,7 +775,6 @@
 "Gd" = (
 /obj/structure/table/wood/plain_alt,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -964,7 +973,6 @@
 "Qt" = (
 /obj/item/natural/rock,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -1312,7 +1320,7 @@ lV
 Te
 Te
 lO
-Se
+wN
 Ns
 wW
 XN
@@ -1433,7 +1441,7 @@ XN
 Fr
 Fr
 Fr
-Ph
+DP
 ml
 iZ
 Fr
@@ -1590,7 +1598,7 @@ hO
 ai
 iZ
 Fr
-zZ
+Dh
 Ns
 gs
 pE

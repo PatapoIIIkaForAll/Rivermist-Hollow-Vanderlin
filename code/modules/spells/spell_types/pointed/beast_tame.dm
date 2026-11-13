@@ -32,6 +32,7 @@
 		/datum/pet_command/protect_owner,
 		/datum/pet_command/aggressive,
 		/datum/pet_command/calm,
+		/datum/pet_command/pet_breed_other,
 	)
 
 /datum/action/cooldown/spell/beast_tame/is_valid_target(atom/cast_on)

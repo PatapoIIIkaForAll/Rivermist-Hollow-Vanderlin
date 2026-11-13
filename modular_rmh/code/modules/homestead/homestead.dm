@@ -47,7 +47,7 @@
 
 	var/mob/living/carbon/human/H = user
 
-	if(!H.has_quirk(/datum/quirk/boon/resident))
+	if(!H.has_quirk(/datum/quirk/positive/resident))
 		return FALSE
 
 	if(H.received_resident_key)
@@ -88,7 +88,7 @@
 
 	var/mob/living/carbon/human/H = user
 
-	if(!H.has_quirk(/datum/quirk/boon/resident))
+	if(!H.has_quirk(/datum/quirk/positive/resident))
 		to_chat(H, span_warning("This is not your home."))
 		return FALSE
 
@@ -105,7 +105,7 @@
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 
-			if(!H.has_quirk(/datum/quirk/boon/resident))
+			if(!H.has_quirk(/datum/quirk/positive/resident))
 				to_chat(H, span_warning("This is not your home."))
 				return FALSE
 

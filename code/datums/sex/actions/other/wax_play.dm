@@ -1,6 +1,6 @@
 /datum/sex_action/wax_play
 	parent_type = /datum/sex_action/held_item_zone
-	name = "Drip wax on selected area"
+	name = "Drip wax"
 	description = "Drip wax from a held lit candle onto the body zone selected on your combat doll."
 	action_item_type = /obj/item/candle
 

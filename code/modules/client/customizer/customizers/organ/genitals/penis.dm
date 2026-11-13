@@ -15,39 +15,71 @@
 	customizer_entry_type = /datum/customizer_entry/organ/genitals/penis
 	organ_dna_type = /datum/organ_dna/penis
 
+/datum/customizer_choice/organ/genitals/penis/make_default_customizer_entry(datum/preferences/prefs, customizer_type, changed_entry = TRUE)
+	. = ..()
+	var/datum/customizer_entry/organ/genitals/penis/penis_entry = .
+	if(istype(prefs))
+		penis_entry.penis_length_cm = prefs.get_default_penis_length()
+	else
+		// NPC bodies pass the mob in place of preferences.
+		var/datum/species/species = return_species(prefs)
+		penis_entry.penis_length_cm = species ? species.default_penis_length : PENIS_LENGTH_DEFAULT
+	penis_entry.penis_size = get_penis_visual_size(penis_entry.penis_length_cm)
+
 /datum/customizer_choice/organ/genitals/penis/validate_entry(datum/preferences/prefs, datum/customizer_entry/entry)
 	..()
 	var/datum/customizer_entry/organ/genitals/penis/penis_entry = entry
-	penis_entry.penis_size = sanitize_integer(penis_entry.penis_size, MIN_PENIS_SIZE, MAX_PENIS_SIZE, DEFAULT_PENIS_SIZE)
+	// Unset lengths and saves from before lengths existed take the length of their size bucket.
+	if(!isnum(penis_entry.penis_length_cm) || penis_entry.penis_length_cm < PENIS_LENGTH_MIN)
+		penis_entry.penis_length_cm = get_penis_length_for_size(penis_entry.penis_size)
+	// Short lengths were migrated above, so anything still out of range is past the cap.
+	penis_entry.penis_length_cm = sanitize_integer(penis_entry.penis_length_cm, PENIS_LENGTH_MIN, PENIS_LENGTH_MAX, PENIS_LENGTH_MAX)
+	penis_entry.penis_size = get_penis_visual_size(penis_entry.penis_length_cm)
 
 /datum/customizer_choice/organ/genitals/penis/imprint_organ_dna(datum/organ_dna/organ_dna, datum/customizer_entry/entry, datum/preferences/prefs)
 	..()
 	var/datum/organ_dna/penis/penis_dna = organ_dna
 	var/datum/customizer_entry/organ/genitals/penis/penis_entry = entry
 	penis_dna.penis_size = penis_entry.penis_size
+	penis_dna.length_cm = penis_entry.penis_length_cm
 	penis_dna.functional = penis_entry.functional
 
 /datum/customizer_choice/organ/genitals/penis/generate_pref_choices(list/dat, datum/preferences/prefs, datum/customizer_entry/entry, customizer_type)
 	..()
 	var/datum/customizer_entry/organ/genitals/penis/penis_entry = entry
-	dat += "<br>Penis size: <a href='byond://?_src_=prefs;task=change_customizer;customizer=[customizer_type];customizer_task=penis_size''>[find_key_by_value(PENIS_SIZES_BY_NAME, penis_entry.penis_size)]</a>"
+	dat += "<br>Penis length: <a href='byond://?_src_=prefs;task=change_customizer;customizer=[customizer_type];customizer_task=penis_length_cm'>[penis_entry.penis_length_cm] cm</a> ([find_key_by_value(PENIS_SIZES_BY_NAME, get_penis_visual_size(penis_entry.penis_length_cm))])"
 	dat += "<br>Functional: <a href='byond://?_src_=prefs;task=change_customizer;customizer=[customizer_type];customizer_task=functional''>[penis_entry.functional ? "YES" : "NO"]</a>"
 
 /datum/customizer_choice/organ/genitals/penis/handle_topic(mob/user, list/href_list, datum/preferences/prefs, datum/customizer_entry/entry, customizer_type)
 	..()
 	var/datum/customizer_entry/organ/genitals/penis/penis_entry = entry
 	switch(href_list["customizer_task"])
+		if("penis_length_cm")
+			var/new_length
+			// The menu sends a value; plain links prompt for one.
+			if(isnull(href_list["value"]))
+				new_length = input(user, "Choose your penis length in centimetres, [PENIS_LENGTH_MIN] to [PENIS_LENGTH_MAX]:", "Character Preference", penis_entry.penis_length_cm) as num|null
+			else
+				new_length = text2num("[href_list["value"]]")
+			if(!isnum(new_length))
+				return
+			penis_entry.penis_length_cm = clamp(round(new_length, 1), PENIS_LENGTH_MIN, PENIS_LENGTH_MAX)
+			penis_entry.penis_size = get_penis_visual_size(penis_entry.penis_length_cm)
 		if("penis_size")
 			var/named_size = browser_input_list(user, "Choose your penis size:", "Character Preference", PENIS_SIZES_BY_NAME, penis_entry.penis_size)
 			if(isnull(named_size))
 				return
-			var/new_size = PENIS_SIZES_BY_NAME[named_size]
-			penis_entry.penis_size = sanitize_integer(new_size, MIN_PENIS_SIZE, MAX_PENIS_SIZE, DEFAULT_PENIS_SIZE)
+			var/new_size = sanitize_integer(PENIS_SIZES_BY_NAME[named_size], MIN_PENIS_SIZE, MAX_PENIS_SIZE, DEFAULT_PENIS_SIZE)
+			penis_entry.penis_length_cm = get_penis_length_for_size(new_size)
+			penis_entry.penis_size = get_penis_visual_size(penis_entry.penis_length_cm)
 		if("functional")
 			penis_entry.functional = !penis_entry.functional
 
 /datum/customizer_entry/organ/genitals/penis
+	/// Visual size bucket, derived from the length.
 	var/penis_size = DEFAULT_PENIS_SIZE
+	/// Length in centimetres; zero means unset or saved before lengths existed.
+	var/penis_length_cm = 0
 	var/functional = TRUE
 
 /datum/customizer/organ/genitals/penis/human

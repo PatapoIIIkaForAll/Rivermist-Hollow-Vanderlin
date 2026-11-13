@@ -187,7 +187,9 @@
 	var/whose_cock = owner == aimed ? "your cock" : get_aim_cock_phrase(owner, who)
 	to_chat(aimed, span_love("[who] points [whose_cock] at [where]."))
 	var/atom/movable/screen/alert/cock_aimed/alert = aimed.throw_alert(get_alert_category(), /atom/movable/screen/alert/cock_aimed)
-	alert?.desc = "[who] is aiming [whose_cock] at [where]."
+	// throw_alert returns null or 0 when it does not show an alert.
+	if(alert)
+		alert.desc = "[who] is aiming [whose_cock] at [where]."
 	warned = TRUE
 
 /datum/climax_aim/proc/unwarn_target()

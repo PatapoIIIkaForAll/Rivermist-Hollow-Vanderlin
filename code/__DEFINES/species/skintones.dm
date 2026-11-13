@@ -21,11 +21,10 @@
 #define SKIN_TONE_DROW_BLACK_BLUE      "2F2F38" // Black-Blue
 #define SKIN_TONE_DROW_VERY_PALE       "fff0e9" // Very Pale
 #define SKIN_TONE_DROW_LIGHT_PURPLE    "a191a1" // Light Purple
-#define SKIN_TONE_DROW_MID_PURPLE      "897489" // Mid Purple
-#define SKIN_TONE_DROW_DARK_PURPLE     "5f5f70" // Dark Purple
-#define SKIN_TONE_DROW_DEPTH_GREY_BLUE "5f5f70" // Depth Grey-Blue
-#define SKIN_TONE_DROW_PINK            "897489" // Pink
-#define SKIN_COLOR_DROW_PALE			"#fff0e9" // Very Pale
+#define SKIN_TONE_DROW_MID_PURPLE      "7b6680" // Mid Purple
+#define SKIN_TONE_DROW_DARK_PURPLE     "4f4256" // Dark Purple
+#define SKIN_TONE_DROW_DEPTH_GREY_BLUE "4a5163" // Depth Grey-Blue
+#define SKIN_TONE_DROW_PINK            "a07f92" // Pink
 
 //HUMAN, DWARF, ELF AND HALFLING SKIN TONES
 #define SKIN_TONE_PALE        "fff0e9" // Pale

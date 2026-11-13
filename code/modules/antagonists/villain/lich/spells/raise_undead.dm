@@ -55,6 +55,7 @@
 	var/list/candidates = pollCandidatesForMob("Do you want to play as a Necromancer's minion?", ROLE_NECRO_SKELETON, null, null, 100, cast_on, POLL_IGNORE_NECROMANCER_SKELETON)
 	if(length(candidates))
 		var/mob/C = pick(candidates)
+		C.leave_lobby_for_role()
 		cast_on.turn_to_minion(owner, C.ckey)
 		cast_on.visible_message(span_warning("[cast_on.real_name]'s eyes light up with an eerie glow."), runechat_message = TRUE)
 	else

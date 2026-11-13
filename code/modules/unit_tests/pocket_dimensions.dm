@@ -1,3 +1,6 @@
+/datum/unit_test/pocket_dimensions
+	needs_pocket_space = TRUE
+
 /datum/unit_test/pocket_dimensions/Run()
 	var/obj/item/pocket_dimension_tester/tester_scroll = allocate(/obj/item/pocket_dimension_tester, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/tester = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -26,6 +29,9 @@
 	TEST_ASSERT_NULL(SSpocket_dimensions.get_instance(REF(tester_scroll)), "Pocket dimension should unregister after deletion.")
 	TEST_ASSERT_EQUAL(get_turf(foreign_bag), moved_holder_turf, "Foreign items should be ejected to the holder's current turf before the pocket collapses.")
 
+/datum/unit_test/pocket_dimension_reuses_reserved_z
+	needs_pocket_space = TRUE
+
 /datum/unit_test/pocket_dimension_reuses_reserved_z/Run()
 	var/initial_maxz = world.maxz
 	var/datum/pocket_dimension/instance = SSpocket_dimensions.get_or_create_instance("[REF(src)]::reserved_z_reuse", /datum/map_template/pocket/test_chamber, POCKET_LIFECYCLE_HIBERNATE, 1)
@@ -33,6 +39,9 @@
 	TEST_ASSERT_EQUAL(world.maxz, initial_maxz, "Creating a small pocket should reuse existing reserved turf before allocating another z-level.")
 
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(instance), "Reserved z reuse test pocket should be deletable.")
+
+/datum/unit_test/pocket_dimension_hibernate_releases_allocator_turfs
+	needs_pocket_space = TRUE
 
 /datum/unit_test/pocket_dimension_hibernate_releases_allocator_turfs/Run()
 	var/initial_maxz = world.maxz
@@ -68,6 +77,9 @@
 
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(instance), "Hibernate allocator test pocket should be deletable.")
 
+/datum/unit_test/pocket_dimension_deleted_slot_reused
+	needs_pocket_space = TRUE
+
 /datum/unit_test/pocket_dimension_deleted_slot_reused/Run()
 	SSmapping.clear_pocket_reservation_cache()
 	var/initial_maxz = world.maxz
@@ -94,6 +106,9 @@
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(second_instance), "Second pocket should be deletable.")
 	SSmapping.clear_pocket_reservation_cache()
 
+/datum/unit_test/pocket_dimension_drop_spot
+	needs_pocket_space = TRUE
+
 /datum/unit_test/pocket_dimension_drop_spot/Run()
 	var/turf/origin = run_loc_floor_bottom_left
 	var/datum/pocket_dimension/instance = SSpocket_dimensions.get_or_create_instance("[REF(src)]::drop_spot", /datum/map_template/pocket/bag_of_holding, POCKET_LIFECYCLE_KEEP_LOADED, 0)
@@ -106,6 +121,9 @@
 
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(instance), "Bag pocket test instance should be deletable.")
 	TEST_ASSERT_EQUAL(get_turf(foreign_item), origin, "Foreign item should be ejected back to the origin turf on collapse.")
+
+/datum/unit_test/pocket_dimension_boundary_cleanup
+	needs_pocket_space = TRUE
 
 /datum/unit_test/pocket_dimension_boundary_cleanup/Run()
 	var/datum/pocket_dimension/instance = SSpocket_dimensions.get_or_create_instance("[REF(src)]::boundary_cleanup", /datum/map_template/pocket/bag_of_holding, POCKET_LIFECYCLE_KEEP_LOADED, 0)
@@ -127,6 +145,9 @@
 	for(var/turf/released_turf as anything in reserved_turfs)
 		TEST_ASSERT(istype(released_turf, RESERVED_TURF_TYPE), "Released pocket turfs should be restored to reserved turf.")
 		TEST_ASSERT(released_turf.turf_flags & UNUSED_RESERVATION_TURF, "Released pocket turfs should be marked as available again.")
+
+/datum/unit_test/pocket_dimension_sound_isolation
+	needs_pocket_space = TRUE
 
 /datum/unit_test/pocket_dimension_sound_isolation/Run()
 	var/first_key = "[REF(src)]::sound_first"
@@ -152,6 +173,9 @@
 
 	SSpocket_dimensions.delete_instance(first_pocket)
 	SSpocket_dimensions.delete_instance(second_pocket)
+
+/datum/unit_test/magic_closet_transport
+	needs_pocket_space = TRUE
 
 /datum/unit_test/magic_closet_transport/Run()
 	var/turf/origin = run_loc_floor_bottom_left
@@ -182,6 +206,9 @@
 #ifdef FOCUS_POCKET_SOUND_ISOLATION_TEST
 TEST_FOCUS(/datum/unit_test/pocket_dimension_sound_isolation)
 #endif
+
+/datum/unit_test/pocket_dimension_snapshot
+	needs_pocket_space = TRUE
 
 /datum/unit_test/pocket_dimension_snapshot/Run()
 	var/turf/origin = run_loc_floor_bottom_left

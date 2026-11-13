@@ -28,7 +28,7 @@
 
 /datum/job/advclass/towner/town_mouth/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
-	spawned.verbs |= /mob/living/carbon/human/proc/town_mouth_announcement
+	add_verb(spawned, /mob/living/carbon/human/proc/town_mouth_announcement)
 
 /datum/outfit/towner/town_mouth
 	name = "Town Mouth"

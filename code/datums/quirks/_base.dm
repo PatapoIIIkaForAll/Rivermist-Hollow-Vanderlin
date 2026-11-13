@@ -5,9 +5,9 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 /proc/init_quirk_registry()
 	GLOB.quirk_registry = list()
 	GLOB.quirk_points_by_type = list(
-		QUIRK_BOON = list(),
-		QUIRK_VICE = list(),
-		QUIRK_PECULIARITY = list()
+		QUIRK_POSITIVE = list(),
+		QUIRK_NEGATIVE = list(),
+		QUIRK_NEUTRAL = list()
 	)
 
 	for(var/datum/quirk/quirk_type as anything in subtypesof(/datum/quirk))
@@ -61,8 +61,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 	var/desc = "A quirk."
 	/// Optional hint to show below the desc, for OOC or important info
 	var/desc_hint = ""
-	/// Category: QUIRK_BOON, QUIRK_VICE, or QUIRK_PECULIARITY
-	var/quirk_category = QUIRK_PECULIARITY
+	/// Category: QUIRK_POSITIVE, QUIRK_NEGATIVE, or QUIRK_NEUTRAL
+	var/quirk_category = QUIRK_NEUTRAL
 	/// Point value (negative = costs points, positive = gives points)
 	var/point_value = 0
 	/// List of quirk types incompatible with this one
@@ -289,8 +289,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 	return addiction_names.Join(", ")
 
 /mob/living/carbon/human/proc/show_self_quirk_summary()
-	to_chat(src, span_info("Boons: [get_quirk_names_by_category(QUIRK_BOON)]"))
-	to_chat(src, span_info("Vices: [get_quirk_names_by_category(QUIRK_VICE)]"))
+	to_chat(src, span_info("Positive: [get_quirk_names_by_category(QUIRK_POSITIVE)]"))
+	to_chat(src, span_info("Negative: [get_quirk_names_by_category(QUIRK_NEGATIVE)]"))
 	to_chat(src, span_info("Addictions: [get_active_addiction_names()]"))
 
 /mob/living/carbon/human/proc/clear_quirks()
@@ -309,7 +309,7 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 /mob/living/carbon/human/proc/count_boons()
 	var/count = 0
 	for(var/datum/quirk/Q in quirks)
-		if(Q.quirk_category == QUIRK_BOON)
+		if(Q.quirk_category == QUIRK_POSITIVE)
 			count++
 	return count
 
@@ -321,8 +321,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 	var/datum/quirk/temp_quirk = quirk_type
 
 	// Check boon limit
-	if(initial(temp_quirk.quirk_category) == QUIRK_BOON)
-		if(count_boons() >= MAX_BOONS)
+	if(initial(temp_quirk.quirk_category) == QUIRK_POSITIVE)
+		if(count_boons() >= MAX_POSITIVE)
 			return FALSE
 
 	// Check point balance

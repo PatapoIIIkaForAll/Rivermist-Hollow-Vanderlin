@@ -58,28 +58,8 @@
 			remove_status_effect(/datum/status_effect/debuff/trainsleep)
 			remove_status_effect(/datum/status_effect/debuff/sleepytime)
 			if(has_status_effect(/datum/status_effect/debuff/dreamytime))
-				remove_status_effect(/datum/status_effect/debuff/dreamytime)
-				if(mind)
-					INVOKE_ASYNC(mind.sleep_adv, TYPE_PROC_REF(/datum/sleep_adv, advance_cycle))
-					if(!mind.antag_datums || !mind.antag_datums.len)
-						allmig_reward++
-						var/static/list/towner_jobs
-						towner_jobs = GLOB.town_positions
-						if(mind.assigned_role.title in towner_jobs) //If you play a towner-related role, you get triumphs.
-							adjust_triumphs(1)
-						to_chat(src, span_danger("Nights Survived: \Roman[allmig_reward]"))
-						if(allmig_reward > 0 && allmig_reward % 2 == 0)
-							adjust_triumphs(1)
+				finish_night_rest()
 	if(!HAS_TRAIT(src, TRAIT_STASIS))
-		if(HAS_TRAIT(src, TRAIT_LEPROSY))
-			if(MOBTIMER_FINISHED(src, MT_LEPERBLEED, 12 MINUTES))
-				if(prob(5))
-					to_chat(src, span_warning("My skin opens up and bleeds..."))
-					MOBTIMER_SET(src, MT_LEPERBLEED)
-					var/obj/item/bodypart/part = pick(bodyparts)
-					if(part)
-						part.create_injury(WOUND_SLASH, 5, TRUE)
-					adjustToxLoss(10)
 		update_stamina()
 		update_energy()
 		handle_environment()
@@ -113,6 +93,21 @@
 
 	if(stat != DEAD)
 		return 1
+
+/// Spends tonight's dream: the dream cycle and Nights Survived. Shared by sleep and Reverie.
+/mob/living/carbon/human/proc/finish_night_rest()
+	remove_status_effect(/datum/status_effect/debuff/dreamytime)
+	if(!mind)
+		return
+	INVOKE_ASYNC(mind.sleep_adv, TYPE_PROC_REF(/datum/sleep_adv, advance_cycle))
+	if(length(mind.antag_datums))
+		return
+	allmig_reward++
+	if(mind.assigned_role?.title in GLOB.town_positions) //If you play a towner-related role, you get triumphs.
+		adjust_triumphs(1)
+	to_chat(src, span_danger("Nights Survived: \Roman[allmig_reward]"))
+	if(allmig_reward > 0 && allmig_reward % 2 == 0)
+		adjust_triumphs(1)
 
 /mob/living/carbon/human/proc/handle_gas_mask_sound()
 	if(!istype(wear_mask, /obj/item/clothing/face/facemask/steel/confessor))

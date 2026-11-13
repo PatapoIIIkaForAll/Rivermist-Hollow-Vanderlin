@@ -288,7 +288,15 @@
 		return FALSE
 	if(!user.can_perform_action(src, FORBID_TELEKINESIS_REACH|NEED_DEXTERITY))
 		return FALSE
+	if(!can_speak_into(user))
+		return FALSE
 	if(check_cooldown(user))
+		return FALSE
+	return TRUE
+
+/obj/item/scomstone/proc/can_speak_into(mob/living/user)
+	if(!user.can_speak_vocal() || user.is_muzzled())
+		to_chat(user, span_warning("I can't speak into [src]!"))
 		return FALSE
 	return TRUE
 
@@ -311,6 +319,8 @@
 
 /obj/item/scomstone/proc/do_scom_broadcast(mob/living/user)
 	if(check_cooldown(user))
+		return
+	if(!can_speak_into(user))
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
 	visible_message(span_notice("[user] presses [user.p_their()] [src.name] against [user.p_their()] mouth."))
@@ -432,7 +442,7 @@
 //always broadcasting uncolored on the general line regardless of garrisonline
 /// A crownstone is spoken into, so a covered mouth blocks it - before the
 /// prompt and again after it, since a sack can go over the head meanwhile.
-/obj/item/scomstone/garrison/can_still_broadcast(mob/living/user)
+/obj/item/scomstone/garrison/can_speak_into(mob/living/user)
 	if(!..())
 		return FALSE
 	if(!get_location_accessible(user, BODY_ZONE_PRECISE_MOUTH, grabs = TRUE))
@@ -443,8 +453,7 @@
 /obj/item/scomstone/garrison/do_scom_broadcast(mob/living/user)
 	if(check_cooldown(user))
 		return
-	if(!get_location_accessible(user, BODY_ZONE_PRECISE_MOUTH, grabs = TRUE))
-		to_chat(user, span_warning("My mouth is covered!"))
+	if(!can_speak_into(user))
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
 	visible_message(span_notice("[user] presses [user.p_their()] [src.name] against [user.p_their()] mouth."))

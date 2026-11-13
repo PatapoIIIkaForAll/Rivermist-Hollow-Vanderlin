@@ -1323,7 +1323,6 @@
 "kj" = (
 /obj/structure/lever/wall{
 	pixel_x = 17;
-	pixel_y = 0;
 	redstone_id = "DragonLair"
 	},
 /mob/living/simple_animal/hostile/retaliate/infernal/hellhound,

@@ -123,7 +123,8 @@
 	erect_state = source.erect_state
 	penis_type = source.penis_type
 	penis_size = source.organ_size
-	body_storage_bulk = source.body_storage_bulk
+	penis_girth = source.get_insert_girth()
+	body_storage_bulk = max(1, round(penis_girth / ORIFICE_BULK_PER_CM))
 	name = "[source.name]"
 
 /obj/item/penis_fake/proc/set_original_owner(mob/living/owner)

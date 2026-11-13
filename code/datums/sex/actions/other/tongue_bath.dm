@@ -1,5 +1,5 @@
 /datum/sex_action/tonguebath
-	name = "Bathe with tongue"
+	name = "Tongue bath"
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 
@@ -30,7 +30,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] bathes [target]'s body with [user.p_their()] tongue..."))
-	user.make_sucking_noise()
+	user.make_mouth_noise("lick")
 
 	perform_sex_action(target, user, 0.5, 0, 0)
 	handle_passive_ejaculation(target)

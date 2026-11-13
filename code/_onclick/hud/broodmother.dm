@@ -63,6 +63,9 @@
 	. = ..()
 	if(isnull(tier))
 		stack_trace("tier was null")
+	// A deleted hud calls this with null to clear itself.
+	if(!hud?.mymob)
+		return
 
 	RegisterSignal(hud.mymob, COMSIG_BROODMOTHER_BIOMASS_CHANGE, PROC_REF(on_biomass_change))
 
@@ -71,8 +74,9 @@
 	update_mask_offset()
 
 /atom/movable/screen/broodmother/bar/Destroy()
-	. = ..()
-	UnregisterSignal(hud.mymob, COMSIG_BROODMOTHER_BIOMASS_CHANGE)
+	if(hud?.mymob)
+		UnregisterSignal(hud.mymob, COMSIG_BROODMOTHER_BIOMASS_CHANGE)
+	return ..()
 
 /atom/movable/screen/broodmother/button
 	icon = 'icons/mob/broodmother_hud/8x8.dmi'

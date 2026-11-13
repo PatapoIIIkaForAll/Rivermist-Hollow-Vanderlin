@@ -6,7 +6,6 @@
 	count_max = 6
 	minimum_tier = QUEST_TIER_DEADLY
 	maximum_tier = QUEST_TIER_LETHAL
-	base_reward_value = QUEST_BASE_REWARD_RAID
 	type_risk_bonus = QUEST_RAID_RISK_BONUS
 
 /datum/quest/kill/raid/get_title()

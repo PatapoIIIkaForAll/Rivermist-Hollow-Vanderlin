@@ -5,6 +5,8 @@
 
 	if(!living_pawn.handcuffed && !living_pawn.legcuffed)
 		return
+	if(iscarbon(living_pawn) && living_pawn.restraints_all_docile())
+		return
 
 	if(SPT_PROB(50, seconds_per_tick))
 		controller.queue_behavior(/datum/ai_behavior/break_restraints)

@@ -164,6 +164,8 @@
 // Initial is used to indicate whether or not this is the initial equipment (job datums etc) or just a player doing it
 /mob/living/carbon/human/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE)
 	if(!..()) //a check failed or the item has already found its slot
+		if(hud_used?.smallclothes_shown) // carbon-handled gear like boots can cover smallclothes too
+			hud_used.update_smallclothes_viewers()
 		return
 
 	var/not_handled = FALSE //Added in case we make this type path deeper one day
@@ -286,6 +288,8 @@
 	if(hud_used)
 		hud_used.throw_icon?.update_appearance(UPDATE_ICON_STATE)
 		hud_used.give_intent?.update_appearance(UPDATE_ICON_STATE)
+		if(hud_used.smallclothes_shown)
+			hud_used.update_smallclothes_viewers()
 
 	return not_handled //For future deeper overrides
 
@@ -403,6 +407,8 @@
 			update_inv_armsleeves()
 	check_armor_class()
 	update_reflection()
+	if(!QDELETED(src) && hud_used?.smallclothes_shown)
+		hud_used.update_smallclothes_viewers()
 
 /mob/living/carbon/human/wear_mask_update(obj/item/I, toggle_off = 1)
 	if((I.flags_inv & (HIDEHAIR|HIDEFACIALHAIR)) || (initial(I.flags_inv) & (HIDEHAIR|HIDEFACIALHAIR)))

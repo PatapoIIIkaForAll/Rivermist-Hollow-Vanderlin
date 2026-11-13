@@ -25,12 +25,12 @@
 /* VILLAIN */
 	#define MT_ZOMBIETRIUMPH "zombie_tri" //! flag
 	#define MT_VAMPTRANSFORM "becoming_vampire" //! flag
-	#define MT_LEPERBLEED "leper_bleed"
 	#define MT_REBELOFFER "rebeloffer" //! flag
 
 /* SORTING IS HARD */
 	#define MT_AMBUSHLAST "ambushlast"
 	#define MT_AMBUSHCHECK "ambush_check"
+	#define MT_WEAKHEART "weak_heart"
 
 	#define MT_SLO "slo" //! I literally don't know what this is supposed to be
 	#define MT_AGGROTIME "aggro_time" //! AI

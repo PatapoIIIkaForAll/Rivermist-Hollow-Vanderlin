@@ -1,5 +1,5 @@
 /datum/sex_action/sex/boobjob
-	name = "Use their tits to get off"
+	name = "Fuck tits"
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	hole_id = ORGAN_SLOT_BREASTS
 	knot_on_finish = FALSE
@@ -40,9 +40,9 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fucks [target]'s tits."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("boob", user, 20)
 
-	perform_sex_action(user, target, 2, 4, 2)
+	perform_sex_action(user, target, 2 * get_breast_paizuri_multiplier(target), 4, 2)
 
 /datum/sex_action/sex/boobjob/on_finish(mob/living/user, mob/living/target)
 	. = ..()

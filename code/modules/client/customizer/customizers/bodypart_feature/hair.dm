@@ -623,7 +623,7 @@
 		//datum/sprite_accessory/hair/head/azur/dreadlocks_accurate_tied,
 		//datum/sprite_accessory/hair/head/azur/cactus,
 		//datum/sprite_accessory/hair/head/azur/choppy,
-		//datum/sprite_accessory/hair/head/azur/elize,
+		/datum/sprite_accessory/hair/head/azur/elize,
 		//datum/sprite_accessory/hair/head/azur/floof,
 		//datum/sprite_accessory/hair/head/azur/wavy_tied,
 		//datum/sprite_accessory/hair/head/azur/wavy,

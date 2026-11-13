@@ -14,6 +14,8 @@
 	integrity_failure = 0.1
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	var/covers_breasts = FALSE
+	/// FALSE lets a viewer behind the wearer see the genitals between the legs.
+	var/covers_rear = TRUE
 	var/mob_overlay_icon_base
 	boob_sized = FALSE
 	sewrepair = /datum/attribute/skill/misc/sewing/mending
@@ -25,23 +27,6 @@
 /obj/item/clothing/undies/Initialize(mapload, ...)
 	. = ..()
 	mob_overlay_icon_base = mob_overlay_icon
-
-/obj/item/clothing/undies/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
-	if(!ishuman(interacting_with) || (user.zone_selected == BODY_ZONE_PRECISE_MOUTH && has_soaked_fluid()))
-		return ..()
-
-	var/mob/living/carbon/human/target = interacting_with
-	if(target.underwear || !get_location_accessible(target, BODY_ZONE_PRECISE_GROIN))
-		return ITEM_INTERACT_BLOCKING
-
-	user.visible_message(span_notice("[user] tries to put [src] on [target]..."))
-	if(!do_after(user, 5 SECONDS, target = target))
-		return ITEM_INTERACT_BLOCKING
-
-	if(!target.equip_to_slot_if_possible(src, ITEM_SLOT_UNDER_BOTTOM, disable_warning = TRUE))
-		return ITEM_INTERACT_BLOCKING
-
-	return ITEM_INTERACT_SUCCESS
 
 /obj/item/clothing/undies/equipped(mob/living/carbon/user, slot)
 	. = ..()
@@ -62,6 +47,10 @@
 /// TRUE when this worn item hides the organ in [slot], even genitals set to show through clothes.
 /obj/item/clothing/undies/proc/hides_organ_slot(slot)
 	return FALSE
+
+/// TRUE when a viewer behind the wearer sees past this garment; devices with a moving rear plate override it.
+/obj/item/clothing/undies/proc/leaves_rear_bare()
+	return !covers_rear
 
 /obj/item/clothing/undies/bikini_bottom
 	name = "bikini bottom"
@@ -88,6 +77,15 @@
 	icon_state = "thong"
 	item_state = "thong"
 	gendered = TRUE
+	covers_rear = FALSE
+
+/obj/item/clothing/undies/loincloth
+	name = "small loincloth"
+	desc = "A tight loincloth adjusted to fit like underwear, for those who like a breeze."
+	icon_state = "loincloth"
+	item_state = "loincloth"
+	gendered = TRUE
+	covers_rear = FALSE
 
 // Craft
 
@@ -103,6 +101,12 @@
 	output = /obj/item/clothing/undies/thong
 	requirements = list(/obj/item/natural/cloth = 1,
 				/obj/item/natural/fibers = 2)
+
+/datum/repeatable_crafting_recipe/sewing/undies/loincloth
+	name = "small loincloth"
+	output = /obj/item/clothing/undies/loincloth
+	requirements = list(/obj/item/natural/cloth = 1)
+	craftdiff = 0
 
 /datum/repeatable_crafting_recipe/sewing/bikini_bottom
 	name = "bikini bottom"

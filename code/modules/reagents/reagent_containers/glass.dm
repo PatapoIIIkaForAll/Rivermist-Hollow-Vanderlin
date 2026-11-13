@@ -23,7 +23,7 @@
 	var/mob/living/carbon/human/human_target = interacting_with
 	switch(user.zone_selected)
 		if(BODY_ZONE_CHEST)
-			if(human_target.wear_shirt && ((human_target.wear_shirt.flags_inv & HIDEBOOB) || !human_target.wear_shirt.genital_access))
+			if(human_target.wear_shirt && !human_target.has_bared_chest() && ((human_target.wear_shirt.flags_inv & HIDEBOOB) || !human_target.wear_shirt.genital_access))
 				to_chat(user, span_warning("[human_target]'s chest must be exposed before I can milk [human_target.p_them()]!"))
 				return ITEM_INTERACT_BLOCKING
 

@@ -143,6 +143,9 @@
 
 	if (beam_icon && beam_icon_state)
 		var/list/true_path = get_path_to(parent, get_turf(owner), TYPE_PROC_REF(/turf, Heuristic_cardinal_3d), 33, 250, 1)
+		// Pathfinding can sleep; the leash may be gone afterwards.
+		if (QDELETED(src))
+			return
 		true_path |= list(get_turf(owner))
 		redraw_beams(true_path)
 

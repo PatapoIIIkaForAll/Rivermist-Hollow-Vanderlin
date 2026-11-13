@@ -77,6 +77,10 @@
 	var/datum/map_template/pocket/dungeon/dungeon_template = template
 	return istype(dungeon_template) ? dungeon_template : null
 
+/// Ordinary authored rooms have no generation state.
+/datum/pocket_dimension/dungeon/proc/set_generation_seed(room_seed)
+	return
+
 /datum/pocket_dimension/dungeon/activate()
 	. = ..()
 	if(. && !contents_setup_done)
@@ -133,21 +137,39 @@
 			to_chat(occupant, span_warning(current_trait.announce))
 
 /// Spawns count floor-pool guardians on random open turfs; returns them unregistered.
-/datum/pocket_dimension/dungeon/proc/scatter_guardians(count, style)
+/datum/pocket_dimension/dungeon/proc/scatter_guardians(count, style, list/turf/spawn_turfs)
 	var/list/mob/living/spawned = list()
 	if(!owning_run?.floor_config)
 		return spawned
 	var/datum/dungeon_floor_config/cfg = owning_run.floor_config
-	var/list/turf/open = get_open_dungeon_turfs()
+	var/list/turf/open = spawn_turfs ? spawn_turfs.Copy() : get_guardian_spawn_turfs()
 	for(var/i in 1 to count)
 		if(!length(open))
 			break
-		var/turf/spot = pick(open)
+		var/turf/spot = pick_guardian_spawn_turf(open)
 		open -= spot
 		var/datum/dungeon_spawn_entry/entry = pick_floor_spawn_entry(cfg, style, owning_run.get_target_tier())
 		if(entry && ispath(entry.mob_type, /mob/living))
 			spawned += new entry.mob_type(spot)
 	return spawned
+
+/// Spawns floor-pool escorts around a boss: two, plus one per extra party member, up to five.
+/datum/pocket_dimension/dungeon/proc/spawn_boss_escorts(mob/living/boss)
+	var/party_size = owning_run ? max(1, length(owning_run.present_ckeys)) : 1
+	var/count = min(DUNGEON_BOSS_ESCORT_BASE + party_size - 1, DUNGEON_BOSS_ESCORT_MAX)
+	var/turf/boss_turf = get_turf(boss)
+	var/list/turf/near_boss = list()
+	for(var/turf/spot as anything in get_guardian_spawn_turfs())
+		if(spot != boss_turf && get_dist(spot, boss_turf) <= 4)
+			near_boss += spot
+	return scatter_guardians(count, null, length(near_boss) >= count ? near_boss : null)
+
+/// Procedural rooms can reserve tactical positions without replacing the encounter director.
+/datum/pocket_dimension/dungeon/proc/get_guardian_spawn_turfs()
+	return get_open_dungeon_turfs()
+
+/datum/pocket_dimension/dungeon/proc/pick_guardian_spawn_turf(list/turf/available)
+	return pick(available)
 
 /datum/pocket_dimension/dungeon/proc/setup_dungeon_contents()
 	var/list/mobs_to_register = list()
@@ -157,6 +179,7 @@
 	var/want_scatter = FALSE
 	var/scatter_density_override = 0
 	var/scatter_marker_style = null
+	var/mob/living/escorted_boss
 
 	for(var/turf/current_turf as anything in affected_turfs)
 		for(var/obj/effect/landmark/dungeon/guardian/guardian_marker in current_turf)
@@ -165,7 +188,10 @@
 				continue
 			var/mob/living/spawned
 			if(istype(guardian_marker, /obj/effect/landmark/dungeon/guardian/boss))
-				spawned = spawn_floor_boss(guardian_marker, current_turf)
+				var/obj/effect/landmark/dungeon/guardian/boss/boss_marker = guardian_marker
+				spawned = spawn_floor_boss(boss_marker, current_turf)
+				if(spawned && boss_marker.brings_escorts)
+					escorted_boss = spawned
 			else
 				spawned = spawn_guardian_from_marker(guardian_marker, current_turf)
 			if(spawned)
@@ -213,6 +239,9 @@
 			mobs_to_register |= mapped_mob
 
 	shrine_turfs = shrine_landmark_turfs
+
+	if(escorted_boss)
+		mobs_to_register += spawn_boss_escorts(escorted_boss)
 
 	// Build the larder before guardians register, so natives can be tagged to it.
 	if(length(larder_turfs) && owning_run)
@@ -279,9 +308,8 @@
 	// Floor-relative, matching guardian scaling - cumulative depth inflated
 	// cache quantity by 1.1^depth and rare weights by 1.3^depth.
 	cache.delve_level = max(1, (owning_run ? owning_run.get_encounter_delve() : depth) + bonus_delve)
-	cache.max_takers = max(cache.max_takers, length(owning_run?.present_ckeys))
 	if(owning_run?.run_unlocks?["extra_cache"])
-		cache.max_takers += 1
+		cache.claims_left += 1
 	if(cache_key_id)
 		cache.key_id = cache_key_id
 		cache.icon_state = "chestweird1" // vault caches look the part
@@ -374,7 +402,8 @@
 	var/mob/living/boss = new boss_type(spawn_turf)
 	var/run_floor = owning_run ? owning_run.floor : 1
 	var/run_tier = owning_run ? owning_run.get_target_tier() : 1
-	var/bounty = make_dungeon_boss(boss, run_floor, run_tier)
+	var/party_size = owning_run ? max(1, length(owning_run.present_ckeys)) : 1
+	var/bounty = make_dungeon_boss(boss, run_floor, run_tier, party_size)
 	boss_bounties["[REF(boss)]"] = bounty
 	return boss
 
@@ -394,8 +423,7 @@
 	// Party scaling: a bigger present party makes guardians tougher.
 	var/party_size = owning_run ? max(1, length(owning_run.present_ckeys)) : 1
 	if(party_size > 1 && istype(guardian, /mob/living/simple_animal))
-		var/party_factor = 1 + min(party_size - 1, 4) * 0.4 // +40% hp per extra member, capped at 5
-		guardian.maxHealth = round(guardian.maxHealth * party_factor)
+		guardian.maxHealth = round(guardian.maxHealth * get_dungeon_party_hp_factor(party_size))
 		guardian.health = guardian.maxHealth
 	// Heat: Hardened Foes inflates every guardian's health.
 	var/heat_hp_mult = owning_run ? owning_run.get_heat_hp_mult() : 1
@@ -437,9 +465,20 @@
 /// A carbon guardian knocked into crit counts as defeated (see register_guardian).
 /datum/pocket_dimension/dungeon/proc/on_carbon_guardian_health(mob/living/source)
 	SIGNAL_HANDLER
+	if(boss_bounties["[REF(source)]"])
+		// Bosses get up from knockouts; only brain failure, death or a spent defeat pool fells them.
+		if(source.stat >= HARD_CRIT || source.get_defeat_damage_pool() >= source.get_effective_defeat_threshold())
+			on_guardian_death(source)
+			if(source.stat != DEAD)
+				INVOKE_ASYNC(source, TYPE_PROC_REF(/mob/living, death))
+		return
 	if(source.stat < UNCONSCIOUS)
 		return
 	on_guardian_death(source)
+
+/// Health multiplier for creature guardians, and toughness multiplier for humanoid bosses.
+/proc/get_dungeon_party_hp_factor(party_size = 1)
+	return 1 + clamp(party_size - 1, 0, DUNGEON_PARTY_HP_MAX_EXTRA) * DUNGEON_PARTY_HP_PER_MEMBER
 
 /// A knockout only clears a guardian when one of the defeat statuses is actually present.
 /datum/pocket_dimension/dungeon/proc/on_guardian_defeated(mob/living/source)

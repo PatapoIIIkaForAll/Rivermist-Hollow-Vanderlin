@@ -103,8 +103,9 @@
 	if(get_dir(leaving.loc, new_location) != dir)
 		return
 
+	// Mirrors CanPass: flyers that may enter over the blocking side may also leave over it.
 	if(leaving.movement_type & (FLOATING|FLYING))
-		if(istype(leaving, /obj/projectile) && (pass_projectile || allow_flying_outwards))
+		if(!istype(leaving, /obj/projectile) || pass_projectile || allow_flying_outwards)
 			return
 
 	if(leaving.throwing)

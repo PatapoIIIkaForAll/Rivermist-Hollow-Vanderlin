@@ -52,15 +52,15 @@
 		lines += "[(UNIT_FORM_STRING(listed.volume))] of <font color=[listed.color]>[listed.name]</font>"
 	return lines
 
-/datum/quirk/boon/cicerone
+/datum/quirk/positive/cicerone
 	name = "Cicerone"
 	desc = "A lifetime spent around pots, casks, and apothecary shelves has sharpened your palate. A sip or a sniff is all it takes for you to name what's in a cup or bottle."
 	point_value = -4
 
-/datum/quirk/boon/cicerone/on_spawn()
+/datum/quirk/positive/cicerone/on_spawn()
 	ADD_TRAIT(owner, TRAIT_CICERONE, "[type]")
 
-/datum/quirk/boon/cicerone/on_remove()
+/datum/quirk/positive/cicerone/on_remove()
 	if(owner)
 		REMOVE_TRAIT(owner, TRAIT_CICERONE, "[type]")
 

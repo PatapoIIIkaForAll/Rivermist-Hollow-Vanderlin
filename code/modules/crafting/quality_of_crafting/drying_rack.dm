@@ -227,7 +227,6 @@
 	tool_usage = list(
 		/obj/item/weapon/knife = list(span_notice("starts to cut"), span_notice("start to cut"), 'sound/items/sharpen_long1.ogg'),
 	)
-	reagent_requirements = null
 	attacked_atom = /obj/item/paper
 	starting_atom = /obj/item/weapon/knife
 	output = /obj/item/fuse/parchment

@@ -12,11 +12,13 @@
 
 /mob/living/proc/setup_quest_spawn_lockdown()
 	setup_equip_block()
-	ADD_TRAIT(src, TRAIT_STUCKITEMS, "quest_spawn_lock")
-	ADD_TRAIT(src, TRAIT_NODISMEMBER, "quest_spawn_lock")
+	ADD_TRAIT(src, TRAIT_STUCKITEMS, QUEST_SPAWN_LOCK_TRAIT)
+	ADD_TRAIT(src, TRAIT_NODISMEMBER, QUEST_SPAWN_LOCK_TRAIT)
 
 	for(var/obj/item/locked_item in GetAllContents(/obj/item))
-		ADD_TRAIT(locked_item, TRAIT_NODROP, "quest_spawn_lock")
+		ADD_TRAIT(locked_item, TRAIT_NODROP, QUEST_SPAWN_LOCK_TRAIT)
+		// Locked gear can never come off, so it must not block ERP for the wearer or a partner.
+		locked_item.allow_erp_equipped = TRUE
 		var/datum/component/storage/storage = locked_item.GetComponent(/datum/component/storage)
 		if(storage)
 			storage.allow_look_inside = FALSE
@@ -173,25 +175,43 @@
 
 		var/mob/living/new_mob = new target_mob_type(spawn_turf)
 		new_mob.add_faction("quest")
+		prepare_spawned_target(new_mob)
 		new_mob.AddComponent(kill_component_type, src)
 		new_mob.setup_quest_spawn_lockdown()
 		ADD_TRAIT(new_mob, TRAIT_FRESHSPAWN, "[type]")
 		addtimer(TRAIT_CALLBACK_REMOVE(new_mob, TRAIT_FRESHSPAWN, "[type]"), 60 SECONDS)
 		addtimer(CALLBACK(new_mob, TYPE_PROC_REF(/mob/living, setup_quest_spawn_lockdown)), 3 SECONDS)
+		if(istype(new_mob.ai_controller, /datum/ai_controller))
+			new_mob.ai_controller.set_blackboard_key(BB_IDLE_LEASH_TURF, get_turf(landmark))
+			new_mob.ai_controller.set_blackboard_key(BB_IDLE_LEASH_RANGE, QUEST_IDLE_LEASH_RANGE)
 		add_tracked_atom(new_mob)
 		if(quest_type != QUEST_BOSS)
 			landmark.add_quest_faction_to_nearby_mobs(spawn_turf)
 		spawned_targets++
-		sleep(1)
 
 	progress_required = spawned_targets
 	return spawned_targets > 0
 
+/// Subtype hook to adjust a freshly spawned target before its quest component and lockdown.
+/datum/quest/kill/proc/prepare_spawned_target(mob/living/new_mob)
+	return
+
+/// A shared-board posting loses a target before anyone claims it, so the posting shrinks or lapses.
+/datum/quest/kill/proc/on_posted_target_lost(mob/living/lost_target)
+	remove_tracked_atom(lost_target)
+	progress_required = max(progress_required - 1, 0)
+	if(progress_required <= progress_current)
+		expire_posting("its last target is gone")
+		return
+	reward_amount = calculate_reward(get_target_anchor_turf())
+	deposit_amount = calculate_deposit(reward_amount)
+
+/// A rune rescue would otherwise let the contractor retry the fight with a fresh body.
+/datum/quest/kill/fails_on_rune_rescue(mob/living/carbon/rescued)
+	return TRUE
+
 /datum/quest/kill/get_risk_score(turf/target_turf)
 	return target_risk_value + type_risk_bonus + round(max(progress_required - 1, 0) / 2)
-
-/datum/quest/kill/get_workload_reward(target_turf)
-	return progress_required * QUEST_KILL_COUNT_REWARD
 
 /datum/quest/kill/proc/get_reward_multiplier()
 	switch(quest_type)

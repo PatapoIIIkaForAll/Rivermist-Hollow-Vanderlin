@@ -8,7 +8,7 @@
 
 /datum/wound/teeth/get_crit_prob(bclass, dam, damage_dividend, mob/living/user, obj/item/bodypart/affected, zone_precise, list/modifiers)
 	var/chance = ..()
-	if(affected.owner?.has_quirk(/datum/quirk/vice/no_dental))
+	if(affected.owner?.has_quirk(/datum/quirk/negative/no_dental))
 		return chance * 2
 	return chance / 10
 

@@ -231,6 +231,8 @@
 		return
 
 	var/mob/living/carbon/C = cast_on
+	// Organ damage to the brain (a beaten dullahan head, poisons) mends with the rest.
+	C.adjustOrganLoss(ORGAN_SLOT_BRAIN, -amount_healed)
 	var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(owner.zone_selected))
 	if(affecting)
 		affecting.heal_damage(amount_healed, amount_healed)

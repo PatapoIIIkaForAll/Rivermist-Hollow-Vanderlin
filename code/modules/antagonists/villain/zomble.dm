@@ -127,6 +127,7 @@
 		return
 
 	zombie.cut_overlay(rotflies)
+	zombie.remove_undead_burning()
 	remove_verb(zombie, /mob/living/carbon/human/proc/zombie_seek)
 	zombie.mind?.special_role = special_role
 	zombie.ambushable = ambushable
@@ -216,6 +217,7 @@
 	zombie.ambushable = FALSE
 
 	zombie.mob_biotypes |= MOB_UNDEAD
+	zombie.add_undead_burning()
 	zombie.add_faction(FACTION_UNDEAD)
 	zombie.remove_faction(list(FACTION_TOWN, FACTION_NEUTRAL))
 	add_verb(zombie, /mob/living/carbon/human/proc/zombie_seek)
@@ -349,3 +351,39 @@
 	zombie_antag.wake_zombie(TRUE)
 
 	return TRUE
+
+/mob/living/carbon/human/proc/undead_burnt_through()
+	if(stat == DEAD || !(mob_biotypes & MOB_UNDEAD))
+		return FALSE
+	var/static/list/vital_zones = list(BODY_ZONE_HEAD, BODY_ZONE_CHEST)
+	for(var/zone in vital_zones)
+		var/obj/item/bodypart/vital = get_bodypart(zone)
+		if(vital && vital.burn_dam >= vital.max_damage - 5)
+			return TRUE
+	return FALSE
+
+/mob/living/carbon/human/proc/add_undead_burning()
+	RegisterSignal(src, COMSIG_LIVING_LIFE, PROC_REF(undead_fire_tick), override = TRUE)
+	RegisterSignal(src, COMSIG_LIVING_HEALTH_UPDATE, PROC_REF(check_undead_burns), override = TRUE)
+
+/mob/living/carbon/human/proc/remove_undead_burning()
+	UnregisterSignal(src, list(COMSIG_LIVING_LIFE, COMSIG_LIVING_HEALTH_UPDATE))
+
+/mob/living/carbon/human/proc/undead_fire_tick(datum/source, seconds, times_fired)
+	SIGNAL_HANDLER
+	if(stat == DEAD || client || !on_fire || !(mob_biotypes & MOB_UNDEAD))
+		return
+	var/stacks = fire_stacks + divine_fire_stacks
+	if(stacks > 0)
+		apply_damage(stacks > 5 ? 15 : 5, BURN, BODY_ZONE_CHEST)
+
+/mob/living/carbon/human/proc/check_undead_burns(datum/source)
+	SIGNAL_HANDLER
+	if(undead_burnt_through())
+		INVOKE_ASYNC(src, PROC_REF(burn_down_undead))
+
+/mob/living/carbon/human/proc/burn_down_undead()
+	if(!undead_burnt_through())
+		return
+	visible_message(span_danger("[src] collapses, burnt through!"))
+	death()

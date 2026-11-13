@@ -5,6 +5,8 @@
 	var/defeat_rune_last_recharge_time = 0
 	/// First defeat rune return is free once per round.
 	var/defeat_rune_first_free_used = FALSE
+	/// Set when the player gave this character up to captivity. No rune may rebuild the body.
+	var/defeat_character_abandoned = FALSE
 
 /datum/mind/proc/get_defeat_rune_charges()
 	recharge_defeat_rune_charges()

@@ -128,8 +128,14 @@
 			inset: 0;
 			background-size: 150% 150%;
 			animation: shine 15s linear infinite;
+			animation-play-state: paused;
 			z-index: 1;
 			pointer-events: none;
+		}
+
+		/* The window stays loaded while hidden; a running shine keeps the compositor busy then. */
+		body.say-open .shine {
+			animation-play-state: running;
 		}
 
 		@keyframes shine {
@@ -555,6 +561,7 @@
 			}
 
 			window.windowOpen = true;
+			document.body.classList.add('say-open');
 
 			editor.style.pointerEvents = 'auto';
 			window.currentChannel = channel;
@@ -580,6 +587,7 @@
 
 		function closeWindow() {
 			window.windowOpen = false;
+			document.body.classList.remove('say-open');
 
 			editor.style.pointerEvents = 'none';
 			editor.innerHTML = '';

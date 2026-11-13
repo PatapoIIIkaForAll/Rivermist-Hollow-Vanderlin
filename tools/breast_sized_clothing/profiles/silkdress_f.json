@@ -1,0 +1,7 @@
+{
+  "worn": "icons/roguetown/clothing/onmob/shirts.dmi",
+  "pair": "cover",
+  "extra": "cover",
+  "hide": "cover",
+  "cut_under_clothing": "fill"
+}

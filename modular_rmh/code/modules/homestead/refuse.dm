@@ -24,7 +24,7 @@
 	if(!target.mind)
 		return FALSE
 
-	if(!target.has_quirk(/datum/quirk/boon/resident))
+	if(!target.has_quirk(/datum/quirk/positive/resident))
 		return FALSE
 
 	var/face_name = target.get_face_name("")
@@ -39,7 +39,7 @@
 	if(QDELETED(target))
 		return
 
-	if(!target.has_quirk(/datum/quirk/boon/resident))
+	if(!target.has_quirk(/datum/quirk/positive/resident))
 		to_chat(owner, span_warning("[target] is not a resident."))
 		return
 
@@ -50,7 +50,7 @@
 
 	. = ..()
 
-	target.remove_quirk(/datum/quirk/boon/resident)
+	target.remove_quirk(/datum/quirk/positive/resident)
 
 	if(owner && target)
 		owner.say("By my authority, I revoke your right to dwell in Rivermist Hollow, [face_name]!")

@@ -136,5 +136,7 @@
 			return "Fruit"
 		if(FAMILY_DIKARYA)
 			return "Dikarya"
+		if(FAMILY_CUCURBIT)
+			return "Cucurbit"
 		else
 			return "Unknown"

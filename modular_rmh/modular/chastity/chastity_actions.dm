@@ -158,7 +158,7 @@
 		add_sex_lock(user, hand)
 
 /datum/sex_action/chastity/hands/self_cock
-	name = "Stroke your caged cock"
+	name = "Stroke cage"
 	description = "Work your caged cock through the bars."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -182,7 +182,7 @@
 	user.visible_message(span_warning("[user] drops [user.p_their()] hand from [user.p_their()] [device_name(user)], breathless and no further along."))
 
 /datum/sex_action/chastity/hands/self_pussy
-	name = "Rub your locked slit"
+	name = "Rub belt"
 	description = "Rub at the front plate of your belt."
 	device_part = CHASTITY_PART_PUSSY
 	device_on_user = TRUE
@@ -205,7 +205,7 @@
 	user.visible_message(span_warning("[user] pulls [user.p_their()] hand away from [user.p_their()] [device_name(user)], no closer to relief."))
 
 /datum/sex_action/chastity/hands/self_rear
-	name = "Rub your anal shield"
+	name = "Rub shield"
 	description = "Press at the rear plate of your device."
 	device_part = CHASTITY_PART_REAR
 	device_on_user = TRUE
@@ -228,7 +228,7 @@
 	user.visible_message(span_warning("[user] withdraws [user.p_their()] hand from [user.p_their()] rear shield."))
 
 /datum/sex_action/chastity/hands/fondle
-	name = "Fondle their chastity device"
+	name = "Fondle device"
 	description = "Feel the weight of their device in your hands."
 
 /datum/sex_action/chastity/hands/fondle/on_start(mob/living/user, mob/living/target)
@@ -248,7 +248,7 @@
 	user.visible_message(span_warning("[user] releases [target]'s [device_name(target)] and pulls [user.p_their()] hands away."))
 
 /datum/sex_action/chastity/hands/stroke_cock
-	name = "Stroke their caged cock"
+	name = "Cage stroking"
 	description = "Stroke their cock through the bars of the cage."
 	device_part = CHASTITY_PART_COCK
 
@@ -270,7 +270,7 @@
 	user.visible_message(span_warning("[user] lets go of [target]'s [device_name(target)]."))
 
 /datum/sex_action/chastity/hands/rub_pussy
-	name = "Rub their locked slit"
+	name = "Belt rubbing"
 	description = "Work your fingers along the front of their belt."
 	device_part = CHASTITY_PART_PUSSY
 
@@ -291,7 +291,7 @@
 	user.visible_message(span_warning("[user] slides [user.p_their()] fingers away from [target]'s [device_name(target)]."))
 
 /datum/sex_action/chastity/hands/tease_rear
-	name = "Tease their anal shield"
+	name = "Shield teasing"
 	description = "Press along the seam of their rear shield."
 	device_part = CHASTITY_PART_REAR
 
@@ -312,7 +312,7 @@
 	user.visible_message(span_warning("[user] draws [user.p_their()] hand back from [target]'s rear shield."))
 
 /datum/sex_action/chastity/hands/work_insert
-	name = "Work their belt's insert"
+	name = "Work insert"
 	description = "Rock their belt so the plug inside it moves."
 	device_part = CHASTITY_PART_PUSSY
 
@@ -340,7 +340,7 @@
 // ---- Mouth ----
 
 /datum/sex_action/chastity/lick_belt
-	name = "Lick through their belt"
+	name = "Lick belt"
 	description = "Work your tongue through the front slits of their belt."
 	device_part = CHASTITY_PART_PUSSY
 	partner_zone = BODY_ZONE_PRECISE_MOUTH
@@ -364,7 +364,7 @@
 	user.visible_message(span_warning("[user] pulls back from [target]'s [device_name(target)], lips wet."))
 
 /datum/sex_action/chastity/rim_shield
-	name = "Rim them behind their shield"
+	name = "Rim shield"
 	description = "Work your tongue along the edges of their rear shield."
 	device_part = CHASTITY_PART_REAR
 	partner_zone = BODY_ZONE_PRECISE_MOUTH
@@ -388,7 +388,7 @@
 	user.visible_message(span_warning("[user] pulls back from [target]'s shield, jaw aching, and straightens up."))
 
 /datum/sex_action/chastity/nuzzle_cage
-	name = "Make them nuzzle your cage"
+	name = "Cage nuzzle"
 	description = "Hold their face against your caged cock."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -413,7 +413,7 @@
 	user.visible_message(span_warning("[user] loosens [user.p_their()] grip and lets [target] pull back from [user.p_their()] [device_name(user)]."))
 
 /datum/sex_action/chastity/force_cage
-	name = "Force them onto your cage"
+	name = "Force cage"
 	description = "Push their mouth over the bars of your caged cock."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -440,7 +440,7 @@
 	user.visible_message(span_warning("[user] releases [target]'s head and lets [target.p_them()] pull off [user.p_their()] [device_name(user)]."))
 
 /datum/sex_action/chastity/force_belt
-	name = "Force them to lick your belt"
+	name = "Force belt"
 	description = "Hold their mouth against the front of your belt."
 	device_part = CHASTITY_PART_PUSSY
 	device_on_user = TRUE
@@ -466,7 +466,7 @@
 	user.visible_message(span_warning("[user] releases [target] with a firm shove backward, [target.p_their()] lips wet."))
 
 /datum/sex_action/chastity/force_rim
-	name = "Force them to rim your shield"
+	name = "Force rim"
 	description = "Hold their mouth against your rear shield."
 	device_part = CHASTITY_PART_REAR
 	device_on_user = TRUE
@@ -494,7 +494,7 @@
 // ---- Bodies ----
 
 /datum/sex_action/chastity/frot_device
-	name = "Frot against their device"
+	name = "Frot cage"
 	description = "Slide your cock along their locked cage."
 	device_part = CHASTITY_PART_COCK
 	partner_organ_slot = ORGAN_SLOT_PENIS
@@ -520,7 +520,7 @@
 	user.visible_message(span_warning("[user] rolls [user.p_their()] hips back from [target]'s [device_name(target)]."))
 
 /datum/sex_action/chastity/frot_on_cage
-	name = "Let them frot on your cage"
+	name = "Offer cage"
 	description = "Work their cock along the bars of your cage."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -547,7 +547,7 @@
 	user.visible_message(span_warning("[user] lets [target]'s cock slip away from [user.p_their()] [device_name(user)]."))
 
 /datum/sex_action/chastity/cage_to_cage
-	name = "Grind cage to cage"
+	name = "Grind cages"
 	description = "Grind your caged cock against theirs."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -573,7 +573,7 @@
 	user.visible_message(span_warning("[user] steps back, and the two devices part with a last scrape of metal."))
 
 /datum/sex_action/chastity/cage_to_belt
-	name = "Press cage to belt"
+	name = "Press belt"
 	description = "Grind your caged cock against the plate of their belt."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -599,7 +599,7 @@
 	user.visible_message(span_warning("[user] steps back and the two devices separate with a last rasp of metal."))
 
 /datum/sex_action/chastity/grind_cage_pussy
-	name = "Grind your cage on their pussy"
+	name = "Cage-grind pussy"
 	description = "Roll the bars of your cage along their bare pussy."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -626,7 +626,7 @@
 	user.visible_message(span_warning("[user] eases back, the metal of [user.p_their()] [device_name(user)] slick as it leaves [target]."))
 
 /datum/sex_action/chastity/grind_cage_slit
-	name = "Grind your cage on their slit"
+	name = "Cage-grind slit"
 	description = "Roll the bars of your cage along their genital slit."
 	device_part = CHASTITY_PART_COCK
 	device_on_user = TRUE
@@ -654,7 +654,7 @@
 	user.visible_message(span_warning("[user] rocks back, breaking contact between [user.p_their()] [device_name(user)] and [target]'s slit."))
 
 /datum/sex_action/chastity/ride_cage
-	name = "Ride their cage"
+	name = "Ride cage"
 	description = "Grind your pussy down on their caged cock."
 	device_part = CHASTITY_PART_COCK
 	partner_organ_slot = ORGAN_SLOT_VAGINA
@@ -680,7 +680,7 @@
 	user.visible_message(span_warning("[user] lifts [user.p_their()] hips off [target]'s [device_name(target)], the metal cold as [user.p_their()] warmth leaves it."))
 
 /datum/sex_action/chastity/ride_cage_slit
-	name = "Ride their cage with your slit"
+	name = "Slit-ride cage"
 	description = "Grind your genital slit down on their caged cock."
 	device_part = CHASTITY_PART_COCK
 	partner_organ_slot = ORGAN_SLOT_PENIS
@@ -707,7 +707,7 @@
 	user.visible_message(span_warning("[user] rocks back and lifts [user.p_their()] slit off [target]'s [device_name(target)]."))
 
 /datum/sex_action/chastity/scissor_belt
-	name = "Scissor against their belt"
+	name = "Scissor belt"
 	description = "Grind your pussy against the plate of their belt."
 	device_part = CHASTITY_PART_PUSSY
 	partner_organ_slot = ORGAN_SLOT_VAGINA
@@ -732,7 +732,7 @@
 	user.visible_message(span_warning("[user] rocks back and lifts away from [target]'s [device_name(target)], flushed and unsatisfied."))
 
 /datum/sex_action/chastity/scissor_locked
-	name = "Scissor with your locked slit"
+	name = "Locked scissoring"
 	description = "Grind the plate of your belt against their bare pussy."
 	device_part = CHASTITY_PART_PUSSY
 	device_on_user = TRUE
@@ -758,7 +758,7 @@
 	user.visible_message(span_warning("[user] separates, the belt pulling away from [target]'s pussy with a soft drag."))
 
 /datum/sex_action/chastity/scissor_belts
-	name = "Scissor belt to belt"
+	name = "Scissor belts"
 	description = "Grind the plate of your belt against theirs."
 	device_part = CHASTITY_PART_PUSSY
 	device_on_user = TRUE
@@ -792,7 +792,7 @@
 	partner_organ_slot = ORGAN_SLOT_TAIL
 
 /datum/sex_action/chastity/tail/cage
-	name = "Prod their cage with your tail"
+	name = "Tail-prod cage"
 	description = "Tease their caged cock with the tip of your tail."
 	device_part = CHASTITY_PART_COCK
 
@@ -814,7 +814,7 @@
 	user.visible_message(span_warning("[user] uncoils [user.p_their()] tail from [target]'s [device_name(target)]."))
 
 /datum/sex_action/chastity/tail/shield
-	name = "Prod their anal shield with your tail"
+	name = "Tail-prod shield"
 	description = "Work the tip of your tail along their rear shield."
 	device_part = CHASTITY_PART_REAR
 

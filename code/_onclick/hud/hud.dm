@@ -37,7 +37,6 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 	var/atom/movable/screen/mana_over
 	var/atom/movable/screen/quad_intents/quad_intents
 	var/atom/movable/screen/give_intent/give_intent
-	var/atom/movable/screen/combat_utilities/combat_utilities
 	var/atom/movable/screen/fov_holder/fov_holder
 	var/atom/movable/screen/clock
 	var/atom/movable/screen/stress/stressies
@@ -46,6 +45,8 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 
 	var/list/static_inventory = list() //the screen objects which are static
 	var/list/toggleable_inventory = list() //the screen objects which can be hidden
+	var/list/smallclothes_inventory = list() //smallclothes drawer slots, kept out of inv_slots because extra slot bits collide there
+	var/smallclothes_shown = FALSE //smallclothes drawer, toggled by the sock button
 	var/list/atom/movable/screen/hotkeybuttons = list() //the buttons that can be used via hotkeys
 	var/list/infodisplay = list() //the screen objects that display mob info (health, alien plasma, etc...)
 	var/list/screenoverlays = list() //the screen objects used as whole screen overlays (flash, damageoverlay, etc...)
@@ -139,6 +140,8 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 		screen_client.screen -= static_inventory
 	if(length(toggleable_inventory))
 		screen_client.screen -= toggleable_inventory
+	if(length(smallclothes_inventory))
+		screen_client.screen -= smallclothes_inventory
 	if(length(hotkeybuttons))
 		screen_client.screen -= hotkeybuttons
 	if(length(infodisplay))
@@ -194,14 +197,31 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 	zone_select = null
 	pull_icon = null
 	backhudl = null
+	// These point at screens deleted above; a lingering hud would otherwise keep them from collecting.
+	hsover = null
+	mana_over = null
+	quad_intents = null
+	give_intent = null
+	stressies = null
+	cmode_button = null
+	rmb_intent = null
+	cdleft = null
+	cdright = null
+	cdmid = null
+	hand_slots = null
 
 	QDEL_LIST(toggleable_inventory)
+	QDEL_LIST(smallclothes_inventory)
 	QDEL_LIST(hotkeybuttons)
 	throw_icon = null
 	QDEL_LIST(infodisplay)
 	QDEL_NULL(vis_holder)
 
 	healths = null
+	bloods = null
+	mana = null
+	stamina = null
+	energy = null
 	healthdoll = null
 	blobpwrdisplay = null
 

@@ -55,16 +55,17 @@ GLOBAL_VAR_INIT(total_runtimes_skipped, 0)
 			if (text2ascii(line) != 32)
 				stack_trace_storage += line
 
-	var/static/list/error_last_seen = list()
-	var/static/list/error_cooldown = list() /* Error_cooldown items will either be positive(cooldown time) or negative(silenced error)
+	// Built lazily: Genesis runtimes run before proc statics init, when initialized statics hold an unusable non-null value.
+	var/static/list/error_last_seen
+	var/static/list/error_cooldown /* Error_cooldown items will either be positive(cooldown time) or negative(silenced error)
 												If negative, starts at -1, and goes down by 1 each time that error gets skipped*/
-
-	if(!error_last_seen) // A runtime is occurring too early in start-up initialization
-		return ..()
+	var/static/regex/stack_workaround
+	error_last_seen ||= list()
+	error_cooldown ||= list()
+	stack_workaround ||= regex("[WORKAROUND_IDENTIFIER](.+?)[WORKAROUND_IDENTIFIER]$")
 
 	// Recover the call site encoded by stack_trace(), without masking malformed errors.
-	var/static/regex/stack_workaround = regex("[WORKAROUND_IDENTIFIER](.+?)[WORKAROUND_IDENTIFIER]$")
-	if(stack_workaround?.Find(E.name))
+	if(stack_workaround.Find(E.name))
 		try
 			var/list/data = json_decode(stack_workaround.group[1])
 			if(islist(data) && length(data) == 2 && istext(data[1]) && isnum(data[2]))
@@ -211,7 +212,8 @@ GLOBAL_VAR_INIT(total_runtimes_skipped, 0)
 /proc/send_to_glitchtip(exception/E, list/extra_data = null)
 	#ifndef SPACEMAN_DMM
 	#ifndef OPENDREAM
-	if(!CONFIG_GET(string/glitchtip_dsn))
+	// Config entries do not exist until world/New loads them.
+	if(!global.config?.entries || !CONFIG_GET(string/glitchtip_dsn))
 		return
 	var/glitchtip_dsn = CONFIG_GET(string/glitchtip_dsn)
 	//! Parse DSN to extract components

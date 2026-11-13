@@ -11,6 +11,7 @@ const contractGroups = {
   'Guild Errands': 'Поручения гильдии',
   Bounties: 'Охотничьи контракты',
   'Player Commissions': 'Контракты игроков',
+  'Carnal Contracts': 'Плотские контракты',
 };
 
 const contractTypes = {
@@ -21,6 +22,9 @@ const contractTypes = {
   Raid: 'Налёт',
   Boss: 'Босс',
   Commission: 'Заказ игрока',
+  'Fluid Harvest': 'Сбор жидкостей',
+  'Clutch Recovery': 'Сбор кладки',
+  'Sate and Mark': 'Утолить и пометить',
 };
 
 const contractDescriptions = {
@@ -30,6 +34,9 @@ const contractDescriptions = {
   'Clear Out': 'Зачистите враждебное скопление в известном регионе.',
   Raid: 'Примите бой против тяжёлой организованной группы врагов.',
   Boss: 'Выследите одиночную элитную угрозу за повышенную награду.',
+  'Fluid Harvest': 'Принесите семя или нектар существа, добытые любым способом.',
+  'Clutch Recovery': 'Принесите невылупившиеся яйца существа-несушки.',
+  'Sate and Mark': 'Доведите существ до похотливого изнеможения и повяжите на каждое ленту гильдии.',
 };
 
 const resolveText = (key, args = {}) => {

@@ -14,16 +14,12 @@
 /area/indoors/rmh_desert)
 "abg" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
-/obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/structure/bars/pipe,
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
 "acd" = (
@@ -125,9 +121,7 @@
 /area/under/rmh_desert/tea/palacecellar)
 "ajQ" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/blocks/stonered/tiny,
@@ -181,9 +175,7 @@
 /turf/open/floor/cobble/alt,
 /area/under/rmh_dungeon)
 "aov" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
@@ -200,17 +192,12 @@
 /area/outdoors/rmh_desert/valley)
 "aqR" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
-/obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/structure/bars/pipe,
 /obj/structure/bars/grille{
 	layer = 2
 	},
@@ -461,9 +448,7 @@
 /area/outdoors/rmh_desert/valley)
 "aOS" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 4
@@ -491,7 +476,6 @@
 "aPL" = (
 /obj/structure/fluff/railing/corner/south_west,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem1,
@@ -581,7 +565,6 @@
 /area/outdoors/rmh_desert/port)
 "aXq" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -743,7 +726,6 @@
 /area/under/rmh_dungeon)
 "bkY" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -756,7 +738,6 @@
 /area/under/rmh_desert/tea/palacecasemates)
 "bll" = (
 /obj/structure/winch{
-	dir = 2;
 	gid = "deast";
 	redstone_id = "deast"
 	},
@@ -773,7 +754,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -902,8 +882,7 @@
 "bxh" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 4
@@ -998,8 +977,7 @@
 "bFD" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/table/wood/large/corner/south_east,
 /turf/open/floor/blocks/stonered/tiny,
@@ -1024,9 +1002,7 @@
 /turf/open/floor/volcanic,
 /area/outdoors/rmh_air)
 "bGE" = (
-/obj/structure/table/wood/reinf_long{
-	pixel_y = 0
-	},
+/obj/structure/table/wood/reinf_long,
 /obj/structure/bars/shop,
 /turf/open/floor/concrete,
 /area/under/rmh_dungeon)
@@ -1307,8 +1283,7 @@
 "caJ" = (
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/table/wood/large/corner/north_east,
 /turf/open/floor/blocks/stonered/tiny,
@@ -1411,7 +1386,6 @@
 /area/under/rmh_desert/tea/hareml)
 "ckI" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/blue,
@@ -1490,9 +1464,7 @@
 /area/indoors/rmh_desert/phouse)
 "cpY" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/table/wood/large/corner/south_west,
 /turf/open/floor/blocks/stonered/tiny,
@@ -1532,8 +1504,6 @@
 /area/under/rmh_desert/tea/hareml)
 "ctz" = (
 /obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0;
 	pixel_x = -13
 	},
 /turf/closed/wall/mineral/pipe,
@@ -1553,14 +1523,11 @@
 /turf/closed/wall/mineral/wooddark/horizontal,
 /area/outdoors/rmh_desert/port)
 "cuO" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/church,
 /area/under/rmh_dungeon)
 "cwj" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -1719,9 +1686,7 @@
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/tea/harem)
 "cKj" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
@@ -1733,7 +1698,6 @@
 /area/outdoors/rmh_desert/oasis)
 "cKK" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -1806,8 +1770,7 @@
 "cTz" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/blocks/stonered/tiny,
@@ -2038,8 +2001,7 @@
 /area/under/rmh_desert/tea/harem)
 "dqy" = (
 /obj/structure/table/wood/reinf_long{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /obj/effect/spawner/map_spawner/loot/potion_poisons,
 /obj/effect/spawner/map_spawner/loot/potion_ingredient/herb,
@@ -2157,7 +2119,6 @@
 /area/under/rmh_desert/tea/harem)
 "dCh" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -2248,9 +2209,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/churchrough,
 /area/under/rmh_dungeon)
 "dIn" = (
@@ -2260,7 +2219,6 @@
 /obj/effect/decal/cobbleedge{
 	icon_state = "planks_1";
 	icon = 'icons/obj/structures/bridge/bridge.dmi';
-	dir = 2;
 	name = "planks"
 	},
 /turf/open/floor/desert/dunes,
@@ -2327,7 +2285,6 @@
 /area/under/rmh_desert/tea/harem)
 "dMK" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -2571,8 +2528,7 @@
 "ehZ" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 8
@@ -2966,7 +2922,6 @@
 /area/indoors/rmh_desert)
 "eIQ" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -3199,7 +3154,6 @@
 /area/under/rmh_dungeon)
 "eXw" = (
 /obj/structure/winch{
-	dir = 2;
 	gid = "deast";
 	redstone_id = "deast"
 	},
@@ -3238,7 +3192,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -3282,7 +3235,6 @@
 "faQ" = (
 /obj/structure/fluff/railing/corner/south_west,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -3450,8 +3402,7 @@
 "fnA" = (
 /obj/structure/bars/pipe,
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /turf/open/floor/metal/barograte,
 /area/under/rmh_dungeon)
@@ -3462,15 +3413,13 @@
 /area/under/rmh_desert/tea/hareml)
 "fot" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 9;
-	pixel_y = 0
+	dir = 9
 	},
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
@@ -3683,9 +3632,7 @@
 /turf/open/floor/sandstone_tile,
 /area/under/rmh_desert/tea/hareml)
 "fHZ" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
@@ -3849,9 +3796,7 @@
 /obj/structure/fluff/walldeco/bath/wallpipes/innie{
 	pixel_y = -10
 	},
-/obj/structure/bars/pipe{
-	pixel_y = 0
-	},
+/obj/structure/bars/pipe,
 /turf/closed/wall/mineral/stonebrick/reddish,
 /area/under/rmh_dungeon)
 "fYs" = (
@@ -3922,7 +3867,6 @@
 	dir = 9
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -3935,19 +3879,16 @@
 /area/under/rmh_dungeon)
 "gcW" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
@@ -4030,8 +3971,7 @@
 "glx" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/under/rmh_dungeon)
@@ -4061,7 +4001,6 @@
 "gnb" = (
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/five,
@@ -4143,9 +4082,7 @@
 /area/under/rmh_dungeon)
 "grP" = (
 /obj/structure/hotspring/border/three,
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
@@ -4208,8 +4145,7 @@
 "gxe" = (
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/bfloorz,
 /area/under/rmh_desert/tea/hareml)
@@ -4221,7 +4157,6 @@
 /area/outdoors/rmh_desert/port)
 "gyT" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy.";
 	light_inner_range = 1;
@@ -4552,9 +4487,7 @@
 /turf/open/floor/tile/harem1,
 /area/under/rmh_desert/tea/palacecasemates)
 "hdM" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/churchrough,
 /area/under/rmh_dungeon)
 "hdV" = (
@@ -4579,8 +4512,7 @@
 "hfF" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/under/rmh_dungeon)
@@ -4639,7 +4571,6 @@
 /area/outdoors/rmh_desert/valley)
 "hkO" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -4842,7 +4773,6 @@
 /area/outdoors/rmh_desert/roofs)
 "hzR" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -4936,7 +4866,6 @@
 /area/outdoors/rmh_desert/valley)
 "hFo" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -5113,7 +5042,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5209,7 +5137,6 @@
 /area/outdoors/rmh_desert/oasis)
 "hZg" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -5296,8 +5223,7 @@
 "ieW" = (
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/under/rmh_dungeon)
@@ -5398,9 +5324,7 @@
 /turf/open/floor/desert/dunes,
 /area/outdoors/rmh_desert/port)
 "imp" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/churchrough,
 /area/under/rmh_dungeon)
@@ -5429,7 +5353,6 @@
 /area/under/rmh_desert/ziqurat)
 "inN" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -5628,7 +5551,6 @@
 /area/under/rmh_dungeon)
 "iEf" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5685,7 +5607,6 @@
 /obj/effect/decal/cobbleedge{
 	icon_state = "planks_1";
 	icon = 'icons/obj/structures/bridge/bridge.dmi';
-	dir = 2;
 	name = "planks"
 	},
 /turf/open/floor/desert/dunes,
@@ -5738,9 +5659,7 @@
 /area/outdoors/rmh_desert/port)
 "iLu" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/under/rmh_dungeon)
@@ -5819,9 +5738,7 @@
 /turf/open/floor/tile/kitchen,
 /area/under/rmh_desert/tea/hareml)
 "iSb" = (
-/turf/closed/wall/mineral/wooddark/end{
-	dir = 2
-	},
+/turf/closed/wall/mineral/wooddark/end,
 /area/indoors/rmh_desert)
 "iSB" = (
 /obj/effect/landmark/tram/queued_path{
@@ -5928,7 +5845,6 @@
 /area/outdoors/rmh_desert/valley)
 "iXe" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5993,7 +5909,6 @@
 /area/under/rmh_desert/tea/hareml)
 "jbT" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/shadow_floor{
@@ -6157,8 +6072,7 @@
 "jnj" = (
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fluff/pillow/magenta{
 	dir = 1;
@@ -6204,7 +6118,6 @@
 /area/under/rmh_desert/tea/harem)
 "jsi" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -6383,7 +6296,6 @@
 /area/indoors/rmh_desert/phouse)
 "jER" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem1,
@@ -6502,7 +6414,6 @@
 /area/outdoors/rmh_desert/valley)
 "jPR" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -6565,8 +6476,7 @@
 "jTf" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 4
@@ -6627,8 +6537,7 @@
 /obj/item/natural/wood/plank,
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/item/natural/glass/shard,
 /obj/effect/decal/cleanable/debris/glass,
@@ -6636,15 +6545,13 @@
 /area/indoors/rmh_desert)
 "jWC" = (
 /obj/structure/bars/pipe{
-	dir = 6;
-	pixel_y = 0
+	dir = 6
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
@@ -6657,12 +6564,10 @@
 /area/under/rmh_desert/tea/hareml)
 "jYx" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/pipe{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /obj/effect/particle_effect/sparks,
 /turf/open/floor/metal/barograte,
@@ -6670,8 +6575,7 @@
 "jZq" = (
 /obj/effect/decal/edge{
 	dir = 4;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/item/fertilizer/ash,
 /turf/open/floor/tile/diamond/blue,
@@ -6686,7 +6590,6 @@
 /area/under/rmh_desert/tea/palacecasemates)
 "kbG" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/blue,
@@ -6714,7 +6617,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -6748,9 +6650,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/church,
 /area/under/rmh_dungeon)
 "kgb" = (
@@ -6878,15 +6778,13 @@
 /area/under/rmh_desert/spider)
 "kpb" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
 	dir = 9;
-	pixel_y = 0;
 	pixel_x = 19
 	},
 /obj/effect/particle_effect/sparks,
@@ -6901,9 +6799,7 @@
 	},
 /area/under/rmh_dungeon)
 "kpt" = (
-/obj/structure/door/weak/bolt{
-	dir = 2
-	},
+/obj/structure/door/weak/bolt,
 /turf/open/floor/ruinedwood/chevron,
 /area/indoors/rmh_desert/phouse)
 "krb" = (
@@ -6992,8 +6888,7 @@
 "kvU" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_desert)
@@ -7017,7 +6912,6 @@
 /area/outdoors/rmh_desert/valley)
 "kyM" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -7309,8 +7203,7 @@
 "kTN" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_desert)
@@ -7360,9 +7253,7 @@
 /turf/open/floor/tile/brownbrick,
 /area/outdoors/rmh_desert/valley)
 "kYA" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
@@ -7409,7 +7300,6 @@
 "lcK" = (
 /obj/structure/flora/ausbushes/fullgrass,
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy.";
 	light_inner_range = 1;
@@ -7495,7 +7385,6 @@
 "lix" = (
 /obj/structure/fluff/railing/corner/south_east,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/shadow_floor{
@@ -7860,7 +7749,6 @@
 /area/under/rmh_dungeon)
 "lIu" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -7933,9 +7821,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/churchrough,
 /area/under/rmh_dungeon)
 "lLy" = (
@@ -8180,7 +8066,6 @@
 /area/under/rmh_dungeon)
 "mkW" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
@@ -8195,9 +8080,7 @@
 /area/outdoors/rmh_desert/oasis)
 "mmW" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 8
@@ -8210,7 +8093,6 @@
 /area/indoors/rmh_desert)
 "mnO" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -8384,7 +8266,6 @@
 /area/under/rmh_dungeon)
 "mCG" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -8531,7 +8412,6 @@
 /area/outdoors/rmh_desert/valley)
 "mLg" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -8607,7 +8487,6 @@
 /area/under/rmh_dungeon)
 "mTB" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -8878,8 +8757,7 @@
 /obj/item/fertilizer/ash,
 /obj/effect/decal/edge{
 	dir = 4;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/blue,
 /area/indoors/rmh_desert)
@@ -8923,7 +8801,6 @@
 /area/under/rmh_desert/tea/hareml)
 "npB" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -8952,9 +8829,7 @@
 /area/under/rmh_desert/tea/harem)
 "nse" = (
 /obj/structure/hotspring/border,
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
@@ -9029,7 +8904,6 @@
 /area/under/rmh_desert/tea/hareml)
 "nuY" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9046,8 +8920,7 @@
 "nvl" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 8
@@ -9066,12 +8939,10 @@
 "nxe" = (
 /obj/structure/bars/pipe{
 	dir = 10;
-	pixel_y = 0;
 	pixel_x = 19
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/fluff/walldeco/gear,
 /obj/structure/fluff/walldeco/gear/small{
@@ -9082,7 +8953,6 @@
 /area/under/rmh_dungeon)
 "nxu" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9163,9 +9033,7 @@
 /area/indoors/rmh_desert/phouse)
 "nBZ" = (
 /obj/structure/hotspring/border/two,
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/church,
 /area/under/rmh_dungeon)
 "nCc" = (
@@ -9191,12 +9059,10 @@
 "nFh" = (
 /obj/structure/bars/pipe{
 	dir = 10;
-	pixel_y = 0;
 	pixel_x = 19
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /turf/open/floor/metal/barograte/open,
 /area/under/rmh_dungeon)
@@ -9325,7 +9191,6 @@
 /area/outdoors/rmh_desert/port)
 "nSd" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9382,7 +9247,6 @@
 "nWU" = (
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9476,15 +9340,13 @@
 /area/indoors/rmh_desert/phouse)
 "ocF" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
@@ -9778,9 +9640,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /turf/open/floor/church,
 /area/under/rmh_dungeon)
 "osl" = (
@@ -9850,7 +9710,6 @@
 /area/indoors/rmh_desert/phouse)
 "ovg" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9887,7 +9746,6 @@
 /area/under/rmh_dungeon)
 "oyK" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9917,7 +9775,6 @@
 /area/outdoors/rmh_desert/port)
 "oAx" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -9998,15 +9855,13 @@
 /area/outdoors/rmh_desert/port)
 "oFn" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/effect/decal/cleanable/greenglow,
 /obj/structure/fluff/walldeco/gear,
@@ -10071,9 +9926,7 @@
 /area/outdoors/rmh_air)
 "oIk" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_desert/phouse)
@@ -10163,8 +10016,7 @@
 /obj/structure/chair/stool,
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_desert/phouse)
@@ -10545,12 +10397,10 @@
 /area/outdoors/rmh_desert/valley)
 "poM" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/pipe{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /turf/open/floor/metal/barograte,
 /area/under/rmh_dungeon)
@@ -10571,8 +10421,7 @@
 	},
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/fluff/millstone{
 	pixel_y = 12
@@ -10653,8 +10502,7 @@
 "ptg" = (
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 4
@@ -10717,9 +10565,7 @@
 "pwm" = (
 /obj/item/fertilizer/ash,
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/blue,
 /area/indoors/rmh_desert)
@@ -10894,7 +10740,6 @@
 /area/under/rmh_desert/pyramid)
 "pNv" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /obj/structure/table/wood/large/corner/south_west,
@@ -10902,8 +10747,7 @@
 /area/under/rmh_dungeon)
 "pOF" = (
 /obj/structure/table/wood/reinf_long{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /obj/structure/bars/shop,
 /turf/open/floor/concrete,
@@ -10911,8 +10755,7 @@
 "pOT" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/table/wood/large/corner/north_west,
 /turf/open/floor/blocks/stonered/tiny,
@@ -11016,7 +10859,6 @@
 /area/under/rmh_dungeon)
 "pVd" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -11054,7 +10896,6 @@
 /area/under/rmh_dungeon)
 "pYh" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
@@ -11124,9 +10965,7 @@
 /area/under/rmh_desert/tea/palacecasemates)
 "qfd" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/item/natural/wood/plank,
 /turf/open/floor/blocks/stonered/tiny,
@@ -11334,8 +11173,7 @@
 "quW" = (
 /obj/structure/fluff/steamvent,
 /obj/structure/fluff/walldeco/bath/wallpipes/innie{
-	dir = 10;
-	pixel_y = 0
+	dir = 10
 	},
 /turf/open/floor/concrete,
 /area/under/rmh_dungeon)
@@ -11419,7 +11257,6 @@
 	pixel_y = 6
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/blue,
@@ -11469,7 +11306,6 @@
 /obj/effect/decal/cobbleedge{
 	icon_state = "planks_1";
 	icon = 'icons/obj/structures/bridge/bridge.dmi';
-	dir = 2;
 	name = "planks"
 	},
 /turf/open/floor/twig,
@@ -11645,7 +11481,6 @@
 "rba" = (
 /obj/structure/flora/grass/herb/random,
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy.";
 	light_inner_range = 1;
@@ -11811,7 +11646,6 @@
 "rrH" = (
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -11833,7 +11667,6 @@
 /area/outdoors/rmh_desert/oasis)
 "rvf" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /obj/structure/table/wood/large/corner/south_east,
@@ -11916,7 +11749,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem1,
@@ -11941,8 +11773,7 @@
 "rDb" = (
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /obj/structure/chair/bench/church/smallbench{
 	dir = 8
@@ -11990,7 +11821,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -12239,17 +12069,12 @@
 /area/under/rmh_dungeon)
 "sbV" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/pipe{
-	dir = 9;
-	pixel_y = 0
+	dir = 9
 	},
-/obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/structure/bars/pipe,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/metal/barograte/open,
 /area/under/rmh_dungeon)
@@ -12324,7 +12149,6 @@
 /area/under/rmh_desert/tea/harem)
 "slg" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /obj/item/fertilizer/ash,
@@ -12332,17 +12156,12 @@
 /area/indoors/rmh_desert)
 "sll" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
-/obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/structure/bars/pipe,
 /obj/structure/bars/grille{
 	layer = 2
 	},
@@ -12354,9 +12173,7 @@
 /turf/open/floor/tile/brownbrick,
 /area/under/town/rmh/sewer)
 "slC" = (
-/obj/structure/door/weak/bolt{
-	dir = 2
-	},
+/obj/structure/door/weak/bolt,
 /obj/effect/spawner/trap,
 /turf/open/floor/concrete,
 /area/under/rmh_dungeon)
@@ -12471,15 +12288,13 @@
 /area/under/rmh_desert/tea/palacecellar)
 "sru" = (
 /obj/structure/bars/pipe{
-	dir = 6;
-	pixel_y = 0
+	dir = 6
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/effect/particle_effect/sparks,
 /turf/open/floor/metal/alt,
@@ -12561,7 +12376,6 @@
 /area/outdoors/rmh_desert/oasis)
 "sxm" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -12672,7 +12486,6 @@
 /area/under/rmh_dungeon)
 "sCW" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/item/natural/silk,
@@ -12820,23 +12633,17 @@
 /area/outdoors/rmh_air)
 "sPV" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 5;
-	pixel_y = 0
+	dir = 5
 	},
+/obj/structure/bars/pipe,
 /obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0
-	},
-/obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/effect/particle_effect/sparks,
 /turf/open/floor/metal/alt,
@@ -13014,23 +12821,17 @@
 /area/indoors/rmh_desert)
 "tgo" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 5;
-	pixel_y = 0
+	dir = 5
 	},
+/obj/structure/bars/pipe,
 /obj/structure/bars/pipe{
-	dir = 2;
-	pixel_y = 0
-	},
-/obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/effect/particle_effect/smoke{
 	lifetime = 14400
@@ -13192,8 +12993,7 @@
 /area/under/rmh_desert/pyramid)
 "tre" = (
 /obj/structure/flora/sakura{
-	pixel_x = -58;
-	plane = -6
+	pixel_x = -58
 	},
 /turf/open/floor/grass/eora,
 /area/under/rmh_dungeon)
@@ -13219,7 +13019,6 @@
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -13308,7 +13107,6 @@
 /area/under/rmh_desert/tea/palacecasemates)
 "tBc" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/sandstone_tile,
@@ -13447,7 +13245,6 @@
 "tKN" = (
 /obj/structure/curtain/purple,
 /obj/structure/door/viewport{
-	dir = 2;
 	name = "Artifacts Gallery"
 	},
 /obj/effect/mapping_helpers/access/keyset/manor/lord{
@@ -13504,9 +13301,7 @@
 /turf/open/floor/desert/citybrick/citybrick1,
 /area/under/rmh_desert/ziqurat)
 "tOQ" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/wood,
 /area/indoors/rmh_desert/phouse)
 "tPf" = (
@@ -13592,15 +13387,13 @@
 /area/outdoors/rmh_desert/port)
 "tTL" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 9;
-	pixel_y = 0
+	dir = 9
 	},
 /obj/effect/particle_effect/sparks,
 /turf/open/floor/metal/alt,
@@ -13983,9 +13776,7 @@
 /turf/open/floor/sandstone,
 /area/under/rmh_desert/tea/harem)
 "uEv" = (
-/obj/structure/fluff/walldeco/church/line{
-	dir = 2
-	},
+/obj/structure/fluff/walldeco/church/line,
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
@@ -14099,7 +13890,6 @@
 /area/under/rmh_bedrock)
 "uMd" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/harem,
@@ -14196,7 +13986,6 @@
 /area/indoors/rmh_desert/phouse)
 "uVm" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -14332,15 +14121,13 @@
 /area/outdoors/rmh_air)
 "vet" = (
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
 	dir = 9;
-	pixel_y = 0;
 	pixel_x = 19
 	},
 /obj/effect/particle_effect/smoke{
@@ -14363,7 +14150,6 @@
 	dir = 9
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -14467,7 +14253,6 @@
 /area/outdoors/rmh_desert/port)
 "vkE" = (
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -14579,7 +14364,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'
@@ -14615,15 +14399,13 @@
 /area/outdoors/rmh_air)
 "vwj" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/grille{
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/metal/alt,
@@ -14634,16 +14416,13 @@
 /area/indoors/rmh_desert)
 "vwW" = (
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/bars/pipe{
-	dir = 6;
-	pixel_y = 0
+	dir = 6
 	},
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /turf/open/floor/metal/barograte,
 /area/under/rmh_dungeon)
@@ -14707,7 +14486,6 @@
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/sandstone_tile/five,
@@ -14764,9 +14542,7 @@
 /obj/structure/fluff/walldeco/bath/wallpipes/innie{
 	pixel_y = -10
 	},
-/obj/structure/bars/pipe{
-	pixel_y = 0
-	},
+/obj/structure/bars/pipe,
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
 "vEj" = (
@@ -14963,7 +14739,6 @@
 	alpha = 5
 	},
 /obj/structure/stairs/stone{
-	dir = 2;
 	color = "#636363"
 	},
 /turf/open/floor/sandstone,
@@ -15241,8 +15016,7 @@
 "wss" = (
 /obj/structure/bars/pipe,
 /obj/structure/bars/pipe{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/effect/particle_effect/sparks,
 /turf/open/floor/metal/barograte,
@@ -15399,8 +15173,7 @@
 	layer = 2
 	},
 /obj/structure/bars/pipe{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/metal/alt,
 /area/under/rmh_dungeon)
@@ -16314,7 +16087,6 @@
 "yin" = (
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/cobbleedge{
-	dir = 2;
 	icon_state = "borderfall";
 	pixel_y = -8;
 	icon = 'icons/turf/constructed/misc.dmi'

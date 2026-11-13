@@ -1,7 +1,6 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "ab" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /turf/open/floor/hay,
@@ -768,7 +767,6 @@
 /area/indoors/town/church/chapel)
 "eT" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -909,7 +907,6 @@
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /turf/open/floor/cobble,
@@ -961,7 +958,6 @@
 /area/ship/middeck)
 "ge" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /turf/open/floor/hay,
@@ -1321,7 +1317,6 @@
 /area/ship/middeck)
 "ik" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/border,
@@ -1632,7 +1627,6 @@
 /area/ship/middeck)
 "kF" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/machinery/light/fueled/wallfire/candle/r,
@@ -1867,7 +1861,6 @@
 /obj/item/natural/fur,
 /obj/item/natural/fur,
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/border,
@@ -2776,7 +2769,6 @@
 /area/ship/middeck)
 "sJ" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/ladder,
@@ -3366,7 +3358,6 @@
 "wc" = (
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /obj/effect/landmark/boat_transfer/ship_side,
@@ -4559,7 +4550,6 @@
 /area/indoors/town/church/inquisition)
 "ED" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/wood,
@@ -5645,7 +5635,6 @@
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /turf/open/floor/wood,
@@ -5656,7 +5645,6 @@
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /obj/machinery/light/fueled/wallfire/candle{
@@ -5787,7 +5775,6 @@
 /area/indoors/town/vault)
 "NA" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /turf/open/floor/rooftop/green{
@@ -6077,7 +6064,6 @@
 /area/indoors/town/church/chapel)
 "Px" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/border,
@@ -6102,7 +6088,6 @@
 /area/ship/nobledeck)
 "PI" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/wood{
@@ -6620,7 +6605,6 @@
 /area/ship/middeck)
 "Sz" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/border,
@@ -7195,7 +7179,6 @@
 /area/ship/nobledeck)
 "VR" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/wood,
@@ -7662,7 +7645,6 @@
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /obj/effect/decal/cobbleedge{
@@ -7670,7 +7652,6 @@
 	},
 /obj/effect/decal/borderfall{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 8
 	},
 /turf/open/floor/herringbone,
@@ -7706,7 +7687,6 @@
 /area/ship/topdeck)
 "Zw" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/railing/border,

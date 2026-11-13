@@ -19,7 +19,7 @@
 	to_chat(user, span_notice("Please use an image of the head and shoulder area to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or ANYTHING AI generated.</span>"]"))
 	to_chat(user, span_notice("If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser."))
 	to_chat(user, span_notice("Keep in mind that the photo will be downsized to 325x325 pixels, so the more square the photo, the better it will look."))
-	var/new_headshot_link = input(user, "Input the headshot link (https, hosts: gyazo, lensdump, imgbox, catbox):", "Headshot", prefs.read_preference(/datum/preference/text/headshot_link)) as text|null
+	var/new_headshot_link = input(user, "Input the headshot link (https, hosts: [prefs.get_image_host_names()]):", "Headshot", prefs.read_preference(/datum/preference/text/headshot_link)) as text|null
 	if(isnull(new_headshot_link))
 		return
 	new_headshot_link = trim(new_headshot_link)

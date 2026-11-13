@@ -1,5 +1,6 @@
 /datum/sex_action/masturbate/other/clit
-	name = "Stroke their clit"
+	name = "Clit stroking"
+	remote_phrase = "Stroke their clit"
 	check_same_tile = FALSE
 
 /datum/sex_action/masturbate/other/clit/shows_on_menu(mob/living/user, mob/living/target)
@@ -29,7 +30,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] strokes [target]'s clit..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("finger", target, 30, ORGAN_SLOT_VAGINA)
 
 	perform_sex_action(target, user, 2, 0, 2)
 

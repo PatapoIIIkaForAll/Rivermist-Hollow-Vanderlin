@@ -18,26 +18,8 @@
 	organ_dna_type = /datum/organ_dna/vagina
 
 /datum/customizer_entry/organ/genitals/vagina
+	/// Older saves kept fertility here; the womb entry copies it once and owns it from then on.
 	var/fertility = TRUE
-
-/datum/customizer_choice/organ/genitals/vagina/generate_pref_choices(list/dat, datum/preferences/prefs, datum/customizer_entry/entry, customizer_type)
-	..()
-	var/datum/customizer_entry/organ/genitals/vagina/vagina_entry = entry
-	dat += "<br>Fertile: <a href='byond://?_src_=prefs;task=change_customizer;customizer=[customizer_type];customizer_task=fertile''>[vagina_entry.fertility ? "Fertile" : "Sterile"]</a>"
-
-/datum/customizer_choice/organ/genitals/vagina/imprint_organ_dna(datum/organ_dna/organ_dna, datum/customizer_entry/entry, datum/preferences/prefs)
-	..()
-	var/datum/organ_dna/vagina/vagina_dna = organ_dna
-	var/datum/customizer_entry/organ/genitals/vagina/vagina_entry = entry
-	vagina_dna.fertility = vagina_entry.fertility
-
-/datum/customizer_choice/organ/genitals/vagina/handle_topic(mob/user, list/href_list, datum/preferences/prefs, datum/customizer_entry/entry, customizer_type)
-	..()
-	var/datum/customizer_entry/organ/genitals/vagina/vagina_entry = entry
-	switch(href_list["customizer_task"])
-		if("fertile")
-			vagina_entry.fertility = !vagina_entry.fertility
-
 
 /datum/customizer/organ/genitals/vagina/human
 	customizer_choices = list(/datum/customizer_choice/organ/genitals/vagina/human)

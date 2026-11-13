@@ -41,6 +41,7 @@
 	attack_sound = list('sound/combat/hits/onstone/wallhit.ogg')
 	dodgetime = 30
 	aggressive = 1
+	slam_cooldown_time = 8 SECONDS
 
 	base_constitution = 15
 	base_endurance = 15

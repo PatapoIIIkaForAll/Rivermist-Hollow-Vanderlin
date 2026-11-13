@@ -1,7 +1,7 @@
 /obj/item/piercings
 	name = "piercings"
 	desc = "piercings."
-	icon = 'modular_rmh/icons/mob/sprite_accessory/piercings/rings.dmi'
+	icon = 'modular_rmh/icons/mob/sprite_accessory/piercings/objects.dmi'
 	icon_state = "rings"
 	obj_flags = CAN_BE_HIT
 	blade_dulling = DULLING_CUT
@@ -9,6 +9,7 @@
 	integrity_failure = 0.1
 	var/datum/bodypart_feature/piercing/piercings_feature
 	var/sprite_acc = /datum/sprite_accessory/piercing/rings
+	dropshrink = 0.4
 
 /obj/item/piercings/Destroy()
 	var/mob/living/carbon/human/wearer = loc
@@ -61,6 +62,35 @@
 	desc = "Same as the ear ones, but for your nipples. These are in a shape of beads, made of emerald."
 	icon_state = "beads-e"
 	sprite_acc = /datum/sprite_accessory/piercing/beads/emerald
+
+/obj/item/piercings/beads/tag
+	name = "nipple tag"
+	desc = "Usually used by slavers and enthusiasts to brand someone without damaging the goods too much."
+	icon_state = "beads-tag"
+	sprite_acc = /datum/sprite_accessory/piercing/rings/tag
+
+/obj/item/piercings/beads/tag/Initialize()
+	. = ..()
+	var/list/datum/inscription/initial_inscriptions = list(
+		new /datum/inscription("Change me!", /datum/language/common)
+	)
+	AddComponent(/datum/component/inscription_holder, initial_inscriptions)
+
+/obj/item/piercings/beads/tag/attack_self(mob/user, list/modifiers)
+	var/datum/component/inscription_holder/holder = GetComponent(/datum/component/inscription_holder)
+	if(!holder)
+		return
+
+	var/datum/inscription/inscription = holder.get_inscription(1)
+	if(!inscription)
+		return
+
+	var/new_text = input(usr, inscription.get_text(), "What do you want to write here?") as message | null
+
+	if(!new_text)
+		return
+
+	inscription.set_text(new_text, user.get_default_language())
 
 /obj/item/piercings/rings
 	name = "ring piercings"

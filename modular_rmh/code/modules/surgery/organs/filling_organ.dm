@@ -45,8 +45,10 @@
 	var/max_reagents = 30
 	/// TRUE if capacity scales with organ_size set in prefs.
 	var/organ_sizeable = FALSE
-	/// Reagent this organ produces; null for organs that only hold fluid.
+	/// Main reagent this organ produces, the one that carries maker data; null for organs that only hold fluid.
 	var/datum/reagent/reagent_to_make = /datum/reagent/consumable/nutriment
+	/// Natural fluid as reagent type = share when it mixes several types, main type first; null for one type.
+	var/list/fluid_mix
 	/// Base setting for production; fluid modifiers can force or block it. Read is_producing().
 	var/produces_fluid = FALSE
 	/// Units produced per second while producing.
@@ -117,30 +119,152 @@
 	var/oviposition_lay_action = "lay"
 
 /mob/living/carbon
-	/// Completed internal hatchling births, stored as world.time values for the rolling implantation limit.
+	/// world.time of each creature hatched from an egg or embryo this body carried, oldest first.
 	var/list/recent_oviposition_births
 	/// Prevents repeated implantation attempts from spamming the recovery warning.
 	var/next_oviposition_birth_limit_warning = 0
 
-/// Returns whether another egg or embryo may be implanted under the rolling birth limit.
+/obj/item/oviposition_egg
+	/// When the birth limit held this egg dormant; 0 while it is free to grow.
+	var/gestation_held_since = 0
+	/// Growth arguments a held egg keeps for when it wakes.
+	var/datum/weakref/held_father_ref
+	var/held_hatch_result_type
+	var/held_fertilized = FALSE
+	var/list/held_father_features
+	var/held_father_name
+	/// Who carried this egg until it was laid; a hatch on the floor counts for them.
+	var/datum/weakref/birth_carrier_ref
+
+/// TRUE when an egg hatching into [hatch_type] makes a creature, not a snack.
+/proc/is_oviposition_offspring_type(hatch_type)
+	return ispath(hatch_type, /atom/movable) && !ispath(hatch_type, /obj/item/reagent_containers/food)
+
+/// Implants always land; past the birth limit they lie dormant, see can_start_oviposition_gestation().
 /mob/living/carbon/proc/can_receive_oviposition_implant(show_feedback = FALSE)
+	return TRUE
+
+/// Drops births older than the window; how many are left.
+/mob/living/carbon/proc/prune_oviposition_births()
 	var/birth_cutoff = world.time - OVIPOSITION_BIRTH_LIMIT_WINDOW
 	while(length(recent_oviposition_births) && recent_oviposition_births[1] <= birth_cutoff)
 		recent_oviposition_births.Cut(1, 2)
+	return length(recent_oviposition_births)
 
-	if(length(recent_oviposition_births) < OVIPOSITION_BIRTH_LIMIT)
+/// Creature eggs growing inside this body; each holds a birth-limit slot until it hatches.
+/mob/living/carbon/proc/count_oviposition_gestations()
+	. = 0
+	for(var/obj/item/organ/organ as anything in internal_organs)
+		if(!organ.supports_oviposition_pregnancy())
+			continue
+		for(var/obj/item/oviposition_egg/egg as anything in organ.get_oviposition_eggs(TRUE))
+			var/datum/component/pregnancy/pregnancy = egg.get_pregnancy_component()
+			if(!pregnancy.laid && pregnancy.spawns_offspring())
+				.++
+
+/// Whether another creature egg or embryo may start growing: recent births plus growing ones stay under the limit.
+/mob/living/carbon/proc/can_start_oviposition_gestation(show_feedback = FALSE)
+	var/births = prune_oviposition_births()
+	var/taken = births + count_oviposition_gestations()
+	if(taken < OVIPOSITION_BIRTH_LIMIT)
 		return TRUE
 
 	if(show_feedback && world.time >= next_oviposition_birth_limit_warning)
-		var/unlock_birth_index = length(recent_oviposition_births) - OVIPOSITION_BIRTH_LIMIT + 1
-		var/time_until_recovered = recent_oviposition_births[unlock_birth_index] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time
-		to_chat(src, span_warning("My body is still recovering from so many recent births. It cannot accept another egg or embryo for [DisplayTimeText(time_until_recovered)]."))
 		next_oviposition_birth_limit_warning = world.time + 1 MINUTES
+		var/unlock_birth_index = taken - OVIPOSITION_BIRTH_LIMIT + 1
+		if(unlock_birth_index <= births)
+			var/time_until_recovered = recent_oviposition_births[unlock_birth_index] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time
+			to_chat(src, span_warning("My body is still recovering from so many recent pregnancies. Nothing new will grow in me for [DisplayTimeText(time_until_recovered)]."))
+		else
+			to_chat(src, span_warning("My body is still recovering from so many recent pregnancies. Nothing new will grow in me for a while yet."))
 	return FALSE
 
-/// Records a successfully completed internal hatchling birth for the rolling implantation limit.
+/// The birth limit as the holes window shows it: counts, free slots, and seconds until slots free.
+/mob/living/carbon/proc/get_oviposition_birth_status()
+	var/births = prune_oviposition_births()
+	var/growing = count_oviposition_gestations()
+	var/list/status = list(
+		"limit" = OVIPOSITION_BIRTH_LIMIT,
+		"births" = births,
+		"growing" = growing,
+		"held" = length(get_held_oviposition_eggs()),
+		"free" = max(0, OVIPOSITION_BIRTH_LIMIT - births - growing),
+		"next_free_seconds" = 0,
+		"clear_seconds" = 0,
+	)
+	// Only births age out; growing eggs free their slot when they hatch.
+	if(births)
+		status["next_free_seconds"] = round(max(0, recent_oviposition_births[1] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time) / 10)
+		status["clear_seconds"] = round(max(0, recent_oviposition_births[births] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time) / 10)
+	return status
+
+/// The one place a hatched creature counts toward the rolling birth limit.
 /mob/living/carbon/proc/record_oviposition_birth()
 	LAZYADD(recent_oviposition_births, world.time)
+
+/// Eggs in this body that the birth limit holds dormant, each to the organ holding it.
+/mob/living/carbon/proc/get_held_oviposition_eggs()
+	. = list()
+	for(var/obj/item/organ/organ as anything in internal_organs)
+		if(!organ.supports_oviposition_pregnancy())
+			continue
+		for(var/obj/item/oviposition_egg/egg as anything in organ.get_oviposition_eggs(FALSE))
+			if(egg.gestation_held_since)
+				.[egg] = organ
+
+/// Checks again later for held eggs; the soonest a slot frees by age, at most a minute away.
+/mob/living/carbon/proc/schedule_held_oviposition_check()
+	var/delay = OVIPOSITION_HELD_EGG_RECHECK
+	if(prune_oviposition_births())
+		delay = min(delay, recent_oviposition_births[1] + OVIPOSITION_BIRTH_LIMIT_WINDOW - world.time)
+	addtimer(CALLBACK(src, PROC_REF(wake_held_oviposition_eggs)), max(1 SECONDS, delay), TIMER_UNIQUE)
+
+/// Starts the oldest held eggs while the limit has room; rechecks while any still wait. How many woke.
+/mob/living/carbon/proc/wake_held_oviposition_eggs()
+	var/list/held = get_held_oviposition_eggs()
+	if(!length(held))
+		return 0
+	var/woken = 0
+	while(stat != DEAD && length(held) && can_start_oviposition_gestation())
+		var/obj/item/oviposition_egg/oldest = held[1]
+		for(var/obj/item/oviposition_egg/egg as anything in held)
+			if(egg.gestation_held_since < oldest.gestation_held_since)
+				oldest = egg
+		var/obj/item/organ/host = held[oldest]
+		held -= oldest
+		if(host.wake_held_oviposition_egg(oldest))
+			woken++
+	if(length(held))
+		schedule_held_oviposition_check()
+	return woken
+
+/// Keeps [egg] dormant under the birth limit, with what it needs to start growing later.
+/obj/item/oviposition_egg/proc/hold_gestation(mob/living/father, hatch_result_type, fertilized, list/father_features, father_name)
+	if(gestation_held_since)
+		return
+	gestation_held_since = world.time
+	held_father_ref = father ? WEAKREF(father) : null
+	held_hatch_result_type = hatch_result_type
+	held_fertilized = fertilized || !isnull(father) || LAZYLEN(father_features)
+	held_father_features = LAZYLEN(father_features) ? father_features.Copy() : get_oviposition_parent_features(father)
+	held_father_name = father_name || father?.real_name
+
+/obj/item/oviposition_egg/proc/clear_gestation_hold()
+	gestation_held_since = 0
+	held_father_ref = null
+	held_hatch_result_type = null
+	held_fertilized = FALSE
+	held_father_features = null
+	held_father_name = null
+
+/// Starts a held egg with the arguments it was laid with; one that cannot start stays a plain dormant egg.
+/obj/item/organ/proc/wake_held_oviposition_egg(obj/item/oviposition_egg/egg)
+	var/mob/living/father = egg.held_father_ref?.resolve()
+	if(start_oviposition_egg_growth(egg, father, egg.held_hatch_result_type, egg.held_fertilized, egg.held_father_features, egg.held_father_name, FALSE) != OVI_EGG_GROWTH_STARTED)
+		egg.clear_gestation_hold()
+		return FALSE
+	to_chat(owner, span_love("The dormant [egg.name] in my [get_oviposition_location_name()] stirs and begins to grow."))
+	return TRUE
 
 /// Ends every active pregnancy after a successful resurrection rune rescue.
 /// Embryo sacs are destroyed, while ordinary eggs remain implanted but dormant.
@@ -148,6 +272,13 @@
 	var/ended_pregnancy = FALSE
 
 	for(var/obj/item/organ/organ as anything in internal_organs)
+		var/obj/item/organ/genitals/filling_organ/filling = organ
+		if(istype(filling) && filling.pregnant)
+			filling.clear_conventional_pregnancy()
+			ended_pregnancy = TRUE
+		// Eggs the birth limit held stay dormant for good too.
+		for(var/obj/item/oviposition_egg/held_egg as anything in organ.get_oviposition_eggs(FALSE))
+			held_egg.clear_gestation_hold()
 		var/list/growing_eggs = organ.get_oviposition_eggs(TRUE)
 		if(!length(growing_eggs))
 			continue
@@ -181,8 +312,20 @@
 	allows_oviposition_pregnancy = TRUE
 	oviposition_storage_component_type = /datum/component/body_storage/mouth
 	oviposition_location_name = "stomach"
-	oviposition_lay_verb = "coughs up"
-	oviposition_lay_action = "cough up"
+	oviposition_lay_verb = "passes"
+	oviposition_lay_action = "pass"
+
+/// What goes down must come out the other end: the stomach births through the rear when there is one.
+/obj/item/organ/guts/get_birth_canal()
+	var/obj/item/organ/genitals/filling_organ/anus = owner ? get_real_organ(owner, ORGAN_SLOT_ANUS) : null
+	return istype(anus) ? anus : src
+
+/// Contractions a labour from this organ adds for the way its passenger has to travel.
+/obj/item/organ/proc/get_birth_extra_contractions()
+	return 0
+
+/obj/item/organ/guts/get_birth_extra_contractions()
+	return 2
 
 /obj/item/organ/genitals/filling_organ/Insert(mob/living/M, special, drop_if_replaced, new_zone = null)
 	. = ..()
@@ -192,6 +335,7 @@
 	if(!reagents)
 		create_reagents(get_base_capacity())
 	reagents.maximum_volume = get_reagent_capacity()
+	orifice?.on_organ_inserted(M)
 	if(pregnant)
 		start_pregnancy_lactation()
 	// Surgery passes special = FALSE, so only spawned bodies start full.
@@ -201,6 +345,8 @@
 		RegisterSignal(M, COMSIG_MOB_FOOD_EAT, PROC_REF(on_owner_ate))
 
 /obj/item/organ/genitals/filling_organ/Remove(mob/living/M, special, drop_if_replaced)
+	stop_creature_fluid_ticks()
+	orifice?.on_organ_removed(M)
 	if(pregnant)
 		M?.remove_fluid_modifier(/datum/fluid_modifier/pregnancy_lactation, FLUID_SOURCE_PREGNANCY)
 	engorgement_steps = 0
@@ -216,14 +362,22 @@
 
 /obj/item/organ/genitals/filling_organ/on_reagent_change(changetype)
 	. = ..()
-	if(slot == ORGAN_SLOT_ANUS || slot == ORGAN_SLOT_VAGINA)
+	if(slot == ORGAN_SLOT_ANUS || slot == ORGAN_SLOT_VAGINA || slot == ORGAN_SLOT_WOMB)
 		SEND_SIGNAL(src, COMSIG_BODYSTORAGE_CHANGED)
+	if(!creature_fluid_ticking && owner && !iscarbon(owner))
+		consider_creature_fluid_ticks(changetype)
 
 /obj/item/organ/genitals/filling_organ/on_body_storage_inserted(obj/item/inserted_item, target_layer)
 	. = ..()
+	on_orifice_item_inserted(inserted_item, target_layer)
 	if(target_layer == STORAGE_LAYER_OUTER || !inserted_item || !reagents?.total_volume)
 		return
 	spill_excess_reagents()
+
+/obj/item/organ/genitals/filling_organ/on_body_storage_removed(obj/item/removed_item, target_layer)
+	. = ..()
+	if(target_layer == STORAGE_LAYER_INNER)
+		on_orifice_item_removed(removed_item)
 
 /// Capacity from organ size alone, before modifiers, pregnancy and stored items.
 /obj/item/organ/genitals/filling_organ/proc/get_base_capacity()
@@ -278,7 +432,7 @@
 
 /// Drips `amount` units of our reagents onto `target`, as drops for organs flagged [drips_as_drops].
 /obj/item/organ/genitals/filling_organ/proc/drip_to_turf(turf/target, amount)
-	spill_fluid_to_turf(target, reagents, amount, drips_as_drops && !owner?.has_quirk(/datum/quirk/peculiarity/free_flowing))
+	spill_fluid_to_turf(target, reagents, amount, drips_as_drops && !owner?.has_quirk(/datum/quirk/neutral/free_flowing))
 
 /// Spills fluid onto a turf: small amounts form a colored drop that grows into a puddle, larger ones pool at once.
 /proc/spill_fluid_to_turf(turf/target, datum/reagents/source, amount, as_drops = TRUE)
@@ -311,6 +465,7 @@
 /// One fluid tick: capacity and production every tick, leaking and absorbing on the slower flow interval.
 /obj/item/organ/genitals/filling_organ/proc/process_fluids(seconds)
 	update_reagent_capacity()
+	orifice?.on_fluid_tick(seconds)
 	handle_overflow()
 	produce_fluid(seconds)
 	stamp_own_fluids()
@@ -325,6 +480,8 @@
 		exchange_with_stored_containers()
 	else if(!HAS_TRAIT(src, TRAIT_PASSIVE_LEAK_BLOCKED))
 		leak_reagents()
+	if(orifice_type)
+		stir_stored_toys()
 
 /// Whether the organ makes fluid now: its base setting, forced or blocked by the owner's fluid modifiers.
 /obj/item/organ/genitals/filling_organ/proc/is_producing()
@@ -367,14 +524,32 @@
 /obj/item/organ/genitals/filling_organ/proc/get_produced_reagent()
 	return LAZYACCESS(owner?.fluid_reagent_overrides, slot) || reagent_to_make
 
-/// Reagent types that count as the organ's own: its natural fluid and any active swap.
-/obj/item/organ/genitals/filling_organ/proc/get_own_fluid_types()
+/// The main natural fluid and any active swap: the types that carry maker data.
+/obj/item/organ/genitals/filling_organ/proc/get_main_fluid_types()
 	var/datum/reagent/produced = get_produced_reagent()
 	if(!produced)
 		return null
 	if(!reagent_to_make || produced == reagent_to_make)
 		return list(produced)
 	return list(reagent_to_make, produced)
+
+/// Every type of the natural fluid mix; callers must not change the returned list.
+/obj/item/organ/genitals/filling_organ/proc/get_natural_fluid_types()
+	if(fluid_mix)
+		return fluid_mix
+	return reagent_to_make ? list(reagent_to_make) : null
+
+/// Reagent types that count as the organ's own: its whole natural mix and any active swap.
+/obj/item/organ/genitals/filling_organ/proc/get_own_fluid_types()
+	if(!fluid_mix)
+		return get_main_fluid_types()
+	var/list/own_types = list()
+	for(var/reagent_type in fluid_mix)
+		own_types += reagent_type
+	var/datum/reagent/swap = LAZYACCESS(owner?.fluid_reagent_overrides, slot)
+	if(swap)
+		own_types |= swap
+	return own_types
 
 /obj/item/organ/genitals/filling_organ/proc/is_own_fluid(datum/reagent/reagent_type)
 	var/list/own_types = get_own_fluid_types()
@@ -384,6 +559,22 @@
 	. = 0
 	for(var/reagent_type in get_own_fluid_types())
 		. += reagents.get_reagent_amount(reagent_type)
+
+/// Takes up to [amount] units of [reagent_types], in proportion to what each holds; returns the units taken.
+/obj/item/organ/genitals/filling_organ/proc/remove_fluid_types(list/reagent_types, amount)
+	if(!reagents || amount <= 0)
+		return 0
+	var/held_total = 0
+	for(var/reagent_type in reagent_types)
+		held_total += reagents.get_reagent_amount(reagent_type)
+	if(held_total <= 0)
+		return 0
+	var/share = min(amount / held_total, 1)
+	for(var/reagent_type in reagent_types)
+		var/held = reagents.get_reagent_amount(reagent_type)
+		if(held > 0)
+			reagents.remove_reagent(reagent_type, held * share)
+	return held_total * share
 
 /// Share of capacity filled with the organ's own fluid, from 0 to 1.
 /obj/item/organ/genitals/filling_organ/proc/get_own_fullness()
@@ -458,49 +649,81 @@
 /obj/item/organ/genitals/filling_organ/proc/is_pent_up()
 	return FALSE
 
-/// Nutrition per unit made; a swapped fluid never costs less than it feeds, so drinking it cannot profit.
+/// Nutrition per unit made; swapped or mixed-in fluid never costs less than it feeds, so drinking it cannot profit.
 /obj/item/organ/genitals/filling_organ/proc/get_nutrition_cost_per_unit()
 	var/cost = nutrition_per_unit
 	var/datum/reagent/produced = get_produced_reagent()
 	if(produced != reagent_to_make)
-		var/datum/reagent/consumable/food = GLOB.chemical_reagents_list[produced]
-		if(istype(food))
-			cost = max(cost, food.nutriment_factor * FLUID_SWAP_NUTRITION_MARGIN)
+		cost = get_foreign_fluid_cost(produced)
+	else if(fluid_mix)
+		cost = 0
+		for(var/reagent_type in fluid_mix)
+			cost += fluid_mix[reagent_type] * (reagent_type == reagent_to_make ? nutrition_per_unit : get_foreign_fluid_cost(reagent_type))
 	return cost * get_nutrition_cost_multiplier()
+
+/// Nutrition per unit of a fluid other than the main one: never less than drinking it feeds.
+/obj/item/organ/genitals/filling_organ/proc/get_foreign_fluid_cost(datum/reagent/reagent_type)
+	var/datum/reagent/consumable/food = GLOB.chemical_reagents_list[reagent_type]
+	if(istype(food))
+		return max(nutrition_per_unit, food.nutriment_factor * FLUID_SWAP_NUTRITION_MARGIN)
+	return nutrition_per_unit
 
 /obj/item/organ/genitals/filling_organ/proc/pay_for_fluid(amount)
 	if(amount <= 0 || HAS_TRAIT(owner, TRAIT_NOHUNGER))
 		return
 	owner.adjust_nutrition(-amount * get_nutrition_cost_per_unit())
 
-/// Adds own fluid up to the free space and returns the units actually added.
+/// Adds own fluid up to the free space, split by the natural mix, and returns the units actually added.
 /obj/item/organ/genitals/filling_organ/proc/add_produced_fluid(amount)
 	var/datum/reagent/produced = get_produced_reagent()
 	if(!produced || !reagents)
 		return 0
-	amount = min(amount, reagents.maximum_volume - reagents.total_volume)
-	if(amount <= 0)
+	var/free_space = reagents.maximum_volume - reagents.total_volume
+	if(min(amount, free_space) <= 0)
 		return 0
-	// Drops under the 0.05 unit reagent floor would vanish in an empty organ, so they add up first.
-	if(reagents.get_reagent_amount(produced) < 0.05)
-		production_carry += amount
-		if(production_carry < 0.05)
-			return 0
-		amount = production_carry
+	amount = min(amount + production_carry, free_space)
+	// A swap makes its one reagent; the natural fluid makes its whole mix.
+	var/list/mix = LAZYACCESS(owner?.fluid_reagent_overrides, slot) ? null : fluid_mix
+	// Parts under the 0.05 unit reagent floor would vanish in an empty organ, so they add up first.
+	if(amount < free_space && fluid_part_would_vanish(produced, mix, amount))
+		production_carry = amount
+		return 0
 	production_carry = 0
-	reagents.add_reagent(produced, amount)
+	add_fluid_mix(produced, mix, amount)
 	return amount
 
-/// Switches the produced reagent and converts the stored own fluid, keeping the holder and capacity.
-/obj/item/organ/genitals/filling_organ/proc/set_reagent_to_make(datum/reagent/new_reagent)
-	if(!new_reagent || new_reagent == reagent_to_make)
+/// Adds [amount] units as [mix] shares, or all as [main_type] when there is no mix.
+/obj/item/organ/genitals/filling_organ/proc/add_fluid_mix(datum/reagent/main_type, list/mix, amount)
+	if(!mix)
+		reagents.add_reagent(main_type, amount)
 		return
-	var/datum/reagent/old_reagent = reagent_to_make
-	reagent_to_make = new_reagent
-	var/own_fluid = reagents?.get_reagent_amount(old_reagent)
+	for(var/reagent_type in mix)
+		reagents.add_reagent(reagent_type, amount * mix[reagent_type])
+
+/// Whether a type's part of [amount] units would fall under the reagent floor and vanish.
+/obj/item/organ/genitals/filling_organ/proc/fluid_part_would_vanish(datum/reagent/main_type, list/mix, amount)
+	if(!mix)
+		return amount < 0.05 && reagents.get_reagent_amount(main_type) < 0.05
+	for(var/reagent_type in mix)
+		if(amount * mix[reagent_type] < 0.05 && reagents.get_reagent_amount(reagent_type) < 0.05)
+			return TRUE
+	return FALSE
+
+/// Sets the natural fluid, one type or a weighted list, and converts the stored own fluid to it.
+/obj/item/organ/genitals/filling_organ/proc/set_reagent_to_make(fluid)
+	var/list/new_mix = normalize_fluid_mix(fluid)
+	if(!length(new_mix))
+		return
+	var/datum/reagent/new_main = new_mix[1]
+	if(length(new_mix) == 1)
+		new_mix = null
+	if(new_main == reagent_to_make && fluid_mixes_match(new_mix, fluid_mix))
+		return
+	var/own_fluid = remove_fluid_types(get_natural_fluid_types(), INFINITY)
+	reagent_to_make = new_main
+	fluid_mix = new_mix
 	if(own_fluid > 0)
-		reagents.remove_reagent(old_reagent, own_fluid)
-		reagents.add_reagent(new_reagent, own_fluid)
+		add_fluid_mix(reagent_to_make, fluid_mix, own_fluid)
 
 /// Applies the current capacity, alerting self-aware owners about large shifts.
 /obj/item/organ/genitals/filling_organ/proc/update_reagent_capacity()
@@ -511,13 +734,13 @@
 	reagents.maximum_volume = capacity
 	if(change < FLUID_CAPACITY_ALERT_MIN_CHANGE || world.time <= last_size_alert + 12 SECONDS)
 		return
-	if(owner.has_quirk(/datum/quirk/peculiarity/selfawaregeni))
+	if(owner.has_quirk(/datum/quirk/neutral/selfawaregeni))
 		last_size_alert = world.time
 		to_chat(owner, span_blue("My [pick(altnames)] hold a different amount now."))
 
 /// Applies bloat debuffs when bloatable and full of foreign fluid; own fluid never bloats.
 /obj/item/organ/genitals/filling_organ/proc/handle_bloat()
-	if(!bloatable) //we wont make removals because other organs may be conflicting and shit.
+	if(!bloatable || !iscarbon(owner)) //we wont make removals because other organs may be conflicting and shit.
 		return
 	var/foreign_volume = reagents.total_volume - get_own_fluid_amount()
 	if(foreign_volume > (reagents.maximum_volume / 3) && !owner.has_status_effect(/datum/status_effect/debuff/bloattwo)) //more than 1/3 full, light bloat.
@@ -538,9 +761,14 @@
 
 /// Nutrition-driven production; a hungry owner reabsorbs fluid instead. Subtypes replace the drive.
 /obj/item/organ/genitals/filling_organ/proc/produce_fluid(seconds)
+	// Creatures keep no fluid upkeep and refill at the plain fed rate.
+	if(!iscarbon(owner))
+		if(is_producing())
+			add_produced_fluid(get_base_production(seconds))
+		return
 	if(HAS_TRAIT(owner, TRAIT_NOHUNGER))
 		if(is_producing())
-			add_produced_fluid(production_rate * get_nourishment_multiplier() * get_production_multiplier() * seconds)
+			add_produced_fluid(get_base_production(seconds) * get_nourishment_multiplier())
 		return
 	if(owner.nutrition < FLUID_HUNGER_NUTRITION)
 		if(hungerhelp)
@@ -548,9 +776,17 @@
 		return
 	if(!is_producing())
 		return
-	var/amount = production_rate * get_production_multiplier() * get_nourishment_multiplier() * seconds
+	var/amount = get_base_production(seconds) * get_nourishment_multiplier()
 	if(amount > 0)
 		pay_for_fluid(add_produced_fluid(amount))
+
+/// Units made over the given seconds before nourishment: base rate, fluid modifiers and fill curve.
+/obj/item/organ/genitals/filling_organ/proc/get_base_production(seconds)
+	return production_rate * get_production_multiplier() * get_fill_rate_multiplier() * seconds
+
+/// Speed share from how full the organ already is; flat unless a subtype slows as it fills.
+/obj/item/organ/genitals/filling_organ/proc/get_fill_rate_multiplier()
+	return 1
 
 /// Production speed from how fed the owner is: none when hungry, full when well fed, faster beyond.
 /obj/item/organ/genitals/filling_organ/proc/get_nourishment_multiplier()
@@ -560,11 +796,14 @@
 
 /// Turns this organ's own fluid back into nutrition, at a loss.
 /obj/item/organ/genitals/filling_organ/proc/reabsorb_for_nutrition(seconds)
-	var/own_fluid = reagents.get_reagent_amount(reagent_to_make)
+	var/list/natural_types = get_natural_fluid_types()
+	var/own_fluid = 0
+	for(var/reagent_type in natural_types)
+		own_fluid += reagents.get_reagent_amount(reagent_type)
 	var/nutrition_gain = min(production_rate * seconds, own_fluid / FLUID_REABSORB_COST)
 	if(nutrition_gain <= 0)
 		return
-	reagents.remove_reagent(reagent_to_make, nutrition_gain * FLUID_REABSORB_COST)
+	remove_fluid_types(natural_types, nutrition_gain * FLUID_REABSORB_COST)
 	owner.adjust_nutrition(nutrition_gain)
 
 /// Moves foreign reagents into the owner's blood; the organ keeps its own fluid.
@@ -619,7 +858,7 @@
 	// A forced leak is a gush, so it always reaches the floor.
 	if(!forced_amount && !can_drip_to_floor())
 		return
-	if(prob(5) && owner.has_quirk(/datum/quirk/peculiarity/selfawaregeni) && MOBTIMER_FINISHED(owner, "organ_drip", rand(20, 120)))
+	if(prob(5) && owner.has_quirk(/datum/quirk/neutral/selfawaregeni) && MOBTIMER_FINISHED(owner, "organ_drip", rand(20, 120)))
 		MOBTIMER_SET(owner, "organ_drip")
 		to_chat(owner, pick(span_info("A little bit of [english_list(reagents.reagent_list)] drips from my [pick(altnames)]..."),
 			span_info("Some liquid drips from my [pick(altnames)]."),
@@ -666,6 +905,9 @@
 	var/mob/living/carbon/carbon_owner = owner
 	var/list/covers = list()
 	if(additional_blocker == "bra")
+		// A pulled-open top leaves the breasts bare, so leaks drip past it.
+		if(carbon_owner.has_bared_chest())
+			return covers
 		covers += carbon_owner.bra
 		if(carbon_owner.underwear?.covers_breasts)
 			covers += carbon_owner.underwear
@@ -738,7 +980,9 @@
 
 				rand_item.doMove(get_turf(H))
 				var/yeet = rand(4)
-				var/turf/selectedturf = pick(orange(H, yeet)) //object flies off the hole with pressure at a random turf, funny.
+				// Turfs only; orange() includes areas and is empty when yeet rolls 0.
+				var/turf/holder_turf = get_turf(H)
+				var/turf/selectedturf = pick(RANGE_TURFS(yeet, holder_turf)) //object flies off the hole with pressure at a random turf, funny.
 				rand_item.throw_at(selectedturf, yeet, 2)
 			else
 				if(H.client?.prefs?.read_preference(/datum/preference/toggle/showrolls))
@@ -754,6 +998,14 @@
 
 /obj/item/organ/proc/supports_oviposition_pregnancy()
 	return allows_oviposition_pregnancy && oviposition_storage_component_type
+
+/// Where an egg laid through this organ should rest: the organ itself unless a womb lies behind it.
+/obj/item/organ/proc/get_oviposition_receiver(obj/item/oviposition_egg/egg, force = FALSE)
+	return src
+
+/// The opening an egg or hatchling leaves through; internal organs name the hole in front of them.
+/obj/item/organ/proc/get_birth_canal()
+	return src
 
 /obj/item/organ/proc/get_oviposition_storage()
 	if(!supports_oviposition_pregnancy())
@@ -817,7 +1069,9 @@
 		if(!islist(layer_contents))
 			continue
 		for(var/obj/item/stored_item as anything in layer_contents.Copy())
-			if(QDELETED(stored_item) || stored_item.loc != src)
+			// A holder with a live mob hangs off the body by design; only an item away from its place is stale.
+			var/atom/expected_loc = stored_item.body_storage_destination(src, owner) || src
+			if(QDELETED(stored_item) || stored_item.loc != expected_loc)
 				layer_contents -= stored_item
 				needs_bulk_recalculation = TRUE
 				continue
@@ -868,7 +1122,8 @@
 				count += 1
 	return count
 
-/obj/item/organ/proc/start_oviposition_egg_growth(obj/item/oviposition_egg/egg, mob/living/father = null, hatch_result_type = null, fertilized = FALSE, list/father_features = null, father_name = null)
+/// OVI_EGG_GROWTH_STARTED, OVI_EGG_GROWTH_HELD when the birth limit keeps it dormant (unless [hold_when_limited] is off), or FALSE.
+/obj/item/organ/proc/start_oviposition_egg_growth(obj/item/oviposition_egg/egg, mob/living/father = null, hatch_result_type = null, fertilized = FALSE, list/father_features = null, father_name = null, hold_when_limited = TRUE)
 	if(!owner)
 		return FALSE
 	if(!egg || !is_oviposition_egg(egg) || egg.has_pregnancy())
@@ -878,18 +1133,29 @@
 	if(!hatch_result_type)
 		hatch_result_type = egg.get_hatch_result_type()
 
+	if(iscarbon(owner) && is_oviposition_offspring_type(hatch_result_type))
+		var/mob/living/carbon/carbon_owner = owner
+		if(!carbon_owner.can_start_oviposition_gestation(hold_when_limited))
+			if(!hold_when_limited)
+				return FALSE
+			egg.hold_gestation(father, hatch_result_type, fertilized, father_features, father_name)
+			carbon_owner.schedule_held_oviposition_check()
+			return OVI_EGG_GROWTH_HELD
+
+	egg.clear_gestation_hold()
 	var/mob/living/egg_mother = egg.get_oviposition_mother(owner)
 	egg.AddComponent(/datum/component/pregnancy, egg_mother, father, hatch_result_type, fertilized, father_features, father_name)
-	return TRUE
+	return OVI_EGG_GROWTH_STARTED
 
 /obj/item/organ/proc/fertilize_oviposition_egg(mob/living/father = null, hatch_result_type = null, list/father_features = null, father_name = null)
 	if(!owner)
 		return null
 
+	// Over the birth limit a creature egg stays unfertilized; the seed may take later.
 	for(var/obj/item/oviposition_egg/egg as anything in get_oviposition_eggs(FALSE))
 		if(!egg.requires_fertilization())
 			continue
-		if(start_oviposition_egg_growth(egg, father, hatch_result_type, TRUE, father_features, father_name))
+		if(start_oviposition_egg_growth(egg, father, hatch_result_type, TRUE, father_features, father_name, FALSE))
 			return egg
 
 	return null
@@ -907,7 +1173,7 @@
 /obj/item/organ/proc/can_attempt_impregnation(allow_embryo_pregnancy = FALSE)
 	return FALSE
 
-/obj/item/organ/proc/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE)
+/obj/item/organ/proc/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE, show_feedback = FALSE)
 	return FALSE
 
 /obj/item/organ/proc/try_start_fertilization_embryo_pregnancy(mob/living/father = null, allow_embryo_pregnancy = FALSE, hatch_result_type = null, list/father_features = null, father_name = null)
@@ -918,6 +1184,10 @@
 
 /obj/item/organ/genitals/filling_organ/has_conventional_pregnancy()
 	return allows_conventional_impregnation && pregnant
+
+/// TRUE while anything grows inside: a hidden pregnancy, hosted eggs or a hatchling waiting for birth.
+/obj/item/organ/genitals/filling_organ/proc/carries_pregnancy()
+	return pregnant || length(get_oviposition_eggs()) || count_internal_womb_hatchlings()
 
 /obj/item/organ/genitals/filling_organ/can_attempt_impregnation(allow_embryo_pregnancy = FALSE)
 	if(!fertility || !owner || owner.stat == DEAD)
@@ -944,13 +1214,13 @@
 			return TRUE
 
 		for(var/obj/item/oviposition_egg/egg as anything in hosted_eggs)
-			if(!egg.requires_fertilization() && start_oviposition_egg_growth(egg, father, null, FALSE, father_features, father_name))
+			if(!egg.requires_fertilization() && start_oviposition_egg_growth(egg, father, null, FALSE, father_features, father_name, FALSE))
 				return TRUE
 
 	// Do not silently fall back to conventional pregnancy when a requested embryo implantation is birth-limited.
 	if(allow_embryo_pregnancy && spawn_embryo_on_fertilization && supports_oviposition_pregnancy() && iscarbon(owner))
 		var/mob/living/carbon/carbon_owner = owner
-		if(!carbon_owner.can_receive_oviposition_implant(TRUE))
+		if(!carbon_owner.can_start_oviposition_gestation(TRUE))
 			return FALSE
 
 	if(try_start_fertilization_embryo_pregnancy(father, allow_embryo_pregnancy, embryo_hatch_result_type, father_features, father_name))
@@ -1009,21 +1279,24 @@
 	else
 		conventional_pregnancy_timer = null
 
-/obj/item/organ/genitals/filling_organ/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE)
+/obj/item/organ/genitals/filling_organ/can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy = FALSE, show_feedback = FALSE)
 	if(!fertility || !owner || owner.stat == DEAD)
 		return FALSE
 	if(!allow_embryo_pregnancy || !spawn_embryo_on_fertilization || !supports_oviposition_pregnancy())
 		return FALSE
-	if(iscarbon(owner))
-		var/mob/living/carbon/carbon_owner = owner
-		if(!carbon_owner.can_receive_oviposition_implant())
-			return FALSE
 	if(fertilization_embryo_limit <= 0)
 		return FALSE
-	return (count_internal_hatching_eggs() + count_internal_womb_hatchlings()) < fertilization_embryo_limit
+	if((count_internal_hatching_eggs() + count_internal_womb_hatchlings()) >= fertilization_embryo_limit)
+		return FALSE
+	// An embryo never waits dormant: over the birth limit it does not start at all.
+	if(iscarbon(owner))
+		var/mob/living/carbon/carbon_owner = owner
+		if(!carbon_owner.can_start_oviposition_gestation(show_feedback))
+			return FALSE
+	return TRUE
 
 /obj/item/organ/genitals/filling_organ/try_start_fertilization_embryo_pregnancy(mob/living/father = null, allow_embryo_pregnancy = FALSE, hatch_result_type = null, list/father_features = null, father_name = null)
-	if(!can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy))
+	if(!can_start_fertilization_embryo_pregnancy(allow_embryo_pregnancy, TRUE))
 		return FALSE
 
 	var/embryo_hatch_result_type = hatch_result_type || fertilization_embryo_hatch_result_type
@@ -1039,7 +1312,7 @@
 	var/fit_result = SEND_SIGNAL(src, COMSIG_BODYSTORAGE_TRY_INSERT, embryo, STORAGE_LAYER_DEEP)
 	switch(fit_result)
 		if(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_OK_OVERRIDE, INSERT_FEEDBACK_ALMOST_FULL)
-			if(start_oviposition_egg_growth(embryo, father, embryo_hatch_result_type, TRUE, father_features, father_name))
+			if(start_oviposition_egg_growth(embryo, father, embryo_hatch_result_type, TRUE, father_features, father_name, FALSE))
 				return TRUE
 
 	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_TRY_REMOVE, embryo, STORAGE_LAYER_DEEP, BODYSTORAGE_REMOVE_INTERNAL)
@@ -1055,32 +1328,6 @@
 				return equipped_item
 			else
 				continue
-
-/obj/item/organ/proc/get_stretched(datum/source, diff)
-	return
-
-/obj/item/organ/genitals/filling_organ/get_stretched(diff)
-	if(!istype(src, /obj/item/organ/genitals/filling_organ) && !stretchable)
-		return
-	var/mob/living/carbon/human/H = owner
-	var/datum/component/arousal/aro = owner.GetComponent(/datum/component/arousal)
-	switch(diff)
-		if(1 to 3)
-			stretched_coefficient += 0.05
-			to_chat(owner, span_love("My [pick(src.altnames)] is getting stretched..."))
-		if(3 to 5)
-			stretched_coefficient += 0.1
-			to_chat(owner, span_alert("This stretching is hurting my [pick(src.altnames)]!"))
-			aro.try_do_pain_effect(PAIN_MED_EFFECT, FALSE)
-		if(5 to INFINITY)
-			stretched_coefficient += 0.5
-			to_chat(owner, span_love("AHH, GET IT ALL OUT OF MY [capitalize(pick(src.altnames))]!"))
-			aro.try_do_pain_effect(PAIN_HIGH_EFFECT, FALSE)
-	if(stretched_coefficient > 3)
-		H.Immobilize(20)
-		//try increase organ size (code later)
-	stretched_coefficient = CLAMP(stretched_coefficient, 1, 3)
-	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_UPDATE_SIZE)
 
 /// A small puddle's worth of dripped fluid. Uses greyscale drop sprites tinted to whatever liquid it holds.
 /obj/effect/decal/cleanable/liquid_drip

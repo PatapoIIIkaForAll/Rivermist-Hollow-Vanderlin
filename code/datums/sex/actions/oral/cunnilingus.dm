@@ -1,5 +1,5 @@
 /datum/sex_action/cunnilingus
-	name = "Suck their cunt off"
+	name = "Cunnilingus"
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 	gags_user = TRUE
@@ -10,7 +10,7 @@
 	scene_target_slot = ORGAN_SLOT_VAGINA
 
 /datum/sex_action/cunnilingus/shows_on_menu(mob/living/user, mob/living/target)
-	if(user == target)
+	if(user == target && !allows_self_use(user))
 		return FALSE
 	if(!target.getorganslot(ORGAN_SLOT_VAGINA))
 		return FALSE
@@ -20,7 +20,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(user == target)
+	if(user == target && !allows_self_use(user))
 		return FALSE
 	if(check_sex_lock(target, ORGAN_SLOT_VAGINA))
 		return FALSE
@@ -42,12 +42,13 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] sucks [target]'s clit..."))
-	user.make_sucking_noise()
+	user.make_mouth_noise("lick")
 	do_thrust_animate(user, target)
 
 	perform_sex_action(target, user, 2, 3, 2)
 	handle_passive_ejaculation(target)
 	perform_sex_action(user, target, 0.5, 0, 0)
+	deposit_saliva_in_hole(user, target, ORGAN_SLOT_VAGINA, 0.5, 4)
 
 /datum/sex_action/cunnilingus/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)

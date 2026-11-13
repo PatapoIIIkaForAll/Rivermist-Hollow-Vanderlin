@@ -20,9 +20,12 @@
 	if(prefs.read_preference(/datum/preference/choiced/gender) == MALE)
 		pickedGender = FEMALE
 	if(pickedGender && pickedGender != prefs.read_preference(/datum/preference/choiced/gender))
+		// Name, hair, pronouns and customizers stay; only choices the new body cannot use change.
+		var/old_gender = prefs.read_preference(/datum/preference/choiced/gender)
+		var/on_default_build = prefs.get_body_build_id() == prefs.pref_species?.get_default_body_build(old_gender)
 		prefs.write_preference(/datum/preference/choiced/gender, pickedGender)
-		prefs.write_preference(/datum/preference/text/real_name, prefs.pref_species.random_name(prefs.read_preference(/datum/preference/choiced/gender), TRUE))
-		prefs.reset_jobs(user)
-		prefs.randomise_appearance_prefs(RANDOMIZE_UNDERWEAR | RANDOMIZE_HAIRSTYLE)
-		prefs.write_preference(/datum/preference/choiced/accessory, "Nothing")
-		prefs.write_preference(/datum/preference/choiced/detail, "Nothing")
+		if(on_default_build)
+			prefs.features["body_build"] = null
+		prefs.sanitize_body_build()
+		prefs.drop_jobs_closed_to_sex(user, pickedGender)
+		prefs.sanitize_voice_type_for_sex()

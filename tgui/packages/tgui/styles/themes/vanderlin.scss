@@ -115,6 +115,17 @@
     }
   }
 
+  // Flat sub-tabs still mark their picked entry in gold; the transparent rule above would hide it.
+  .Button--color--transparent.Button--selected {
+    background-color: #cfc08a;
+    color: #161418;
+
+    &:hover {
+      background-color: #ded1a0;
+      color: #161418;
+    }
+  }
+
   .Button--color--transparent.Button--disabled {
     color: #6b6353;
   }

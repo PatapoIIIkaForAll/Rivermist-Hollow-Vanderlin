@@ -37,6 +37,7 @@ GLOBAL_LIST_INIT(natural_precursor_registry, list())
 		/obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,
 		/obj/item/reagent_containers/food/snacks/produce/vegetable/onion,
 		/obj/item/reagent_containers/food/snacks/produce/vegetable/turnip,
+		/obj/item/reagent_containers/food/snacks/produce/vegetable/pumpkin,
 	)
 
 /datum/natural_precursor/fruit

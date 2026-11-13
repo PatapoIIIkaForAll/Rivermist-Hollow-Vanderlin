@@ -1268,10 +1268,7 @@
 			return
 		var/datum/species/S = H.dna.species
 		species_id = S.limbs_id
-		if(H.gender == MALE)
-			species_icon = S.limbs_icon_m
-		else
-			species_icon = S.limbs_icon_f
+		species_icon = H.get_limbs_icon()
 		species_flags_list = H.dna.species.species_traits
 
 		body_gender = H.gender
@@ -1411,9 +1408,16 @@
 	else
 		limb.icon = species_icon
 		limb.icon_state = "pr_[body_zone]"
+		//RMH EDITED START - prosthetic material tint
+		var/list/tint_matrix = prosthetic_tint ? prosthetic_tint_matrix(prosthetic_tint) : null
+		if(tint_matrix)
+			limb.color = tint_matrix
+		//RMH EDITED END
 		if(aux_zone)
 			if(!hideaux)
 				aux = image(limb.icon, "pr_[aux_zone]", -aux_layer, image_dir)
+				if(tint_matrix) // RMH EDIT
+					aux.color = tint_matrix
 				. += aux
 		return
 
@@ -1474,14 +1478,21 @@
 	for(var/key in specific_markings)
 		var/color = specific_markings[key]
 		var/datum/body_marking/BM = GLOB.body_markings[key]
+		// Stored DNA can still name a marking that was renamed or removed.
+		if(!BM)
+			continue
 
 		var/render_limb_string = specific_render_zone
+		var/marking_nudge = 0
 		if(BM.gendered && (!BM.gender_only_chest || specific_render_zone == BODY_ZONE_CHEST))
-			var/gendaar = (human_owner.gender == FEMALE) ? "f" : "m"
-			render_limb_string = "[render_limb_string]_[gendaar]"
+			render_limb_string = "[render_limb_string]_[human_owner.get_marking_sex()]"
+			// Gendered art is drawn for one frame per sex; the build moves it onto other frames.
+			marking_nudge = human_owner.get_marking_offset(specific_render_zone)
 		var/mutable_appearance/accessory_overlay = mutable_appearance(BM.icon, "[BM.icon_state]_[render_limb_string]", -specific_layer)
+		accessory_overlay.pixel_y += marking_nudge
 		if(key in emissive_markings[specific_render_zone])
 			var/mutable_appearance/emissive_overlay = emissive_appearance(BM.icon, "[BM.icon_state]_[render_limb_string]", -specific_layer)
+			emissive_overlay.pixel_y += marking_nudge
 			emissive_overlay.color = override_color ? "#[override_color]" : "#[color]"
 			appearance_list += emissive_overlay
 		if(override_color)

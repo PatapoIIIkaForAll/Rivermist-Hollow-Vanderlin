@@ -156,6 +156,8 @@
 		qdel(src)
 
 /mob/living/simple_animal/hostile/dreamfiend/death()
+	if(QDELETED(src))
+		return
 	if(prob(5))
 		new /obj/item/gem/yellow(loc)
 	//Was it even real?!
@@ -163,8 +165,11 @@
 	qdel(src)
 
 /mob/living/simple_animal/hostile/dreamfiend/major/death()
+	// This override never sets DEAD, so updatehealth can call it again after qdel.
+	if(QDELETED(src))
+		return
 	new /obj/effect/decal/cleanable/dreamfiend_ichor/large(loc)
-	var/main_target = ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	var/main_target = ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
 	for(var/i in 1 to 2)
 		var/mob/living/simple_animal/hostile/dreamfiend/F = new(loc)
 		F.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, main_target)
@@ -173,6 +178,8 @@
 	qdel(src)
 
 /mob/living/simple_animal/hostile/dreamfiend/ancient/death()
+	if(QDELETED(src))
+		return
 	new /obj/effect/decal/cleanable/dreamfiend_ichor/huge(loc)
 	qdel(src)
 

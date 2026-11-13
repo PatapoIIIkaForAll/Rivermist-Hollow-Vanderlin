@@ -81,6 +81,10 @@
 /obj/proc/get_access()
 	if(!length(lockids))
 		return null
+	// A bare id string means some writer skipped the list; keep the key working and report it.
+	if(!islist(lockids))
+		stack_trace("[type] has a non-list lockids: [lockids]")
+		return list(lockids)
 	return lockids.Copy()
 
 /// Check if obj has access set

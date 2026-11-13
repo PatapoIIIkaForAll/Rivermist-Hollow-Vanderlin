@@ -173,8 +173,14 @@
 	var/typed = pref.deserialize(value, src)
 	if (!pref.is_valid(typed, src))
 		return FALSE
+	note_preview_preference_change(pref, typed)
 	preference_cache[pref.type] = typed
 	return TRUE
+
+/// Bumps the preview revision when a visible preference changes, so the menu preview redraws.
+/datum/preferences/proc/note_preview_preference_change(datum/preference/pref, new_value)
+	if(pref.should_update_preview && preference_cache[pref.type] != new_value)
+		preview_image_revision++
 
 /// Deserialise and cache the toggled state for a preference.
 /// Does NOT write to the savefile, should be used when save_preferences() is called at the end of the block
@@ -188,6 +194,7 @@
 	var/typed = pref.deserialize(!old_value, src)
 	if (!pref.is_valid(typed, src))
 		return FALSE
+	note_preview_preference_change(pref, typed)
 	preference_cache[pref.type] = typed
 	return TRUE
 
@@ -201,6 +208,7 @@
 	if (!pref.is_valid(typed, src))
 		return FALSE
 
+	note_preview_preference_change(pref, typed)
 	preference_cache[pref.type] = typed
 
 	if (pref.savefile_identifier == PREF_PLAYER)

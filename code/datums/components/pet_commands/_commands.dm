@@ -155,7 +155,8 @@
 		var/manual_emote_text = generate_emote_command()
 		commander.manual_emote(manual_emote_text)
 		return
-	RegisterSignal(commander, COMSIG_MOB_CLICKON, PROC_REF(click_on_target))
+	// The command can be re-issued before a target is clicked, which re-registers this.
+	RegisterSignal(commander, COMSIG_MOB_CLICKON, PROC_REF(click_on_target), override = TRUE)
 	commander.client?.mouse_pointer_icon = 'icons/effects/mousemice/pet_paw.dmi'
 	commander.update_mouse_pointer()
 

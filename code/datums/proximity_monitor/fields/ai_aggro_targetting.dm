@@ -82,7 +82,7 @@
 /datum/proximity_monitor/advanced/ai_aggro_tracking/proc/controller_think(datum/ai_controller/source, list/datum/ai_behavior/old_behaviors, list/datum/ai_behavior/new_behaviors)
 	SIGNAL_HANDLER
 	// If our parent was forgotten, nuke ourselves
-	if(!new_behaviors[owning_behavior])
+	if(!LAZYACCESS(new_behaviors, owning_behavior))
 		qdel(src)
 
 /datum/proximity_monitor/advanced/ai_aggro_tracking/proc/behavior_requeued(datum/source, list/new_arguments)

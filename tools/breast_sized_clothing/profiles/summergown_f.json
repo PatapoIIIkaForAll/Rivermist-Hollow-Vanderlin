@@ -1,0 +1,6 @@
+{
+  "pair": {"S": "bottom", "default": "stretch"},
+  "extra": {"S": "bottom", "default": "stretch"},
+  "hide": "stretch",
+  "cut_under_clothing": true
+}

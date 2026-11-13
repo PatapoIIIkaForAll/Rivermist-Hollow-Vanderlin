@@ -34,6 +34,7 @@
 				/datum/pet_command/protect_owner,
 				/datum/pet_command/aggressive,
 				/datum/pet_command/calm,
+				/datum/pet_command/pet_breed_other,
 			)
 	AddComponent(/datum/component/obeys_commands, pet_commands)
 

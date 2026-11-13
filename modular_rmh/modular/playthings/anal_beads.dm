@@ -74,7 +74,7 @@
 	return null
 
 /obj/item/organ/genitals/filling_organ/vagina/get_insertion_depth_limit()
-	return (BEAD_VAGINA_BASE_DEPTH + max(organ_size, 0)) * stretched_coefficient
+	return (BEAD_VAGINA_BASE_DEPTH + max(organ_size, 0)) * (orifice ? orifice.get_stretch_ratio() : 1)
 
 // ---- Shapes ----
 
@@ -207,6 +207,8 @@ GLOBAL_LIST_INIT(bead_shapes, init_bead_shapes())
 	var/mob/living/carbon/host
 	var/mutable_appearance/hanging_overlay
 	var/steps_since_shift = 0
+	/// Bead crossing the ring during a push or pull; zero when none.
+	var/passing_bead = 0
 
 /obj/item/anal_beads/Destroy()
 	if(host_organ)
@@ -303,8 +305,25 @@ GLOBAL_LIST_INIT(bead_shapes, init_bead_shapes())
 /obj/item/anal_beads/get_fluid_displacement()
 	return round(get_inserted_bulk() * 4)
 
+/// Index of the widest bead from [first] to [last]; the outermost wins a tie.
+/obj/item/anal_beads/proc/get_widest_bead_index(first, last)
+	. = 0
+	var/widest = 0
+	for(var/index in max(first, 1) to min(last, get_bead_count()))
+		var/girth = get_bead_girth(get_bead(index))
+		if(girth >= widest)
+			widest = girth
+			. = index
+
+/// Passes bead [index] through the ring of [hole] once, for strain pain and soreness.
+/obj/item/anal_beads/proc/pass_bead(obj/item/organ/hole, index, force = SEX_FORCE_MID, mob/living/performer)
+	var/obj/item/organ/genitals/filling_organ/filling_hole = hole
+	if(!istype(filling_hole) || !index)
+		return
+	filling_hole.get_orifice()?.pass_through(get_bead_girth(get_bead(index)), force, performer)
+
 /// Pushes the next bead into [organ]. Returns a body-storage insert feedback or a BEADS_* result.
-/obj/item/anal_beads/proc/push_bead(obj/item/organ/organ, use_force = FALSE)
+/obj/item/anal_beads/proc/push_bead(obj/item/organ/organ, use_force = FALSE, mob/living/pusher, force = SEX_FORCE_MID)
 	if(!shape || !organ)
 		return FALSE
 	if(beads_inside >= get_bead_count())
@@ -314,33 +333,58 @@ GLOBAL_LIST_INIT(bead_shapes, init_bead_shapes())
 	var/depth_limit = organ.get_insertion_depth_limit()
 	if(!isnull(depth_limit) && get_inserted_depth(beads_inside + 1) > depth_limit)
 		return BEADS_TOO_DEEP
+	passing_bead = beads_inside + 1
 	var/result
 	if(!beads_inside)
 		body_storage_bulk = get_inserted_bulk(1)
+		// Storage insertion checks the opening and passes the first bead through it.
 		result = SEND_SIGNAL(organ, COMSIG_BODYSTORAGE_TRY_INSERT, src, STORAGE_LAYER_INNER, use_force)
 	else
-		result = SEND_SIGNAL(organ, COMSIG_BODYSTORAGE_TRY_RESIZE, src, get_inserted_bulk(beads_inside + 1), use_force)
-		if(result in list(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_ALMOST_FULL))
-			beads_inside++
+		result = organ.get_body_storage_width_feedback(src, STORAGE_LAYER_INNER, use_force)
+		var/forced_wide = result == INSERT_FEEDBACK_OK_FORCE
+		if(result == INSERT_FEEDBACK_OK || forced_wide)
+			result = SEND_SIGNAL(organ, COMSIG_BODYSTORAGE_TRY_RESIZE, src, get_inserted_bulk(beads_inside + 1), use_force)
+			if(result in list(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_ALMOST_FULL))
+				// Across the ring before it counts as inside, so the held-open floor does not cushion it.
+				pass_bead(organ, passing_bead, force, pusher)
+				beads_inside++
+				if(forced_wide)
+					result = INSERT_FEEDBACK_OK_FORCE
+	passing_bead = 0
 	update_hanging_overlay()
 	return result
 
 /// Draws the outermost inside bead out. Returns its size, or null. The last bead hands the string to [puller].
-/obj/item/anal_beads/proc/pull_bead(mob/living/puller)
-	if(!host_organ || beads_inside <= 0)
-		return null
-	var/size = get_bead(beads_inside)
-	beads_inside--
-	if(beads_inside)
-		SEND_SIGNAL(host_organ, COMSIG_BODYSTORAGE_TRY_RESIZE, src, get_inserted_bulk(beads_inside), FALSE)
+/obj/item/anal_beads/proc/pull_bead(mob/living/puller, force = SEX_FORCE_MID)
+	var/list/sizes = pull_beads(1, puller, force)
+	return length(sizes) ? sizes[1] : null
+
+/// Draws the outermost [count] beads out at once, one passage at the widest. Returns their sizes.
+/obj/item/anal_beads/proc/pull_beads(count, mob/living/puller, force = SEX_FORCE_MID)
+	. = list()
+	count = min(count, beads_inside)
+	if(!host_organ || count <= 0)
+		return
+	var/obj/item/organ/hole = host_organ
+	var/string_leaves = count >= beads_inside
+	passing_bead = get_widest_bead_index(beads_inside - count + 1, beads_inside)
+	if(!string_leaves)
+		pass_bead(hole, passing_bead, force, puller)
+	for(var/pulled in 1 to count)
+		. += get_bead(beads_inside)
+		beads_inside--
+	if(!string_leaves)
+		passing_bead = 0
+		SEND_SIGNAL(hole, COMSIG_BODYSTORAGE_TRY_RESIZE, src, get_inserted_bulk(beads_inside), FALSE)
 		update_hanging_overlay()
-		return size
-	var/turf/drop_turf = get_turf(host) || get_turf(host_organ)
-	SEND_SIGNAL(host_organ, COMSIG_BODYSTORAGE_FORCE_REMOVE, src, STORAGE_LAYER_INNER)
+		return
+	var/turf/drop_turf = get_turf(host) || get_turf(hole)
+	// Storage removal passes the marked bead through the ring as the string leaves.
+	SEND_SIGNAL(hole, COMSIG_BODYSTORAGE_FORCE_REMOVE, src, STORAGE_LAYER_INNER)
+	passing_bead = 0
 	forceMove(drop_turf)
 	if(puller && !puller.get_active_held_item())
 		puller.put_in_active_hand(src)
-	return size
 
 /obj/item/anal_beads/on_body_storage_entered(obj/item/organ/storage_organ, target_layer)
 	. = ..()

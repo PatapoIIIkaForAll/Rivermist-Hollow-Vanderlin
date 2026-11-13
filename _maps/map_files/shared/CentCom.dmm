@@ -8,6 +8,9 @@
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor/basement)
+"ac" = (
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "ad" = (
 /obj/effect/lily_petal,
 /turf/open/water/bath,
@@ -28,13 +31,41 @@
 /obj/structure/chair/bench/coucha,
 /turf/open/floor/carpet/royalblack,
 /area/indoors/town/rmh/manor)
+"ag" = (
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
+"ah" = (
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
+"ai" = (
+/obj/machinery/light/fueled/torchholder/c,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "aj" = (
 /turf/open/water/clean/dirt,
 /area/outdoors/woods_safe)
+"ak" = (
+/obj/effect/landmark/start/gnoll_champion{
+	dir = 1
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "al" = (
 /obj/machinery/light/fueled/wallfire/candle/blue,
 /turf/open/floor/herringbone,
 /area/outdoors/exposed/rmh/manorgarri)
+"am" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/cave/rmh_cave/gnolls)
+"an" = (
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
+"ao" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "ap" = (
 /obj/structure/door/fancy,
 /obj/effect/mapping_helpers/access/locker,
@@ -58,11 +89,19 @@
 /obj/item/clothing/pants/tights/colored/lord,
 /turf/open/floor/wood,
 /area)
+"as" = (
+/obj/machinery/light/fueled/campfire/densefire,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "at" = (
 /obj/machinery/light/fueled/hearth,
 /obj/structure/fake_machine/stockpile_withdraw,
 /turf/open/floor/concrete,
 /area/indoors/town/rmh/manor)
+"au" = (
+/obj/structure/bed/shit,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "av" = (
 /obj/structure/flora/grass,
 /turf/open/floor/dirt,
@@ -87,6 +126,13 @@
 /mob/living/carbon/human/species/human/northern/highwayman,
 /turf/open/floor/naturalstone,
 /area/outdoors/woods_safe)
+"aA" = (
+/obj/structure/hay_stack,
+/obj/structure/hay_stack/rope{
+	pixel_y = 14
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "aB" = (
 /obj/structure/table/wood/fancy/red,
 /obj/item/clothing/head/helmet/orc,
@@ -106,6 +152,12 @@
 /obj/structure/chair/wood/alt,
 /turf/open/floor/ruinedwood/darker,
 /area/outdoors/woods_safe)
+"aF" = (
+/turf/closed/mineral/bedrock/sandstone,
+/area/under/rmh_bedrock)
+"aG" = (
+/turf/open/water/clean,
+/area/indoors/cave/rmh_cave/gnolls)
 "aH" = (
 /obj/structure/fluff/walldeco/maidendrape,
 /obj/structure/fluff/statue/gargoyle/candles,
@@ -150,20 +202,17 @@
 "aL" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
 "aM" = (
 /obj/structure/table/wood/reinf_long{
-	dir = 8;
-	pixel_y = 0
+	dir = 8
 	},
 /obj/item/dye_pack/cheap{
 	pixel_y = 4;
@@ -171,6 +220,12 @@
 	},
 /turf/open/floor/herringbone,
 /area/under/rmh_dungeon/catacombs_church)
+"aN" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "aO" = (
 /obj/effect/decal/cobbleedge/alt,
 /obj/machinery/light/fueled/firebowl/standing,
@@ -209,6 +264,12 @@
 /obj/item/storage/sack,
 /turf/open/floor/wood,
 /area/indoors/town/rmh/manor/basement)
+"aR" = (
+/obj/effect/landmark/start/gnoll_champion{
+	dir = 8
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "aS" = (
 /turf/open/floor/mushroom,
 /area/outdoors/woods_safe)
@@ -216,6 +277,16 @@
 /obj/structure/fermentation_keg/random/beer,
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
+"aU" = (
+/obj/structure/stairs/maskstairs{
+	dir = 4
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
+"aV" = (
+/obj/machinery/light/fueled/torchholder/r,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "aW" = (
 /turf/open/floor/wood,
 /area/indoors/town/rmh/manor/bath)
@@ -223,6 +294,20 @@
 /obj/machinery/essence/research_matrix,
 /turf/open/floor/concrete,
 /area/indoors/town/rmh/manor)
+"aY" = (
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls)
+"aZ" = (
+/obj/machinery/light/fueled/torchholder/l,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
+"ba" = (
+/turf/open/floor/concrete,
+/area/indoors/cave/rmh_cave/gnolls)
+"bb" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "bc" = (
 /obj/effect/decal/edge{
 	dir = 8;
@@ -258,6 +343,10 @@
 /obj/item/reagent_containers/glass/cup,
 /turf/open/floor/wood,
 /area/indoors/town/rmh/manor/basement)
+"bg" = (
+/obj/structure/bed/shit,
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls)
 "bh" = (
 /obj/effect/decal/edge{
 	dir = 1;
@@ -286,6 +375,18 @@
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
+"bl" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls)
+"bm" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "bn" = (
 /obj/effect/decal/edge{
 	dir = 9;
@@ -298,6 +399,9 @@
 /obj/structure/door/swing,
 /turf/open/floor/ruinedwood/spiral,
 /area/indoors)
+"bp" = (
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls)
 "bq" = (
 /obj/effect/decal/cobbleedge{
 	dir = 10
@@ -331,9 +435,16 @@
 /obj/structure/hotspring/border/fourteen,
 /turf/open/floor/dirt/road,
 /area/outdoors)
+"bv" = (
+/obj/structure/bed/shit,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls)
+"bw" = (
+/obj/structure/bed/shit,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "bx" = (
 /obj/structure/door/weak/bolt{
-	pixel_y = 0;
 	dir = 4
 	},
 /turf/open/floor/naturalstone,
@@ -344,8 +455,7 @@
 "bz" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 6;
@@ -353,6 +463,10 @@
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
+"bA" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "bB" = (
 /obj/structure/fluff/railing/wood,
 /obj/machinery/light/fueled/wallfire/candle/r,
@@ -382,6 +496,12 @@
 /obj/item/reagent_containers/powder/salt,
 /turf/open/floor/tile,
 /area/indoors)
+"bD" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls)
 "bE" = (
 /obj/machinery/light/fueled/wallfire/candle{
 	pixel_y = -32
@@ -408,12 +528,26 @@
 "bH" = (
 /turf/closed/mineral/bedrock,
 /area/overlord_lair)
+"bI" = (
+/obj/machinery/light/fueled/campfire/densefire,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
+"bJ" = (
+/obj/machinery/light/fueled/wallfire/floorcandle/alt,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "bK" = (
 /obj/structure/mannequin/male,
 /obj/item/clothing/shirt/robe/astrata,
 /obj/item/clothing/head/roguehood/astrata,
 /turf/open/floor/wood,
 /area)
+"bL" = (
+/obj/effect/decal/cleanable/dirt/cobweb{
+	dir = 4
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "bM" = (
 /obj/machinery/light/fueled/torchholder/c,
 /obj/structure/chair/bench/coucha/redleft,
@@ -442,7 +576,6 @@
 /area/indoors)
 "bP" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/hexstone,
@@ -467,6 +600,10 @@
 	dir = 8
 	},
 /area/indoors/town/rmh/manor)
+"bT" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "bU" = (
 /turf/open/floor/metal,
 /area/indoors/town/rmh/manor/basement)
@@ -476,6 +613,10 @@
 	},
 /turf/open/floor/grass/yel,
 /area/outdoors)
+"bW" = (
+/obj/item/natural/bundle/bone,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "bX" = (
 /obj/structure/closet/crate/chest/old_crate,
 /turf/open/floor/cobble,
@@ -502,6 +643,10 @@
 /obj/structure/flora/grass,
 /turf/open/floor/grass/yel,
 /area/outdoors)
+"cd" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "ce" = (
 /obj/effect/decal/cobbleedge{
 	dir = 4
@@ -515,9 +660,17 @@
 	dir = 8
 	},
 /area/indoors/town/rmh/manor)
+"cg" = (
+/obj/item/alch/bone,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "ch" = (
 /turf/open/floor/carpet,
 /area/indoors)
+"ci" = (
+/obj/effect/decal/remains/bear,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "cj" = (
 /obj/effect/decal/edge{
 	dir = 1;
@@ -533,6 +686,14 @@
 	},
 /turf/open/floor/desert/deserttile/tilegreyblu,
 /area/indoors/town/rmh/manor)
+"ck" = (
+/obj/item/fertilizer/bone_meal,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
+"cl" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "cm" = (
 /obj/effect/decal/borderfall{
 	dir = 1;
@@ -545,6 +706,13 @@
 /obj/structure/hotspring/border/twelve,
 /turf/open/floor/dirt/road,
 /area/outdoors)
+"co" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
+"cp" = (
+/turf/open/water/marsh,
+/area/indoors/cave/rmh_cave/gnolls)
 "cq" = (
 /obj/structure/fluff/railing/border{
 	dir = 1
@@ -569,6 +737,10 @@
 	},
 /turf/open/floor/dirt/road,
 /area/outdoors)
+"ct" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/drider/nest)
 "cu" = (
 /obj/item/clothing/shirt/dress/silkdress,
 /obj/item/clothing/shirt/dress/silkdress,
@@ -604,10 +776,31 @@
 "cx" = (
 /turf/open/water/clean,
 /area/indoors/town/rmh/manor)
+"cy" = (
+/obj/effect/landmark/start/gnoll_champion,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
+"cz" = (
+/obj/structure/bed/shit,
+/obj/item/weapon/hammer,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "cA" = (
 /obj/structure/carpet/red,
 /turf/open/floor/desert/deserttile/tilegreyblu,
 /area/indoors/town/rmh/manor)
+"cB" = (
+/obj/machinery/anvil/crafted,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
+"cC" = (
+/obj/item/weapon/tongs/stone,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
+"cD" = (
+/obj/machinery/light/fueled/smelter,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "cE" = (
 /obj/structure/table/wood/large/corner_new{
 	dir = 9
@@ -624,7 +817,6 @@
 /area/outdoors/woods_safe)
 "cF" = (
 /obj/structure/table/wood/reinf_long{
-	dir = 2;
 	layer = 2.81;
 	pixel_y = 1
 	},
@@ -664,16 +856,27 @@
 "cL" = (
 /turf/open/floor/grass/cold,
 /area/outdoors/exposed/rmh/manorgarri)
+"cM" = (
+/obj/item/bin/water,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
+"cN" = (
+/obj/machinery/light/fueled/forge,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "cO" = (
 /obj/structure/flora/grass/crawlvines,
 /obj/effect/decal/cleanable/debris/stone,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
 /turf/open/floor/cobblerock,
 /area/under/rmh_bogforest_caves/werewolf)
+"cP" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "cQ" = (
 /obj/structure/fluff/railing/border/east,
 /obj/structure/fluff/alch{
@@ -681,6 +884,10 @@
 	},
 /turf/open/floor/church,
 /area/indoors/town/rmh/manor)
+"cR" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "cS" = (
 /obj/structure/stairs/fancy,
 /turf/open/floor/blocks,
@@ -695,7 +902,6 @@
 /area/indoors)
 "cU" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/fluff/statue/small,
@@ -712,12 +918,20 @@
 /obj/item/kitchen/spoon/pewter,
 /turf/open/floor/carpet/stellar,
 /area/outdoors/exposed/rmh/manorgarri)
+"cW" = (
+/obj/effect/decal/cleanable/blood/tracks,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "cX" = (
 /obj/effect/landmark/hammer/dev_text{
 	name = "Убежище гильдии воров;"
 	},
 /turf/closed/basic,
 /area)
+"cY" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "cZ" = (
 /obj/effect/decal/cobbleedge{
 	icon = 'icons/roguetown/misc/tables.dmi';
@@ -725,7 +939,6 @@
 	name = "carpet"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -741,6 +954,11 @@
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
+"db" = (
+/obj/machinery/light/fueled/torchholder/c,
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "dc" = (
 /obj/structure/closet/crate/drawer{
 	pixel_x = 5;
@@ -756,7 +974,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "de" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /obj/effect/decal/edge_corner{
@@ -765,6 +982,9 @@
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
+"df" = (
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dg" = (
 /turf/open/floor/tile,
 /area/indoors/town/rmh/manor/basement)
@@ -775,6 +995,17 @@
 	},
 /turf/open/floor/metal,
 /area/indoors/town/rmh/manor/basement)
+"di" = (
+/obj/machinery/light/fueled/firebowl/standing/blue,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/drider/nest)
+"dj" = (
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/drider/nest)
+"dk" = (
+/obj/machinery/light/fueled/firebowl/standing/blue,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dl" = (
 /obj/structure/fluff/walldeco/maidendrape,
 /obj/effect/decal/cleanable/dirt/cobweb/cobweb2,
@@ -793,6 +1024,12 @@
 /obj/structure/flora/grass/bush/wall/tall/green,
 /turf/open/floor/grass/healthy,
 /area/indoors/town/rmh/manor)
+"do" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "dp" = (
 /obj/structure/fluff/statue/aasimar{
 	icon = 'icons/roguetown/clothing/masks.dmi';
@@ -827,6 +1064,10 @@
 /obj/structure/mannequin/male/female,
 /turf/open/floor/wood,
 /area)
+"dr" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "ds" = (
 /obj/structure/stairs,
 /obj/structure/fluff/railing/wood/west,
@@ -836,6 +1077,10 @@
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/rmh/manor/bath)
+"du" = (
+/obj/machinery/light/fueled/campfire/densefire,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "dv" = (
 /obj/machinery/light/fueled/wallfire/candle/l,
 /turf/open/floor/wood,
@@ -848,6 +1093,24 @@
 /obj/item/scrying,
 /turf/open/floor/carpet,
 /area/indoors)
+"dx" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/den)
+"dy" = (
+/obj/effect/decal/edge_corner{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
+"dz" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dA" = (
 /obj/structure/stairs/stone{
 	dir = 4;
@@ -889,10 +1152,21 @@
 	},
 /turf/open/floor/tile/diamond/purple,
 /area/indoors/town/rmh/manor/bath)
+"dH" = (
+/obj/effect/decal/edge_corner{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dI" = (
 /obj/structure/hotspring,
 /turf/open/water/clean,
 /area/outdoors/woods_safe)
+"dJ" = (
+/obj/structure/bed/shit,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "dK" = (
 /obj/effect/decal/edge_corner{
 	dir = 8;
@@ -906,14 +1180,26 @@
 	},
 /turf/open/floor/cobble,
 /area/outdoors/exposed/rmh/manorgarri)
+"dM" = (
+/obj/structure/bed/bear,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "dN" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/purple,
 /area/indoors/town/rmh/manor/bath)
+"dO" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 5
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dP" = (
 /obj/structure/carpet/red,
 /turf/open/floor/tile/bfloorz,
@@ -925,6 +1211,17 @@
 	},
 /turf/open/floor/church/rust,
 /area/indoors/town/rmh/manor)
+"dR" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dS" = (
 /obj/structure/bed/hay,
 /obj/structure/rack/rogue/shelf/alizeria/shelf1,
@@ -940,6 +1237,13 @@
 "dU" = (
 /turf/open/dungeon_trap,
 /area/outdoors/exposed/rmh/manorgarri)
+"dV" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dW" = (
 /obj/structure/flora/crystal,
 /turf/open/floor/cobblerock,
@@ -948,6 +1252,17 @@
 /obj/effect/lily_petal/three,
 /turf/open/water/bath,
 /area/indoors/town/rmh/manor/bath)
+"dY" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "dZ" = (
 /obj/structure/rack/shelf/biggest,
 /obj/item/rope/net,
@@ -961,7 +1276,6 @@
 /area/outdoors/woods_safe)
 "ea" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -1013,6 +1327,16 @@
 "ek" = (
 /turf/closed/mineral,
 /area/indoors/cave/rmh_cave/central)
+"el" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "em" = (
 /turf/open/floor/herringbone,
 /area/overlord_lair)
@@ -1025,12 +1349,34 @@
 /obj/structure/bars,
 /turf/open/floor/cobble/alt,
 /area/outdoors/woods_safe)
+"ep" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 4
+	},
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "eq" = (
 /obj/effect/decal/cobbleedge/alt{
 	dir = 9
 	},
 /turf/open/floor/naturalstone,
 /area/outdoors/woods_safe)
+"er" = (
+/obj/effect/decal/edge{
+	color = "#3b3b3b"
+	},
+/obj/machinery/light/fueled/firebowl/standing/blue,
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
+"es" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls/den)
+"et" = (
+/obj/structure/gnoll_shrine,
+/obj/effect/decal/cleanable/roguerune,
+/turf/open/floor/concrete,
+/area/indoors/cave/rmh_cave/gnolls)
 "eu" = (
 /obj/effect/decal/edge{
 	color = "#575757";
@@ -1044,12 +1390,40 @@
 /obj/item/clothing/head/roguehood/eora,
 /turf/open/floor/wood,
 /area)
+"ew" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	color = "#575757";
+	dir = 5
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
+"ex" = (
+/obj/effect/decal/edge_corner{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "ey" = (
 /obj/structure/hotspring,
 /obj/effect/lily_petal/two,
 /obj/effect/falling_sakura,
 /turf/open/floor/dirt/road,
 /area/outdoors)
+"ez" = (
+/turf/open/floor/churchrough/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
+"eA" = (
+/obj/effect/decal/edge_corner{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "eB" = (
 /obj/structure/bridge_stakes{
 	dir = 8;
@@ -1058,6 +1432,31 @@
 /obj/structure/curtain/black,
 /turf/open/floor/ruinedwood/alt,
 /area/under/rmh_dungeon/catacombs_church)
+"eC" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
+"eD" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
+"eE" = (
+/turf/open/floor/churchmarble/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "eF" = (
 /obj/structure/chair/bench/couchablack,
 /obj/item/instrument/harp,
@@ -1073,6 +1472,17 @@
 /mob/living/simple_animal/hostile/retaliate/wolf,
 /turf/open/floor/naturalstone,
 /area/under/rmh_bogforest_caves/werewolf)
+"eI" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "eJ" = (
 /obj/effect/decal/edge_corner{
 	dir = 4;
@@ -1081,6 +1491,10 @@
 /obj/structure/chair/stool/bar,
 /turf/open/floor/herringbone,
 /area/under/rmh_dungeon/catacombs_church)
+"eK" = (
+/obj/structure/carpet/purple,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "eL" = (
 /obj/structure/hotspring/border/thirteen,
 /obj/machinery/light/fueled/torchholder/hotspring/standing{
@@ -1096,6 +1510,17 @@
 /obj/structure/carpet/cyan,
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/rmh/manor/bath)
+"eO" = (
+/obj/structure/carpet/purple,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
+"eP" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "eQ" = (
 /obj/structure/table/map{
 	dir = 10
@@ -1118,6 +1543,13 @@
 /obj/structure/carpet/green,
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/rmh/manor/bath)
+"eT" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "eU" = (
 /obj/structure/fluff/walldeco/bath/wallpipes,
 /obj/effect/decal/edge_corner{
@@ -1134,6 +1566,12 @@
 	},
 /turf/open/floor/tile/harem2,
 /area/indoors/town/rmh/manor/bath)
+"eW" = (
+/obj/structure/stairs/maskstairs{
+	dir = 4
+	},
+/turf/open/floor/concrete,
+/area/indoors/cave/rmh_cave/drider/nest)
 "eX" = (
 /obj/structure/mannequin/male,
 /obj/item/clothing/shirt/robe/noc,
@@ -1163,6 +1601,10 @@
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/indoors/town/rmh/manor/basement)
+"fb" = (
+/obj/effect/decal/cleanable/blood/gibs,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "fc" = (
 /turf/open/floor/cobblerock,
 /area)
@@ -1171,6 +1613,12 @@
 /obj/item/natural/rock/random_ore,
 /turf/open/floor/naturalstone,
 /area/outdoors/woods_safe)
+"fe" = (
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 4
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "ff" = (
 /obj/structure/well,
 /obj/machinery/light/fueled/torchholder/hotspring{
@@ -1194,12 +1642,16 @@
 "fh" = (
 /obj/structure/fluff/railing/border,
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/cobble,
 /area/outdoors/exposed/rmh/manorgarri)
+"fi" = (
+/obj/structure/fluff/nest{
+	name = "patch of straw"
+	},
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "fj" = (
 /turf/open/floor/underworld/space/sparkle_quiet/fake_world,
 /area)
@@ -1232,6 +1684,9 @@
 	},
 /turf/open/floor/dirt,
 /area/outdoors)
+"fo" = (
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "fp" = (
 /obj/machinery/light/fueled/firebowl/church/unholyfire,
 /turf/closed/wall/mineral/decostone/cand,
@@ -1286,6 +1741,26 @@
 /obj/item/reagent_containers/glass/bucket/wooden,
 /turf/open/water/clean,
 /area/indoors/town/rmh/manor/basement)
+"fu" = (
+/obj/structure/spider/stickyweb,
+/obj/effect/decal/cleanable/blood/tracks{
+	dir = 4
+	},
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
+"fv" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/drider/nest)
+"fw" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls)
+"fx" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/fluff/walldeco/vinez/r,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "fy" = (
 /obj/item/natural/rock,
 /obj/effect/decal/cleanable/debris/stone,
@@ -1301,10 +1776,19 @@
 	},
 /turf/open/floor/cobble,
 /area/indoors)
+"fA" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "fB" = (
 /obj/structure/flora/ausbushes/ywflowers,
 /turf/open/floor/grass/yel,
 /area/outdoors)
+"fC" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "fD" = (
 /obj/effect/decal/cobbleedge{
 	dir = 10
@@ -1333,6 +1817,10 @@
 	},
 /turf/open/floor/metal,
 /area/indoors/town/rmh/manor/basement)
+"fH" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "fI" = (
 /obj/structure/carpet/green,
 /turf/open/floor/tile/bfloorz,
@@ -1360,6 +1848,24 @@
 	},
 /turf/open/floor/dirt/road,
 /area/under/rmh_bogforest_caves/werewolf)
+"fN" = (
+/obj/effect/decal/cleanable/blood/tracks,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
+"fO" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/den)
+"fP" = (
+/obj/machinery/light/fueled/wallfire/floorcandle,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
+"fQ" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "fR" = (
 /obj/structure/fermentation_keg/random/water,
 /turf/open/floor/cobblerock,
@@ -1372,6 +1878,10 @@
 /obj/structure/fluff/traveltile/rmh_cc/exit_werewolf,
 /turf/open/floor/grass/mixyel,
 /area/under/rmh_bogforest_caves/werewolf)
+"fU" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "fV" = (
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/cobble,
@@ -1379,6 +1889,11 @@
 "fW" = (
 /turf/open/floor/church/rust,
 /area/indoors/town/rmh/manor)
+"fX" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "fY" = (
 /obj/structure/flora/grass/herb/rosa,
 /obj/structure/flora/grass/herb/rosa{
@@ -1389,6 +1904,10 @@
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/grass/healthy,
 /area/indoors/town/rmh/manor)
+"fZ" = (
+/obj/machinery/light/fueled/wallfire/floorcandle,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "ga" = (
 /obj/structure/hotspring/border/nine,
 /turf/open/floor/naturalstone,
@@ -1400,6 +1919,10 @@
 "gc" = (
 /turf/open/floor/ruinedwood/chevron,
 /area/indoors)
+"gd" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "ge" = (
 /obj/structure/fluff/walldeco/vinez{
 	opacity = 1
@@ -1410,11 +1933,9 @@
 /area)
 "gf" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -1471,16 +1992,29 @@
 /obj/structure/closet/crate/chest/wicker,
 /turf/open/floor/cobble,
 /area/under/rmh_dungeon/catacombs_church)
+"gp" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "gq" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /turf/open/floor/carpet/red,
 /area/indoors/town/rmh/manor)
+"gr" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "gs" = (
 /obj/structure/table/wood/plain,
 /obj/item/reagent_containers/glass/bucket/pot,
 /obj/item/reagent_containers/glass/bucket/pot,
 /turf/open/floor/tile/checker_green,
 /area/indoors)
+"gt" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "gu" = (
 /obj/effect/decal/edge{
 	dir = 10;
@@ -1503,6 +2037,11 @@
 /obj/machinery/light/fueled/torchholder/r,
 /turf/open/floor/wood,
 /area/indoors)
+"gx" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "gy" = (
 /obj/machinery/light/fueled/wallfire/candle/blue/r,
 /turf/open/floor/metal,
@@ -1511,6 +2050,15 @@
 /obj/machinery/light/fueled/torchholder/c,
 /turf/open/floor/tile,
 /area/indoors)
+"gA" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls/den)
+"gB" = (
+/obj/structure/fluff/walldeco/vinez/l,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "gC" = (
 /obj/machinery/light/fueled/forge{
 	pixel_y = 3
@@ -1538,6 +2086,10 @@
 "gF" = (
 /turf/open/floor/wood,
 /area/indoors)
+"gG" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls)
 "gH" = (
 /obj/structure/hotspring/border/two,
 /obj/structure/flora/grass/crawlvines,
@@ -1547,12 +2099,22 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/maniac,
 /area)
+"gJ" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls/den)
+"gK" = (
+/obj/machinery/light/fueled/torchholder/c,
+/obj/structure/fluff/walldeco/vinez/offset,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "gL" = (
 /obj/structure/fluff/railing/border{
 	dir = 10
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -1579,6 +2141,11 @@
 	},
 /turf/open/floor/grass/cold,
 /area/outdoors/exposed/rmh/manorgarri)
+"gP" = (
+/obj/structure/fluff/walldeco/vinez/l,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "gQ" = (
 /obj/structure/closet/crate/chest/wicker,
 /obj/item/reagent_containers/food/snacks/produce/vegetable/cabbage,
@@ -1609,6 +2176,11 @@
 	},
 /turf/open/floor/cobble,
 /area/under/rmh_dungeon/catacombs_church)
+"gT" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "gU" = (
 /obj/structure/maniac_return_machine,
 /turf/open/floor/plasteel/maniac/damaged,
@@ -1623,12 +2195,20 @@
 /obj/machinery/light/fueled/wallfire/candle/l,
 /turf/open/floor/grass/healthy,
 /area/indoors/town/rmh/manor)
+"gW" = (
+/obj/machinery/light/fueled/wallfire/floorcandle/alt,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "gX" = (
 /turf/open/floor/tile/diamond/purple,
 /area/indoors/town/rmh/manor/bath)
 "gY" = (
 /turf/open/water/clean,
 /area/under/rmh_bogforest_caves/werewolf)
+"gZ" = (
+/obj/structure/fluff/walldeco/vinez/l,
+/turf/open/water/clean,
+/area/indoors/cave/rmh_cave/gnolls)
 "ha" = (
 /obj/structure/window/harem3{
 	name = "tall window"
@@ -1654,6 +2234,10 @@
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
+"hd" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls)
 "he" = (
 /obj/structure/table/wood/large_new{
 	dir = 5;
@@ -1679,8 +2263,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
@@ -1695,10 +2278,18 @@
 "hi" = (
 /turf/open/floor/tile,
 /area/indoors/town/rmh/manor)
+"hj" = (
+/obj/structure/fluff/walldeco/vinez/r,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "hk" = (
 /obj/structure/carpet/purple,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor/basement)
+"hl" = (
+/obj/structure/fluff/walldeco/vinez/l,
+/turf/open/water/marsh,
+/area/indoors/cave/rmh_cave/gnolls)
 "hm" = (
 /obj/item/reagent_containers/food/snacks/produce/grain/oat,
 /obj/item/reagent_containers/food/snacks/produce/grain/oat,
@@ -1716,6 +2307,10 @@
 /obj/structure/carpet/red,
 /turf/open/floor/wood,
 /area/indoors/succubus_lair)
+"ho" = (
+/obj/machinery/light/fueled/wallfire/floorcandle/alt,
+/turf/closed/mineral/bedrock,
+/area/under/rmh_bedrock)
 "hp" = (
 /obj/structure/mannequin/male,
 /obj/item/clothing/shoes/simpleshoes/buckle,
@@ -1724,6 +2319,10 @@
 /obj/item/clothing/pants/tights/colored/red,
 /turf/open/floor/wood,
 /area)
+"hq" = (
+/obj/structure/fluff/walldeco/vinez/l,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls)
 "hr" = (
 /obj/structure/wild_plant/nospread/mushroom/waddle,
 /obj/effect/decal/cleanable/debris/stone,
@@ -1762,15 +2361,34 @@
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
+"hy" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
+"hz" = (
+/obj/machinery/light/fueled/torchholder/c,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "hA" = (
 /obj/structure/hotspring/border/nine,
 /obj/effect/falling_sakura,
 /turf/open/floor/dirt/road,
 /area/outdoors)
+"hB" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls)
 "hC" = (
 /obj/structure/door/window,
 /turf/open/floor/cobble,
 /area/indoors)
+"hD" = (
+/obj/structure/fluff/walldeco/vinez/offset,
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
 "hE" = (
 /obj/structure/closet/crate/drawer{
 	pixel_x = 5;
@@ -1781,6 +2399,10 @@
 /obj/structure/curtain/magenta,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood3,
 /area/indoors/town/rmh/manor/basement)
+"hF" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/hay,
+/area/indoors/cave/rmh_cave/gnolls)
 "hG" = (
 /obj/structure/door/viewport{
 	dir = 1;
@@ -1817,9 +2439,30 @@
 	dir = 1
 	},
 /area/indoors/town/rmh/manor)
+"hM" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/machinery/light/fueled/wallfire/floorcandle,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
+"hN" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#3b3b3b"
+	},
+/obj/machinery/light/fueled/firebowl/standing/blue,
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "hO" = (
 /turf/open/floor/carpet/lord/center,
 /area/indoors/town/rmh/manor/basement)
+"hP" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#3b3b3b"
+	},
+/obj/machinery/light/fueled/firebowl/standing/blue,
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "hQ" = (
 /obj/machinery/light/fueled/torchholder/r,
 /obj/structure/closet/crate/chest/wicker,
@@ -1840,11 +2483,23 @@
 /obj/item/clothing/armor/chainmail/iron/orc,
 /turf/open/floor/carpet,
 /area/indoors)
+"hS" = (
+/obj/structure/spider/stickyweb,
+/turf/closed/mineral/bedrock,
+/area/under/rmh_bedrock)
 "hT" = (
 /obj/structure/chair/bench/coucha,
 /obj/structure/carpet/red,
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/rmh/manor)
+"hU" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#3b3b3b"
+	},
+/obj/machinery/light/fueled/firebowl/standing/blue,
+/turf/open/floor/church/purple,
+/area/indoors/cave/rmh_cave/drider/nest)
 "hV" = (
 /obj/structure/bars/pipe{
 	pixel_y = 2
@@ -1860,6 +2515,14 @@
 /mob/living/carbon/human/species/goblin/npc/ambush,
 /turf/open/floor/naturalstone,
 /area/outdoors/woods_safe)
+"hX" = (
+/obj/structure/fluff/traveltile/rmh_cc/exit_gnollhub,
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls)
+"hY" = (
+/obj/structure/fluff/traveltile/rmh_cc/exit_gnollhub,
+/turf/open/floor/dirt,
+/area/indoors/cave/rmh_cave/gnolls)
 "hZ" = (
 /obj/item/natural/cloth,
 /turf/open/water/bath,
@@ -1928,8 +2591,7 @@
 /area/indoors/town/rmh/manor)
 "ip" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /obj/structure/fake_machine/scomm{
 	pixel_y = -32
@@ -1976,8 +2638,7 @@
 "ix" = (
 /obj/effect/decal/cobbleedge{
 	dir = 10;
-	icon_state = "cobbleedgealt-e";
-	pixel_y = 0
+	icon_state = "cobbleedgealt-e"
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -2007,7 +2668,6 @@
 /area/outdoors)
 "iD" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -2079,9 +2739,7 @@
 /area)
 "iV" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/succubus_lair)
@@ -2201,8 +2859,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
@@ -2333,7 +2990,6 @@
 "ka" = (
 /obj/structure/flora/grass/crawlvines,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -2388,7 +3044,6 @@
 /area/indoors)
 "kk" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 1
 	},
 /obj/structure/chair/wood/alt,
@@ -2406,6 +3061,9 @@
 /obj/structure/bed/fake_world,
 /turf/open/floor/plasteel/maniac,
 /area)
+"ko" = (
+/turf/closed/mineral/bedrock,
+/area/under/rmh_bedrock)
 "kr" = (
 /turf/closed/wall/mineral/underbrick/fake_world,
 /area)
@@ -2654,7 +3312,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/firebowl/standing/blue{
@@ -3109,7 +3766,6 @@
 /area/outdoors)
 "nr" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 4
 	},
 /obj/effect/decal/edge{
@@ -3124,7 +3780,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -3162,8 +3817,7 @@
 /area/indoors/town/rmh/manor)
 "nD" = (
 /obj/effect/decal/cobbleedge{
-	dir = 9;
-	pixel_y = 0
+	dir = 9
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -3224,16 +3878,12 @@
 /area/outdoors/woods_safe)
 "nY" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
 "nZ" = (
-/obj/effect/decal/cobbleedge{
-	pixel_y = 0;
-	dir = 2
-	},
+/obj/effect/decal/cobbleedge,
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
 "oa" = (
@@ -3255,8 +3905,7 @@
 "oe" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -3270,9 +3919,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -3313,8 +3960,7 @@
 "ol" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -3329,7 +3975,6 @@
 	pixel_x = 32
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/railing/wood,
@@ -3462,8 +4107,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/closet/crate/crafted_closet/dark,
 /obj/item/clothing/shirt/dress/maid,
@@ -3528,7 +4172,6 @@
 /area/outdoors/woods_safe)
 "pb" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -3543,9 +4186,7 @@
 /area/indoors/town/rmh/manor)
 "pd" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -3609,7 +4250,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "po" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -3647,7 +4287,6 @@
 	name = "carpet"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -3696,7 +4335,6 @@
 /area)
 "pD" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /turf/open/floor/blocks,
@@ -3724,7 +4362,6 @@
 "pK" = (
 /obj/structure/fluff/railing/border,
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -3782,11 +4419,9 @@
 /area/indoors/town/rmh/manor)
 "pY" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 10
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -3882,8 +4517,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/table/vtable/v2,
 /obj/item/bedsheet/cloth{
@@ -3920,7 +4554,6 @@
 /area/indoors/cave/rmh_cave/central)
 "qx" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -4124,8 +4757,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "rl" = (
 /obj/structure/fluff/walldeco/chains{
-	icon_state = "chains3";
-	pixel_y = 0
+	icon_state = "chains3"
 	},
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
@@ -4185,9 +4817,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/succubus_lair)
@@ -4240,7 +4870,6 @@
 /area/outdoors/woods_safe)
 "rM" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 9
 	},
 /obj/structure/table/wood/counter/end,
@@ -4268,8 +4897,7 @@
 /area/indoors/town/rmh/manor)
 "rQ" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /obj/effect/decal/edge{
 	color = "#575757";
@@ -4286,6 +4914,9 @@
 /obj/machinery/light/fueled/torchholder,
 /turf/closed/wall/mineral/decostone,
 /area/indoors)
+"rT" = (
+/turf/open/floor/grass/mixyel,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "rU" = (
 /obj/machinery/light/fueled/wallfire/floorcandle/alt{
 	pixel_y = -16
@@ -4459,8 +5090,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/r,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -4759,9 +5389,7 @@
 /obj/structure/fluff/walldeco/med6{
 	pixel_x = -32
 	},
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "tK" = (
 /turf/open/floor/ruinedwood/alt,
@@ -4992,7 +5620,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -5035,9 +5662,7 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "uW" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
 /area/indoors/town/rmh/manor/basement)
@@ -5051,6 +5676,9 @@
 /obj/machinery/light/fueled/smelter,
 /turf/open/floor/church/green,
 /area)
+"va" = (
+/turf/open/floor/cobblerock,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "vc" = (
 /obj/structure/chair/wood/alt/fancy/chair5{
 	dir = 8
@@ -5067,7 +5695,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/cobbleedge{
@@ -5158,7 +5785,6 @@
 "vv" = (
 /obj/structure/flora/new_shroom/cyan,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -5203,11 +5829,8 @@
 /turf/closed/mineral,
 /area/under/rmh_dungeon/catacombs_church)
 "vJ" = (
-/obj/effect/decal/cobbleedge{
-	dir = 2
-	},
+/obj/effect/decal/cobbleedge,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/blocks,
@@ -5277,9 +5900,7 @@
 /area/indoors/town/rmh/manor)
 "vV" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fluff/pillow/purple,
 /turf/open/floor/tile/diamond/purple,
@@ -5302,8 +5923,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -5388,7 +6008,6 @@
 /area/outdoors)
 "wq" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /obj/structure/table/wood/counter/end/right,
@@ -5446,9 +6065,7 @@
 /turf/open/floor/tile/bfloorz,
 /area/indoors/town/rmh/manor/bath)
 "ww" = (
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "wx" = (
 /turf/open/floor/hexstone,
@@ -5576,8 +6193,7 @@
 "wT" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -5641,7 +6257,6 @@
 /area)
 "xf" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 1
 	},
 /turf/open/floor/blocks,
@@ -5874,8 +6489,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/succubus_lair)
@@ -5985,13 +6599,11 @@
 /area)
 "yl" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /obj/structure/closet/crate/crafted_closet/dark,
@@ -6192,7 +6804,6 @@
 /area/outdoors/woods_safe)
 "ze" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
@@ -6222,7 +6833,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "zk" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 9
 	},
 /obj/effect/decal/edge{
@@ -6296,7 +6906,6 @@
 /area/indoors/town/rmh/manor)
 "zy" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 5
 	},
 /obj/structure/door/iron/bars{
@@ -6313,7 +6922,6 @@
 /area)
 "zE" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/left,
@@ -6323,7 +6931,6 @@
 	dir = 6
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -6495,8 +7102,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Ar" = (
 /obj/effect/decal/cobbleedge{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -6513,8 +7119,7 @@
 "Av" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -6547,9 +7152,7 @@
 /area/outdoors/exposed/rmh/manorgarri)
 "AF" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -6564,6 +7167,9 @@
 	},
 /turf/open/floor/cobblerock,
 /area/outdoors/woods_safe)
+"AK" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "AL" = (
 /obj/effect/landmark/hammer/dev_text{
 	name = "Пещеры иллитидов / тентаклей;"
@@ -6783,7 +7389,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "Bz" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/railing/wood,
@@ -6796,7 +7401,6 @@
 	},
 /obj/structure/table/wood/reinf_long{
 	dir = 8;
-	pixel_y = 0;
 	pixel_x = 3
 	},
 /obj/item/clothing/gloves/fingerless/shadowgloves,
@@ -6826,8 +7430,7 @@
 "BF" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
 /area/indoors/town/rmh/manor/basement)
@@ -6892,8 +7495,7 @@
 "BU" = (
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/center,
 /area/indoors/town/rmh/manor)
@@ -6918,7 +7520,6 @@
 /area/indoors/town/rmh/manor)
 "Cb" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 10
 	},
 /obj/effect/decal/edge{
@@ -6981,7 +7582,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "Cn" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#575757"
 	},
 /turf/open/floor/cobblerock,
@@ -7130,8 +7730,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/tile/brownbrick,
@@ -7317,7 +7916,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue{
@@ -7447,7 +8045,6 @@
 /area/indoors/town/vault)
 "Er" = (
 /obj/structure/table/wood/reinf_long{
-	pixel_y = 0;
 	dir = 4
 	},
 /obj/structure/fermentation_keg/water{
@@ -7508,9 +8105,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -7612,7 +8207,6 @@
 /area/indoors/town/rmh/manor)
 "EZ" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -7623,7 +8217,6 @@
 /area/indoors)
 "Fc" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 5
 	},
 /obj/effect/decal/edge{
@@ -7713,7 +8306,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -7762,7 +8354,6 @@
 /area/outdoors/woods_safe)
 "FK" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -7786,13 +8377,11 @@
 /area/indoors/town/rmh/manor)
 "FO" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -7804,7 +8393,6 @@
 /area/indoors/town/rmh/manor)
 "FQ" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -7877,7 +8465,6 @@
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /obj/structure/fluff/railing/wood,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/left,
@@ -7937,7 +8524,6 @@
 /area/outdoors/woods_safe)
 "Gq" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -8043,7 +8629,6 @@
 	name = "carpet"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -8134,6 +8719,9 @@
 	},
 /turf/open/floor/cobble,
 /area/indoors)
+"Hb" = (
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "Hc" = (
 /obj/structure/flora/grass/herb/rosa,
 /obj/structure/flora/grass/herb/rosa{
@@ -8173,8 +8761,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -8193,9 +8780,7 @@
 /obj/machinery/light/fueled/wallfire/floorcandle/alt{
 	pixel_y = -16
 	},
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "Hr" = (
 /obj/structure/wild_plant/nospread/mushroom/waddle,
@@ -8220,16 +8805,13 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Hv" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /turf/open/floor/cobblerock,
 /area)
 "Hx" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/purple,
 /area/indoors/succubus_lair)
@@ -8303,7 +8885,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/chair/bench/couch/right/lord_primary,
@@ -8421,7 +9002,6 @@
 /area/indoors/town/rmh/manor)
 "Il" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -8588,9 +9168,7 @@
 	icon_state = "borderfall";
 	icon = 'icons/turf/constructed/misc.dmi'
 	},
-/turf/open/floor/tile/masonic{
-	dir = 2
-	},
+/turf/open/floor/tile/masonic,
 /area/indoors/town/rmh/manor)
 "IX" = (
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -8605,8 +9183,7 @@
 /area/indoors/town/rmh/manor)
 "Jb" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /turf/open/floor/naturalstone,
 /area)
@@ -8620,8 +9197,7 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Jd" = (
 /obj/structure/fluff/walldeco/chains{
-	icon_state = "chains3";
-	pixel_y = 0
+	icon_state = "chains3"
 	},
 /turf/open/floor/churchrough/green,
 /area)
@@ -8664,8 +9240,7 @@
 "Jq" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fake_machine/stockpile_withdraw,
 /obj/structure/rack/shelf/biggest,
@@ -8743,7 +9318,6 @@
 /area/outdoors/woods_safe)
 "JK" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#575757"
 	},
 /turf/open/floor/hexstone,
@@ -8812,7 +9386,6 @@
 /area/overlord_lair)
 "JW" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 10
 	},
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -8851,7 +9424,6 @@
 /area/outdoors/woods_safe)
 "Kd" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -8879,7 +9451,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -8921,8 +9492,7 @@
 /area/outdoors/exposed/rmh/manorgarri)
 "Kw" = (
 /obj/effect/decal/edge{
-	color = "#575757";
-	dir = 2
+	color = "#575757"
 	},
 /obj/effect/decal/edge{
 	color = "#575757";
@@ -8955,7 +9525,6 @@
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -9095,7 +9664,6 @@
 /area/under/rmh_bogforest_caves/werewolf)
 "KX" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
@@ -9119,7 +9687,6 @@
 /area/indoors)
 "Ld" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -9209,7 +9776,6 @@
 	pixel_x = -18
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/desert/deserttile/tilegreyblu,
@@ -9291,9 +9857,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -9621,7 +10185,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Nj" = (
 /obj/structure/table/wood/reinf_long{
-	pixel_y = 0;
 	dir = 8
 	},
 /obj/item/storage/fancy/pilltin/charcoal{
@@ -9661,9 +10224,11 @@
 /obj/machinery/light/fueled/firebowl/standing,
 /turf/open/floor/ruinedwood/chevron,
 /area/indoors)
+"Nv" = (
+/turf/open/floor/dirt/road,
+/area/indoors/cave/rmh_cave/gnolls/den)
 "Nw" = (
 /obj/effect/decal/borderfall{
-	dir = 2;
 	pixel_y = -8
 	},
 /obj/structure/table/map{
@@ -9838,9 +10403,7 @@
 /area/indoors/succubus_lair)
 "Oh" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fluff/pillow/purple,
 /turf/open/floor/tile/diamond/purple,
@@ -9868,7 +10431,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Oq" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -9905,8 +10467,7 @@
 "Oy" = (
 /obj/effect/decal/edge{
 	dir = 4;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/hexstone,
 /area/indoors/town/rmh/manor/basement)
@@ -10020,7 +10581,6 @@
 	pixel_x = -20
 	},
 /obj/structure/fluff/walldeco/bath/wallpipes/outie{
-	dir = 2;
 	pixel_x = 12
 	},
 /obj/structure/bars/grille,
@@ -10167,7 +10727,6 @@
 /area/outdoors/exposed/rmh/manorgarri)
 "Pq" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -10213,7 +10772,6 @@
 "Pw" = (
 /obj/structure/fluff/railing/wood,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/walldeco/customflag{
@@ -10225,7 +10783,6 @@
 "Pz" = (
 /obj/structure/hotspring/border/six,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -10295,9 +10852,7 @@
 /area/outdoors/woods_safe)
 "PN" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/indoors/town/rmh/manor/bath)
@@ -10328,7 +10883,6 @@
 "PS" = (
 /obj/structure/bookcase/random/myths,
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -10363,7 +10917,6 @@
 /area/outdoors)
 "PY" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -10719,7 +11272,6 @@
 /area/indoors/town/rmh/manor/bath)
 "QZ" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -11021,7 +11573,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Sp" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
@@ -11043,7 +11594,6 @@
 /area/indoors)
 "Sv" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/desert/deserttile/tilegreyblu,
@@ -11066,8 +11616,7 @@
 /area/indoors/town/rmh/manor/bath)
 "SA" = (
 /obj/structure/table/wood{
-	icon_state = "tablewood3";
-	pixel_y = 0
+	icon_state = "tablewood3"
 	},
 /obj/item/plate/onyxa{
 	pixel_y = 4
@@ -11108,7 +11657,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/table/map{
@@ -11157,8 +11705,7 @@
 "SM" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -11229,8 +11776,7 @@
 "SX" = (
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/hexstone,
 /area/indoors/town/rmh/manor/basement)
@@ -11240,7 +11786,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/fluff/statue{
@@ -11322,7 +11867,6 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/table/wood/nice/decorated_alt,
@@ -11427,7 +11971,6 @@
 "TC" = (
 /obj/item/natural/rock,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -11498,7 +12041,6 @@
 "TL" = (
 /obj/effect/landmark/start/vampirespawn,
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -11765,8 +12307,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/blue/l,
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
@@ -11807,7 +12348,6 @@
 /area/under/rmh_dungeon/catacombs_church)
 "Vq" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -11833,7 +12373,6 @@
 /area/indoors/town/rmh/manor)
 "Vr" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -11845,7 +12384,6 @@
 /area/start)
 "Vw" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/herringbone,
@@ -11883,7 +12421,6 @@
 /area/indoors/town/rmh/manor/bath)
 "VI" = (
 /obj/structure/door/viewport{
-	dir = 2;
 	name = "Blood Vault"
 	},
 /obj/effect/mapping_helpers/access/keyset/manor/lord{
@@ -11899,7 +12436,6 @@
 /area/indoors/succubus_lair)
 "VK" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/carpet/lord/right,
@@ -12186,7 +12722,6 @@
 /area/indoors/town/rmh/manor/basement)
 "WS" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/chair/wood{
@@ -12224,8 +12759,7 @@
 /area/indoors/town/vault)
 "Xa" = (
 /obj/effect/decal/cobbleedge{
-	dir = 5;
-	pixel_y = 0
+	dir = 5
 	},
 /turf/open/floor/blocks,
 /area/under/rmh_dungeon/catacombs_church)
@@ -12317,8 +12851,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/tile/brownbrick,
@@ -12339,7 +12872,6 @@
 /area/indoors)
 "Xq" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -12439,7 +12971,6 @@
 /area/indoors/succubus_lair)
 "XU" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -12500,8 +13031,7 @@
 /obj/machinery/light/fueled/wallfire/candle,
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -12630,7 +13160,6 @@
 /area/indoors/town/rmh/manor)
 "YD" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /turf/open/floor/cobble,
@@ -12743,7 +13272,6 @@
 "YZ" = (
 /obj/structure/table/wood/plain_alt,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -13001,8 +13529,7 @@
 "ZZ" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/ruinedwood/alizeria/tiles/wood1,
 /area/indoors/town/rmh/manor)
@@ -42674,31 +43201,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (148,1,1) = {"
@@ -42876,31 +43403,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+dj
+dk
+hS
+dj
+dj
+fv
+ct
+ct
+ct
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (149,1,1) = {"
@@ -43078,31 +43605,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ct
+ct
+ct
+dj
+dj
+dj
+dj
+dj
+dj
+df
+df
+df
+ct
+ct
+dj
+dj
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (150,1,1) = {"
@@ -43280,31 +43807,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ct
+ct
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+dj
+dj
+dk
+ko
+ko
+ko
+ko
 Nn
 "}
 (151,1,1) = {"
@@ -43482,31 +44009,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+di
+df
+df
+df
+df
+ko
+ko
+hS
+hS
+hS
+ko
+ko
+di
+df
+df
+df
+dj
+dj
+ko
+ko
+ko
+ko
 Nn
 "}
 (152,1,1) = {"
@@ -43684,31 +44211,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+df
+df
+df
+df
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ct
+ct
+ct
+df
+df
+ko
+ko
+ko
 Nn
 "}
 (153,1,1) = {"
@@ -43886,31 +44413,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+hS
+df
+df
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ct
+df
+df
+ko
+ko
+ko
 Nn
 "}
 (154,1,1) = {"
@@ -44088,31 +44615,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+df
+df
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ct
+ct
+df
+df
+ko
+ko
 Nn
 "}
 (155,1,1) = {"
@@ -44290,31 +44817,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+df
+df
+df
+df
+ko
+ko
+ko
+ko
+ko
+eA
+eP
+hN
+eP
+dy
+ko
+ko
+ko
+ko
+ct
+df
+df
+ko
+ko
 Nn
 "}
 (156,1,1) = {"
@@ -44492,31 +45019,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+df
+df
+df
+df
+df
+df
+eA
+eI
+eC
+eT
+eT
+eT
+eD
+ew
+dy
+ko
+ko
+ct
+df
+ct
+ko
+ko
 Nn
 "}
 (157,1,1) = {"
@@ -44694,31 +45221,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+df
+df
+df
+df
+df
+df
+dY
+dH
+ez
+ez
+ez
+ez
+ez
+ex
+dO
+ko
+ko
+df
+df
+df
+ko
+ko
 Nn
 "}
 (158,1,1) = {"
@@ -44896,31 +45423,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ct
+ct
+ct
+df
+df
+eA
+el
+ez
+ez
+eE
+eE
+eE
+ez
+ez
+dR
+dy
+ko
+ko
+df
+df
+ko
+ko
 Nn
 "}
 (159,1,1) = {"
@@ -45098,31 +45625,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ct
+di
+ko
+dV
+dz
+ez
+eE
+eE
+eE
+eE
+eE
+ez
+dV
+dz
+ko
+ko
+df
+df
+ct
+ko
 Nn
 "}
 (160,1,1) = {"
@@ -45300,31 +45827,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+hU
+dz
+ez
+eE
+eE
+eE
+eE
+eE
+ez
+dV
+er
+ko
+ko
+df
+df
+df
+ko
 Nn
 "}
 (161,1,1) = {"
@@ -45502,31 +46029,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+dV
+dz
+ez
+eE
+eE
+eE
+eE
+eE
+ez
+dV
+dz
+ko
+ko
+df
+df
+df
+ko
 Nn
 "}
 (162,1,1) = {"
@@ -45704,31 +46231,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ex
+dO
+ez
+ez
+eE
+eE
+eE
+ez
+ez
+dY
+dH
+ko
+ko
+di
+df
+df
+ko
 Nn
 "}
 (163,1,1) = {"
@@ -45906,31 +46433,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+dR
+dy
+ez
+ez
+ez
+ez
+ez
+eA
+el
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (164,1,1) = {"
@@ -46108,31 +46635,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ex
+eD
+ew
+eP
+eP
+eP
+eI
+eC
+dH
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (165,1,1) = {"
@@ -46310,31 +46837,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+df
+df
+df
+ko
+ko
+ko
+ko
+ko
+ko
+ex
+eT
+hP
+eT
+dH
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (166,1,1) = {"
@@ -46512,31 +47039,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+df
+df
+df
+df
+df
+ko
+ko
+ko
+ko
+ko
+ko
+eW
+eW
+eW
+ko
+ko
+ko
+ko
+ko
+df
+df
+ko
+ko
+ko
 Nn
 "}
 (167,1,1) = {"
@@ -46714,31 +47241,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+df
+df
+df
+df
+df
+di
+ko
+ko
+ko
+df
+df
+df
+df
+df
+ko
+ko
+ko
+ko
+df
+df
+df
+df
+ko
+ko
 Nn
 "}
 (168,1,1) = {"
@@ -46916,31 +47443,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+di
+ko
+ko
 Nn
 "}
 (169,1,1) = {"
@@ -47118,31 +47645,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+di
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+df
+ko
+ko
 Nn
 "}
 (170,1,1) = {"
@@ -47320,31 +47847,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+df
+df
+df
+df
+df
+dj
+dj
+dj
+dj
+dj
+df
+df
+df
+di
+ko
+df
+df
+df
+df
+ko
+ko
+ko
 Nn
 "}
 (171,1,1) = {"
@@ -47522,31 +48049,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+dj
+dk
+dj
+dj
+dj
+dj
+dj
+dj
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (172,1,1) = {"
@@ -47724,31 +48251,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (173,1,1) = {"
@@ -48128,31 +48655,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (175,1,1) = {"
@@ -48330,31 +48857,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+hq
+hq
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+aF
+am
+aA
+ao
+ah
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (176,1,1) = {"
@@ -48532,31 +49059,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+bp
+bD
+bv
+gG
+aF
+aF
+aF
+ko
+ko
+ko
+ko
+aF
+aF
+aF
+fP
+cY
+ah
+cz
+cl
+ko
+ko
+ko
+ko
 Nn
 "}
 (177,1,1) = {"
@@ -48734,31 +49261,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+hF
+fw
+ac
+ah
+gG
+hl
+aF
+aF
+aF
+ko
+ko
+ko
+aF
+cD
+ac
+ac
+ac
+as
+ah
+cl
+ko
+ko
+ko
+ko
 Nn
 "}
 (178,1,1) = {"
@@ -48936,31 +49463,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+aN
+ac
+bI
+ah
+ao
+cp
+gZ
+gZ
+aF
+aF
+ko
+ko
+aF
+cM
+ac
+cB
+an
+an
+ah
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (179,1,1) = {"
@@ -49138,31 +49665,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+hz
+ac
+ah
+ah
+ah
+cp
+cp
+aG
+aF
+aF
+gB
+ko
+am
+cN
+cC
+an
+an
+au
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (180,1,1) = {"
@@ -49340,31 +49867,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+hy
+bw
+ah
+am
+cl
+cy
+cp
+cp
+gP
+aZ
+ah
+ah
+cP
+an
+an
+an
+ak
+an
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (181,1,1) = {"
@@ -49542,31 +50069,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+hM
+ac
+ah
+cl
+fU
+an
+an
+ac
+ac
+aY
+aY
+ah
+ah
+ah
+ah
+an
+an
+an
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (182,1,1) = {"
@@ -49744,31 +50271,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ah
+ah
+an
+ba
+ba
+ba
+ac
+ac
+am
+gG
+ko
+ko
+ko
+ko
+ko
+fH
+an
+am
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (183,1,1) = {"
@@ -49946,31 +50473,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+hB
+fb
+an
+ba
+et
+ba
+ac
+gT
+aF
+ko
+ko
+ko
+ko
+ko
+ko
+db
+an
+aF
+aF
+ko
+ko
+ko
+ko
 Nn
 "}
 (184,1,1) = {"
@@ -50148,31 +50675,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+hD
+an
+an
+ba
+ba
+ba
+fU
+aF
+aF
+ko
+ko
+ko
+ko
+ko
+ko
+fH
+an
+an
+aF
+aF
+ko
+ko
+ko
 Nn
 "}
 (185,1,1) = {"
@@ -50350,31 +50877,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+aF
+hD
+hy
+an
+an
+an
+an
+an
+an
+aF
+aF
+ko
+ko
+ko
+an
+an
+an
+an
+ah
+aF
+aF
+aF
+ko
+ko
 Nn
 "}
 (186,1,1) = {"
@@ -50552,31 +51079,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+aF
+am
+hy
+an
+an
+aR
+hj
+ah
+ah
+aF
+aF
+ko
+ko
+fZ
+an
+fQ
+fN
+cW
+ah
+ah
+cl
+aF
+ko
+ko
 Nn
 "}
 (187,1,1) = {"
@@ -50754,31 +51281,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+hz
+ac
+an
+an
+aF
+hd
+ah
+ah
+ko
+ko
+an
+an
+an
+fU
+aF
+ah
+ah
+cP
+co
+aF
+aF
+ko
 Nn
 "}
 (188,1,1) = {"
@@ -50956,31 +51483,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+aY
+hy
+bw
+bm
+an
+aF
+aF
+gW
+cP
+ah
+ko
+aU
+aU
+aF
+aF
+aF
+aF
+ko
+ai
+ac
+ac
+hX
+ko
 Nn
 "}
 (189,1,1) = {"
@@ -51158,31 +51685,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+gG
+hy
+an
+an
+ac
+aF
+aF
+ac
+ac
+ah
+ah
+ep
+an
+aF
+aF
+ko
+ko
+ko
+cl
+fx
+bb
+hY
+ko
 Nn
 "}
 (190,1,1) = {"
@@ -51360,31 +51887,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+bm
+an
+as
+ac
+aY
+aF
+ko
+ko
+ac
+aV
+ep
+an
+aF
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (191,1,1) = {"
@@ -51562,31 +52089,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+fe
+an
+ac
+bg
+aY
+aF
+ko
+ko
+ko
+ko
+gp
+dr
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (192,1,1) = {"
@@ -51764,31 +52291,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+fe
+ac
+ac
+bl
+ko
+ko
+ko
+ko
+ko
+ko
+gr
+va
+va
+ko
+AK
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (193,1,1) = {"
@@ -51966,31 +52493,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+fu
+ac
+ho
+ko
+ko
+ko
+ko
+ko
+ko
+AK
+gt
+Nv
+Nv
+va
+Nv
+fC
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (194,1,1) = {"
@@ -52168,31 +52695,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+bA
+fu
+ac
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+gx
+fo
+fi
+va
+va
+Nv
+dM
+Nv
+do
+ko
+ko
+ko
+ko
 Nn
 "}
 (195,1,1) = {"
@@ -52370,31 +52897,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+cg
+bT
+bL
+bA
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+gA
+fo
+va
+va
+va
+va
+Nv
+Nv
+cR
+Nv
+bJ
+ko
+ko
 Nn
 "}
 (196,1,1) = {"
@@ -52572,31 +53099,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ci
+bW
+bT
+bA
+ko
+ko
+ko
+ko
+ko
+ko
+gJ
+rT
+Nv
+eK
+eK
+va
+va
+Hb
+du
+Hb
+Nv
+Nv
+ko
+ko
 Nn
 "}
 (197,1,1) = {"
@@ -52774,31 +53301,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ck
+ag
+ag
+bA
+ko
+ko
+ko
+ko
+ko
+ko
+gK
+es
+Nv
+eO
+eO
+va
+dJ
+Hb
+dx
+fA
+fA
+ko
+ko
+ko
 Nn
 "}
 (198,1,1) = {"
@@ -52976,31 +53503,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+cd
+bW
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+gd
+fX
+fA
+fO
+AK
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (199,1,1) = {"
@@ -53178,31 +53705,31 @@ Nn
 Nn
 Nn
 Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
-Nn
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
+ko
 Nn
 "}
 (200,1,1) = {"

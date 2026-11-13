@@ -1,5 +1,6 @@
 GLOBAL_LIST_EMPTY(keys_by_ckey)						//all client ckeys, and their associated keys (keys_by_ckey[ckey] -> key), isn't cleared when the client leaves the game
 GLOBAL_LIST_EMPTY(clients)							//all clients
+GLOBAL_LIST_EMPTY(sense_relay_mobs)					//mobs that see and hear from another atom, e.g. headless dullahans
 GLOBAL_LIST_EMPTY(admins)							//all clients whom are admins
 GLOBAL_PROTECT(admins)
 GLOBAL_LIST_EMPTY(deadmins)							//all ckeys who have used the de-admin verb.
@@ -114,6 +115,10 @@ GLOBAL_LIST_INIT(dangerous_turf_contents, typecacheof(list(
 	for(var/atom/movable/thing as anything in target_turf)
 		if(is_type_in_typecache(thing, GLOB.dangerous_turf_contents))
 			return TRUE
+		if(istype(thing, /obj/machinery/light/fueled))
+			var/obj/machinery/light/fueled/fire = thing
+			if(fire.burns_crossers())
+				return TRUE
 	return FALSE
 
 /proc/update_config_movespeed_type_lookup(update_mobs = TRUE)

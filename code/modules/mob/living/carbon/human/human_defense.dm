@@ -90,6 +90,10 @@
 	if(steam_boiler && def_zone == BODY_ZONE_CHEST)
 		steam_boiler.take_damage(boiler_damage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
 
+	// Bare stockings have no armour value, so they would never feel a hit on the legs otherwise.
+	if(damage > 0 && (d_type in list(BLUNT, SLASH, STAB, PIERCE)) && (def_zone in list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_PRECISE_R_FOOT)))
+		get_exposed_legwear()?.snag(damage * 0.5, d_type)
+
 	if(physiology)
 		protection += physiology.armor.get_rating(d_type)
 	return protection
@@ -301,6 +305,11 @@
 		if(check_shields(P, P.damage, "the [P.name]", PROJECTILE_ATTACK, P.armor_penetration))
 			P.on_hit(src, 100, def_zone)
 			return BULLET_ACT_HIT
+
+	var/mob/living/carbon/human/shield = bellyride_shield_for(P.starting, def_zone)
+	if(shield)
+		LAZYSET(P.impacted, shield, TRUE)
+		return shield.bullet_act(P, def_zone)
 	return ..(P, def_zone)
 
 /mob/living/carbon/human/proc/check_reflect(def_zone) //Reflection checks for anything in my l_hand, r_hand, or wear_armor based on the reflection chance of the object
@@ -356,11 +365,16 @@
 		throwpower = I.throwforce
 		if(I.thrownby == src) //No throwing stuff at myself to trigger hit reactions
 			return ..()
-	if(check_shields(AM, throwpower, "\the [AM.name]", THROWN_PROJECTILE_ATTACK))
+	var/held_block = check_shields(AM, throwpower, "\the [AM.name]", THROWN_PROJECTILE_ATTACK)
+	if(held_block)
 		hitpush = FALSE
 		skipcatch = TRUE
 		blocked = TRUE
-	else if(I)
+	else if(!blocked && (skipcatch || !can_catch_item()))
+		var/mob/living/carbon/human/shield = bellyride_shield_for(throwingdatum?.starting_turf, throwingdatum?.target_zone)
+		if(shield)
+			return shield.hitby(AM, TRUE, hitpush, blocked, throwingdatum, damage_type)
+	if(!held_block && I)
 		if(((throwingdatum ? throwingdatum.speed : I.throw_speed) >= EMBED_THROWSPEED_THRESHOLD) || I.embedding.embedded_ignore_throwspeed_threshold)
 			if(I.can_embed() && prob(I.embedding.embed_chance) && !HAS_TRAIT(src, TRAIT_PIERCEIMMUNE))
 				//throw_alert("embeddedobject", /atom/movable/screen/alert/embeddedobject)
@@ -384,6 +398,10 @@
 /mob/living/carbon/human/attacked_by(obj/item/I, mob/living/user)
 	if(!I || !user)
 		return 0
+
+	var/mob/living/carbon/human/shield = bellyride_shield_for(user, user.tempatarget || user.zone_selected)
+	if(shield)
+		return shield.attacked_by(I, user)
 
 	var/obj/item/bodypart/affecting
 	var/useder = user.zone_selected
@@ -473,29 +491,35 @@
 		var/zones = M.zone_selected
 		if(!M.ckey)
 			zones = pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_PRECISE_NECK, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-		var/dam_zone = dismembering_strike(M, zones)
-		if(!dam_zone) //Dismemberment successful
-			return TRUE
+		var/mob/living/carbon/human/shield = bellyride_shield_for(M, zones)
+		if(shield)
+			return shield.take_animal_hit(M, damage, zones)
+		return take_animal_hit(M, damage, zones)
 
-		var/obj/item/bodypart/affecting = get_bodypart(ran_zone(dam_zone))
-		if(!affecting)
-			affecting = get_bodypart(BODY_ZONE_CHEST)
-		var/armor = run_armor_check(affecting, M.damage_type, armor_penetration = M.a_intent.penfactor, damage = damage, attacker = M, used_intent = M.a_intent)
-		next_attack_msg.Cut()
+/// Applies a creature's landed melee hit; returns FALSE when armor stops it.
+/mob/living/carbon/human/proc/take_animal_hit(mob/living/simple_animal/M, damage, zones)
+	var/dam_zone = dismembering_strike(M, zones)
+	if(!dam_zone) //Dismemberment successful
+		return TRUE
 
-		var/nodmg = FALSE
-		set_damage_attack_context(M)
-		if(!apply_damage(damage, M.melee_damage_type, affecting, armor))
-			nodmg = TRUE
-			next_attack_msg += " <span class='warning'>Armor stops the damage.</span>"
-		else
-			affecting.bodypart_attacked_by(M.a_intent.blade_class, damage - armor, M, dam_zone, crit_message = TRUE, pre_applied = TRUE)
-		clear_damage_attack_context()
-		visible_message("<span class='danger'>\The [M] [pick(M.a_intent.attack_verb)] [src]![next_attack_msg.Join()]</span>", \
-					"<span class='danger'>\The [M] [pick(M.a_intent.attack_verb)] me![next_attack_msg.Join()]</span>", null, COMBAT_MESSAGE_RANGE)
-		next_attack_msg.Cut()
-		if(nodmg)
-			return FALSE
+	var/obj/item/bodypart/affecting = get_bodypart(ran_zone(dam_zone))
+	if(!affecting)
+		affecting = get_bodypart(BODY_ZONE_CHEST)
+	var/armor = run_armor_check(affecting, M.damage_type, armor_penetration = M.a_intent.penfactor, damage = damage, attacker = M, used_intent = M.a_intent)
+	next_attack_msg.Cut()
+
+	var/nodmg = FALSE
+	set_damage_attack_context(M)
+	if(!apply_damage(damage, M.melee_damage_type, affecting, armor))
+		nodmg = TRUE
+		next_attack_msg += " <span class='warning'>Armor stops the damage.</span>"
+	else
+		affecting.bodypart_attacked_by(M.a_intent.blade_class, damage - armor, M, dam_zone, crit_message = TRUE, pre_applied = TRUE)
+	clear_damage_attack_context()
+	visible_message("<span class='danger'>\The [M] [pick(M.a_intent.attack_verb)] [src]![next_attack_msg.Join()]</span>", \
+				"<span class='danger'>\The [M] [pick(M.a_intent.attack_verb)] me![next_attack_msg.Join()]</span>", null, COMBAT_MESSAGE_RANGE)
+	next_attack_msg.Cut()
+	return !nodmg
 
 /mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
 	if(HAS_TRAIT(src, TRAIT_BOMBIMMUNE))
@@ -686,7 +710,7 @@
 				affecting.receive_damage(acidity, 2*acidity)
 				emote("scream")
 				dna?.species.go_bald(src)
-				ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
+				acid_scar_face()
 
 		update_damage_overlays()
 
@@ -753,7 +777,7 @@
 	else
 		examination += "<span class='dead'>[m1] dead.</span>"
 
-	switch(blood_volume)
+	switch(is_bloodless() ? BLOOD_VOLUME_NORMAL : blood_volume)
 		if(-INFINITY to BLOOD_VOLUME_SURVIVE)
 			examination += "<span class='artery'><B>[m1] extremely anemic.</B></span>"
 		if(BLOOD_VOLUME_SURVIVE to BLOOD_VOLUME_BAD)

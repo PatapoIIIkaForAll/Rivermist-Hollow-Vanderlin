@@ -49,7 +49,8 @@
 
 	screens -= category
 
-	if(animated)
+	// A deleting mob cannot own the fade timer.
+	if(animated && !QDELING(src))
 		animate(screen, alpha = 0, time = animated)
 		addtimer(CALLBACK(src, PROC_REF(clear_fullscreen_after_animate), screen), animated, TIMER_CLIENT_TIME, flags = ANIMATION_PARALLEL)
 	else

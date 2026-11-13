@@ -138,47 +138,13 @@
 /mob/living/proc/on_restrained_trait_gain(datum/source)
 	SIGNAL_HANDLER
 	ADD_TRAIT(src, TRAIT_HANDS_BLOCKED, TRAIT_RESTRAINED)
+	restrained_since = world.time
 
 /// Called when [TRAIT_RESTRAINED] is removed from the mob.
 /mob/living/proc/on_restrained_trait_loss(datum/source)
 	SIGNAL_HANDLER
 	REMOVE_TRAIT(src, TRAIT_HANDS_BLOCKED, TRAIT_RESTRAINED)
-
-/* ROGUE */
-
-/datum/attribute_holder/sheet/job/leper_vice
-	raw_attribute_list = list(
-		STAT_STRENGTH = -3,
-		STAT_ENDURANCE = -3,
-		STAT_CONSTITUTION = -3,
-		STAT_PERCEPTION = -3,
-		STAT_SPEED = -3,
-		STAT_INTELLIGENCE = -3,
-		STAT_FORTUNE = -3
-	)
-///Called when TRAIT_LEPROSY is added to the mob.
-/mob/living/proc/on_leprosy_trait_gain(datum/source)
-	SIGNAL_HANDLER
-	if(has_quirk(/datum/quirk/vice/leprosy))
-		attributes?.add_sheet(/datum/attribute_holder/sheet/job/leper_vice)
-
-	else
-		adjust_stat_modifier(TRAIT_LEPROSY, list(
-			STAT_STRENGTH = -3,
-			STAT_ENDURANCE = -3,
-			STAT_CONSTITUTION = -3,
-			STAT_PERCEPTION = -3,
-			STAT_SPEED = -3,
-			STAT_INTELLIGENCE = -3,
-			STAT_FORTUNE = -3
-		))
-
-///Called when TRAIT_LEPROSY is removed from the mob.
-/mob/living/proc/on_leprosy_trait_loss(datum/source)
-	SIGNAL_HANDLER
-	if(has_quirk(/datum/quirk/vice/leprosy))
-		attributes?.subtract_sheet(/datum/attribute_holder/sheet/job/leper_vice)
-	remove_stat_modifier(TRAIT_LEPROSY)
+	restrained_since = 0
 
 ///Called when TRAIT_CRATEMOVER is added to the mob.
 /mob/living/proc/on_cratemover_trait_gain(datum/source)
@@ -189,8 +155,7 @@
 /mob/living/proc/on_cratemover_trait_loss(datum/source)
 	SIGNAL_HANDLER
 	var/datum/component/strongpull = GetComponent(/datum/component/strong_pull)
-	if(strongpull)
-		strongpull.RemoveComponent()
+	qdel(strongpull)
 
 ///From [element/movetype_handler/on_movement_type_trait_gain()]
 /mob/living/proc/on_movement_type_flag_enabled(datum/source, trait)

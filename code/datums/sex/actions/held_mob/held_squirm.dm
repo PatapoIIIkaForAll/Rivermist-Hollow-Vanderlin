@@ -8,7 +8,7 @@
  * own getting out - this is for making the person using you regret the grip they have on you.
  */
 /datum/sex_action/held_mob_squirm
-	name = "Squirm in their grip"
+	name = "Squirm"
 	description = "Thrash about to throw off whoever is using you."
 	do_time = 2 SECONDS
 	stamina_cost = 1

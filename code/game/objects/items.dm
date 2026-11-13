@@ -431,8 +431,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 		AddComponent(/datum/component/particle_spewer/sparkle)
 	else
 		var/datum/component/particle_spewer = GetComponent(/datum/component/particle_spewer/sparkle)
-		if(particle_spewer)
-			particle_spewer.RemoveComponent()
+		qdel(particle_spewer)
 
 /obj/item/update_overlays()
 	. = ..()

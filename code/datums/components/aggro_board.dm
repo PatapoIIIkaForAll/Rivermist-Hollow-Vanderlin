@@ -75,7 +75,8 @@
 		return
 
 	var/datum/targetting_datum/targetting_datum = victim.ai_controller.blackboard[BB_TARGETTING_DATUM]
-	targetting_datum?.set_horny_target_hostile(victim, attacker)
+	if(!horny_ai_counts_partner_hits(victim.ai_controller, attacker))
+		targetting_datum?.set_horny_target_hostile(victim, attacker)
 
 	// Base threat from being attacked
 	var/threat_to_add = 5
@@ -195,6 +196,9 @@
 
 /datum/component/ai_aggro_system/proc/is_valid_threat_target(mob/living/source, mob/threat_mob)
 	if(!source?.ai_controller || !threat_mob || QDELETED(threat_mob))
+		return FALSE
+	// A threat that walked off (or changed level) leaves the table instead of being re-asserted each decay tick.
+	if(!source.ai_controller.is_threat_in_reach(threat_mob))
 		return FALSE
 
 	var/datum/targetting_datum/targetting_datum = source.ai_controller.blackboard[BB_TARGETTING_DATUM]

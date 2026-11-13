@@ -2,6 +2,9 @@ GLOBAL_VAR(round_id)
 GLOBAL_PROTECT(round_id)
 GLOBAL_VAR(log_directory)
 GLOBAL_PROTECT(log_directory)
+/// log_runtime() text from before SetupLogs; replayed into runtime.log once it exists.
+GLOBAL_LIST(early_runtime_logs)
+GLOBAL_PROTECT(early_runtime_logs)
 
 #define DECLARE_LOG_NAMED(log_var_name, log_file_name, start)\
 GLOBAL_VAR(##log_var_name);\

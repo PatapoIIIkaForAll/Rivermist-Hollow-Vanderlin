@@ -2564,7 +2564,6 @@
 /obj/structure/fluff/railing/border,
 /obj/structure/lever/wall{
 	pixel_x = 18;
-	pixel_y = 0;
 	redstone_id = "Marsh3"
 	},
 /turf/open/floor/tile/masonic/spiral,
@@ -3434,8 +3433,7 @@
 	pixel_y = -4
 	},
 /obj/item/kitchen/fork/iron{
-	pixel_x = -6;
-	pixel_y = 0
+	pixel_x = -6
 	},
 /turf/open/floor/tile/kitchen,
 /area/indoors/lich)
@@ -3509,7 +3507,6 @@
 	dir = 9;
 	icon_state = "tome";
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
-	pixel_x = 0;
 	pixel_y = 42;
 	name = "Book of Zizo";
 	desc = "A horrible book that contains untold power. This book is currently in use to darken this area in the void."

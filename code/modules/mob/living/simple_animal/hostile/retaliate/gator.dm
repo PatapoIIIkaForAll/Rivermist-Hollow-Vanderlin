@@ -64,6 +64,7 @@
 		/datum/pet_command/protect_owner,
 		/datum/pet_command/aggressive,
 		/datum/pet_command/calm,
+		/datum/pet_command/pet_breed_other,
 	)
 
 /mob/living/simple_animal/hostile/retaliate/gator/Initialize()

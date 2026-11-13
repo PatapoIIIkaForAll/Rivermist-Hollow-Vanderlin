@@ -141,7 +141,8 @@
 
 //Update this whenever you need to take advantage of more recent byond features
 #define MIN_COMPILER_MINOR_VERSION 1667
-#ifndef SPACEMAN_DMM
+// OpenDream reports its own DM_BUILD, so only real BYOND compilers are gated.
+#if !defined(SPACEMAN_DMM) && !defined(OPENDREAM)
 #if DM_BUILD < MIN_COMPILER_MINOR_VERSION
 //Don't forget to update this part
 #error Your version of BYOND is too out-of-date to compile this project. Go to https://secure.byond.com/download and update.

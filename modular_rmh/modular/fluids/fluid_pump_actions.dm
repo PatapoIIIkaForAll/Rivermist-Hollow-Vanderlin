@@ -1,6 +1,6 @@
 /// Fits the pump in the user's hand over the matching organ, on themselves or a partner.
 /datum/sex_action/attach_fluid_pump
-	name = "Attach a pump"
+	name = "Attach pump"
 	description = "Fit the pump in your hand over the matching organ. It covers the organ until removed."
 	continous = FALSE
 	do_time = 3 SECONDS
@@ -56,7 +56,7 @@
 
 /// Takes a fitted pump off, into the user's hand; works on yourself or a partner.
 /datum/sex_action/remove_fluid_pump
-	name = "Remove the pump"
+	name = "Remove pump"
 	description = "Pop a fitted pump off, reservoir and all."
 	continous = FALSE
 	do_time = 2 SECONDS

@@ -115,6 +115,10 @@
 	var/voice_locked = TRUE
 	/// Additional multiplicative slowdown applied on top of stat changes.
 	var/movespeed_slowdown = 0.9
+	/// Name of the Reverie this body rests in instead of sleep.
+	var/reverie_name = "Dreamless Pause"
+	/// Voice line key spoken when entering Reverie.
+	var/reverie_voice_line = "Dreamless Pause"
 
 /datum/species/automaton/proc/add_synthetic_components(mob/living/carbon/C)
 	C.AddComponent(/datum/component/abberant_eater, list(/obj/item/ore/coal, /obj/item/grown/log/tree), _keeps_items = FALSE)
@@ -128,22 +132,22 @@
 	var/datum/component/component
 
 	component = C.GetComponent(/datum/component/abberant_eater)
-	component?.RemoveComponent()
+	qdel(component)
 
 	component = C.GetComponent(/datum/component/steam_life)
-	component?.RemoveComponent()
+	qdel(component)
 
 	component = C.GetComponent(/datum/component/command_follower)
-	component?.RemoveComponent()
+	qdel(component)
 
 	component = C.GetComponent(/datum/component/augmentable)
-	component?.RemoveComponent()
+	qdel(component)
 
 	component = C.GetComponent(/datum/component/easy_repair)
-	component?.RemoveComponent()
+	qdel(component)
 
 	component = C.GetComponent(/datum/component/damage_shutdown)
-	component?.RemoveComponent()
+	qdel(component)
 
 /datum/species/automaton/proc/add_species_actions(mob/living/carbon/C)
 	for(var/datum/action/action as anything in actions)
@@ -176,15 +180,34 @@
 
 	apply_robotic_bodyparts(C)
 
+	RegisterSignal(C, COMSIG_CARBON_LIMB_REGENERATED, PROC_REF(on_limb_regenerated))
+
+	if(ishuman(C))
+		var/mob/living/carbon/human/H = C
+		H.grant_reverie(SPECIES_TRAIT, reverie_name, reverie_voice_line)
+
 /datum/species/automaton/on_species_loss(mob/living/carbon/C, datum/species/new_species)
 	. = ..()
 	if(!istype(new_species, /datum/species/automaton))
 		reset_robotic_bodyparts(C)
+	if(ishuman(C))
+		var/mob/living/carbon/human/H = C
+		H.revoke_reverie(SPECIES_TRAIT)
 	remove_synthetic_components(C)
 	remove_species_actions(C)
-	UnregisterSignal(C, list(COMSIG_MOB_SAY))
-	C.remove_language(/datum/language/common)
+	UnregisterSignal(C, list(COMSIG_MOB_SAY, COMSIG_CARBON_LIMB_REGENERATED))
 	C.remove_movespeed_modifier("automaton")
+
+/// Regrown limbs come back as the same built material as the rest of the body.
+/datum/species/automaton/proc/on_limb_regenerated(mob/living/carbon/source, obj/item/bodypart/new_limb)
+	SIGNAL_HANDLER
+	new_limb.status = BODYPART_ROBOTIC
+
+/datum/species/automaton/spec_life(mob/living/carbon/human/H)
+	. = ..()
+	// Without metabolism reagents never act, so the body sheds them instead of hoarding them forever.
+	if(H.reagents?.total_volume)
+		H.reagents.remove_all(min(2, H.reagents.total_volume))
 
 /datum/species/automaton/check_roundstart_eligible()
 	return FALSE

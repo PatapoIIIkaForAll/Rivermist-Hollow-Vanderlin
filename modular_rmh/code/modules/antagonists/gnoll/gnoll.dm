@@ -290,20 +290,3 @@
 /proc/is_in_gnoll_camp(atom/movable/thing)
 	return istype(get_area(thing), /area/outdoors/gnoll_camp)
 
-/datum/patron/faerun/evil_gods/Gorellik
-	name = "Gorellik"
-	domain = "Gnolls, Hyenas, Wilderness and the Hunt"
-	desc = "An ancient, fading patron of gnolls and hyenas. His rebuilding packs honor the living hunt, their wild homes and the continuity of the pack through fertility rites."
-	worshippers = "Gnoll packs, wilderness hunters and keepers of the old ways."
-	flaws = "Proud, territorial and slow to forgive a broken pack oath."
-	sins = "Wasting life, abandoning the pack, denying a defeated quarry their release."
-	boons = "Keen senses, endurance, living hunts and the renewal of the pack."
-	devotion_holder = /datum/devotion/gnoll
-	confess_lines = list("May the hunt test us, the wild shelter us, and the pack live on.")
-
-/datum/devotion/gnoll
-	devotion = 300
-	passive_devotion_gain = 1
-	devotion_color = "#b58b50"
-	// Recovery miracles are granted by the champion's calling, not to every ordinary worshipper.
-

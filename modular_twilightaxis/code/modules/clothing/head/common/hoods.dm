@@ -1,0 +1,21 @@
+/obj/item/clothing/head/roguehood/bishop
+	name = "bishop hood"
+	desc = ""
+	icon = 'modular_twilightaxis/icons/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilightaxis/icons/clothing/onmob/head.dmi'
+	sleeved = null
+	icon_state = "bishop_hood"
+	item_state = "bishop_hood"
+	color = null
+	body_parts_covered = NECK
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	dynamic_hair_suffix = ""
+	edelay_type = 1
+	adjustable = CAN_CADJUST
+	toggle_icon_state = TRUE
+	max_integrity = 180
+	resistance_flags = FIRE_PROOF
+	salvage_result = /obj/item/natural/cloth
+	salvage_amount = 1
+	ported_clothing = TRUE
+	misc_flags = CRAFTING_TEST_EXCLUDE

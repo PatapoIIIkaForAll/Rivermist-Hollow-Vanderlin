@@ -9,7 +9,7 @@
 	spawning = 0
 	width                  = 800  // I think this is supposed to be in pixels, but it doesn't match bounds, so idk - 800x800 seems to prevent particle-less edges
 	height                 = 800
-	count                  = 3000 // 3000 particles
+	count                  = 1000 // Clients simulate and draw each live particle every frame; 3000 doubled render CPU
 	//Set bounds to rough screensize + some extra on the side and top movement for "wind"
 	bound1                 = list(-500,-256,-10)
 	bound2                 = list(500,500,10)
@@ -203,11 +203,16 @@
 		SSParticleWeather.particleEffect.animateSeverity(severityMod())
 
 		//Wait for the last particle to fade, then qdel yourself
-		var/wait_time = (SSParticleWeather.particleEffect.lifespan + SSParticleWeather.particleEffect.fade)
-		if(istype(wait_time, /generator)) // because this can happen
-			var/generator/wait_generator = wait_time
-			wait_time = wait_generator.Rand()
-		addtimer(CALLBACK(src, PROC_REF(end)), (SSParticleWeather.particleEffect.lifespan + SSParticleWeather.particleEffect.fade))
+		var/lifespan = SSParticleWeather.particleEffect.lifespan
+		var/fade = SSParticleWeather.particleEffect.fade
+		// Either can be a generator, and a sum of generators is not one; addtimer needs a number.
+		if(istype(lifespan, /generator))
+			var/generator/lifespan_generator = lifespan
+			lifespan = lifespan_generator.Rand()
+		if(istype(fade, /generator))
+			var/generator/fade_generator = fade
+			fade = fade_generator.Rand()
+		addtimer(CALLBACK(src, PROC_REF(end)), lifespan + fade)
 
 
 

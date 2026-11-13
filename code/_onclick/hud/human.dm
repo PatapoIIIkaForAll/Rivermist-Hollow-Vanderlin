@@ -72,8 +72,11 @@
 	quad_intents = new /atom/movable/screen/quad_intents(null, src)
 	static_inventory += quad_intents
 
-	combat_utilities = new /atom/movable/screen/combat_utilities(null, src)
-	static_inventory += combat_utilities
+	using = new /atom/movable/screen/interact_heart(null, src)
+	static_inventory += using
+
+	using = new /atom/movable/screen/hole_status_button(null, src)
+	static_inventory += using
 
 	cmode_button = new /atom/movable/screen/cmode(null, src)
 	var/atom/movable/screen/cmode/combat_mode_screen = cmode_button
@@ -242,6 +245,10 @@
 	inv_box.slot_id = ITEM_SLOT_MOUTH
 	static_inventory += inv_box
 
+	using = new /atom/movable/screen/smallclothes_toggle(null, src)
+	static_inventory += using
+	build_smallclothes_inventory()
+
 	using = new /atom/movable/screen/drop(null, src)
 	using.icon = ui_style
 	using.screen_loc = rogueui_drop
@@ -324,7 +331,7 @@
 	var/datum/species/S = H.dna.species
 	if(!S)
 		return
-	for(var/atom/movable/screen/inventory/inv in (static_inventory + toggleable_inventory))
+	for(var/atom/movable/screen/inventory/inv in (static_inventory + toggleable_inventory + smallclothes_inventory))
 		if(inv.slot_id)
 			if(inv.slot_id in S.no_equip)
 				inv.alpha = 128
@@ -337,6 +344,8 @@
 	var/mob/living/carbon/human/H = mymob
 
 	var/mob/screenmob = viewer || H
+
+	smallclothes_inventory_update(screenmob)
 
 	if(screenmob.hud_used.inventory_shown && screenmob.hud_used.hud_shown)
 		if(H.shoes)

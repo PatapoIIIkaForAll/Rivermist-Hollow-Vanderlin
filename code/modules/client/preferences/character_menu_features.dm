@@ -83,7 +83,8 @@
 /datum/customizer_choice/organ/genitals/penis/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
 	var/datum/customizer_entry/organ/genitals/penis/penis_entry = entry
 	return list(
-		list("task" = "penis_size", "label" = "Size", "kind" = "text", "value" = find_key_by_value(PENIS_SIZES_BY_NAME, penis_entry.penis_size)),
+		list("task" = "penis_length_cm", "label" = "Length", "kind" = "number", "value" = penis_entry.penis_length_cm, "min" = PENIS_LENGTH_MIN, "max" = PENIS_LENGTH_MAX, "step" = 1, "unit" = "cm"),
+		list("task" = "penis_size", "label" = "Size", "kind" = "text", "value" = find_key_by_value(PENIS_SIZES_BY_NAME, get_penis_visual_size(penis_entry.penis_length_cm)), "readonly" = TRUE),
 		list("task" = "functional", "label" = "Functional", "kind" = "text", "value" = penis_entry.functional ? "Yes" : "No"),
 	)
 
@@ -101,10 +102,10 @@
 		list("task" = "lactating", "label" = "Lactation", "kind" = "text", "value" = breasts_entry.lactating ? "Enabled" : "Disabled"),
 	)
 
-/datum/customizer_choice/organ/genitals/vagina/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
-	var/datum/customizer_entry/organ/genitals/vagina/vagina_entry = entry
+/datum/customizer_choice/organ/genitals/womb/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)
+	var/datum/customizer_entry/organ/genitals/womb/womb_entry = entry
 	return list(
-		list("task" = "fertile", "label" = "Fertility", "kind" = "text", "value" = vagina_entry.fertility ? "Fertile" : "Sterile"),
+		list("task" = "fertile", "label" = "Fertility", "kind" = "text", "value" = womb_entry.fertility ? "Fertile" : "Sterile"),
 	)
 
 /datum/customizer_choice/organ/genitals/belly/character_setup_tgui_extras(datum/preferences/prefs, datum/customizer_entry/entry)

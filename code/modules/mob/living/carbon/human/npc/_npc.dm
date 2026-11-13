@@ -127,6 +127,19 @@
 	changeNext_move(adf)
 
 
+/// How hurt an AI should treat this mob, 0 to 1; brute leaves human health alone, so pain counts too.
+/mob/living/proc/get_ai_hurt_fraction()
+	var/hurt = maxHealth ? 1 - (health / maxHealth) : 0
+	if(can_feel_pain())
+		// Pain floors a carbon at SHOCK_STAGE_4, long before any damage pool runs out.
+		hurt = max(hurt, max(traumatic_shock, shock_stage) / SHOCK_STAGE_4)
+	return clamp(hurt, 0, 1)
+
+/// Extra chance to spot a sneaker once badly hurt; a wounded mob watches its back.
+/mob/living/proc/get_npc_sneak_alert_bonus()
+	return get_ai_hurt_fraction() >= 0.5 ? 30 : 0
+
+
 /mob/living/proc/npc_detect_sneak(mob/living/target, extra_prob = 0)
 	if (target.alpha > 100)
 		return TRUE

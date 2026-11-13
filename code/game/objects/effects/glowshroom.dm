@@ -31,6 +31,9 @@
 			if(!HAS_TRAIT(L, TRAIT_KNEESTINGER_IMMUNITY))
 				if(L.electrocute_act(20, src))
 					L.emote("painscream")
+					if(ishuman(L))
+						var/mob/living/carbon/human/stung = L
+						stung.get_exposed_legwear()?.snag(15, STAB)
 					L.update_sneak_invis(TRUE)
 					L.consider_ambush(always = TRUE)
 					if(L.throwing)

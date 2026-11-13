@@ -256,7 +256,7 @@
 	category = "Shoes"
 
 /datum/repeatable_crafting_recipe/sewing/zigbox
-	name = "zigbox"
+	name = "cigarette box"
 	output = /obj/item/storage/fancy/cigarettes/zig/empty
 	requirements = list(/obj/item/paper = 1,
 				/obj/item/natural/fibers = 1)

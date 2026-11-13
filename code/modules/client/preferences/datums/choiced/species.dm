@@ -66,29 +66,5 @@
 	var/result = browser_input_list(user, "SELECT YOUR HERO'S PEOPLE:", "VANDERLIN FAUNA", selectable, prefs.pref_species)
 
 	if(result)
-		var/species_type = selectable[result]
-
-		prefs.set_species_preference(species_type)
-
-		to_chat(user, "<em>[prefs.pref_species.name]</em>")
-		if(prefs.pref_species.desc)
-			to_chat(user, "[prefs.pref_species.desc]")
-
-		if(!length(prefs.pref_species.allowed_pronouns))
-			to_chat(user, span_warning("This species does not have any allowed pronouns. Please contact a coder to add them."))
-		else if (length(prefs.pref_species.allowed_pronouns) == 1)
-			prefs.write_preference(/datum/preference/choiced/pronouns, prefs.pref_species.allowed_pronouns[1])
-		else if(!(prefs.read_preference(/datum/preference/choiced/pronouns) in prefs.pref_species.allowed_pronouns))
-			prefs.write_preference(/datum/preference/choiced/pronouns, prefs.pref_species.allowed_pronouns[1])
-
-		//Now that we changed our species, we must verify that the mutant colour is still allowed.
-		prefs.write_preference(/datum/preference/text/real_name, prefs.pref_species.random_name(prefs.read_preference(/datum/preference/choiced/gender), TRUE))
-		prefs.reset_jobs(user)
-		prefs.reset_patron(user)
-		prefs.reset_culture(user)
-		prefs.randomise_appearance_prefs(~(RANDOMIZE_SPECIES))
-		prefs.customizer_entries = list()
-		prefs.validate_customizer_entries()
-		prefs.reset_all_customizer_accessory_colors()
-		prefs.randomize_all_customizer_accessories()
-		prefs.write_preference(/datum/preference/choiced/accessory, "Nothing")
+		var/datum/species/picked_species = selectable[result]
+		prefs.character_setup_apply_species(user, picked_species::id)

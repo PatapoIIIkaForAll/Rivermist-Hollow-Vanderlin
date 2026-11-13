@@ -30,6 +30,7 @@
 
 	var/lip_style = null	//no lipstick by default- arguably misleading, as it could be used for general makeup
 	var/lip_color = "white"
+	var/lip_alpha = 255
 
 	var/age = "Adult"		//Player's age
 /*

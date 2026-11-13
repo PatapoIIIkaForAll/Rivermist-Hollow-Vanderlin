@@ -55,8 +55,9 @@
 	var/question = "Would you like to be [group_name]?"
 	var/list/candidates = pollCandidatesForMobs(question, ROLE_ASPIRANT, null, FALSE, 100, bodies)
 	while(LAZYLEN(candidates) && LAZYLEN(bodies))
-		var/mob/dead/observer/C = pick_n_take(candidates)
+		var/mob/C = pick_n_take(candidates)
 		var/mob/living/body = pick_n_take(bodies)
+		C.leave_lobby_for_role()
 
 		to_chat(body, "<span class='warning'>My mob has been taken over by a ghost!</span>")
 		message_admins("[key_name_admin(C)] has taken control of ([key_name_admin(body)])")

@@ -31,7 +31,7 @@
 	var/sheet_tucked = FALSE
 	var/sheet_on = FALSE
 	hidingspot = TRUE
-	var/mob/living/hiddenguy = null // So we can find them with fixed eye search
+	hide_preposition = "under"
 
 /obj/structure/bed/Initialize(mapload, ...)
 	. = ..()
@@ -78,31 +78,3 @@
 	if(user.m_intent == MOVE_INTENT_SNEAK)
 		hideinside(user)
 		return
-
-/obj/structure/bed/proc/hideinside(mob/living/user)
-	var/sneak_level = GET_MOB_SKILL_VALUE_OLD(user, /datum/attribute/skill/misc/sneaking) || 0
-	var/sneaktime = max(10, 50 - (sneak_level * 10)) // Hard caps at 1 second at Expert and above.
-	if(user.loc == src)
-		unhide(user)
-		return
-	if(occupied)
-		to_chat(user, span_warning("Someone is already hiding under [src]!"))
-		return
-	if(!do_after(user, sneaktime, src))
-		return
-	user.forceMove(src)
-	occupied = TRUE
-	hiddenguy = user
-	to_chat(user, span_warning("I hide under [src]!"))
-
-/obj/structure/bed/proc/unhide(mob/living/user)
-	var/turf/T = get_turf(src)
-	if(!T) return
-	user.forceMove(T)
-	occupied = FALSE
-	hiddenguy = null
-	to_chat(user, span_warning("I come out from under [src]!"))
-
-/obj/structure/bed/relaymove(mob/user)
-	if(user.loc == src)
-		unhide(user)

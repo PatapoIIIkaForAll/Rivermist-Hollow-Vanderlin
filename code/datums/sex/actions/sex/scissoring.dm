@@ -41,7 +41,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] scissors with [target]'s cunt."))
-	playsound(target, 'sound/misc/mat/segso.ogg', 50, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("grind", target, 50)
 	do_thrust_animate(user, target)
 
 	perform_sex_action(user, target, 1, 4, 1)

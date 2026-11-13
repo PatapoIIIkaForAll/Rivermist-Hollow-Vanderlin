@@ -248,21 +248,38 @@
 
 	return summary
 
-/datum/preferences/proc/character_setup_loadout_static(mob/user)
-	var/list/catalog = list()
+/// Catalog fields that stay fixed for the round, keyed by loadout item; empty until the spritesheet is ready.
+GLOBAL_LIST_EMPTY(loadout_catalog_fields)
+
+/proc/get_loadout_catalog_fields()
+	if(length(GLOB.loadout_catalog_fields))
+		return GLOB.loadout_catalog_fields
 	var/datum/asset/spritesheet/spritesheet = get_asset_datum(/datum/asset/spritesheet/loadout_items)
+	var/list/fields_by_item = list()
 	for(var/datum/loadout_item/item as anything in GLOB.loadout_items)
 		var/obj/item/item_type = item.item_path
 		if(!item_type)
 			continue
-		UNTYPED_LIST_ADD(catalog, list(
+		fields_by_item[item] = list(
 			"name" = item.name,
 			"desc" = initial(item_type.desc) || item.description,
 			"point_cost" = item.point_cost,
 			"typepath" = "[item.type]",
 			"icon" = spritesheet.icon_class_name(sanitize_css_class_name("loadout_item_[REF(item)]")),
-			"nobility_locked" = !item.nobility_check(user),
-		))
+		)
+	// A spritesheet still loading has no class names yet, so build again next time.
+	if(spritesheet.fully_generated)
+		GLOB.loadout_catalog_fields = fields_by_item
+	return fields_by_item
+
+/datum/preferences/proc/character_setup_loadout_static(mob/user)
+	var/list/catalog = list()
+	var/list/fields_by_item = get_loadout_catalog_fields()
+	for(var/datum/loadout_item/item as anything in fields_by_item)
+		var/list/fields = fields_by_item[item]
+		var/list/entry = fields.Copy()
+		entry["nobility_locked"] = !item.nobility_check(user)
+		UNTYPED_LIST_ADD(catalog, entry)
 	return catalog
 
 /datum/preferences/proc/character_setup_loadout_slots_data()
@@ -376,7 +393,7 @@
 				return TRUE
 			if(GLOB.colorlist[new_color] == "CUSTOM_RGB")
 				var/current_color = vars["loadout_[slot]_hex"] || "#FFFFFF"
-				var/newer_color = input(user, "Select color:", "Custom Color", current_color) as color|null
+				var/newer_color = tgui_color_picker(user, "Select color:", "Custom Color", sanitize_hexcolor(current_color, 6, TRUE, "#ffffff"))
 				if(newer_color)
 					vars["loadout_[slot]_hex"] = sanitize_hexcolor(newer_color, include_crunch = 1)
 			else

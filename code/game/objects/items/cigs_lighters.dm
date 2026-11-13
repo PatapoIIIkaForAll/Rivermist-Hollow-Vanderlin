@@ -327,7 +327,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 // Cigarette brands.
 
 /obj/item/clothing/face/cigarette/rollie
-	name = "zig"
+	name = "cigarette"
 	desc = ""
 	icon_state = "spliffoff"
 	icon_on = "spliffon"
@@ -357,7 +357,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	list_reagents = list(/datum/reagent/drug/space_drugs = 30)
 
 /obj/item/cigbutt
-	name = "zig butt"
+	name = "cig butt"
 	desc = ""
 	icon = 'icons/roguetown/items/lighting.dmi'
 	icon_state = "roach"

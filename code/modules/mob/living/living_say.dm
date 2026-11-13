@@ -112,9 +112,12 @@
 	var/datum/language/speaker_language = GLOB.language_datum_instances[language]
 	var/signed = speaker_language?.flags & SIGNLANG
 
-	if(!signed && !can_speak_vocal(message))
-		to_chat(src, span_warning("I can't talk."))
-		return
+	var/muffled = FALSE
+	if(!signed)
+		muffled = is_speech_muffled()
+		if(!can_voice_words() || (!muffled && !can_speak_vocal(message)))
+			to_chat(src, span_warning("I can't speak."))
+			return
 
 	var/message_range = 7
 
@@ -137,7 +140,13 @@
 	else
 		src.log_talk("said: [message]", LOG_SAY, forced_by=forced)
 
-	message = treat_message(message) // unfortunately we still need this
+	var/typed_message = message
+	if(muffled)
+		// Every listener, channel and speech hook below gets the mumble, never the typed words.
+		message = muffle_speech(message)
+		original_message = message
+	else
+		message = treat_message(message) // unfortunately we still need this
 	var/sigreturn = SEND_SIGNAL(src, COMSIG_MOB_SAY, args)
 	if (sigreturn & COMPONENT_UPPERCASE_SPEECH)
 		message = uppertext(message)
@@ -145,6 +154,8 @@
 		return
 	if(!message)
 		return
+	if(muffled)
+		to_chat(src, span_notice("I try to say: \"[typed_message]\""))
 
 	if(client)
 		last_words = message
@@ -190,9 +201,9 @@
 		return TRUE
 
 	if(speaker_language?.flags & SIGNLANG)
-		send_speech_sign(message, message_range, src, bubble_type, spans, language, message_mods, original_message)
+		send_speech_sign(message, message_range, get_sense_anchor(), bubble_type, spans, language, message_mods, original_message)
 	else
-		send_speech(message, message_range, src, bubble_type, spans, language, message_mods, original_message)
+		send_speech(message, message_range, get_sense_anchor(), bubble_type, spans, language, message_mods, original_message)
 
 	if(succumbed)
 		succumb(TRUE)
@@ -233,7 +244,7 @@
 
 	// Create map text prior to modifying message for goonchat
 	if(can_see_runechat(speaker) && can_hear())
-		create_chat_message(speaker, message_language, raw_message, spans)
+		create_chat_message(speaker.get_sense_anchor(), message_language, raw_message, spans)
 	// Recompose message for AI hrefs, language incomprehension.
 	message = compose_message(speaker, message_language, raw_message, radio_freq, spans, message_mods)
 	// voice muffling
@@ -259,7 +270,7 @@
 
 /mob/living/send_speech(message, message_range = 6, obj/source = src, bubble_type = bubble_icon, list/spans, datum/language/message_language, list/message_mods = list(), original_message)
 	var/speaker_has_ceiling = TRUE
-	var/turf/speaker_turf = get_turf(src)
+	var/turf/speaker_turf = get_turf(source)
 	var/turf/speaker_ceiling = get_step_multiz(speaker_turf, UP)
 	if(!speaker_ceiling || istransparentturf(speaker_ceiling))
 		speaker_has_ceiling = FALSE
@@ -295,14 +306,14 @@
 			if(player_mob.stat != DEAD)
 				if(z_message_type != Z_MODE_ALL)
 					continue
-				if(get_dist(player_mob, src) > message_range)
+				if(get_dist(player_mob, source) > message_range)
 					continue
 				if(!is_in_zweb(player_mob.z, source.z))
 					continue
 				listening |= player_mob
 				continue
 			// Else if dead check prefs (unless subtle with noghost)
-			if(!is_in_zweb(player_mob.z, source.z) || get_dist(player_mob, src) > message_range) //they're out of range of normal hearing
+			if(!is_in_zweb(player_mob.z, source.z) || get_dist(player_mob, source) > message_range) //they're out of range of normal hearing
 				if(player_mob.client.prefs)
 					var/chat_toggles = player_mob.client.prefs.read_preference(/datum/preference/bitwise/chat_toggles)
 					if(eavesdrop_range && !(chat_toggles & CHAT_GHOSTWHISPER)) //they're whispering and we have hearing whispers at any range off
@@ -312,6 +323,12 @@
 				the_dead[player_mob] = TRUE
 				listening |= player_mob
 
+	// A mob that hears through an anchor gets the message from the anchor, never twice.
+	if(length(GLOB.sense_relay_mobs))
+		for(var/mob/relay_mob as anything in GLOB.sense_relay_mobs)
+			if(!QDELETED(relay_mob) && (relay_mob.get_sense_anchor() in listening))
+				listening -= relay_mob
+
 	var/eavesdropping
 	var/eavesrendered
 	if(eavesdrop_range)
@@ -319,6 +336,9 @@
 		eavesrendered = compose_message(src, message_language, eavesdropping, null, spans, message_mods)
 
 	var/rendered = compose_message(src, message_language, message, null, spans, message_mods, TRUE)
+	var/static/regex/yield_words = regex(@"\b(yield|give\s+up|surrender|stop\s+resisting)\b", "i")
+	var/list/yield_viewers = list()
+	var/show_yield = yield_words.Find(message)
 
 	for(var/atom/movable/hearing_movable as anything in listening)
 		if(!hearing_movable)
@@ -333,7 +353,7 @@
 		if(HAS_TRAIT(hearing_movable, TRAIT_KEENEARS))
 			keenears_range_bonus = 5
 
-		if(!ignore_z && z_message_type == Z_MODE_ONE_CEILING && hearing_movable.z != z)
+		if(!ignore_z && z_message_type == Z_MODE_ONE_CEILING && hearing_movable.z != source.z)
 			var/listener_has_ceiling = TRUE
 			var/turf/listener_turf = get_turf(hearing_movable)
 			var/turf/listener_ceiling = GET_TURF_ABOVE(listener_turf) // optimize, this is inside a loop
@@ -350,6 +370,13 @@
 			hearing_movable.Hear(eavesrendered, src, message_language, eavesdropping, null, spans, message_mods, original_message)
 		else
 			hearing_movable.Hear(rendered, src, message_language, message, null, spans, message_mods, original_message)
+			if(show_yield && ismob(hearing_movable))
+				var/mob/listener = hearing_movable
+				if(listener.client && listener.can_hear())
+					yield_viewers |= listener.client
+
+	if(length(yield_viewers))
+		play_gesture(yield_viewers, "yield", gesture_icon = 'modular_rmh/icons/mob/yield.dmi')
 
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_LIVING_SAY_SPECIAL, src, message)
 
@@ -359,7 +386,7 @@
 			speech_bubble_recipients |= M.client
 
 	if(length(speech_bubble_recipients))
-		var/image/I = image('icons/mob/talk.dmi', src, "[bubble_type][say_test(message)]", FLY_LAYER)
+		var/image/I = image('icons/mob/talk.dmi', source, "[bubble_type][say_test(message)]", FLY_LAYER)
 		I.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
 		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(flick_overlay), I, speech_bubble_recipients, 30)
 
@@ -450,6 +477,45 @@
 		return FALSE
 
 	return TRUE
+
+/// Whether this mob can make speech sounds at all, before a gag or a filled mouth is counted.
+/mob/living/proc/can_voice_words()
+	if(HAS_TRAIT(src, TRAIT_MUTE) || HAS_TRAIT(src, TRAIT_BAGGED))
+		return FALSE
+	return IsVocal()
+
+/// Whether a gag, a mouth item or a hand over the mouth turns speech into mumbling.
+/mob/living/proc/is_speech_muffled()
+	return FALSE
+
+/// Longest mumble word; longer typed words still mumble, just capped.
+#define MUFFLED_WORD_MAX_LENGTH 12
+
+/// Mumble with the typed word lengths and trailing punctuation, so questions and shouts still read as such.
+/proc/muffle_speech(message)
+	var/static/regex/trailing_punctuation = regex(@"[.,!?;:~-]+$")
+	var/list/mumbled_words = list()
+	// Decoded so entities count as one letter; the output holds no markup characters.
+	for(var/word in splittext(html_decode(message), " "))
+		if(!length(word))
+			continue
+		var/tail = ""
+		if(trailing_punctuation.Find(word))
+			tail = copytext(word, trailing_punctuation.index)
+			word = copytext(word, 1, trailing_punctuation.index)
+		var/letters = min(length_char(word), MUFFLED_WORD_MAX_LENGTH)
+		switch(letters)
+			if(0)
+				mumbled_words += tail
+			if(1, 2)
+				mumbled_words += "[repeat_string(letters, "m")][tail]"
+			else
+				mumbled_words += "[repeat_string(letters - 2, "m")]ph[tail]"
+	if(!length(mumbled_words))
+		return "Mmph..."
+	return capitalize(jointext(mumbled_words, " "))
+
+#undef MUFFLED_WORD_MAX_LENGTH
 
 /mob/living/proc/treat_message(message)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH))

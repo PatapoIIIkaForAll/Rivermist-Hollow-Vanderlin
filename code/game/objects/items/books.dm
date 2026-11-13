@@ -488,11 +488,12 @@
 	else if(is_in_round_player_generated)
 		INVOKE_ASYNC(src, PROC_REF(update_book_data), in_round_player_mob, text)
 	else
-		player_book_titles = SSlibrarian.pull_player_book_titles()
 		if(title)
 			player_book_content = SSlibrarian.file2playerbook(title)
-		else if(LAZYLEN(player_book_titles))
-			player_book_content = SSlibrarian.file2playerbook(pick(player_book_titles))
+		else
+			player_book_titles = SSlibrarian.get_player_book_titles()
+			if(LAZYLEN(player_book_titles))
+				player_book_content = SSlibrarian.file2playerbook(pick(player_book_titles))
 		if(LAZYLEN(player_book_content))
 			player_book_title = player_book_content["book_title"]
 			player_book_author = player_book_content["author"]

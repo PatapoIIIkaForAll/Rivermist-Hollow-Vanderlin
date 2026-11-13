@@ -19,9 +19,7 @@
 /turf/open/floor/ruinedwood/alizeria/tiles/wood21,
 /area/indoors/town/rmh)
 "l" = (
-/obj/structure/window/openclose/reinforced{
-	dir = 2
-	},
+/obj/structure/window/openclose/reinforced,
 /obj/structure/curtain/dir{
 	color = "#428138";
 	dir = 1

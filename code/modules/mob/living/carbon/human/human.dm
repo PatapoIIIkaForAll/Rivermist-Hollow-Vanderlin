@@ -2,13 +2,20 @@
 	. = ..()
 	if(!user)
 		return
+	// An aggressive hold turns a chest or groin middle-click into tearing the top or the hem.
+	if((user.zone_selected == BODY_ZONE_CHEST || user.zone_selected == BODY_ZONE_PRECISE_GROIN) && is_tear_grabbed_by(user))
+		try_tear_clothes(user, user.zone_selected)
+		return
 	var/obj/item/held_item = user.get_active_held_item()
 	if(!user.cmode && held_item && held_item.get_sharpness() && held_item.wlength == WLENGTH_SHORT)
 		if(user.zone_selected == BODY_ZONE_CHEST)
-			if(try_shave_body_hair(user, held_item, BODYPART_FEATURE_BODY_HAIR, "body hair", BODY_ZONE_CHEST, 10 SECONDS))
+			if(try_groom_body_hair(user, held_item, BODYPART_FEATURE_BODY_HAIR, "body hair", BODY_ZONE_CHEST))
 				return
 		if(user.zone_selected == BODY_ZONE_PRECISE_GROIN)
-			if(try_shave_body_hair(user, held_item, BODYPART_FEATURE_PUBIC_HAIR, "pubic hair", BODY_ZONE_PRECISE_GROIN, 10 SECONDS))
+			if(try_groom_body_hair(user, held_item, BODYPART_FEATURE_PUBIC_HAIR, "pubic hair", BODY_ZONE_PRECISE_GROIN))
+				return
+		if(user.zone_selected == BODY_ZONE_L_ARM || user.zone_selected == BODY_ZONE_R_ARM)
+			if(try_groom_body_hair(user, held_item, BODYPART_FEATURE_ARMPIT_HAIR, "armpit hair", BODY_ZONE_CHEST))
 				return
 	if(user.cmode)
 		if(held_item && (user.zone_selected == BODY_ZONE_PRECISE_NECK))
@@ -116,28 +123,7 @@
 	if(user == src)
 		if(get_num_arms(FALSE) < 1)
 			return
-		if(user.zone_selected == BODY_ZONE_PRECISE_GROIN)
-			if(!underwear)
-				return
-			if(underwear.locked())
-				to_chat(src, span_warning("\The [underwear] is locked on."))
-				return
-			var/under_clothes = get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE)
-			src.visible_message(span_notice("[src] begins to take off [underwear][under_clothes ? " from under their clothes" : ""]..."))
-			var/delay = under_clothes ? 20 : 40
-			if(do_after(user, delay, target = src))
-				var/obj/item/clothing/undies/removed_underwear = underwear
-				if(removed_underwear && src.dropItemToGround(removed_underwear))
-					src.put_in_hands(removed_underwear)
-		if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
-			if(!legwear_socks)
-				return
-			var/under_clothes = get_location_accessible(src, BODY_ZONE_PRECISE_R_FOOT, skipundies = TRUE) || get_location_accessible(src, BODY_ZONE_PRECISE_L_FOOT, skipundies = TRUE)
-			src.visible_message(span_notice("[src] begins to take off [legwear_socks][under_clothes ? " from under their clothes" : ""]..."))
-			var/delay = under_clothes ? 25 : 50
-			if(do_after(user, delay, target = src))
-				src.dropItemToGround(legwear_socks)
-				src.put_in_hands(legwear_socks)
+		// Underwear and stockings come off through the smallclothes drawer, not by middle-clicking yourself.
 		if(user.zone_selected == BODY_ZONE_CHEST)
 			if(try_remove_own_nipple_clamps())
 				return
@@ -196,6 +182,8 @@
 	culture = GLOB.culture_singletons[culture]
 
 	. = ..()
+	// Only damage refreshes health, so start full instead of at the living default of 100.
+	set_health(maxHealth)
 
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/human)
 	AddElement(/datum/element/footstep, footstep_type, 1, -6)
@@ -205,6 +193,11 @@
 
 	if(!GetComponent(/datum/component/arousal))
 		AddComponent(/datum/component/arousal)
+
+/mob/living/carbon/human/reset_perspective(atom/new_perspective)
+	if(!new_perspective)
+		new_perspective = dna?.species?.get_default_perspective(src)
+	return ..(new_perspective)
 
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(active_ooze_editor)
@@ -271,6 +264,9 @@
 	if(clan)
 		. += "VITAE: [round(bloodpool)]/[maxbloodpool]"
 		. += "DETECTIONS: [detections]"
+	var/datum/rage/werewolf/werewolf_rage = rage_datum
+	if(istype(werewolf_rage))
+		. += werewolf_rage.get_status_tab_line()
 
 /mob/living/carbon/human/show_inv(mob/user, extra_only = FALSE)
 	user.set_machine(src)
@@ -828,9 +824,14 @@
 	VV_DROPDOWN_OPTION(VV_HK_SET_SPECIES, "Set Species")
 	VV_DROPDOWN_OPTION(VV_HK_CORONATE, "Coronate")
 	VV_DROPDOWN_OPTION(VV_HK_CHANGE_TITLE, "Change Title")
+	VV_DROPDOWN_OPTION(VV_HK_BREAST_TEST_PANEL, "Breast Test Panel")
 
 /mob/living/carbon/human/vv_do_topic(list/href_list)
 	. = ..()
+	if(href_list[VV_HK_BREAST_TEST_PANEL])
+		if(!check_rights(R_SPAWN))
+			return
+		open_breast_test_panel(usr)
 	if(href_list[VV_HK_COPY_OUTFIT])
 		if(!check_rights(R_SPAWN))
 			return
@@ -946,9 +947,20 @@
 	return (istype(target) && target.stat == CONSCIOUS)
 
 /mob/living/carbon/human/proc/can_be_firemanned(mob/living/target)
-	return !QDELETED(target) && ((ishuman(target) && target.body_position == LYING_DOWN) || (isanimal(target) && (target.living_flags & CAN_BE_FIREMANNED)))
+	if(QDELETED(target))
+		return FALSE
+	if(ishuman(target))
+		return target.body_position == LYING_DOWN
+	if(!isanimal(target))
+		return FALSE
+	// Any spent creature can be hauled off, not only the small ones flagged for it.
+	return (target.living_flags & CAN_BE_FIREMANNED) || target.has_status_effect(/datum/status_effect/mob_horny_knockout)
 
 /mob/living/carbon/human/proc/fireman_carry(mob/living/target)
+	if(!can_be_firemanned(target) || incapacitated(IGNORE_GRAB) || pulling != target || !Adjacent(target))
+		return FALSE
+	if(!target.confirm_mob_horny_ko_lift(src))
+		return FALSE
 	if(!can_be_firemanned(target) || incapacitated(IGNORE_GRAB) || pulling != target || !Adjacent(target))
 		return FALSE
 	var/fitness_level = GET_MOB_SKILL_VALUE_OLD(src, /datum/attribute/skill/misc/athletics) - 1
@@ -960,7 +972,9 @@
 		return FALSE
 	if(incapacitated(IGNORE_GRAB) || pulling != target || !Adjacent(target))
 		return FALSE
-	return buckle_mob(target, force = TRUE, check_loc = FALSE, buckle_mob_flags = CARRIER_NEEDS_ARM)
+	. = buckle_mob(target, force = TRUE, check_loc = FALSE, buckle_mob_flags = CARRIER_NEEDS_ARM)
+	if(.)
+		target.roll_mob_horny_ko_lash_out(src)
 
 /mob/living/carbon/human/proc/piggyback(mob/living/carbon/target)
 	if(!can_piggyback(target) || pulling != target || cmode || !Adjacent(target))
@@ -1055,6 +1069,7 @@
 	skin_tone = target.skin_tone
 	lip_style = target.lip_style
 	lip_color = target.lip_color
+	lip_alpha = target.lip_alpha
 	age = target.age
 	//underwear = target.underwear
 	//underwear_color = target.underwear_color
@@ -1166,6 +1181,15 @@
 			add_faction("islander")
 			SSisland_mobs.register_mob(src, SSterrain_generation.get_island_at_location(turf))
 
+/mob/living/carbon/human/proc/clean_lips()
+	if(!lip_style)
+		return FALSE
+	lip_style = null
+	lip_color = initial(lip_color)
+	lip_alpha = initial(lip_alpha)
+	update_body()
+	return TRUE
+
 /**
  * Called when this human should be washed
  */
@@ -1190,6 +1214,10 @@
 	var/list/obscured = check_obscured_slots()
 
 	if(!is_mouth_covered())
+		clean_lips()
+		. = TRUE
+
+	if(wash_lipstick_marks())
 		. = TRUE
 
 	if(!(obscured[SLOT_CHECK_REGULAR] & ITEM_SLOT_SHIRT) && wear_shirt?.wash(clean_types))
@@ -1229,7 +1257,7 @@
 	message_admins("[ADMIN_LOOKUPFLW_PP(src)] is a [mind.assigned_role.get_informed_title(src)] and has been disconnected for more than 30 seconds!")
 
 /mob/living/carbon/human/nobles_seen_servant_work()
-	if(!is_servant_job(mind.assigned_role))
+	if(!mind || !is_servant_job(mind.assigned_role))
 		return
 
 	var/list/nobles = list()

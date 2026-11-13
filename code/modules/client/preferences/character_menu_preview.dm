@@ -2,6 +2,9 @@
 /// Three embedded map views (main/front/side) rendering a prefs-dressed dummy,
 /// measured via flat icon art bounds so the frontend can zoom to fit.
 
+/// A full render dresses the dummy again and builds two flat icons, so a player gets at most one per this period.
+#define CHARACTER_SETUP_RENDER_COOLDOWN (0.4 SECONDS)
+
 /datum/preferences/proc/character_setup_selectable_ages()
 	. = list()
 	if(!pref_species)
@@ -45,7 +48,11 @@
 		if(!character_setup_body)
 			character_setup_body = new
 		character_setup_log("VIEW", "ensure_view created map=[character_setup_view.assigned_map] user=[user?.ckey] window=[ui?.window ? "yes" : "NO"] window_visible=[ui?.window?.visible] tile_top=[character_setup_view_tile_top]")
+		// New views start empty, so draw even if the preferences match the last render.
+		character_setup_render_forced = TRUE
 		character_setup_update_view()
+		// The opening payload was built before the views existed, so it carries no map ids.
+		character_setup_queue_push()
 	if(character_setup_view_shown)
 		return
 	var/client/target_client = user?.client
@@ -125,6 +132,8 @@
 	character_setup_hover_color = null
 	character_setup_hover_customizer = null
 	character_setup_view_shown = FALSE
+	character_setup_rendered_sig = null
+	character_setup_note_rendered_hover()
 	character_setup_view?.hide_from(user)
 	character_setup_view_front?.hide_from(user)
 	character_setup_view_side?.hide_from(user)
@@ -136,27 +145,187 @@
 	QDEL_NULL(character_setup_bg_front)
 	QDEL_NULL(character_setup_bg_side)
 
-/datum/preferences/proc/character_setup_update_view()
+/// base_changed FALSE means only hover or facing changed, which the loop tracks on its own.
+/datum/preferences/proc/character_setup_update_view(base_changed = TRUE)
 	set waitfor = FALSE
 	if(!character_setup_view || !character_setup_body || !pref_species)
 		character_setup_log("VIEW", "update_view SKIP view=[!!character_setup_view] body=[!!character_setup_body] species=[!!pref_species]")
 		return
 	if(character_setup_view_busy)
+		// The yielded render may have read the old preferences, so the next pass must draw.
+		if(base_changed)
+			character_setup_render_forced = TRUE
 		character_setup_view_pending = TRUE
 		character_setup_log("VIEW", "update_view BUSY -> pending")
+		return
+	// Topics run after SendMaps at the end of the tick, where a render's first stage would overrun it;
+	// the timer runs it inside the MC's budget. A burst of clicks collapses into one render, at most
+	// one per cooldown.
+	addtimer(CALLBACK(src, PROC_REF(character_setup_run_view_update)), max(1, COOLDOWN_TIMELEFT(src, character_setup_render_cooldown)), TIMER_UNIQUE)
+
+/datum/preferences/proc/character_setup_run_view_update()
+	set waitfor = FALSE
+	if(!character_setup_view || !character_setup_body || !pref_species)
+		return
+	if(character_setup_view_busy)
+		character_setup_view_pending = TRUE
+		return
+	var/wait = COOLDOWN_TIMELEFT(src, character_setup_render_cooldown)
+	if(wait)
+		addtimer(CALLBACK(src, PROC_REF(character_setup_run_view_update)), wait, TIMER_UNIQUE)
 		return
 	character_setup_view_busy = TRUE
 	do
 		character_setup_view_pending = FALSE
 		var/_t = world.timeofday
-		character_setup_render_body()
-		character_setup_log_op("render_body", _t, "dir=[character_setup_preview_dir] hover=[character_setup_hover_acc || "none"] species=[pref_species?.id]")
-	while(character_setup_view_pending)
+		try
+			var/needs_full_render = character_setup_render_forced || character_setup_render_signature() != character_setup_rendered_sig
+			if(!needs_full_render && character_setup_hover_changed())
+				needs_full_render = !character_setup_render_hover()
+			if(needs_full_render)
+				COOLDOWN_START(src, character_setup_render_cooldown, CHARACTER_SETUP_RENDER_COOLDOWN)
+				character_setup_render_forced = FALSE
+				character_setup_redraw_dir = FALSE
+				// Noted before dressing: the render reads hover first, and a hover changed during its yield must still show.
+				character_setup_note_rendered_hover()
+				character_setup_render_body()
+				// Taken after the render, so preference writes made while dressing the dummy count as drawn.
+				character_setup_rendered_sig = character_setup_render_signature()
+				character_setup_log_op("render_body", _t, "dir=[character_setup_preview_dir] hover=[character_setup_hover_acc || "none"] species=[pref_species?.id]")
+			else
+				character_setup_render_main_only = FALSE
+				if(character_setup_redraw_dir)
+					character_setup_redraw_dir = FALSE
+					character_setup_turn_view()
+		catch(var/exception/render_error)
+			// Cleared before rethrowing, or one failed render freezes this preview for the round.
+			character_setup_view_busy = FALSE
+			if(character_setup_body)
+				character_setup_body.defer_body_parts_update = FALSE
+				character_setup_body.status_flags &= ~BUILDING_ORGANS
+			throw render_error
+	while(character_setup_view_pending && character_setup_view && character_setup_body && !COOLDOWN_TIMELEFT(src, character_setup_render_cooldown))
 	character_setup_view_busy = FALSE
+	// Changes made while a render yielded wait out the cooldown like any other burst.
+	if(character_setup_view_pending && character_setup_view && character_setup_body)
+		character_setup_view_pending = FALSE
+		addtimer(CALLBACK(src, PROC_REF(character_setup_run_view_update)), max(1, COOLDOWN_TIMELEFT(src, character_setup_render_cooldown)), TIMER_UNIQUE)
 	var/bbox_sig = "[character_setup_view_zoom_w]x[character_setup_view_zoom_h]"
 	if(bbox_sig != character_setup_view_bbox_sent)
 		character_setup_view_bbox_sent = bbox_sig
-		SStgui.update_uis(src)
+		character_setup_queue_push()
+
+/// What the preview dummy is dressed from, minus facing and hover; an unchanged signature means a render would change nothing.
+/datum/preferences/proc/character_setup_render_signature()
+	return "[get_character_preview_fingerprint()]|[character_setup_preview_clothes]|[character_setup_preview_underwear]"
+
+/datum/preferences/proc/character_setup_hover_changed()
+	return character_setup_hover_acc != character_setup_rendered_hover_acc || character_setup_hover_color != character_setup_rendered_hover_color || character_setup_hover_customizer != character_setup_rendered_hover_customizer
+
+/datum/preferences/proc/character_setup_note_rendered_hover()
+	character_setup_rendered_hover_acc = character_setup_hover_acc
+	character_setup_rendered_hover_color = character_setup_hover_color
+	character_setup_rendered_hover_customizer = character_setup_hover_customizer
+
+/// Swaps only the hovered accessory on the dressed dummy; FALSE when a full render is needed instead.
+/datum/preferences/proc/character_setup_render_hover()
+	var/mob/living/carbon/human/dummy/body = character_setup_body
+	var/old_customizer = character_setup_rendered_hover_customizer
+	var/new_customizer_path = character_setup_hover_customizer ? text2path(character_setup_hover_customizer) : null
+	var/new_acc_path = character_setup_hover_acc ? text2path(character_setup_hover_acc) : null
+	// Put the previously hovered customizer back to its saved choice first.
+	if(old_customizer && old_customizer != character_setup_hover_customizer)
+		var/old_customizer_path = text2path(old_customizer)
+		if(old_customizer_path && !character_setup_redress_customizer(body, old_customizer_path))
+			return FALSE
+	if(new_acc_path && new_customizer_path && !character_setup_redress_customizer(body, new_customizer_path, new_acc_path, character_setup_hover_color))
+		return FALSE
+	character_setup_suppress_eye_glow(body)
+	body.update_body_parts(TRUE)
+	character_setup_note_rendered_hover()
+	character_setup_render_main_only = FALSE
+	character_setup_redraw_dir = FALSE
+	character_setup_turn_view()
+	return TRUE
+
+/// Re-applies one customizer to the dummy, optionally with a hovered accessory; FALSE if this one needs a full render.
+/datum/preferences/proc/character_setup_redress_customizer(mob/living/carbon/human/body, customizer_path, accessory_path, accessory_colors)
+	var/datum/customizer_entry/entry = get_customizer_entry_for_customizer_type(customizer_path)
+	if(!entry)
+		return FALSE
+	var/datum/customizer/customizer = CUSTOMIZER(entry.customizer_type)
+	if(!customizer?.is_allowed(src))
+		return FALSE
+	var/saved_accessory = entry.accessory_type
+	var/saved_colors = entry.accessory_colors
+	var/saved_disabled = entry.disabled
+	if(accessory_path)
+		entry.accessory_type = accessory_path
+		if(accessory_colors)
+			entry.accessory_colors = accessory_colors
+		entry.disabled = FALSE
+	try
+		. = character_setup_redress_choice(body, CUSTOMIZER_CHOICE(entry.customizer_choice_type), entry)
+	catch(var/exception/redress_error)
+		// The entry is the saved character; never leave a hovered value in it.
+		entry.accessory_type = saved_accessory
+		entry.accessory_colors = saved_colors
+		entry.disabled = saved_disabled
+		throw redress_error
+	entry.accessory_type = saved_accessory
+	entry.accessory_colors = saved_colors
+	entry.disabled = saved_disabled
+
+/// Mirrors how a full render applies this customizer; organs that would have to be created return FALSE.
+/datum/preferences/proc/character_setup_redress_choice(mob/living/carbon/human/body, datum/customizer_choice/choice, datum/customizer_entry/entry)
+	if(istype(choice, /datum/customizer_choice/bodypart_feature))
+		var/datum/customizer_choice/bodypart_feature/feature_choice = choice
+		if(!entry.disabled)
+			// Adding a feature replaces whatever sits in its slot.
+			feature_choice.apply_customizer_to_character(body, src, entry)
+			return TRUE
+		var/datum/bodypart_feature/feature_type = feature_choice.feature_type
+		var/datum/bodypart_feature/existing = body.get_bodypart_feature_of_slot(initial(feature_type.feature_slot))
+		if(existing)
+			var/obj/item/bodypart/part = body.get_bodypart(existing.body_zone)
+			part?.remove_bodypart_feature(existing)
+		return TRUE
+	if(istype(choice, /datum/customizer_choice/organ))
+		var/datum/customizer_choice/organ/organ_choice = choice
+		var/list/organs = body.getorganslotlist(organ_choice.get_organ_slot())
+		if(entry.disabled || !length(organs))
+			return FALSE
+		var/datum/organ_dna/organ_dna = organ_choice.create_organ_dna(entry, src)
+		if(!organ_dna)
+			return FALSE
+		for(var/obj/item/organ/organ as anything in organs)
+			organ_dna.imprint_organ(organ, species = body.dna.species)
+			customize_organ(organ)
+		return TRUE
+	return FALSE
+
+/// Emissive eye glow renders as a flat white blob in the lit portrait; returns TRUE if any glow was switched off.
+/datum/preferences/proc/character_setup_suppress_eye_glow(mob/living/carbon/human/body)
+	for(var/obj/item/organ/eyes/preview_eyes in body.internal_organs)
+		if(preview_eyes.glows && preview_eyes.user_glowing_pref)
+			preview_eyes.user_glowing_pref = FALSE
+			. = TRUE
+
+/// Re-measures and turns the main view without dressing the dummy again.
+/datum/preferences/proc/character_setup_turn_view()
+	var/mob/living/carbon/human/dummy/body = character_setup_body
+	character_setup_measure_body(character_setup_preview_dir)
+	// Measuring can yield; skip if the menu closed or reopened meanwhile.
+	if(QDELETED(body) || body != character_setup_body)
+		return
+	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
+
+/// A full render takes about two ticks of work. Yielding between its stages lets each tick
+/// finish on time, so a busy editor delays its own doll instead of dilating the server.
+/// FALSE when the menu closed or reopened meanwhile; update_view redraws any change made during the wait.
+/datum/preferences/proc/character_setup_render_yield(mob/living/carbon/human/dummy/body)
+	CHECK_TICK
+	return !QDELETED(body) && body == character_setup_body
 
 /datum/preferences/proc/character_setup_render_body()
 	var/mob/living/carbon/human/dummy/body = character_setup_body
@@ -181,6 +350,11 @@
 			if(character_setup_hover_color)
 				hover_entry.accessory_colors = character_setup_hover_color
 			hover_entry.disabled = FALSE
+	// Dressing puts on dozens of organs and features, and each would redraw the whole body;
+	// both flags hold those redraws for one regenerate_icons() at the end.
+	var/was_building_organs = body.status_flags & BUILDING_ORGANS
+	body.status_flags |= BUILDING_ORGANS
+	body.defer_body_parts_update = TRUE
 	body.wipe_state()
 	// character_setup = TRUE: culls stale taur bodies (ensure_not_taur) and skips
 	// roundstart-only side effects (quirks, bans, kinks) on the preview dummy.
@@ -189,15 +363,11 @@
 		hover_entry.accessory_type = hover_old_acc
 		hover_entry.accessory_colors = hover_old_colors
 		hover_entry.disabled = hover_old_disabled
-	// Emissive eye glow renders as a flat white blob in the lit portrait; the RMH
-	// user_glowing_pref switch suppresses the emissive overlay at its source.
-	var/suppressed_eye_glow = FALSE
-	for(var/obj/item/organ/eyes/preview_eyes in body.internal_organs)
-		if(preview_eyes.glows && preview_eyes.user_glowing_pref)
-			preview_eyes.user_glowing_pref = FALSE
-			suppressed_eye_glow = TRUE
-	if(suppressed_eye_glow)
-		body.update_body_parts()
+	// The RMH user_glowing_pref switch suppresses the emissive overlay at its source.
+	character_setup_suppress_eye_glow(body)
+	// Not before this point: a hovered value must never sit in the saved entry across a yield.
+	if(!character_setup_render_yield(body))
+		return
 	if(!character_setup_preview_underwear)
 		// Smallclothes are worn items living in inventory slots here, not strings.
 		QDEL_NULL(body.underwear)
@@ -206,24 +376,39 @@
 		QDEL_NULL(body.garter)
 		QDEL_NULL(body.legwear_socks)
 		QDEL_NULL(body.armsleeves)
-		body.update_body_parts()
 	if(preview_job)
 		body.dna.species.pre_equip_species_outfit(preview_job, body, TRUE)
 	if(preview_outfit)
 		body.equipOutfit(preview_outfit, TRUE)
+	if(!character_setup_render_yield(body))
+		return
+	if(!was_building_organs)
+		body.status_flags &= ~BUILDING_ORGANS
+	body.defer_body_parts_update = FALSE
+	body.update_limb_efficiencies()
+	// wipe_state() cut every overlay, and this rebuilds limbs, body and worn items in one pass.
+	body.regenerate_icons()
+	// After regenerate_icons(), which would redraw these slots without the preview filters.
 	body.update_inv_hands()
 	body.update_inv_belt(hide_experimental = TRUE)
 	body.update_inv_back(hide_experimental = TRUE)
 	body.update_inv_head(hide_nonstandard = TRUE)
+	if(!character_setup_render_yield(body))
+		return
 	var/main_only = character_setup_render_main_only
 	character_setup_render_main_only = FALSE
 	character_setup_measure_body(character_setup_preview_dir)
 	if(!main_only)
+		if(!character_setup_render_yield(body))
+			return
 		var/list/perp_art = character_setup_measure_art(turn(character_setup_preview_dir, 90))
 		var/zoom_dim_w = max(character_setup_view_bbox_w, perp_art ? perp_art[1] : 0)
 		var/zoom_dim_h = max(character_setup_view_bbox_h, perp_art ? perp_art[2] : 0)
 		character_setup_view_zoom_w = CEILING(zoom_dim_w, 4)
 		character_setup_view_zoom_h = CEILING(zoom_dim_h, 4)
+	// Measuring can yield; skip if the menu closed or reopened meanwhile.
+	if(QDELETED(body) || body != character_setup_body)
+		return
 	character_setup_apply_to_view(character_setup_view, body, character_setup_preview_dir)
 	if(!main_only)
 		character_setup_apply_to_view(character_setup_view_front, body, SOUTH)
@@ -234,18 +419,16 @@
 	var/mob/living/carbon/human/dummy/body = character_setup_body
 	if(!body)
 		return null
-	var/icon/measure = character_setup_get_flat_icon(body, dir, no_anim = TRUE)
-	var/measure_w = isicon(measure) ? measure.Width() : 32
-	var/measure_h = isicon(measure) ? measure.Height() : 32
-	var/art_x = 0
-	var/art_y = 0
-	var/list/art = character_setup_art_bounds(measure)
-	if(art)
-		art_x = art[1] - 1
-		art_y = art[2] - 1
-		measure_w = art[3] - art[1] + 1
-		measure_h = art[4] - art[2] + 1
-	return list(measure_w, measure_h, GLOB.character_setup_flat_origin_x + art_x, GLOB.character_setup_flat_origin_y + art_y)
+	// A frozen copy, so the measurement holds if the dummy changes while a new sprite is scanned.
+	var/mutable_appearance/snapshot = new(body)
+	// Copied appearances get FLOAT_PLANE in New(); overlays are filtered by plane.
+	snapshot.plane = body.plane
+	var/list/art
+	if(snapshot.alpha > 0)
+		art = character_setup_appearance_art_bounds(snapshot, dir, snapshot.icon, snapshot.icon_state, snapshot.blend_mode)
+	if(!art)
+		return list(32, 32, 0, 0)
+	return list(art[3] - art[1] + 1, art[4] - art[2] + 1, art[1] - 1, art[2] - 1)
 
 /datum/preferences/proc/character_setup_measure_body(dir)
 	var/list/art = character_setup_measure_art(dir)
@@ -263,181 +446,69 @@
 	if(GLOB.character_setup_debug)
 		character_setup_log("VIEW", "measure dir=[dir] art=[character_setup_view_bbox_w]x[character_setup_view_bbox_h] origin=[character_setup_view_off_x],[character_setup_view_off_y] extent=[character_setup_view_extent_w]x[character_setup_view_extent_h] zoom_dims=[character_setup_view_zoom_w]x[character_setup_view_zoom_h] species=[pref_species?.id] taur=[pref_species?.forced_taur ? 1 : 0]")
 
-/proc/character_setup_get_flat_icon(image/appearance, defdir, deficon, defstate, defblend, start = TRUE, no_anim = FALSE)
-	#define CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, process, base_layer) \
-		for (var/i in 1 to length(process)) { \
-			var/image/current = process[i]; \
-			if (!current) { \
-				continue; \
-			} \
-			if (current.plane == EMISSIVE_PLANE) { \
-				continue; \
-			} \
-			if (current.plane != FLOAT_PLANE && current.plane != appearance.plane) { \
-				continue; \
-			} \
-			var/current_layer = current.layer; \
-			if (current_layer < 0) { \
-				if (current_layer <= -1000) { \
-					return flat; \
-				} \
-				current_layer = base_layer + appearance.layer + current_layer / 1000; \
-			} \
-			for (var/index_to_compare_to in 1 to length(layers)) { \
-				var/compare_to = layers[index_to_compare_to]; \
-				if (current_layer < layers[compare_to]) { \
-					layers.Insert(index_to_compare_to, current); \
-					break; \
-				} \
-			} \
-			layers[current] = current_layer; \
-		}
-
-	var/static/icon/flat_template = icon('icons/blanks/32x32.dmi', "nothing")
-	var/icon/flat = icon(flat_template)
-
-	if(!appearance || appearance.alpha <= 0)
-		return flat
-
-	if(start)
-		GLOB.character_setup_flat_origin_x = 0
-		GLOB.character_setup_flat_origin_y = 0
-		if(!defdir)
-			defdir = appearance.dir
-		if(!deficon)
-			deficon = appearance.icon
-		if(!defstate)
-			defstate = appearance.icon_state
-		if(!defblend)
-			defblend = appearance.blend_mode
-
+/// Pixel bounds (x1, y1, x2, y2) of what this appearance draws, in its own icon's coordinates, or null.
+/// Follows the layer rules a flat icon of it would, but unions cached per-sprite bounds instead of
+/// blending a flat icon, which made every preview render cost tenths of a second.
+/proc/character_setup_appearance_art_bounds(image/appearance, defdir, deficon, defstate, defblend)
 	var/curicon = appearance.icon || deficon
 	var/curstate = appearance.icon_state || defstate
 	var/curdir = (!appearance.dir || appearance.dir == SOUTH) ? defdir : appearance.dir
-
-	var/render_icon = curicon
-
-	if(render_icon)
-		if(!icon_exists(curicon, curstate))
-			if(icon_exists(curicon, ""))
-				curstate = ""
-			else
-				render_icon = FALSE
-
-	var/base_icon_dir
-
-	if(render_icon)
-		if (curdir != SOUTH)
-			if(!length(icon_states(icon(curicon, curstate, NORTH))))
-				base_icon_dir = SOUTH
-
-		var/list/icon_dimensions = get_icon_dimensions(curicon)
-		var/icon_width = icon_dimensions["width"]
-		var/icon_height = icon_dimensions["height"]
-		if(icon_width != 32 || icon_height != 32)
-			flat.Scale(icon_width, icon_height)
-
-	if(!base_icon_dir)
-		base_icon_dir = curdir
-
 	var/curblend = appearance.blend_mode || defblend
-
-	if(length(appearance.overlays) || length(appearance.underlays))
-		var/list/layers = list()
-		var/image/copy
-		if(render_icon)
-			copy = image(icon=curicon, icon_state=curstate, layer=appearance.layer, dir=base_icon_dir)
-			copy.color = appearance.color
-			copy.alpha = appearance.alpha
-			copy.blend_mode = curblend
-			layers[copy] = appearance.layer
-
-		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
-		CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
-
-		var/icon/add
-
-		var/flatX1 = 1
-		var/flatX2 = flat.Width()
-		var/flatY1 = 1
-		var/flatY2 = flat.Height()
-
-		var/addX1 = 0
-		var/addX2 = 0
-		var/addY1 = 0
-		var/addY2 = 0
-
-		for(var/image/layer_image as anything in layers)
-			if(layer_image.alpha == 0)
+	// Cached and shared: unions below always build a new list.
+	var/list/bounds = character_setup_sprite_art_bounds(curicon, curstate, curdir)
+	for(var/list/layers as anything in list(appearance.underlays, appearance.overlays))
+		for(var/image/current as anything in layers)
+			if(!current || current.alpha == 0 || current.plane == EMISSIVE_PLANE)
 				continue
-
-			if(layer_image == copy)
-				curblend = BLEND_OVERLAY
-				add = icon(layer_image.icon, layer_image.icon_state, base_icon_dir)
-			else
-				add = character_setup_get_flat_icon(image(layer_image), curdir, curicon, curstate, curblend, FALSE, no_anim)
-			if(!add)
+			if(current.plane != FLOAT_PLANE && current.plane != appearance.plane)
 				continue
-
-			addX1 = min(flatX1, layer_image.pixel_x + 1)
-			addX2 = max(flatX2, layer_image.pixel_x + add.Width())
-			addY1 = min(flatY1, layer_image.pixel_y + 1)
-			addY2 = max(flatY2, layer_image.pixel_y + add.Height())
-
-			if (
-				addX1 != flatX1 \
-				|| addX2 != flatX2 \
-				|| addY1 != flatY1 \
-				|| addY2 != flatY2 \
-			)
-				flat.Crop(
-					addX1 - flatX1 + 1,
-					addY1 - flatY1 + 1,
-					addX2 - flatX1 + 1,
-					addY2 - flatY1 + 1
-				)
-
-				flatX1 = addX1
-				flatX2 = addX2
-				flatY1 = addY1
-				flatY2 = addY2
-
-			flat.Blend(add, blendMode2iconMode(curblend), layer_image.pixel_x + 2 - flatX1, layer_image.pixel_y + 2 - flatY1)
-
-		if(appearance.color)
-			if(islist(appearance.color))
-				flat.MapColors(arglist(appearance.color))
+			// A flat icon gives up on layers this low and draws nothing.
+			if(current.layer <= -1000)
+				return null
+			// Multiplied and inset layers only recolour pixels that are already drawn.
+			var/layer_blend = current.blend_mode || curblend
+			if(layer_blend == BLEND_MULTIPLY || layer_blend == BLEND_INSET_OVERLAY)
+				continue
+			var/list/layer_bounds = character_setup_appearance_art_bounds(image(current), curdir, curicon, curstate, curblend)
+			if(!layer_bounds)
+				continue
+			var/x1 = layer_bounds[1] + current.pixel_x
+			var/y1 = layer_bounds[2] + current.pixel_y
+			var/x2 = layer_bounds[3] + current.pixel_x
+			var/y2 = layer_bounds[4] + current.pixel_y
+			if(bounds)
+				bounds = list(min(bounds[1], x1), min(bounds[2], y1), max(bounds[3], x2), max(bounds[4], y2))
 			else
-				flat.Blend(appearance.color, ICON_MULTIPLY)
+				bounds = list(x1, y1, x2, y2)
+	return bounds
 
-		if(appearance.alpha < 255)
-			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
-
-		if(start)
-			GLOB.character_setup_flat_origin_x = flatX1 - 1
-			GLOB.character_setup_flat_origin_y = flatY1 - 1
-
-		if(no_anim)
-			var/icon/cleaned = new /icon()
-			cleaned.Insert(flat, "", SOUTH, 1, 0)
-			return cleaned
-		else
-			return icon(flat, "", SOUTH)
-	else if (render_icon)
-		var/icon/final_icon = icon(icon(curicon, curstate, base_icon_dir), "", SOUTH, no_anim ? TRUE : null)
-
-		if (appearance.alpha < 255)
-			final_icon.Blend(rgb(255,255,255, appearance.alpha), ICON_MULTIPLY)
-
-		if (appearance.color)
-			if (islist(appearance.color))
-				final_icon.MapColors(arglist(appearance.color))
-			else
-				final_icon.Blend(appearance.color, ICON_MULTIPLY)
-
-		return final_icon
-
-	#undef CHARACTER_SETUP_PROCESS_OVERLAYS_OR_UNDERLAYS
+/// Art bounds of one sprite frame, drawn the way a flat icon draws it. Sprites never change,
+/// so every result is kept for the round and shared by all players.
+/proc/character_setup_sprite_art_bounds(sprite_icon, sprite_state, sprite_dir)
+	if(!sprite_icon)
+		return null
+	var/static/list/bounds_by_icon = list()
+	var/list/bounds_by_key = bounds_by_icon[sprite_icon]
+	if(!bounds_by_key)
+		bounds_by_key = list()
+		bounds_by_icon[sprite_icon] = bounds_by_key
+	var/key = "[sprite_state]|[sprite_dir]"
+	var/cached = bounds_by_key[key]
+	if(!isnull(cached))
+		return cached || null
+	// Only a sprite seen for the first time is scanned; callers measure a frozen appearance copy.
+	CHECK_TICK
+	var/list/bounds
+	var/state = sprite_state
+	if(!icon_exists(sprite_icon, state) && icon_exists(sprite_icon, ""))
+		state = ""
+	if(icon_exists(sprite_icon, state))
+		var/draw_dir = sprite_dir || SOUTH
+		if(draw_dir != SOUTH && !length(icon_states(icon(sprite_icon, state, NORTH))))
+			draw_dir = SOUTH
+		bounds = character_setup_art_bounds(icon(sprite_icon, state, draw_dir, 1))
+	bounds_by_key[key] = bounds || FALSE
+	return bounds
 
 /datum/preferences/proc/character_setup_apply_to_view(atom/movable/screen/map_view/view, mob/living/carbon/human/dummy/body, view_dir)
 	if(!view)
@@ -464,3 +535,5 @@
 	if(pref_species?.forced_taur && LAZYLEN(pref_species.allowed_taur_types))
 		return max(1, round(character_setup_view_scale * 0.55))
 	return character_setup_view_scale
+
+#undef CHARACTER_SETUP_RENDER_COOLDOWN

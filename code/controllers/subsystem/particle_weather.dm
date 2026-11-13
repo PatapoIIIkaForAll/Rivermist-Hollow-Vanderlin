@@ -21,6 +21,7 @@ SUBSYSTEM_DEF(ParticleWeather)
 	// process active weather
 	if(runningWeather)
 		if(runningWeather.running)
+			update_weather_viewers()
 			runningWeather.tick()
 			for(var/mob/act_on as anything in GLOB.mob_living_list) //yikes. this should probably be a client scan not all mobs. it already checks for minds
 				runningWeather.try_weather_act(act_on)
@@ -39,6 +40,40 @@ SUBSYSTEM_DEF(ParticleWeather)
 					if(prob(weather_special_effect.probability))
 						turf.apply_weather_effect(weather_special_effect)
 					CHECK_TICK_LOW
+
+/// Extra tiles around a view searched for open sky, so rain starts before outdoor turfs scroll in.
+#define WEATHER_VIEW_MARGIN 3
+
+/// Gives the particle object only to clients that can see a weather-exposed turf; masked particles still cost full client CPU.
+/datum/controller/subsystem/ParticleWeather/proc/update_weather_viewers()
+	var/obj/effect = getweatherEffect()
+	for(var/client/viewer as anything in GLOB.clients)
+		var/datum/hud/viewer_hud = viewer?.mob?.hud_used
+		if(!viewer_hud)
+			continue
+		var/atom/movable/screen/plane_master/weather_effect/plane = viewer_hud.plane_masters["[WEATHER_EFFECT_PLANE]"]
+		if(!plane)
+			continue
+		var/wanted = client_sees_weather(viewer)
+		if(wanted == (effect in plane.vis_contents))
+			continue
+		plane.vis_contents = wanted ? list(effect) : list()
+
+/datum/controller/subsystem/ParticleWeather/proc/client_sees_weather(client/viewer)
+	var/turf/center = get_turf(viewer.eye)
+	if(!center)
+		return FALSE
+	if(center.outdoor_effect && !center.outdoor_effect.weatherproof)
+		return TRUE
+	var/list/view_size = getviewsize(viewer.view)
+	var/half_width = round(view_size[1] / 2) + WEATHER_VIEW_MARGIN
+	var/half_height = round(view_size[2] / 2) + WEATHER_VIEW_MARGIN
+	for(var/turf/seen as anything in block(max(1, center.x - half_width), max(1, center.y - half_height), center.z, min(world.maxx, center.x + half_width), min(world.maxy, center.y + half_height), center.z))
+		if(seen.outdoor_effect && !seen.outdoor_effect.weatherproof)
+			return TRUE
+	return FALSE
+
+#undef WEATHER_VIEW_MARGIN
 
 //This has been mangled - currently only supports 1 weather effect serverwide so I can finish this
 /datum/controller/subsystem/ParticleWeather/Initialize(start_timeofday)

@@ -10,6 +10,6 @@
 		/datum/ai_planning_subtree/pet_planning,
 		/datum/ai_planning_subtree/aggro_find_target,
 		/datum/ai_planning_subtree/behemoth_special_abilities,
-		/datum/ai_planning_subtree/basic_melee_attack_subtree/warden,
+		/datum/ai_planning_subtree/basic_melee_attack_subtree,
 	)
 	idle_behavior = /datum/idle_behavior/idle_random_walk

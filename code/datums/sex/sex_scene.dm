@@ -499,6 +499,8 @@
 	participant.sex_scene = src
 	RegisterSignal(participant, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(on_participant_invalidated))
 	update_display_name()
+	if(length(GLOB.sense_relay_mobs))
+		ensure_dullahan_head_contexts(src)
 	return TRUE
 
 /datum/sex_scene/proc/remove_participant(mob/living/participant)
@@ -836,9 +838,7 @@
 	else
 		action.remote_context?.clear_action_overlay(action)
 
-	var/suppress_visible_messages = action.begin_remote_visible_message_suppression()
-	action.on_finish(action_user, action_target)
-	action.end_remote_visible_message_suppression(suppress_visible_messages)
+	action.run_act_hook(TYPE_PROC_REF(/datum/sex_action, on_finish), action_user, action_target)
 	action.unbind_runtime()
 	qdel(action)
 

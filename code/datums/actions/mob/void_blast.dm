@@ -27,7 +27,8 @@
 	owner.add_overlay(direction_overlay)
 
 	var/fully_charged = do_after(owner, delay = charge_duration, target = owner)
-	if(!owner)
+	// The action can be deleted while do_after sleeps.
+	if(QDELETED(src) || !owner)
 		return TRUE
 	owner.cut_overlay(direction_overlay)
 	if (!fully_charged)
@@ -41,6 +42,8 @@
 		return TRUE
 
 	do_after(owner, delay = beam_duration, target = owner)
+	if(QDELETED(src))
+		return TRUE
 	extinguish_laser()
 	StartCooldown()
 	return TRUE

@@ -9,6 +9,7 @@ import { createLogger } from 'tgui/logging';
 import { Tooltip } from 'tgui-core/components';
 import { EventEmitter } from 'tgui-core/events';
 import { classes } from 'tgui-core/react';
+import { RollTooltip } from '../chat_components/RollTooltip';
 import { TooltipHTML } from '../chat_components/TooltipHTML';
 import { store } from '../events/store';
 import { scrollTrackingAtom } from './atom';
@@ -42,6 +43,7 @@ export const TGUI_CHAT_COMPONENTS = {
   // plain-text-only Tooltip above. See span_tooltip_html() in
   // code/__DEFINES/chat/span.dm for the DM side.
   TooltipHTML,
+  RollTooltip,
 };
 
 // List of injectable attibute names mapped to their proper prop
@@ -51,6 +53,13 @@ export const TGUI_CHAT_ATTRIBUTES_TO_PROPS = {
   content: 'content',
   // RMH EDITED - for TooltipHTML's data-html attribute above.
   html: 'html',
+  dice: 'dice',
+  labels: 'labels',
+  sides: 'sides',
+  outcome: 'outcome',
+  outcomes: 'outcomes',
+  stats: 'stats',
+  footers: 'footers',
 };
 
 function createHighlightNode(text, color) {
@@ -440,11 +449,12 @@ class ChatRenderer {
               working_value = true;
             } else if (working_value === '$false') {
               working_value = false;
-            } else if (!Number.isNaN(working_value)) {
-              const parsed_float = parseFloat(working_value);
-              if (!Number.isNaN(parsed_float)) {
-                working_value = parsed_float;
-              }
+            } else if (
+              typeof working_value === 'string' &&
+              working_value.trim() !== '' &&
+              !Number.isNaN(Number(working_value))
+            ) {
+              working_value = Number(working_value);
             }
 
             let canon_name = attribute.nodeName.replace('data-', '');

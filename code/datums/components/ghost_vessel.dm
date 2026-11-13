@@ -98,11 +98,12 @@ GLOBAL_LIST_EMPTY(active_ghost_vessels)
 		GLOB.active_ghost_vessels[vessel_id] = list()
 	GLOB.active_ghost_vessels[vessel_id] += living_parent
 
-/datum/component/ghost_vessel/proc/possess_vessel(mob/dead/observer/ghost)
+/datum/component/ghost_vessel/proc/possess_vessel(mob/dead/ghost)
 	if(!ghost?.client)
 		return
 
 	being_offered = FALSE
+	ghost.leave_lobby_for_role()
 
 	ghost.client.stop_sounds_rogue()
 

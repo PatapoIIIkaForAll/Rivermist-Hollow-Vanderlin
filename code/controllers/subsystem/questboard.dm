@@ -15,6 +15,8 @@ SUBSYSTEM_DEF(questboard)
 	)
 	var/list/generation_queue = list()
 	var/next_refresh = 0
+	/// Tier -> world.time before which a claimed Lethal or Mythic slot stays empty.
+	var/list/tier_refill_after = list()
 
 /datum/controller/subsystem/questboard/Initialize(start_timeofday)
 	reset_pool()
@@ -41,10 +43,21 @@ SUBSYSTEM_DEF(questboard)
 	quest_pool = list(list(), list(), list(), list(), list(), list())
 	generation_queue = list()
 	next_refresh = 0
+	tier_refill_after = list()
+
+/// Starts the refill wait when a generated Lethal or Mythic posting is claimed.
+/datum/controller/subsystem/questboard/proc/on_posting_claimed(datum/quest/posted_quest)
+	if(!posted_quest || posted_quest.player_commission)
+		return
+	var/tier = posted_quest.requested_tier
+	if(tier >= QUEST_TIER_LETHAL)
+		tier_refill_after["[tier]"] = world.time + QUESTBOARD_HIGH_TIER_REFILL_COOLDOWN
 
 /datum/controller/subsystem/questboard/proc/build_generation_queue()
 	generation_queue = list()
 	for(var/tier in QUEST_TIER_ROUTINE to QUEST_TIER_MYTHIC)
+		if(world.time < tier_refill_after["[tier]"])
+			continue
 		var/generated_count = 0
 		for(var/datum/quest/posted_quest as anything in quest_pool[tier])
 			if(!posted_quest.player_commission)
@@ -69,9 +82,12 @@ SUBSYSTEM_DEF(questboard)
 		return null
 
 	var/list/valid_types = list()
+	var/carnal_board_full = count_carnal_postings() >= QUEST_CARNAL_BOARD_MAX
 	for(var/contract_type in GLOB.global_quest_registry)
 		var/datum/quest/quest_path = GLOB.global_quest_registry[contract_type]
 		if(tier < initial(quest_path.minimum_tier) || tier > initial(quest_path.maximum_tier))
+			continue
+		if(carnal_board_full && quest_contract_uses_taker_pool(contract_type))
 			continue
 		var/datum/quest/template = new quest_path()
 		if(template.can_generate_for_world())
@@ -100,6 +116,12 @@ SUBSYSTEM_DEF(questboard)
 		generated_quest.expiry_time = world.time + get_expiry_duration(tier)
 		return generated_quest
 	return null
+
+/datum/controller/subsystem/questboard/proc/count_carnal_postings()
+	. = 0
+	for(var/datum/quest/posted_quest as anything in get_all_posted_quests())
+		if(posted_quest.contract_group == QUEST_GROUP_CARNAL)
+			.++
 
 /datum/controller/subsystem/questboard/proc/get_expiry_duration(tier)
 	switch(tier)

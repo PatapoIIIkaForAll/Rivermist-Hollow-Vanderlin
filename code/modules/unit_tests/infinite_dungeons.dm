@@ -1,3 +1,6 @@
+/datum/unit_test/dungeon_onebite
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_onebite/Run()
 	var/mob/living/carbon/human/raider = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
 	var/turf/origin = run_loc_floor_bottom_left
@@ -34,6 +37,9 @@
 	TEST_ASSERT(QDELETED(guardian), "Dead native guardian must be deleted on collapse, not ejected.")
 	TEST_ASSERT_EQUAL(get_turf(keepsake), origin, "Foreign items left in a standalone room must be ejected on collapse.")
 
+/datum/unit_test/dungeon_native_mobs_die_on_collapse
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_native_mobs_die_on_collapse/Run()
 	var/turf/origin = run_loc_floor_bottom_left
 	var/datum/pocket_dimension/dungeon/instance = SSpocket_dimensions.get_or_create_instance("[REF(src)]::collapse", /datum/map_template/pocket/dungeon/test_onebite, POCKET_LIFECYCLE_COLLAPSE, 0)
@@ -48,6 +54,9 @@
 	// Collapse with the guardian still alive - it must be deleted, never ejected.
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(instance, null, origin), "Dungeon should collapse with a live guardian inside.")
 	TEST_ASSERT(QDELETED(guardian), "Live native guardian must be deleted on collapse, not ejected.")
+
+/datum/unit_test/dungeon_defeated_guardian_clears_room
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_defeated_guardian_clears_room/Run()
 	var/turf/origin = run_loc_floor_bottom_left
@@ -66,6 +75,9 @@
 	TEST_ASSERT(instance.cleared, "A guardian with a defeat status should clear the room without dying.")
 
 	SSpocket_dimensions.delete_instance(instance, null, origin)
+
+/datum/unit_test/dungeon_drow_theme_harness
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_drow_theme_harness/Run()
 	var/list/expected_rooms = list(
@@ -174,6 +186,9 @@
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(transition_descent, null, origin), "The transition descent fixture should collapse cleanly.")
 	qdel(transition_run)
 
+/datum/unit_test/dungeon_singlet_production_harnesses
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_singlet_production_harnesses/Run()
 	var/list/production_pool = get_dungeon_template_pool(DUNGEON_ROOM_ONESHOT)
 	TEST_ASSERT(length(production_pool) >= 6, "The production one-shot pool should contain the shipped singlet set.")
@@ -221,6 +236,9 @@
 		TEST_ASSERT_EQUAL(get_turf(delver), origin, "The return seam in [expected_template.id] should lead back to its entrance.")
 		qdel(entrance)
 
+/datum/unit_test/dungeon_singlet_shared_lifecycle_and_cooldown
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_singlet_shared_lifecycle_and_cooldown/Run()
 	var/turf/origin = run_loc_floor_bottom_left
 	var/obj/structure/dungeon_entrance/wolf_den/entrance = allocate(/obj/structure/dungeon_entrance/wolf_den, origin)
@@ -263,6 +281,9 @@
 	TEST_ASSERT_NOTEQUAL(fresh_room.instance_id, first_instance_id, "A reopened entrance must not reuse its spent instance.")
 	qdel(entrance)
 
+/datum/unit_test/dungeon_singlet_entrance_deletion_ejects_occupants
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_singlet_entrance_deletion_ejects_occupants/Run()
 	var/turf/origin = run_loc_floor_bottom_left
 	var/obj/structure/dungeon_entrance/spider_nursery/entrance = allocate(/obj/structure/dungeon_entrance/spider_nursery, origin)
@@ -274,6 +295,9 @@
 	qdel(entrance)
 	TEST_ASSERT(QDELETED(room), "Deleting a singlet entrance should tear down its keyed room.")
 	TEST_ASSERT_EQUAL(get_turf(delver), origin, "Deleting an occupied entrance should eject its delver safely to the entrance turf.")
+
+/datum/unit_test/dungeon_infinite_run
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_infinite_run/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -365,6 +389,9 @@
 	TEST_ASSERT(QDELETED(second_break), "Run teardown should delete remaining rooms.")
 	TEST_ASSERT_EQUAL(get_turf(delver), get_turf(entrance), "Run teardown should eject the delver to the entrance.")
 
+/datum/unit_test/dungeon_floor_descent
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_floor_descent/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -394,6 +421,9 @@
 
 	qdel(run)
 
+/datum/unit_test/dungeon_solo_still_works
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_solo_still_works/Run()
 	// Guards the foundation behavior: a lone, partyless delver can still run.
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -421,6 +451,9 @@
 
 	qdel(run)
 
+/datum/unit_test/dungeon_at_rest_state
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_at_rest_state/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -440,6 +473,9 @@
 	TEST_ASSERT(!run.is_at_rest(), "With a live combat stretch room, the run should not be at rest.")
 
 	qdel(run)
+
+/datum/unit_test/dungeon_forced_entrant_lifecycle
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_forced_entrant_lifecycle/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -465,6 +501,9 @@
 	TEST_ASSERT_EQUAL(captive.maxHealth, base_health, "Extraction should strip the run's boons immediately.")
 	qdel(run)
 
+/datum/unit_test/dungeon_present_set
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_present_set/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -477,6 +516,9 @@
 	TEST_ASSERT(length(present) >= 1, "The delver should be counted among present members of the run.")
 
 	qdel(run)
+
+/datum/unit_test/dungeon_boss_room
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_boss_room/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -570,6 +612,9 @@
 
 	qdel(run)
 
+/datum/unit_test/dungeon_elite_path
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_elite_path/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -598,6 +643,9 @@
 	TEST_ASSERT(findtext(guardian.name, "Champion"), "Elite guardian should be named a Champion.")
 
 	qdel(run)
+
+/datum/unit_test/dungeon_motes
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_motes/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -633,6 +681,9 @@
 
 	qdel(run)
 
+/datum/unit_test/dungeon_boons
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_boons/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -655,6 +706,9 @@
 
 	qdel(run)
 	TEST_ASSERT_EQUAL(delver.maxHealth, starting_health, "Run teardown should strip boons and restore max health (sandbox guarantee).")
+
+/datum/unit_test/dungeon_shrine
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_shrine/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -687,6 +741,9 @@
 	TEST_ASSERT(run.spend_motes(40), "Run should still have motes after a free apply (spend path tested separately).")
 
 	qdel(run)
+
+/datum/unit_test/dungeon_key_gate
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_key_gate/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -742,6 +799,9 @@
 	reloaded.echoes = before
 	reloaded.purchased_unlocks = list()
 	reloaded.save_progress()
+
+/datum/unit_test/dungeon_start_unlocks
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_start_unlocks/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -846,6 +906,9 @@
 	carbon_kit.process(0.1)
 	TEST_ASSERT(carbon_ability.next_use > world.time, "A carbon boss should fire its kit at the AI controller's combat target.")
 
+/datum/unit_test/dungeon_scatter
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_scatter/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -869,6 +932,9 @@
 	TEST_ASSERT(!scatter_room.cleared, "A scatter room with guardians should not start cleared.")
 
 	qdel(run)
+
+/datum/unit_test/dungeon_room_trait_emboldened
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_room_trait_emboldened/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -987,6 +1053,9 @@
 				qdel(g_mob)
 	return room.cleared
 
+/datum/unit_test/dungeon_door_rewards
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_door_rewards/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -1043,6 +1112,9 @@
 	TEST_ASSERT(delver.getBruteLoss() < damage_before, "Clearing a HEAL door should heal present members (before=[damage_before], after=[delver.getBruteLoss()], members=[length(run.get_members_in_room(heal_room))]).")
 
 	qdel(run)
+
+/datum/unit_test/dungeon_vault_reward
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_vault_reward/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1162,6 +1234,9 @@
 
 	qdel(run)
 
+/datum/unit_test/dungeon_wipe_logic
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_wipe_logic/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -1191,6 +1266,9 @@
 	run.wiped = TRUE
 	qdel(run)
 	TEST_ASSERT_NULL(entrance.active_run, "Wipe teardown should clear the entrance's run.")
+
+/datum/unit_test/dungeon_larder
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_larder/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1232,6 +1310,9 @@
 	TEST_ASSERT(!length(GLOB.kidnap_entrance_markers[run_tag]), "Run teardown must deregister the larder markers.")
 	TEST_ASSERT_NULL(get_dungeon_run_by_larder_tag(run_tag), "A torn-down run should no longer answer to its tag.")
 
+/datum/unit_test/dungeon_captives_and_stubborn_heart
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_captives_and_stubborn_heart/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -1262,6 +1343,9 @@
 	qdel(run)
 	TEST_ASSERT_EQUAL(delver.defeat_struggle_delay_mult, 1, "Run teardown should restore the struggle multiplier (sandbox).")
 
+/datum/unit_test/dungeon_boon_no_restack
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_boon_no_restack/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/delver = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
@@ -1287,6 +1371,9 @@
 
 	qdel(run)
 	TEST_ASSERT_EQUAL(delver.maxHealth, base_health, "Teardown should strip the stack exactly once.")
+
+/datum/unit_test/dungeon_presence_reconciliation
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_presence_reconciliation/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1319,6 +1406,9 @@
 	run.check_abandonment()
 	TEST_ASSERT(QDELETED(run), "A run should collapse once every delver has left by an outside teleport.")
 	TEST_ASSERT_NULL(entrance.active_run, "External extraction collapse should release the owning entrance.")
+
+/datum/unit_test/dungeon_forsaken_paths
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_forsaken_paths/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1371,6 +1461,9 @@
 	run.flush_mote_announce()
 	TEST_ASSERT_EQUAL(run.pending_mote_announce, 0, "Flush should clear the buffer.")
 	qdel(run)
+
+/datum/unit_test/dungeon_boon_offer_session
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_boon_offer_session/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1431,6 +1524,9 @@
 	TEST_ASSERT(isnum(data["echoes"]), "Echoes should always be a number.")
 	TEST_ASSERT(!data["run_active"], "No run should be active yet.")
 
+/datum/unit_test/dungeon_heat_dials
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_heat_dials/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	entrance.theme_filter = DUNGEON_THEME_TEST
@@ -1473,6 +1569,9 @@
 		TEST_ASSERT(run.draw_door_reward() != DUNGEON_REWARD_HEAL, "Sealed Mercy fallback draws must never yield HEAL.")
 	qdel(run)
 
+/datum/unit_test/dungeon_heat_gating
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_heat_gating/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	entrance.theme_filter = DUNGEON_THEME_TEST
@@ -1486,6 +1585,9 @@
 	TEST_ASSERT_EQUAL(run.get_total_heat(), 0, "Heat staged without the covenant must be discarded.")
 	TEST_ASSERT_EQUAL(length(entrance.pending_heat_ranks), 0, "Pending heat should be consumed either way.")
 	qdel(run)
+
+/datum/unit_test/dungeon_dark_bargain
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_dark_bargain/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1518,6 +1620,9 @@
 	TEST_ASSERT_EQUAL(delver.maxHealth, base_max - expected_cut, "Price of Flesh should cut max health.")
 	qdel(run)
 	TEST_ASSERT_EQUAL(delver.maxHealth, base_max, "Run teardown must restore the flesh price exactly.")
+
+/datum/unit_test/dungeon_cursed_debt
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_cursed_debt/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1559,6 +1664,9 @@
 	TEST_ASSERT(combat_room.cleared, "Cursed room should still clear normally.")
 	TEST_ASSERT(run.motes > motes_before, "Breaking a cursed room should pay bonus motes.")
 	qdel(run)
+
+/datum/unit_test/dungeon_special_room_selection
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_special_room_selection/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1619,6 +1727,9 @@
 	TEST_ASSERT(found_trader, "Trader room should contain a peddler stall.")
 	qdel(run)
 
+/datum/unit_test/dungeon_wave_room
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_wave_room/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	entrance.theme_filter = DUNGEON_THEME_TEST
@@ -1663,6 +1774,9 @@
 	TEST_ASSERT(length(wave_room.loot_caches) > caches_before, "Wave clear should spawn a loot cache.")
 	qdel(run)
 
+/datum/unit_test/dungeon_mystery_events
+	needs_pocket_space = TRUE
+
 /datum/unit_test/dungeon_mystery_events/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
 	entrance.theme_filter = DUNGEON_THEME_TEST
@@ -1694,6 +1808,9 @@
 	fountain.attack_hand(delver)
 	TEST_ASSERT_EQUAL(run.motes, motes_after_first, "Fountain must refuse a second sip.")
 	qdel(run)
+
+/datum/unit_test/dungeon_synergy_gating
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_synergy_gating/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1772,6 +1889,40 @@
 	TEST_ASSERT(food_share < 0.2, "Food should be a garnish, not the meal (share was [round(food_share * 100, 0.1)]%).")
 	qdel(table)
 
+/datum/unit_test/dungeon_caches_roll_no_gold_piles/Run()
+	// Gold piles hide in several donors, and every cache coin must arrive at half value.
+	var/mob/living/carbon/human/looter = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
+	var/list/full_value_coins = list(/obj/item/coin/gold, /obj/item/coin/silver, /obj/item/coin/silver/pile, /obj/item/coin/copper/pile)
+	for(var/datum/loot_table/dungeon/table_type as anything in subtypesof(/datum/loot_table/dungeon))
+		if(IS_ABSTRACT(table_type))
+			continue
+		var/datum/loot_table/dungeon/table = new table_type
+		var/list/pool = table.return_list(null, 5, 1.0) | table.return_list(looter, 5, 1.0)
+		for(var/path in pool)
+			TEST_ASSERT(!ispath(path, /obj/item/coin/gold/pile), "[table_type] should not roll gold piles.")
+			TEST_ASSERT(!(path in full_value_coins), "[table_type] should pay [path] at half value.")
+		qdel(table)
+
+/datum/unit_test/dungeon_cache_opens_once/Run()
+	var/mob/living/carbon/human/opener = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
+	var/mob/living/carbon/human/latecomer = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
+	var/obj/structure/dungeon_loot_cache/cache = allocate(/obj/structure/dungeon_loot_cache, run_loc_floor_bottom_left)
+	cache.loot = new /datum/loot_table/dungeon/tier1
+	TEST_ASSERT(!cache.try_loot(opener), "A sealed cache should refuse to open.")
+	cache.unseal()
+	TEST_ASSERT(cache.try_loot(opener), "The first opener should take the spoils.")
+	TEST_ASSERT(!cache.try_loot(latecomer), "A cache should open once; the party splits one roll.")
+	TEST_ASSERT(!cache.try_loot(opener), "The opener should not roll the cache a second time.")
+
+	// Greedy Eye adds one opening, and anyone may take it, so a solo delver still benefits.
+	var/obj/structure/dungeon_loot_cache/greedy_cache = allocate(/obj/structure/dungeon_loot_cache, run_loc_floor_bottom_left)
+	greedy_cache.loot = new /datum/loot_table/dungeon/tier1
+	greedy_cache.claims_left += 1
+	greedy_cache.unseal()
+	TEST_ASSERT(greedy_cache.try_loot(opener), "The first opening should succeed.")
+	TEST_ASSERT(greedy_cache.try_loot(opener), "The extra opening should not care who takes it.")
+	TEST_ASSERT(!greedy_cache.try_loot(latecomer), "No opening should remain after the extra one.")
+
 /datum/unit_test/dungeon_free_offers_payable/Run()
 	// Banking is priced at 0 and spend_motes refuses anything <= 0, so every
 	// vendor gate must run through try_pay_offer or banking is unreachable.
@@ -1789,6 +1940,9 @@
 	run.bank_motes_now(null) // no ckey: bails before conversion, must not clear
 	TEST_ASSERT_EQUAL(run.motes, 1, "Banking without a valid banker must not consume the pool.")
 	qdel(run)
+
+/datum/unit_test/dungeon_ghosts_are_not_delvers
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_ghosts_are_not_delvers/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)
@@ -1813,6 +1967,9 @@
 	TEST_ASSERT(!run.has_client_occupants(), "A watching ghost alone must not keep a run alive.")
 	qdel(watcher)
 	qdel(run)
+
+/datum/unit_test/dungeon_petition_no_remote_yank
+	needs_pocket_space = TRUE
 
 /datum/unit_test/dungeon_petition_no_remote_yank/Run()
 	var/obj/structure/dungeon_entrance/infinite/entrance = allocate(/obj/structure/dungeon_entrance/infinite, run_loc_floor_bottom_left)

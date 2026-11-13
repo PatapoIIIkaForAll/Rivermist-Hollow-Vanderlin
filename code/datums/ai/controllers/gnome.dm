@@ -91,10 +91,12 @@
 				if(state_manager)
 					state_manager.notify_priority_change()
 
-/datum/ai_controller/basic_controller/gnome_homunculus/proc/on_hear_speech(datum/source, mob/living/speaker, message)
+/datum/ai_controller/basic_controller/gnome_homunculus/proc/on_hear_speech(datum/source, list/hearing_args)
 	SIGNAL_HANDLER
 	var/mob/living/simple_animal/hostile/gnome_homunculus/host = pawn
-	if(!host || speaker == host)
+	var/mob/living/speaker = hearing_args[HEARING_SPEAKER]
+	var/raw_message = hearing_args[HEARING_RAW_MESSAGE]
+	if(!host || !isliving(speaker) || speaker == host || !raw_message)
 		return
 
 	var/friendship_check = SEND_SIGNAL(host, COMSIG_FRIENDSHIP_CHECK_LEVEL, speaker, "friend")
@@ -110,7 +112,9 @@
 		"all","any","new","now","old","see","two","way","who","boy",
 		"did","its","let","own","say","she","too","use"
 	)
-	var/list/words = splittext(LOWER_TEXT(message), " ")
+	// Raw speech arrives html-encoded; decode it and drop ASCII punctuation except apostrophes and hyphens.
+	var/static/regex/punctuation = regex(@"[\x21-\x26\x28-\x2C\x2E\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]", "g")
+	var/list/words = splittext(LOWER_TEXT(punctuation.Replace(html_decode(raw_message), "")), " ")
 	for(var/word in words)
 		word = trim(word)
 		if(length(word) > 3 && !(word in boring_words))

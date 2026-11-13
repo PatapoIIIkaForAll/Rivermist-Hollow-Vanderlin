@@ -56,6 +56,8 @@
 
 /obj/effect/whirlpool/process()
 	for(var/mob/living/L in range(pull_range, src))
+		if(QDELETED(L))
+			continue
 		if(creator && creator.faction_check_atom(L))
 			continue
 

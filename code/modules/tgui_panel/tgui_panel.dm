@@ -65,6 +65,10 @@
 		assets = list(
 			get_asset_datum(/datum/asset/simple/tgui_panel),
 		))
+	// initialize() can sleep on asset sends; a logout deletes this panel and its window.
+	if(QDELETED(src) || !window || QDELETED(client))
+		initializing = FALSE
+		return
 
 	window.send_asset(get_asset_datum(/datum/asset/simple/namespaced/fontawesome))
 	window.send_asset(get_asset_datum(/datum/asset/simple/namespaced/tgfont))

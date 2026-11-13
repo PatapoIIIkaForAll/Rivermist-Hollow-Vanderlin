@@ -187,7 +187,8 @@
 	traits = list(
 		TRAIT_GOODLOVER,
 		TRAIT_BEAUTIFUL,
-		TRAIT_EMPATH
+		TRAIT_EMPATH,
+		TRAIT_BATHHOUSE_DANCER,
 	)
 
 /datum/outfit/tavern_wench/bath_wench

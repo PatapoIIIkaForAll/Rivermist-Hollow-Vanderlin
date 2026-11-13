@@ -151,6 +151,7 @@
 	+ typesof(/turf/open/lava) \
 	+ typesof(/turf/open/floor/carpet) \
 	+ typesof(/turf/closed/wall/mineral/desert_sandstone) \
+	+ typesof(/turf/open/floor/maneater_stomach) \
 	+ typesof(/turf/open/floor/crawl_space) //mapper-placed tunnels, nothing builds them
 	used_turfs |= blacklisted_turfs
 

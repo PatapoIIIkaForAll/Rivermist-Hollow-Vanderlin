@@ -83,6 +83,8 @@
 	if(iscarbon(owner.current))
 		lich_body_ref = WEAKREF(owner.current)
 		RegisterSignal(owner.current, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+	if(ishuman(lich))
+		lich.grant_reverie(REF(src), "Grave Vigil")
 	for(var/datum/action/spell as anything in spells)
 		owner.current.add_spell(spell, source = src)
 	owner.special_role = name
@@ -97,6 +99,9 @@
 	var/mob/living/lich_mob = owner.current
 	lich_mob.remove_spells(source = src)
 	UnregisterSignal(lich_mob, COMSIG_LIVING_DEATH)
+	if(ishuman(lich_mob))
+		var/mob/living/carbon/human/lich_human = lich_mob
+		lich_human.revoke_reverie(REF(src))
 
 /datum/antagonist/lich/greet()
 	. = ..()

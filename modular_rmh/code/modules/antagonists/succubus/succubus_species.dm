@@ -47,11 +47,14 @@
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/belly/animal,
 		/datum/customizer/organ/genitals/butt/animal,
 		/datum/customizer/organ/genitals/testicles/anthro,
-		/datum/customizer/bodypart_feature/pubic_hair
+		/datum/customizer/bodypart_feature/body_hair/optional,
+		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair
 	)
 
 /datum/species/demon/check_roundstart_eligible()

@@ -17,16 +17,6 @@
 	salvage_result = /obj/item/natural/cloth
 	slot_flags = ITEM_SLOT_GARTER
 
-/obj/item/clothing/garter/attack(mob/M, mob/user, def_zone)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(!H.garter)
-			if(!get_location_accessible(H, BODY_ZONE_PRECISE_GROIN))
-				return
-			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
-			if(do_after(user, 50, target = H))
-				H.equip_to_slot_if_possible(src, ITEM_SLOT_GARTER, disable_warning = TRUE)
-
 /datum/repeatable_crafting_recipe/sewing/garters
 	name = "garter"
 	output = /obj/item/clothing/garter

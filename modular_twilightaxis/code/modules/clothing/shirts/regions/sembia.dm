@@ -1,0 +1,23 @@
+/obj/item/clothing/shirt/padedetrshirt
+	name = "padded Sembian shirt"
+	desc = "A strong loosely worn quilted shirt that places little weight on the arms."
+	icon = 'modular_twilightaxis/icons/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilightaxis/icons/clothing/onmob/shirts.dmi'
+	sleeved = 'modular_twilightaxis/icons/clothing/onmob/helpers/sleeves_armor.dmi'
+	icon_state = "etrrubaha"
+	allowed_race = SPECIES_BASE_BODY
+	boobed = FALSE
+	body_parts_covered = (( CHEST | GROIN | VITALS | ARMS))
+	color = "#FFFFFF"
+	var/shiftable = FALSE
+	armor_type = /datum/armor/ported/padded
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 35
+	blocksound = SOFTUNDERHIT
+	blade_dulling = DULLING_BASHCHOP
+	break_sound = 'sound/foley/cloth_rip.ogg'
+	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
+	sewrepair = TRUE
+	detail_tag = "_detail"
+	detail_color = CLOTHING_WHITE
+	ported_clothing = TRUE
+	misc_flags = CRAFTING_TEST_EXCLUDE

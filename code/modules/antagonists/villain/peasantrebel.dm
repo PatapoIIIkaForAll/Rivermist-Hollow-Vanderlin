@@ -50,10 +50,10 @@
 	. = ..()
 
 	var/title
-	if(new_owner?.assigned_role.parent_job)
+	if(new_owner?.assigned_role?.parent_job)
 		title = new_owner?.assigned_role.parent_job.title
 	else
-		title = new_owner?.assigned_role.title
+		title = new_owner?.assigned_role?.title
 
 	if(.)
 		if(title in GLOB.lords_positions)

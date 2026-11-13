@@ -1,0 +1,359 @@
+{
+ "variant_tokens": [
+  "f",
+  "m",
+  "dwarf",
+  "boob",
+  "detail",
+  "child",
+  "alt",
+  "bs",
+  "bn",
+  "bb",
+  "bl",
+  "bvl"
+ ],
+ "jobs": [
+  {
+   "base": "icons/roguetown/clothing/onmob/pants.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_pants.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_pants.dmi",
+   "families": [
+    "skirt",
+    "patkilt",
+    "lakkarikilt"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/onmob/physician.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_physician.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_physician.dmi",
+   "families": [
+    "docskirt",
+    "courtrobe"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/formal.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_formal.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_formal.dmi",
+   "families": [
+    "skirt",
+    "skirt_color"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/armor/onmob/pants.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_pants.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_pants.dmi",
+   "families": [
+    "leatherskirt",
+    "hlskirt",
+    "studdedskirt"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/desert_sorceress.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_desert_sorceress.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_desert_sorceress.dmi",
+   "families": [
+    "skirt"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/shirts_royalty.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_shirts_royalty.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_shirts_royalty.dmi",
+   "families": [
+    "winterdress",
+    "royaldress",
+    "princess"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/armor.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_armor.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_armor.dmi",
+   "families": [
+    "armordress",
+    "armordressalt",
+    "eastsuit3",
+    "eastsuit4",
+    "eastsuit2",
+    "eastsuit1",
+    "abyssal_robe",
+    "chargah",
+    "white_robe",
+    "astratarobe",
+    "dendorrobe",
+    "eorarobes",
+    "eorastraps",
+    "facelesscloth",
+    "feldrobe",
+    "kimono",
+    "warlock",
+    "necrarobe",
+    "nocrobe",
+    "nun",
+    "surgrobe",
+    "priestrobe",
+    "spellcasterrobe",
+    "wizardrobes"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/onmob/nyctea_onmob.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_nyctea_onmob.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_nyctea_onmob.dmi",
+   "families": [
+    "dress"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/shirts.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_shirts.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_shirts.dmi",
+   "families": [
+    "dress",
+    "dressgen",
+    "sexydress",
+    "maiddress",
+    "maidgown",
+    "silkdress",
+    "silkydress",
+    "loudmouthrobe",
+    "archivist",
+    "priestunder",
+    "vrobe"
+   ],
+   "states": [
+    "adept-red",
+    "adept-red-hood",
+    "sorcerer-red",
+    "sorcerer-red-hood",
+    "vizier-red",
+    "adept-green",
+    "adept-green-hood",
+    "sorcerer-green",
+    "sorcerer-green-hood",
+    "vizier-green",
+    "adept-blue",
+    "adept-blue-hood",
+    "sorcerer-blue",
+    "sorcerer-blue-hood",
+    "vizier-blue",
+    "adept-gray",
+    "adept-gray-hood",
+    "sorcerer-gray",
+    "sorcerer-gray-hood",
+    "vizier-gray"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/courtesan.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_courtesan.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_courtesan.dmi",
+   "families": [
+    "dress"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/shirts_gown.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_shirts_gown.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_shirts_gown.dmi",
+   "families": [
+    "springgown",
+    "fallgown",
+    "summergown",
+    "wintergown"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/valentyi/onmob/skyrim_dress.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_skyrim_dress.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_skyrim_dress.dmi",
+   "families": [
+    "hdress",
+    "dress"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/onmob/shirts.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_shirts.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_shirts.dmi",
+   "families": [
+    "weddingdress",
+    "stewarddress"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/skyrim_tavern.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_skyrim_tavern.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_skyrim_tavern.dmi",
+   "families": [
+    "tavern"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/special/onmob/steward.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_steward.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_steward.dmi",
+   "families": [
+    "stewarddress"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/nightie.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_nightie.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_nightie.dmi",
+   "families": [
+    "dress"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/ornate_tunic.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_ornate_tunic.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_ornate_tunic.dmi",
+   "families": [
+    "ornatedress"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/valentyi/onmob/toga.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_toga.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_toga.dmi",
+   "families": [
+    "toga",
+    "togafem"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/licensed-infraredbaron/onmob/armor.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_armor.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_armor.dmi",
+   "families": [
+    "duchess",
+    "magos"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/cloaks.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_cloaks.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_cloaks.dmi",
+   "families": [
+    "apron",
+    "aproncook",
+    "maidapron",
+    "waistpron",
+    "absolutionistrobe",
+    "battlenun"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/newclothes/onmob/onmobdrip.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_onmobdrip.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_onmobdrip.dmi",
+   "families": [
+    "shadowrobe"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/tig.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_tig.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_tig.dmi",
+   "families": [
+    "tig"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/patron_robes.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_patron_robes.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_patron_robes.dmi",
+   "families": [
+    "abyssrobe",
+    "pestrarobe"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/courtphys.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_courtphys.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_courtphys.dmi",
+   "families": [
+    "courtrobe",
+    "docskirt"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/selune.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_selune.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_selune.dmi",
+   "families": [
+    "selune"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/vladegeg/onmob/skyrim_mage.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_skyrim_mage.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_skyrim_mage.dmi",
+   "families": [
+    "mage"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/onmob/nun_robes.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_nun_robes.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_nun_robes.dmi",
+   "families": [
+    "sex_nun_robe",
+    "sex_nun_robe_alt"
+   ],
+   "alt_uses_parent": false
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/helpers/sleeves_pants.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_helpers_sleeves_pants.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_helpers_sleeves_pants.dmi",
+   "plan_from": "icons/roguetown/clothing/onmob/pants.dmi",
+   "plan_prefixes": [
+    "r_",
+    "l_"
+   ],
+   "families": [
+    "r_skirt",
+    "l_skirt",
+    "r_patkilt",
+    "l_patkilt",
+    "r_lakkarikilt",
+    "l_lakkarikilt"
+   ]
+  },
+  {
+   "base": "modular_rmh/icons/clothing/onmob/helpers/physician_sleeves.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_rmh_helpers_physician_sleeves.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_rmh_helpers_physician_sleeves.dmi",
+   "plan_from": "modular_rmh/icons/clothing/onmob/physician.dmi",
+   "plan_prefixes": [
+    "r_",
+    "l_"
+   ],
+   "families": [
+    "r_docskirt",
+    "l_docskirt"
+   ]
+  },
+  {
+   "base": "icons/roguetown/clothing/onmob/helpers/sleeves_courtphys.dmi",
+   "output": "modular_rmh/modular/hiking/icons/hiked_helpers_sleeves_courtphys.dmi",
+   "output_back": "modular_rmh/modular/hiking/icons/back/hiked_helpers_sleeves_courtphys.dmi",
+   "plan_from": "icons/roguetown/clothing/onmob/courtphys.dmi",
+   "plan_prefixes": [
+    "r_",
+    "l_"
+   ],
+   "families": [
+    "r_docskirt",
+    "l_docskirt"
+   ]
+  }
+ ]
+}

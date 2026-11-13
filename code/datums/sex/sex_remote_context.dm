@@ -9,6 +9,8 @@
 	var/line_of_sight_break_grace = 20 SECONDS
 	var/line_of_sight_lost_at = 0
 	var/check_interval = 2 SECONDS
+	/// TRUE lets actions keep their ordinary visible messages and visual effects through this context.
+	var/allows_visible_messages = FALSE
 
 /datum/sex_remote_context/New(mob/living/caster, mob/living/target, duration = 2 MINUTES, range_override = 7)
 	. = ..()
@@ -17,7 +19,8 @@
 		RegisterSignal(caster, COMSIG_LIVING_DEATH, PROC_REF(on_participant_invalidated))
 	if(target)
 		target_ref = WEAKREF(target)
-		RegisterSignal(target, COMSIG_LIVING_DEATH, PROC_REF(on_participant_invalidated))
+		if(target != caster)
+			RegisterSignal(target, COMSIG_LIVING_DEATH, PROC_REF(on_participant_invalidated))
 	range = range_override
 	if(duration > 0)
 		expires_at = world.time + duration
@@ -181,7 +184,7 @@
 /datum/sex_remote_context/mage_hand/proc/get_action_phrase(datum/sex_action/action, target_perspective = FALSE)
 	if(!action?.name)
 		return null
-	var/phrase = LOWER_TEXT(action.name)
+	var/phrase = LOWER_TEXT(action.remote_phrase || action.name)
 	var/mob/living/remote_target = get_target()
 	if(target_perspective)
 		phrase = replacetext(phrase, "their", "my")
@@ -345,7 +348,7 @@
 	var/datum/species/species = wearer.dna?.species
 	if(!species)
 		return prefix
-	if(species.sexes && ((wearer.gender == FEMALE && !species.swap_female_clothes) || (wearer.gender == MALE && species.swap_male_clothes)))
+	if(wearer.get_body_cut() == BODY_CUT_FEMININE)
 		prefix += "_f"
 	if(species.custom_clothes && ((species.custom_id || species.id) == SPEC_ID_DWARF))
 		prefix += "_dwarf"

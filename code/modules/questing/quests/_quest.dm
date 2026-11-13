@@ -51,7 +51,7 @@
 	var/distance_bonus_mult = 0
 	/// Map reward modifier from quest_map_config, set once at generation
 	var/map_reward_modifier = 1.0
-	/// Unscaled map reward modifier, kept for reward formulas that need their own curve
+	/// Unscaled map reward modifier; errands use it without QUEST_MAP_REWARD_SCALE
 	var/map_reward_base_modifier = 1.0
 	/// Map difficulty modifier from quest_map_config, set once at generation
 	var/map_difficulty_modifier = 1.0
@@ -65,16 +65,25 @@
 	var/datum/weakref/quest_scroll_ref
 	/// List of weakrefs to actual quest items/mobs for reducing overhead of compass.
 	var/list/datum/weakref/tracked_atoms = list()
+	/// Weakrefs to mobs a quest ambush spawned; they leave with the contract.
+	var/list/datum/weakref/ambush_mobs
+	/// Weakref to the tool kit the ledger handed out with this contract.
+	var/datum/weakref/contract_kit_ref
 
 /datum/quest/Destroy()
 	being_destroyed = TRUE
 
-	// Clean up mobs with quest components
-	for(var/mob/living/M in GLOB.mob_list)
-		var/datum/component/quest_object/Q = M.GetComponent(/datum/component/quest_object)
-		if(Q && Q.quest_ref?.resolve() == src)
-			M.remove_filter("quest_item_outline")
-			qdel(Q)
+	for(var/datum/weakref/ambush_ref as anything in ambush_mobs)
+		var/mob/living/ambush_mob = ambush_ref.resolve()
+		if(QDELETED(ambush_mob) || ambush_mob.client || ambush_mob.stat == DEAD)
+			continue
+		qdel(ambush_mob)
+	ambush_mobs = null
+
+	var/obj/item/contract_kit = contract_kit_ref?.resolve()
+	if(!QDELETED(contract_kit))
+		qdel(contract_kit)
+	contract_kit_ref = null
 
 	for(var/datum/weakref/tracked_weakref in tracked_atoms)
 		var/atom/target_atom = tracked_weakref.resolve()
@@ -119,6 +128,108 @@
 		return TRUE
 
 	return FALSE
+
+/// Stops tracking an atom but leaves it in the world; remove_tracked_atom also deletes it via its weakref.
+/datum/quest/proc/forget_tracked_atom(atom/movable/to_forget)
+	for(var/datum/weakref/tracked_ref in tracked_atoms.Copy())
+		if(tracked_ref.resolve() != to_forget)
+			continue
+		tracked_atoms -= tracked_ref
+		return TRUE
+	return FALSE
+
+/datum/quest/proc/add_ambush_mob(mob/living/ambush_mob)
+	LAZYADD(ambush_mobs, WEAKREF(ambush_mob))
+
+/// Withdraws an unclaimed shared-board posting that can no longer be completed.
+/datum/quest/proc/expire_posting(reason)
+	SSquestboard?.remove_quest(src)
+	log_game("Quest posting withdrawn: [title] ([reason])")
+	qdel(src)
+
+/// Whether a rune rescue of the contractor voids this unfinished contract.
+/datum/quest/proc/fails_on_rune_rescue(mob/living/carbon/rescued)
+	return FALSE
+
+/// TRUE when a tracked quest item rides on the carrier: held, worn or in a bag.
+/datum/quest/proc/is_tracked_item_carried_by(mob/living/carrier)
+	for(var/datum/weakref/tracked_ref as anything in tracked_atoms)
+		var/obj/item/tracked_item = tracked_ref.resolve()
+		if(isitem(tracked_item) && get(tracked_item, /mob/living) == carrier)
+			return TRUE
+	return FALSE
+
+/// Voids the contract with no refund; quest Destroy unbinds the scroll before deleting it.
+/datum/quest/proc/fail_from_rune_rescue(mob/living/carbon/rescued)
+	var/forfeit_text = deposit_amount > 0 ? " The [deposit_amount] amna deposit is forfeit." : ""
+	to_chat(rescued, span_warning("The rune's pull voids your contract, \"[get_title()]\".[forfeit_text]"))
+	var/mob/giver = quest_giver_reference?.resolve()
+	if(giver && giver != rescued)
+		to_chat(giver, span_warning("[rescued.real_name] was pulled back by the rune, voiding the contract \"[get_title()]\".[forfeit_text]"))
+	log_quest(rescued.ckey, rescued.mind, rescued, "Rune rescue voided [quest_type]: [get_title()]")
+	qdel(src)
+
+/// Voids every unfinished contract the rune-rescued mob holds whose type forbids a rescue.
+/proc/fail_contracts_on_rune_rescue(mob/living/carbon/rescued)
+	if(!rescued)
+		return
+	for(var/obj/item/paper/scroll/quest/scroll as anything in GLOB.quest_scrolls.Copy())
+		var/datum/quest/quest = scroll.assigned_quest
+		if(!quest || quest.complete || quest.being_destroyed)
+			continue
+		if(!(rescued in scroll.get_quest_assignees(rescued)))
+			continue
+		if(quest.fails_on_rune_rescue(rescued))
+			quest.fail_from_rune_rescue(rescued)
+
+/// Landmark contract types this quest may spawn at.
+/datum/quest/proc/get_landmark_contract_types()
+	return quest_type
+
+/// Lets a contract tailor itself to the player taking it at the ledger, before generation.
+/datum/quest/proc/prepare_for_issuer(mob/living/carbon/human/issuer)
+	return
+
+/// Whether this contract shows up for the player in the shared postings.
+/datum/quest/proc/is_visible_to(mob/living/carbon/human/viewer)
+	return TRUE
+
+/// Hands out any tools the contract needs, alongside its scroll.
+/datum/quest/proc/issue_contract_kit(mob/living/carbon/human/user)
+	return
+
+/datum/quest/proc/set_contract_kit(obj/item/kit)
+	contract_kit_ref = WEAKREF(kit)
+
+/// Whether this contract is finished by handing goods to the ledger at turn-in.
+/datum/quest/proc/uses_turn_in_goods()
+	return FALSE
+
+/// Whether goods on the ledger's input turf or carried by the user can finish this contract at turn-in.
+/datum/quest/proc/has_turn_in_goods(turf/input_point, mob/user)
+	return FALSE
+
+/// Takes the goods from the input turf and the user and completes the contract; returns TRUE on success.
+/datum/quest/proc/try_collect_turn_in_goods(turf/input_point, mob/user)
+	return FALSE
+
+/// Chat line telling the user how much of the needed goods the ledger can see.
+/datum/quest/proc/get_turn_in_goods_report(turf/input_point, mob/user)
+	return ""
+
+/// Goods of a type on the input turf, in containers there, or carried by the user; never inside a body or another mob.
+/datum/quest/proc/find_turn_in_goods(turf/input_point, mob/user, goods_type)
+	. = list()
+	for(var/atom/place as anything in list(input_point, user))
+		if(!place)
+			continue
+		for(var/atom/movable/candidate as anything in place.GetAllContents(goods_type))
+			if(candidate == place || get(candidate, /obj/item/organ))
+				continue
+			var/mob/living/holder = get(candidate, /mob/living)
+			if(holder && holder != user)
+				continue
+			. |= candidate
 
 /datum/quest/proc/set_target_anchor(atom/source)
 	var/turf/anchor_turf = get_turf(source)
@@ -331,7 +442,9 @@
 /datum/quest/proc/is_supported_area_target(target_area_or_type, turf/reference_turf = null)
 	return is_supported_map_turf(get_area_target_turf(target_area_or_type, reference_turf))
 
-/datum/quest/proc/has_supported_spawn_landmark(contract_type = quest_type)
+/datum/quest/proc/has_supported_spawn_landmark(contract_type)
+	if(isnull(contract_type))
+		contract_type = get_landmark_contract_types()
 	for(var/obj/effect/landmark/quest_spawner/landmark in GLOB.quest_landmarks_list)
 		if(!landmark.supports_contract_type(contract_type))
 			continue
@@ -536,7 +649,7 @@
 
 	var/mob/living/ambush_carrier = pick(candidate_mobs)
 	var/ambush_config_type = pick(config.ambush_pools)
-	ambush_carrier.AddComponent(/datum/component/quest_ambush_payload, ambush_config_type)
+	ambush_carrier.AddComponent(/datum/component/quest_ambush_payload, ambush_config_type, src)
 	return TRUE
 
 /// Get the quest title - override in subtypes for dynamic titles
@@ -633,10 +746,14 @@
 	var/workload_reward = max(0, ROUND_UP(get_workload_reward(target_turf)))
 	threat_tier = get_tier_from_risk_score(risk_score)
 	var/base_total = get_base_reward() + (risk_score * QUEST_ERRAND_REWARD_PER_RISK_POINT) + (workload_reward * QUEST_ERRAND_WORKLOAD_REWARD_MULT)
-	var/map_curve = map_reward_base_modifier * map_reward_base_modifier
-	base_total *= map_curve
+	// Errands skip the kill-contract scale; a squared curve would let remote errands outpay hunts.
+	base_total *= map_reward_base_modifier
 	base_total *= (1 + distance_bonus_mult)
 	return max(0, ROUND_UP(base_total))
+
+/// Highest reward a turn-in may pay, handler bonus included.
+/datum/quest/proc/get_reward_cap()
+	return INFINITY
 
 /datum/quest/proc/calculate_deposit(reward_override)
 	var/effective_tier = get_effective_requested_tier(null)

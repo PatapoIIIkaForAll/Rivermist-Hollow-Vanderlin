@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -40,6 +40,12 @@ export function NumberInputModal(props) {
 
   const [value, setValue] = useState(init_value);
   const [isValid, setIsValid] = useState(true);
+
+  // Pooled windows keep state between prompts; start each new prompt from its own default.
+  useEffect(() => {
+    setValue(init_value);
+    setIsValid(true);
+  }, [init_value, message, title]);
 
   // Dynamically changes the window height based on the message.
   const windowHeight =

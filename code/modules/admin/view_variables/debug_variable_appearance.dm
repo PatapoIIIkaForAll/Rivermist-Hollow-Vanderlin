@@ -56,6 +56,8 @@
 
 /mutable_appearance/appearance_mirror/vv_get_var(var_name)
 	// No editing for you
+	if(!(var_name in vars))
+		return "<li style='backgroundColor:white'>(READ ONLY) [var_name] = (no such var)</li>"
 	var/value = vars[var_name]
 	return "<li style='backgroundColor:white'>(READ ONLY) [var_name] = [_debug_variable_value(var_name, value, 0, src, sanitize = TRUE, display_flags = NONE)]</li>"
 

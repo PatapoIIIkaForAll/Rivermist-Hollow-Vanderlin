@@ -152,7 +152,7 @@
 		return FALSE
 	if(holder.is_disconnected_player_erp_body())
 		return FALSE
-	return owner.is_penis_grippable()
+	return owner.is_penis_grippable(holder)
 
 /obj/item/penis_grip/melee_attack_chain(mob/user, atom/target, list/modifiers)
 	if(user != holder || !is_hold_valid())
@@ -268,7 +268,7 @@
 /// Letting go ends an aim this hand made.
 /obj/item/penis_grip/proc/drop_aim()
 	var/datum/climax_aim/aim = penis?.climax_aim
-	if(aim?.aimer == holder)
+	if(holder && aim?.aimer == holder)
 		aim.clear()
 
 // --- Edge ---
@@ -441,21 +441,16 @@
 			return TRUE
 	return FALSE
 
-/// TRUE when the cock is there, free of devices, not inside someone, and not behind armour.
-/mob/living/carbon/proc/is_penis_grippable()
+/// TRUE when the cock is there, free of devices, not inside someone, and no armor keeps [actor] off it.
+/mob/living/carbon/proc/is_penis_grippable(mob/living/actor)
 	if(!getorganslot(ORGAN_SLOT_PENIS) || is_organ_slot_blocked(ORGAN_SLOT_PENIS) || is_penis_inside_someone())
 		return FALSE
-	for(var/obj/item/clothing/garment in get_equipped_items())
-		if(!(garment.body_parts_covered & GROIN))
-			continue
-		if(garment.armor_class > AC_LIGHT && !garment.allow_erp_equipped && !garment.genital_access)
-			return FALSE
-	return TRUE
+	return !get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, actor)
 
 /// Puts a grip on the owner's cock into a free hand, preferring the given hand zone; returns it or null.
 /mob/living/carbon/proc/take_penis_grip(mob/living/carbon/grip_owner, made_by_action = FALSE, hand_zone)
 	var/obj/item/organ/genitals/penis/penis = grip_owner?.getorganslot(ORGAN_SLOT_PENIS)
-	if(!penis || penis.grip || !grip_owner.is_penis_grippable())
+	if(!penis || penis.grip || !grip_owner.is_penis_grippable(src))
 		return null
 	var/obj/item/penis_grip/grip = new(null, src, grip_owner, penis)
 	grip.made_by_action = made_by_action
@@ -485,7 +480,7 @@
 	if(target.is_penis_inside_someone())
 		to_chat(src, span_warning(target == src ? "My [word] is busy inside someone." : "[target]'s [word] is busy inside someone."))
 		return TRUE
-	if(!target.is_penis_grippable())
+	if(!target.is_penis_grippable(src))
 		return FALSE
 	if(target != src && !target.allows_player_erp_while_disconnected())
 		return FALSE
@@ -526,25 +521,27 @@
 
 /// Whose cock this action puts inside someone, or null.
 /datum/sex_action/proc/get_inserted_penis_owner(mob/living/user, mob/living/target)
-	if(!ispath(stored_item_type, /obj/item/organ/genitals/penis))
+	// A cock still pressing at the opening is not inside yet.
+	if(orifice_pressing || !ispath(stored_item_type, /obj/item/organ/genitals/penis))
 		return null
 	return get_storage_insertor(user, target)
 
 // NPC penetration skips hole storage, so each names its cock directly.
+// A warming NPC has not gone in yet.
 /datum/sex_action/npc/npc_vaginal_sex/get_inserted_penis_owner(mob/living/user, mob/living/target)
-	return user
+	return warmup_cycles_left > 0 ? null : user
 
 /datum/sex_action/npc/npc_anal_sex/get_inserted_penis_owner(mob/living/user, mob/living/target)
-	return user
+	return warmup_cycles_left > 0 ? null : user
 
 /datum/sex_action/npc/npc_throat_sex/get_inserted_penis_owner(mob/living/user, mob/living/target)
 	return user
 
 /datum/sex_action/npc/npc_vaginal_ride_sex/get_inserted_penis_owner(mob/living/user, mob/living/target)
-	return target
+	return warmup_cycles_left > 0 ? null : target
 
 /datum/sex_action/npc/npc_anal_ride_sex/get_inserted_penis_owner(mob/living/user, mob/living/target)
-	return target
+	return warmup_cycles_left > 0 ? null : target
 
 /// On start: a stroking action links to a grip, or makes one; a cock going into something is let go.
 /datum/sex_action/proc/sync_penis_grip(mob/living/user, mob/living/target)

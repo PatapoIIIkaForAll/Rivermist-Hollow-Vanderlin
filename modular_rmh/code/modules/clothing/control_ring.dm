@@ -65,7 +65,8 @@
 	SIGNAL_HANDLER
 	if(!is_worn_by(wearer))
 		return
-	RegisterSignal(wearer, COMSIG_USER_MOUSE_ENTERED, PROC_REF(on_worn_owner_mouse_hover))
+	// Held keys auto-repeat key-down, so this can run again before key-up unregisters it.
+	RegisterSignal(wearer, COMSIG_USER_MOUSE_ENTERED, PROC_REF(on_worn_owner_mouse_hover), override = TRUE)
 
 /obj/item/clothing/ring/slave_control/proc/on_view_command_key_up(mob/living/wearer)
 	SIGNAL_HANDLER

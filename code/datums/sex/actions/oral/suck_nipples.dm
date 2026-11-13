@@ -1,12 +1,12 @@
 /datum/sex_action/suck_nipples
-	name = "Suck their nipples"
+	name = "Suck nipples"
 	description = "Suck and tease their nipples, with flavor matching the shape of their chest."
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	check_same_tile = FALSE
 
 /datum/sex_action/suck_nipples/shows_on_menu(mob/living/user, mob/living/target)
-	if(user == target)
+	if(user == target && !allows_self_use(user))
 		return FALSE
 	return TRUE
 
@@ -14,7 +14,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(user == target)
+	if(user == target && !allows_self_use(user))
 		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_CHEST, TRUE))
 		return FALSE

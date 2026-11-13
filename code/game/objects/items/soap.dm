@@ -109,11 +109,11 @@
 				return ITEM_INTERACT_BLOCKING
 
 		user.visible_message(
-			span_warning("<[user] starts to wash \the [target]'s mouth out with [src]..."),
+			span_warning("[user] starts to wash \the [target]'s mouth out with [src]..."),
 			span_notice("I start to wash \the [target]'s mouth out with [src]...")
 		) //washes mouth out with soap sounds better than 'the soap' here
 		// how this looks vvv https://www.desmos.com/calculator/55fpadxol5
-		if(do_after(user, (20 / GET_MOB_ATTRIBUTE_VALUE(user, STAT_SPEED) + 2) SECONDS, target))
+		if(!do_after(user, (20 / GET_MOB_ATTRIBUTE_VALUE(user, STAT_SPEED) + 2) SECONDS, target))
 			return ITEM_INTERACT_BLOCKING
 		user.visible_message(
 			span_warning("[user] washes \the [target]'s mouth out with [src]!"),
@@ -125,9 +125,9 @@
 		reagents.add_reagent(/datum/reagent/soap, 5)
 		reagents.trans_to(target, reagents.total_volume, transfered_by = user, method = INGEST)
 		log_combat(user, target, "fed", /datum/reagent/soap)
-		decreaseUses(5)
-		target.lip_style = null //removes lipstick
-		target.update_body()
+		target.clean_lips()
+		target.clear_lipstick_marks_on_zone(BODY_ZONE_PRECISE_MOUTH)
+		decreaseUses(user, 5)
 
 		return ITEM_INTERACT_SUCCESS
 
@@ -194,14 +194,14 @@
 	reagents.add_reagent(/datum/reagent/soap, amt2Add)
 
 	to_chat(user, span_info("I dissolve some of \the [name] in the water."))
-	decreaseUses(5)
+	decreaseUses(user, 5)
 
 	return TRUE
 
 /obj/item/soap/proc/scrub_scrub(mob/living/carbon/human/target, mob/living/carbon/user)
 	target.wash(clean_strength)
 	user.visible_message(span_info("[user] scrubs [target] with [src]."), span_info("I scrub [target] with [src]."))
-	decreaseUses(5)
+	decreaseUses(user, 5)
 	target.add_stress(/datum/stress_event/clean)
 	target.adjust_hygiene(50)
 	target.ExtinguishMob()

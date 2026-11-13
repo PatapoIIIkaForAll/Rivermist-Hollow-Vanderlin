@@ -37,7 +37,8 @@
 							/obj/item/grown/log/tree/stick = 16,
 							/obj/structure/closet/dirthole/closed/loot = 3,
 							/obj/structure/flora/grass/maneater/real = 4,
-							/obj/structure/flora/grass/swampweed = 10
+							/obj/structure/flora/grass/swampweed = 10,
+							/obj/structure/flora/grass/pumpkin = 1
 							)
 	spawnableTurfs = list(/turf/open/floor/dirt/road=2,
 						/turf/open/water/swamp=1)

@@ -6,6 +6,8 @@
 	var/shock_warning_last_at = 0
 	/// Last warning tick while damage/blood loss is approaching defeat.
 	var/damage_warning_last_at = 0
+	/// Pooled damage seen at the last near-defeat check; only fresh harm repeats the warning.
+	var/damage_warning_seen_total = 0
 	/// Valid hostile climax events accumulated toward horny defeat.
 	var/horny_defeat_climax_count = 0
 	/// Climaxes needed for horny defeat this encounter. Resolved and cached on the first valid climax.
@@ -61,7 +63,7 @@
 	// deliberately excluded - a fall from a higher z-level spikes oxy hard and would otherwise KO you
 	// almost instantly. It gets its own near-lethal bar below instead.
 	// Burn is weighted down: it lands in bigger single lumps than brute, so raw parity fell far too fast.
-	var/total_damage = carbon_parent.getBruteLoss() + (carbon_parent.getFireLoss() * DEFEAT_BURN_DAMAGE_WEIGHT) + carbon_parent.getToxLoss() + carbon_parent.getCloneLoss()
+	var/total_damage = carbon_parent.get_defeat_damage_pool()
 	maybe_warn_damage_defeat(carbon_parent, total_damage, selected_threshold)
 	if(total_damage >= selected_threshold)
 		return carbon_parent.enter_defeat(DEFEAT_REASON_DAMAGE, DEFEAT_SEVERITY_NORMAL)
@@ -111,9 +113,15 @@
 /// Warn the player as their wounds (or blood loss) approach the point of defeat, throttled.
 /datum/component/defeat_monitor/proc/maybe_warn_damage_defeat(mob/living/carbon/carbon_parent, total_damage, threshold)
 	var/nearly_beaten = (threshold > 0 && total_damage >= threshold * DEFEAT_DAMAGE_WARNING_FRACTION && total_damage < threshold)
-	var/bleeding_out = (carbon_parent.blood_volume <= BLOOD_VOLUME_BAD && carbon_parent.blood_volume > BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(carbon_parent, TRAIT_BLOODLOSS_IMMUNE))
+	var/bleeding_out = (carbon_parent.blood_volume <= BLOOD_VOLUME_BAD && carbon_parent.blood_volume > BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(carbon_parent, TRAIT_BLOODLOSS_IMMUNE) && !carbon_parent.is_bloodless())
 	if(!nearly_beaten && !bleeding_out)
 		damage_warning_last_at = 0
+		damage_warning_seen_total = 0
+		return FALSE
+	// Unchanged damage does not repeat the warning, so bodies that cannot heal are not nagged forever.
+	var/fresh_harm = total_damage > damage_warning_seen_total
+	damage_warning_seen_total = total_damage
+	if(!bleeding_out && !fresh_harm)
 		return FALSE
 	if(damage_warning_last_at && world.time - damage_warning_last_at < DEFEAT_SHOCK_WARNING_COOLDOWN)
 		return FALSE
@@ -155,6 +163,7 @@
 	reset_shock_defeat_window()
 	shock_warning_last_at = 0
 	damage_warning_last_at = 0
+	damage_warning_seen_total = 0
 	reset_horny_defeat_encounter()
 
 /datum/component/defeat_monitor/proc/on_defeated(datum/source, ...)
@@ -289,7 +298,7 @@
 	if(explicit_override > 0)
 		return clamp(round(explicit_override), DEFEAT_HORNY_MOB_THRESHOLD_MIN, DEFEAT_HORNY_MOB_THRESHOLD_MAX)
 	if(player_owned)
-		return clamp(round((constitution + endurance) / 2), DEFEAT_HORNY_PLAYER_THRESHOLD_MIN, DEFEAT_HORNY_PLAYER_THRESHOLD_MAX)
+		return clamp(round((constitution + endurance) / DEFEAT_HORNY_PLAYER_STAT_DIVISOR), DEFEAT_HORNY_PLAYER_THRESHOLD_MIN, DEFEAT_HORNY_PLAYER_THRESHOLD_MAX)
 	return clamp(round((constitution + endurance) / 10), DEFEAT_HORNY_MOB_THRESHOLD_MIN, DEFEAT_HORNY_MOB_THRESHOLD_MAX)
 
 /// Player-owned includes disconnected bodies whose mind is still attached.

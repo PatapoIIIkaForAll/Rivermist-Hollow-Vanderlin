@@ -187,7 +187,12 @@ GLOBAL_PROTECT(VVpixelmovement)
 	var/old_assoc_value //EXPERIMENTAL - Keep old associated value while modifying key, if any
 	if(is_normal_list)
 		if (assoc)
-			variable = L[assoc_key]
+			// Special lists such as contents cannot be indexed by element.
+			try
+				variable = L[assoc_key]
+			catch
+				to_chat(src, "This list has no assigned values to edit.")
+				return
 		else
 			variable = L[index]
 			//EXPERIMENTAL - Keep old associated value while modifying key, if any

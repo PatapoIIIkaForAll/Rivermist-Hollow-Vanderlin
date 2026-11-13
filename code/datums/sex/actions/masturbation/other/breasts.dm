@@ -1,5 +1,6 @@
 /datum/sex_action/masturbate/other/breasts
-	name = "Rub their breasts"
+	name = "Breast rubbing"
+	remote_phrase = "Rub their breasts"
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	mage_hand_overlay_zone = MAGE_HAND_ZONE_CHEST
 
@@ -31,7 +32,7 @@
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fondles [target]'s breasts..."))
 
-	perform_sex_action(target, user, 1, 0, 0.1)
+	perform_sex_action(target, user, 1 * get_breast_touch_multiplier(target), 0, 0.1)
 	handle_passive_ejaculation(target)
 
 /datum/sex_action/masturbate/other/breasts/on_finish(mob/living/user, mob/living/target)

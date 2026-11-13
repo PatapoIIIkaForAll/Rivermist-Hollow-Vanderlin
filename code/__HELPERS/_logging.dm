@@ -201,6 +201,8 @@
 
 /* Log to the logfile only. */
 /proc/log_runtime(text)
+	if(!GLOB.log_directory)
+		LAZYADD(GLOB.early_runtime_logs, text)
 	WRITE_LOG(GLOB.world_runtime_log, text)
 
 /* Rarely gets called; just here in case the config breaks. */

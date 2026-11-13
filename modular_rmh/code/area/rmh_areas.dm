@@ -251,6 +251,56 @@
 	icon_state = "orc"
 	//deathsight_message = "a greenskins camp"
 
+/area/indoors/cave/rmh_cave/gnolls
+	name = "Gnoll Warren"
+	first_time_text = "GNOLL WARREN"
+	icon_state = "cave"
+	droning_index = DRONING_CAVE_GENERIC
+	ambient_index = AMBIENCE_CAVE
+	background_track = 'sound/music/area/caves.ogg'
+	background_track_dusk = 'sound/music/area/caves.ogg'
+	background_track_night = 'sound/music/area/caves.ogg'
+	background_track_dawn = 'sound/music/area/caves.ogg'
+	soundenv = 8
+	ambush_times = null
+	ambush_types = null
+	ambush_mobs = null
+	ceiling_protected = TRUE
+	//deathsight_message = "a gnoll warren"
+
+/area/indoors/cave/rmh_cave/gnolls/den
+	name = "Pack Leader's Den"
+	first_time_text = "PACK LEADER'S DEN"
+
+/area/indoors/cave/rmh_cave/gnolls/tunnels
+	name = "Gnoll Tunnels"
+	first_time_text = "GNOLL TUNNELS"
+
+/area/indoors/cave/rmh_cave/drider
+	name = "Webbed Hollow"
+	first_time_text = "WEBBED HOLLOW"
+	icon_state = "underworld"
+	droning_index = DRONING_CAVE_WET
+	ambient_index = AMBIENCE_CAVE
+	background_track = 'sound/music/area/dungeon2.ogg'
+	background_track_dusk = 'sound/music/area/dungeon2.ogg'
+	background_track_night = 'sound/music/area/dungeon2.ogg'
+	background_track_dawn = 'sound/music/area/dungeon2.ogg'
+	soundenv = 8
+	ambush_times = null
+	ambush_types = null
+	ambush_mobs = null
+	ceiling_protected = TRUE
+	//deathsight_message = "a webbed hollow"
+
+/area/indoors/cave/rmh_cave/drider/nest
+	name = "Drider Nest"
+	first_time_text = "DRIDER NEST"
+
+/area/indoors/cave/rmh_cave/drider/tunnels
+	name = "Silk Tunnels"
+	first_time_text = "SILK TUNNELS"
+
 // - - - - - -
 //TOWN
 // - - - - - -

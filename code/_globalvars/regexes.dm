@@ -21,5 +21,5 @@ GLOBAL_DATUM_INIT(filename_forbidden_chars, /regex, regex(@{""|[\\\n\t/?%*:|<>]|
 GLOBAL_PROTECT(filename_forbidden_chars)
 // had to use the OR operator for quotes instead of putting them in the character class because it breaks the syntax highlighting otherwise.
 
-//Characters stripped for hearing
-GLOBAL_DATUM_INIT(hearing_stripped_chars, /regex, regex(@{""|[\\\n\t/?%*:|<>].,"}, "g"))
+//Characters stripped for hearing: ", \, \n, \t, /, ?, %, *, :, |, <, >, ., ,
+GLOBAL_DATUM_INIT(hearing_stripped_chars, /regex, regex(@{""|[\\\n\t/?%*:|<>.,]"}, "g"))

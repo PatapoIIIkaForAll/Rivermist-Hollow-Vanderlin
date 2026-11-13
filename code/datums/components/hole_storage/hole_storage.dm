@@ -42,7 +42,6 @@
 		STORAGE_LAYER_DEEP = null,
 	)
 	var/max_insert_size = HOLE_MAX_BULK_INSERT
-	var/max_stretching_mult = 1 /// Will NOT stretch at 1, must specify for subtypes if you want stretching
 
 	var/list/outer_overlays = list()
 
@@ -127,7 +126,7 @@
  * @param override - If the insertion should always succeed. Boolean
 */
 /datum/component/body_storage/proc/handle_insertion(datum/source, obj/item/incoming_item, target_layer, force = FALSE, override = FALSE)
-	if(!available_layers[target_layer])
+	if(QDELETED(incoming_item) || !available_layers[target_layer])
 		return FALSE
 	var/fit_condition = check_fit(source, incoming_item, target_layer, force, override)
 	if(fit_condition == INSERT_FEEDBACK_OK || fit_condition == INSERT_FEEDBACK_OK_FORCE || fit_condition == INSERT_FEEDBACK_ALMOST_FULL || fit_condition == INSERT_FEEDBACK_OK_OVERRIDE)
@@ -157,12 +156,9 @@
 	layer_storage_cur_bulk[target_layer] += incoming_item.body_storage_bulk
 	organ_storing.on_body_storage_inserted(incoming_item, target_layer)
 	incoming_item.on_body_storage_entered(organ_storing, target_layer)
-	var/diff = layer_storage_cur_bulk[target_layer] - layer_storage_max_bulk[target_layer]
 	if(incoming_item.has_body_storage_overlay)
 		if(isnull(incoming_item.bstorage_visible_layer) || incoming_item.bstorage_visible_layer == target_layer)
 			apply_outer_overlay(incoming_item)
-	if(diff > 0)
-		handle_stretch(source, diff)
 	if(iscarbon(owner))
 		var/mob/living/carbon/carbon_owner = owner
 		carbon_owner.update_carry_weight()
@@ -182,10 +178,15 @@
 	if(!incoming_item)
 		return FALSE
 
+	// A stretched opening changes its room between checks, so refresh before weighing it.
+	if(organ_storing.has_dynamic_body_storage())
+		calculate_bulk()
+
 	if(!incoming_item.can_enter_body_storage_layer(target_layer))
 		return FALSE
 
-	if(incoming_item.body_storage_bulk > max_insert_size)
+	// Openings with a width check judge size by girth instead of this flat cap.
+	if(incoming_item.body_storage_bulk > max_insert_size && !organ_storing.has_body_storage_width_check())
 		return FALSE
 
 	var/list/t_layer = all_layers[target_layer]
@@ -198,6 +199,11 @@
 
 	if(override)
 		return INSERT_FEEDBACK_OK_OVERRIDE
+
+	// Width first: one thing too wide for the opening fails before fullness is weighed.
+	var/width_feedback = organ_storing.get_body_storage_width_feedback(incoming_item, target_layer, force)
+	if(width_feedback != INSERT_FEEDBACK_OK)
+		return width_feedback
 
 	var/incoming_bulk = layer_storage_cur_bulk[target_layer] + incoming_item.body_storage_bulk
 	if(incoming_bulk > layer_storage_max_bulk[target_layer])
@@ -270,6 +276,7 @@
 	if(removed_item.has_body_storage_overlay)
 		remove_outer_overlay(removed_item)
 	removed_item.on_body_storage_exited(organ_storing)
+	organ_storing.on_body_storage_removed(removed_item, target_layer)
 	if(iscarbon(owner))
 		var/mob/living/carbon/carbon_owner = owner
 		carbon_owner.update_carry_weight()
@@ -324,15 +331,6 @@
 	SEND_SIGNAL(parent, COMSIG_BODYSTORAGE_TRY_REMOVE, item_a, source_layer, BODYSTORAGE_REMOVE_RANDOM)
 	return handle_insertion(source, item_a, new_layer, force)
 
-/**
- * Handles the stretching of our parent organ
- * @param size_diff - The over-the-limit value of inserted item
-*/
-/datum/component/body_storage/proc/handle_stretch(datum/source, size_diff)
-	if(istype(organ_storing, /obj/item/organ/genitals/filling_organ) || organ_storing.stretchable)
-		if(organ_storing.stretched_coefficient < max_stretching_mult)
-			organ_storing.get_stretched(size_diff)
-
 /// Grows or shrinks a stored item's bulk in place; growing follows the same fullness rules as an insertion.
 /datum/component/body_storage/proc/try_resize_item(datum/source, obj/item/stored_item, new_bulk, force = FALSE)
 	var/target_layer = find_item_layer(source, stored_item)
@@ -353,8 +351,6 @@
 			result = INSERT_FEEDBACK_ALMOST_FULL
 	stored_item.body_storage_bulk = new_bulk
 	layer_storage_cur_bulk[target_layer] = new_total
-	if(new_bulk > old_bulk && new_total > max_bulk)
-		handle_stretch(source, new_total - max_bulk)
 	if(iscarbon(owner))
 		var/mob/living/carbon/carbon_owner = owner
 		carbon_owner.update_carry_weight()
@@ -490,8 +486,8 @@
 	if(organ_size_mult != 1)
 		organ_size_add = organ_size_mult * 2
 
-	layer_storage_max_bulk[STORAGE_LAYER_INNER] = (def_bulk_inner + organ_size_add) * organ_storing.stretched_coefficient //setting up default max bulk
-	layer_storage_max_bulk[STORAGE_LAYER_DEEP] = (def_bulk_deep + organ_size_add) * organ_storing.stretched_coefficient
+	layer_storage_max_bulk[STORAGE_LAYER_INNER] = organ_storing.get_body_storage_capacity(STORAGE_LAYER_INNER, def_bulk_inner + organ_size_add)
+	layer_storage_max_bulk[STORAGE_LAYER_DEEP] = organ_storing.get_body_storage_capacity(STORAGE_LAYER_DEEP, def_bulk_deep + organ_size_add)
 
 /**
  * Updates the bulk
@@ -573,6 +569,25 @@
 
 /obj/item/organ/proc/on_body_storage_inserted(obj/item/inserted_item, target_layer)
 	return
+
+/obj/item/organ/proc/on_body_storage_removed(obj/item/removed_item, target_layer)
+	return
+
+/// Bulk a layer holds; stretchable openings grow it with their current girth.
+/obj/item/organ/proc/get_body_storage_capacity(layer, base_bulk)
+	return base_bulk
+
+/// TRUE when capacity can change between checks and must be refreshed first.
+/obj/item/organ/proc/has_dynamic_body_storage()
+	return FALSE
+
+/// TRUE when insertions are judged by girth, so the flat bulk cap does not apply.
+/obj/item/organ/proc/has_body_storage_width_check()
+	return FALSE
+
+/// INSERT_FEEDBACK_OK, or the feedback for an item too wide for the opening.
+/obj/item/organ/proc/get_body_storage_width_feedback(obj/item/incoming_item, target_layer, force)
+	return INSERT_FEEDBACK_OK
 
 
 /mob/living/proc/get_organs_items()

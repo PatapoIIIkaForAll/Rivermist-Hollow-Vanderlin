@@ -211,7 +211,7 @@
 	required_table = TRUE
 	attacked_atom = /obj/item/reagent_containers/powder/salt
 	starting_atom = /obj/item/reagent_containers/food/snacks/roastseeds
-	output = /obj/item/reagent_containers/food/snacks/roastseeds
+	output = /obj/item/reagent_containers/food/snacks/saltseeds
 	output_amount = 3
 	craft_time = 8 SECONDS
 	crafting_sound = 'sound/foley/dropsound/food_drop.ogg'

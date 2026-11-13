@@ -1,3 +1,8 @@
+/// Breasts refill at full speed until this share of capacity holds milk.
+#define BREAST_QUICK_FILL_RATIO 0.3
+/// Speed share left when full; it falls to this in a straight line from the quick-fill limit.
+#define BREAST_FULL_FILL_MULT 0.15
+
 /obj/item/organ/genitals/filling_organ/breasts
 	name = "breasts"
 	icon_state = "breasts"
@@ -8,8 +13,10 @@
 	reagent_to_make = /datum/reagent/consumable/milk
 	// Milk costs more than drinking it gives back, so it cannot feed its maker.
 	nutrition_per_unit = 2
-	// A cow's pace, so one person is no cheese factory.
-	production_rate = 0.5
+	// 15 to 90 units by size; 60 at the default size.
+	storage_per_size = 15
+	// Default-size rate while nearly empty; about 40 minutes from empty to full when well fed.
+	production_rate = 0.03
 	hungerhelp = TRUE
 	absorbing = FALSE //funny liquid tanks
 	startsfilled = TRUE
@@ -29,6 +36,8 @@
 	. = ..()
 	if(!.)
 		return FALSE
+	if(ishuman(M))
+		M.LoadComponent(/datum/component/breast_animation)
 	add_bodystorage(M, null, /datum/component/body_storage/breasts)
 	var/obj/item/organ/genitals/nipple/left/l_nip = new /obj/item/organ/genitals/nipple/left
 	var/obj/item/organ/genitals/nipple/right/r_nip = new /obj/item/organ/genitals/nipple/right
@@ -36,25 +45,20 @@
 	r_nip.Insert(M, FALSE, FALSE)
 
 
-	var/obj/item/organ/genitals/filling_organ/breasts/badonkas = M.getorganslot(ORGAN_SLOT_BREASTS)
-	if(!badonkas)
-		return TRUE
-	//Making users of big BOOBA suk dikus
-	if(badonkas.organ_size >= BREAST_SIZE_ENORMOUS)
-		M.apply_status_effect(/datum/status_effect/debuff/bigboobs/permanent/lite)
-	else if(badonkas.organ_size == BREAST_SIZE_LARGE)
-		M.apply_status_effect(/datum/status_effect/debuff/largeboobs/permanent/lite)
-	else if(badonkas.organ_size == BREAST_SIZE_SMALL)
-		M.apply_status_effect(/datum/status_effect/debuff/smallboobs/permanent/lite)
-	else if(badonkas.organ_size == BREAST_SIZE_VERY_SMALL)
-		M.apply_status_effect(/datum/status_effect/debuff/vsmallboobs/permanent/lite)
-	else if(badonkas.organ_size == BREAST_SIZE_FLAT)
-		M.apply_status_effect(/datum/status_effect/debuff/flatboobs/permanent/lite)
+	// One size status follows the visible size, replacing the per-size statuses.
+	if(ishuman(M))
+		var/mob/living/carbon/human/human_owner = M
+		human_owner.update_breast_size_effect()
 
 /obj/item/organ/genitals/filling_organ/breasts/Remove(mob/living/M, special, drop_if_replaced)
 	. = ..()
+	var/datum/component/breast_animation/breast_animation = M?.GetComponent(/datum/component/breast_animation)
+	breast_animation?.refresh()
 	var/datum/component/body_storage/breasts/comp = GetComponent(/datum/component/body_storage/breasts)
 	comp?.RemoveComponent()
+	if(ishuman(M))
+		var/mob/living/carbon/human/human_owner = M
+		human_owner.update_breast_size_effect()
 
 /obj/item/organ/genitals/filling_organ/breasts/get_availability(datum/species/owner_species, mob/living/C, datum/preferences/pref_load)
 	if(issimple(C))
@@ -64,3 +68,15 @@
 			return pref_load.has_enabled_customizer_entry(/datum/customizer_entry/organ/genitals/breasts)
 		else
 			return C.gender == FEMALE
+
+/// Quick refill while nearly empty, slower as milk builds; capacity scales it so every size refills equally fast.
+/obj/item/organ/genitals/filling_organ/breasts/get_fill_rate_multiplier()
+	var/size_scale = reagents.maximum_volume / (storage_per_size * (1 + DEFAULT_BREASTS_SIZE))
+	var/fullness = get_own_fullness()
+	if(fullness <= BREAST_QUICK_FILL_RATIO)
+		return size_scale
+	var/slowdown = (fullness - BREAST_QUICK_FILL_RATIO) / (1 - BREAST_QUICK_FILL_RATIO)
+	return size_scale * (1 - slowdown * (1 - BREAST_FULL_FILL_MULT))
+
+#undef BREAST_QUICK_FILL_RATIO
+#undef BREAST_FULL_FILL_MULT

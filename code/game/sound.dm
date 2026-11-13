@@ -20,6 +20,9 @@
 /proc/playsound(atom/source, soundin, vol as num, vary, extrarange as num, falloff_exponent = SOUND_FALLOFF_EXPONENT, frequency = null, channel, pressure_affected = FALSE, ignore_walls = TRUE, falloff_distance = SOUND_DEFAULT_FALLOFF_DISTANCE, soundping = FALSE, repeat)
 	if(isarea(source))
 		CRASH("playsound(): source is an area")
+	if(length(GLOB.sense_relay_mobs) && (source in GLOB.sense_relay_mobs))
+		var/atom/movable/relay_source = source
+		source = relay_source.get_voice_anchor(soundin)
 
 	var/turf/turf_source = get_turf(source)
 	if(!turf_source)
@@ -73,6 +76,16 @@
 		for(var/mob/listening_ghost as anything in SSmobs.dead_players_by_zlevel[source_z])
 			if(get_dist(listening_ghost, turf_source) <= audible_distance)
 				listeners += listening_ghost
+
+	if(length(GLOB.sense_relay_mobs))
+		for(var/mob/relay_mob as anything in GLOB.sense_relay_mobs)
+			if(QDELETED(relay_mob))
+				GLOB.sense_relay_mobs -= relay_mob
+				continue
+			var/turf/anchor_turf = get_turf(relay_mob.get_sense_anchor())
+			if(!anchor_turf || anchor_turf.z != source_z || get_dist(anchor_turf, turf_source) > audible_distance)
+				continue
+			listeners |= relay_mob
 
 	// Pocket rooms share allocator space, but not an acoustic space. Resolve the source once and
 	// filter only pocket-origin sounds, leaving the overwhelmingly common world sound path unchanged.
@@ -137,7 +150,7 @@
 	var/distance = 0
 
 	if(isturf(turf_source))
-		var/turf/T = get_turf(src)
+		var/turf/T = get_turf(get_sense_anchor())
 
 		//sound volume falloff_exponent with distance
 		distance = max(get_dist(T, turf_source) * distance_multiplier, 0)

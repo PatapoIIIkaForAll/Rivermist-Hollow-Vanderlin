@@ -156,9 +156,13 @@
 	//RMH EDITED START - implements[null] indexes a list by null and runtimes with
 	//"list index out of bounds". Any item with no tool_behaviour hits this, which
 	//includes every touch-spell hand (searing palm, prestidigitation, orison...).
-	var/behaviour_quality = realtool.tool_behaviour ? implements[realtool.tool_behaviour] : null
+	var/behaviour_quality = get_behaviour_quality(realtool)
 	return (realtool.toolspeed) * (behaviour_quality || is_type_in_list(realtool, implements, zebra = TRUE) || 0)
 	//RMH EDITED END
+
+/// Quality listed for the tool's behaviour; NONE (0) would index implements out of bounds.
+/datum/surgery_operation/proc/get_behaviour_quality(obj/item/tool)
+	return tool.tool_behaviour ? implements[tool.tool_behaviour] : null
 
 /**
  * Return a radial slice, a list of radial slices, or an assoc list of radial slice to operation info

@@ -70,6 +70,10 @@
 
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mt.dmi'
 	limbs_icon_f = 'icons/roguetown/mob/bodies/f/fm.dmi'
+	allowed_body_builds = HUMANOID_BODY_BUILDS
+	default_body_build_m = BODY_BUILD_BROAD
+	default_body_build_f = BODY_BUILD_SLIM
+	body_hair_materials = BODY_HAIR_MATERIALS_BEASTKIN
 
 	meat = list(/obj/item/reagent_containers/food/snacks/meat/steak = 1,
 		/obj/item/natural/fur/gote = 0.1,
@@ -159,14 +163,18 @@
 		/datum/customizer/organ/tail/demihuman,
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/belly/animal,
 		/datum/customizer/organ/genitals/butt/animal,
 		/datum/customizer/organ/genitals/testicles/anthro,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 	)
 
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,
 		/datum/descriptor_choice/stature,

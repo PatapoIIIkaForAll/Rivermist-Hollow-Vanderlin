@@ -17,7 +17,7 @@
 
 /datum/sex_custom_action_template/blank_partner
 	template_id = "blank_partner"
-	template_name = "Blank Partner Action"
+	template_name = "Partner Action"
 	template_summary = "A clean slate for actions aimed at another participant."
 
 /datum/sex_custom_action_template/blank_partner/apply_to(datum/sex_custom_action_data/draft)
@@ -31,7 +31,7 @@
 
 /datum/sex_custom_action_template/blank_self
 	template_id = "blank_self"
-	template_name = "Blank Solo Action"
+	template_name = "Solo Action"
 	template_summary = "A clean slate for actions you perform on yourself."
 
 /datum/sex_custom_action_template/blank_self/apply_to(datum/sex_custom_action_data/draft)
@@ -739,6 +739,8 @@ GLOBAL_LIST_INIT(sex_custom_action_templates, build_sex_custom_action_templates(
 			return "rough"
 		if(SEX_FORCE_EXTREME)
 			return "brutal"
+		if(SEX_FORCE_UNRELENTING)
+			return "unrelenting"
 	return "steady"
 
 /datum/sex_action/custom/proc/get_custom_speed_word()
@@ -751,6 +753,8 @@ GLOBAL_LIST_INIT(sex_custom_action_templates, build_sex_custom_action_templates(
 			return "quick"
 		if(SEX_SPEED_EXTREME)
 			return "relentless"
+		if(SEX_SPEED_UNRELENTING)
+			return "furious"
 	return "steady"
 
 /datum/sex_action/custom/proc/build_default_custom_climax_message(mob/living/user, mob/living/target, location)

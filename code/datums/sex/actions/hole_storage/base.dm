@@ -10,9 +10,12 @@
 	continous = TRUE
 	var/self = FALSE
 	var/obj/item/organ/genitals/target_organ
+	/// The stored item the next cycle reaches for, chosen early so the cycle's length fits it.
+	var/obj/item/pending_toy
 
 /datum/sex_action/hole_storage/Destroy()
 	target_organ = null
+	pending_toy = null
 	return ..()
 
 /datum/sex_action/hole_storage/can_perform(mob/living/user, mob/living/target)

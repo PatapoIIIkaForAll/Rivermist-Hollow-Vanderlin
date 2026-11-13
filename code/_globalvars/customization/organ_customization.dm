@@ -20,7 +20,7 @@ GLOBAL_LIST_INIT(customizers, build_customizers())
 	return .
 
 /proc/color_pick_sanitized_lumi(mob/user, description, title, default_value, min_lumi = 0.02, max_lumi = 1.0)
-	var/color = input(user, description, title, default_value) as color|null
+	var/color = tgui_color_picker(user, description, title, sanitize_hexcolor(default_value, 6, TRUE, "#ffffff"))
 	var/good = TRUE
 	if(!color)
 		return

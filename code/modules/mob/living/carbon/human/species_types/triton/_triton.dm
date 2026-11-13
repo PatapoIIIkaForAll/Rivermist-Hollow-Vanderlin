@@ -102,6 +102,7 @@
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/belly/animal,
 		/datum/customizer/organ/genitals/butt/animal,
@@ -139,6 +140,20 @@
 		/datum/body_marking/front,
 		/datum/body_marking/flushed_cheeks,
 		/datum/body_marking/eyeliner,
+	)
+	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
+		/datum/descriptor_choice/stature,
+		/datum/descriptor_choice/height,
+		/datum/descriptor_choice/body,
+		/datum/descriptor_choice/face,
+		/datum/descriptor_choice/face_exp,
+		/datum/descriptor_choice/skin_lamia,
+		/datum/descriptor_choice/voice,
+		/datum/descriptor_choice/prominent_one,
+		/datum/descriptor_choice/prominent_two,
+		/datum/descriptor_choice/prominent_three,
+		/datum/descriptor_choice/prominent_four,
 	)
 
 /datum/species/triton/on_species_gain(mob/living/carbon/C, datum/species/old_species)

@@ -44,6 +44,13 @@
 	var/bone_set = FALSE
 	/// Emote we use when applied
 	var/gain_emote = "paincrit"
+	/// Crit messages used instead when the limb is built rather than grown
+	var/list/robotic_crit_message = list(
+		"The frame cracks!",
+		"The %BODYPART buckles!",
+		"A joint shears apart!",
+		"The %BODYPART splits along its seams!",
+	)
 
 /datum/wound/fracture/get_visible_name(mob/user)
 	. = ..()
@@ -60,9 +67,22 @@
 		return FALSE
 	return ..()
 
+/datum/wound/fracture/get_crit_message(mob/living/affected, obj/item/bodypart/affected_bodypart)
+	if(affected_bodypart?.status != BODYPART_ROBOTIC)
+		return ..()
+	var/list/flesh_messages = crit_message
+	crit_message = robotic_crit_message
+	. = ..()
+	crit_message = flesh_messages
+
+/datum/wound/fracture/get_sound_effect(mob/living/affected, obj/item/bodypart/affected_bodypart)
+	if(affected_bodypart?.status == BODYPART_ROBOTIC)
+		return "fracturedry"
+	return ..()
+
 /datum/wound/fracture/on_mob_gain(mob/living/affected)
 	. = ..()
-	if(gain_emote)
+	if(gain_emote && !HAS_TRAIT(affected, TRAIT_NOPAIN))
 		affected.emote(gain_emote, TRUE)
 	affected.Slowdown(20)
 	shake_camera(affected, 2, 2)

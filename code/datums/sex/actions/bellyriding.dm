@@ -21,7 +21,7 @@
 	return FALSE
 
 /datum/sex_action/bellyriding/groin_rub
-	name = "Bellyriding Groin Rub"
+	name = "Bellyriding Grind"
 
 /datum/sex_action/bellyriding/groin_rub/can_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	. = ..()

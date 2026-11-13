@@ -274,6 +274,9 @@
 	controller.ai_interact(swing_at, TRUE, TRUE, modifiers)
 	pawn.cmode = old_cmode
 	controller.clear_blackboard_key(BB_HUMAN_NPC_COMMITTED_SWING_TOKEN)
+	// A lethal counter during the swing can gib the pawn.
+	if(QDELETED(pawn))
+		return
 
 	if(pawn.next_click < world.time)
 		pawn.next_click = world.time + (pawn.used_intent?.clickcd * (1 + rand(0.2, 0.4)))

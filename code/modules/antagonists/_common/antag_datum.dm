@@ -121,9 +121,9 @@ GLOBAL_LIST_EMPTY(antagonists)
 		apply_innate_effects()
 		add_antag_hud(antag_hud_type, antag_hud_name)
 		give_antag_stress()
-		if(owner.current.has_quirk(/datum/quirk/vice/pacifist))
+		if(owner.current.has_quirk(/datum/quirk/negative/pacifist))
 			var/mob/living/carbon/human/human_user = owner.current
-			human_user.remove_quirk(/datum/quirk/vice/pacifist)
+			human_user.remove_quirk(/datum/quirk/negative/pacifist)
 			was_pacifist = TRUE
 		if(is_banned(owner.current) && replace_banned)
 			replace_banned_player()
@@ -142,9 +142,10 @@ GLOBAL_LIST_EMPTY(antagonists)
 /datum/antagonist/proc/replace_banned_player()
 	set waitfor = FALSE
 
-	var/list/mob/dead/observer/candidates = pollCandidatesForMob("Do you want to play as a [name]?", "[name]", null, job_rank, 50, owner.current)
+	var/list/mob/candidates = pollCandidatesForMob("Do you want to play as a [name]?", "[name]", null, job_rank, 50, owner.current)
 	if(LAZYLEN(candidates))
-		var/mob/dead/observer/C = pick(candidates)
+		var/mob/C = pick(candidates)
+		C.leave_lobby_for_role()
 		to_chat(owner, "Your mob has been taken over by a ghost! Appeal your job ban if you want to avoid this in the future!")
 		message_admins("[key_name_admin(C)] has taken control of ([key_name_admin(owner)]) to replace a jobbanned player.")
 		owner.current.ghostize(0)
@@ -163,7 +164,7 @@ GLOBAL_LIST_EMPTY(antagonists)
 			owner.current.refresh_looping_ambience()
 			if(was_pacifist)
 				var/mob/living/carbon/human/human_user = owner.current
-				human_user.add_quirk(/datum/quirk/vice/pacifist)
+				human_user.add_quirk(/datum/quirk/negative/pacifist)
 			if(!silent)
 				farewell()
 

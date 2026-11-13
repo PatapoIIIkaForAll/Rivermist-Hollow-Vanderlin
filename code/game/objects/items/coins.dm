@@ -485,6 +485,28 @@
 	if(!coin_amount)
 		set_quantity(rand(4,14))
 
+// Dungeon cache stacks hold half the coin of an ordinary pile.
+/obj/item/coin/copper/pile/dungeon
+
+/obj/item/coin/copper/pile/dungeon/Initialize(mapload, coin_amount)
+	return ..(mapload, coin_amount || rand(2, 7))
+
+/obj/item/coin/silver/pile/dungeon
+
+/obj/item/coin/silver/pile/dungeon/Initialize(mapload, coin_amount)
+	return ..(mapload, coin_amount || rand(2, 7))
+
+/obj/item/coin/gold/pile/dungeon
+
+/obj/item/coin/gold/pile/dungeon/Initialize(mapload, coin_amount)
+	return ..(mapload, coin_amount || rand(2, 7))
+
+/// Half a taran, paid out as five fandare.
+/obj/item/coin/copper/five
+
+/obj/item/coin/copper/five/Initialize(mapload, coin_amount)
+	return ..(mapload, coin_amount || 5)
+
 /obj/item/coin/silver/pile/xylix
 	name = MAP_SWITCH("ziliqua", "INFINTE COIN PILE")
 

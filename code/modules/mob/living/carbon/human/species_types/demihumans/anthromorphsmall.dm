@@ -37,6 +37,8 @@
 
 	limbs_icon_m = 'modular_rmh/icons/mob/species/anthro_small_malea.dmi'
 	limbs_icon_f = 'modular_rmh/icons/mob/species/anthro_small_femalea.dmi'
+	lips_state_m = "anthro_small_male"
+	body_hair_materials = BODY_HAIR_MATERIALS_FURRED
 	dam_icon_m = 'icons/roguetown/mob/bodies/dam/dam_male.dmi'
 	dam_icon_f = 'icons/roguetown/mob/bodies/dam/dam_female.dmi'
 
@@ -140,11 +142,14 @@
 		/datum/customizer/organ/neck_feature/anthro,
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/belly/animal,
 		/datum/customizer/organ/genitals/butt/animal,
 		/datum/customizer/organ/genitals/testicles/anthro,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/none,
@@ -166,12 +171,13 @@
 		/datum/body_marking/small/spotted,
 	)
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,
 		/datum/descriptor_choice/stature,
 		/datum/descriptor_choice/face,
 		/datum/descriptor_choice/face_exp,
-		/datum/descriptor_choice/skin,
+		/datum/descriptor_choice/skin_all,
 		/datum/descriptor_choice/voice,
 		/datum/descriptor_choice/prominent_one_wild,
 		/datum/descriptor_choice/prominent_two_wild,

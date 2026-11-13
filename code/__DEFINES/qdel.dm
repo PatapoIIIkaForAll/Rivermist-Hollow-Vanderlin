@@ -43,6 +43,9 @@
 #define GC_CHECK_QUEUE 5 MINUTES
 #define GC_DEL_QUEUE 10 SECONDS
 
+/// Recent hard-delete skips SSgarbage keeps for inspection while hard deletes are disabled.
+#define FAILED_HARD_DELETES_KEPT 50
+
 #define GC_QUEUED_FOR_QUEUING -1
 #define GC_CURRENTLY_BEING_QDELETED -2
 

@@ -1,5 +1,5 @@
 /datum/sex_action/rimming
-	name = "Lick their anus"
+	name = "Rimjob"
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 	gags_user = TRUE
@@ -10,7 +10,7 @@
 	scene_target_slot = ORGAN_SLOT_ANUS
 
 /datum/sex_action/rimming/shows_on_menu(mob/living/user, mob/living/target)
-	if(user == target)
+	if(user == target && !allows_self_use(user))
 		return FALSE
 	return TRUE
 
@@ -18,7 +18,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(user == target)
+	if(user == target && !allows_self_use(user))
 		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_GROIN, TRUE))
 		return FALSE
@@ -38,11 +38,12 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] rims [target]'s butt..."))
-	user.make_sucking_noise()
+	user.make_mouth_noise("lick")
 	do_thrust_animate(user, target)
 
 	perform_sex_action(target, user, 2, 0, 1.5)
 	handle_passive_ejaculation(target)
+	deposit_saliva_in_hole(user, target, ORGAN_SLOT_ANUS, 0.5, 4)
 
 /datum/sex_action/rimming/on_finish(mob/living/user, mob/living/target)
 	. = ..()

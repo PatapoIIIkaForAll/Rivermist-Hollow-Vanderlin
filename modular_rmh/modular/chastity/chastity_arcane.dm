@@ -81,6 +81,9 @@
 		return flat_cage ? "flat" : "cage"
 	return "belt"
 
+/obj/item/clothing/undies/chastity/arcane/leaves_rear_bare()
+	return rear_open
+
 /obj/item/clothing/undies/chastity/arcane/proc/get_worn_state()
 	return "arcane_[get_worn_look()][rear_open ? "" : "_shield"]"
 

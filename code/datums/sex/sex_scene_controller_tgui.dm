@@ -3,7 +3,7 @@
 /datum/sex_scene_controller/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "SexScene", "Sate Desire", 900, 560)
+		ui = new(user, src, "SexScene", "Sate Desire", 760, 520)
 		ui.set_autoupdate(FALSE)
 		ui.open()
 
@@ -23,7 +23,7 @@
 	data["scene_claims"] = get_scene_claims_ui_data()
 
 	var/list/status_lines = list()
-	for(var/line in user.return_character_information())
+	for(var/line in user.return_character_information(status_follows_examine()))
 		if(line)
 			status_lines += line
 	data["status_lines"] = status_lines
@@ -45,6 +45,8 @@
 		"auto_clench" = !!user.wants_auto_clench(),
 		"can_hold_it_in" = user.can_hold_fluids_in(),
 		"hold_it_in" = user.is_holding_fluids_in(),
+		"reach_under_armor" = user.get_cached_erp_pref(/datum/erp_preference/boolean/allow_reach_under_armor) == TRUE,
+		"status_follows_examine" = status_follows_examine(),
 	)
 	data["zone_options"] = get_zone_options_ui_data()
 	data["actions"] = get_actions_ui_data()
@@ -82,11 +84,12 @@
 
 /datum/sex_scene_controller/proc/get_scene_participants_ui_data()
 	var/list/participants_out = list()
+	var/examine_rule = status_follows_examine()
 	for(var/mob/living/participant as anything in scene?.participants)
 		if(!participant || QDELETED(participant))
 			continue
 		var/list/status_lines = list()
-		for(var/line in participant.return_character_information())
+		for(var/line in participant.return_character_information(examine_rule))
 			if(line)
 				status_lines += line
 		participants_out += list(list(
@@ -159,6 +162,9 @@
 			"can_perform" = TRUE,
 			"user_zones" = action.user_menu_zone_mask,
 			"target_zones" = action.target_menu_zone_mask,
+			"fit_hint" = target ? action.get_orifice_fit_hint(user, target) : null,
+			"category" = action.menu_category,
+			"tip" = action.menu_tip,
 		))
 	for(var/datum/sex_action/action_template as anything in get_all_menu_actions())
 		if(is_action_active(action_template))
@@ -174,8 +180,12 @@
 			"name" = action.name,
 			"active" = FALSE,
 			"can_perform" = can_start,
+			"refusal" = can_start ? null : action.armor_refusal,
 			"user_zones" = action.user_menu_zone_mask,
 			"target_zones" = action.target_menu_zone_mask,
+			"fit_hint" = target ? action.get_orifice_fit_hint(user, target) : null,
+			"category" = action.menu_category,
+			"tip" = action.menu_tip,
 		))
 		qdel(proposal)
 	return actions_out
@@ -234,6 +244,7 @@
 		your_erp_data = your_prefs.character_setup_erp_data(user)
 		out["yours"] = your_erp_data["categories"]
 		out["lock_reason"] = your_erp_data["lock_reason"]
+		out["your_kinks"] = your_erp_data["kink_categories"]
 
 	var/list/their_erp_data = your_erp_data
 	if(target != user)
@@ -255,6 +266,56 @@
 				categories_out += list(list("name" = category["name"], "kinks" = kinks_out))
 		out["their_kinks"] = categories_out
 	return out
+
+/// Flips the user's armor reach consent and writes it to the character.
+/datum/sex_scene_controller/proc/toggle_reach_under_armor()
+	var/allowed = flip_panel_pref(/datum/erp_preference/boolean/allow_reach_under_armor)
+	if(isnull(allowed))
+		return FALSE
+	var/message = allowed ? "Players may now reach under my armor." : "My armor keeps everyone out again."
+	to_chat(user, span_notice(message))
+	return TRUE
+
+/// Flips a boolean ERP pref of the user and writes it to the character; the new value, or null without prefs.
+/datum/sex_scene_controller/proc/flip_panel_pref(pref_type)
+	var/datum/preferences/prefs = user?.client?.prefs
+	if(!prefs)
+		return null
+	var/datum/erp_preference/pref = new pref_type()
+	var/value = !pref.get_value(prefs)
+	pref.set_value(prefs, value)
+	prefs.save_erp_preferences()
+	return value
+
+/// TRUE unless the viewing user switched the status lines to the older coverage rule.
+/datum/sex_scene_controller/proc/status_follows_examine()
+	var/datum/preferences/prefs = user?.client?.prefs
+	if(!prefs)
+		return TRUE
+	var/datum/erp_preference/pref = new /datum/erp_preference/boolean/panel_status_follows_examine()
+	return pref.get_value(prefs) != FALSE
+
+/// Applies the Kinks tab draft to the user's prefs, writes the slot's ERP block and refreshes the cache.
+/datum/sex_scene_controller/proc/save_own_kinks(list/changes)
+	var/datum/preferences/prefs = user?.client?.prefs
+	if(!prefs || !islist(changes) || length(changes) > length(GLOB.available_kinks))
+		return FALSE
+	var/lock_reason = prefs.get_erp_preference_edit_lock_reason(user)
+	if(lock_reason)
+		to_chat(user, span_warning(lock_reason))
+		return TRUE
+	var/changed = FALSE
+	for(var/list/change in changes)
+		if(prefs.set_kink_preference(change["name"], change["enabled"], change["intensity"], change["notes"]))
+			changed = TRUE
+	if(!changed)
+		return TRUE
+	prefs.mark_erp_preferences_dirty()
+	if(prefs.save_erp_preferences())
+		to_chat(user, span_notice("My kinks are saved."))
+	else
+		to_chat(user, span_warning("My kinks changed, but could not be saved to the character."))
+	return TRUE
 
 /datum/sex_scene_controller/proc/get_notes_ui_data()
 	var/list/yours_out = list()
@@ -290,6 +351,12 @@
 
 	if(action == "select_participant")
 		return select_ui_participant("[params["ref"]]")
+
+	if(action == "view_holes")
+		var/mob/living/carbon/human/human_user = user
+		if(istype(human_user))
+			human_user.view_holes()
+		return TRUE
 
 	if(!sync_ui_selected_participant())
 		return FALSE
@@ -353,6 +420,10 @@
 		if("toggle_hold_it_in")
 			user.toggle_holding_fluids_in()
 			return TRUE
+		if("toggle_reach_under_armor")
+			return toggle_reach_under_armor()
+		if("toggle_status_follows_examine")
+			return !isnull(flip_panel_pref(/datum/erp_preference/boolean/panel_status_follows_examine))
 		if("swap_side")
 			user.swap_lying_direction()
 			return TRUE
@@ -383,15 +454,22 @@
 			belly_comp.set_selected_action(null, user)
 			return TRUE
 		if("erp_pref")
-			if(!user.client?.prefs)
+			var/datum/preferences/prefs = user.client?.prefs
+			if(!prefs)
 				return FALSE
 			// handle_erp_pref_topic reads href-style text values; tgui sends
 			// JSON numbers, so stringify every param (text2num(number) runtimes).
 			var/list/href_list = list()
 			for(var/key in params)
 				href_list[key] = "[params[key]]"
-			user.client.prefs.handle_erp_pref_topic(user, href_list)
+			var/revision = prefs.erp_preferences_revision
+			prefs.handle_erp_pref_topic(user, href_list)
+			// An accepted edit bumps the revision; write it to the character, as the Kinks tab's Save does.
+			if(prefs.erp_preferences_revision != revision)
+				prefs.save_erp_preferences()
 			return TRUE
+		if("save_kinks")
+			return save_own_kinks(params["changes"])
 		if("note_add")
 			var/note_title = trim("[params["title"]]")
 			var/note_content = trim("[params["content"]]")

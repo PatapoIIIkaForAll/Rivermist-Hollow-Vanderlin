@@ -206,8 +206,9 @@
 		N = new /obj/item/bodypart/r_leg
 		N.attach_limb(src)
 
-	// make sure we unapply our clipmasks
-	regenerate_icons()
+	// make sure we unapply our clipmasks; whoever set BUILDING_ORGANS redraws once when done
+	if(!(status_flags & BUILDING_ORGANS))
+		regenerate_icons()
 	set_resting(FALSE)
 
 /mob/living/carbon/proc/Taurize(taur_type = /obj/item/bodypart/taur, color = "#ffffff", markings = "#ffffff", tertiary = "#ffffff")
@@ -226,8 +227,9 @@
 		T.taur_tertiary = tertiary
 	T.attach_limb(src)
 
-	// make sure we apply our clipmasks
-	regenerate_icons()
+	// make sure we apply our clipmasks; whoever set BUILDING_ORGANS redraws once when done
+	if(!(status_flags & BUILDING_ORGANS))
+		regenerate_icons()
 	resting = FALSE
 	update_resting()
 	set_body_position(STANDING_UP)

@@ -211,12 +211,12 @@
 	to_chat(target, span_notice("[user] helps me push some fluid out into [destination_text]."))
 
 /datum/sex_action/hole_storage/expel_foreign_fluids/vaginal
-	name = "Expel fluids from pussy"
+	name = "Drain pussy"
 	hole_id = ORGAN_SLOT_VAGINA
 	cavity_name = "vaginal cavity"
 
 /datum/sex_action/hole_storage/expel_foreign_fluids/anal
-	name = "Expel fluids from anus"
+	name = "Drain ass"
 	hole_id = ORGAN_SLOT_ANUS
 	cavity_name = "anal cavity"
 

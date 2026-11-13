@@ -1,5 +1,6 @@
 /datum/sex_action/masturbate/other/anus
-	name = "Finger their butt"
+	name = "Butt fingering"
+	remote_phrase = "Finger their butt"
 	check_same_tile = FALSE
 	mage_hand_overlay_zone = MAGE_HAND_ZONE_BUTT
 
@@ -28,7 +29,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fingers [target]'s butt..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("finger", target, 30, ORGAN_SLOT_ANUS)
 
 	perform_sex_action(target, user, 2, 2, 2)
 	handle_passive_ejaculation(target)

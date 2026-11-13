@@ -1,3 +1,6 @@
+/datum/unit_test/pocket_access
+	needs_pocket_space = TRUE
+
 /datum/unit_test/pocket_access/Run()
 	var/obj/item/storage/backpack/test_anchor = allocate(/obj/item/storage/backpack, run_loc_floor_bottom_left)
 	var/datum/component/pocket_access/access = test_anchor.AddComponent(/datum/component/pocket_access, /datum/map_template/pocket/test_chamber, POCKET_ACCESS_INSTANCE_USER, POCKET_LIFECYCLE_HIBERNATE, 1)

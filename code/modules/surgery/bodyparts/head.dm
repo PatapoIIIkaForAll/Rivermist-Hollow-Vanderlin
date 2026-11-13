@@ -35,6 +35,7 @@
 
 	var/lip_style = null
 	var/lip_color = "white"
+	var/lip_alpha = 255
 
 	offset = OFFSET_HEAD
 
@@ -173,9 +174,11 @@
 		if(H.lip_style && (LIPS in S.species_traits))
 			lip_style = H.lip_style
 			lip_color = H.lip_color
+			lip_alpha = H.lip_alpha
 		else
 			lip_style = null
 			lip_color = "white"
+			lip_alpha = initial(lip_alpha)
 	..()
 
 /obj/item/bodypart/head/update_icon_dropped()
@@ -205,8 +208,14 @@
 
 		// lipstick
 		if(lip_style)
-			var/image/lips_overlay = image('icons/mob/human_face.dmi', "lips_[lip_style]", -BODY_LAYER, SOUTH)
+			var/list/snout_lips = get_snout_lips(lip_style)
+			var/image/lips_overlay
+			if(snout_lips)
+				lips_overlay = image('icons/mob/human_face.dmi', snout_lips[1], snout_lips[2], SOUTH)
+			else
+				lips_overlay = image('icons/mob/human_face.dmi', "lips_[lip_style]", -BODY_LAYER, SOUTH)
 			lips_overlay.color = lip_color
+			lips_overlay.alpha = lip_alpha
 			. += lips_overlay
 
 		// eyes
@@ -228,6 +237,21 @@
 
 			if(eyes_right.eye_color)
 				right_overlay.color = eyes_right.eye_color
+
+/obj/item/bodypart/head/proc/get_snout_lips(style)
+	for(var/obj/item/organ/snout/snout in get_organs())
+		if(!snout.accessory_type || !snout.is_visible())
+			continue
+		var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(snout.accessory_type)
+		if(!accessory?.icon_state || accessory.icon != 'icons/mob/sprite_accessory/snouts/snouts.dmi')
+			continue
+		if(!accessory.is_visible(snout, src, owner))
+			continue
+		var/lips_state = "lips_[style]_snout_[accessory.icon_state]"
+		if(!icon_exists('icons/mob/human_face.dmi', lips_state))
+			continue
+		return list(lips_state, (BODY_FRONT_LAYER in accessory.relevant_layers) ? -ABOVE_BODY_FRONT_LAYER : -BODY_LAYER)
+	return null
 
 /obj/item/bodypart/head/monkey
 	icon = 'icons/mob/animal_parts.dmi'

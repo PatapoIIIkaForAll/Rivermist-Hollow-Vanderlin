@@ -607,6 +607,9 @@
 			owner.balloon_alert(owner, "too far away!")
 			return sig_return | SPELL_CANCEL_CAST
 
+		if(is_hostile_to(cast_on) && owner.spares_ally(cast_on, TRUE))
+			return sig_return | SPELL_CANCEL_CAST
+
 		if((spell_type == SPELL_MIRACLE) && HAS_TRAIT(cast_on, TRAIT_ATHEISM_CURSE))
 			if(isliving(cast_on))
 				var/mob/living/L = cast_on
@@ -638,6 +641,10 @@
 			on_end_charge(success)
 
 	return sig_return
+
+/// TRUE when this aimed spell harms what it is cast on, so the caster's party members are skipped.
+/datum/action/cooldown/spell/proc/is_hostile_to(atom/cast_on)
+	return FALSE
 
 /datum/action/cooldown/spell/proc/do_after_checks(mob/owner, atom/cast_on)
 	if(!currently_charging)
@@ -766,7 +773,8 @@
 
 /// End the charging cycle
 /datum/action/cooldown/spell/proc/end_charging()
-	UnregisterSignal(owner.client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
+	// The failsafe cancel timer can fire after the action lost its owner.
+	UnregisterSignal(owner?.client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
 	UnregisterSignal(owner, list(COMSIG_MOB_LOGOUT, COMSIG_MOB_DEATH, COMSIG_MOVABLE_MOVED))
 	currently_charging = FALSE
 	charge_started_at = null

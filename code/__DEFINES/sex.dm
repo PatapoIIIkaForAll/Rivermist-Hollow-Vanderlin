@@ -4,6 +4,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 
 #define ERP_PREFERENCE_EDIT_GRACE_MINUTES 20
 #define ERP_PREFERENCE_EDIT_GRACE_PERIOD (ERP_PREFERENCE_EDIT_GRACE_MINUTES MINUTES)
+#define KINK_NOTES_MAX_LENGTH 256
 
 #define MAGE_HAND_ACTION_MESSAGE_START "start"
 #define MAGE_HAND_ACTION_MESSAGE_PERFORM "perform"
@@ -17,6 +18,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define COMSIG_SEX_GET_AROUSAL "sex_get_arousal"                        // () - Get current arousal info
 #define COMSIG_SEX_GET_AROUSAL_FLOOR "sex_get_arousal_floor"            // (list/floor_data) - Raise floor_data["floor"]; cooling stops there
 #define COMSIG_SEX_CLIMAX "sex_climax"                                  // (sex_action, action_receiver, action_partner, action_performer) - Handle climax event
+#define COMSIG_SEX_ACTION_TICK "sex_action_tick"                        // (sex_action, action_user, action_target) - to both, once per performed beat
 #define COMSIG_SEX_RECEIVE_ACTION "sex_receive_action"                  // (sex_action, action_receiver, action_partner, arousal_amt, pain_amt, orgasm_prog_amt, giving, force, speed, resist, action_performer) - Receive action effects
 #define COMSIG_SEX_GENERIC_ACTION "sex_receive_gen_action"					// ... - for generic actions without the sex session panel
 #define COMSIG_SEX_ADJUST_EDGING "sex_adjust_edging"                 	// (amount) - Adjust edging level
@@ -119,21 +121,64 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define SEX_SPEED_MID 2
 #define SEX_SPEED_HIGH 3
 #define SEX_SPEED_EXTREME 4
+/// Fifth and highest speed; the panel names it Furious, since level four is already Unrelenting.
+#define SEX_SPEED_UNRELENTING 5
 
-#define SEX_SPEEDS list(SEX_SPEED_LOW, SEX_SPEED_MID, SEX_SPEED_HIGH, SEX_SPEED_EXTREME)
+#define SEX_SPEEDS list(SEX_SPEED_LOW, SEX_SPEED_MID, SEX_SPEED_HIGH, SEX_SPEED_EXTREME, SEX_SPEED_UNRELENTING)
 
 #define SEX_SPEED_MIN 1
-#define SEX_SPEED_MAX 4
+#define SEX_SPEED_MAX 5
 
 #define SEX_FORCE_LOW 1
 #define SEX_FORCE_MID 2
 #define SEX_FORCE_HIGH 3
 #define SEX_FORCE_EXTREME 4
+/// Fifth and highest force, above Brutal; the panel names it Unrelenting.
+#define SEX_FORCE_UNRELENTING 5
 
-#define SEX_FORCES list(SEX_FORCE_LOW, SEX_FORCE_MID, SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
+#define SEX_FORCES list(SEX_FORCE_LOW, SEX_FORCE_MID, SEX_FORCE_HIGH, SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 
 #define SEX_FORCE_MIN 1
-#define SEX_FORCE_MAX 4
+#define SEX_FORCE_MAX 5
+
+/// Per-cycle chance and damage for brutal force snagging the receiver's bare stockings.
+#define SEX_LEGWEAR_SNAG_CHANCE 15
+#define SEX_LEGWEAR_SNAG_DAMAGE 6
+/// The same at unrelenting force.
+#define SEX_LEGWEAR_SNAG_CHANCE_UNRELENTING 25
+#define SEX_LEGWEAR_SNAG_DAMAGE_UNRELENTING 9
+
+// Impact marks: spanks and lashes leave fading, examine-only marks on the struck spot.
+#define IMPACT_MARK_NONE 0
+#define IMPACT_MARK_FAINT 1
+#define IMPACT_MARK_RED 2
+#define IMPACT_MARK_BRUISED 3
+#define IMPACT_MARK_MAX IMPACT_MARK_BRUISED
+/// Strike score (force level + tool tier + Strength bonus) a mark level needs.
+#define IMPACT_MARK_SCORE_FAINT 2
+#define IMPACT_MARK_SCORE_RED 4
+#define IMPACT_MARK_SCORE_BRUISED 6
+/// Strength counts from this base, one score point per step above or below it.
+#define IMPACT_MARK_STRENGTH_BASE 10
+#define IMPACT_MARK_STRENGTH_STEP 5
+/// Tool tiers: a bare hand or soft flogger, a strap, paddle or crop, a whip or cane.
+#define IMPACT_TOOL_HAND 0
+#define IMPACT_TOOL_STRAP 1
+#define IMPACT_TOOL_WHIP 2
+/// How long each mark level shows before it fades one level.
+#define IMPACT_MARK_FADE_FAINT (10 MINUTES)
+#define IMPACT_MARK_FADE_RED (20 MINUTES)
+#define IMPACT_MARK_FADE_BRUISED (40 MINUTES)
+/// Least time between two sates from making or taking marks, by mark level; heavier marks sate sooner.
+#define IMPACT_MARK_SATE_COOLDOWN_FAINT (15 MINUTES)
+#define IMPACT_MARK_SATE_COOLDOWN_RED (10 MINUTES)
+#define IMPACT_MARK_SATE_COOLDOWN_BRUISED (5 MINUTES)
+/// Least time between two sates from examining marks.
+#define IMPACT_MARK_EXAMINE_SATE_COOLDOWN (5 MINUTES)
+// Indexes into one impact mark entry.
+#define IMPACT_MARK_LEVEL 1
+#define IMPACT_MARK_BY_TOOL 2
+#define IMPACT_MARK_TIME 3
 
 #define SEX_MANUAL_AROUSAL_DEFAULT 1
 #define SEX_MANUAL_AROUSAL_UNAROUSED 2
@@ -159,12 +204,14 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define SEX_FORCE_PAIN_MULT_MID 0.75
 #define SEX_FORCE_PAIN_MULT_HIGH 2.0
 #define SEX_FORCE_PAIN_MULT_EXTREME 4.0
+#define SEX_FORCE_PAIN_MULT_UNRELENTING 6.0
 
 /// Speed pain steps. Secondary to force; speed sharpens what force already causes.
 #define SEX_SPEED_PAIN_MULT_LOW 0.8
 #define SEX_SPEED_PAIN_MULT_MID 1.0
 #define SEX_SPEED_PAIN_MULT_HIGH 1.25
 #define SEX_SPEED_PAIN_MULT_EXTREME 1.5
+#define SEX_SPEED_PAIN_MULT_UNRELENTING 1.75
 
 /// How much the receiver's own arousal softens incoming pain, by arousal band.
 #define SEX_PAIN_READINESS_UNAROUSED 1.4
@@ -193,6 +240,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 /// Harder force earns faster feedback, so top settings read as continuous.
 #define PAIN_COOLDOWN_HIGH (4 SECONDS)
 #define PAIN_COOLDOWN_EXTREME (2.5 SECONDS)
+#define PAIN_COOLDOWN_UNRELENTING (1.5 SECONDS)
 
 #define LOW_ORGASM_THRESHOLD_GAIN 4
 #define MED_ORGASM_THRESHOLD_GAIN 6
@@ -291,6 +339,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define ORGAN_SLOT_TESTICLES "testicles"
 #define ORGAN_SLOT_BREASTS "breasts"
 #define ORGAN_SLOT_VAGINA "vagina"
+#define ORGAN_SLOT_WOMB "womb"
 #define ORGAN_SLOT_ANUS "anus"
 #define ORGAN_SLOT_BUTT "butt"
 #define ORGAN_SLOT_BELLY "belly"
@@ -352,7 +401,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define ORGASM_LOCATION_SELF "self"
 #define ORGASM_LOCATION_CONTAINER "container"
 
-/// Units of fluid a female climax adds into the vagina (instead of spawning a puddle); the organ's drip system leaks it out.
+/// Units of femcum a female climax makes; what the wetness cap cannot keep gushes out at once.
 #define FEMCUM_ORGASM_VOLUME 10
 
 // Fluid modifier sources. Sources are strings so they never hold a reference.
@@ -377,6 +426,8 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define PHEROMONE_AROUSAL_FLOOR 40
 /// Plain arousal wetness drips to the floor only from this arousal up.
 #define VAGINA_DRIP_AROUSAL 80
+/// Units per second of own femcum taken back while wetness sits above its arousal target.
+#define VAGINA_WETNESS_FADE_RATE 0.02
 
 // Body fluid reagent data keys: who made it, whether makers mixed, and a hint of their last meals.
 #define FLUID_DATA_DONOR "fluid_donor"
@@ -415,6 +466,17 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define PENIS_SLAP_KNOCKBACK_HEFT 1.5
 /// Arousal the cock's owner gets from one slap.
 #define PENIS_SLAP_AROUSAL 1
+
+// Spots on a body a crotch can grind against; a turned back reads ass, lower back and back.
+#define GRIND_SPOT_FEET "feet"
+#define GRIND_SPOT_THIGH "thigh"
+#define GRIND_SPOT_HAND "hand"
+#define GRIND_SPOT_CROTCH "crotch"
+#define GRIND_SPOT_LAP "lap"
+#define GRIND_SPOT_BELLY "belly"
+#define GRIND_SPOT_ARM "arm"
+#define GRIND_SPOT_CHEST "chest"
+#define GRIND_SPOT_FACE "face"
 /// Leak multiplier while the owner lies down; gravity helps less.
 #define FLUID_LYING_LEAK_MULT 0.5
 /// Leak multiplier for a vagina or anus while the owner holds it in.
@@ -439,6 +501,15 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define CONCEPTION_DOUBLE_SEED 21
 /// Conception chance multiplier while the carrier is in heat.
 #define CONCEPTION_HEAT_MULT 2
+/// Units of seed the vagina passes into the womb per intake tick; only seed in the womb can take root.
+#define WOMB_SEED_INTAKE_PER_TICK 1
+/// Time between womb intake ticks.
+#define WOMB_SEED_INTAKE_INTERVAL (20 SECONDS)
+/// Outcomes of one try to draw a toy out of a hole, from the filling organ's resolve_toy_removal().
+#define TOY_REMOVE_OUT 1
+#define TOY_REMOVE_NO_GRIP 2
+#define TOY_REMOVE_SLIPPED_DEEPER 3
+#define TOY_REMOVE_STUCK 4
 /// Morning sickness starts this long after conception, somewhere in the range.
 #define PREGNANCY_SICKNESS_MIN_DELAY (30 MINUTES)
 #define PREGNANCY_SICKNESS_MAX_DELAY (60 MINUTES)

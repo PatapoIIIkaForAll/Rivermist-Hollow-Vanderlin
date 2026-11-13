@@ -1,5 +1,5 @@
 /datum/sex_action/suck_balls
-	name = "Lick or suck their balls"
+	name = "Suck balls"
 	description = "Tease their balls with your tongue, shifting from licking to sucking as force increases."
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
@@ -57,7 +57,7 @@
 			arousal_amt = 1.5
 			pain_amt = 1.8
 			orgasm_amt = 1
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "roughly sucks and tugs at"
 			arousal_amt = 1.3
 			pain_amt = 3.8

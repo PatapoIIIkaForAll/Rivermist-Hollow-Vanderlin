@@ -343,4 +343,7 @@
 /obj/item/mob_holder/internal_womb/container_resist(mob/living/user)
 	if(allow_internal_release)
 		return ..()
+	// A hatchling that cannot get out still squirms, and its host feels it.
+	var/datum/component/internal_womb_hatchling/hatchling = GetComponent(/datum/component/internal_womb_hatchling)
+	hatchling?.on_struggle(user)
 	return FALSE

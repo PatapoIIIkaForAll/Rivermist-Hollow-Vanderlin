@@ -284,6 +284,11 @@
 			/obj/item/reagent_containers/glass/bottle/vial/conpot = 10,
 			/obj/item/reagent_containers/glass/bottle/vial/intpot = 10,
 			/obj/item/reagent_containers/glass/bottle/vial/spdpot = 10,
-			/obj/item/reagent_containers/glass/bottle/vial/lucpot = 10
+			/obj/item/reagent_containers/glass/bottle/vial/lucpot = 10,
+			/obj/item/reagent_containers/glass/bottle/vial/slick_balm = 10,
+			/obj/item/reagent_containers/glass/bottle/vial/yielding_draught = 5,
+			/obj/item/reagent_containers/glass/bottle/vial/maidens_knot = 5,
+			/obj/item/reagent_containers/glass/bottle/vial/limber_draught = 5,
+			/obj/item/reagent_containers/glass/bottle/vial/rosewater_salve = 5
 		)
 	)

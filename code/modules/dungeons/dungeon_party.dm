@@ -375,6 +375,9 @@
 			))
 			qdel(unlock)
 		for(var/datum/dungeon_cosmetic/cosmetic as anything in get_dungeon_cosmetic_catalogue())
+			if(cosmetic.event_only && !progress.has_cosmetic(cosmetic.id))
+				qdel(cosmetic)
+				continue
 			title_data += list(list(
 				"id" = cosmetic.id,
 				"name" = cosmetic.name,
@@ -459,6 +462,9 @@
 				else
 					qdel(cosmetic)
 			if(!target)
+				return
+			if(target.event_only)
+				qdel(target)
 				return
 			if(!progress.has_cosmetic(target.id))
 				if(progress.spend_echoes(target.echo_cost))
@@ -655,7 +661,7 @@
 	var/datum/party/party = get_party()
 	if(party && !(ckey(petitioner.ckey) in party.members))
 		if(!join_party(petitioner, party))
-			to_chat(petitioner, span_warning("You cannot join this expedition while bound to another party."))
+			to_chat(petitioner, span_warning("You cannot join this expedition: its party is full, or you are in another party."))
 			return FALSE
 	add_run_member(petitioner)
 	// Actually descending consumes any remembered approval, whichever path got

@@ -71,6 +71,9 @@
 
 /// Called every fluid tick; rolls once per interval while seed is recorded.
 /obj/item/organ/genitals/filling_organ/proc/check_conception()
+	// Creature wombs tick only for fluids; conception stays a carbon feature for now.
+	if(!iscarbon(owner))
+		return
 	if(!LAZYLEN(seed_ledger) || !COOLDOWN_FINISHED(src, conception_cooldown))
 		return
 	COOLDOWN_START(src, conception_cooldown, CONCEPTION_CHECK_INTERVAL)
@@ -80,7 +83,8 @@
 /obj/item/organ/genitals/filling_organ/proc/roll_conception()
 	sync_seed_ledger()
 	var/inside = get_virile_seed_units()
-	if(!LAZYLEN(seed_ledger) || inside < CONCEPTION_MIN_SEED)
+	// A staged unit can land a hair under one, so the minimum gets a little slack.
+	if(!LAZYLEN(seed_ledger) || inside < CONCEPTION_MIN_SEED - 0.01)
 		return FALSE
 	var/list/weights = get_seed_weights()
 	if(!length(weights))

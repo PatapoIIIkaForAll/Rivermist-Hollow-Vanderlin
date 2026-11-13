@@ -309,7 +309,6 @@
 "oq" = (
 /obj/structure/flora/new_shroom/cyan,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -341,8 +340,7 @@
 /area/pocket_dimension)
 "qP" = (
 /obj/structure/fluff/walldeco/chains{
-	icon_state = "chains3";
-	pixel_y = 0
+	icon_state = "chains3"
 	},
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 9
@@ -428,13 +426,16 @@
 /obj/effect/landmark/pocket_dimension/drop_spot,
 /turf/open/floor/naturalstone,
 /area/pocket_dimension)
+"vx" = (
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/ruinedwood/darker,
+/area/pocket_dimension)
 "ws" = (
 /obj/effect/decal/cobblerockedge,
 /turf/open/floor/naturalstone,
 /area/pocket_dimension)
 "wM" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -507,7 +508,6 @@
 /area/pocket_dimension)
 "zi" = (
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -545,7 +545,6 @@
 "BK" = (
 /obj/structure/hotspring/border/six,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -561,12 +560,12 @@
 /area/pocket_dimension)
 "Cj" = (
 /obj/structure/hotspring/border,
+/obj/structure/bondage/chains/lair,
 /turf/open/floor/naturalstone,
 /area/pocket_dimension)
 "Cl" = (
 /obj/item/natural/rock,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -1007,6 +1006,12 @@
 	},
 /turf/open/floor/twig,
 /area/pocket_dimension)
+"SC" = (
+/obj/structure/flora/grass/crawlvines,
+/obj/item/natural/stone,
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/naturalstone,
+/area/pocket_dimension)
 "SG" = (
 /obj/structure/closet/crate/chest/neu,
 /obj/item/grown/log/tree/small,
@@ -1022,7 +1027,6 @@
 "SP" = (
 /obj/structure/table/wood/plain_alt,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -1035,7 +1039,6 @@
 "Ua" = (
 /obj/structure/flora/grass/crawlvines,
 /obj/structure/flora/new_shroom/redwall{
-	dir = 2;
 	pixel_y = 0;
 	pixel_x = 32
 	},
@@ -1181,7 +1184,7 @@ bO
 TD
 XX
 cB
-Qf
+SC
 kX
 bd
 Lr
@@ -1390,7 +1393,7 @@ BO
 Mm
 bd
 bd
-GZ
+vx
 Qt
 cu
 bd

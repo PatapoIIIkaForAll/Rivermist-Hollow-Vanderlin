@@ -60,7 +60,6 @@
 	var/list/lines = list()
 	lines += "This soul lies open to my arts."
 	lines += cast_on.has_erp_pref(/datum/erp_preference/boolean/enthrallable) ? "Their will could be bound to mine, in time." : "Their will is anchored; thralldom is beyond reach."
-	lines += cast_on.has_erp_pref(/datum/erp_preference/boolean/dream_visitable) ? "Their dreams lie unlatched." : "Their dreams are barred."
 	lines += cast_on.has_erp_pref(/datum/erp_preference/boolean/fatal_drain_ok) ? "I could drink this one to the very dregs..." : "Something guards their lifespark; I may sip, never drain."
 	if(cast_on.IsWedded())
 		lines += "A mortal vow binds this soul. Corrupting it would be especially sweet."
@@ -479,6 +478,7 @@
 	current_mob.add_spell(/datum/action/cooldown/spell/succubus_whisper, source = owner)
 	current_mob.add_spell(/datum/action/cooldown/spell/succubus_charm, source = owner)
 	current_mob.add_spell(/datum/action/cooldown/spell/succubus_enthrall, source = owner)
+	current_mob.add_spell(/datum/action/cooldown/spell/hypnosis/succubus, source = owner)
 	refresh_succubus_tier_abilities()
 
 /datum/antagonist/succubus/proc/refresh_succubus_tier_abilities()
@@ -515,6 +515,7 @@
 	current_mob.remove_spell(/datum/action/cooldown/spell/succubus_whisper)
 	current_mob.remove_spell(/datum/action/cooldown/spell/succubus_charm)
 	current_mob.remove_spell(/datum/action/cooldown/spell/succubus_enthrall)
+	current_mob.remove_spell(/datum/action/cooldown/spell/hypnosis/succubus)
 	current_mob.remove_spell(/datum/action/cooldown/spell/undirected/succubus_beguiling_doubles)
 	current_mob.remove_spell(/datum/action/cooldown/spell/undirected/succubus_summon_imp)
 	current_mob.remove_spell(/datum/action/cooldown/spell/undirected/succubus_summon_lusthound)

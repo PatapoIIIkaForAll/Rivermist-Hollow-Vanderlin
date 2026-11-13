@@ -1,3 +1,64 @@
+GLOBAL_LIST_INIT(random_bookcase_lore_books, list(
+	"Apocrypha & Grimoires" = list(
+		/obj/item/book/magicaltheory,
+		/obj/item/book/arcyne,
+		/obj/item/book/godofdreamsandnightmares,
+		/obj/item/book/vownecrapage,
+		/obj/item/book/necra,
+		/obj/item/book/noc,
+		/obj/item/book/psybibleplayerbook,
+		/obj/item/book/bookofpriests,
+	),
+	"Myths & Tales" = list(
+		/obj/item/book/tales1,
+		/obj/item/book/festus,
+		/obj/item/book/tales3,
+		/obj/item/book/beardling,
+	),
+	"Legends & Accounts" = list(
+		/obj/item/book/tales3,
+		/obj/item/book/blackmountain,
+		/obj/item/book/abyssor,
+		/obj/item/book/mysticalfog,
+		/obj/item/book/magicaltheory,
+		/obj/item/book/noc,
+	),
+	"Thesis" = list(
+		/obj/item/book/knowledge1,
+		/obj/item/book/arcyne,
+		/obj/item/book/mysticalfog,
+		/obj/item/book/fishing,
+		/obj/item/book/sword,
+		/obj/item/book/robber,
+		/obj/item/book/cardgame,
+		/obj/item/book/manners,
+		/obj/item/book/advice_soup,
+		/obj/item/book/advice_farming,
+		/obj/item/book/advice_weaving,
+		/obj/item/book/yeoldecookingmanual,
+	),
+))
+
+/obj/structure/bookcase/proc/shelve_random_books(amount, category)
+	if(!isnum(amount) || amount < 1)
+		return
+	var/list/categories = category ? list(category) : null
+	if(category == "Erotica")
+		categories += list("Romance & Scandal", "Eoratica")
+	var/list/player_books = SSlibrarian.get_player_book_titles(categories)
+	var/list/lore_books = list()
+	for(var/lore_category in GLOB.random_bookcase_lore_books)
+		if(!category || lore_category == category)
+			lore_books |= GLOB.random_bookcase_lore_books[lore_category]
+	for(var/i in 1 to amount)
+		if(length(player_books))
+			new /obj/item/book/playerbook(src, null, null, null, pick_n_take(player_books))
+		else if(length(lore_books))
+			var/book_type = pick_n_take(lore_books)
+			new book_type(src)
+		else
+			return
+
 /obj/structure/bookcase/random
 	var/category = null
 	var/book_count = 10
@@ -19,12 +80,7 @@
 	return ..()
 
 /obj/structure/bookcase/random/proc/create_random_books(amount = 2)
-	. = list()
-	if (!isnum(amount) || amount < 1)
-		return
-
-	for(var/i = 1 to amount)
-		new /obj/item/book/playerbook(src)
+	shelve_random_books(amount, category)
 
 /obj/structure/bookcase/random/apocrypha
 	name = "bookcase (Apocrypha & Grimoires)"
@@ -72,12 +128,7 @@
 	return ..()
 
 /obj/structure/bookcase/fancy/random/proc/create_random_books(amount = 2)
-	. = list()
-	if (!isnum(amount) || amount < 1)
-		return
-
-	for(var/i = 1 to amount)
-		new /obj/item/book/playerbook(src)
+	shelve_random_books(amount, category)
 
 /obj/structure/bookcase/fancy/random/apocrypha
 	name = "fancy bookcase (Apocrypha & Grimoires)"

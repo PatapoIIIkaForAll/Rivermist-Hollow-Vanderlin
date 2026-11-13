@@ -8,11 +8,15 @@
 	var/ambush_config_type
 	/// Whether the ambush has already triggered (prevent double-fire)
 	var/triggered = FALSE
+	/// Contract whose end also clears the ambushers.
+	var/datum/weakref/quest_ref
 
-/datum/component/quest_ambush_payload/Initialize(ambush_config_path)
+/datum/component/quest_ambush_payload/Initialize(ambush_config_path, datum/quest/owning_quest)
 	if(!ismob(parent))
 		return COMPONENT_INCOMPATIBLE
 	ambush_config_type = ambush_config_path
+	if(owning_quest)
+		quest_ref = WEAKREF(owning_quest)
 	RegisterSignal(parent, COMSIG_MOB_DEATH, PROC_REF(on_carrier_death))
 
 /datum/component/quest_ambush_payload/Destroy()
@@ -42,12 +46,14 @@
 		return
 
 	var/list/spawned_mobs = list()
+	var/datum/quest/owning_quest = quest_ref?.resolve()
 	for(var/mob_type in config.mob_types)
 		var/count = config.mob_types[mob_type]
 		for(var/i in 1 to count)
 			var/turf/spawn_turf = find_ambush_spawn_turf(death_turf)
 			var/mob/living/ambush_mob = new mob_type(spawn_turf)
 			ambush_mob.add_faction("quest_ambush")
+			owning_quest?.add_ambush_mob(ambush_mob)
 			spawned_mobs += ambush_mob
 
 	qdel(config)

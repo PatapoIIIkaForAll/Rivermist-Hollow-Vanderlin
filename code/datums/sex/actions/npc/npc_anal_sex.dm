@@ -1,5 +1,5 @@
 /datum/sex_action/npc/npc_anal_sex
-	name = "NPC Sodomize them"
+	name = "Anal"
 	check_same_tile = FALSE
 	require_grab = FALSE
 	hole_id = ORGAN_SLOT_ANUS
@@ -8,6 +8,10 @@
 	scene_user_slot = ORGAN_SLOT_PENIS
 	scene_target_role = SEX_SCENE_ROLE_RECEIVER
 	scene_target_slot = ORGAN_SLOT_ANUS
+	warms_up_orifice = TRUE
+	// Only knotted organs tie; plain ones ignore these flags.
+	knot_on_finish = TRUE
+	can_knot = TRUE
 
 /datum/sex_action/npc/npc_anal_sex/shows_on_menu(mob/living/user, mob/living/target)
 	return FALSE
@@ -30,50 +34,113 @@
 
 /datum/sex_action/npc/npc_anal_sex/on_start(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning(get_start_message(user, target)))
+	if(needs_orifice_warmup(user, target))
+		start_orifice_warmup(user, target)
+		return .
+	show_penetration_start(user, target)
+
+/datum/sex_action/npc/npc_anal_sex/show_penetration_start(mob/living/user, mob/living/target)
+	show_act_lines(get_start_lines(user, target), user, target, "warning")
 	var/used_sex_volume = sex_volume
 	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
 
-/datum/sex_action/npc/npc_anal_sex/proc/get_start_message(mob/living/user, mob/living/target)
-	return "[user] slides his cock into [target]'s ass!"
+/datum/sex_action/npc/npc_anal_sex/compose_start_lines(mob/living/user, mob/living/target)
+	var/list/words = get_act_words(user, target)
+	var/hole = get_act_hole(user, target)
+	var/part = get_act_part(user, words)
+	var/hear = get_act_hear(words, "anal")
+	var/list/override = override_lines(words, "start_anal", hole, hear)
+	if(override)
+		return override
+	if(!hunter_has_hands(user))
+		return act_lines("[user] [words["mount"]] [words["article"]] [part] into [target]'s [hole]!", "[user] [words["mount"]] into my [hole]!", hear)
+	return act_lines(
+		"[user] spreads [target]'s cheeks and drives [words["article"]] [part] into [target]'s [hole]!",
+		"[user] spreads me open and drives into my [hole]!",
+		hear
+	)
 
 /datum/sex_action/npc/npc_anal_sex/on_perform(mob/living/user, mob/living/target)
+	if(run_orifice_warmup_cycle(user, target))
+		return
+	act_cycles++
 	if(can_show_action_message(user, target))
-		user.visible_message(spanify_force(get_perform_message(user, target)))
+		show_perform_lines(user, target)
 	var/used_sex_volume = sex_volume
 	playsound(target, get_force_sound(), used_sex_volume, TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target)
 
 	perform_sex_action(user, target, 2, 0, 2)
 
-	if(considered_limp())
+	if(considered_limp(user))
 		perform_sex_action(target, user, 1.2, 4, 1.2)
 	else
 		perform_sex_action(target, user, 2.4, 9, 2.4)
 	handle_passive_ejaculation(target)
 
-/datum/sex_action/npc/npc_anal_sex/proc/get_perform_message(mob/living/user, mob/living/target)
-	return "[user] [get_generic_force_adjective()] fucks [target]'s ass."
+/datum/sex_action/npc/npc_anal_sex/compose_perform_lines(mob/living/user, mob/living/target, stage, variant)
+	var/list/words = get_act_words(user, target)
+	var/list/thrusts = words["thrusts"]
+	var/hole = get_act_hole(user, target)
+	var/part = get_act_part(user, words)
+	var/hear = get_act_hear(words, "anal")
+	switch(stage)
+		if("tied")
+			return tied_penetration_lines(user, target, words, hole, hear)
+		if("opening")
+			return act_lines("[user] works [words["their"]] [part] into [target]'s [hole] and finds a rhythm.", "[user] works into my [hole] and finds a rhythm.", hear)
+		if("late")
+			return act_lines("[user] drives into [target]'s [hole] in short, hard jabs.", "[user] drives into my [hole] in short, hard jabs.", hear)
+	var/adverb = get_generic_force_adjective()
+	switch(variant)
+		if(1)
+			return act_lines("[user] [adverb] [thrusts[3]] [target]'s [hole].", "[user] [thrusts[3]] my [hole], every thrust forcing a grunt out of me.", hear)
+		if(2)
+			return act_lines("[user] [adverb] pounds into [target]'s [hole].", "[user] pounds into my [hole] and I cannot get away from it.", hear)
+	if(!hunter_has_hands(user))
+		return act_lines("[user] [words["hold"]] and [adverb] [thrusts[2]] into [target.p_their()] [hole].", "[user] pins me down and [thrusts[2]] into my [hole].", hear)
+	return act_lines("[user] grips [target]'s hips and [adverb] [thrusts[2]] into [target.p_their()] [hole].", "[user] grips my hips and [thrusts[2]] into my [hole].", hear)
 
+/datum/sex_action/npc/npc_anal_sex/get_climax_lines(mob/living/climaxer, mob/living/partner, flipped)
+	if(flipped)
+		var/list/hunter_words = get_act_words(partner, climaxer)
+		var/part = get_act_part(partner, hunter_words)
+		var/victim_hole = get_act_hole(partner, climaxer)
+		return act_lines("[climaxer]'s [victim_hole] clenches around [partner]'s [part]!", "I shake as my [victim_hole] clenches around [partner]'s [part]!", get_act_hear(hunter_words, "anal"))
+	var/list/words = get_act_words(climaxer, partner)
+	var/part = get_act_part(climaxer, words)
+	var/hole = get_act_hole(climaxer, partner)
+	var/spills = hunter_has_seed(climaxer) ? "spills" : "pulses"
+	return act_lines(
+		"[climaxer] buries [words["their"]] [part] deep and [spills] into [partner]'s [hole]!",
+		"[climaxer] buries [words["their"]] [part] deep and [spills] into my [hole]!",
+		get_act_hear(words, "anal")
+	)
 
 /datum/sex_action/npc/npc_anal_sex/handle_climax_message(mob/living/user, mob/living/target, must_flip)
+	show_climax_lines(user, target, must_flip)
 	if(must_flip)
-		user.visible_message(span_love("[user] cums with their butt from [target]'s cock!"))
 		user.lose_virginity()
 		target.lose_virginity()
 		return ORGASM_LOCATION_SELF
 	else
-		user.visible_message(span_love("[user] cums into [target]'s butt!"))
 		user.lose_virginity()
 		target.lose_virginity()
 		return ORGASM_LOCATION_INTO
 
 /datum/sex_action/npc/npc_anal_sex/on_finish(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning(get_finish_message(user, target)))
+	show_act_lines(get_finish_lines(user, target), user, target, "warning")
 
-/datum/sex_action/npc/npc_anal_sex/proc/get_finish_message(mob/living/user, mob/living/target)
-	return "[user] pulls [user.p_their()] cock out of [target]'s butt."
+/datum/sex_action/npc/npc_anal_sex/compose_finish_lines(mob/living/user, mob/living/target)
+	var/list/words = get_act_words(user, target)
+	var/part = get_act_part(user, words)
+	var/hole = get_act_hole(user, target)
+	return act_lines(
+		"[user] drags [words["their"]] [part] out of [target]'s [hole].",
+		"[user] drags [words["their"]] [part] out of my [hole].",
+		get_act_hear(words, "anal")
+	)
 
 /datum/sex_action/npc/npc_anal_sex/lock_sex_object(mob/living/user, mob/living/target)
 	add_sex_lock(user, ORGAN_SLOT_PENIS)

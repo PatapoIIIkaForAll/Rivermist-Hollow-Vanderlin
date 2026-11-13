@@ -82,9 +82,5 @@
 	var/mob/living/actual_target = passed_target
 	if(!actual_target)
 		actual_target = target
-	// Faction mobs (orcs, wolves, etc.) haul off prey they have already defeated instead of mauling it.
-	if(can_kidnap_defeated_prey(actual_target))
-		try_kidnap_defeated_prey(actual_target)
-		return TRUE
 	if(!QDELETED(actual_target))
 		return actual_target.attack_animal(src)

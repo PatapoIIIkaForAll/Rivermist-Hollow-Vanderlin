@@ -46,6 +46,7 @@
 
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/harpy.dmi'
 	limbs_icon_f = 'icons/roguetown/mob/bodies/f/harpy.dmi'
+	body_hair_materials = BODY_HAIR_MATERIALS_FEATHERED
 
 	soundpack_m = /datum/voicepack/male
 	soundpack_f = /datum/voicepack/female
@@ -127,20 +128,24 @@
 		/datum/customizer/organ/wings/harpy,
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/human,
 		/datum/customizer/organ/genitals/belly/human,
 		/datum/customizer/organ/genitals/butt/human,
 		/datum/customizer/organ/genitals/testicles/human,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 	)
 
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,
 		/datum/descriptor_choice/stature,
 		/datum/descriptor_choice/face,
 		/datum/descriptor_choice/face_exp,
-		/datum/descriptor_choice/skin,
+		/datum/descriptor_choice/skin_harpy,
 		/datum/descriptor_choice/voice,
 		/datum/descriptor_choice/prominent_one_wild,
 		/datum/descriptor_choice/prominent_two_wild,

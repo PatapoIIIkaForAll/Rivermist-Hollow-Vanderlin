@@ -23,6 +23,7 @@
 
 #define AUTH_HEADER ("Basic " + CONFIG_GET(string/comms_key))
 #define OLD_PLEXORA_CONFIG "config/plexora.json"
+#define ADMIN_SAY_ICON_LIFETIME (10 MINUTES)
 
 SUBSYSTEM_DEF(plexora)
 	name = "Plexora"
@@ -45,6 +46,8 @@ SUBSYSTEM_DEF(plexora)
 	var/restart_type = PLEXORA_SHUTDOWN_NORMAL
 	var/mob/restart_requester
 	var/list/active_requests = list()
+	/// ckey -> list(body ref, expiry time, base64 avatar) for the admin say relay.
+	var/list/admin_say_icons = list()
 
 /datum/controller/subsystem/plexora/Initialize()
 	if(!CONFIG_GET(flag/plexora_enabled) && !load_old_plexora_config())
@@ -229,11 +232,24 @@ SUBSYSTEM_DEF(plexora)
 		return json_body["alive_likely"]
 
 /datum/controller/subsystem/plexora/proc/relay_admin_say(client/user, message)
+	// The avatar below costs hundreds of milliseconds, so never build it for a disabled relay.
+	if(!enabled)
+		return
 	http_basicasync("relay_admin_say", list(
 		"key" = user.key,
 		"message" = message,
-		"icon_b64" = icon2base64(getFlatIcon(user.mob, SOUTH, no_anim = TRUE)),
+		"icon_b64" = get_admin_say_icon(user),
 	))
+
+/// A flat icon of a dressed human blocks the server for ~0.4 s; reuse one per admin and body for a while.
+/datum/controller/subsystem/plexora/proc/get_admin_say_icon(client/user)
+	var/body_ref = REF(user.mob)
+	var/list/cached = admin_say_icons[user.ckey]
+	if(cached && cached[1] == body_ref && world.time < cached[2])
+		return cached[3]
+	var/icon_b64 = icon2base64(getFlatIcon(user.mob, SOUTH, no_anim = TRUE))
+	admin_say_icons[user.ckey] = list(body_ref, world.time + ADMIN_SAY_ICON_LIFETIME, icon_b64)
+	return icon_b64
 
 // note: recover_all_SS_and_recreate_master to force mc shit
 
@@ -788,6 +804,7 @@ SUBSYSTEM_DEF(plexora)
 #undef OLD_PLEXORA_CONFIG
 #undef AUTH_HEADER
 #undef TOPIC_EMITTER
+#undef ADMIN_SAY_ICON_LIFETIME
 
 
 /client

@@ -5592,7 +5592,6 @@
 "fGo" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 24;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"
@@ -6359,7 +6358,6 @@
 "gDz" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 4;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"
@@ -8046,7 +8044,6 @@
 "iUc" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 24;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"
@@ -9584,7 +9581,6 @@
 "kOF" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 24;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"
@@ -11654,7 +11650,6 @@
 "nQA" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 24;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"
@@ -14539,8 +14534,7 @@
 "sdo" = (
 /obj/structure/fluff/walldeco/bath/wallpipes/innie{
 	dir = 6;
-	pixel_x = 15;
-	pixel_y = 0
+	pixel_x = 15
 	},
 /obj/structure/fluff/walldeco/bath/wallpipes/innie{
 	dir = 1;
@@ -18001,7 +17995,6 @@
 "xen" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 24;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"
@@ -18198,7 +18191,6 @@
 	},
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
 	pixel_y = 24;
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi';
 	icon_state = "obelisk"

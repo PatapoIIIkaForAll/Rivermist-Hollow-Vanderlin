@@ -3,7 +3,7 @@
 #define LEATHER_INT 3
 #define CLOTH_INT 3
 
-/datum/quirk/boon/goodman
+/datum/quirk/positive/goodman
 	name = "Good man"
 	desc = "I try to live by honor and law. I help those in need, respect the authorities, and avoid needless cruelty. \
 	My reputation as a good and honest man precedes me, and people often expect me to act with fairness and restraint. \
@@ -12,7 +12,7 @@
 	Others may seek your help, rely on your judgment, or hold you to higher moral standards. \
 	Play responsibly and stay true to your principles."
 	point_value = 1
-	incompatible_quirks = list(/datum/quirk/vice/wanted)
+	incompatible_quirks = list(/datum/quirk/negative/wanted)
 
 /obj/item
 	var/integrity_scaled = FALSE

@@ -1,4 +1,5 @@
 /datum/buildmode_mode/mapgen
+	name = "Map Generator"
 	key = "mapgen"
 
 	use_corner_selection = TRUE
@@ -22,7 +23,7 @@
 	generator_path = options[type]
 	deselect_region()
 
-/datum/buildmode_mode/mapgen/handle_click(client/c, list/modifiers, obj/object)
+/datum/buildmode_mode/mapgen/handle_click(client/c, list/modifiers, atom/object)
 	if(isnull(generator_path))
 		to_chat(c, "<span class='warning'>Select generator type first.</span>")
 		deselect_region()
@@ -36,7 +37,10 @@
 		var/datum/mapGenerator/G = new generator_path
 		G.defineRegion(cornerA, cornerB, 1)
 		highlight_region(G.map)
-		var/confirm = alert("Are you sure you want to run the map generator?", "Run generator", "Yes", "No")
-		if(confirm == "Yes")
-			G.generate()
-		log_admin("Build Mode: [key_name(c)] ran the map generator '[G.buildmode_name]' in the region from [AREACOORD(cornerA)] to [AREACOORD(cornerB)]")
+		var/turf/corner_a = cornerA
+		var/turf/corner_b = cornerB
+		var/confirm = alert(c, "Are you sure you want to run the map generator?", "Run generator", "Yes", "No")
+		if(confirm != "Yes")
+			return
+		G.generate()
+		log_admin("Build Mode: [key_name(c)] ran the map generator '[G.buildmode_name]' in the region from [AREACOORD(corner_a)] to [AREACOORD(corner_b)]")

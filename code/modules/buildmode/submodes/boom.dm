@@ -1,4 +1,5 @@
 /datum/buildmode_mode/boom
+	name = "Boom"
 	key = "boom"
 
 	var/devastation = -1
@@ -11,7 +12,6 @@
 /datum/buildmode_mode/boom/show_help(client/c)
 	to_chat(c, "<span class='notice'>***********************************************************</span>")
 	to_chat(c, "<span class='notice'>Mouse Button on obj  = Kaboom</span>")
-	to_chat(c, "<span class='notice'>NOTE: Using the \"Config/Launch Supplypod\" verb allows you to do this in an IC way (i.e., making a cruise missile come down from the sky and explode wherever you click!)</span>")
 	to_chat(c, "<span class='notice'>***********************************************************</span>")
 
 /datum/buildmode_mode/boom/change_settings(client/c)
@@ -34,9 +34,7 @@
 	if(hotspots == null)
 		hotspots = -1
 
-/datum/buildmode_mode/boom/handle_click(client/c, list/modifiers, obj/object)
-	var/left_click = LAZYACCESS(modifiers, LEFT_CLICK)
-
-	if(left_click)
+/datum/buildmode_mode/boom/handle_click(client/c, list/modifiers, atom/object)
+	if(LAZYACCESS(modifiers, LEFT_CLICK))
 		explosion(object, devastation, heavy, light, flash, FALSE, TRUE, flames, hotspots)
 		log_admin("Build Mode: [key_name(c)] caused an explosion(dev=[devastation], hvy=[heavy], lgt=[light], hotspots=[hotspots], flash=[flash], flames=[flames]) at [AREACOORD(object)]")

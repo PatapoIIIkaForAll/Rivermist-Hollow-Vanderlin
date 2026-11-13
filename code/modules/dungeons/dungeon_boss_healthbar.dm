@@ -12,8 +12,7 @@
 /datum/component/dungeon_boss_healthbar/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_LIVING_HEALTH_UPDATE, PROC_REF(refresh))
 	RegisterSignal(parent, COMSIG_LIVING_DEATH, PROC_REF(on_death))
-	// Carbons fight through the pain/shock ladder, which barely moves health
-	// and emits no signal - a slow periodic refresh keeps the bar honest.
+	// A slow refresh also catches changes that arrive without a health update signal.
 	START_PROCESSING(SSprocessing, src)
 	build_bar()
 
@@ -50,15 +49,12 @@
 		return
 	owner.cut_overlay(bar)
 	var/ratio = owner.maxHealth > 0 ? clamp(owner.health / owner.maxHealth, 0, 1) : 0
-	// Carbon bosses are beaten through pain, not raw health: blend the shock
-	// ladder in so the bar drains as the fight actually progresses.
+	// Humanoid bosses fall when their defeat pool fills, and stand back up from knockouts.
+	var/beaten_stat = UNCONSCIOUS
 	if(iscarbon(owner))
-		var/mob/living/carbon/carbon_owner = owner
-		var/shock_headroom = 1 - clamp(carbon_owner.shock_stage / SHOCK_STAGE_8, 0, 1)
-		ratio = min(ratio, shock_headroom)
-	// Carbons collapse via crit/shock long before raw health empties - a downed
-	// boss reads as beaten, so empty the bar the moment it drops.
-	if(owner.stat >= UNCONSCIOUS)
+		ratio = 1 - clamp(owner.get_defeat_damage_pool() / owner.get_effective_defeat_threshold(), 0, 1)
+		beaten_stat = HARD_CRIT
+	if(owner.stat >= beaten_stat)
 		ratio = 0
 	var/filled = round(ratio * 10)
 	var/bar_str = ""

@@ -480,6 +480,11 @@
 	if(examine_desc)
 		. += "<span class='info'>[examine_desc]</span>"
 
+	var/datum/component/inscription_holder/inscriptions = src.GetComponent(/datum/component/inscription_holder)
+	if(inscriptions)
+		. += inscriptions.get_examine_list(user)
+
+
 	if(reagents)
 		if(reagents.flags & TRANSPARENT)
 			if(length(reagents.reagent_list))

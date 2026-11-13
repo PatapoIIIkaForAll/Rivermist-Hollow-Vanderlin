@@ -43,14 +43,14 @@
 	var/datum/customizer_entry/organ/eyes/eyes_entry = entry
 	switch(href_list["customizer_task"])
 		if("right_eye_color")
-			var/new_color = input(user, "Choose your right eye color:", "Character Preference", eyes_entry.right_eye_color) as color|null
+			var/new_color = tgui_color_picker(user, "Choose your right eye color:", "Character Preference", sanitize_hexcolor(eyes_entry.right_eye_color, 6, TRUE, "#ffffff"))
 			if(!new_color)
 				return
 			eyes_entry.right_eye_color = sanitize_hexcolor(new_color, 6, TRUE)
 		if("left_eye_color")
 			if(!allows_heterochromia)
 				return
-			var/new_color = input(user, "Choose your left eye color:", "Character Preference", eyes_entry.left_eye_color) as color|null
+			var/new_color = tgui_color_picker(user, "Choose your left eye color:", "Character Preference", sanitize_hexcolor(eyes_entry.left_eye_color, 6, TRUE, "#ffffff"))
 			if(!new_color)
 				return
 			eyes_entry.left_eye_color = sanitize_hexcolor(new_color, 6, TRUE)

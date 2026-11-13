@@ -25,7 +25,7 @@
 
 /datum/surgery_operation/limb/incise_skin/tool_check(obj/item/tool)
 	// Require edged sharpness OR a tool behavior match
-	if((tool.get_sharpness() >= IS_SHARP) || implements[tool.tool_behaviour])
+	if((tool.get_sharpness() >= IS_SHARP) || get_behaviour_quality(tool))
 		return TRUE
 
 	return FALSE
@@ -257,7 +257,7 @@
 
 /datum/surgery_operation/limb/saw_bones/tool_check(obj/item/tool)
 	// Require edged sharpness and sufficient force OR a tool behavior match
-	return (((tool.get_sharpness() >= IS_SHARP) && tool.force >= 10) || implements[tool.tool_behaviour])
+	return (((tool.get_sharpness() >= IS_SHARP) && tool.force >= 10) || get_behaviour_quality(tool))
 
 /datum/surgery_operation/limb/saw_bones/on_preop(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
 	display_results(

@@ -12405,7 +12405,6 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 0;
 	pixel_x = -9
 	},
 /obj/effect/decal/shadow_floor,
@@ -13273,7 +13272,6 @@
 "grz" = (
 /obj/structure/bars/pipe{
 	dir = 6;
-	pixel_y = 0;
 	pixel_x = 13
 	},
 /turf/open/floor/rooftop{
@@ -14907,7 +14905,6 @@
 	},
 /obj/structure/fluff/railing/border{
 	dir = 8;
-	pixel_y = 0;
 	pixel_x = -2
 	},
 /obj/structure/fluff/railing/border{
@@ -15137,9 +15134,7 @@
 /turf/open/floor/ruinedwood/chevron,
 /area/indoors/town/orphanage)
 "hlv" = (
-/obj/effect/decal/cobblerockedge/alt{
-	dir = 2
-	},
+/obj/effect/decal/cobblerockedge/alt,
 /turf/open/floor/cobble,
 /area/outdoors/town)
 "hlB" = (
@@ -18553,9 +18548,7 @@
 /turf/open/floor/blocks/newstone/alt,
 /area/indoors/town/dwarfin)
 "iXK" = (
-/obj/structure/table/wood/reinf_long{
-	dir = 2
-	},
+/obj/structure/table/wood/reinf_long,
 /turf/open/floor/tile,
 /area/indoors/town/clinic_large)
 "iXM" = (
@@ -20220,7 +20213,6 @@
 /obj/structure/fluff/railing/border{
 	dir = 9;
 	pixel_x = -1;
-	pixel_y = 0;
 	density = 0
 	},
 /obj/item/storage/fancy/pilltin,
@@ -22022,7 +22014,6 @@
 /obj/effect/decal/cobbleedge{
 	dir = 1;
 	icon_state = "borderfall";
-	pixel_y = 0;
 	pixel_x = 7
 	},
 /obj/effect/decal/shadow_floor{
@@ -26981,7 +26972,6 @@
 "nfI" = (
 /obj/structure/bars/pipe{
 	dir = 6;
-	pixel_y = 0;
 	pixel_x = 13
 	},
 /turf/open/floor/rooftop,
@@ -27076,8 +27066,6 @@
 "nin" = (
 /obj/structure/fluff/railing/border{
 	dir = 9;
-	pixel_x = 0;
-	pixel_y = 0;
 	density = 0
 	},
 /turf/open/floor/blocks/stonered,
@@ -29764,8 +29752,6 @@
 /obj/structure/rack,
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_x = 0;
-	pixel_y = 0;
 	density = 0
 	},
 /turf/open/floor/blocks/stonered/tiny,
@@ -41639,7 +41625,6 @@
 	},
 /obj/structure/fluff/railing/border{
 	dir = 4;
-	pixel_y = 0;
 	pixel_x = 2
 	},
 /obj/structure/fluff/railing/border{

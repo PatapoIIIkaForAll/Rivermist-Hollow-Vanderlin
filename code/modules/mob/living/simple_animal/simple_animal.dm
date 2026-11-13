@@ -375,6 +375,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 				/datum/pet_command/protect_owner,
 				/datum/pet_command/aggressive,
 				/datum/pet_command/calm,
+				/datum/pet_command/pet_breed_other,
 			)
 			if(!GetComponent(/datum/component/obeys_commands))
 				AddComponent(/datum/component/obeys_commands, pet_commands)
@@ -774,6 +775,30 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		apply_damage(5, BURN)
 		if(fire_stacks + divine_fire_stacks > 5)
 			apply_damage(10, BURN)
+	if(stat == DEAD && !mind && !QDELETED(src))
+		burn_to_ash()
+
+/mob/living/simple_animal/proc/burn_to_ash()
+	visible_message(span_warning("[src] crumbles into ash!"))
+	var/turf/our_turf = get_turf(src)
+	if(ssaddle)
+		ssaddle.forceMove(our_turf)
+		ssaddle = null
+	if(ccaparison)
+		ccaparison.forceMove(our_turf)
+		ccaparison = null
+	if(bbarding)
+		bbarding.forceMove(our_turf)
+		bbarding = null
+	spill_embedded_objects()
+	if(dextrous)
+		drop_all_held_items()
+	unbuckle_all_mobs(force = TRUE)
+	if(buckled)
+		buckled.unbuckle_mob(src, force = TRUE)
+	ExtinguishMob()
+	spawn_dust(TRUE)
+	qdel(src)
 
 /mob/living/simple_animal/revive(full_heal_flags = NONE, excess_healing = 0, force_grab_ghost = FALSE)
 	. = ..()

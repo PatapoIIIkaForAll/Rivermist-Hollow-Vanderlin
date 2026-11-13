@@ -135,13 +135,13 @@
 	return islist(quirks) && (quirk_type in quirks)
 
 /datum/preferences/proc/has_extra_genital_customizer_unlock()
-	return pref_species?.id == SPEC_ID_OOZE || has_selected_quirk(/datum/quirk/peculiarity/extra_genitals)
+	return pref_species?.id == SPEC_ID_OOZE || has_selected_quirk(/datum/quirk/neutral/extra_genitals)
 
 /datum/preferences/proc/has_ovipositor_customizer_override()
-	return has_selected_quirk(/datum/quirk/peculiarity/ovipositor)
+	return has_selected_quirk(/datum/quirk/neutral/ovipositor)
 
 /datum/preferences/proc/has_generous_figure_size_unlock()
-	return has_selected_quirk(/datum/quirk/peculiarity/generous_figure)
+	return has_selected_quirk(/datum/quirk/neutral/generous_figure)
 
 /datum/preferences/proc/get_max_breast_size()
 	return has_generous_figure_size_unlock() ? MAX_BREASTS_SIZE : BREAST_SIZE_LARGE
@@ -186,7 +186,7 @@
 /datum/preferences/proc/get_entry_genital_set(datum/customizer_entry/entry)
 	if(istype(entry, /datum/customizer_entry/organ/genitals/penis) || istype(entry, /datum/customizer_entry/organ/genitals/testicles))
 		return "masculine"
-	if(istype(entry, /datum/customizer_entry/organ/genitals/breasts) || istype(entry, /datum/customizer_entry/organ/genitals/vagina))
+	if(istype(entry, /datum/customizer_entry/organ/genitals/breasts) || istype(entry, /datum/customizer_entry/organ/genitals/vagina) || istype(entry, /datum/customizer_entry/organ/genitals/womb))
 		return "feminine"
 	return null
 
@@ -324,11 +324,13 @@
 	. = FALSE
 	if(penis_entry.customizer_choice_type != /datum/customizer_choice/organ/genitals/penis/ovipositor)
 		var/old_size = penis_entry.penis_size
+		var/old_length = penis_entry.penis_length_cm
 		var/old_functional = penis_entry.functional
 		customizer_entries -= penis_entry
 		qdel(penis_entry)
 		penis_entry = penis_customizer.create_customizer_entry(src, /datum/customizer_choice/organ/genitals/penis/ovipositor)
 		penis_entry.penis_size = old_size
+		penis_entry.penis_length_cm = old_length
 		penis_entry.functional = old_functional
 		customizer_entries += penis_entry
 		. = TRUE

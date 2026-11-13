@@ -1,234 +1,320 @@
-
-// Global cache for appearance objects
-GLOBAL_LIST_EMPTY(buildmode_appearance_cache)
-/**
- * Enhanced BuildMode Datum
- *
- * Improved buildmode system with categorized selections,
- * embedded HTML interfaces, preview functionality, and grid-based building.
- */
 /datum/buildmode
-	var/build_dir = SOUTH
-	var/datum/buildmode_mode/mode
+	/// Client using this buildmode; BYOND nulls it when the client disconnects.
 	var/client/holder
+	/// Kept so the login callback can still be removed after holder is gone.
+	var/datum/player_details/holder_details
+	var/datum/callback/login_callback
+	/// Mob whose hover signals move the preview.
 	var/mob/registered_mob
 
-	// Login callback
-	var/li_cb
+	var/datum/buildmode_mode/mode
+	var/build_dir = SOUTH
 
-	// UI elements
-	var/list/buttons
-	var/list/selected_item // Currently selected item to place
-	var/mutable_appearance/preview_appearance // Appearance for preview
-	var/image/preview_image // Image shown to the user
-	var/pixel_x_offset = 0
-	var/pixel_y_offset = 0
-
-	// Switching management
+	/// HUD panel currently shown, a BM_SWITCHSTATE_* value.
 	var/switch_state = BM_SWITCHSTATE_NONE
 	var/switch_width = 5
-
-	// Mode switch UI
+	var/list/buttons = list()
 	var/atom/movable/screen/buildmode/mode/modebutton
-	var/list/modeswitch_buttons = list()
-
-	// Direction switch UI
 	var/atom/movable/screen/buildmode/bdir/dirbutton
+	var/list/modeswitch_buttons = list()
 	var/list/dirswitch_buttons = list()
 
-	// Category selection UI
-	var/atom/movable/screen/buildmode/category/categorybutton
-	var/list/category_buttons = list()
-	var/current_category = null
+	var/datum/buildmode_item_browser/item_browser
 
-	// Item browser interface
-	var/datum/browser/item_browser = null
-	var/list/cached_icons = list() // Cache for item icons
-	var/current_page = 1
-	var/browser_total_items = 0
-	var/browser_page_count = 1
-	var/browser_search = ""
+	/// Atom type that placement modes build.
+	var/selected_item
+	/// Translucent copy of selected_item that follows the cursor.
+	var/image/preview_image
+	/// Screen-wide catcher that tracks the cursor pixel while Shift is held.
+	var/atom/movable/screen/buildmode/pixel_catcher/pixel_catcher
 
-	// Pixel positioning mode
-	var/pixel_positioning_mode = FALSE
-	var/atom/movable/buildmode_pixel_dummy/pixel_positioning_dummy = null
-
-	var/list/cached_buildmode_html = list()
-
-/**
- * Creates a new buildmode instance
- *
- * @param {client} c - The client who will use this buildmode
- */
-/datum/buildmode/New(client/c)
+/datum/buildmode/New(client/user_client)
+	holder = user_client
+	holder_details = holder.player_details
 	mode = new /datum/buildmode_mode/basic(src)
-	holder = c
-	buttons = list()
-	li_cb = CALLBACK(src, PROC_REF(post_login))
-	holder.player_details.post_login_callbacks += li_cb
-	create_buttons(c)
+	create_buttons()
 	holder.screen += buttons
 	holder.click_intercept = src
+	login_callback = CALLBACK(src, PROC_REF(post_login))
+	holder_details.post_login_callbacks += login_callback
+	register_mob(holder.mob)
+	item_browser = new(src)
 	mode.enter_mode(src)
-	current_category = BM_CATEGORY_TURF
-	open_item_browser()
-	registered_mob = holder.mob
-	if(registered_mob)
-		RegisterSignal(registered_mob, COMSIG_MOUSE_ENTERED, PROC_REF(on_mouse_moved))
-		RegisterSignal(registered_mob, COMSIG_ATOM_MOUSE_ENTERED, PROC_REF(on_mouse_moved_pre))
+	item_browser.open()
 
-/**
- * Clean up and exit buildmode
- */
-/datum/buildmode/proc/quit()
-	mode?.exit_mode(src)
-	if(holder)
-		holder.screen -= buttons
-		if(holder.click_intercept == src)
-			holder.click_intercept = null
-	clear_preview()
-	if(item_browser)
-		item_browser.close()
-		item_browser = null
-	unregister_mouse_signals()
-
-	qdel(src)
-
-/datum/buildmode/proc/unregister_mouse_signals()
-	if(!registered_mob)
-		return
-	UnregisterSignal(registered_mob, COMSIG_MOUSE_ENTERED)
-	UnregisterSignal(registered_mob, COMSIG_ATOM_MOUSE_ENTERED)
-	registered_mob = null
-
-/**
- * Clean up resources when deleted
- */
 /datum/buildmode/Destroy()
-	clear_pixel_positioning_dummy()
 	close_switchstates()
+	clear_pixel_catcher()
+	clear_preview()
+	mode?.exit_mode(src)
+	QDEL_NULL(mode)
+	QDEL_NULL(item_browser)
 	if(holder)
 		holder.screen -= buttons
 		if(holder.click_intercept == src)
 			holder.click_intercept = null
-	unregister_mouse_signals()
-	holder?.player_details?.post_login_callbacks -= li_cb
-	li_cb = null
+	holder_details?.post_login_callbacks -= login_callback
+	holder_details = null
+	login_callback = null
+	register_mob(null)
 	QDEL_LIST(modeswitch_buttons)
-	modeswitch_buttons = null
 	QDEL_LIST(dirswitch_buttons)
-	dirswitch_buttons = null
-	QDEL_LIST(category_buttons)
-	category_buttons = null
 	QDEL_LIST(buttons)
-	buttons = null
 	modebutton = null
 	dirbutton = null
-	categorybutton = null
-	clear_preview()
-
-	if(item_browser)
-		item_browser.close()
-		item_browser = null
-
-	cached_icons.Cut()
-	cached_icons = null
-	cached_buildmode_html.Cut()
-	cached_buildmode_html = null
-	selected_item = null
-	browser_search = null
 	holder = null
-	QDEL_NULL(mode)
 	return ..()
 
-/**
- * Reset UI after client login
- */
-/datum/buildmode/proc/post_login()
-	if(QDELETED(holder))
-		return
-	holder.screen += buttons
+/datum/buildmode/proc/quit()
+	qdel(src)
 
+/// Re-adds the HUD after the client takes a new mob; quits if the client reconnected.
+/datum/buildmode/proc/post_login()
+	if(!holder)
+		// Deferred: this runs inside the loop over post_login_callbacks.
+		QDEL_IN(src, 0)
+		return
+	clear_pixel_catcher()
+	holder.screen += buttons
 	switch(switch_state)
 		if(BM_SWITCHSTATE_MODE)
-			open_modeswitch()
+			holder.screen += modeswitch_buttons
 		if(BM_SWITCHSTATE_DIR)
-			open_dirswitch()
-		if(BM_SWITCHSTATE_CATEGORY)
-			open_categoryswitch()
-		if(BM_SWITCHSTATE_ITEMS)
-			open_item_browser()
+			holder.screen += dirswitch_buttons
+	register_mob(holder.mob)
 
-/**
- * Create the buildmode UI buttons
- */
-/datum/buildmode/proc/create_buttons(client/client)
-	var/datum/hud/hud_used = client?.mob?.hud_used
-	modebutton = new /atom/movable/screen/buildmode/mode(null, hud_used, src)
+/datum/buildmode/proc/register_mob(mob/new_mob)
+	if(registered_mob == new_mob)
+		return
+	if(registered_mob)
+		UnregisterSignal(registered_mob, list(COMSIG_USER_MOUSE_ENTERED, COMSIG_PARENT_QDELETING))
+	registered_mob = new_mob
+	if(registered_mob)
+		RegisterSignal(registered_mob, COMSIG_USER_MOUSE_ENTERED, PROC_REF(on_mouse_entered))
+		RegisterSignal(registered_mob, COMSIG_PARENT_QDELETING, PROC_REF(on_mob_deleted))
+
+/datum/buildmode/proc/on_mob_deleted(datum/source)
+	SIGNAL_HANDLER
+	register_mob(null)
+
+/datum/buildmode/proc/create_buttons()
+	modebutton = new(null, null, src)
 	buttons += modebutton
-	buttons += new /atom/movable/screen/buildmode/help(null, hud_used, src)
-	dirbutton = new /atom/movable/screen/buildmode/bdir(null, hud_used, src)
+	buttons += new /atom/movable/screen/buildmode/help(null, null, src)
+	dirbutton = new(null, null, src)
 	buttons += dirbutton
-	categorybutton = new /atom/movable/screen/buildmode/category(null, hud_used, src)
-	buttons += categorybutton
+	buttons += new /atom/movable/screen/buildmode/quit(null, null, src)
+	buttons += new /atom/movable/screen/buildmode/items(null, null, src)
+	modebutton.update_appearance(UPDATE_ICON_STATE | UPDATE_NAME)
+	dirbutton.update_appearance(UPDATE_ICON_STATE)
 
-	var/atom/movable/screen/buildmode/items/itembutton = new(null, hud_used, src)
-	buttons += itembutton
+	build_options_grid(subtypesof(/datum/buildmode_mode), modeswitch_buttons, /atom/movable/screen/buildmode/modeswitch)
+	build_options_grid(list(SOUTH, EAST, WEST, NORTH, NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST), dirswitch_buttons, /atom/movable/screen/buildmode/dirswitch)
 
-	buttons += new /atom/movable/screen/buildmode/quit(null, hud_used, src)
+/datum/buildmode/proc/build_options_grid(list/elements, list/buttonslist, buttontype)
+	var/pos_idx = 0
+	for(var/thing in elements)
+		var/x = pos_idx % switch_width
+		var/y = FLOOR(pos_idx / switch_width, 1)
+		var/atom/movable/screen/buildmode/button = new buttontype(null, null, src, thing)
+		// Extra .5 for a nice offset look
+		button.screen_loc = "NORTH-[(1 + 0.5 + y * 1.5)],WEST+[0.5 + x * 1.5]"
+		buttonslist += button
+		pos_idx++
 
-	build_options_grid(subtypesof(/datum/buildmode_mode), modeswitch_buttons, /atom/movable/screen/buildmode/modeswitch, hud_used)
-	build_options_grid(list(SOUTH, EAST, WEST, NORTH, NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST), dirswitch_buttons, /atom/movable/screen/buildmode/dirswitch, hud_used)
-	build_options_grid(list(
-		BM_CATEGORY_TURF,
-		BM_CATEGORY_OBJ,
-		BM_CATEGORY_MOB,
-		BM_CATEGORY_ITEM,
-		BM_CATEGORY_WEAPON,
-		BM_CATEGORY_CLOTHING,
-		BM_CATEGORY_REAGENT_CONTAINERS,
-		BM_CATEGORY_FOOD,
-	), category_buttons, /atom/movable/screen/buildmode/categoryswitch, hud_used)
+/datum/buildmode/proc/close_switchstates()
+	switch(switch_state)
+		if(BM_SWITCHSTATE_MODE)
+			close_modeswitch()
+		if(BM_SWITCHSTATE_DIR)
+			close_dirswitch()
 
-/**
- * Create or update the preview appearance that follows the cursor
- *
- * @param {path} item_path - The path of the item to preview
- */
-/datum/buildmode/proc/create_preview_appearance(item_path)
+/datum/buildmode/proc/toggle_modeswitch()
+	if(switch_state == BM_SWITCHSTATE_MODE)
+		close_modeswitch()
+		return
+	close_switchstates()
+	switch_state = BM_SWITCHSTATE_MODE
+	holder?.screen += modeswitch_buttons
+
+/datum/buildmode/proc/close_modeswitch()
+	switch_state = BM_SWITCHSTATE_NONE
+	holder?.screen -= modeswitch_buttons
+
+/datum/buildmode/proc/toggle_dirswitch()
+	if(switch_state == BM_SWITCHSTATE_DIR)
+		close_dirswitch()
+		return
+	close_switchstates()
+	switch_state = BM_SWITCHSTATE_DIR
+	holder?.screen += dirswitch_buttons
+
+/datum/buildmode/proc/close_dirswitch()
+	switch_state = BM_SWITCHSTATE_NONE
+	holder?.screen -= dirswitch_buttons
+
+/datum/buildmode/proc/change_mode(newmode)
+	close_switchstates()
+	if(mode?.type == newmode)
+		return
+	clear_pixel_catcher()
+	mode.exit_mode(src)
+	QDEL_NULL(mode)
+	mode = new newmode(src)
+	mode.enter_mode(src)
+	update_preview()
+	modebutton.update_appearance(UPDATE_ICON_STATE | UPDATE_NAME)
+	to_chat(holder, span_notice("Build mode: [mode.name]. Use the ? button for controls."))
+
+/datum/buildmode/proc/change_dir(newdir)
+	build_dir = newdir
+	close_dirswitch()
+	dirbutton.update_appearance(UPDATE_ICON_STATE)
+	if(preview_image)
+		preview_image.dir = build_dir
+
+/datum/buildmode/proc/InterceptClickOn(mob/user, list/modifiers, atom/object)
+	// HUD elements keep working; everything on the map belongs to the current mode.
+	if(istype(object, /atom/movable/screen))
+		return FALSE
+	mode.handle_click(user.client, modifiers, object)
+	return TRUE
+
+/datum/buildmode/proc/select_item(item_path)
+	if(!ispath(item_path, /atom) || ispath(item_path, /area))
+		return FALSE
+	selected_item = item_path
+	update_preview()
+	item_browser?.send_selection()
+	var/atom/item_atom = item_path
+	to_chat(holder, span_notice("Selected [initial(item_atom.name)] ([item_path])."))
+	return TRUE
+
+/datum/buildmode/proc/clear_selection()
+	if(!selected_item)
+		return
+	selected_item = null
 	clear_preview()
-	if(GLOB.buildmode_appearance_cache[item_path])
-		preview_appearance = new
-		preview_appearance.appearance = GLOB.buildmode_appearance_cache[item_path]
-	else
-		preview_appearance = new
+	clear_pixel_catcher()
+	item_browser?.send_selection()
+	to_chat(holder, span_notice("Selection cleared."))
 
-		if(ispath(item_path, /turf))
-			var/turf/T = item_path
-			preview_appearance.icon = initial(T.icon)
-			preview_appearance.icon_state = initial(T.icon_state)
-			preview_appearance.dir = build_dir
-			preview_appearance.color = LIGHT_COLOR_LIGHT_CYAN
-		else
-			var/atom/preview_atom = item_path
-			preview_appearance.icon = initial(preview_atom.icon)
-			preview_appearance.icon_state = initial(preview_atom.icon_state)
-			preview_appearance.dir = build_dir
-			preview_appearance.color = LIGHT_COLOR_LIGHT_CYAN
+/// Builds the selected type on target; offsets shift movables from their base pixel position.
+/datum/buildmode/proc/place_selected(turf/target, mob/user, offset_x = 0, offset_y = 0)
+	if(!selected_item || !target)
+		return null
+	if(ispath(selected_item, /turf))
+		target.ChangeTurf(selected_item)
+		log_admin("Build Mode: [key_name(user)] changed [AREACOORD(target)] to [selected_item].")
+		return target
+	var/atom/movable/placed = new selected_item(target)
+	if(QDELETED(placed))
+		return null
+	placed.setDir(build_dir)
+	if(offset_x || offset_y)
+		placed.pixel_x = placed.base_pixel_x + offset_x
+		placed.pixel_y = placed.base_pixel_y + offset_y
+	log_admin("Build Mode: [key_name(user)] placed [selected_item] at [AREACOORD(target)].")
+	return placed
 
-		GLOB.buildmode_appearance_cache[item_path] = preview_appearance.appearance
+/// Returns list(turf, pixel_x, pixel_y) under the cursor from click or mouse params.
+/datum/buildmode/proc/resolve_cursor(list/modifiers)
+	if(!holder || !LAZYACCESS(modifiers, SCREEN_LOC))
+		return null
+	var/turf/origin = get_turf(holder.eye)
+	if(!origin)
+		return null
+	var/list/scratch = modifiers.Copy()
+	var/turf/cursor_turf = parse_caught_click_modifiers(scratch, origin, holder)
+	if(!cursor_turf)
+		return null
+	var/offset_x = clamp(text2num(scratch[ICON_X]) - 16, -16, 16)
+	var/offset_y = clamp(text2num(scratch[ICON_Y]) - 16, -16, 16)
+	return list(cursor_turf, offset_x, offset_y)
 
-	preview_image = new
-	preview_image.appearance = preview_appearance
-	preview_image.alpha = 150
+/datum/buildmode/proc/update_preview()
+	var/turf/last_turf = preview_image?.loc
+	clear_preview()
+	if(!selected_item || !holder || !mode?.uses_selection)
+		return
+	var/atom/item_atom = selected_item
+	preview_image = image(initial(item_atom.icon), last_turf, initial(item_atom.icon_state), dir = build_dir)
 	preview_image.plane = ABOVE_LIGHTING_PLANE
-	preview_image.layer = FLOAT_LAYER
+	preview_image.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM | KEEP_APART
+	preview_image.color = LIGHT_COLOR_LIGHT_CYAN
+	preview_image.alpha = 150
 	preview_image.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-
 	holder.images += preview_image
 
-	update_preview_position()
+/datum/buildmode/proc/clear_preview()
+	if(!preview_image)
+		return
+	if(holder)
+		holder.images -= preview_image
+	preview_image.loc = null
+	preview_image = null
 
+/datum/buildmode/proc/on_mouse_entered(datum/source, atom/hovered)
+	SIGNAL_HANDLER
+	// The catcher drives the preview while Shift is held.
+	if(!preview_image || pixel_catcher)
+		return
+	var/turf/hovered_turf = get_turf(hovered)
+	if(hovered_turf)
+		preview_image.loc = hovered_turf
+
+/// Called from the Shift key hooks; shows the pixel catcher while Shift is held.
+/datum/buildmode/proc/set_pixel_positioning(enabled)
+	if(!enabled)
+		clear_pixel_catcher()
+		return
+	if(pixel_catcher || !holder || !preview_image || !mode?.pixel_placement)
+		return
+	pixel_catcher = new(null, null, src)
+	holder.screen += pixel_catcher
+
+/datum/buildmode/proc/clear_pixel_catcher()
+	if(!pixel_catcher)
+		return
+	if(holder)
+		holder.screen -= pixel_catcher
+	QDEL_NULL(pixel_catcher)
+	if(preview_image)
+		preview_image.pixel_x = 0
+		preview_image.pixel_y = 0
+
+/datum/buildmode/proc/track_cursor(list/modifiers)
+	if(!preview_image)
+		return
+	var/list/cursor = resolve_cursor(modifiers)
+	if(!cursor)
+		return
+	preview_image.loc = cursor[1]
+	preview_image.pixel_x = cursor[2]
+	preview_image.pixel_y = cursor[3]
+
+/datum/buildmode/proc/catcher_click(list/modifiers)
+	// No Shift on the click means the key release was missed, so drop the catcher.
+	if(!LAZYACCESS(modifiers, SHIFT_CLICKED))
+		clear_pixel_catcher()
+	var/list/cursor = resolve_cursor(modifiers)
+	if(cursor)
+		mode.handle_click(holder, modifiers, cursor[1])
+
+/proc/togglebuildmode(mob/M as mob in GLOB.player_list)
+	set name = "Toggle Build Mode"
+	set category = "Event"
+
+	if(M.client)
+		if(istype(M.client.click_intercept, /datum/buildmode))
+			var/datum/buildmode/B = M.client.click_intercept
+			B.quit()
+			log_admin("[key_name(usr)] has left build mode.")
+		else
+			new /datum/buildmode(M.client)
+			log_admin("[key_name(usr)] has entered build mode.")
+
+/// Used by the blueprint system to read pixel offsets from mouse params.
 /proc/get_pixel_offsets_from_screenloc(params)
 	var/list/modifiers = params2list(params)
 	var/screen_loc = LAZYACCESS(modifiers, SCREEN_LOC)
@@ -250,194 +336,3 @@ GLOBAL_LIST_EMPTY(buildmode_appearance_cache)
 	var/y_offset = text2num(y_parts[2]) - 16
 
 	return list("x" = x_offset, "y" = y_offset)
-
-/datum/buildmode/proc/on_mouse_moved_pre(datum/source, atom/atom, params)
-	if(istype(source, /atom/movable/buildmode_pixel_dummy))
-		return
-	on_mouse_moved(source, get_turf(atom), params)
-
-/datum/buildmode/proc/on_mouse_moved(datum/source, turf/turf, params)
-	if(turf == preview_image?.loc)
-		return
-	if(!preview_image || !turf)
-		return
-
-	// Update the image's location
-	preview_image.loc = turf
-
-	// Move pixel dummy and handle tile crossing
-	if(pixel_positioning_dummy && params)
-		pixel_positioning_dummy.forceMove(turf)
-		var/list/offsets = get_pixel_offsets_from_screenloc(params)
-		if(offsets)
-			pixel_x_offset = offsets["x"]
-			pixel_y_offset = offsets["y"]
-
-	if(!pixel_positioning_mode)
-		pixel_x_offset = 0
-		pixel_y_offset = 0
-
-	// Apply the pixel offsets
-	preview_image.pixel_x = pixel_x_offset
-	preview_image.pixel_y = pixel_y_offset
-
-/**
- * Update the preview object's position and appearance
- */
-/datum/buildmode/proc/update_preview_position()
-	if(!preview_image)
-		return
-
-	if(!pixel_positioning_mode)
-		preview_image.pixel_x = 0
-		preview_image.pixel_y = 0
-	else
-		preview_image.pixel_x = pixel_x_offset
-		preview_image.pixel_y = pixel_y_offset
-	preview_image.dir = build_dir
-
-/**
- * Clear the current preview
- */
-/datum/buildmode/proc/clear_preview()
-	if(preview_image)
-		if(holder)
-			holder.images -= preview_image
-		qdel(preview_image)
-		preview_image = null
-
-	preview_appearance = null
-
-/**
- * Toggle pixel positioning mode
- */
-/datum/buildmode/proc/toggle_pixel_positioning_mode(toggled)
-	pixel_positioning_mode = toggled
-
-
-	if(pixel_positioning_mode)
-		to_chat(holder.mob, "<span class='notice'>Pixel positioning mode enabled. Move mouse to adjust pixel position.</span>")
-		create_pixel_positioning_dummy()
-	else
-		to_chat(holder.mob, "<span class='notice'>Pixel positioning mode disabled.</span>")
-		clear_pixel_positioning_dummy()
-		pixel_y_offset = 0
-		pixel_x_offset = 0
-		update_preview_position()
-
-/**
- * Create dummy object for pixel positioning
- */
-/datum/buildmode/proc/create_pixel_positioning_dummy()
-	clear_pixel_positioning_dummy()
-	if(!preview_image)
-		return
-	pixel_positioning_dummy = new /atom/movable/buildmode_pixel_dummy(get_turf(preview_image.loc), src)
-
-/**
- * Clear pixel positioning dummy
- */
-/datum/buildmode/proc/clear_pixel_positioning_dummy()
-	if(pixel_positioning_dummy)
-		qdel(pixel_positioning_dummy)
-		pixel_positioning_dummy = null
-
-/**
- * Intercept clicks to handle buildmode functionality
- *
- * @param {mob} user - The user clicking
- * @param {string} params - Click parameters
- * @param {atom} object - The object clicked on
- * @return {bool} - Whether the click was handled
- */
-/datum/buildmode/proc/InterceptClickOn(mob/user, list/modifiers, atom/object)
-	var/left_click = LAZYACCESS(modifiers, LEFT_CLICK)
-	var/right_click = LAZYACCESS(modifiers, RIGHT_CLICK)
-
-	if(selected_item && !istype(mode, /datum/buildmode_mode/advanced))
-		if(left_click)
-			place_object(get_turf(object), user, modifiers)
-			return TRUE
-
-		if(right_click)
-			clear_selection()
-			return TRUE
-	return mode.handle_click(user.client, modifiers, object)
-
-/**
- * New buildmode category button
- */
-/atom/movable/screen/buildmode/category/update_name()
-	. = ..()
-	var/category_name = "None"
-	switch(bd.current_category)
-		if(BM_CATEGORY_TURF)
-			category_name = "Turfs"
-		if(BM_CATEGORY_OBJ)
-			category_name = "Objects"
-		if(BM_CATEGORY_MOB)
-			category_name = "Mobs"
-		if(BM_CATEGORY_ITEM)
-			category_name = "Items"
-
-	name = "Build Category: [category_name]"
-
-/**
- * Toggle BuildMode admin command
- *
- * @param {mob} M - The mob to toggle buildmode for
- */
-/proc/togglebuildmode(mob/M as mob in GLOB.player_list)
-	set name = "Toggle Build Mode"
-	set category = "Event"
-
-	if(M.client)
-		if(istype(M.client.click_intercept, /datum/buildmode))
-			var/datum/buildmode/B = M.client.click_intercept
-			B.quit()
-			log_admin("[key_name(usr)] has left build mode.")
-		else
-			new /datum/buildmode(M.client)
-			log_admin("[key_name(usr)] has entered build mode.")
-
-/**
- * Dummy object for tracking mouse movement in pixel positioning mode
- */
-/atom/movable/buildmode_pixel_dummy
-	name = "pixel positioning tracker"
-	icon = 'icons/effects/alphacolors.dmi'
-	alpha = 1
-	glide_size = 1000
-	plane = HUD_PLANE
-	var/datum/buildmode/parent_buildmode
-	var/skip = FALSE
-
-/atom/movable/buildmode_pixel_dummy/Initialize(mapload, datum/buildmode/bm)
-	. = ..()
-	parent_buildmode = bm
-
-/atom/movable/buildmode_pixel_dummy/Destroy()
-	parent_buildmode = null
-	return ..()
-
-/atom/movable/buildmode_pixel_dummy/MouseMove(location, control, params)
-	if(!parent_buildmode || !parent_buildmode.pixel_positioning_mode)
-		return
-
-	var/list/offsets = get_pixel_offsets_from_screenloc(params)
-	if(offsets)
-		parent_buildmode.pixel_x_offset = offsets["x"]
-		parent_buildmode.pixel_y_offset = offsets["y"]
-		parent_buildmode.update_preview_position()
-
-
-
-/atom/movable/buildmode_pixel_dummy/MouseEntered(location, control, params)
-	if(!parent_buildmode || !parent_buildmode.pixel_positioning_mode)
-		return
-
-	var/list/offsets = get_pixel_offsets_from_screenloc(params)
-	if(offsets)
-		parent_buildmode.pixel_x_offset = offsets["x"]
-		parent_buildmode.pixel_y_offset = offsets["y"]
-		parent_buildmode.update_preview_position()

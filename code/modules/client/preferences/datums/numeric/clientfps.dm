@@ -1,3 +1,6 @@
+/// Each client frame redraws the whole map, so higher fps costs weak PCs proportionally more CPU.
+#define DEFAULT_CLIENT_FPS 60
+
 /datum/preference/numeric/clientfps
 	savefile_key = "clientfps"
 	savefile_identifier = PREF_PLAYER
@@ -9,13 +12,15 @@
 	step = 1
 
 /datum/preference/numeric/clientfps/create_default_value(datum/preferences/prefs)
-	return 100
+	return DEFAULT_CLIENT_FPS
 
 /datum/preference/numeric/clientfps/apply_to_client(client/client, value)
-	client.fps = (value < 0) ? 100 : value
+	client.fps = (value < 0) ? DEFAULT_CLIENT_FPS : value
 
 /datum/preference/numeric/clientfps/handle_link(datum/preferences/prefs, mob/user)
 	var/desiredfps = input(user, "Choose your desired fps. (0 = synced with server tick rate (currently:[world.fps]))", "Character Preference", prefs.read_preference(/datum/preference/numeric/clientfps))  as null|num
 	if (!isnull(desiredfps))
 		prefs.write_preference(/datum/preference/numeric/clientfps, desiredfps)
 		prefs.parent.fps = desiredfps
+
+#undef DEFAULT_CLIENT_FPS

@@ -332,8 +332,8 @@ All effects don't start immediately, but rather get worse over time; the rate is
 				remove_status_effect(/datum/status_effect/buff/drunk_master)
 		if(drunkenness >= 1)
 			SEND_SIGNAL(src, COMSIG_DRUG_INDULGE)
-			if(has_quirk(/datum/quirk/vice/addiction/alcoholic))
-				sate_addiction(/datum/quirk/vice/addiction/alcoholic)
+			if(has_quirk(/datum/quirk/negative/addiction/alcoholic))
+				sate_addiction(/datum/quirk/negative/addiction/alcoholic)
 		if(drunkenness >= 3)
 			if(prob(3))
 				slurring += 2
@@ -574,8 +574,19 @@ All effects don't start immediately, but rather get worse over time; the rate is
 *	Hunger and Hydration.
 */
 
+/// The bed or chair this mob rests on: the buckled seat first, then anything on its turf.
+/mob/living/carbon/proc/get_rest_surface()
+	if(buckled)
+		return buckled
+	var/turf/T = get_turf(src)
+	for(var/obj/structure/bed/B in T)
+		return B
+	for(var/obj/structure/chair/C in T)
+		return C
+
 /mob/living/carbon/proc/handle_sleep()
 	if(HAS_TRAIT(src, TRAIT_NOSLEEP))
+		handle_sleepless_rest()
 		return
 	var/cant_fall_asleep = FALSE
 	var/cause = "I just can't..."
@@ -592,58 +603,14 @@ All effects don't start immediately, but rather get worse over time; the rate is
 
 	//Healing while sleeping in a bed
 	if(stat >= UNCONSCIOUS)
-		var/obj/structure/sleep_surface = buckled
-		if(!sleep_surface)
-			var/turf/T = get_turf(src)
-			for(var/obj/structure/bed/B in T)
-				sleep_surface = B
-				break
-			if(!sleep_surface)
-				for(var/obj/structure/chair/C in T)
-					sleep_surface = C
-					break
-
-		var/sleepy_mod = sleep_surface?.sleepy || 0.5
-		var/bleed_rate = get_bleed_rate()
-		var/yess = HAS_TRAIT(src, TRAIT_NOHUNGER)
-		if(nutrition > 0 || yess)
-			adjust_energy(sleepy_mod * (max_energy * 0.02))
-		if(HAS_TRAIT(src, TRAIT_BETTER_SLEEP))
-			adjust_energy(sleepy_mod * (max_energy * 0.004))
-		if(locate(/obj/item/bedsheet) in get_turf(src))
-			adjust_energy(sleepy_mod * (max_energy * 0.004))
-		if(hydration > 0 || yess)
-			if(!bleed_rate)
-				adjust_bloodvolume(4 * sleepy_mod, BLOOD_VOLUME_NORMAL)
-			for(var/obj/item/bodypart/affecting as anything in bodyparts)
-				//for context, it takes 5 small cuts (0.4 x 5) or 3 normal cuts (0.8 x 3) for a bodypart to not be able to heal itself
-				if(affecting.get_bleed_rate() >= 2)
-					continue
-				if(affecting.heal_damage(sleepy_mod * 1.5, sleepy_mod * 1.5, required_status = BODYPART_ORGANIC, updating_health = FALSE)) // multiplier due to removing healing from sleep effect
-					src.update_damage_overlays()
-				for(var/datum/wound/wound as anything in affecting.wounds)
-					if(!wound.sleep_healing)
-						continue
-					wound.heal_wound(wound.sleep_healing * sleepy_mod)
-			if(toxloss)
-				adjustToxLoss(-(sleepy_mod * 0.15), FALSE, TRUE)
-				. |= BODYPART_LIFE_UPDATE_HEALTH
-			if(eyesclosed && !HAS_TRAIT(src, TRAIT_NOSLEEP))
-				Sleeping(300)
+		var/atom/movable/sleep_surface = get_rest_surface()
+		. |= apply_rest_recovery(sleep_surface?.sleepy || 0.5)
+		if((hydration > 0 || HAS_TRAIT(src, TRAIT_NOHUNGER)) && eyesclosed && !HAS_TRAIT(src, TRAIT_NOSLEEP))
+			Sleeping(300)
 		tiredness = 0
 	else if(!IsSleeping() && !HAS_TRAIT(src, TRAIT_NOSLEEP))
 		// Resting on a bed or something
-		var/obj/structure/sleep_surface = buckled
-		if(!sleep_surface)
-			var/turf/T = get_turf(src)
-			for(var/obj/structure/bed/B in T)
-				sleep_surface = B
-				break
-			if(!sleep_surface)
-				for(var/obj/structure/chair/C in T)
-					sleep_surface = C
-					break
-
+		var/atom/movable/sleep_surface = get_rest_surface()
 		if(sleep_surface?.sleepy)
 
 			if(eyesclosed && !cant_fall_asleep || (eyesclosed && !(fallingas >= 10 && cant_fall_asleep)))
@@ -684,3 +651,41 @@ All effects don't start immediately, but rather get worse over time; the rate is
 		else if(fallingas)
 			fallingas = 0
 		tiredness = min(tiredness + 1, 100)
+
+/// Sleep-strength recovery: energy, blood, organic limbs, wounds and toxins. Returns life update flags.
+/mob/living/carbon/proc/apply_rest_recovery(sleepy_mod)
+	var/bleed_rate = get_bleed_rate()
+	var/yess = HAS_TRAIT(src, TRAIT_NOHUNGER)
+	if(nutrition > 0 || yess)
+		adjust_energy(sleepy_mod * (max_energy * 0.02))
+	if(HAS_TRAIT(src, TRAIT_BETTER_SLEEP))
+		adjust_energy(sleepy_mod * (max_energy * 0.004))
+	if(locate(/obj/item/bedsheet) in get_turf(src))
+		adjust_energy(sleepy_mod * (max_energy * 0.004))
+	if(hydration <= 0 && !yess)
+		return
+	if(!bleed_rate)
+		adjust_bloodvolume(4 * sleepy_mod, BLOOD_VOLUME_NORMAL)
+	for(var/obj/item/bodypart/affecting as anything in bodyparts)
+		//for context, it takes 5 small cuts (0.4 x 5) or 3 normal cuts (0.8 x 3) for a bodypart to not be able to heal itself
+		if(affecting.get_bleed_rate() >= 2)
+			continue
+		if(affecting.heal_damage(sleepy_mod * 1.5, sleepy_mod * 1.5, required_status = BODYPART_ORGANIC, updating_health = FALSE)) // multiplier due to removing healing from sleep effect
+			src.update_damage_overlays()
+		for(var/datum/wound/wound as anything in affecting.wounds)
+			if(!wound.sleep_healing)
+				continue
+			wound.heal_wound(wound.sleep_healing * sleepy_mod)
+	if(toxloss)
+		adjustToxLoss(-(sleepy_mod * 0.15), FALSE, TRUE)
+		. |= BODYPART_LIFE_UPDATE_HEALTH
+
+/// Awake rest for mobs that cannot sleep, at the same rate as resting with open eyes.
+/mob/living/carbon/proc/handle_sleepless_rest()
+	if(stat >= UNCONSCIOUS || has_status_effect(/datum/status_effect/reverie))
+		return
+	var/atom/movable/rest_surface = get_rest_surface()
+	if(rest_surface?.sleepy)
+		adjust_energy(rest_surface.sleepy * (max_energy * 0.01))
+	else if(body_position == LYING_DOWN)
+		adjust_energy(max_energy * 0.01)

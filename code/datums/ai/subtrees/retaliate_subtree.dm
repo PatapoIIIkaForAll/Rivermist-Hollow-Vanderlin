@@ -30,6 +30,8 @@
  */
 /datum/ai_behavior/target_from_retaliate_list
 	action_cooldown = 2 SECONDS
+	// Waiting out the cooldown in the queue must not stop the mob from planning.
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 	/// How far can we see stuff?
 	var/vision_range = 8
 	/// How long (from the last time the mob hit us) we remember them as enemies
@@ -66,7 +68,7 @@
 	for(var/mob/living/living_target in potential_targets)
 		if(can_attack_target(living_mob, living_target, targetting_datum))
 			continue
-		var/extra_chance = (living_mob.health <= living_mob.maxHealth * 50) ? 30 : 0 // if we're below half health, we're way more alert
+		var/extra_chance = living_mob.get_npc_sneak_alert_bonus()
 		if(living_mob.npc_detect_sneak(living_target, extra_chance))
 			continue
 		potential_targets -= living_target

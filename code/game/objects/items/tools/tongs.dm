@@ -140,7 +140,8 @@
 	if(!istype(interacting_with) || !isturf(interacting_with.loc))
 		return NONE
 
-	if(held_item)
+	// Tongs only hold items; the checks below read item-only vars.
+	if(held_item || !isitem(interacting_with))
 		return NONE
 
 	var/obj/item/item = interacting_with

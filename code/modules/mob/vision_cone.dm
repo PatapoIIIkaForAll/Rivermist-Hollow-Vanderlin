@@ -139,17 +139,17 @@
 			new_shadow_angle = FOV_270_DEGREES
 			new_angle = 0
 		else if(fovangle & FOV_BEHIND)
-			new_shadow_angle = FOV_180PLUS45_DEGREES
+			new_shadow_angle = FOV_180MINUS45_DEGREES
 			new_angle = -45
 		else
-			new_shadow_angle = FOV_180PLUS45_DEGREES
+			new_shadow_angle = FOV_180MINUS45_DEGREES
 			new_angle = 45
 	else if(fovangle & FOV_LEFT)
 		if(fovangle & FOV_BEHIND)
-			new_shadow_angle = FOV_180MINUS45_DEGREES
+			new_shadow_angle = FOV_180PLUS45_DEGREES
 			new_angle = 45
 		else
-			new_shadow_angle = FOV_180MINUS45_DEGREES
+			new_shadow_angle = FOV_180PLUS45_DEGREES
 			new_angle = -45
 	else if(fovangle & FOV_BEHIND)
 		new_shadow_angle = FOV_180_DEGREES

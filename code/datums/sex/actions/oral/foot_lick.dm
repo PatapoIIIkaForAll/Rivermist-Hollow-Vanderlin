@@ -1,5 +1,5 @@
 /datum/sex_action/foot_lick
-	name = "Lick their feet"
+	name = "Lick feet"
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_LEGS
 	check_same_tile = FALSE
@@ -33,7 +33,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] licks [target]'s feet..."))
-	user.make_sucking_noise()
+	user.make_mouth_noise("lick")
 	perform_sex_action(user, target, 0.5, 0, 0)
 
 	perform_sex_action(target, user, 0.25, 0, 0)

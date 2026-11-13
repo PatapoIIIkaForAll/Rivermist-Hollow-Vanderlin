@@ -230,7 +230,7 @@
 
 				if(iscarbon(M)) //Carbon stuff
 					if(ishuman(M))
-						if(M.mind?.assigned_role.parent_job)
+						if(M.mind?.assigned_role?.parent_job)
 							M_job = M.mind.assigned_role.parent_job.title
 						else
 							M_job = M.job

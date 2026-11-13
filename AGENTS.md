@@ -20,4 +20,12 @@ read saved files from disk, not unsaved VS Code buffers. Exit codes are 0 for no
 errors (warnings/hints may remain), 1 for diagnostic errors, and 2 for a failed
 check. A failed check is not a clean result. See `tools/dm_diagnostics.md`.
 
+Includes in `vanderlin.dme` and `code/modules/unit_tests/_unit_tests.dm` must
+stay in the order CI checks. After adding or removing an include anywhere in
+the `// BEGIN_INCLUDE` block, run:
+
+```powershell
+python tools/ticked_file_enforcement/sort_includes.py
+```
+
 Never commit or push without user authorization.

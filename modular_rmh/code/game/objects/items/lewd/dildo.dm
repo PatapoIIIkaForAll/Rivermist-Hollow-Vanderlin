@@ -11,6 +11,8 @@
 	w_class = WEIGHT_CLASS_SMALL
 	obj_flags = CAN_BE_HIT
 	sellprice = 1
+	// The sprite is drawn large for the inventory; in the world it is a third of that.
+	dropshrink = 0.4
 	var/dildo_type = "human"
 	var/dildo_size = "small"
 	var/pleasure = 4
@@ -18,9 +20,8 @@
 	var/dildo_material
 	var/shape_choice
 	var/size_choice
-	var/mob/living/carbon/human/wearer
-	var/obj/item/organ/genitals/penis/strapon
-	slot_flags = ITEM_SLOT_BELT
+	// Worn only through a strap-on harness, which seats the toy in its ring.
+	slot_flags = NONE
 
 /obj/item/dildo/New()
 	. = ..()
@@ -32,25 +33,6 @@
 		return
 	if(can_custom)
 		customize(user)
-
-/obj/item/dildo/equipped(mob/user, slot, initial = FALSE)
-	if(slot == ITEM_SLOT_BELT)
-		var/mob/living/carbon/human/U = user
-		if(strapon)
-			var/obj/item/organ/genitals/penis/penis = U.getorganslot(ORGAN_SLOT_PENIS)
-			if(!penis)
-				penis = strapon
-				wearer = U
-				penis.Insert(U)
-	. = ..()
-
-/obj/item/dildo/dropped(mob/user, silent = FALSE) //called when belt removed so we can use it to remove the strapon
-	if(wearer) // so males who already have a penis dont get their dicks removed
-		// Only pull out our own strapon; the wearer may have gained a real penis since.
-		if(strapon && wearer.getorganslot(ORGAN_SLOT_PENIS) == strapon)
-			strapon.Remove(wearer)
-		wearer = null
-	. = ..()
 
 /obj/item/dildo/proc/customize(mob/living/user)
 	if(!can_custom)
@@ -71,38 +53,15 @@
 					pleasure = 6
 				if("big")
 					pleasure = 8
+	// Storage bulk follows the girth of the chosen size.
+	body_storage_bulk = max(1, round(get_insert_girth() / ORIFICE_BULK_PER_CM))
 	update_appearance()
-	update_strapon()
 	can_custom = FALSE
 	return TRUE
 
-/obj/item/dildo/proc/update_strapon()
-	var/obj/item/organ/genitals/penis/temp = new /obj/item/organ/genitals/penis
-	temp.name = name
-	icon_state = "dildo_[dildo_type]_[dildo_size]"
-	switch(shape_choice)
-		if("knotted")
-			temp.penis_type = PENIS_TYPE_KNOTTED
-		if("human")
-			temp.penis_type = PENIS_TYPE_PLAIN
-		if("flared")
-			temp.penis_type = PENIS_TYPE_EQUINE
-	switch(dildo_size)
-		if("small")
-			temp.organ_size = DEFAULT_PENIS_SIZE-1
-		if("medium")
-			temp.organ_size = DEFAULT_PENIS_SIZE
-		if("big")
-			temp.organ_size = DEFAULT_PENIS_SIZE+1
-		if("huge")
-			temp.organ_size = DEFAULT_PENIS_SIZE+1 //huge doesnt exist in mobs
-	temp.always_hard = TRUE
-	temp.strapon = TRUE
-	strapon = temp
-
 /obj/item/dildo/update_appearance()
 	. = ..()
-	icon_state = "dildo_[dildo_type]_[dildo_size]"
+	icon_state = get_toy_icon_state()
 	name = "[dildo_size] [dildo_type] [dildo_material] dildo"
 	desc = "To quench the woman's thirst."
 
@@ -130,6 +89,8 @@
 /obj/item/dildo/silver/pickup(mob/user)
 	. = ..()
 	var/mob/living/carbon/human/H = user
+	if(!ishuman(H) || !H.mind)
+		return
 	var/datum/antagonist/vampire/V_lord = H.mind.has_antag_datum(/datum/antagonist/vampire/)
 	var/datum/antagonist/werewolf/W = H.mind.has_antag_datum(/datum/antagonist/werewolf/)
 	if(ishuman(H))
@@ -150,7 +111,7 @@
 		return
 
 	. = ..()
-	if(ishuman(target))
+	if(ishuman(target) && target.mind)
 		//var/mob/living/carbon/human/s_user = user
 		var/mob/living/carbon/human/H = target
 		var/datum/antagonist/werewolf/W = H.mind.has_antag_datum(/datum/antagonist/werewolf/)

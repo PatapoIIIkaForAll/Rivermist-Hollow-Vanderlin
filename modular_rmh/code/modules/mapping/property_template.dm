@@ -45,3 +45,9 @@
 	mappath = "_maps/map_files/hsector/housing/lab.dmm"
 	width = 8
 	height = 8
+
+/datum/map_template/rmh_outskirt1
+	name = "Rivermist Hollow Outskirt House"
+	mappath = "_maps/map_files/hsector/housing/outskirt1.dmm"
+	width = 9
+	height = 9

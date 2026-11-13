@@ -772,7 +772,7 @@ h2.alert {
 .hypnophrase {
   color: hsl(0, 0%, 5.1%);
   font-weight: bold;
-  animation: hypnocolor 1500ms infinite;
+  animation: hypnocolor 1500ms 4;
   animation-direction: alternate;
 }
 
@@ -801,7 +801,7 @@ h2.alert {
 .phobia {
   color: hsl(0, 100%, 43.3%);
   font-weight: bold;
-  animation: phobia 750ms infinite;
+  animation: phobia 750ms 4;
 }
 
 @keyframes phobia {
@@ -819,11 +819,37 @@ h2.alert {
 }
 
 
+// Chat animations must end: an infinite one repaints every frame while its message stays in chat.
+// The pink flash for the best beats of a scene; four pulses, then it rests.
+.love_flash {
+  color: #f07ad8;
+  text-shadow: 0 0 6px #e85bc8;
+  font-size: 105%;
+  animation: love_flash 750ms 4;
+}
+
+@keyframes love_flash {
+  0% {
+    color: #f07ad8;
+    text-shadow: 0 0 4px #e85bc8;
+  }
+
+  50% {
+    color: #ff3fd0;
+    text-shadow: 0 0 10px #ff6ad9;
+  }
+
+  100% {
+    color: #f07ad8;
+    text-shadow: 0 0 4px #e85bc8;
+  }
+}
+
 .animatedpain {
   color: #BA55D3;
   text-shadow: 0 0 6px #c75be2;
   font-size: 110%;
-  animation: pain 750ms infinite;
+  animation: pain 750ms 4;
 }
 
 @keyframes pain {
@@ -1235,7 +1261,7 @@ $border-width-px: $border-width * 1px;
 .god_generic {
   color: hsl(0, 86%, 71%);
   font-weight: bold;
-  animation: prayer_flicker 1s infinite;
+  animation: prayer_flicker 1s 3;
 }
 
 @keyframes prayer_flicker {
@@ -1260,7 +1286,7 @@ $border-width-px: $border-width * 1px;
 .god_astrata {
   color: hsl(52, 70%, 65%);
   font-weight: bold;
-  animation: astrata_flicker 1s infinite;
+  animation: astrata_flicker 1s 3;
 }
 
 @keyframes astrata_flicker {
@@ -1287,7 +1313,7 @@ $border-width-px: $border-width * 1px;
 .god_noc {
   color: hsl(219, 53%, 68%);
   font-weight: bold;
-  animation: noc_flicker 1s infinite;
+  animation: noc_flicker 1s 3;
 }
 
 @keyframes noc_flicker {
@@ -1313,7 +1339,7 @@ $border-width-px: $border-width * 1px;
 .god_abyssor {
   color: hsl(352, 51%, 36%);
   font-weight: bold;
-  animation: abyssor_flicker 1s infinite;
+  animation: abyssor_flicker 1s 3;
 }
 
 @keyframes abyssor_flicker {
@@ -1339,7 +1365,7 @@ $border-width-px: $border-width * 1px;
 .god_dendor {
   color: hsl(85, 20%, 44%);
   font-weight: bold;
-  animation: dendor_flicker 1s infinite;
+  animation: dendor_flicker 1s 3;
 }
 
 @keyframes dendor_flicker {
@@ -1365,7 +1391,7 @@ $border-width-px: $border-width * 1px;
 .god_ravox {
   color: hsl(8, 27%, 37%);
   font-weight: bold;
-  animation: ravox_flicker 1s infinite;
+  animation: ravox_flicker 1s 3;
 }
 
 @keyframes ravox_flicker {
@@ -1391,7 +1417,7 @@ $border-width-px: $border-width * 1px;
 .god_malum {
   color: hsl(29, 58%, 59%);
   font-weight: bold;
-  animation: malum_flicker 1s infinite;
+  animation: malum_flicker 1s 3;
 }
 
 @keyframes malum_flicker {
@@ -1417,7 +1443,7 @@ $border-width-px: $border-width * 1px;
 .god_eora {
   color: hsl(297, 47%, 82%);
   font-weight: bold;
-  animation: eora_flicker 1s infinite;
+  animation: eora_flicker 1s 3;
  }
 
 @keyframes eora_flicker {
@@ -1443,7 +1469,7 @@ $border-width-px: $border-width * 1px;
 .god_xylix {
   color: hsl(70, 47%, 82%);
   font-weight: bold;
-  animation: xylix_flicker 1s infinite;
+  animation: xylix_flicker 1s 3;
 }
 
 @keyframes xylix_flicker {
@@ -1469,7 +1495,7 @@ $border-width-px: $border-width * 1px;
 .god_pestra {
   color: hsl(70, 70%, 37%);
   font-weight: bold;
-  animation: pestra_flicker 1s infinite;
+  animation: pestra_flicker 1s 3;
 }
 
 @keyframes pestra_flicker {
@@ -1495,7 +1521,7 @@ $border-width-px: $border-width * 1px;
 .god_necra {
   color: hsl(243, 60%, 58%);
   font-weight: bold;
-  animation: necra_flicker 1s infinite;
+  animation: necra_flicker 1s 3;
 }
 
 @keyframes necra_flicker {
@@ -1521,7 +1547,7 @@ $border-width-px: $border-width * 1px;
 .god_matthios {
   color: hsl(220, 6.1%, 9.6%);
   font-weight: bold;
-  animation: matthios_flicker 1s infinite;
+  animation: matthios_flicker 1s 3;
 }
 
 @keyframes matthios_flicker {
@@ -1547,7 +1573,7 @@ $border-width-px: $border-width * 1px;
 .god_baotha {
   color: hsl(294.9, 26.5%, 43.7%);
   font-weight: bold;
-  animation: baotha_flicker 1s infinite;
+  animation: baotha_flicker 1s 3;
 }
 
 @keyframes baotha_flicker {
@@ -1573,7 +1599,7 @@ $border-width-px: $border-width * 1px;
 .god_graggar {
   color: hsl(125.9, 49.1%, 32.4%);
   font-weight: bold;
-  animation: graggar_flicker 1s infinite;
+  animation: graggar_flicker 1s 3;
 }
 
 @keyframes graggar_flicker {
@@ -1599,7 +1625,7 @@ $border-width-px: $border-width * 1px;
 .god_zizo {
   color: hsl(338.7, 59.2%, 29.8%);
   font-weight: bold;
-  animation: zizo_flicker 1s infinite;
+  animation: zizo_flicker 1s 3;
 }
 
 @keyframes zizo_flicker {
@@ -1625,7 +1651,7 @@ $border-width-px: $border-width * 1px;
 .god_psydon {
   color: hsl(190.9, 36.3%, 82.2%);
   font-weight: bold;
-  animation: psydon_flicker 1s infinite;
+  animation: psydon_flicker 1s 3;
 }
 
 @keyframes psydon_flicker {
@@ -1648,7 +1674,7 @@ $border-width-px: $border-width * 1px;
 /* ##### END ##### */
 
 .highlight-bounce {
-  animation: bounce 2s infinite;
+  animation: bounce 2s 3;
   display: inline-block;
   border-radius: 3px;
 }
@@ -1672,7 +1698,7 @@ $border-width-px: $border-width * 1px;
 .highlight-slide {
   background: linear-gradient(90deg, transparent 30%, var(--highlight-color, #ffdd44) 50%, transparent 70%);
   background-size: 200% 100%;
-  animation: slide 2s infinite;
+  animation: slide 2s 3;
   border-radius: 3px;
 }
 

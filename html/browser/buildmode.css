@@ -208,3 +208,28 @@
 .item-grid::-webkit-scrollbar-thumb:hover {
     background: #777;
 }
+
+.bm-selection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: #ffdd88;
+}
+
+.bm-hint {
+    margin-top: 6px;
+    font-size: 10px;
+    color: #999;
+}
+
+.button.disabled {
+    color: #666;
+    cursor: default;
+}
+
+.button.disabled:hover {
+    background-color: #444;
+}

@@ -33,7 +33,7 @@
 	var/chosen_verb = pick(list("jerks [user.p_their()] cock", "strokes [user.p_their()] cock", "masturbates", "jerks off"))
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] [chosen_verb]..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("fap", user, 30)
 
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)

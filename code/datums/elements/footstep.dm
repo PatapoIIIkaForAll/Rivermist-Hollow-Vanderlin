@@ -32,7 +32,7 @@
 			return
 		if(FOOTSTEP_MOB_CLAW)
 			footstep_sounds = GLOB.clawfootstep
-		if(FOOTSTEP_MOB_BAREFOOT)
+		if(FOOTSTEP_MOB_BAREFOOT, FOOTSTEP_MOB_BEAST)
 			footstep_sounds = GLOB.barefootstep
 		if(FOOTSTEP_MOB_HEAVY)
 			footstep_sounds = GLOB.heavyfootstep
@@ -79,7 +79,7 @@
 	if(steps % 2)
 		return
 
-	. = list(HEELSTEP_MOB_HEEL = turf.heelstep, FOOTSTEP_MOB_SHOE = turf.footstep, FOOTSTEP_MOB_BAREFOOT = turf.barefootstep, FOOTSTEP_MOB_HEAVY = turf.heavyfootstep, FOOTSTEP_MOB_METAL = turf.heavyfootstep, FOOTSTEP_MOB_CLAW = turf.clawfootstep, STEP_SOUND_PRIORITY = STEP_SOUND_NO_PRIORITY)
+	. = list(HEELSTEP_MOB_HEEL = turf.heelstep, FOOTSTEP_MOB_SHOE = turf.footstep, FOOTSTEP_MOB_BAREFOOT = turf.barefootstep, FOOTSTEP_MOB_BEAST = turf.barefootstep, FOOTSTEP_MOB_HEAVY = turf.heavyfootstep, FOOTSTEP_MOB_METAL = turf.heavyfootstep, FOOTSTEP_MOB_CLAW = turf.clawfootstep, STEP_SOUND_PRIORITY = STEP_SOUND_NO_PRIORITY)
 	SEND_SIGNAL(source, COMSIG_MOB_PREPARE_STEP_SOUND, .) // Used to override shoe material before turf
 	SEND_SIGNAL(turf, COMSIG_TURF_PREPARE_STEP_SOUND, .)
 	return .
@@ -122,7 +122,9 @@
 		volume_multiplier = 0.6
 		range_adjustment = -2
 
-	if(istype(source.shoes, /obj/item/clothing/shoes/heels))
+	var/obj/item/clothing/shoes/humshoes = source.shoes
+	var/heeled = istype(humshoes) && humshoes.heeled
+	if(heeled)
 		volume_multiplier *= 1.1
 		range_adjustment += 1
 
@@ -138,22 +140,22 @@
 	var/list/heard_clients
 
 	var/mob/living/carbon/human/H = source
-	var/obj/item/clothing/shoes/humshoes = H.shoes
 	var/feetCover = (H.wear_armor && (H.wear_armor.body_parts_covered & FEET)) || (H.wear_pants && (H.wear_pants.body_parts_covered & FEET))
 
-	// HEEL CHECK
-	if(istype(humshoes, /obj/item/clothing/shoes/heels))
-		var/heelstep_type = prepared_steps[HEELSTEP_MOB_HEEL]
-		if(!heelstep_type)
-			return
+	// Turfs without a heel sound fall back to the shoe sound.
+	var/list/heel_sound
+	var/heelstep_type = heeled ? prepared_steps[HEELSTEP_MOB_HEEL] : null
+	if(heelstep_type)
+		heel_sound = GLOB.heelstep[heelstep_type]
 
-		var/list/heelstep_sounds = GLOB.heelstep
+	// HEEL CHECK
+	if(heel_sound)
 		heard_clients = playsound(
 			source.loc,
-			pick(heelstep_sounds[heelstep_type][1]),
-			heelstep_sounds[heelstep_type][2] * volume * volume_multiplier,
+			pick(heel_sound[1]),
+			heel_sound[2] * volume * volume_multiplier,
 			TRUE,
-			heelstep_sounds[heelstep_type][3] + e_range + range_adjustment,
+			heel_sound[3] + e_range + range_adjustment,
 			falloff_distance = 1,
 			vary = sound_vary
 		)

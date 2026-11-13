@@ -53,6 +53,9 @@
 
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mm.dmi'	//If we want to be funny, change these in the future? Has to be subtle.
 	limbs_icon_f = 'icons/roguetown/mob/bodies/f/fm.dmi'	//We don't want this species to be meta-detectable.
+	allowed_body_builds = HUMANOID_BODY_BUILDS
+	default_body_build_m = BODY_BUILD_AVERAGE
+	default_body_build_f = BODY_BUILD_SLIM
 
 	soundpack_m = /datum/voicepack/male						//Also a funny potential switch, more feasible to stay covert given that this is tied to emotes almost exclusively.
 	soundpack_f = /datum/voicepack/female
@@ -108,11 +111,14 @@
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/genitals/penis/human,
 		/datum/customizer/organ/genitals/vagina/human,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/human,
 		/datum/customizer/organ/genitals/belly/human,
 		/datum/customizer/organ/genitals/butt/human,
 		/datum/customizer/organ/genitals/testicles/human,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 	)
 	body_markings = list(
 		/datum/body_marking/tonage,

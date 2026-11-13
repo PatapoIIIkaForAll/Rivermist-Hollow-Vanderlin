@@ -7,7 +7,6 @@
 	kill_component_type = /datum/component/quest_object/kill/boss
 	minimum_tier = QUEST_TIER_LETHAL
 	maximum_tier = QUEST_TIER_MYTHIC
-	base_reward_value = QUEST_BASE_REWARD_BOSS
 	type_risk_bonus = QUEST_BOSS_RISK_BONUS
 	var/target_display_name = ""
 
@@ -28,11 +27,13 @@
 	var/base_risk = max(1, target_risk_value)
 	var/reward = (base_risk * base_risk * QUEST_BOSS_REWARD_RISK_SQUARE_MULTIPLIER) + \
 		(max(base_risk - QUEST_BOSS_REWARD_RISK_OVERFLOW_START, 0) * QUEST_BOSS_REWARD_RISK_OVERFLOW_BONUS)
-	// Apply map reward modifier
-	reward *= map_reward_modifier
-	// Apply distance bonus
-	reward *= (1 + distance_bonus_mult)
+	// The squared risk curve already pays for danger, so bosses skip the kill-contract map scale.
+	reward *= map_reward_base_modifier
+	reward *= (1 + distance_bonus_mult * QUEST_BOSS_DISTANCE_BONUS_SCALE)
 	return max(0, min(QUEST_BOSS_REWARD_MAX, ROUND_UP(reward)))
+
+/datum/quest/kill/boss/get_reward_cap()
+	return QUEST_BOSS_REWARD_MAX
 
 /datum/quest/kill/boss/generate(obj/effect/landmark/quest_spawner/landmark)
 	..()

@@ -2034,9 +2034,6 @@ GLOBAL_LIST_EMPTY(custom_outfits) //Admin created outfits
 			if(is_role_banned(C.ckey, job_check.title))
 				continue
 
-			if(job_check.banned_leprosy && is_misc_banned(C.ckey, BAN_MISC_LEPROSY))
-				continue
-
 			if(job_check.banned_lunatic && is_misc_banned(C.ckey, BAN_MISC_LUNATIC))
 				continue
 
@@ -2122,9 +2119,6 @@ GLOBAL_LIST_EMPTY(custom_outfits) //Admin created outfits
 		// Check role bans
 		if(is_role_banned(player.ckey, job_check.title))
 			job_fail += "You are banned from this role"
-
-		if(job_check.banned_leprosy && is_misc_banned(player.ckey, BAN_MISC_LEPROSY))
-			job_fail += "Leprosy restriction"
 
 		if(job_check.banned_lunatic && is_misc_banned(player.ckey, BAN_MISC_LUNATIC))
 			job_fail += "Lunatic restriction"

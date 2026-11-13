@@ -170,7 +170,8 @@
 
 /datum/browser/modal/input_list/Topic(href, href_list)
 	. = ..()
-	if(href_list["submit"])
+	// A submit with every option filtered out sends no choice; treat it as a cancel.
+	if(href_list["submit"] && !isnull(href_list["choice"]))
 		set_choice(href_list["choice"])
 
 	closed = TRUE

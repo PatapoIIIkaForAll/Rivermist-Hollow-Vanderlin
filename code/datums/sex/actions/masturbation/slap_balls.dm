@@ -42,13 +42,13 @@
 			arousal_amt = 1.1
 			pain_amt = 4.5
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "brutally smacks"
 			arousal_amt = 0.8
 			pain_amt = 7
 			orgasm_amt = 0.3
 
-	playsound(user, pick('sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg'), 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, get_slap_sound("balls"), 45, TRUE, -2, ignore_walls = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [action_text] [user.p_their()] balls."))
 	perform_sex_action(user, user, arousal_amt, pain_amt, orgasm_amt)
@@ -63,7 +63,8 @@
 	add_sex_lock(user, ORGAN_SLOT_TESTICLES, null, FALSE)
 
 /datum/sex_action/masturbate/other/slap_balls
-	name = "Slap their balls"
+	name = "Ball slapping"
+	remote_phrase = "Slap their balls"
 	description = "Slap their balls, ranging from a teasing tap to a punishing smack."
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 	do_time = 2.5 SECONDS
@@ -107,13 +108,13 @@
 			arousal_amt = 1.1
 			pain_amt = 4.5
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "brutally smacks"
 			arousal_amt = 0.8
 			pain_amt = 7
 			orgasm_amt = 0.3
 
-	playsound(target, pick('sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg'), 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, get_slap_sound("balls"), 45, TRUE, -2, ignore_walls = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [action_text] [target]'s balls."))
 	perform_sex_action(target, user, arousal_amt, pain_amt, orgasm_amt)

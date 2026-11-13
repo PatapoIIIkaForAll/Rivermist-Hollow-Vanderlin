@@ -16,6 +16,8 @@
 	var/datum/pocket_dimension/dungeon/destination_room
 	/// Template a forward gate will instantiate on first use
 	var/datum/map_template/pocket/dungeon/pre_rolled_template
+	/// Stable geometry seed for this destination, including retries before traversal succeeds.
+	var/generation_seed = 0
 	/// Forward gates stay sealed until the room is cleared
 	var/sealed = FALSE
 	/// DUNGEON_PATH_* — risk/reward flavor of the room beyond

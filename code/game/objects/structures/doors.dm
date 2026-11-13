@@ -29,7 +29,7 @@
 	/// Can people riding go through without falling off their mount
 	var/ridethrough = FALSE
 	/// If TRUE when bumped open we callback close
-	var/bump_closed = FALSE
+	var/bump_closed = TRUE
 	var/door_opened = FALSE
 	/// If we are switching states
 	var/switching_states = FALSE
@@ -278,13 +278,28 @@
 			rattle()
 			return
 		if(TryToSwitchState(AM))
-			if(isliving(AM) && bump_closed)
-				var/mob/living/M = AM
-				var/delay = (close_delay >= 0) ? close_delay : 2.5 SECONDS
-				if(M.m_intent == MOVE_INTENT_SNEAK)
-					addtimer(CALLBACK(src, PROC_REF(Close), TRUE), delay)
-				else
-					addtimer(CALLBACK(src, PROC_REF(Close), FALSE), delay)
+			if(isliving(AM))
+				bump_close_later(AM)
+
+/obj/structure/door/proc/bump_close_later(mob/user)
+	if(!bump_closed)
+		return
+	var/delay = (close_delay > 0) ? close_delay : 2.5 SECONDS
+	addtimer(CALLBACK(src, PROC_REF(bump_close), user.m_intent == MOVE_INTENT_SNEAK), delay)
+
+/obj/structure/door/proc/bump_close(silent = FALSE)
+	var/mob/bumper = last_bumper?.resolve()
+	last_bumper = null
+	if(obj_broken)
+		return
+	Close(silent)
+	if(door_opened || locked() || !bumper || !bumper.Adjacent(src))
+		return
+	var/obj/item/key = find_bump_key(bumper)
+	if(!key || !pre_lock_interact(bumper))
+		return
+	var/datum/lock/key/key_lock = lock
+	key_lock.lock(bumper, key, silent)
 
 /obj/structure/door/proc/find_bump_key(mob/user)
 	if(!istype(lock, /datum/lock/key))
@@ -308,10 +323,12 @@
 	var/datum/lock/key/key_lock = lock
 	if(!key_lock.check_access(key))
 		return FALSE
-	last_bumper = WEAKREF(user)
-	key_lock.unlock(user, key, user.m_intent == MOVE_INTENT_SNEAK)
+	var/silent = user.m_intent == MOVE_INTENT_SNEAK
+	key_lock.unlock(user, key, silent)
 	if(!locked())
-		Open()
+		last_bumper = WEAKREF(user)
+		Open(silent, user)
+		bump_close_later(user)
 	return TRUE
 
 /obj/structure/door/CanAStarPass(ID, to_dir, datum/requester)
@@ -417,7 +434,7 @@
 	SEND_SIGNAL(src, COMSIG_DOOR_OPENED, user)
 
 /obj/structure/door/proc/Close(silent = FALSE)
-	if(switching_states || !door_opened)
+	if(switching_states || !door_opened || obj_broken)
 		return
 	for(var/mob/living/L in get_turf(src))
 		return
@@ -556,6 +573,7 @@
 	animate_time = 0.6 SECONDS
 	lock_sound = 'sound/foley/lock.ogg'
 	unlock_sound = 'sound/foley/unlock.ogg'
+	bump_closed = FALSE
 
 /obj/structure/door/iron/bars/cell
 	name = "cell door"

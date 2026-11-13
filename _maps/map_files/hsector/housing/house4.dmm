@@ -59,9 +59,7 @@
 /area/indoors/town/rmh)
 "G" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered,
 /area/indoors/town/rmh)
@@ -73,7 +71,6 @@
 /area/indoors/town/rmh)
 "N" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered,

@@ -542,8 +542,8 @@
 
 /datum/status_effect/debuff/stinky_person/on_remove()
 	. = ..()
-	var/datum/component/stinky_component = GetComponent(/datum/component/rot/stinky_person)
-	stinky_component?.RemoveComponent()
+	var/datum/component/stinky_component = owner.GetComponent(/datum/component/rot/stinky_person)
+	qdel(stinky_component)
 
 /datum/status_effect/debuff/tainted_lux
 	tick_interval = STATUS_EFFECT_NO_TICK

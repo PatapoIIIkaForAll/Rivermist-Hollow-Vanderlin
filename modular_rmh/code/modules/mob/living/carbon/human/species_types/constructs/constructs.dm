@@ -10,6 +10,9 @@
 	desc = "Warforged are artificial people forged from metal, stone, and alchemy, then roused to thought by binding rites or patient craftsmanship. \
 	They do not eat, breathe, or sleep, and their bodies can be repaired like finely-made machines. \
 	\n\n\
+	Instead of sleep they rest in a still Dormancy, where they recover, mend small dents and still dream. \
+	Larger damage needs a hammer and material held in the other hand; finer material mends more. Potions do nothing for them. \
+	\n\n\
 	(+1 STR, +1 CON, +1 END, -2 SPD)."
 
 	skin_tone_wording = "Material"
@@ -34,12 +37,15 @@
 	order_num = 28
 	voice_locked = FALSE
 	movespeed_slowdown = 0
+	reverie_name = "Dormancy"
+	reverie_voice_line = null
 	allowed_pronouns = PRONOUNS_LIST
 	actions = list()
 	no_equip = list()
 
 	limbs_icon_m = 'modular_rmh/icons/mob/species/construct_male.dmi'
 	limbs_icon_f = 'modular_rmh/icons/mob/species/construct_female.dmi'
+	lips_state_m = "construct_male"
 
 	bodypart_features = list(
 		/datum/bodypart_feature/hair/head,
@@ -47,10 +53,10 @@
 	)
 
 	organs = list(
-		ORGAN_SLOT_BRAIN = /obj/item/organ/brain/automaton,
-		ORGAN_SLOT_HEART = /obj/item/organ/heart/automaton,
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain/automaton/construct,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart/automaton/construct,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
-		ORGAN_SLOT_EYES = /obj/item/organ/eyes/automaton,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes/automaton/construct,
 		ORGAN_SLOT_EARS = /obj/item/organ/ears,
 		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
@@ -73,6 +79,7 @@
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/breasts/human,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/belly/human,
 		/datum/customizer/organ/genitals/butt/human,
 	)
@@ -189,6 +196,8 @@
 	desc = "Awakened dolls are porcelain, wood, or lacquered companions shaped in mortal form and granted a will of their own. \
 	They are graceful, clever, and light on their feet, but their delicate frames can crack where sturdier constructs would endure. \
 	\n\n\
+	Like other constructs they rest in Dormancy instead of sleep, and are mended with a hammer and material rather than potions. \
+	\n\n\
 	(-2 STR, +2 INT, +1 SPD)."
 
 	inherent_traits = list(
@@ -203,7 +212,6 @@
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_BEAUTIFUL,
 		TRAIT_EASYDISMEMBER,
-		TRAIT_CRITICAL_WEAKNESS,
 	)
 
 	body_marking_sets = list(/datum/body_marking_set/none)
@@ -235,6 +243,18 @@
 
 /datum/species/automaton/construct/doll/get_random_features()
 	return ..()
+
+/obj/item/organ/brain/automaton/construct
+	name = "animus core"
+	desc = "A rune-etched core where a living soul has settled into its crafted body."
+
+/obj/item/organ/heart/automaton/construct
+	name = "binding engine"
+	desc = "A small alchemical engine of runes and quicksilver that keeps a crafted body moving."
+
+/obj/item/organ/eyes/automaton/construct
+	name = "crafted eyes"
+	desc = "Polished lenses of glass or crystal, set by a patient maker."
 
 /datum/attribute_holder/sheet/job/species/construct/stats/male
 	raw_attribute_list = list(STAT_STRENGTH = 1, STAT_PERCEPTION = 0, STAT_INTELLIGENCE = 0, STAT_CONSTITUTION = 1, STAT_ENDURANCE = 1, STAT_SPEED = -2, STAT_FORTUNE = 0)

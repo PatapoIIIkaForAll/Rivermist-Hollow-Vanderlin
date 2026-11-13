@@ -1,3 +1,6 @@
+/// Seconds an ip-api lookup may take before it counts as a connection error.
+#define OVERWATCH_API_TIMEOUT 10
+
 SUBSYSTEM_DEF(overwatch)
 	name = "Overwatch"
 	init_order = INIT_ORDER_OW
@@ -107,9 +110,12 @@ SUBSYSTEM_DEF(overwatch)
 		log_access("Overwatch data for [C] ([ip]) is loaded from cache!")
 
 	while(!response && is_active && error_counter < max_error_count)
-		var/list/http = world.Export("http://ip-api.com/json/[ip]?fields=17025024")
+		// world.Export has no overall deadline, so a slow peer could hold this proc forever.
+		var/datum/http_request/request = http_request(RUSTG_HTTP_METHOD_GET, "http://ip-api.com/json/[ip]?fields=17025024", "", null, null, OVERWATCH_API_TIMEOUT)
+		request.begin_async()
+		var/datum/http_response/http = request.wait_for_response((OVERWATCH_API_TIMEOUT + 5) SECONDS)
 
-		if(!http)
+		if(!http || http.errored)
 			if(C)
 				log_access("Overwatch: API connection failed, could not check [C], retrying.")
 			else
@@ -118,7 +124,7 @@ SUBSYSTEM_DEF(overwatch)
 			sleep(2)
 			continue
 
-		var/raw_response = file2text(http["CONTENT"])
+		var/raw_response = http.body
 
 		try
 			response = json_decode(raw_response)
@@ -453,5 +459,7 @@ SUBSYSTEM_DEF(overwatch)
 
 	var/overwatch_status = SSoverwatch.Toggle()
 	log_access("has [overwatch_status ? "enabled" : "disabled"] the Overwatch system!")
+
+#undef OVERWATCH_API_TIMEOUT
 
 

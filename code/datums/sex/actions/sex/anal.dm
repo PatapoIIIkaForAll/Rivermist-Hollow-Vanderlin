@@ -1,5 +1,5 @@
 /datum/sex_action/sex/anal
-	name = "Fuck their ass"
+	name = "Fuck ass"
 	hole_id = ORGAN_SLOT_ANUS
 	stamina_cost = 0.5
 
@@ -28,6 +28,11 @@
 
 /datum/sex_action/sex/anal/on_start(mob/living/user, mob/living/target)
 	. = ..()
+	if(!.)
+		return FALSE
+	// Still pressing at the opening: nothing went in yet, so no entry line or sound.
+	if(orifice_pressing)
+		return .
 	user.visible_message(span_warning("[user] slides [user.p_their()] cock into [target]'s butt!"))
 	var/used_sex_volume = sex_volume
 	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
@@ -44,7 +49,7 @@
 
 	perform_sex_action(user, target, 2, 0, 2)
 
-	if(considered_limp())
+	if(considered_limp(user))
 		perform_sex_action(target, user, 1.2, 4, 1.2)
 	else
 		perform_sex_action(target, user, 2.4, 9, 2.4)
@@ -64,5 +69,10 @@
 
 
 /datum/sex_action/sex/anal/on_finish(mob/living/user, mob/living/target)
+	// The parent clears the pressing state, so read it first.
+	var/was_pressing = orifice_pressing
 	. = ..()
+	if(was_pressing)
+		user.visible_message(span_warning("[user] gives up pressing [user.p_their()] cock against [target]'s butt."))
+		return
 	user.visible_message(span_warning("[user] pulls [user.p_their()] cock out of [target]'s butt."))

@@ -1,5 +1,5 @@
 /datum/sex_action/sex/throat
-	name = "Fuck their throat"
+	name = "Fuck throat"
 	target_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	hole_id = BODY_ZONE_PRECISE_MOUTH
 	stamina_cost = 0.5
@@ -32,13 +32,12 @@
 /datum/sex_action/sex/throat/on_start(mob/living/user, mob/living/target)
 	. = ..()
 	user.visible_message(span_warning("[user] slides [user.p_their()] cock into [target]'s throat!"))
-	var/used_sex_volume = sex_volume
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
+	play_throat_entry(target, sex_volume)
 
 /datum/sex_action/sex/throat/on_perform(mob/living/user, mob/living/target)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fucks [target]'s throat."))
-	playsound(target, 'sound/misc/mat/segso.ogg', 50, TRUE, -2, ignore_walls = FALSE)
+	play_throat_thrust(target, 50)
 	do_thrust_animate(user, target)
 
 	perform_sex_action(user, target, 2, 0, 2.5)

@@ -27,6 +27,9 @@ SUBSYSTEM_DEF(machines)
 		currentrun.len--
 		if(!QDELETED(thing) && thing.process(seconds) != PROCESS_KILL)
 			continue
+		// STOP_PROCESSING also clears the shared flag; leaving it set makes later START_PROCESSING calls no-ops.
+		if(thing)
+			STOP_PROCESSING(src, thing)
 		else
 			processing -= thing
 		if (MC_TICK_CHECK)

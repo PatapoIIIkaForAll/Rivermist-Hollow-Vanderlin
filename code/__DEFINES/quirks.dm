@@ -1,10 +1,10 @@
 // Quirk Categories
-#define QUIRK_BOON "Boon"          // Positive quirks (cost points)
-#define QUIRK_VICE "Vice"          // Negative quirks (give points)
-#define QUIRK_PECULIARITY "Peculiarity" // Neutral quirks (0 points)
+#define QUIRK_POSITIVE "Positive"			// Positive quirks (cost points)
+#define QUIRK_NEGATIVE "Negative"			// Negative quirks (give points)
+#define QUIRK_NEUTRAL "Neutral"				// Neutral quirks (0 points)
 
 // Quirk value constants
-#define MAX_BOONS 6
+#define MAX_POSITIVE 6
 #define STARTING_QUIRK_POINTS 0
 
 #define MASO_THRESHOLD_ONE 1

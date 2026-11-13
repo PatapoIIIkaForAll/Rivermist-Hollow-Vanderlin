@@ -64,6 +64,11 @@
 	if (!(read_preference(/datum/preference/choiced/pronouns) in allowed_pronouns))
 		write_preference(/datum/preference/choiced/pronouns, pick(allowed_pronouns))
 
+	if(randomise_flags & RANDOMIZE_FEATURES)
+		randomise_body_build()
+	else
+		sanitize_body_build()
+
 	if(randomise_flags & RANDOMIZE_AGE)
 		write_preference(/datum/preference/choiced/age, pick(pref_species.possible_ages))
 

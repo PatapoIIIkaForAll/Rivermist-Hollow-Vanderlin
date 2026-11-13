@@ -47,8 +47,7 @@
 "ar" = (
 /obj/structure/fluff/railing/border/east,
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -102,6 +101,10 @@
 	},
 /turf/open/floor/wood,
 /area)
+"aE" = (
+/obj/machinery/light/fueled/firebowl,
+/turf/open/floor/concrete,
+/area)
 "aG" = (
 /obj/effect/decal/edge{
 	color = "#4d443e";
@@ -121,14 +124,17 @@
 /obj/machinery/light/fueled/torchholder/r,
 /turf/open/floor/ruinedwood/two,
 /area)
+"aP" = (
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/wood,
+/area)
 "aS" = (
 /obj/structure/fluff/railing/border/east,
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
 "aX" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/structure/closet/crate/chest/wicker,
 /obj/item/reagent_containers/food/snacks/cheese,
@@ -156,6 +162,20 @@
 /obj/effect/decal/cleanable/debris/wood,
 /turf/open/floor/ruinedwood,
 /area)
+"bl" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 1
+	},
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "bm" = (
 /obj/effect/decal/edge{
 	color = "#4d443e";
@@ -169,6 +189,10 @@
 	dir = 8
 	},
 /turf/open/floor/woodturned,
+/area)
+"bq" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/wood,
 /area)
 "br" = (
 /obj/effect/decal/carpet/kover_darkred{
@@ -286,6 +310,13 @@
 /obj/structure/carpet,
 /turf/open/floor/wood,
 /area)
+"cr" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
+/area)
 "cs" = (
 /obj/effect/decal/edge{
 	dir = 8;
@@ -331,12 +362,19 @@
 /obj/item/kitchen/fork,
 /turf/open/floor/tile/diamond,
 /area)
+"cB" = (
+/obj/machinery/light/fueled/firebowl/standing,
+/turf/open/floor/woodturned,
+/area)
 "cC" = (
 /obj/effect/decal/cleanable/debris/glass,
 /turf/open/floor/ruinedwood/spiral,
 /area)
 "cD" = (
 /turf/closed/wall/mineral/wooddark/end,
+/area)
+"cK" = (
+/turf/open/floor/tile/brick,
 /area)
 "cO" = (
 /obj/effect/decal/edge_corner{
@@ -359,10 +397,14 @@
 /obj/structure/fluff/littlebanners/greenwhite,
 /turf/open/openspace,
 /area)
-"db" = (
-/obj/structure/table/wood/reinf_long{
-	dir = 2
+"cX" = (
+/obj/structure/stairs/ccwdown{
+	dir = 4
 	},
+/turf/open/floor/ruinedwood,
+/area)
+"db" = (
+/obj/structure/table/wood/reinf_long,
 /obj/structure/bars/passage/shutter{
 	redstone_id = "counter_khan";
 	name = "counter's shutter"
@@ -391,6 +433,9 @@
 "dj" = (
 /obj/effect/landmark/boat_transfer/ship_side,
 /turf/open/water/ocean/abyss,
+/area)
+"dk" = (
+/turf/open/floor/tile/brownbrick,
 /area)
 "dn" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -421,10 +466,23 @@
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
 /area)
+"dz" = (
+/obj/structure/table/wood/reinf_long{
+	pixel_y = 1
+	},
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "dA" = (
 /obj/effect/decal/edge_corner{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /turf/open/floor/ruinedwood,
 /area/indoors/town/warehouse)
@@ -448,7 +506,6 @@
 /area)
 "dK" = (
 /obj/structure/mannequin/male{
-	pixel_y = 0;
 	pixel_x = -7;
 	dir = 1
 	},
@@ -464,6 +521,15 @@
 	},
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/water/ocean,
+/area)
+"dS" = (
+/obj/structure/closet/crate/chest/wicker,
+/obj/structure/carpet/blue,
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 1
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
 /area)
 "dU" = (
 /obj/structure/fluff/railing/wood/west,
@@ -525,6 +591,11 @@
 /obj/machinery/light/fueled/wallfire/candle,
 /turf/open/floor/ruinedwood/two,
 /area)
+"em" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/wood,
+/area)
 "eo" = (
 /obj/structure/bars/grille,
 /turf/closed/basic,
@@ -566,11 +637,16 @@
 /area)
 "eG" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/structure/fermentation_keg/sandpot/wine,
 /turf/open/floor/desert/deserttile,
+/area)
+"eI" = (
+/obj/structure/stairs/desert{
+	dir = 4
+	},
+/turf/open/floor/concrete,
 /area)
 "eK" = (
 /obj/structure/carpet/red,
@@ -585,8 +661,7 @@
 "eP" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/edge_corner{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /obj/machinery/light/fueled/firebowl/standing{
 	pixel_y = 10
@@ -634,6 +709,13 @@
 /obj/item/reagent_containers/food/snacks/produce/fruit/jacksberry,
 /turf/open/floor/desert/deserttile,
 /area)
+"eZ" = (
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec5";
+	color = "#c2a15b"
+	},
+/turf/open/floor/desert/dunes,
+/area)
 "fd" = (
 /turf/open/floor/carpet,
 /area)
@@ -659,6 +741,14 @@
 	},
 /turf/open/floor/desert/sandbrick,
 /area)
+"fz" = (
+/obj/structure/fluff/railing/border,
+/obj/effect/decal/edge{
+	color = "#4d443e";
+	dir = 1
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "fE" = (
 /obj/effect/decal/borderfall{
 	pixel_y = -8
@@ -679,6 +769,16 @@
 /obj/structure/stairs/ccwdown,
 /turf/open/floor/ruinedwood/spiral,
 /area)
+"fN" = (
+/obj/machinery/light/fueled/hearth/big_fireplace,
+/turf/open/floor/tile/brownbrick,
+/area)
+"fP" = (
+/obj/effect/decal/carpet/kover_purple{
+	pixel_y = 7
+	},
+/turf/open/floor/wood,
+/area)
 "fV" = (
 /obj/structure/table/wood/plain_alt,
 /obj/structure/carpet,
@@ -691,6 +791,13 @@
 "fZ" = (
 /obj/structure/fluff/railing/wood,
 /turf/open/floor/ruinedwood,
+/area)
+"gb" = (
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
 /area)
 "gc" = (
 /obj/structure/fluff/railing/border/north,
@@ -728,8 +835,7 @@
 /area)
 "gs" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -786,6 +892,9 @@
 "gU" = (
 /turf/closed/wall/mineral/wood,
 /area/ship/topdeck)
+"gY" = (
+/turf/open/floor/concrete,
+/area)
 "ha" = (
 /turf/closed/sea_fog,
 /area)
@@ -811,8 +920,7 @@
 /obj/structure/mannequin/male{
 	density = 0;
 	pixel_y = 20;
-	pixel_x = -9;
-	dir = 2
+	pixel_x = -9
 	},
 /obj/machinery/light/fueled/wallfire/candle/l,
 /turf/open/floor/woodturned,
@@ -839,6 +947,10 @@
 	},
 /turf/open/floor/ruinedwood,
 /area/indoors/town/warehouse)
+"hl" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/wood,
+/area)
 "hn" = (
 /turf/open/water/ocean,
 /area)
@@ -890,10 +1002,18 @@
 	color = "#6C747F"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#6C747F"
 	},
 /turf/open/floor/desert/deserttile/tilewhiteblue,
+/area)
+"hN" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 4
+	},
+/turf/open/floor/wood,
 /area)
 "hO" = (
 /obj/structure/rack/shelf/big{
@@ -914,6 +1034,14 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood,
 /area)
+"hS" = (
+/obj/effect/decal/edge_corner{
+	color = "#4d443e";
+	dir = 1
+	},
+/obj/structure/fake_machine/stockpile_withdraw,
+/turf/open/floor/tile/checkeralt,
+/area)
 "hY" = (
 /obj/effect/decal/edge{
 	color = "#4d443e";
@@ -921,6 +1049,16 @@
 	},
 /turf/open/floor/ruinedwood,
 /area/indoors/town/warehouse)
+"id" = (
+/obj/effect/decal/alizeria/decals/wooddecal7,
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/obj/structure/carpet/purple,
+/turf/open/floor/ruinedwood/spiral,
+/area)
+"ie" = (
+/obj/structure/table/wood/plain_alt,
+/turf/open/floor/desert/lightpath,
+/area)
 "ig" = (
 /obj/structure/carpet/red,
 /obj/structure/table/wood/large/corner_new{
@@ -942,11 +1080,17 @@
 /area)
 "il" = (
 /obj/effect/decal/edge{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /turf/open/floor/ruinedwood,
 /area/indoors/town/warehouse)
+"im" = (
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "ip" = (
 /obj/structure/fluff/railing/wood,
 /obj/structure/rack,
@@ -992,8 +1136,8 @@
 /turf/open/floor/twig,
 /area)
 "je" = (
-/obj/structure/well/climb_down,
-/turf/open/floor/desert/darkpath,
+/obj/structure/fluff/railing/border/east,
+/turf/open/floor/desert/lightpath,
 /area)
 "jf" = (
 /obj/structure/table/wood/counter/end,
@@ -1015,6 +1159,12 @@
 	pixel_x = 3
 	},
 /turf/open/floor/desert/deserttile,
+/area)
+"jh" = (
+/obj/structure/fluff/railing/corner{
+	dir = 9
+	},
+/turf/open/floor/desert/sandbrick,
 /area)
 "jj" = (
 /obj/structure/table/wood/counter/alt,
@@ -1147,6 +1297,11 @@
 /obj/structure/fluff/railing/border/west,
 /turf/closed/wall/mineral/wooddark/vertical,
 /area)
+"jQ" = (
+/obj/machinery/light/fueled/hearth,
+/obj/machinery/light/fueled/oven/north,
+/turf/open/floor/tile/brick,
+/area)
 "jS" = (
 /obj/structure/flowerpot{
 	color = "#96956f";
@@ -1215,6 +1370,21 @@
 	},
 /turf/open/floor/desert/deserttile,
 /area)
+"kA" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/desert/lightpath,
+/area)
+"kB" = (
+/obj/effect/decal/edge_corner{
+	color = "#6C747F";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#6C747F"
+	},
+/turf/open/floor/desert/deserttile/tilewhiteblue,
+/area)
 "kC" = (
 /obj/structure/table/wood/counter/end/right,
 /obj/structure/bars/passage/shutter{
@@ -1258,6 +1428,10 @@
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/ruinedwood/turned,
 /area)
+"la" = (
+/obj/structure/fluff/canopy/booth/booth02,
+/turf/open/floor/desert/lightpath,
+/area)
 "le" = (
 /turf/closed/wall/mineral/wood,
 /area)
@@ -1286,6 +1460,30 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/ruinedwood,
 /area)
+"ll" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"lp" = (
+/obj/structure/table/wood/counter/alt,
+/obj/structure/carpet/purple,
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"lq" = (
+/obj/structure/fake_machine/stockpile_withdraw{
+	pixel_y = 0;
+	pixel_x = 32
+	},
+/obj/structure/fluff/railing/border,
+/turf/open/floor/tile/brownbrick,
+/area)
 "lr" = (
 /obj/effect/decal/borderfall{
 	dir = 8;
@@ -1293,10 +1491,19 @@
 	},
 /turf/open/openspace,
 /area)
+"ls" = (
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "lx" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
 /area)
@@ -1314,6 +1521,24 @@
 "lM" = (
 /turf/closed/wall/mineral/wooddark/horizontal,
 /area/ship/topdeck)
+"lP" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
+"lQ" = (
+/obj/structure/flowerpot{
+	color = "#96956f";
+	pixel_y = -4
+	},
+/obj/structure/flora/grass/herb/salvia{
+	pixel_x = -2;
+	pixel_y = 7
+	},
+/turf/open/floor/woodturned,
+/area)
 "lR" = (
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/water/ocean,
@@ -1362,6 +1587,20 @@
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
 /area)
+"mm" = (
+/obj/structure/table/wood/counter/end/right,
+/obj/structure/carpet/purple,
+/obj/machinery/loom{
+	pixel_y = 12;
+	pixel_x = 5
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"mn" = (
+/obj/structure/chair/stool,
+/obj/structure/carpet/purple,
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "mp" = (
 /obj/structure/door/red{
 	name = "Stable"
@@ -1393,6 +1632,10 @@
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area)
+"mG" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/desert/lightpath,
+/area)
 "mI" = (
 /obj/structure/fluff/railing/wood,
 /turf/open/floor/ruinedwood/turned,
@@ -1421,6 +1664,19 @@
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/water/ocean/abyss,
 /area)
+"mW" = (
+/obj/structure/stairs/cw{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area)
+"mZ" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "nd" = (
 /obj/structure/fluff/littlebanners{
 	pixel_y = -25
@@ -1441,7 +1697,6 @@
 	dir = 1
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
@@ -1455,11 +1710,23 @@
 	},
 /turf/open/floor/wood,
 /area)
+"nm" = (
+/obj/structure/carpet/blue,
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "np" = (
 /obj/structure/fluff/railing/wood/north{
 	pixel_y = 6
 	},
 /turf/open/floor/ruinedwood,
+/area)
+"ns" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/woodturned,
 /area)
 "nt" = (
 /obj/structure/drape/desert{
@@ -1482,6 +1749,17 @@
 	color = "#b9c4bd"
 	},
 /turf/open/floor/grass,
+/area)
+"nx" = (
+/obj/structure/carpet/blue,
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"nA" = (
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec6";
+	color = "#c2a15b"
+	},
+/turf/open/floor/desert/dunes,
 /area)
 "nB" = (
 /turf/open/floor/desert/sandbrick,
@@ -1521,14 +1799,19 @@
 	dir = 8
 	},
 /obj/effect/decal/edge{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /turf/open/floor/desert/citybrick,
 /area)
 "ob" = (
 /obj/machinery/light/fueled/firebowl/standing,
 /turf/open/floor/carpet,
+/area)
+"od" = (
+/obj/structure/stairs/cwdown{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
 /area)
 "oh" = (
 /obj/structure/stairs{
@@ -1563,6 +1846,10 @@
 "oA" = (
 /turf/closed/wall/mineral/wooddark,
 /area/ship/topdeck)
+"oC" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/wood,
+/area)
 "oE" = (
 /obj/structure/fluff/railing/border,
 /turf/open/floor/ruinedwood,
@@ -1574,6 +1861,14 @@
 "oI" = (
 /obj/structure/fluff/railing/border/north,
 /turf/open/openspace,
+/area)
+"oL" = (
+/obj/structure/flora/grass/bush/wall/green,
+/turf/open/floor/grass,
+/area)
+"oM" = (
+/obj/structure/fluff/railing/border/east,
+/turf/open/floor/wood,
 /area)
 "oN" = (
 /turf/open/floor/ruinedwood,
@@ -1636,12 +1931,19 @@
 	},
 /turf/open/floor/ruinedwood/turned,
 /area)
+"pk" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/effect/decal/edge{
+	color = "#4d443e";
+	dir = 1
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "pm" = (
 /turf/open/floor/sand/sandstone,
 /area)
 "pp" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/edge{
@@ -1656,13 +1958,22 @@
 	},
 /turf/open/water/ocean,
 /area)
+"pt" = (
+/obj/structure/stairs{
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#683E38"
+	},
+/turf/open/floor/ruinedwood,
+/area)
 "py" = (
 /turf/closed/wall/mineral/wooddark,
 /area/ship/middeck)
 "pC" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/effect/decal/edge{
 	dir = 1;
@@ -1690,6 +2001,17 @@
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
 /area)
+"pD" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "pF" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/walldeco/wantedposter/l,
@@ -1706,8 +2028,7 @@
 	pixel_y = 6
 	},
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/effect/decal/edge{
 	dir = 1;
@@ -1715,15 +2036,34 @@
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
 /area)
+"pW" = (
+/obj/effect/decal/edge_corner{
+	color = "#6C747F";
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#6C747F"
+	},
+/turf/open/floor/desert/deserttile/tilewhiteblue,
+/area)
 "pY" = (
 /obj/effect/decal/edge{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /turf/open/floor/desert/citybrick,
 /area)
 "qa" = (
 /turf/closed/wall/mineral/wooddark/vertical,
+/area)
+"qc" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 4
+	},
+/turf/open/floor/concrete,
 /area)
 "qg" = (
 /obj/structure/fluff/railing/corner/south_west,
@@ -1734,6 +2074,30 @@
 	icon_state = "shell-2"
 	},
 /turf/open/water/ocean,
+/area)
+"qm" = (
+/obj/structure/table/wood/fancy/black,
+/obj/item/plate/pewter{
+	pixel_x = -3;
+	pixel_y = 4;
+	layer = 2.7
+	},
+/obj/item/reagent_containers/glass/carafe/teapot/shell{
+	pixel_x = 4
+	},
+/obj/item/candle/tin/lit{
+	pixel_y = 19;
+	pixel_x = -2
+	},
+/turf/open/floor/wood,
+/area)
+"qo" = (
+/obj/structure/carpet/purple,
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 4
+	},
+/turf/open/floor/desert/deserttile,
 /area)
 "qr" = (
 /obj/effect/decal/cleanable/debris/glass,
@@ -1796,6 +2160,10 @@
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/openspace,
 /area)
+"qO" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/woodturned,
+/area)
 "qQ" = (
 /obj/structure/window/openclose/reinforced,
 /turf/open/floor/ruinedwood/darker,
@@ -1848,7 +2216,6 @@
 	dir = 9
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/edge{
@@ -1868,15 +2235,38 @@
 /area)
 "rz" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/tile/diamond,
 /area)
+"rA" = (
+/obj/effect/decal/edge{
+	color = "#4d443e";
+	dir = 4
+	},
+/obj/structure/table/wood/reinf_long{
+	pixel_y = 1
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "rB" = (
 /obj/effect/decal/cleanable/dirt/paper,
 /turf/open/floor/sandstone,
+/area)
+"rC" = (
+/obj/effect/decal/edge{
+	color = "#4d443e";
+	dir = 1
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
+"rD" = (
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
 /area)
 "rF" = (
 /obj/structure/flora/shells{
@@ -1908,6 +2298,17 @@
 	},
 /turf/open/floor/ruinedwood,
 /area)
+"rP" = (
+/obj/effect/decal/edge_corner{
+	color = "#6C747F";
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#6C747F"
+	},
+/turf/open/floor/desert/deserttile/tilewhiteblue,
+/area)
 "rV" = (
 /obj/structure/door/red{
 	name = "Stable"
@@ -1924,6 +2325,16 @@
 	pixel_y = -13
 	},
 /turf/open/floor/ruinedwood/herringbone_clear,
+/area)
+"rZ" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
 /area)
 "sc" = (
 /obj/structure/fluff/railing/corner/north_east,
@@ -1998,7 +2409,6 @@
 /area)
 "sK" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/item/reagent_containers/food/snacks/produce/vegetable/onion{
@@ -2121,10 +2531,7 @@
 /area)
 "tg" = (
 /obj/structure/fluff/railing/border,
-/obj/effect/decal/borderfall{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/effect/decal/borderfall,
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
 "ti" = (
@@ -2178,6 +2585,17 @@
 /obj/structure/stairs/desert,
 /turf/open/floor/desert/deserttile/tiledrab2,
 /area)
+"tx" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "ty" = (
 /obj/structure/carpet/blue,
 /obj/machinery/light/fueled/wallfire/candle,
@@ -2190,10 +2608,7 @@
 /area)
 "tA" = (
 /obj/structure/fluff/railing/border,
-/obj/effect/decal/borderfall{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/effect/decal/borderfall,
 /obj/structure/fluff/railing/border/west,
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/ruinedwood/darker,
@@ -2202,6 +2617,23 @@
 /obj/structure/rack/shelf/biggest,
 /obj/item/storage/sack,
 /turf/open/floor/ruinedwood/spiral,
+/area)
+"tJ" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 4
+	},
+/turf/open/floor/tile/diamond,
+/area)
+"tN" = (
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/floor/desert/lightpath,
+/area)
+"tX" = (
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 6
+	},
+/turf/open/floor/wood,
 /area)
 "tZ" = (
 /turf/open/floor/carpet/red,
@@ -2228,7 +2660,6 @@
 /obj/structure/well{
 	icon = 'icons/obj/structures/rotation_devices/water_vent.dmi';
 	icon_state = "pipevent";
-	dir = 2;
 	density = 0;
 	name = "water tap"
 	},
@@ -2238,6 +2669,11 @@
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area)
+"up" = (
+/obj/structure/table/wood/plain_alt,
+/obj/structure/fluff/canopy,
+/turf/open/floor/desert/lightpath,
+/area)
 "uq" = (
 /obj/item/storage/sack,
 /turf/open/floor/sandstone,
@@ -2246,11 +2682,22 @@
 /obj/structure/carpet/purple,
 /turf/open/floor/wood,
 /area)
+"uv" = (
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "uy" = (
 /obj/structure/stairs{
 	dir = 4
 	},
 /turf/open/floor/ruinedwood/two,
+/area)
+"uz" = (
+/obj/structure/door/fancy,
+/turf/open/floor/concrete,
 /area)
 "uF" = (
 /obj/structure/bed/inn,
@@ -2263,6 +2710,11 @@
 	},
 /obj/structure/fluff/pillow/red,
 /turf/open/floor/carpet/red,
+/area)
+"uH" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/wood,
 /area)
 "uL" = (
 /obj/machinery/light/fueled/hearth,
@@ -2286,6 +2738,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/ruinedwood/turned,
 /area)
+"va" = (
+/obj/structure/fluff/railing/corner/south_east,
+/turf/open/floor/desert/lightpath,
+/area)
 "vg" = (
 /obj/structure/stairs/desert{
 	dir = 1
@@ -2298,6 +2754,10 @@
 /obj/structure/fluff/canopy/green,
 /turf/open/floor/ruinedwood,
 /area)
+"vl" = (
+/obj/structure/curtain/bluecurtain,
+/turf/open/floor/concrete,
+/area)
 "vn" = (
 /obj/structure/fluff/railing/wood/north{
 	pixel_y = 6
@@ -2309,8 +2769,7 @@
 /area)
 "vr" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/machinery/light/fueled/torchholder/l,
 /turf/open/floor/desert/deserttile,
@@ -2341,6 +2800,10 @@
 /turf/open/floor/rooftop{
 	dir = 1
 	},
+/area)
+"vD" = (
+/obj/structure/fluff/railing/border,
+/turf/open/floor/desert/lightpath,
 /area)
 "vE" = (
 /obj/machinery/light/fueled/wallfire/candle{
@@ -2381,6 +2844,10 @@
 /obj/structure/fluff/railing/border/west,
 /turf/open/floor/wood,
 /area)
+"wc" = (
+/obj/structure/fluff/railing/corner/south_east,
+/turf/open/floor/tile/brownbrick,
+/area)
 "wf" = (
 /obj/structure/flowerpot{
 	color = "#96956f";
@@ -2399,6 +2866,10 @@
 	},
 /turf/open/floor/wood,
 /area)
+"wl" = (
+/obj/structure/fluff/canopy/booth/booth_green02,
+/turf/open/floor/desert/citybrick,
+/area)
 "wp" = (
 /obj/structure/water_pipe,
 /turf/closed/wall/mineral/pipe,
@@ -2408,12 +2879,9 @@
 /turf/open/floor/grass,
 /area)
 "wt" = (
-/obj/structure/window/openclose/reinforced{
-	dir = 2
-	},
+/obj/structure/window/openclose/reinforced,
 /obj/structure/curtain/bounty/dir{
-	open = 0;
-	dir = 2
+	open = 0
 	},
 /turf/open/floor/wood,
 /area)
@@ -2479,6 +2947,13 @@
 	},
 /turf/open/floor/tile/diamond,
 /area)
+"xk" = (
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec3";
+	color = "#c2a15b"
+	},
+/turf/open/floor/desert/dunes,
+/area)
 "xl" = (
 /obj/effect/decal/edge_corner{
 	color = "#683E38";
@@ -2501,6 +2976,16 @@
 	dir = 4
 	},
 /turf/open/floor/ruinedwood/spiral,
+/area)
+"xq" = (
+/obj/effect/decal/edge_corner{
+	color = "#6C747F"
+	},
+/obj/effect/decal/edge{
+	dir = 5;
+	color = "#6C747F"
+	},
+/turf/open/floor/desert/deserttile/tilewhiteblue,
 /area)
 "xr" = (
 /obj/structure/flora/grass,
@@ -2609,8 +3094,7 @@
 "yj" = (
 /obj/structure/rack/shelf/biggest,
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/item/reagent_containers/glass/bottle/black/komuchisake{
 	pixel_x = -4;
@@ -2683,6 +3167,16 @@
 	},
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area)
+"yz" = (
+/obj/item/cushion/desert1,
+/obj/structure/fluff/walldeco/bigpainting/rainuponthevalley,
+/turf/open/floor/wood,
+/area)
+"yA" = (
+/obj/structure/fake_machine/stockpile_withdraw,
+/obj/structure/fluff/railing/border/west,
+/turf/open/floor/tile/brick,
+/area)
 "yC" = (
 /obj/structure/closet/crate/crafted_closet/inn,
 /turf/open/floor/ruinedwood/two,
@@ -2703,6 +3197,16 @@
 /obj/structure/carpet/blue,
 /obj/item/instrument/lute,
 /turf/open/floor/wood,
+/area)
+"yM" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 4
+	},
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 1
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
 /area)
 "yQ" = (
 /obj/structure/fluff/railing/wood,
@@ -2736,9 +3240,7 @@
 /area)
 "zm" = (
 /obj/structure/window/openclose/reinforced,
-/obj/structure/curtain/bounty/dir{
-	dir = 2
-	},
+/obj/structure/curtain/bounty/dir,
 /turf/open/floor/wood,
 /area)
 "zo" = (
@@ -2829,12 +3331,10 @@
 /obj/structure/fluff/railing/border/east,
 /obj/structure/fluff/railing/corner/north_east,
 /obj/effect/decal/borderfall{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /obj/effect/decal/borderfall{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
@@ -2951,6 +3451,13 @@
 "AI" = (
 /turf/open/floor/plank,
 /area)
+"AK" = (
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec2";
+	color = "#c2a15b"
+	},
+/turf/open/floor/desert/dunes,
+/area)
 "AM" = (
 /obj/structure/chair/wood/alt{
 	dir = 4
@@ -2979,6 +3486,16 @@
 /obj/structure/rack,
 /turf/open/floor/woodturned,
 /area)
+"AW" = (
+/obj/structure/curtain/noccurtain/dir{
+	dir = 4
+	},
+/obj/structure/door/weak/bolt{
+	dir = 4
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/concrete,
+/area)
 "Ba" = (
 /obj/effect/decal/carpet/kover_darkred{
 	dir = 4;
@@ -2986,6 +3503,21 @@
 	pixel_y = -8
 	},
 /turf/open/floor/woodturned,
+/area)
+"Bc" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
 /area)
 "Bd" = (
 /obj/effect/decal/cleanable/debris/glass,
@@ -3009,6 +3541,25 @@
 	},
 /obj/effect/decal/cleanable/debris/wood,
 /turf/open/floor/ruinedwood,
+/area)
+"Bp" = (
+/obj/structure/table/wood/plain_alt,
+/obj/structure/fluff/canopy/green,
+/turf/open/floor/desert/lightpath,
+/area)
+"Bs" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
 /area)
 "Bw" = (
 /obj/structure/fluff/railing/wood,
@@ -3057,6 +3608,22 @@
 	},
 /turf/open/water/ocean/abyss,
 /area)
+"BP" = (
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec4";
+	color = "#c2a15b"
+	},
+/turf/open/floor/desert/dunes,
+/area)
+"BQ" = (
+/obj/structure/table/wood/plain_alt,
+/turf/open/floor/desert/citybrick,
+/area)
+"BR" = (
+/obj/structure/table/wood/plain_alt,
+/obj/structure/fluff/canopy/green,
+/turf/open/floor/desert/citybrick,
+/area)
 "BV" = (
 /mob/living/simple_animal/hostile/retaliate/saiga/horse/black/male/tame/saddled{
 	dir = 4
@@ -3077,13 +3644,23 @@
 /obj/structure/chair/bench/coucha,
 /turf/open/floor/carpet/red,
 /area)
+"Ch" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "Ck" = (
 /obj/structure/flora/driftwood,
 /turf/open/floor/sand/sandstone,
 /area)
 "Cm" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /turf/open/floor/tile/diamond,
@@ -3165,6 +3742,10 @@
 /obj/structure/fluff/railing/border/east,
 /turf/closed/wall/mineral/sandbrick,
 /area)
+"CW" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "CY" = (
 /obj/effect/decal/borderfall{
 	pixel_y = 8;
@@ -3176,6 +3757,33 @@
 /obj/structure/fluff/railing/wood/east,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/ruinedwood,
+/area)
+"De" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
+"Dh" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 4
+	},
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec6";
+	color = "#c2a15b";
+	pixel_y = -32;
+	pixel_x = 33
+	},
+/obj/machinery/light/fueled/wallfire/candle/r{
+	pixel_y = -32
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
 /area)
 "Di" = (
 /obj/effect/decal/edge{
@@ -3232,6 +3840,22 @@
 	name = "Counter side"
 	},
 /turf/open/floor/ruinedwood/two,
+/area)
+"Ds" = (
+/obj/structure/closet/crate/chest/wickertrunk/red,
+/obj/effect/decal/edge_corner{
+	color = "#683E38"
+	},
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec6";
+	color = "#c2a15b";
+	pixel_y = -32;
+	pixel_x = -31
+	},
+/obj/machinery/light/fueled/wallfire/candle/l{
+	pixel_y = -32
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
 /area)
 "Du" = (
 /obj/structure/carpet/blue,
@@ -3291,14 +3915,25 @@
 "DX" = (
 /turf/open/floor/ruinedwood/two,
 /area)
+"DY" = (
+/obj/structure/stairs/desert{
+	dir = 1
+	},
+/turf/open/floor/concrete,
+/area)
 "Ea" = (
 /obj/structure/mannequin/male{
 	density = 0;
 	pixel_y = 20;
-	pixel_x = -9;
-	dir = 2
+	pixel_x = -9
 	},
 /turf/open/floor/ruinedwood/two,
+/area)
+"Eb" = (
+/obj/structure/fluff/railing/corner{
+	dir = 9
+	},
+/turf/open/floor/tile/brick,
 /area)
 "Ed" = (
 /obj/item/bin{
@@ -3322,6 +3957,20 @@
 /obj/structure/bars/grille,
 /turf/open/openspace,
 /area/ship/topdeck)
+"Em" = (
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
+/area)
 "En" = (
 /obj/effect/decal/grass_edges{
 	dir = 8
@@ -3330,6 +3979,23 @@
 	dir = 4
 	},
 /turf/open/floor/desert/citybrick,
+/area)
+"Eq" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
+"Es" = (
+/obj/structure/stairs/ccw{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
 /area)
 "Ev" = (
 /obj/effect/decal/borderfall{
@@ -3421,7 +4087,6 @@
 /area)
 "EQ" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
@@ -3463,6 +4128,12 @@
 "Fa" = (
 /obj/structure/fluff/railing/border,
 /turf/open/floor/ruinedwood/herringbone_clear,
+/area)
+"Fc" = (
+/obj/machinery/light/fueled/firebowl{
+	pixel_y = 3
+	},
+/turf/open/floor/concrete,
 /area)
 "Fd" = (
 /obj/item/weapon/shield/heater{
@@ -3512,11 +4183,18 @@
 	dir = 9
 	},
 /obj/effect/decal/borderfall{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
+"Fw" = (
+/obj/structure/fluff/railing/border/west,
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 8
+	},
+/turf/open/floor/desert/deserttile,
+/area)
 "Fz" = (
 /obj/effect/decal/edge_corner{
 	color = "#683E38";
@@ -3599,6 +4277,14 @@
 	},
 /turf/open/floor/sandstone,
 /area)
+"FX" = (
+/obj/structure/carpet/blue,
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 8
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "Ga" = (
 /turf/open/floor/woodturned,
 /area)
@@ -3643,6 +4329,15 @@
 	},
 /turf/open/floor/tile/brownbrick,
 /area)
+"Gp" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/obj/structure/curtain/purplecurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/concrete,
+/area)
 "Gu" = (
 /obj/effect/decal/edge{
 	dir = 5;
@@ -3660,6 +4355,13 @@
 /obj/structure/giantfur/small,
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area)
+"GD" = (
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "GG" = (
 /obj/structure/closet/crate/chest/wicker,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -3673,8 +4375,7 @@
 /area)
 "GK" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/structure/fake_machine/scomm/l,
 /turf/open/floor/desert/deserttile/tiledrab2,
@@ -3689,6 +4390,11 @@
 "GP" = (
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/ruinedwood/herringbone_clear,
+/area)
+"GQ" = (
+/obj/structure/fluff/railing/border/north,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/turf/open/floor/ruinedwood/spiral,
 /area)
 "GR" = (
 /obj/structure/carpet,
@@ -3706,6 +4412,13 @@
 /area)
 "GW" = (
 /turf/open/floor/desert/dunes,
+/area)
+"GX" = (
+/obj/effect/decal/edge{
+	color = "#4d443e";
+	dir = 5
+	},
+/turf/open/floor/tile/checkeralt,
 /area)
 "GZ" = (
 /obj/effect/decal/cleanable/food/salt,
@@ -3736,6 +4449,20 @@
 	name = "Kitchen room"
 	},
 /turf/open/floor/tile/brownbrick,
+/area)
+"Hr" = (
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
 /area)
 "Hx" = (
 /obj/effect/decal/borderfall{
@@ -3797,6 +4524,16 @@
 	},
 /turf/open/floor/ruinedwood/herringbone_clear,
 /area)
+"HW" = (
+/obj/effect/decal/edge_corner{
+	color = "#4d443e";
+	dir = 1
+	},
+/obj/structure/table/wood/reinf_long{
+	dir = 1
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "Ir" = (
 /obj/structure/fermentation_keg/fancypot/random/water,
 /turf/open/floor/ruinedwood/spiral,
@@ -3809,8 +4546,7 @@
 "Iw" = (
 /obj/machinery/light/fueled/lanternpost/fixed{
 	pixel_x = -8;
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /obj/item/bin{
 	icon = 'modular_rmh/icons/obj/structures/yashiki.dmi';
@@ -3850,7 +4586,6 @@
 /area)
 "IH" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#6C747F"
 	},
 /obj/effect/decal/edge{
@@ -3867,8 +4602,7 @@
 /obj/structure/mannequin/male{
 	density = 0;
 	pixel_y = 20;
-	pixel_x = -9;
-	dir = 2
+	pixel_x = -9
 	},
 /turf/open/floor/wood,
 /area)
@@ -3883,6 +4617,16 @@
 "IT" = (
 /turf/closed/wall/mineral/wooddark/vertical,
 /area/ship/middeck)
+"IU" = (
+/obj/structure/fluff/railing/corner{
+	dir = 9
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
+/area)
 "IW" = (
 /obj/structure/table/wood/counter/end/right,
 /obj/structure/flowerpot/medium{
@@ -3996,8 +4740,7 @@
 /area)
 "Jk" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /obj/structure/rack/shelf/biggest,
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -4047,6 +4790,28 @@
 	},
 /turf/open/floor/woodturned,
 /area)
+"JH" = (
+/obj/structure/table/wood/counter/end,
+/obj/machinery/tanningrack{
+	pixel_y = 12;
+	pixel_x = -3
+	},
+/obj/effect/decal/edge_corner{
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"JU" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/wood,
+/area)
+"JW" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/structure/carpet/purple,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "JX" = (
 /obj/effect/decal/borderfall{
 	pixel_y = -8
@@ -4078,6 +4843,14 @@
 	},
 /turf/open/floor/ruinedwood/turned,
 /area/ship/topdeck)
+"Kl" = (
+/obj/structure/carpet/purple,
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "Kq" = (
 /obj/structure/table/wood/reinf_long{
 	dir = 4
@@ -4105,6 +4878,11 @@
 	},
 /turf/open/floor/ruinedwood/turned,
 /area/indoors/town/warehouse)
+"Kz" = (
+/obj/structure/stairs,
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "KD" = (
 /obj/structure/pillar/sand1,
 /turf/open/floor/sandstone,
@@ -4169,6 +4947,13 @@
 "Li" = (
 /turf/open/floor/grass/mixyel,
 /area)
+"Lk" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 8
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "Lo" = (
 /obj/structure/stairs{
 	dir = 4
@@ -4198,6 +4983,31 @@
 "LL" = (
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/water/ocean/abyss,
+/area)
+"LM" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 1;
+	pixel_y = -2
+	},
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 1
+	},
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec6";
+	color = "#c2a15b";
+	pixel_y = 32;
+	pixel_x = 33
+	},
+/obj/machinery/light/fueled/wallfire/candle/r{
+	pixel_y = 32
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"LO" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/ruinedwood/spiral,
 /area)
 "LP" = (
 /obj/structure/fluff/railing/corner{
@@ -4241,8 +5051,7 @@
 "Mh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/edge{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /turf/open/floor/desert/citybrick,
 /area)
@@ -4258,6 +5067,15 @@
 	},
 /obj/structure/chair/stool,
 /turf/open/floor/ruinedwood/two,
+/area)
+"Mo" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/obj/structure/curtain/purplecurtain/dir{
+	dir = 4
+	},
+/turf/open/floor/concrete,
 /area)
 "Mq" = (
 /obj/structure/fluff/railing/wood/west,
@@ -4314,6 +5132,20 @@
 /obj/structure/closet/crate/crafted_closet,
 /turf/open/floor/ruinedwood/spiral,
 /area)
+"Na" = (
+/obj/structure/fluff/railing/wood/east,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/wood,
+/area)
+"Nd" = (
+/obj/structure/fluff/railing/corner{
+	dir = 9
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/structure/carpet/purple,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "Ne" = (
 /obj/structure/table/wood/plain/alto,
 /turf/open/floor/carpet/red,
@@ -4331,6 +5163,16 @@
 	pixel_x = 2
 	},
 /turf/open/floor/carpet/purple,
+/area)
+"Nm" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
 /area)
 "Nq" = (
 /obj/structure/rack,
@@ -4458,9 +5300,23 @@
 	},
 /turf/open/floor/desert/darkpath,
 /area)
+"Oe" = (
+/obj/structure/ladder/hatch,
+/turf/open/floor/woodturned,
+/area)
 "Ot" = (
 /obj/structure/closet/crate/chest/neu,
 /turf/open/floor/ruinedwood/two,
+/area)
+"Ow" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/checkeralt,
 /area)
 "OE" = (
 /obj/machinery/light/fueled/wallfire/candle/l,
@@ -4484,6 +5340,21 @@
 /obj/effect/decal/cleanable/debris/glass,
 /turf/open/floor/ruinedwood/turned,
 /area)
+"OK" = (
+/obj/structure/door/town,
+/turf/open/floor/concrete,
+/area)
+"ON" = (
+/obj/structure/ladder{
+	pixel_x = -4;
+	pixel_y = -5
+	},
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 6
+	},
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/wood,
+/area)
 "OO" = (
 /obj/effect/decal/borderfall,
 /obj/structure/fluff/railing/wood,
@@ -4491,7 +5362,13 @@
 /area)
 "OQ" = (
 /obj/effect/decal/edge{
-	dir = 2;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
+/area)
+"OR" = (
+/obj/structure/carpet/purple,
+/obj/effect/decal/edge{
 	color = "#683E38"
 	},
 /turf/open/floor/desert/deserttile,
@@ -4501,7 +5378,6 @@
 	pixel_y = 6
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/edge{
@@ -4568,6 +5444,15 @@
 	},
 /turf/open/floor/ruinedwood/turned,
 /area)
+"Pw" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/structure/carpet/blue,
+/obj/effect/decal/edge{
+	dir = 9;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "Px" = (
 /obj/structure/table/wood/reinf_long{
 	dir = 8
@@ -4607,6 +5492,12 @@
 /obj/machinery/light/fueled/torchholder/r,
 /turf/open/floor/desert/deserttile,
 /area)
+"PL" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "PR" = (
 /obj/effect/decal/edge{
 	dir = 8;
@@ -4629,6 +5520,12 @@
 "PU" = (
 /obj/structure/rack/shelf/biggest,
 /turf/open/floor/ruinedwood/spiral,
+/area)
+"PY" = (
+/obj/structure/bed/inn/double,
+/obj/item/bedsheet/fabric_double,
+/obj/structure/carpet/purple,
+/turf/open/floor/wood,
 /area)
 "Qa" = (
 /obj/structure/stairs{
@@ -4686,6 +5583,12 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/sandstone,
 /area)
+"QA" = (
+/obj/structure/fluff/walldeco/stone{
+	color = "#c2a15b"
+	},
+/turf/open/floor/desert/dunes,
+/area)
 "QC" = (
 /obj/structure/window/harem3{
 	name = "tall window"
@@ -4702,14 +5605,24 @@
 /obj/structure/bars/steel,
 /turf/open/floor/wood,
 /area)
+"QI" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "QK" = (
 /obj/structure/fluff/railing/border/north,
 /obj/structure/fluff/railing/corner{
 	dir = 9
 	},
 /obj/effect/decal/borderfall{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
@@ -4717,14 +5630,22 @@
 /obj/structure/mannequin/male{
 	density = 0;
 	pixel_y = 20;
-	pixel_x = -9;
-	dir = 2
+	pixel_x = -9
 	},
 /turf/open/floor/carpet/red,
 /area)
 "QQ" = (
 /obj/structure/chair/stool,
 /turf/open/floor/ruinedwood/two,
+/area)
+"QV" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/concrete,
 /area)
 "Ra" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -4761,6 +5682,16 @@
 	},
 /turf/open/floor/ruinedwood/two,
 /area)
+"Rk" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	color = "#683E38"
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "Rl" = (
 /turf/open/water/ocean/abyss,
 /area)
@@ -4782,8 +5713,7 @@
 	dir = 6
 	},
 /obj/effect/decal/edge{
-	color = "#4d443e";
-	dir = 2
+	color = "#4d443e"
 	},
 /turf/open/floor/desert/citybrick,
 /area)
@@ -4856,6 +5786,11 @@
 	},
 /turf/open/floor/dirt/desert,
 /area)
+"Se" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal5,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "Sg" = (
 /obj/structure/rack,
 /obj/item/natural/saddle,
@@ -4902,6 +5837,12 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet,
 /area)
+"SC" = (
+/obj/effect/decal/edge_corner{
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "SG" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/ruinedwood/spiral,
@@ -4946,11 +5887,17 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/tile/diamond,
 /area)
+"SZ" = (
+/obj/effect/decal/edge{
+	dir = 10;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
+/area)
 "Tb" = (
 /obj/structure/fluff/railing/border/north,
 /obj/effect/decal/borderfall{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
@@ -4965,6 +5912,15 @@
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/ruinedwood/turned,
 /area)
+"Tm" = (
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 6
+	},
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/turf/open/floor/wood,
+/area)
 "Tn" = (
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/hay_stack/rope{
@@ -4977,8 +5933,7 @@
 	name = "tall window"
 	},
 /obj/structure/curtain/bounty/dir{
-	open = 0;
-	dir = 2
+	open = 0
 	},
 /turf/open/floor/wood,
 /area)
@@ -5012,6 +5967,16 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/desert/citybrick,
 /area)
+"TR" = (
+/obj/effect/decal/edge{
+	color = "#4d443e";
+	dir = 4
+	},
+/obj/structure/table/wood/reinf_long{
+	icon_state = "tablewood_reinf_m"
+	},
+/turf/open/floor/tile/checkeralt,
+/area)
 "TX" = (
 /obj/effect/decal/grass_edges{
 	dir = 8
@@ -5040,8 +6005,7 @@
 /area)
 "Um" = (
 /obj/effect/decal/edge_corner{
-	color = "#683E38";
-	dir = 2
+	color = "#683E38"
 	},
 /turf/open/floor/desert/deserttile,
 /area)
@@ -5073,6 +6037,12 @@
 	},
 /turf/open/floor/desert/lightpath,
 /area)
+"UL" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "UM" = (
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
@@ -5086,6 +6056,12 @@
 /obj/structure/fluff/railing/border,
 /turf/open/floor/ruinedwood/darker,
 /area/ship/topdeck)
+"Ve" = (
+/obj/structure/table/wood/reinf_long{
+	dir = 8
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "Vg" = (
 /obj/effect/decal/edge_corner{
 	color = "#4d443e";
@@ -5107,7 +6083,6 @@
 	dir = 1
 	},
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/structure/ladder,
@@ -5130,6 +6105,27 @@
 	name = "Room V"
 	},
 /turf/open/floor/ruinedwood/two,
+/area)
+"VA" = (
+/turf/open/floor/tile/diamond,
+/area)
+"VB" = (
+/obj/effect/decal/edge{
+	dir = 4;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 8;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile,
+/area)
+"VF" = (
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
 /area)
 "VG" = (
 /obj/structure/bed/inn,
@@ -5199,6 +6195,12 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/tile/diamond,
 /area)
+"Wb" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area)
 "Wc" = (
 /obj/effect/decal/edge{
 	dir = 4;
@@ -5216,6 +6218,29 @@
 "Wq" = (
 /obj/structure/stockpile_storage,
 /turf/open/floor/woodturned,
+/area)
+"Wr" = (
+/obj/structure/flora/junglebush/large{
+	color = "#b9c4bd"
+	},
+/turf/open/floor/grass,
+/area)
+"Ww" = (
+/obj/machinery/light/fueled/hearth{
+	pixel_y = 5;
+	pixel_x = 1
+	},
+/obj/machinery/light/fueled/oven/north,
+/turf/open/floor/tile/brownbrick,
+/area)
+"Wy" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/obj/structure/curtain/noccurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/concrete,
 /area)
 "Wz" = (
 /obj/structure/fluff/railing/corner/south_west,
@@ -5250,10 +6275,7 @@
 /area/ship/topdeck)
 "WP" = (
 /obj/structure/fluff/railing/border,
-/obj/effect/decal/borderfall{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/effect/decal/borderfall,
 /obj/structure/fluff/railing/border/east,
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/ruinedwood/darker,
@@ -5271,6 +6293,14 @@
 	},
 /turf/open/floor/ruinedwood/turned,
 /area)
+"WY" = (
+/obj/structure/carpet/blue,
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
 "Xd" = (
 /obj/structure/stairs{
 	dir = 8
@@ -5278,6 +6308,15 @@
 /obj/structure/fluff/railing/wood,
 /turf/open/floor/ruinedwood/turned,
 /area/ship/topdeck)
+"Xe" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/obj/structure/curtain/greencurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area)
 "Xf" = (
 /obj/effect/decal/edge{
 	dir = 4;
@@ -5290,6 +6329,12 @@
 	},
 /obj/machinery/light/fueled/torchholder/r,
 /turf/open/floor/desert/deserttile,
+/area)
+"Xk" = (
+/obj/structure/window/harem3{
+	name = "tall window"
+	},
+/turf/open/floor/concrete,
 /area)
 "Xl" = (
 /obj/effect/landmark/ship_marker{
@@ -5349,10 +6394,13 @@
 /obj/structure/fluff/railing/corner/south_west,
 /turf/open/floor/ruinedwood,
 /area)
+"XI" = (
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/structure/carpet/purple,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "XM" = (
-/obj/structure/window/openclose/reinforced{
-	dir = 2
-	},
+/obj/structure/window/openclose/reinforced,
 /turf/open/floor/ruinedwood/two,
 /area)
 "XN" = (
@@ -5393,7 +6441,6 @@
 /area)
 "Yk" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/edge_corner{
@@ -5417,7 +6464,6 @@
 /area)
 "Yv" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /obj/effect/decal/edge{
@@ -5489,6 +6535,29 @@
 "YU" = (
 /turf/closed/wall/mineral/desert_sandstone,
 /area)
+"YW" = (
+/obj/structure/fluff/railing/border,
+/obj/structure/rack/shelf/biggest,
+/obj/effect/decal/edge_corner{
+	color = "#683E38";
+	dir = 8
+	},
+/obj/structure/fluff/walldeco/stone{
+	icon_state = "walldec6";
+	color = "#c2a15b";
+	pixel_y = 32;
+	pixel_x = -31
+	},
+/obj/machinery/light/fueled/wallfire/candle/l{
+	pixel_y = 32
+	},
+/turf/open/floor/desert/deserttile/tiledrab2,
+/area)
+"YX" = (
+/obj/effect/decal/alizeria/decals/wooddecal1,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "YY" = (
 /turf/closed/wall/mineral/sandstone,
 /area)
@@ -5503,6 +6572,10 @@
 	},
 /obj/item/weapon/knife/cleaver,
 /turf/open/floor/concrete,
+/area)
+"Ze" = (
+/obj/effect/decal/carpet/kover_black,
+/turf/open/floor/desert/deserttile,
 /area)
 "Zj" = (
 /obj/effect/decal/edge_corner{
@@ -5559,6 +6632,12 @@
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/water/ocean,
 /area)
+"ZA" = (
+/obj/structure/fluff/railing/border/east,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/ruinedwood/spiral,
+/area)
 "ZB" = (
 /obj/structure/window/harem3{
 	name = "tall window"
@@ -5582,10 +6661,20 @@
 "ZM" = (
 /obj/structure/window/openclose/reinforced,
 /obj/structure/curtain/bounty/dir{
-	open = 0;
-	dir = 2
+	open = 0
 	},
 /turf/open/floor/wood,
+/area)
+"ZO" = (
+/obj/effect/decal/edge{
+	dir = 1;
+	color = "#683E38"
+	},
+/obj/effect/decal/edge{
+	dir = 6;
+	color = "#683E38"
+	},
+/turf/open/floor/tile/diamond,
 /area)
 "ZP" = (
 /obj/structure/bed/inn,
@@ -5595,7 +6684,6 @@
 /area)
 "ZR" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#683E38"
 	},
 /turf/open/floor/desert/deserttile/tiledrab2,
@@ -66113,14 +67201,14 @@ GW
 GW
 GW
 GW
-xd
-xd
-xd
 GW
 GW
 GW
 GW
-GW
+Zs
+Zs
+Zs
+Zs
 GW
 GW
 GW
@@ -66315,9 +67403,9 @@ GW
 GW
 GW
 GW
-xd
-xd
-xd
+GW
+GW
+GW
 GW
 GW
 GW
@@ -66517,20 +67605,20 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 xd
 xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-nB
 xd
 xd
 sN
@@ -66718,21 +67806,21 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+BP
+GW
+GW
+GW
 xd
 xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-nB
 xd
 xd
 sN
@@ -66745,7 +67833,7 @@ xd
 xd
 xd
 GW
-VS
+GW
 VS
 VS
 qa
@@ -66908,33 +67996,33 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+xk
+GW
+GW
+GW
 xd
 xd
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-nB
 xd
 xd
 xd
@@ -66946,8 +68034,8 @@ xd
 xd
 xd
 xd
-GW
-GW
+VS
+VS
 GW
 GW
 le
@@ -67108,23 +68196,6 @@ GW
 GW
 GW
 GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-GW
-xd
-xd
-xd
-GW
-xd
-xd
-xd
-xd
 GW
 GW
 GW
@@ -67136,8 +68207,25 @@ GW
 GW
 GW
 GW
-nB
-nB
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+QA
+eZ
+GW
+GW
+GW
+xd
+xd
 xd
 xd
 xd
@@ -67307,26 +68395,6 @@ GW
 GW
 GW
 GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
 GW
 GW
 GW
@@ -67339,7 +68407,27 @@ GW
 GW
 GW
 GW
-nB
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+AK
+nA
+GW
+GW
+GW
+xd
+xd
 xd
 xd
 xd
@@ -67508,40 +68596,40 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 xd
 xd
-xd
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-nB
 xd
 xd
 xd
@@ -67708,29 +68796,6 @@ GW
 GW
 GW
 GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
 GW
 GW
 GW
@@ -67743,11 +68808,34 @@ GW
 GW
 GW
 GW
-xd
-xd
-xd
-xd
-xd
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+Zs
+Zs
+ij
+qc
+hN
+qc
+ij
 xd
 xd
 xd
@@ -67910,47 +68998,47 @@ GW
 GW
 GW
 GW
-xd
-xd
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
+gY
+ij
+gY
+ij
+ij
+Zs
+Zs
+Zs
+ij
+ij
+HI
+ll
+lx
+ij
+ij
 xd
 xd
 xd
@@ -68113,47 +69201,47 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
 ij
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-nB
-nB
-xd
-xd
+ij
+ij
+ij
+ij
+Ch
+tx
+lP
+lP
+SC
+ij
+Xk
+Xk
+ij
+ij
+YW
+pt
+CW
+uv
+Ds
+ij
+ij
 xd
 xd
 xd
@@ -68315,47 +69403,47 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
 ij
+DY
+xf
+VA
+VA
+SZ
+lP
+lP
+SC
 ij
-ij
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-nB
-nB
-nB
-nB
-xd
+FX
+Pw
+Fw
+IU
+Um
+uv
+JH
+QV
 xd
 xd
 xd
@@ -68517,47 +69605,47 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
 ij
-ij
-ij
-GW
-GW
-GW
-GW
-GW
-le
-le
-le
-le
-le
-le
-le
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-nB
-nB
-nB
-nB
-nB
+aE
+xf
+VA
+VA
+VA
+VA
+VA
+Cm
+uz
+WY
+nx
+Zx
+Ze
+OR
+mn
+lp
+Xe
 xd
 xd
 xd
@@ -68720,46 +69808,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
 ij
+DY
+xf
+VA
+VA
+VF
+mZ
+mZ
+tJ
 ij
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-nB
-nB
-OY
-OY
-nB
-nB
+dS
+nm
+Lv
+cr
+qo
+Kl
+mm
+QV
 xd
 xd
 xd
@@ -68922,51 +70010,51 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+VA
+VA
+VA
+VA
+VA
+ij
+pD
+De
+mZ
+mZ
+tJ
+ij
+Xk
+Xk
 ij
 ij
+LM
+Ve
+bv
+GD
+Dh
 ij
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+ij
 xd
 xd
 xd
-xd
-nB
-nB
-OY
-je
-OY
-OY
-nB
-xd
-xd
-xd
-GW
-GW
+VS
+VS
 IA
 hB
 yW
@@ -69124,51 +70212,51 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+VA
+VA
+VA
+VA
+VA
 ij
 ij
+vl
+ij
+vl
+ij
+ij
+Zs
+Zs
+Zs
+ij
+ij
+yM
+Wc
+EF
+ij
 ij
 GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-le
-le
-le
-le
-le
-le
-le
-GW
-GW
-GW
 xd
 xd
 xd
-nB
-OY
-OY
-OY
-OY
-nB
-nB
-xd
-xd
-xd
-GW
-GW
+VS
+VS
 Nv
 hO
 lA
@@ -69326,46 +70414,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
 ij
+ij
+ij
+ij
+ij
+ij
+HI
+HG
+Em
+HG
+HG
+Em
+HG
+lx
+Zs
+Zs
+ij
+ij
+uz
+ij
+ij
 GW
 GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-xd
-xd
-xd
-nB
-nB
-OY
-OY
-OY
-nB
-nB
 xd
 xd
 xd
@@ -69528,46 +70616,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
 ij
-ij
+HI
+rD
+bv
+rZ
+bv
+bv
+rZ
+bv
+uv
+lx
+Zs
+Xk
+Lk
+lP
+SC
+Xk
 GW
 GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-nB
-nB
-nB
-nB
-nB
-xd
 xd
 xd
 GW
@@ -69730,46 +70818,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
-ij
-ij
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
+VA
+VA
+VA
+VA
+VA
 xd
-xd
-xd
-xd
-xd
-nB
-xd
-xd
-xd
+RF
+bv
+Wr
+pW
+ET
+ET
+xq
+oL
+bv
+ZR
+Zs
+Xk
+xf
+VA
+Cm
+Xk
+GW
+GW
 xd
 xd
 GW
@@ -69932,46 +71020,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+VA
+VA
+VA
+VA
+VA
+Xk
+Bc
+VB
+pW
+kB
+PC
+PC
+rP
+xq
+VB
+Hr
 ij
 ij
+xf
+VA
+Cm
+ij
 ij
 GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
-xd
 xd
 GW
 GW
@@ -70134,46 +71222,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
+xd
+RF
+bv
+IH
+PC
+PC
+PC
+PC
+IH
+bv
+ZR
 ij
+Lk
+gb
+VA
+SZ
+SC
 ij
 GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-xd
-xd
-xd
-xd
 GW
 GW
 GW
@@ -70336,45 +71424,45 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
 ij
-ij
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-xd
-xd
-xd
-GW
+RF
+bv
+IH
+PC
+PC
+PC
+PC
+IH
+bv
+ZR
+vl
+xf
+VA
+VA
+VA
+Cm
+gY
 GW
 GW
 GW
@@ -70538,45 +71626,45 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
+VA
+VA
+VA
 ij
-GW
-GW
-GW
-GW
-GW
-le
-le
-le
-le
-le
-le
-le
-le
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+ij
+Bc
+VB
+rP
+xq
+PC
+PC
+pW
+kB
+VB
+Hr
+ij
+xf
+VA
+VA
+VA
+Cm
+ij
 GW
 GW
 GW
@@ -70740,9 +71828,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
 GW
 GW
 GW
@@ -70759,26 +71844,29 @@ GW
 GW
 GW
 GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+Xk
+VA
+VA
+VA
+Xk
+Zs
+RF
+bv
+oL
+rP
+ET
+ET
+kB
+et
+bv
+ZR
+vl
+ZO
+mZ
+mZ
+mZ
+ls
+gY
 GW
 GW
 GW
@@ -70942,46 +72030,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+Xk
+VA
+VA
+VA
+Xk
+Zs
+NW
+im
+bv
+rZ
+bv
+bv
+rZ
+bv
+GD
+EF
 ij
+Nm
+eI
+Fc
+eI
+QI
 ij
-ij
 GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-VS
 VS
 GW
 GW
@@ -71144,46 +72232,46 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
 ij
+ij
+ij
+Zs
+Zs
+NW
+Wc
+Bs
+Wc
+Wc
+Bs
+Wc
+EF
+ij
+ij
+ij
+ij
+ij
+ij
+ij
+ij
 GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
-le
-le
-le
-le
-le
-le
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-VS
 VS
 VS
 VS
@@ -71346,44 +72434,44 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
+VA
+VA
+VA
 ij
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+ij
+Zs
+Zs
+Zs
+ij
+ij
+xd
+Xk
+xd
+ij
+ij
+VA
+VA
+VA
+VA
+VA
+ij
 GW
 GW
 VS
@@ -71548,44 +72636,44 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
+VA
+VA
+VA
+VA
+VA
 ij
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+ij
+Xk
+Xk
+ij
+VA
+VA
+VA
+VA
+VA
+ij
+VA
+VA
+VA
+VA
+VA
+ij
 GW
 GW
 GW
@@ -71750,44 +72838,44 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
+VA
+VA
 ij
+VA
+VA
+VA
+VA
+VA
+VA
+VA
+VA
 ij
-GW
-GW
-GW
-GW
-le
-le
-le
-le
-le
-le
-le
-le
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+VA
+VA
+VA
+VA
+VA
+ij
 GW
 GW
 GW
@@ -71952,44 +73040,44 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
+VA
+VA
 ij
+VA
+VA
+VA
+VA
+VA
+VA
+VA
+VA
 ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+VA
+VA
+VA
+VA
+VA
+ij
 GW
 GW
 GW
@@ -72154,44 +73242,44 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
+VA
+VA
+VA
+VA
+VA
+VA
+VA
 ij
+VA
+VA
+VA
+VA
+VA
+VA
+VA
+VA
 ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+VA
+VA
+VA
+VA
+VA
+ij
 GW
 GW
 GW
@@ -72356,44 +73444,44 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+ij
+VA
+VA
+VA
+VA
+VA
+ij
+ij
+Xk
+Xk
+ij
+VA
+VA
+VA
+VA
+VA
 ij
 ij
 ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+ij
+ij
+ij
+ij
 GW
 GW
 GW
@@ -72558,38 +73646,38 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+ij
+VA
+VA
+VA
+ij
+ij
+GW
+GW
+GW
 ij
 ij
 ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-GW
+ij
+ij
+ij
+ij
 GW
 GW
 GW
@@ -72760,22 +73848,27 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
 ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
+ij
+ij
 GW
 GW
 GW
@@ -72789,14 +73882,9 @@ GW
 GW
 GW
 GW
-le
-le
-le
-le
-le
-le
-le
-le
+GW
+GW
+GW
 GW
 GW
 GW
@@ -72962,22 +74050,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
 GW
 GW
 GW
@@ -72991,14 +74063,30 @@ GW
 GW
 GW
 GW
-le
 GW
 GW
 GW
 GW
 GW
 GW
-le
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 GW
 GW
 GW
@@ -73164,22 +74252,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-GW
-GW
-GW
-GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-GW
-le
 GW
 GW
 GW
@@ -73193,14 +74265,30 @@ GW
 GW
 GW
 GW
-le
 GW
 GW
 GW
 GW
 GW
 GW
-le
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 GW
 GW
 GW
@@ -73366,22 +74454,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-GW
-GW
-GW
-GW
-le
-le
-le
-le
-le
-le
-le
-le
-le
 GW
 GW
 GW
@@ -73395,14 +74467,6 @@ GW
 GW
 GW
 GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
 GW
 GW
 GW
@@ -73412,6 +74476,30 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+up
+ie
 GW
 GW
 VS
@@ -73568,10 +74656,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -73597,14 +74681,6 @@ GW
 GW
 GW
 GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
 GW
 GW
 GW
@@ -73614,6 +74690,18 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+la
+ie
 GW
 VS
 VS
@@ -73770,11 +74858,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -73799,14 +74882,19 @@ GW
 GW
 GW
 GW
-le
 GW
 GW
 GW
 GW
 GW
 GW
-le
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 GW
 GW
 GW
@@ -73973,11 +75061,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -74001,14 +75084,19 @@ GW
 GW
 GW
 GW
-le
 GW
 GW
 GW
 GW
 GW
 GW
-le
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 GW
 GW
 GW
@@ -74176,13 +75264,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -74203,14 +75284,6 @@ GW
 GW
 GW
 GW
-le
-GW
-GW
-GW
-GW
-GW
-GW
-le
 GW
 GW
 GW
@@ -74220,6 +75293,21 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+BQ
+Bp
 GW
 GW
 VS
@@ -74379,13 +75467,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -74405,14 +75486,6 @@ GW
 GW
 GW
 GW
-le
-le
-le
-le
-le
-le
-le
-le
 GW
 GW
 GW
@@ -74422,6 +75495,21 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+BQ
+la
 GW
 GW
 VS
@@ -74582,19 +75670,19 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 GW
 GW
 GW
@@ -74787,17 +75875,17 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 GW
 GW
 GW
@@ -74990,23 +76078,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -75028,6 +76099,23 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+wl
+BQ
 GW
 VS
 VS
@@ -75199,17 +76287,6 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
 GW
 GW
 GW
@@ -75230,6 +76307,17 @@ GW
 GW
 GW
 GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+BR
+BQ
 GW
 VS
 VS
@@ -75402,17 +76490,17 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
-ij
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+GW
 ij
 ij
 ij
@@ -75611,10 +76699,10 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
-ij
+GW
+GW
+GW
+GW
 ij
 ij
 ij
@@ -75814,9 +76902,9 @@ GW
 GW
 GW
 GW
-ij
-ij
-ij
+GW
+GW
+GW
 ij
 ij
 ij
@@ -92994,13 +94082,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+ij
+Xk
+Xk
+ij
+ij
 qu
 qu
 qu
@@ -93185,24 +94273,24 @@ qu
 qu
 qu
 qu
+nB
+nB
+nB
+YY
+ij
+ij
+YY
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+ZA
+PL
+tX
+RO
+RO
+ij
 qu
 qu
 qu
@@ -93381,30 +94469,30 @@ qu
 qu
 qu
 qu
+nB
+nB
+nB
+nB
+nB
+nB
+nB
+VS
+VS
+Xk
+em
+JU
+ij
+Xk
+YY
+ij
+ij
+fz
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+GQ
+tX
+RO
+RO
+Xk
 qu
 qu
 qu
@@ -93583,30 +94671,30 @@ qu
 qu
 qu
 qu
+nB
+VS
+VS
+VS
+VS
+VS
+DY
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+VS
+qa
+uH
+aP
+JU
+Eq
+Ow
+ij
+SN
+fz
+xo
+GQ
+tX
+RO
+RO
+Xk
 qu
 qu
 qu
@@ -93785,30 +94873,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+nB
+VS
+VS
+VS
+VS
+VS
+nB
+oL
+VS
+YY
+Wb
+Na
+bq
+Rk
+Ww
+ij
+fN
+pk
+XI
+Nd
+ON
+oC
+RO
+ij
 qu
 qu
 qu
@@ -93987,30 +95075,30 @@ qu
 qu
 qu
 qu
+nB
+VS
+VS
+VS
+VS
+VS
+DY
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+VS
+OK
+wc
+dk
+Tm
+bl
+dz
+ij
+SN
+rC
+JW
+id
+YX
+Kz
+oC
+ij
 qu
 qu
 qu
@@ -94189,30 +95277,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+nB
+VS
+VS
+VS
+VS
+VS
+VS
+VS
+VS
+Xk
+lq
+od
+ij
+Xk
+YY
+ij
+ij
+hS
+GX
+LO
+Se
+UL
+ij
+ij
 qu
 qu
 qu
@@ -94391,29 +95479,29 @@ qu
 qu
 qu
 qu
+nB
+VS
+VS
+VS
+VS
+VS
+nB
+nB
+nB
+YY
+ij
+ij
+YY
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+HW
+TR
+rA
+ij
+ij
 qu
 qu
 qu
@@ -94592,6 +95680,14 @@ qu
 qu
 qu
 qu
+nB
+nB
+VS
+VS
+VS
+VS
+nB
+nB
 qu
 qu
 qu
@@ -94602,19 +95698,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+ij
+ij
+ij
 qu
 qu
 qu
@@ -94794,6 +95882,13 @@ qu
 qu
 qu
 qu
+nB
+VS
+VS
+VS
+VS
+VS
+nB
 qu
 qu
 qu
@@ -94805,18 +95900,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+YY
+RO
+RO
+RO
+YY
 qu
 qu
 qu
@@ -94996,6 +96084,13 @@ qu
 qu
 qu
 qu
+nB
+YY
+YY
+YY
+YY
+YY
+nB
 qu
 qu
 qu
@@ -95007,18 +96102,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+Xk
+RO
+RO
+RO
+Xk
 qu
 qu
 qu
@@ -95198,6 +96286,13 @@ qu
 qu
 qu
 qu
+YY
+YY
+VS
+VS
+VS
+YY
+YY
 qu
 qu
 qu
@@ -95208,20 +96303,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+YY
+ij
+oC
+oC
+Wb
+ij
+YY
 qu
 qu
 qu
@@ -95400,6 +96488,13 @@ qu
 qu
 qu
 qu
+VS
+VS
+VS
+VS
+VS
+VS
+VS
 qu
 qu
 qu
@@ -95410,20 +96505,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+cX
+cK
+cK
+cK
+jQ
+ij
 qu
 qu
 qu
@@ -95602,6 +96690,13 @@ qu
 qu
 qu
 qu
+VS
+VS
+VS
+VS
+VS
+VS
+VS
 qu
 qu
 qu
@@ -95612,20 +96707,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+yA
+Eb
+cK
+cK
+cK
+ij
 qu
 qu
 qu
@@ -95804,6 +96892,13 @@ qu
 qu
 qu
 qu
+VS
+VS
+VS
+VS
+VS
+VS
+VS
 qu
 qu
 qu
@@ -95814,20 +96909,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+YY
+Xk
+OK
+YY
+yY
+Xk
+YY
 qu
 qu
 qu
@@ -96007,6 +97095,11 @@ qu
 qu
 qu
 qu
+VS
+VS
+VS
+VS
+VS
 qu
 qu
 qu
@@ -96018,18 +97111,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+nB
+va
+je
+je
+je
+mG
+nB
 qu
 qu
 qu
@@ -96209,6 +97297,11 @@ qu
 qu
 qu
 qu
+VS
+VS
+VS
+VS
+VS
 qu
 qu
 qu
@@ -96220,18 +97313,13 @@ qu
 qu
 qu
 qu
+nB
+vD
 qu
+oL
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+kA
+nB
 qu
 qu
 qu
@@ -96411,6 +97499,11 @@ qu
 qu
 qu
 qu
+ij
+ij
+ij
+ij
+ij
 qu
 qu
 qu
@@ -96421,19 +97514,14 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+nB
+nB
+vD
+eI
+Fc
+eI
+CR
+nB
 qu
 qu
 qu
@@ -96612,29 +97700,29 @@ qu
 qu
 qu
 qu
+ij
+ij
+GW
+GW
+GW
+ij
+ij
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+VS
+VS
+VS
+YY
+nB
+nB
+nB
+VS
+tN
+VS
+VS
+VS
+jh
 qu
 qu
 qu
@@ -96813,30 +97901,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+GW
+GW
+GW
+GW
+GW
+ij
+ij
+VS
+VS
+VS
+VS
+VS
+YY
+YY
+VS
+VS
+VS
+VS
+VS
+VS
+VS
+nB
 qu
 qu
 qu
@@ -97015,30 +98103,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+VS
+VS
+VS
+VS
+VS
+VS
+YY
+VS
+VS
+VS
+VS
+VS
+VS
+VS
+nB
 qu
 qu
 qu
@@ -97217,30 +98305,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+VS
+VS
+VS
+VS
+VS
+VS
+YY
+VS
+VS
+VS
+VS
+VS
+VS
+VS
+nB
 qu
 qu
 qu
@@ -97419,30 +98507,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+GW
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+VS
+VS
+VS
+VS
+VS
+VS
+YY
+VS
+VS
+VS
+VS
+VS
+VS
+VS
+nB
 qu
 qu
 qu
@@ -97621,30 +98709,30 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+GW
+GW
+GW
+GW
+GW
+GW
+ij
+ij
+VS
+VS
+VS
+VS
+VS
+YY
+YY
+VS
+nB
+nB
+nB
+nB
+nB
+nB
+nB
 qu
 qu
 qu
@@ -97823,24 +98911,24 @@ qu
 qu
 qu
 qu
+ij
+GW
+GW
+GW
+GW
+GW
+ij
+ij
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+VS
+VS
+VS
+YY
+nB
+nB
+nB
 qu
 qu
 qu
@@ -98025,13 +99113,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+ij
+ij
+ij
+ij
+ij
 qu
 qu
 qu
@@ -118245,11 +119333,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
+nB
+nB
+nB
+nB
+nB
 qu
 qu
 qu
@@ -118439,20 +119527,20 @@ qu
 qu
 qu
 qu
+YY
+ij
+ij
+BG
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+nB
+nB
+VS
+VS
+VS
+nB
+nB
 qu
 qu
 qu
@@ -118641,21 +119729,21 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+le
+RO
+RO
+ij
+ij
+BG
+nB
+nB
+YY
+Mo
+AW
+Mo
+YY
+nB
+nB
 qu
 qu
 qu
@@ -118843,21 +119931,21 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+le
+RO
+RO
+RO
+RO
+qa
+nB
+VS
+qa
+qm
+bR
+lQ
+Gp
+VS
+nB
 qu
 qu
 qu
@@ -119045,21 +120133,21 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+YY
+RO
+RO
+RO
+RO
+qa
+nB
+VS
+qa
+yz
+fP
+Oe
+Wy
+VS
+nB
 qu
 qu
 qu
@@ -119247,21 +120335,21 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+le
+RO
+oM
+hl
+RO
+qa
+nB
+VS
+qa
+PY
+ut
+cB
+Gp
+VS
+nB
 qu
 qu
 qu
@@ -119449,21 +120537,21 @@ qu
 qu
 qu
 qu
+le
+mW
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+ij
+ij
+BG
+nB
+nB
+YY
+yY
+yY
+yY
+YY
+nB
+nB
 qu
 qu
 qu
@@ -119651,20 +120739,20 @@ qu
 qu
 qu
 qu
+YY
+ij
+ij
+BG
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+nB
+nB
+VS
+VS
+VS
+nB
+nB
 qu
 qu
 qu
@@ -119861,11 +120949,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
+nB
+nB
+nB
+nB
+nB
 qu
 qu
 qu
@@ -120063,11 +121151,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
+YY
+le
+le
+le
+YY
 qu
 qu
 qu
@@ -120265,11 +121353,11 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
+qa
+Ga
+Ga
+Ga
+qa
 qu
 qu
 qu
@@ -120466,13 +121554,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+BG
+qa
+qO
+Ga
+Ga
+qa
+BG
 qu
 qu
 qu
@@ -120668,13 +121756,13 @@ qu
 qu
 qu
 qu
+qa
 qu
-qu
-qu
-qu
-qu
-qu
-qu
+ns
+Ga
+Ga
+Ga
+qa
 qu
 qu
 qu
@@ -120870,13 +121958,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+qa
+Es
+Ga
+Ga
+Ga
+Ga
+qa
 qu
 qu
 qu
@@ -121072,13 +122160,13 @@ qu
 qu
 qu
 qu
-qu
-qu
-qu
-qu
-qu
-qu
-qu
+BG
+YY
+yY
+yY
+yY
+YY
+BG
 qu
 qu
 qu

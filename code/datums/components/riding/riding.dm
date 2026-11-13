@@ -259,7 +259,7 @@
 		buckled_mob.on_lying_down()
 
 	buckled_mob.reset_offsets(RIDING_SOURCE)
-	buckled_mob.client?.view_size.resetToDefault()
+	buckled_mob.client?.view_size?.resetToDefault()
 
 /datum/component/riding/proc/restore_parent_layer_and_offsets()
 	var/atom/movable/seat = parent

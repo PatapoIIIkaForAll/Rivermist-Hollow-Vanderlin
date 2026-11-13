@@ -78,7 +78,7 @@
 		return
 	var/obj/item/organ/organ = target.getorganslot(hole_id)
 	var/use_force = force >= SEX_FORCE_HIGH
-	var/pushes = (use_force && prob(force == SEX_FORCE_EXTREME ? 50 : 25)) ? 2 : 1
+	var/pushes = (use_force && prob(force >= SEX_FORCE_EXTREME ? 50 : 25)) ? 2 : 1
 	var/static/list/pushed_results = list(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_ALMOST_FULL, INSERT_FEEDBACK_OK_OVERRIDE)
 	var/pushed = 0
 	var/pleasure = 0
@@ -87,7 +87,7 @@
 	var/result
 	for(var/push in 1 to pushes)
 		var/size = beads.get_bead(beads.beads_inside + 1)
-		result = beads.push_bead(organ, use_force)
+		result = beads.push_bead(organ, use_force, user, force)
 		if(!(result in pushed_results))
 			break
 		pushed++
@@ -113,7 +113,7 @@
 		return
 	switch(result)
 		if(INSERT_FEEDBACK_TRY_FORCE)
-			to_chat(user, span_warning("The next bead will not go in without more force."))
+			to_chat(user, span_warning("The next bead will not go in without more force, or something slick."))
 		if(INSERT_FEEDBACK_STUFFED)
 			user.visible_message(span_warning("[capitalize(whose(user, target))] [hole_word] is too full to take another bead."))
 			stop_runtime()
@@ -129,10 +129,10 @@
 	user.visible_message(span_warning("[user] stops feeding beads into [whose(user, target)] [hole_word]."))
 
 /datum/sex_action/beads/feed/anus
-	name = "Feed beads into ass"
+	name = "Feed anal-beads"
 
 /datum/sex_action/beads/feed/vagina
-	name = "Feed beads into pussy"
+	name = "Feed vaginal-beads"
 	hole_id = ORGAN_SLOT_VAGINA
 	hole_word = "pussy"
 
@@ -153,14 +153,14 @@
 		stop_runtime()
 		return
 	var/pulls = 1
-	if(force >= SEX_FORCE_HIGH && prob(force == SEX_FORCE_EXTREME ? 40 : 20))
+	if(force >= SEX_FORCE_HIGH && prob(force >= SEX_FORCE_EXTREME ? 40 : 20))
 		pulls = rand(2, 3)
 	var/popped = 0
 	var/pleasure = 0
 	var/pain = 0
 	var/last_size
 	for(var/pull in 1 to pulls)
-		var/size = beads.pull_bead(user)
+		var/size = beads.pull_bead(user, force)
 		if(!size)
 			break
 		popped++
@@ -187,10 +187,10 @@
 	user.visible_message(span_warning("[user] lets go of the ring."))
 
 /datum/sex_action/beads/draw/anus
-	name = "Draw beads from ass"
+	name = "Draw anal-beads"
 
 /datum/sex_action/beads/draw/vagina
-	name = "Draw beads from pussy"
+	name = "Draw vaginal-beads"
 	hole_id = ORGAN_SLOT_VAGINA
 	hole_word = "pussy"
 
@@ -219,14 +219,12 @@
 		return
 	var/caught = is_caught(user, target)
 	var/count = caught ? min(rand(1, 2), beads.beads_inside) : beads.beads_inside
-	var/popped = 0
 	var/pleasure = 0
 	var/pain = 0
-	for(var/pull in 1 to count)
-		var/size = beads.pull_bead(user)
-		if(!size)
-			break
-		popped++
+	// Everything torn free crosses the ring together: one passage at the widest bead.
+	var/list/sizes = beads.pull_beads(count, user, force)
+	var/popped = length(sizes)
+	for(var/size in sizes)
 		pleasure += beads.get_bead_pleasure_of(size)
 		pain += beads.get_bead_pain_of(size)
 	if(!popped)
@@ -243,10 +241,10 @@
 	handle_passive_ejaculation(target)
 
 /datum/sex_action/beads/yank/anus
-	name = "Yank beads from ass"
+	name = "Yank anal-beads"
 
 /datum/sex_action/beads/yank/vagina
-	name = "Yank beads from pussy"
+	name = "Yank vaginal-beads"
 	hole_id = ORGAN_SLOT_VAGINA
 	hole_word = "pussy"
 
@@ -268,7 +266,7 @@
 		return
 	var/pleasure = 0.6 + 0.25 * force
 	if(force >= SEX_FORCE_HIGH && prob(15 + 10 * (force - SEX_FORCE_HIGH)))
-		var/size = beads.pull_bead(user)
+		var/size = beads.pull_bead(user, force)
 		if(size)
 			pleasure += beads.get_bead_pleasure_of(size)
 			user.visible_message(spanify_force("[user] tugs too hard, and a [get_bead_word(size)] pops out of [whose(user, target)] [hole_word]!"))
@@ -285,10 +283,10 @@
 	user.visible_message(span_warning("[user] lets the ring go."))
 
 /datum/sex_action/beads/tug/anus
-	name = "Tug bead ring (ass)"
+	name = "Tug anal-beads"
 
 /datum/sex_action/beads/tug/vagina
-	name = "Tug bead ring (pussy)"
+	name = "Tug vaginal-beads"
 	hole_id = ORGAN_SLOT_VAGINA
 	hole_word = "pussy"
 
@@ -312,6 +310,8 @@
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] pops a [get_bead_word(size)] out of [whose(user, target)] [hole_word] and pushes it back in..."))
 	playsound(target, 'sound/misc/mat/pop.ogg', 25, TRUE, -2, ignore_walls = FALSE)
+	// The outer bead pops out and back in: one passage through the ring.
+	beads.pass_bead(beads.host_organ, beads.beads_inside, force, user)
 	var/pleasure = beads.get_bead_pleasure_of(size) * 1.3
 	perform_sex_action(target, user, pleasure, cap_bead_pain(target, beads.get_bead_pain_of(size) * 0.5, force, speed), pleasure * 0.8)
 	handle_passive_ejaculation(target)
@@ -321,10 +321,10 @@
 	user.visible_message(span_warning("[user] stops working the beads."))
 
 /datum/sex_action/beads/work/anus
-	name = "Work beads in ass"
+	name = "Work anal-beads"
 
 /datum/sex_action/beads/work/vagina
-	name = "Work beads in pussy"
+	name = "Work vaginal-beads"
 	hole_id = ORGAN_SLOT_VAGINA
 	hole_word = "pussy"
 
@@ -357,7 +357,7 @@
 	if(!beads)
 		stop_runtime()
 		return
-	var/size = beads.pull_bead()
+	var/size = beads.pull_bead(null, force)
 	if(!size)
 		stop_runtime()
 		return
@@ -371,9 +371,9 @@
 		stop_runtime()
 
 /datum/sex_action/beads/bear_down/anus
-	name = "Bear down on beads (ass)"
+	name = "Expel anal-beads"
 
 /datum/sex_action/beads/bear_down/vagina
-	name = "Bear down on beads (pussy)"
+	name = "Expel vaginal-beads"
 	hole_id = ORGAN_SLOT_VAGINA
 	hole_word = "pussy"

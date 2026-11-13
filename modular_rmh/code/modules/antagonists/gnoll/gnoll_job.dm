@@ -24,6 +24,7 @@
 	display_order = JDO_SUCCUBUS + 0.5
 	advclass_cat_rolls = list(CAT_GNOLL = 4)
 	job_subclasses = list(/datum/job/advclass/gnoll/hunter, /datum/job/advclass/gnoll/knight, /datum/job/advclass/gnoll/templar, /datum/job/advclass/gnoll/shaman)
+	job_whitelist_id = "gnoll"
 
 /datum/job/gnoll/proc/has_required_landmarks()
 	return length(GLOB.jobspawn_overrides[title]) && length(GLOB.gnoll_shrines)
@@ -94,13 +95,23 @@
 
 /datum/attribute_holder/sheet/job/advclass/gnoll/hunter
 	raw_attribute_list = list(
-		STAT_STRENGTH = 1,
-		STAT_ENDURANCE = 2,
-		STAT_SPEED = 2,
-		/datum/attribute/skill/combat/unarmed = 40,
+		STAT_CONSTITUTION = 2,
+		STAT_ENDURANCE = 3,
+		STAT_STRENGTH = 3,
+		STAT_SPEED = 3,
+		/datum/attribute/skill/combat/axesmaces = 20,
 		/datum/attribute/skill/combat/wrestling = 40,
+		/datum/attribute/skill/combat/unarmed = 40,
+		/datum/attribute/skill/combat/swords = 20,
+		/datum/attribute/skill/combat/shields = 10,
+		/datum/attribute/skill/craft/tanning = 20,
+		/datum/attribute/skill/misc/swimming = 40,
+		/datum/attribute/skill/misc/climbing = 40,
 		/datum/attribute/skill/misc/athletics = 40,
-		/datum/attribute/skill/misc/climbing = 30,
+		/datum/attribute/skill/misc/sewing = 20,
+		/datum/attribute/skill/craft/cooking = 10,
+		/datum/attribute/skill/labor/butchering = 10,
+		/datum/attribute/skill/misc/medicine = 10,
 		/datum/attribute/skill/misc/tracking = 50,
 		/datum/attribute/skill/misc/sneaking = 30,
 		/datum/attribute/skill/craft/traps = 20,
@@ -117,15 +128,26 @@
 
 /datum/attribute_holder/sheet/job/advclass/gnoll/knight
 	raw_attribute_list = list(
-		STAT_CONSTITUTION = 2,
-		STAT_ENDURANCE = 2,
+		STAT_CONSTITUTION = 3,
+		STAT_ENDURANCE = 5,
+		STAT_STRENGTH = 5,
 		STAT_SPEED = -1,
-		/datum/attribute/skill/combat/unarmed = 40,
+		/datum/attribute/skill/combat/axesmaces = 10,
 		/datum/attribute/skill/combat/wrestling = 40,
-		/datum/attribute/skill/combat/shields = 30,
-		/datum/attribute/skill/misc/athletics = 30,
-		/datum/attribute/skill/misc/climbing = 20,
-		/datum/attribute/skill/misc/tracking = 40,
+		/datum/attribute/skill/combat/unarmed = 30,
+		/datum/attribute/skill/combat/swords = 40,
+		/datum/attribute/skill/combat/shields = 40,
+		/datum/attribute/skill/craft/tanning = 20,
+		/datum/attribute/skill/misc/swimming = 40,
+		/datum/attribute/skill/misc/climbing = 40,
+		/datum/attribute/skill/misc/athletics = 40,
+		/datum/attribute/skill/misc/sewing = 20,
+		/datum/attribute/skill/craft/cooking = 10,
+		/datum/attribute/skill/labor/butchering = 10,
+		/datum/attribute/skill/misc/medicine = 10,
+		/datum/attribute/skill/misc/tracking = 50,
+		/datum/attribute/skill/misc/sneaking = 30,
+		/datum/attribute/skill/craft/traps = 20,
 	)
 
 /datum/outfit/gnoll/knight
@@ -143,14 +165,27 @@
 
 /datum/attribute_holder/sheet/job/advclass/gnoll/templar
 	raw_attribute_list = list(
-		STAT_CONSTITUTION = 1,
-		STAT_ENDURANCE = 1,
-		/datum/attribute/skill/combat/unarmed = 30,
+		STAT_CONSTITUTION = 4,
+		STAT_ENDURANCE = 4,
+		STAT_STRENGTH = 4,
+		/datum/attribute/skill/combat/axesmaces = 20,
 		/datum/attribute/skill/combat/wrestling = 30,
+		/datum/attribute/skill/combat/unarmed = 30,
+		/datum/attribute/skill/combat/swords = 20,
+		/datum/attribute/skill/combat/shields = 10,
+		/datum/attribute/skill/craft/tanning = 20,
+		/datum/attribute/skill/misc/swimming = 40,
+		/datum/attribute/skill/misc/climbing = 40,
+		/datum/attribute/skill/misc/athletics = 40,
+		/datum/attribute/skill/misc/sewing = 20,
+		/datum/attribute/skill/craft/cooking = 10,
+		/datum/attribute/skill/labor/butchering = 10,
+		/datum/attribute/skill/misc/medicine = 20,
+		/datum/attribute/skill/misc/tracking = 50,
+		/datum/attribute/skill/misc/sneaking = 30,
+		/datum/attribute/skill/craft/traps = 20,
 		/datum/attribute/skill/magic/holy = 30,
 		/datum/attribute/skill/misc/reading = 30,
-		/datum/attribute/skill/misc/medicine = 20,
-		/datum/attribute/skill/misc/tracking = 40,
 	)
 
 /datum/job/advclass/gnoll/shaman
@@ -164,15 +199,30 @@
 
 /datum/attribute_holder/sheet/job/advclass/gnoll/shaman
 	raw_attribute_list = list(
+		STAT_CONSTITUTION = 2,
+		STAT_ENDURANCE = 4,
+		STAT_STRENGTH = 1,
 		STAT_INTELLIGENCE = 2,
 		STAT_PERCEPTION = 1,
-		/datum/attribute/skill/combat/unarmed = 20,
+		/datum/attribute/skill/combat/axesmaces = 10,
 		/datum/attribute/skill/combat/wrestling = 20,
+		/datum/attribute/skill/combat/unarmed = 20,
+		/datum/attribute/skill/combat/swords = 10,
+		/datum/attribute/skill/combat/shields = 10,
+		/datum/attribute/skill/craft/tanning = 20,
+		/datum/attribute/skill/misc/swimming = 20,
+		/datum/attribute/skill/misc/climbing = 30,
+		/datum/attribute/skill/misc/athletics = 30,
+		/datum/attribute/skill/misc/sewing = 20,
+		/datum/attribute/skill/craft/cooking = 10,
+		/datum/attribute/skill/labor/butchering = 10,
+		/datum/attribute/skill/misc/tracking = 40,
+		/datum/attribute/skill/misc/sneaking = 30,
+		/datum/attribute/skill/craft/traps = 20,
 		/datum/attribute/skill/magic/holy = 40,
 		/datum/attribute/skill/misc/medicine = 40,
 		/datum/attribute/skill/misc/reading = 40,
 		/datum/attribute/skill/craft/alchemy = 30,
-		/datum/attribute/skill/misc/tracking = 40,
 	)
 
 /datum/outfit/gnoll/shaman

@@ -35,6 +35,11 @@
 
 /datum/sex_action/sex/other/vagina/on_start(mob/living/user, mob/living/target)
 	. = ..()
+	if(!.)
+		return FALSE
+	// Still pressing at the opening: nothing went in yet, so no entry line or sound.
+	if(orifice_pressing)
+		return .
 	user.visible_message(span_warning("[user] gets on top of [target] and begins riding [target.p_them()] with [user.p_their()] cunt!"))
 	var/used_sex_volume = sex_volume
 	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
@@ -49,13 +54,14 @@
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
 
+	// The rider's hole takes the strain; the cock under them feels no pain, as in "Fuck pussy".
 	if(considered_limp(target))
-		perform_sex_action(target, user, 1.2, 3, 3)
+		perform_sex_action(user, target, 1.2, 3, 3)
 	else
-		perform_sex_action(target, user, 2.4, 7, 2)
+		perform_sex_action(user, target, 2.4, 7, 2)
 	handle_passive_ejaculation(target)
 
-	perform_sex_action(user, target, 2, 4, 3)
+	perform_sex_action(target, user, 2, 0, 3)
 
 /datum/sex_action/sex/other/vagina/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
@@ -70,5 +76,10 @@
 		return ORGASM_LOCATION_ONTO
 
 /datum/sex_action/sex/other/vagina/on_finish(mob/living/user, mob/living/target)
+	// The parent clears the pressing state, so read it first.
+	var/was_pressing = orifice_pressing
 	. = ..()
+	if(was_pressing)
+		user.visible_message(span_warning("[user] gives up trying to sink onto [target]'s cock."))
+		return
 	user.visible_message(span_warning("[user] gets off [target]."))

@@ -447,7 +447,7 @@
 
 /// Licks body fluid off a partner's bare skin.
 /datum/sex_action/lick_coat
-	name = "Lick them clean"
+	name = "Lick clean"
 	description = "Lick the fluid off their bare skin."
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	check_same_tile = FALSE

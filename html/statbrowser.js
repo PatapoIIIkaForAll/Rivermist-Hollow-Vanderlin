@@ -269,7 +269,7 @@ function tab_change(tab) {
   if (document.getElementById(tab))
     document.getElementById(tab).className = "button active"; // make current button active
   var spell_tabs_thingy = spell_tabs.includes(tab);
-  var verb_tabs_thingy = verb_tabs.includes(tab);
+  var verb_tabs_thingy = is_verb_tab(tab);
   statcontentdiv.className = "statcontent";
   if (tab == "Status") {
     draw_status();
@@ -755,11 +755,104 @@ function make_verb_onclick(command) {
   };
 }
 
+// MC/Tickets/SDQL2 get pushed into verb_tabs by their update handlers, but they
+// have their own renderers — never draw them as a verb grid.
+var NON_VERB_TABS = ["Status", "MC", "Tickets", "SDQL2", "Debug Stat Panel"];
+
+function is_verb_tab(tab) {
+  return verb_tabs.includes(tab) && !NON_VERB_TABS.includes(tab);
+}
+
+// Verb search: only real verb tabs get it
+var verb_search = "";
+var last_verb_cat = null;
+var verb_search_input = null;
+var verb_search_groups = []; // [{ header, container, items }]
+
+function apply_verb_filter() {
+  var query = verb_search.toLowerCase();
+  for (var g = 0; g < verb_search_groups.length; g++) {
+    var group = verb_search_groups[g];
+    var visible = 0;
+    for (var i = 0; i < group.items.length; i++) {
+      var item = group.items[i];
+      var match =
+        !query ||
+        item.getAttribute("data-label").toLowerCase().indexOf(query) != -1;
+      item.style.display = match ? "" : "none";
+      if (match) visible++;
+    }
+    // Hide a sub-category heading when nothing under it matches
+    if (group.header) group.header.style.display = visible ? "" : "none";
+    group.container.style.display = visible ? "" : "none";
+  }
+}
+
+function create_verb_search() {
+  var input = document.createElement("input");
+  input.type = "text";
+  input.className = "verb-search";
+  input.placeholder = "Search verbs...";
+  input.value = verb_search;
+  input.setAttribute("spellcheck", "false");
+  input.setAttribute("autocomplete", "off");
+  var onchange = function () {
+    if (verb_search === this.value) return;
+    verb_search = this.value;
+    apply_verb_filter();
+  };
+  input.oninput = onchange;
+  input.onkeyup = onchange;
+  return input;
+}
+
+// Verb lists arrive in bursts (login, species change, organ swap): redraw once per burst
+var verb_redraw_pending = false;
+
+function schedule_draw_verbs() {
+  if (verb_redraw_pending) return;
+  verb_redraw_pending = true;
+  setTimeout(function () {
+    verb_redraw_pending = false;
+    if (is_verb_tab(current_tab)) draw_verbs(current_tab);
+  }, 50);
+}
+
 function draw_verbs(cat) {
+  // New tab -> fresh query
+  if (cat !== last_verb_cat) {
+    verb_search = "";
+    last_verb_cat = cat;
+  }
+  // add_verb_list() can redraw mid-typing — keep focus and caret
+  var was_focused =
+    verb_search_input && document.activeElement === verb_search_input;
+  var caret = was_focused ? verb_search_input.selectionStart : null;
+
   statcontentdiv.textContent = "";
+  verb_search_groups = [];
+  verb_search_input = create_verb_search();
+  if (cat === EMOTE_TAB) {
+    draw_emote_panel(cat);
+  } else {
+    statcontentdiv.appendChild(verb_search_input);
+    draw_verb_grid(cat);
+  }
+
+  apply_verb_filter();
+
+  if (was_focused) {
+    verb_search_input.focus();
+    if (caret !== null) verb_search_input.setSelectionRange(caret, caret);
+  }
+}
+
+function draw_verb_grid(cat) {
   var table = document.createElement("div");
   var additions = {}; // additional sub-categories to be rendered
   table.className = "grid-container";
+  var main_group = { header: null, container: table, items: [] };
+  verb_search_groups.push(main_group);
   sortVerbs();
   if (split_admin_tabs && cat.lastIndexOf(".") != -1) {
     var splitName = cat.split(".");
@@ -784,6 +877,7 @@ function draw_verbs(cat) {
       if (subCat && !additions[subCat]) {
         var newTable = document.createElement("div");
         newTable.className = "grid-container";
+        newTable.search_items = [];
         additions[subCat] = newTable;
       }
 
@@ -791,11 +885,13 @@ function draw_verbs(cat) {
       a.href = "#";
       a.onclick = make_verb_onclick(command.replace(/\s/g, "-"));
       a.className = "grid-item";
+      a.setAttribute("data-label", command);
       var t = document.createElement("span");
       t.textContent = command;
       t.className = "grid-item-text";
       a.appendChild(t);
       (subCat ? additions[subCat] : table).appendChild(a);
+      (subCat ? additions[subCat].search_items : main_group.items).push(a);
     }
   }
 
@@ -804,14 +900,221 @@ function draw_verbs(cat) {
   content.appendChild(table);
 
   // Append additional sub-categories if relevant
-  for (var cat in additions) {
-    if (additions.hasOwnProperty(cat)) {
+  for (var subcat in additions) {
+    if (additions.hasOwnProperty(subcat)) {
       // do addition here
       var header = document.createElement("h3");
-      header.textContent = cat;
+      header.textContent = subcat;
       content.appendChild(header);
-      content.appendChild(additions[cat]);
+      content.appendChild(additions[subcat]);
+      verb_search_groups.push({
+        header: header,
+        container: additions[subcat],
+        items: additions[subcat].search_items,
+      });
     }
+  }
+}
+
+// Emotes tab: All / Favourite pages, starred emotes and player-made custom emotes.
+// Favourites and customs are stored in the player's prefs on the server.
+var EMOTE_TAB = "Emotes";
+var emote_page = "all";
+var emote_favourites = [];
+var emote_customs = []; // [{ id, name }]
+// Emote groups drawn after the alphabetical ones, in this order
+var EMOTE_TRAILING_GROUPS = ["Rolling"];
+var STAR_SVG =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.75 5.82 6.37.74-4.73 4.36 1.27 6.3L12 16.9l-5.66 3.12 1.27-6.3-4.73-4.36 6.37-.74z"/></svg>';
+var EDIT_SVG =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M13.5 6.5l4 4"/></svg>';
+
+function collect_tab_verbs(cat) {
+  // [{ command, sub }] in display order, sub is null for verbs without a sub-category
+  var result = [];
+  sortVerbs();
+  for (var i = verbs.length - 1; i >= 0; i--) {
+    var name = verbs[i][0];
+    var command = verbs[i][1];
+    if (
+      !command ||
+      name.lastIndexOf(cat, 0) == -1 ||
+      (name.length != cat.length && name.charAt(cat.length) != ".")
+    )
+      continue;
+    result.push({
+      command: command,
+      sub: name.lastIndexOf(".") != -1 ? name.split(".")[1] : null,
+    });
+  }
+  return result;
+}
+
+function create_emote_cell(label, on_run, side_button) {
+  var cell = document.createElement("div");
+  cell.className = "emote-cell";
+  cell.setAttribute("data-label", label);
+  var item = document.createElement("div");
+  item.className = "emote-item";
+  var run = document.createElement("a");
+  run.href = "#";
+  run.className = "emote-item-name";
+  run.textContent = label;
+  run.title = label;
+  run.onclick = function (e) {
+    if (e) e.preventDefault();
+    on_run();
+  };
+  item.appendChild(run);
+  item.appendChild(side_button);
+  cell.appendChild(item);
+  return cell;
+}
+
+function create_emote_side_button(class_name, svg, title, on_click) {
+  var button = document.createElement("a");
+  button.href = "#";
+  button.className = "emote-item-side " + class_name;
+  button.title = title;
+  button.innerHTML = svg;
+  button.onclick = function (e) {
+    if (e) e.preventDefault();
+    on_click(button);
+  };
+  return button;
+}
+
+function toggle_emote_favourite(command, star) {
+  var index = emote_favourites.indexOf(command);
+  if (index == -1) emote_favourites.push(command);
+  else emote_favourites.splice(index, 1);
+  // Optimistic, the server answers with emote_panel_data
+  star.className = "emote-item-side emote-star" + (index == -1 ? " active" : "");
+  Byond.sendMessage("Emote-Favourite", { name: command });
+  if (emote_page === "favourite") draw_verbs(current_tab);
+}
+
+function add_emote_group(content, title, cells) {
+  if (!cells.length) return;
+  var header = null;
+  if (title) {
+    header = document.createElement("h3");
+    header.textContent = title;
+    content.appendChild(header);
+  }
+  var container = document.createElement("div");
+  container.className = "emote-grid";
+  for (var i = 0; i < cells.length; i++) container.appendChild(cells[i]);
+  content.appendChild(container);
+  verb_search_groups.push({ header: header, container: container, items: cells });
+}
+
+function create_emote_page_toggle(cat) {
+  var toggle = document.createElement("div");
+  toggle.className = "emote-page-toggle";
+  var pages = [
+    ["all", "All"],
+    ["favourite", "Favourite"],
+  ];
+  for (var i = 0; i < pages.length; i++) {
+    (function (page, label) {
+      var button = document.createElement("div");
+      button.className = "emote-page-btn" + (emote_page === page ? " active" : "");
+      button.textContent = label;
+      button.onclick = function () {
+        if (emote_page === page) return;
+        emote_page = page;
+        draw_verbs(cat);
+      };
+      toggle.appendChild(button);
+    })(pages[i][0], pages[i][1]);
+  }
+  return toggle;
+}
+
+function draw_emote_panel(cat) {
+  var toolbar = document.createElement("div");
+  toolbar.className = "emote-toolbar";
+  toolbar.appendChild(verb_search_input);
+  toolbar.appendChild(create_emote_page_toggle(cat));
+  statcontentdiv.appendChild(toolbar);
+
+  var favourite_page = emote_page === "favourite";
+  if (favourite_page) {
+    var add = document.createElement("div");
+    add.className = "emote-custom-add";
+    add.textContent = "+ Custom";
+    add.title = "Add your own emote";
+    add.onclick = function () {
+      Byond.sendMessage("Emote-Custom-Add");
+    };
+    statcontentdiv.appendChild(add);
+
+    var custom_cells = [];
+    for (var c = 0; c < emote_customs.length; c++) {
+      (function (custom) {
+        custom_cells.push(
+          create_emote_cell(
+            custom.name,
+            function () {
+              run_after_focus(function () {
+                Byond.sendMessage("Emote-Custom-Run", { id: custom.id });
+              });
+            },
+            create_emote_side_button("emote-edit", EDIT_SVG, "Edit", function () {
+              Byond.sendMessage("Emote-Custom-Edit", { id: custom.id });
+            }),
+          ),
+        );
+      })(emote_customs[c]);
+    }
+    add_emote_group(statcontentdiv, "Custom", custom_cells);
+  }
+
+  var tab_verbs = collect_tab_verbs(cat);
+  var groups = {};
+  var order = [];
+  for (var i = 0; i < tab_verbs.length; i++) {
+    var entry = tab_verbs[i];
+    var is_favourite = emote_favourites.indexOf(entry.command) != -1;
+    if (favourite_page && !is_favourite) continue;
+    var key = entry.sub || "";
+    if (!groups[key]) {
+      groups[key] = [];
+      order.push(key);
+    }
+    (function (command, favourite) {
+      var star = create_emote_side_button(
+        "emote-star" + (favourite ? " active" : ""),
+        STAR_SVG,
+        "Favourite",
+        function (button) {
+          toggle_emote_favourite(command, button);
+        },
+      );
+      groups[key].push(
+        create_emote_cell(command, make_verb_onclick(command.replace(/\s/g, "-")), star),
+      );
+    })(entry.command, is_favourite);
+  }
+  // Verbs without a sub-category go first, without a heading; trailing groups go last
+  order.sort(function (a, b) {
+    if (a === "") return -1;
+    if (b === "") return 1;
+    var a_last = EMOTE_TRAILING_GROUPS.indexOf(a);
+    var b_last = EMOTE_TRAILING_GROUPS.indexOf(b);
+    if (a_last != b_last) return a_last - b_last;
+    return a < b ? -1 : a > b ? 1 : 0;
+  });
+  for (var g = 0; g < order.length; g++) {
+    add_emote_group(statcontentdiv, order[g] || null, groups[order[g]]);
+  }
+
+  if (favourite_page && !emote_customs.length && !order.length) {
+    var hint = document.createElement("div");
+    hint.className = "emote-empty";
+    hint.textContent = "Star an emote on the All page to keep it here.";
+    statcontentdiv.appendChild(hint);
   }
 }
 
@@ -843,6 +1146,10 @@ function set_tabs_style(style) {
 }
 
 function restoreFocus() {
+  // Don't yank focus to the map while typing in the verb search
+  if (document.activeElement && document.activeElement.tagName === "INPUT") {
+    return;
+  }
   run_after_focus(function () {
     Byond.winset("map", {
       focus: true,
@@ -875,11 +1182,11 @@ function add_verb_list(payload) {
       if (split_admin_tabs && splitName[0] === "Admin") category = splitName[1];
       else category = splitName[0];
     }
-    if (findVerbindex(part[1], verbs)) continue;
+    if (findVerbindex(part[1], verbs) !== undefined) continue;
     if (verb_tabs.includes(category)) {
       verbs.push(part);
-      if (current_tab == category) {
-        draw_verbs(category); // redraw if we added a verb to the tab we're currently in
+      if (current_tab == category && is_verb_tab(category)) {
+        schedule_draw_verbs(); // redraw if we added a verb to the tab we're currently in
       }
     } else if (category) {
       verb_tabs.push(category);
@@ -929,7 +1236,7 @@ Byond.subscribeTo("remove_verb_list", function (v) {
   }
   check_verbs();
   sortVerbs();
-  if (verb_tabs.includes(current_tab)) draw_verbs(current_tab);
+  if (is_verb_tab(current_tab)) schedule_draw_verbs();
 });
 
 // passes a 2D list of (verbcategory, verbname) creates tabs and adds verbs to respective list
@@ -945,14 +1252,14 @@ Byond.subscribeTo("init_verbs", function (payload) {
     cat = verb_tabs[i];
     createStatusTab(cat); // create a category if the verb doesn't exist yet
   }
-  if (verb_tabs.includes(current_tab)) {
+  if (is_verb_tab(current_tab)) {
     do_update = true;
   }
   if (payload.verblist) {
     add_verb_list(payload.verblist);
     sortVerbs(); // sort them
     if (do_update) {
-      draw_verbs(current_tab);
+      schedule_draw_verbs();
     }
   }
   SendTabsToByond();
@@ -1094,3 +1401,15 @@ Byond.subscribeTo("remove_sdql2", remove_sdql2);
 Byond.subscribeTo("remove_mc", remove_mc);
 
 Byond.subscribeTo("add_verb_list", add_verb_list);
+
+Byond.subscribeTo("emote_panel_data", function (payload) {
+  // The server echoes every star click back; skip the redraw when it matches what we show
+  var favourites = payload.favourites || [];
+  var customs = payload.customs || [];
+  var changed =
+    JSON.stringify(favourites) !== JSON.stringify(emote_favourites) ||
+    JSON.stringify(customs) !== JSON.stringify(emote_customs);
+  emote_favourites = favourites.slice();
+  emote_customs = customs;
+  if (changed && current_tab === EMOTE_TAB) schedule_draw_verbs();
+});

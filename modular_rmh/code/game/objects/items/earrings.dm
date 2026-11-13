@@ -14,17 +14,13 @@
 	gendered = FALSE
 	var/base_icon = "ear_stud"
 
+// _l/_r states exist only in the worn icon; icon_state must stay valid for HUD slots.
 /obj/item/earring/build_worn_icon(age = AGE_ADULT, default_layer = 0, default_icon_file = null, isinhands = FALSE, femaleuniform = NO_FEMALE_UNIFORM, override_state = null, coom = FALSE, customi = null, sleeveindex, breast_size = 0, icon/clip_mask = null)
-	icon_state = base_icon
 	if(default_layer == EARRING_L_LAYER)
-		icon_state = base_icon + "_l"
-	else if (default_layer == EARRING_R_LAYER)
-		icon_state = base_icon + "_r"
-	. = ..()
-
-/obj/item/earring/dropped(mob/user)
-	icon_state = base_icon
-	. = ..()
+		override_state = base_icon + "_l"
+	else if(default_layer == EARRING_R_LAYER)
+		override_state = base_icon + "_r"
+	return ..(age, default_layer, default_icon_file, isinhands, femaleuniform, override_state, coom, customi, sleeveindex, breast_size, clip_mask)
 
 /obj/item/earring/glass
 	name = "glass stud earring"

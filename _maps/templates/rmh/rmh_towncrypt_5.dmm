@@ -29,9 +29,7 @@
 /obj/effect/decal/cobblerockedge{
 	dir = 10
 	},
-/obj/structure/statue/bone/rib{
-	dir = 2
-	},
+/obj/structure/statue/bone/rib,
 /turf/open/floor/naturalstone,
 /area/under/town/rmh/basement)
 "m" = (
@@ -81,7 +79,6 @@
 	dir = 9
 	},
 /obj/structure/statue/bone/rib{
-	dir = 2;
 	pixel_y = 15
 	},
 /turf/open/floor/naturalstone,

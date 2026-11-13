@@ -89,7 +89,8 @@
 		return LANGUAGE_KNOWN
 	else
 		var/atom/movable/AM = get_atom()
-		if(!AM)
+		// get_language_holder() refuses deleting atoms by design.
+		if(QDELETED(AM))
 			return FALSE
 		var/datum/language_holder/L = AM.get_language_holder(shadow=FALSE)
 		if(!L || L == src)

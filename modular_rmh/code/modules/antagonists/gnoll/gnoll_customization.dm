@@ -82,7 +82,8 @@
 	var/list/options = list()
 	for(var/descriptor_type in subtypesof(descriptor_root))
 		var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(descriptor_type)
-		if(descriptor)
+		// Gnoll profiles carry no player-written text.
+		if(descriptor && !descriptor.custom_index)
 			options[descriptor.name] = descriptor_type
 	return options
 
@@ -116,15 +117,15 @@
 	var/datum/antagonist/gnoll/champion = get_gnoll_antag(user)
 	if(champion && world.time < champion.customization_until)
 		page += "<p><b>Changes also reshape your current champion for [DisplayTimeText(champion.customization_until - world.time)].</b></p>"
-	page += "<b>Name:</b> [html_encode(profile["name"])] <a href='?src=[REF(src)];field=name'>Change</a> · <a href='?src=[REF(src)];field=random_name'>Randomize</a><br>"
-	page += "<b>Voice color:</b> <a href='?src=[REF(src)];field=voice_color'>[html_encode(profile["voice_color"])]</a><br>"
+	page += "<b>Name:</b> [html_encode(profile["name"])] <a href='byond://?src=[REF(src)];field=name'>Change</a> · <a href='byond://?src=[REF(src)];field=random_name'>Randomize</a><br>"
+	page += "<b>Voice color:</b> <a href='byond://?src=[REF(src)];field=voice_color'>[html_encode(profile["voice_color"])]</a><br>"
 	for(var/field in appearance_fields)
 		var/list/options = get_options(field)
 		var/current_label
 		for(var/label in options)
 			if(options[label] == profile[field])
 				current_label = label
-		page += "<b>[appearance_fields[field]]:</b> <a href='?src=[REF(src)];field=[field]'>[html_encode(current_label)]</a><br>"
+		page += "<b>[appearance_fields[field]]:</b> <a href='byond://?src=[REF(src)];field=[field]'>[html_encode(current_label)]</a><br>"
 	page += "<h3>Pelt previews</h3><table><tr>"
 	var/list/pelts = get_options("pelt")
 	for(var/label in pelts)
@@ -132,7 +133,7 @@
 		page += "<td align='center'>[icon2html(pelt_icon, user.client)]<br>[label]</td>"
 	page += "</tr></table><h3>Champion profile</h3><p>Gallery fields accept one image link per line. Rumours, gossip and detailed interaction preferences use your ordinary character settings.</p>"
 	for(var/field in profile_fields)
-		page += "<a href='?src=[REF(src)];field=[field]'>[html_encode(replacetext(field, "_", " "))]</a><br>"
+		page += "<a href='byond://?src=[REF(src)];field=[field]'>[html_encode(replacetext(field, "_", " "))]</a><br>"
 	page += "<p>Your choices save automatically. Open this menu through Preferences → Gnoll Customization.</p>"
 	var/datum/browser/popup = new(user, "gnoll_customization", "Gnoll Customization", 620, 760)
 	popup.set_content(page.Join())
@@ -228,9 +229,14 @@
 		else if(!profile[field] && organ)
 			// Transformation must preserve pregnancies already underway.
 			if(field == "vagina")
-				var/obj/item/organ/genitals/filling_organ/vagina/womb = organ
-				if(GetComponent(/datum/component/pregnancy) || organ.GetComponent(/datum/component/pregnancy) || (istype(womb) && (womb.pregnant || length(womb.get_oviposition_eggs()) || womb.count_internal_womb_hatchlings())))
+				var/obj/item/organ/genitals/filling_organ/vagina/hole = organ
+				var/obj/item/organ/genitals/filling_organ/womb/womb = get_womb()
+				if(GetComponent(/datum/component/pregnancy) || organ.GetComponent(/datum/component/pregnancy) || (istype(hole) && hole.carries_pregnancy()) || womb?.carries_pregnancy())
 					continue
+				// The womb goes with its vagina.
+				if(womb)
+					womb.Remove(src)
+					qdel(womb)
 			organ.Remove(src)
 			qdel(organ)
 	if(profile["penis"] != "inherit")

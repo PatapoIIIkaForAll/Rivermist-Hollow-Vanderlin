@@ -12,7 +12,8 @@
 	grid_width = 32
 	grid_height = 32
 	max_integrity = 100
-	integrity_failure = 0.1
+	// The ripped look shows at half integrity; zero shreds worn stockings off the legs.
+	integrity_failure = 0.5
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	sewrepair = /datum/attribute/skill/misc/sewing/mending
 	salvage_result = /obj/item/natural/cloth
@@ -27,18 +28,6 @@
 	. = ..()
 	icon_state_base = icon_state
 
-/obj/item/clothing/legwears/attack(mob/M, mob/user, def_zone)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(!H.legwear_socks)
-			if(!get_location_accessible(H, BODY_ZONE_PRECISE_L_FOOT))
-				return
-			if(!get_location_accessible(H, BODY_ZONE_PRECISE_R_FOOT))
-				return
-			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
-			if(do_after(user, 50, target = H))
-				H.equip_to_slot_if_possible(src, ITEM_SLOT_SOCKS, disable_warning = TRUE)
-
 /obj/item/clothing/legwears/update_clothes_damaged_state(damaging = TRUE)
 	if(damaged_icon && damaged_overlay_icon)
 
@@ -46,14 +35,16 @@
 			damaged_clothes = 1
 			icon = damaged_icon
 			mob_overlay_icon = damaged_overlay_icon
-			icon_state = icon_state + "_ripped"
-			name = "ripped " + name
+			icon_state = "[icon_state_base]_ripped"
+			if(!findtext(name, "ripped ", 1, 8))
+				name = "ripped [name]"
 		else
 			damaged_clothes = 0
 			icon = initial(icon)
 			mob_overlay_icon = initial(mob_overlay_icon)
-			icon_state = initial(icon_state)
-			name = initial(name)
+			icon_state = icon_state_base
+			if(findtext(name, "ripped ", 1, 8))
+				name = copytext(name, 8)
 		update_appearance(updates = ALL)
 	else
 		. = ..()
@@ -73,6 +64,60 @@
 	. = ..()
 	icon_state = icon_state_base
 	update_clothes_damaged_state(damaged_clothes)
+
+/obj/item/clothing/legwears/atom_break(damage_flag, silent)
+	var/mob/living/carbon/human/wearer = loc
+	if(!silent && istype(wearer) && wearer.legwear_socks == src)
+		to_chat(wearer, span_warning("A ladder runs up my [name]!"))
+	return ..()
+
+/obj/item/clothing/legwears/atom_destruction(damage_flag)
+	var/mob/living/carbon/human/wearer = loc
+	if(!istype(wearer) || wearer.legwear_socks != src || (damage_flag in list("acid", "fire")))
+		return ..()
+	wearer.visible_message(span_warning("[wearer]'s [name] shred apart and fall away!"), span_warning("My [name] shred apart and fall away!"))
+	playsound(wearer, break_sound, 70, TRUE)
+	wearer.dropItemToGround(src, force = TRUE)
+	return ..()
+
+/// Wears the stockings down; cuts and stabs tear faster than blunt rubs. Returns the damage dealt.
+/obj/item/clothing/legwears/proc/snag(amount, damage_flag = SLASH)
+	if(amount <= 0 || QDELETED(src) || atom_integrity <= 0)
+		return 0
+	if(damage_flag == BLUNT)
+		amount *= 0.5
+	return take_damage(amount, BRUTE, damage_flag, FALSE)
+
+/// Rips the stockings straight to their torn look; returns TRUE only when this call tore them.
+/obj/item/clothing/legwears/proc/tear_open(damage_flag = SLASH)
+	if(!damaged_icon || obj_broken || QDELETED(src))
+		return FALSE
+	var/to_break = atom_integrity - integrity_failure * max_integrity
+	if(to_break <= 0)
+		return FALSE
+	take_damage(to_break, BRUTE, damage_flag, FALSE)
+	return obj_broken
+
+/// Worn legwear that no trousers or leg armour cover, or null.
+/mob/living/carbon/human/proc/get_exposed_legwear()
+	RETURN_TYPE(/obj/item/clothing/legwears)
+	var/obj/item/clothing/legwears/stockings = legwear_socks
+	if(!istype(stockings))
+		return null
+	for(var/obj/item/clothing/cover as anything in list(wear_pants, wear_armor))
+		if(istype(cover) && (cover.body_parts_covered & LEGS))
+			return null
+	return stockings
+
+/// Worn stockings [actor] can get at, or null when armor over the legs keeps them off.
+/mob/living/carbon/human/proc/get_sex_reachable_legwear(mob/living/actor)
+	RETURN_TYPE(/obj/item/clothing/legwears)
+	var/obj/item/clothing/legwears/stockings = legwear_socks
+	if(!istype(stockings))
+		return null
+	if(get_sex_covering_garment(BODY_ZONE_L_LEG, actor) || get_sex_covering_garment(BODY_ZONE_R_LEG, actor))
+		return null
+	return stockings
 
 
 /obj/item/clothing/legwears/random

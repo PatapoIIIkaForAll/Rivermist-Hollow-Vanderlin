@@ -63,6 +63,12 @@
 /// Failed admission (most commonly a full profile) backs the captor off instead of retrying every
 /// AI planning cycle and spamming the victim/nearby players.
 #define KIDNAP_RETRY_COOLDOWN (30 SECONDS)
+/// How long prey must lie bound before a captor with a lair hauls it off instead of playing on.
+#define KIDNAP_RESTRAINED_DELAY (2 MINUTES)
+/// A struggle against the bonds this recently keeps the captor playing instead of hauling.
+#define KIDNAP_STRUGGLE_WINDOW (20 SECONDS)
+/// A captor hauls bound prey only after a scene with it this recently.
+#define KIDNAP_SCENE_MEMORY (10 MINUTES)
 /// Captivity pocket ownership. Shared profiles key by a stable lair id, carrier profiles by the
 /// captor reference, and per-captive profiles by the captive reference.
 #define DEFEAT_CAPTIVITY_SHARED "shared"
@@ -74,10 +80,12 @@
 #define DEFEAT_CAPTIVITY_ACCESS_CAPTOR "captor"
 #define DEFEAT_CAPTIVITY_ACCESS_SEALED "sealed"
 /// Explicit choices shown when a captive's knockout-release timer completes.
-#define KIDNAP_CHOICE_CALL_RUNE "Call the Rune"
-#define KIDNAP_CHOICE_REJECT_RUNE "Reject Rune and Wake"
-#define KIDNAP_CHOICE_RETURN_LOBBY "Abandon Character and Return to Lobby"
-#define KIDNAP_CHOICE_WAIT "Wait in the Lair"
+#define KIDNAP_CHOICE_CALL_RUNE "Call the rune"
+#define KIDNAP_CHOICE_WAKE "Wake up"
+#define KIDNAP_CHOICE_GIVE_UP "Give up this character"
+#define KIDNAP_CHOICE_WAIT "Stay for now"
+/// How long "Stay for now" waits before the dialog returns to a still-knocked-out captive.
+#define KIDNAP_CHOICE_REPROMPT (5 MINUTES)
 /// Namespaced instance keys keep captivity pockets separate from every other pocket-dimension user.
 #define DEFEAT_CAPTIVITY_INSTANCE_PREFIX "defeat_captivity"
 
@@ -145,8 +153,10 @@
 #define DEFEAT_HORNY_ENCOUNTER_TIMEOUT (5 MINUTES)
 /// Deterministic player thresholds snapshot current Constitution and Endurance on the first valid
 /// hostile climax. Creature thresholds use immutable type defaults instead.
-#define DEFEAT_HORNY_PLAYER_THRESHOLD_MIN 10
-#define DEFEAT_HORNY_PLAYER_THRESHOLD_MAX 20
+#define DEFEAT_HORNY_PLAYER_THRESHOLD_MIN 5
+#define DEFEAT_HORNY_PLAYER_THRESHOLD_MAX 10
+/// Player threshold = (CON + END) / this, before the clamp above. 4 puts an average body at the floor.
+#define DEFEAT_HORNY_PLAYER_STAT_DIVISOR 4
 #define DEFEAT_HORNY_MOB_THRESHOLD_MIN 1
 #define DEFEAT_HORNY_MOB_THRESHOLD_MAX 3
 #define DEFEAT_HORNY_THRESHOLD_VALUE "value"
@@ -166,3 +176,9 @@
 #define DEFEAT_MOB_HORNY_KO_RECHECK (30 SECONDS)
 /// How far the KO cleanup looks for a watching player before it deletes a lone mob.
 #define DEFEAT_MOB_HORNY_CLEANUP_VIEW 7
+/// How long a helper works to bring a KO'd mob back to its senses.
+#define DEFEAT_MOB_HORNY_HELP_UP_TIME (4 SECONDS)
+/// Percent chance an unbound KO'd mob comes to and lashes out when lifted.
+#define DEFEAT_MOB_HORNY_LIFT_LASH_CHANCE 35
+/// How long the lash-out floors the carrier.
+#define DEFEAT_MOB_HORNY_LASH_KNOCKDOWN (2 SECONDS)

@@ -102,6 +102,11 @@
 			assets = list(
 				get_asset_datum(/datum/asset/simple/tgui),
 			))
+		// Window setup can sleep; this UI or its object may have been closed meanwhile.
+		if(QDELETED(src) || QDELETED(src_object))
+			if(!QDELETED(src))
+				close(can_be_suspended = FALSE)
+			return FALSE
 	else
 		window.send_message("ping")
 	send_assets()

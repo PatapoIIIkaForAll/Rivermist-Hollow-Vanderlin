@@ -172,9 +172,7 @@
 /area/indoors/cave/rmh_dwarf_keep/living)
 "cw" = (
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/herringbone,
 /area/indoors/cave/rmh_dwarf_keep/entrance)
@@ -282,7 +280,6 @@
 "dW" = (
 /obj/structure/leyline,
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp"
 	},
 /turf/open/floor/dirt,
@@ -586,7 +583,6 @@
 /area/indoors/cave/rmh_dwarf_keep/entrance)
 "hn" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp"
 	},
 /turf/open/floor/dirt,
@@ -665,7 +661,6 @@
 	},
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_y = 0;
 	layer = 4.12
 	},
 /turf/open/floor/metal/barograte,
@@ -1296,9 +1291,7 @@
 /area/outdoors/exposed/rmh_dwarf_keep)
 "oV" = (
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/herringbone,
 /area/outdoors/exposed/rmh_dwarf_keep)
@@ -1327,8 +1320,7 @@
 /area/indoors/cave/rmh_dwarf_keep/throne)
 "pf" = (
 /obj/structure/bars/pipe{
-	pixel_y = 10;
-	dir = 2
+	pixel_y = 10
 	},
 /obj/item/ore/coal,
 /turf/open/floor/tile,
@@ -1584,8 +1576,7 @@
 /area/indoors/cave/rmh_dwarf_keep/entrance)
 "rQ" = (
 /obj/structure/bars/pipe{
-	pixel_y = 9;
-	dir = 2
+	pixel_y = 9
 	},
 /turf/closed/wall/mineral/pipe/line,
 /area/indoors/cave/rmh_dwarf_keep/smelters)
@@ -1804,8 +1795,7 @@
 /area/indoors/cave/rmh_dwarf_keep/living)
 "uA" = (
 /obj/structure/bars/pipe{
-	pixel_y = 9;
-	dir = 2
+	pixel_y = 9
 	},
 /turf/open/floor/tile,
 /area/indoors/cave/rmh_dwarf_keep/smelters)
@@ -2109,8 +2099,7 @@
 /area/under/rmh_bedrock)
 "xD" = (
 /obj/structure/bars/pipe{
-	pixel_y = -8;
-	dir = 2
+	pixel_y = -8
 	},
 /obj/item/ore/copper,
 /turf/open/water/sewer,
@@ -2248,7 +2237,6 @@
 "zz" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_y = 0;
 	layer = 4.12
 	},
 /turf/open/floor/herringbone,
@@ -2299,9 +2287,7 @@
 /area/outdoors/mountains/rmh_mountains/frozen/forsaken_village)
 "Ah" = (
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /obj/structure/fluff/railing/border{
 	dir = 1
@@ -2387,7 +2373,6 @@
 "Bc" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_y = 0;
 	layer = 4.12
 	},
 /obj/effect/decal/cleanable/debris/stone,
@@ -3322,7 +3307,6 @@
 	color = "#4dc6eb"
 	},
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp"
 	},
 /turf/open/floor/dirt,
@@ -3470,7 +3454,6 @@
 "KU" = (
 /obj/structure/fluff/railing/border{
 	dir = 5;
-	pixel_y = 0;
 	layer = 4.12
 	},
 /turf/open/openspace,
@@ -4119,7 +4102,6 @@
 /area/indoors/cave/rmh_dwarf_keep/throne)
 "RY" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp"
 	},
 /turf/open/floor/cobblerock/snow,
@@ -4441,8 +4423,7 @@
 /area/indoors/cave/rmh_dwarf_keep/forge)
 "Vl" = (
 /obj/structure/bars/pipe{
-	pixel_y = 9;
-	dir = 2
+	pixel_y = 9
 	},
 /obj/structure/bars/grille,
 /turf/open/floor/tile,
@@ -4544,9 +4525,7 @@
 /turf/open/floor/hexstone,
 /area/indoors/cave/rmh_dwarf_keep)
 "Wb" = (
-/turf/open/floor/snowpath/snowcorner{
-	dir = 2
-	},
+/turf/open/floor/snowpath/snowcorner,
 /area/outdoors/mountains/rmh_mountains/frozen)
 "Wg" = (
 /obj/effect/spawner/trap,
@@ -4655,8 +4634,7 @@
 /area/outdoors/exposed/rmh_dwarf_keep)
 "Xy" = (
 /obj/structure/bars/pipe{
-	pixel_y = 10;
-	dir = 2
+	pixel_y = 10
 	},
 /turf/open/floor/tile,
 /area/indoors/cave/rmh_dwarf_keep/smelters)

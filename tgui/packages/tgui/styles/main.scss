@@ -20,11 +20,12 @@
 @include meta.load-css('./interfaces/AlertModal.scss');
 @include meta.load-css('./interfaces/AttributeMenu.scss');
 @include meta.load-css('./interfaces/Changelog.scss');
+@include meta.load-css('./interfaces/CharacterCreator.scss');
 @include meta.load-css('./interfaces/ColorPicker.scss');
+@include meta.load-css('./interfaces/ContestResponse.scss');
 @include meta.load-css('./interfaces/HotKeysHelp.scss');
 @include meta.load-css('./interfaces/ListInput.scss');
 @include meta.load-css('./interfaces/Orbit.scss');
-@include meta.load-css('./interfaces/PreferencesMenu.scss');
 @include meta.load-css('./interfaces/QuestBoard.scss');
 @include meta.load-css('./interfaces/RecipeBook.scss');
 

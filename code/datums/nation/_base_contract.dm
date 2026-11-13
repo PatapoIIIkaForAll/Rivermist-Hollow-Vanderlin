@@ -87,7 +87,7 @@
 	if(mammon_reward <= 0)
 		return
 
-	var/gold_coins = floor(mammon_reward/10)
+	var/gold_coins = floor(mammon_reward/100)
 	if(gold_coins >= 1)
 		var/stacks = floor(gold_coins/20) // keep this in sync with MAX_COIN_STACK_SIZE in coins.dm
 		if(stacks >= 1)
@@ -96,11 +96,11 @@
 		var/remainder = gold_coins % 20
 		if(remainder >= 1)
 			location.cached_rewards += new /obj/item/coin/gold(null, remainder)
-	mammon_reward -= gold_coins*10
+	mammon_reward -= gold_coins*100
 	if(!mammon_reward)
 		return
 
-	var/silver_coins = floor(mammon_reward/5)
+	var/silver_coins = floor(mammon_reward/10)
 	if(silver_coins >= 1)
 		var/stacks = floor(silver_coins/20)
 		if(stacks >= 1)
@@ -109,7 +109,7 @@
 		var/remainder = silver_coins % 20
 		if(remainder >= 1)
 			location.cached_rewards += new /obj/item/coin/silver(null, remainder)
-	mammon_reward -= silver_coins*5
+	mammon_reward -= silver_coins*10
 	if(!mammon_reward)
 		return
 

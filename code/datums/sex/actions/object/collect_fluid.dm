@@ -33,7 +33,7 @@
 
 // --- Self ---
 /datum/sex_action/collect_fluid/self
-	name = "Pleasure myself into a container"
+	name = "Collect fluids"
 
 /datum/sex_action/collect_fluid/self/shows_on_menu(mob/living/user, mob/living/target)
 	if(user != target)
@@ -94,7 +94,8 @@
 
 // --- Other ---
 /datum/sex_action/collect_fluid/other
-	name = "Milk them into a container"
+	name = "Milk genitals"
+	remote_phrase = "Milk them into a container"
 	check_same_tile = FALSE
 	mage_hand_allowed = TRUE
 	mage_hand_overlay_zone = MAGE_HAND_ZONE_GROIN

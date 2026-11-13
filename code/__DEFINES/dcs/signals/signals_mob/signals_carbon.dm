@@ -5,3 +5,5 @@
 
 ///from base of /mob/living/carbon/regenerate_limbs(): (excluded_limbs)
 #define COMSIG_CARBON_REGENERATE_LIMBS "living_regen_limbs"
+///from base of /mob/living/carbon/regenerate_limb(), before the new limb attaches: (obj/item/bodypart/new_limb)
+#define COMSIG_CARBON_LIMB_REGENERATED "carbon_limb_regenerated"

@@ -8,6 +8,8 @@
 	var/default_value = FALSE
 	/// Category for organization in menus
 	var/category = "General"
+	/// Belongs to character creation; cannot change once the character has spawned.
+	var/locked_after_spawn = FALSE
 
 /datum/erp_preference/proc/get_value(datum/preferences/prefs)
 	return get_value_from_list(prefs?.ensure_erp_preferences())
@@ -42,8 +44,14 @@
 		return content
 	return "<span[tooltip_attr]>[content]</span>"
 
+/// Why this preference cannot change right now, or null when it can.
+/datum/erp_preference/proc/get_edit_lock_reason(mob/user, datum/preferences/prefs)
+	if(locked_after_spawn && prefs?.is_erp_spawn_locked(user))
+		return "[name] is set in character creation and cannot change after spawning."
+	return prefs?.get_erp_preference_edit_lock_reason(user)
+
 /datum/erp_preference/proc/ensure_editable(mob/user, datum/preferences/prefs)
-	var/lock_reason = prefs.get_erp_preference_edit_lock_reason(user)
+	var/lock_reason = get_edit_lock_reason(user, prefs)
 	if(!lock_reason)
 		return TRUE
 	if(user)

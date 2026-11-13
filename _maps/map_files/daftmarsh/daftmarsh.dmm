@@ -727,8 +727,7 @@
 "aGE" = (
 /obj/machinery/light/fueled/lanternpost/fixed{
 	dir = 1;
-	pixel_x = 3;
-	pixel_y = 0
+	pixel_x = 3
 	},
 /turf/open/floor/blocks,
 /area/outdoors/town)
@@ -12147,8 +12146,7 @@
 /area/outdoors/town)
 "kvp" = (
 /obj/effect/decal/carpet/kover_black{
-	pixel_x = 16;
-	pixel_y = 0
+	pixel_x = 16
 	},
 /turf/open/floor/carpet/stellar,
 /area/indoors/town/shop)
@@ -13669,8 +13667,7 @@
 "lNR" = (
 /obj/effect/landmark/start/merchant,
 /obj/effect/decal/carpet/kover_black{
-	pixel_x = -12;
-	pixel_y = 0
+	pixel_x = -12
 	},
 /turf/open/floor/carpet/stellar,
 /area/indoors/town/shop)

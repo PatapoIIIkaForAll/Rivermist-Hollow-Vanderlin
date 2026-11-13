@@ -51,7 +51,7 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	var/datum/weakref/generated_key_ref
 	/// Who wears the device right now.
 	var/mob/living/carbon/human/wearer
-	/// Whether an inward plug sits inside the device, for "Work their belt's insert".
+	/// Whether an inward plug sits inside the device, for "Work insert".
 	var/has_insert = FALSE
 
 /obj/item/clothing/undies/chastity/Initialize(mapload, ...)
@@ -66,6 +66,13 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	set_wearer(null)
 	generated_key_ref = null
 	return ..()
+
+/obj/item/clothing/undies/chastity/OnCrafted(dirin, mob/user)
+	// The lock is built in and matches the key; hide it so the parent cannot strip it.
+	var/datum/lock/own_lock = lock
+	lock = null
+	. = ..()
+	lock = own_lock
 
 /obj/item/clothing/undies/chastity/equipped(mob/living/carbon/user, slot)
 	. = ..()
@@ -196,8 +203,8 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 /obj/item/clothing/undies/chastity/pre_lock_interact(mob/living/user)
 	if(!wearer)
 		return TRUE
-	if(!get_location_accessible(wearer, BODY_ZONE_PRECISE_GROIN))
-		to_chat(user, span_warning("[user == wearer ? "My" : "[wearer]'s"] groin is covered."))
+	if(wearer.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, user))
+		to_chat(user, span_warning("[user == wearer ? "My" : "[wearer]'s"] armor is in the way."))
 		return FALSE
 	return TRUE
 
@@ -325,6 +332,7 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	hidden_organ_slots = list(ORGAN_SLOT_PENIS)
 	required_organ_slots = list(ORGAN_SLOT_PENIS)
 	worn_flags_inv = NONE
+	covers_rear = FALSE
 
 /obj/item/clothing/undies/chastity/cage/shield
 	name = "chastity cage with anal shield"
@@ -332,6 +340,7 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	icon_state = "cage_standard_shield"
 	item_state = "cage_standard_shield"
 	blocked_organ_slots = list(ORGAN_SLOT_PENIS, ORGAN_SLOT_ANUS)
+	covers_rear = TRUE
 
 /obj/item/clothing/undies/chastity/cage/flat
 	name = "flat chastity cage"
@@ -346,6 +355,7 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	icon_state = "cage_flat_shield"
 	item_state = "cage_flat_shield"
 	blocked_organ_slots = list(ORGAN_SLOT_PENIS, ORGAN_SLOT_ANUS)
+	covers_rear = TRUE
 
 /obj/item/clothing/undies/chastity/insertable
 	name = "insertable chastity belt"
@@ -356,6 +366,7 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	hidden_organ_slots = list(ORGAN_SLOT_VAGINA)
 	required_organ_slots = list(ORGAN_SLOT_VAGINA)
 	has_insert = TRUE
+	covers_rear = FALSE
 
 /obj/item/clothing/undies/chastity/insertable/shield
 	name = "insertable chastity belt with anal shield"
@@ -363,6 +374,7 @@ GLOBAL_VAR_INIT(chastity_lock_serial, 0)
 	icon_state = "cage_insert_shield"
 	item_state = "cage_insert_shield"
 	blocked_organ_slots = list(ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS)
+	covers_rear = TRUE
 
 /obj/item/clothing/undies/chastity/intersex
 	name = "intersex chastity device"

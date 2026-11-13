@@ -25,7 +25,8 @@
 	set category = "Preferences.Options"
 	set desc = ""
 	if(prefs)
-		usr.client.prefs.show_choices(usr, 4)
+		// Opens on the settings tab; the lobby character button opens the character itself.
+		usr.client.prefs.show_choices(usr, 1)
 
 /client/verb/stop_sounds_rogue()
 	set name = "StopSounds"

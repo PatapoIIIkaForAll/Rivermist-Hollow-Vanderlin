@@ -61,7 +61,6 @@
 /area/pocket_dimension/dungeon)
 "ga" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
@@ -130,9 +129,7 @@
 /area/pocket_dimension/dungeon)
 "qo" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/diamond/purple,
 /area/pocket_dimension/dungeon)
@@ -163,9 +160,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/pocket_dimension/dungeon)
@@ -175,9 +170,7 @@
 /area/pocket_dimension/dungeon)
 "wy" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/pocket_dimension/dungeon)
@@ -195,8 +188,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/machinery/light/fueled/wallfire/candle/r,
 /turf/open/floor/tile/brownbrick,
@@ -204,8 +196,7 @@
 "yx" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/pocket_dimension/dungeon)
@@ -245,9 +236,7 @@
 /area/pocket_dimension/dungeon)
 "JE" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/fluff/pillow/purple,
 /turf/open/floor/tile/diamond/purple,
@@ -258,9 +247,7 @@
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -275,9 +262,7 @@
 /area/pocket_dimension/dungeon)
 "Ow" = (
 /obj/effect/decal/edge{
-	dir = 2;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -297,8 +282,7 @@
 "QU" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -314,13 +298,11 @@
 /area/pocket_dimension/dungeon)
 "Tx" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 5;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
 /turf/open/floor/tile/brownbrick,
@@ -357,7 +339,6 @@
 /area/pocket_dimension/dungeon)
 "Uz" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
 	color = "#3b3b3b"
 	},
 /obj/structure/carpet/purple,
@@ -373,8 +354,7 @@
 	},
 /obj/effect/decal/edge{
 	dir = 9;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /turf/open/floor/tile/brownbrick,
 /area/pocket_dimension/dungeon)
@@ -385,8 +365,7 @@
 "VV" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	dir = 4;
@@ -412,8 +391,7 @@
 "ZV" = (
 /obj/effect/decal/edge{
 	dir = 8;
-	color = "#3b3b3b";
-	pixel_y = 0
+	color = "#3b3b3b"
 	},
 /obj/effect/decal/edge{
 	color = "#575757";

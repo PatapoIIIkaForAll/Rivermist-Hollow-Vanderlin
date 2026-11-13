@@ -30,7 +30,7 @@
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fondles [user.p_their()] breasts..."))
 
-	perform_sex_action(user, user, 1, 0, 0.1)
+	perform_sex_action(user, user, 1 * get_breast_touch_multiplier(user), 0, 0.1)
 	handle_passive_ejaculation()
 
 /datum/sex_action/masturbate/breasts/on_finish(mob/living/user, mob/living/target)

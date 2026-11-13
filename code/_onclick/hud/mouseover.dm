@@ -71,7 +71,8 @@
 	return ..()
 
 /mob/living/carbon/human/get_over_text_content(mob/user)
-	if(voice_color && name != "Unknown")
+	// A hidden face shows body words, so the voice colour must not give the person away.
+	if(voice_color && get_face_name(""))
 		return "<span style='color:#[voice_color]'>[name]</span>"
 	return ..()
 

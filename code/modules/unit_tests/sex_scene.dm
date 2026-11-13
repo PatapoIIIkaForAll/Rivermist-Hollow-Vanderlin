@@ -604,9 +604,15 @@
 	var/datum/ai_behavior/horny/horny_behavior = new
 	TEST_ASSERT(horny_behavior.setup(controller, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM) != FALSE, "the horny behavior should acquire its opted-in target")
 	TEST_ASSERT_NULL(horny_npc.sex_scene, "the chase should not bind a sex scene before the NPC reaches its target")
-	horny_behavior.perform(1, controller, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM)
-	var/datum/sex_scene_controller/scene_controller = horny_npc.sex_scene?.get_controller(horny_npc)
-	TEST_ASSERT_NOTNULL(scene_controller, "the horny NPC should bind an actor-owned scene controller after reaching its target")
+	// The phased hunt seizes, holds and preps over several beats before the act starts.
+	var/datum/sex_scene_controller/scene_controller
+	for(var/beat in 1 to 12)
+		horny_npc.next_move = 0
+		horny_behavior.perform(1, controller, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM)
+		scene_controller = horny_npc.sex_scene?.get_controller(horny_npc)
+		if(length(scene_controller?.get_active_actions()))
+			break
+	TEST_ASSERT_NOTNULL(scene_controller, "the horny NPC should bind an actor-owned scene controller after reaching its target (phase [controller.blackboard[BB_HORNY_PHASE]])")
 	TEST_ASSERT_EQUAL(controller.blackboard[BB_BASIC_MOB_CURRENT_HORNY_TARGET], target, "scene acquisition should not cancel the horny behavior")
 	var/list/active_actions = scene_controller.get_active_actions()
 	TEST_ASSERT_EQUAL(length(active_actions), 1, "the horny NPC should start one runtime action after reaching its target")
@@ -622,3 +628,38 @@
 	TEST_ASSERT_NOTNULL(replacement_controller, "a failed horny encounter should not prevent the NPC from acquiring a different target")
 	qdel(replacement_controller)
 	qdel(horny_behavior)
+
+/// Records every mob that receives sex stimulation.
+/datum/sex_scene_receive_probe
+	var/list/receivers = list()
+
+/datum/sex_scene_receive_probe/proc/on_receive(mob/living/source)
+	SIGNAL_HANDLER
+	receivers += source
+
+/// Putting an item into a partner's body stimulates the partner, not the one who inserts it.
+/datum/unit_test/hole_storage_insert_stimulates_receiver/Run()
+	var/mob/living/carbon/human/user = allocate(/mob/living/carbon/human)
+	var/mob/living/carbon/human/target = allocate(/mob/living/carbon/human)
+	target.gender = FEMALE
+	target.give_genitals()
+	TEST_ASSERT_NOTNULL(target.getorganslot(ORGAN_SLOT_BREASTS), "Test setup: the target needs breasts")
+	var/obj/item/stored = allocate(/obj/item)
+	stored.w_class = WEIGHT_CLASS_TINY
+	user.put_in_active_hand(stored)
+
+	var/datum/sex_scene_controller/session = user.open_sex_scene(target, show_ui = FALSE)
+	var/datum/sex_action/hole_storage/boobs_store/action = session.instantiate_action(/datum/sex_action/hole_storage/boobs_store)
+	TEST_ASSERT(action.bind_runtime(session), "Test setup: the action should bind to the session")
+	var/datum/sex_scene_receive_probe/probe = allocate(/datum/sex_scene_receive_probe)
+	probe.RegisterSignal(user, COMSIG_SEX_RECEIVE_ACTION, TYPE_PROC_REF(/datum/sex_scene_receive_probe, on_receive))
+	probe.RegisterSignal(target, COMSIG_SEX_RECEIVE_ACTION, TYPE_PROC_REF(/datum/sex_scene_receive_probe, on_receive))
+
+	action.on_perform(user, target)
+
+	TEST_ASSERT(stored.loc != user, "Test setup: the item should leave the inserter's hand")
+	TEST_ASSERT(target in probe.receivers, "The partner receiving the item should feel it")
+	TEST_ASSERT(!(user in probe.receivers), "The inserter must not feel the partner's insertion")
+
+	qdel(action)
+	qdel(session)

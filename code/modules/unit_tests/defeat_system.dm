@@ -482,10 +482,6 @@
 	monitor.shock_warning_last_at = world.time - DEFEAT_SHOCK_WARNING_COOLDOWN
 	TEST_ASSERT(monitor.maybe_warn_shock_defeat(DEFEAT_SHOCK_WARNING_STAGE), "Shock warning should fire again after the cooldown.")
 
-	test_human.setShockStage(DEFEAT_SHOCK_WARNING_STAGE - 1, FALSE, TRUE)
-	monitor.check_defeat_triggers()
-	TEST_ASSERT_EQUAL(monitor.shock_warning_last_at, 0, "Dropping below the shock warning stage should clear the warning cooldown.")
-
 /datum/unit_test/defeat_rescue_applies_aftermath_debuff
 
 /datum/unit_test/defeat_rescue_applies_aftermath_debuff/Run()
@@ -955,7 +951,7 @@
 	test_human.defeat_damage_threshold = 200
 	TEST_ASSERT_EQUAL(test_human.get_effective_defeat_threshold(), 200, "With no fragility quirks the effective threshold should equal the base.")
 
-	var/datum/quirk/vice/frail/frail_quirk = new()
+	var/datum/quirk/negative/frail/frail_quirk = new()
 	test_human.quirks += frail_quirk
 	TEST_ASSERT_EQUAL(test_human.get_effective_defeat_threshold(), round(200 * 0.6), "A fragility quirk should lower the effective defeat threshold.")
 
@@ -1169,7 +1165,7 @@
 	var/datum/component/defeat_monitor/monitor = victim.AddComponent(/datum/component/defeat_monitor)
 
 	monitor.on_climax(victim, null, victim, grabber, grabber)
-	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 15, "Horny defeat should cache the exact encounter-start stat average.")
+	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 7, "Horny defeat should cache the exact encounter-start stat formula.")
 	TEST_ASSERT_NULL(victim.has_status_effect(/datum/status_effect/defeat_knockout), "A single climax should not reach this deterministic horny knockout threshold.")
 
 /datum/unit_test/defeat_horny_encounter_decays_and_recalculates
@@ -1197,7 +1193,7 @@
 	monitor.on_climax(victim, null, victim, grabber, grabber)
 	TEST_ASSERT_NULL(victim.has_status_effect(/datum/status_effect/defeat_knockout), "Climaxes from a long-expired encounter must not stack into a surprise horny defeat.")
 	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_count, 1, "After the encounter lull, the climax count should restart at one.")
-	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 15, "The expired encounter's threshold should be recalculated from current player stats.")
+	TEST_ASSERT_EQUAL(monitor.horny_defeat_climax_threshold, 7, "The expired encounter's threshold should be recalculated from current player stats.")
 	TEST_ASSERT_EQUAL(monitor.horny_defeat_warned_stage, 0, "Warning beats should reset with the expired encounter.")
 
 	// Completed progress stays cached through the KO itself and clears only when recovery removes it.
@@ -1281,6 +1277,7 @@
 	TEST_ASSERT_EQUAL(horny_defeat_warning_stage(5, 0), 0, "An unrolled threshold should produce no warning.")
 
 /datum/unit_test/defeat_horny_self_recovery
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_horny_self_recovery/Run()
 	var/mob/living/carbon/human/patient = allocate(/mob/living/carbon/human)
@@ -1405,6 +1402,7 @@
 	lair_tag = "unit_test_kidnap_lair"
 
 /datum/unit_test/defeat_kidnap_to_lair_and_escape
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_kidnap_to_lair_and_escape/Run()
 	var/turf/lair_turf = get_step(run_loc_floor_bottom_left, EAST)
@@ -1445,6 +1443,7 @@
 	TEST_ASSERT(!(locate(/datum/action/innate/defeat_refuse_advances) in victim.actions), "Escaping should remove the Refuse Advances action from the captive.")
 
 /datum/unit_test/defeat_faction_mob_kidnaps_defeated_prey
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_faction_mob_kidnaps_defeated_prey/Run()
 	var/turf/lair_turf = get_step(run_loc_floor_bottom_left, EAST)
@@ -1561,6 +1560,7 @@
 	TEST_ASSERT(!(trinket in victim.held_items), "Surrender should drop carried items out of the hands.")
 
 /datum/unit_test/defeat_kidnap_remembers_captor_faction
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_kidnap_remembers_captor_faction/Run()
 	var/turf/lair_turf = get_step(run_loc_floor_bottom_left, EAST)
@@ -1582,6 +1582,7 @@
 	TEST_ASSERT(("greenskin_unit_test" in captivity.captor_faction), "Captivity should remember the captor's faction so a surrendered captive shares it.")
 
 /datum/unit_test/defeat_kidnap_climaxes_offer_surrender
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_kidnap_climaxes_offer_surrender/Run()
 	var/mob/living/carbon/human/victim = allocate(/mob/living/carbon/human)
@@ -2154,6 +2155,75 @@
 
 	TEST_ASSERT(!beast.enter_mob_horny_defeat(aggressor), "A mob already in horny KO should not re-enter it.")
 
+/datum/unit_test/mob_horny_ko_pauses_ai_and_frees_hold
+
+/datum/unit_test/mob_horny_ko_pauses_ai_and_frees_hold/Run()
+	var/mob/living/simple_animal/hostile/beast = allocate(/mob/living/simple_animal/hostile)
+	var/mob/living/carbon/human/prey = allocate(/mob/living/carbon/human)
+	beast.mob_horny_defeat_enabled = TRUE
+	beast.start_handless_pull(prey, GRAB_PASSIVE, MOVE_FORCE_OVERPOWERING, suppress_message = TRUE)
+	TEST_ASSERT_EQUAL(beast.pulling, prey, "Setup: the beast should be holding its prey.")
+
+	beast.apply_status_effect(/datum/status_effect/mob_horny_knockout)
+	TEST_ASSERT(HAS_TRAIT(beast, TRAIT_AI_PAUSED), "The mob KO must pause the AI through the trait, not a bare status change.")
+	TEST_ASSERT_NULL(beast.pulling, "A spent mob must let go of what it holds.")
+
+	beast.remove_status_effect(/datum/status_effect/mob_horny_knockout)
+	TEST_ASSERT(!HAS_TRAIT(beast, TRAIT_AI_PAUSED), "Waking must lift the AI pause.")
+
+/datum/unit_test/mob_horny_ko_help_up_and_carry
+
+/datum/unit_test/mob_horny_ko_help_up_and_carry/Run()
+	var/mob/living/simple_animal/hostile/beast = allocate(/mob/living/simple_animal/hostile)
+	var/mob/living/carbon/human/helper = allocate(/mob/living/carbon/human)
+	beast.mob_horny_defeat_enabled = TRUE
+	beast.living_flags &= ~CAN_BE_FIREMANNED
+
+	TEST_ASSERT(!helper.can_be_firemanned(beast), "An awake creature without the carry flag must not be liftable.")
+	TEST_ASSERT(!beast.try_mob_horny_ko_help_up(helper), "Help-up must not use the click on an awake mob.")
+
+	beast.apply_status_effect(/datum/status_effect/mob_horny_knockout)
+	TEST_ASSERT(helper.can_be_firemanned(beast), "Any spent creature must be liftable.")
+	TEST_ASSERT(beast.confirm_mob_horny_ko_lift(helper), "A clientless lifter gets no popup and may lift.")
+
+	TEST_ASSERT(beast.try_mob_horny_ko_help_up(helper), "Help-up must use the click on a spent mob.")
+	TEST_ASSERT_NULL(beast.has_status_effect(/datum/status_effect/mob_horny_knockout), "A finished help-up must end the mob KO.")
+
+/datum/unit_test/mob_horny_ko_bonds_stay_docile
+
+/datum/unit_test/mob_horny_ko_bonds_stay_docile/Run()
+	var/mob/living/carbon/human/species/goblin/npc/goblin = allocate(/mob/living/carbon/human/species/goblin/npc)
+	var/obj/item/rope/arm_rope = allocate(/obj/item/rope)
+	var/obj/item/rope/leg_rope = allocate(/obj/item/rope)
+	var/mob/living/carbon/human/carrier = allocate(/mob/living/carbon/human)
+	goblin.mob_horny_defeat_enabled = TRUE
+
+	goblin.apply_status_effect(/datum/status_effect/mob_horny_knockout)
+	arm_rope.apply_cuffs(goblin, null)
+	TEST_ASSERT_EQUAL(goblin.handcuffed, arm_rope, "Setup: the goblin should be tied while spent.")
+	TEST_ASSERT(!goblin.roll_mob_horny_ko_lash_out(carrier), "A mob with tied arms must never lash out when lifted.")
+
+	goblin.remove_status_effect(/datum/status_effect/mob_horny_knockout)
+	TEST_ASSERT(goblin.restraints_all_docile(), "Bonds put on while spent must be accepted on waking.")
+	goblin.cuff_resist(arm_rope, instant = TRUE)
+	TEST_ASSERT_EQUAL(goblin.handcuffed, arm_rope, "A docile mob must not break the bonds it woke up in.")
+
+	leg_rope.apply_cuffs(goblin, null, leg = TRUE)
+	TEST_ASSERT(!goblin.restraints_all_docile(), "Fresh bonds put on an awake mob are fought as usual.")
+
+/datum/unit_test/defeat_keyless_npc_mind_not_eligible
+
+/datum/unit_test/defeat_keyless_npc_mind_not_eligible/Run()
+	var/mob/living/carbon/human/npc = allocate(/mob/living/carbon/human)
+	npc.mind = allocate(/datum/mind)
+	npc.mind.current = npc
+	TEST_ASSERT(!npc.defeat_system_is_eligible(), "An NPC with a keyless mind must not get the regular defeat KO.")
+
+	npc.mind.key = "defeat-keyless-npc-player"
+	TEST_ASSERT(npc.defeat_system_is_eligible(), "A keyed mind is a player and keeps the regular defeat KO.")
+	npc.mind.current = null
+	npc.mind = null
+
 /datum/unit_test/mob_horny_defeat_ko_after_threshold
 
 /datum/unit_test/mob_horny_defeat_ko_after_threshold/Run()
@@ -2225,11 +2295,11 @@
 
 	var/datum/status_effect/debuff/defeat/horny/wobble/lewd = patient.apply_status_effect(/datum/status_effect/debuff/defeat/horny/wobble, null, DEFEAT_SEVERITY_SEVERE)
 	TEST_ASSERT_EQUAL(lewd.linked_alert.name, "Lewd: Rubbery Legs (Severe)", "A horny trauma alert should be labelled distinctly from an ordinary injury.")
-	TEST_ASSERT_NOTEQUAL(lewd.linked_alert.icon_state, head.linked_alert.icon_state, "Horny and physical trauma alerts should not share an icon.")
+	TEST_ASSERT_NOTEQUAL(lewd.linked_alert.overlay_state, head.linked_alert.overlay_state, "Horny and physical trauma alerts should not share an icon.")
 
 	var/datum/status_effect/debuff/defeat/grievous/grave = patient.apply_status_effect(/datum/status_effect/debuff/defeat/grievous, null, DEFEAT_SEVERITY_SEVERE)
-	TEST_ASSERT_EQUAL(grave.linked_alert.name, "Grievous: Grievous Wounds (Severe)", "A grievous wound alert should be labelled distinctly.")
-	TEST_ASSERT_NOTEQUAL(grave.linked_alert.icon_state, head.linked_alert.icon_state, "Grievous and physical trauma alerts should not share an icon.")
+	TEST_ASSERT_EQUAL(grave.linked_alert.name, "Recovery: Convalescence (Severe)", "A convalescence alert should be labelled distinctly.")
+	TEST_ASSERT_NOTEQUAL(grave.linked_alert.overlay_state, head.linked_alert.overlay_state, "Convalescence and physical trauma alerts should not share an icon.")
 
 // Focused isolation run for just the mob horny-defeat KO tests. Compile with FOCUS_MOB_HORNY_DEFEAT_TEST
 // defined to run only these. Guarded so it is inert (and safe to leave in) on a normal build.
@@ -2679,3 +2749,30 @@
 	TEST_ASSERT_EQUAL(product[2], 5, "Every generated Healer should carry five vials.")
 
 
+
+/// Beating a prosthetic wears the device, not the wearer, so it never fills the defeat pool.
+/datum/unit_test/defeat_pool_ignores_prosthetic_damage/Run()
+	var/mob/living/carbon/human/patient = allocate(/mob/living/carbon/human)
+	var/obj/item/bodypart/old_arm = patient.get_bodypart(BODY_ZONE_R_ARM)
+	old_arm.drop_limb()
+	qdel(old_arm)
+	var/obj/item/bodypart/r_arm/prosthetic/wood/arm = new(null)
+	arm.attach_limb(patient)
+	TEST_ASSERT_EQUAL(patient.get_bodypart(BODY_ZONE_R_ARM), arm, "Test setup: the wooden arm should be attached")
+	arm.bodypart_attacked_by(BCLASS_BLUNT, 40)
+	arm.update_damages()
+	TEST_ASSERT(arm.brute_dam > 0, "Test setup: the wooden arm should take damage")
+	TEST_ASSERT_EQUAL(patient.get_defeat_damage_pool(), 0, "Prosthetic damage must not count toward defeat")
+
+	var/obj/item/bodypart/left_arm = patient.get_bodypart(BODY_ZONE_L_ARM)
+	left_arm.create_injury(WOUND_BLUNT, 30)
+	left_arm.update_damages()
+	TEST_ASSERT(patient.get_defeat_damage_pool() > 0, "Damage to a flesh limb should still count toward defeat")
+
+	var/mob/living/carbon/human/automaton = allocate(/mob/living/carbon/human)
+	automaton.set_species(/datum/species/automaton)
+	var/obj/item/bodypart/brass_arm = automaton.get_bodypart(BODY_ZONE_R_ARM)
+	TEST_ASSERT(brass_arm.is_robotic_limb(), "Test setup: automaton limbs should be robotic")
+	brass_arm.bodypart_attacked_by(BCLASS_BLUNT, 40)
+	brass_arm.update_damages()
+	TEST_ASSERT(automaton.get_defeat_damage_pool() > 0, "An automaton's own limbs are its body and must still count")

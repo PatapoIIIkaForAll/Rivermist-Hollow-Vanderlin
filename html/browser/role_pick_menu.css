@@ -1,0 +1,252 @@
+/* Class picker and dream skill picker; palette and buttons follow the character creator. */
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+	background: #0c0a08;
+}
+
+.rp,
+.rp * {
+	box-sizing: border-box;
+}
+
+.rp {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	height: 100vh;
+	padding: 8px;
+	color: #e6dccb;
+	font-family: Georgia, 'Palatino Linotype', 'Book Antiqua', serif;
+	font-size: 13px;
+	line-height: 1.4;
+	background: radial-gradient(ellipse at 50% 0%, rgba(201, 164, 92, 0.09), transparent 60%), #0c0a08;
+	user-select: none;
+	cursor: default;
+}
+
+/* Framed panel with a faint gold inner line. */
+.rp-frame {
+	position: relative;
+	background: linear-gradient(180deg, #1d1812, #16120e);
+	border: 1px solid #3a3024;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.rp-frame::before {
+	content: '';
+	position: absolute;
+	inset: 3px;
+	border: 1px solid rgba(201, 164, 92, 0.18);
+	pointer-events: none;
+}
+
+.rp-head {
+	flex: none;
+	padding: 10px 12px 8px;
+	text-align: center;
+}
+
+.rp-title {
+	color: #c9a45c;
+	font-size: 18px;
+	letter-spacing: 1px;
+}
+
+.rp-sub {
+	margin-top: 2px;
+	color: #b4a791;
+	font-size: 12px;
+}
+
+.rp-points {
+	display: inline-block;
+	margin-top: 6px;
+	padding: 2px 12px;
+	border: 1px solid #8a7040;
+	border-radius: 3px;
+	color: #eee69c;
+	background: rgba(0, 0, 0, 0.35);
+	font-size: 14px;
+}
+
+/* Scrolling middle area; the footer button stays in view below it. */
+.rp-body {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 8px;
+	scrollbar-width: thin;
+	scrollbar-color: #8a7040 #120f0b;
+}
+
+.rp-body::-webkit-scrollbar {
+	width: 8px;
+}
+
+.rp-body::-webkit-scrollbar-track {
+	background: #120f0b;
+}
+
+.rp-body::-webkit-scrollbar-thumb {
+	background: linear-gradient(90deg, #5e4a2a, #b08d57, #5e4a2a);
+	border-radius: 4px;
+}
+
+.rp-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.rp-ornament {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 4px 0;
+	color: #eee69c;
+	font-size: 12px;
+}
+
+.rp-ornament::before,
+.rp-ornament::after {
+	content: '';
+	flex: 1;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, #8a7040, transparent);
+}
+
+/* One pickable entry: a full-width card. */
+a.rp-pick,
+a.rp-pick:link,
+a.rp-pick:visited,
+a.rp-pick:active {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 38px;
+	padding: 6px 12px;
+	color: #e6dccb;
+	text-decoration: none;
+	font-size: 15px;
+	border: 1px solid #3a3024;
+	border-radius: 4px;
+	background: radial-gradient(circle at 20% 50%, #2a2219, #15110d);
+}
+
+a.rp-pick:hover {
+	color: #fff;
+	border-color: #c9a45c;
+	box-shadow: 0 0 8px rgba(201, 164, 92, 0.45);
+}
+
+a.rp-pick.rp-special {
+	border-color: #8a7040;
+}
+
+a.rp-pick.rp-off,
+a.rp-pick.rp-off:hover {
+	opacity: 0.45;
+	border-color: #3a3024;
+	box-shadow: none;
+	color: #b4a791;
+}
+
+.rp-pick-name {
+	flex: 1;
+	min-width: 0;
+}
+
+.rp-pick-level {
+	display: block;
+	color: #b4a791;
+	font-size: 11px;
+}
+
+.rp-pick-cost {
+	flex: none;
+	min-width: 30px;
+	padding: 1px 6px;
+	text-align: center;
+	color: #eee69c;
+	border: 1px solid #8a7040;
+	border-radius: 3px;
+	font-size: 12px;
+}
+
+.rp-empty {
+	padding: 16px 8px;
+	text-align: center;
+	color: #b4a791;
+}
+
+.rp-desc {
+	white-space: pre-line;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.rp-hint {
+	color: #b4a791;
+	font-size: 11px;
+	text-align: center;
+}
+
+/* Footer: the main action spans the width at the bottom of the window. */
+.rp-foot {
+	flex: none;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+a.rp-main,
+a.rp-main:link,
+a.rp-main:visited,
+a.rp-main:active {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 54px;
+	padding: 8px 12px;
+	color: #f3e3bf;
+	text-decoration: none;
+	font-size: 20px;
+	letter-spacing: 2px;
+	border: 1px solid #c9a45c;
+	border-radius: 3px;
+	background: linear-gradient(180deg, #4a3b22, #2b2214);
+}
+
+a.rp-main:hover {
+	color: #fff;
+	box-shadow: 0 0 10px rgba(201, 164, 92, 0.5);
+	background: linear-gradient(180deg, #5a4829, #33281a);
+}
+
+a.rp-back,
+a.rp-back:link,
+a.rp-back:visited,
+a.rp-back:active {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 30px;
+	color: #e6dccb;
+	text-decoration: none;
+	font-size: 13px;
+	border: 1px solid #4a3c2a;
+	border-radius: 3px;
+	background: linear-gradient(180deg, #2a2219, #1a150f);
+}
+
+a.rp-back:hover {
+	color: #fff;
+	border-color: #c8ccd4;
+}

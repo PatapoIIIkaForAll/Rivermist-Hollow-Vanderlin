@@ -1,5 +1,5 @@
 /datum/sex_action/sex/other/thighjob
-	name = "Jerk them off with thighs"
+	name = "Give thighjob"
 	user_menu_zone_mask = SEX_UI_ZONE_LEGS
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 	requires_hole_storage = FALSE
@@ -35,7 +35,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] jerks [target]'s cock with [user.p_their()] thighs..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("skin", target, 30)
 	do_thrust_animate(target, user)
 
 	perform_sex_action(target, user, 2, 4, 2)

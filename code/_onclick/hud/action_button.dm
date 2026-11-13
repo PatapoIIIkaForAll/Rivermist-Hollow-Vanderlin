@@ -195,8 +195,13 @@
 	for(var/datum/action/action as anything in actions)
 		var/atom/movable/screen/movable/action_button/button = action.viewers[hud_used]
 		action.build_all_button_icons()
-		if(reload_screen)
-			client.screen += button
+		if(!reload_screen)
+			continue
+		// Actions granted while this hud did not exist yet have no button; ShowTo makes and adds one.
+		if(!button)
+			action.ShowTo(src)
+			continue
+		client.screen += button
 
 	if(reload_screen)
 		hud_used.update_our_owner()

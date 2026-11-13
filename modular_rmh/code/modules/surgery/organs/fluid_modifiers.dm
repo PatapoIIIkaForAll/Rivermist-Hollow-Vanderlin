@@ -20,6 +20,8 @@
 	var/conception_multiplier = 1
 	/// Multiplies the virility of seed this organ gives.
 	var/virility_multiplier = 1
+	/// Lets a vagina's own wetness fill all free room instead of stopping at its small lube reserve.
+	var/lifts_wetness_cap = FALSE
 
 /datum/fluid_modifier/proc/affects(obj/item/organ/genitals/filling_organ/organ)
 	return !affected_slots || (organ.slot in affected_slots)
@@ -36,6 +38,7 @@
 /datum/fluid_modifier/fluid_surge
 	rate_multiplier = 2
 	climax_multiplier = 1.5
+	lifts_wetness_cap = TRUE
 
 /datum/fluid_modifier/fluid_ebb
 	rate_multiplier = 0.5
@@ -66,7 +69,7 @@
 
 /// Moon Tea: seed held in the womb or rear rarely takes.
 /datum/fluid_modifier/barren_womb
-	affected_slots = list(ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS)
+	affected_slots = list(ORGAN_SLOT_WOMB, ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS)
 	conception_multiplier = CONTRACEPTIVE_MULTIPLIER
 
 /// Cold Seed draught: seed given while it works rarely takes.

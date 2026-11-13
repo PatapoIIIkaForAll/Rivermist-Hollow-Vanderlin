@@ -9,7 +9,7 @@
 	var/heavyfootstep
 	///The sound played for movables with shoed step sound type.
 	var/footstep
-	///Heelsteps
+	///The sound played for heeled shoes; null makes them use the shoed step sound.
 	var/heelstep
 	///The priority this element has in relation to other elements of the same type attached to other movables on the same turf.	var/priority
 	var/priority
@@ -19,11 +19,12 @@
 	*/
 	var/list/occupied_turfs = list()
 
-/datum/element/footstep_override/Attach(atom/movable/target, clawfootstep = FOOTSTEP_HARD_CLAW, barefootstep = FOOTSTEP_HARD_BAREFOOT, heavyfootstep = FOOTSTEP_GENERIC_HEAVY, footstep = FOOTSTEP_FLOOR, priority = STEP_SOUND_NO_PRIORITY)
+/datum/element/footstep_override/Attach(atom/movable/target, clawfootstep = FOOTSTEP_HARD_CLAW, barefootstep = FOOTSTEP_HARD_BAREFOOT, heavyfootstep = FOOTSTEP_GENERIC_HEAVY, footstep = FOOTSTEP_FLOOR, priority = STEP_SOUND_NO_PRIORITY, heelstep = null)
 	. = ..()
 	if(!ismovable(target))
 		return ELEMENT_INCOMPATIBLE
 
+	src.heelstep = heelstep
 	src.clawfootstep = clawfootstep
 	src.barefootstep = barefootstep
 	src.heavyfootstep = heavyfootstep
@@ -77,6 +78,7 @@
 	steps[HEELSTEP_MOB_HEEL]  = heelstep
 	steps[FOOTSTEP_MOB_SHOE] = footstep
 	steps[FOOTSTEP_MOB_BAREFOOT] = barefootstep
+	steps[FOOTSTEP_MOB_BEAST] = barefootstep
 	steps[FOOTSTEP_MOB_HEAVY] = heavyfootstep
 	steps[FOOTSTEP_MOB_CLAW] = clawfootstep
 	steps[STEP_SOUND_PRIORITY] = priority

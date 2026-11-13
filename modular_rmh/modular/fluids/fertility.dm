@@ -16,7 +16,7 @@
 /obj/item/organ/genitals/filling_organ/proc/hint_conception()
 	if(!owner)
 		return
-	if(owner.has_quirk(/datum/quirk/peculiarity/selfawaregeni))
+	if(owner.has_quirk(/datum/quirk/neutral/selfawaregeni))
 		to_chat(owner, span_love("Something feels different, deep inside my [get_oviposition_location_name()]..."))
 		return
 	to_chat(owner, span_small(span_love("A faint warmth settles low in my belly.")))

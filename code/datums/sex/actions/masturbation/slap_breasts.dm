@@ -29,7 +29,7 @@
 
 /datum/sex_action/masturbate/slap_breasts/on_perform(mob/living/user, mob/living/target)
 	. = ..()
-	var/sound = pick('sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg')
+	var/sound = get_slap_sound("clap")
 	var/action_text = "slaps"
 	var/arousal_amt = 0.8
 	var/pain_amt = 1.0
@@ -45,7 +45,7 @@
 			arousal_amt = 1.4
 			pain_amt = 2.8
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "smacks"
 			arousal_amt = 1.3
 			pain_amt = 4.0
@@ -63,7 +63,8 @@
 	user.visible_message(span_warning("[user] lowers [user.p_their()] hand from [user.p_their()] chest."))
 
 /datum/sex_action/masturbate/other/slap_breasts
-	name = "Slap their breasts"
+	name = "Breast slapping"
+	remote_phrase = "Slap their breasts"
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	do_time = 2.5 SECONDS
 	stamina_cost = 0
@@ -94,7 +95,7 @@
 
 /datum/sex_action/masturbate/other/slap_breasts/on_perform(mob/living/user, mob/living/target)
 	. = ..()
-	var/sound = pick('sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg')
+	var/sound = get_slap_sound("clap")
 	var/action_text = "slaps"
 	var/arousal_amt = 0.8
 	var/pain_amt = 1.0
@@ -110,7 +111,7 @@
 			arousal_amt = 1.4
 			pain_amt = 2.8
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "smacks"
 			arousal_amt = 1.3
 			pain_amt = 4.0

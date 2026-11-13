@@ -29,7 +29,7 @@
 /datum/admins/proc/show_player_panel_next(mob/M, clicked_flag = null)
 	log_admin("[key_name(usr)] checked the individual player panel for [key_name(M)][isobserver(usr)?"":" while in game"].")
 
-	if(!M)
+	if(QDELETED(M))
 		to_chat(usr, "<span class='warning'>I seem to be selecting a mob that doesn't exist anymore.</span>")
 		return
 
@@ -126,7 +126,7 @@
 		if(ishuman(M))
 			var/mob/living/carbon/human/human_mob = M
 			curse_string = human_mob.curses.Join(", ")
-			job = human_mob?.mind.assigned_role.title
+			job = human_mob.mind?.assigned_role?.title
 
 		body += "<br><br>Current Patron: <a href='byond://?_src_=holder;[HrefToken()];changepatron=add;mob=[REF(M)]'>\[[patron ? patron : "NA"]\]</a>"
 		body += "<br>Current Curses: <a href='byond://?_src_=holder;[HrefToken()];modifycurses=add;mob=[REF(M)]'>\[[curse_string ? curse_string : "NA"]\]</a>"
@@ -227,15 +227,15 @@
 		body += "<option value=''>-- Select Quirk --</option>"
 
 		// Group quirks by category
-		for(var/category in list(QUIRK_BOON, QUIRK_VICE, QUIRK_PECULIARITY))
+		for(var/category in list(QUIRK_POSITIVE, QUIRK_NEGATIVE, QUIRK_NEUTRAL))
 			var/category_name = ""
 			switch(category)
-				if(QUIRK_BOON)
-					category_name = "Boons"
-				if(QUIRK_VICE)
-					category_name = "Vices"
-				if(QUIRK_PECULIARITY)
-					category_name = "Peculiarities"
+				if(QUIRK_POSITIVE)
+					category_name = "Positive"
+				if(QUIRK_NEGATIVE)
+					category_name = "Negative"
+				if(QUIRK_NEUTRAL)
+					category_name = "Neutral"
 
 			body += "<optgroup label='[category_name]'>"
 			for(var/quirk_data in GLOB.quirk_points_by_type[category])

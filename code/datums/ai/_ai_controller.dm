@@ -212,6 +212,8 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	RegisterSignal(pawn, COMSIG_MOB_LOGIN, PROC_REF(on_sentience_gained))
 	RegisterSignal(pawn, COMSIG_MOB_STATCHANGE, PROC_REF(on_stat_changed))
 	RegisterSignal(pawn, COMSIG_ATOM_WAS_ATTACKED, PROC_REF(on_pawn_attacked))
+	// COMSIG_ATOM_WAS_ATTACKED only fires through this element, which many pawns lack otherwise.
+	pawn.AddElement(/datum/element/relay_attackers)
 	RegisterSignal(pawn, COMSIG_PARENT_QDELETING, PROC_REF(on_pawn_qdeleted))
 	setup_able_to_run()
 	update_able_to_run()
@@ -401,6 +403,11 @@ have ways of interacting with a specific atom and control it. They posses a blac
 		GLOB.ai_controllers_by_status[ai_status] -= src
 	stop_previous_processing()
 	CancelActions()
+	// Detection fields are hosted on the pawn and must not outlive this possession.
+	for(var/key in blackboard)
+		var/datum/proximity_monitor/field = blackboard[key]
+		if(istype(field))
+			qdel(field)
 	pawn.ai_controller = null
 	pawn = null
 	if(destroy)
@@ -509,6 +516,19 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	var/last_ranged_hit_time = blackboard[BB_LAST_RANGED_HIT_TIME] || 0
 	return world.time - last_ranged_hit_time <= AI_RANGED_HOT_PURSUIT_TIME
 
+/// TRUE if a threat is close enough to keep steering us: inside the aggro keep range, or a fresh ranged attacker.
+/datum/ai_controller/proc/is_threat_in_reach(atom/threat)
+	if(QDELETED(threat))
+		return FALSE
+	if(is_hot_pursuit_target(threat))
+		return TRUE
+	var/turf/our_turf = get_turf(pawn)
+	var/turf/their_turf = get_turf(threat)
+	if(!our_turf || !their_turf || abs(our_turf.z - their_turf.z) > 1)
+		return FALSE
+	var/reach = blackboard[BB_AGGRO_MAINTAIN_RANGE] || max_target_distance
+	return max(abs(our_turf.x - their_turf.x), abs(our_turf.y - their_turf.y)) <= reach
+
 /// Generates a plan and see if our existing one is still valid.
 /datum/ai_controller/process(delta_time)
 	if(!able_to_run)
@@ -531,8 +551,6 @@ have ways of interacting with a specific atom and control it. They posses a blac
 			if(!is_hot_pursuit_target(current_movement_target))
 				CancelActions()
 				return
-
-	SEND_SIGNAL(src, COMSIG_AI_CONTROLLER_PICKED_BEHAVIORS, current_behaviors, planned_behaviors)
 
 	for(var/datum/ai_behavior/current_behavior as anything in current_behaviors)
 		var/action_delta_time = max(current_behavior.get_cooldown(src) * 0.1, delta_time)
@@ -627,6 +645,9 @@ have ways of interacting with a specific atom and control it. They posses a blac
 			if(subtree.SelectBehaviors(src, delta_time) == SUBTREE_RETURN_FINISH_PLANNING)
 				break
 
+	// Once per finished plan: detection fields whose finder this plan left out delete themselves.
+	SEND_SIGNAL(src, COMSIG_AI_CONTROLLER_PICKED_BEHAVIORS, current_behaviors, planned_behaviors)
+
 	for(var/datum/ai_behavior/current_behavior as anything in current_behaviors)
 		if(LAZYACCESS(planned_behaviors, current_behavior))
 			continue
@@ -666,10 +687,16 @@ have ways of interacting with a specific atom and control it. They posses a blac
 		if(AI_STATUS_IDLE)
 			STOP_PROCESSING(SSidle_ai_behaviors, src)
 
+/// Pauses the AI for at least `time`; a shorter call never cuts a running pause, use ResumeAi() for that.
 /datum/ai_controller/proc/PauseAi(time)
 	paused_until = max(paused_until, world.time + time)
 	update_able_to_run()
 	addtimer(CALLBACK(src, PROC_REF(update_able_to_run)), max(0, paused_until - world.time), TIMER_UNIQUE|TIMER_OVERRIDE|TIMER_NO_HASH_WAIT|TIMER_DELETE_ME)
+
+/// Ends a PauseAi() pause early; signal pauses and TRAIT_AI_PAUSED still apply.
+/datum/ai_controller/proc/ResumeAi()
+	paused_until = 0
+	update_able_to_run()
 
 /// Pause for at most `time`, waking as soon as the pawn receives `signal`.
 /datum/ai_controller/proc/PauseAiUntilSignal(signal, time = 1 HOURS)
@@ -712,6 +739,11 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	arguments[1] = src
 
 	if(LAZYACCESS(current_behaviors, behavior)) ///It's still in the plan, don't add it again to current_behaviors but do keep it in the planned behavior list so its not cancelled
+		LAZYADDASSOCLIST(planned_behaviors, behavior, TRUE)
+		return
+
+	// Its field already does the searching: keep it planned so the field lives, but don't run it.
+	if(behavior.has_live_detection_field(src))
 		LAZYADDASSOCLIST(planned_behaviors, behavior, TRUE)
 		return
 

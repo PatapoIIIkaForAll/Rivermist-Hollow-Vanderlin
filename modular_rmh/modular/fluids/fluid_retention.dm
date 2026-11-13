@@ -1,24 +1,30 @@
 // Keeping fluid inside: gravity slows leaks while lying down, and a clench toggle holds the vagina and anus shut.
 
-/// Leak multiplier from posture and from holding it in.
+/// Leak multiplier for an opening gaping too wide to close.
+#define GAPED_LEAK_MULT 4
+
+/// Leak multiplier from posture, from holding it in, and from gaping open.
 /obj/item/organ/genitals/filling_organ/proc/get_retention_multiplier()
 	. = 1
 	if(!owner)
 		return
 	if(owner.body_position == LYING_DOWN)
 		. *= FLUID_LYING_LEAK_MULT
+	// A gaping opening cannot be clenched shut.
+	if(orifice?.gaped)
+		return . * GAPED_LEAK_MULT
 	if(can_hold_in && owner.is_holding_fluids_in())
 		. *= FLUID_HELD_LEAK_MULT
 
 /mob/living/proc/is_holding_fluids_in()
 	return !!has_status_effect(/datum/status_effect/holding_fluids_in)
 
-/// The openings a clench keeps shut.
+/// The openings a clench keeps shut; a gaping one cannot be held.
 /mob/living/proc/get_held_in_organs()
 	. = list()
 	for(var/slot in list(ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS))
 		var/obj/item/organ/genitals/filling_organ/opening = getorganslot(slot)
-		if(istype(opening) && opening.can_hold_in)
+		if(istype(opening) && opening.can_hold_in && !opening.orifice?.gaped)
 			. += opening
 
 /mob/living/proc/can_hold_fluids_in()
@@ -30,6 +36,8 @@
 		remove_status_effect(/datum/status_effect/holding_fluids_in)
 		return FALSE
 	if(stat != CONSCIOUS || !can_hold_fluids_in())
+		if(stat == CONSCIOUS && has_gaped_orifice())
+			to_chat(src, span_warning("I can't clench, I'm gaping."))
 		return FALSE
 	return !!apply_status_effect(/datum/status_effect/holding_fluids_in)
 
@@ -48,6 +56,8 @@
 
 /datum/status_effect/holding_fluids_in/tick()
 	if(owner.stat != CONSCIOUS || !owner.can_hold_fluids_in())
+		if(owner.stat == CONSCIOUS && owner.has_gaped_orifice())
+			to_chat(owner, span_warning("I can't clench, I'm gaping."))
 		give_out()
 		return
 	if(!is_holding_anything())
@@ -98,3 +108,5 @@
 	var/mob/living/viewer = mob_viewer
 	if(istype(viewer) && viewer.is_holding_fluids_in())
 		viewer.toggle_holding_fluids_in()
+
+#undef GAPED_LEAK_MULT

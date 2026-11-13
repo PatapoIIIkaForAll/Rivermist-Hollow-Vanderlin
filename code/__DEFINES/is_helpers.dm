@@ -70,6 +70,7 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 
 //RT species
 #define ishumannorthern(A) (is_species(A, /datum/species/human/northern))
+#define isdullahan(A) (is_species(A, /datum/species/dullahan))
 #define isdwarfmountain(A) (is_species(A, /datum/species/dwarf/mountain))
 #define isdwarfjarosite(A) (is_species(A, /datum/species/dwarf/jarosite))
 #define isdarkelf(A) (is_species(A, /datum/species/elf/dark))

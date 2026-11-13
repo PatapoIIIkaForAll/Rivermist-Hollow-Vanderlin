@@ -1,6 +1,6 @@
 
 /datum/sex_action/hole_storage/boobs_store
-	name = "Store items between boobs"
+	name = "Stuff cleavage"
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	hole_id = ORGAN_SLOT_BREASTS
 
@@ -19,6 +19,8 @@
 	if(!.)
 		return FALSE
 	var/obj/item/dildo = user.get_active_held_item()
+	if(!check_location_accessible(user, target, BODY_ZONE_CHEST, TRUE))
+		return FALSE
 	if(!dildo)
 		return FALSE
 	if(check_sex_lock(target, ORGAN_SLOT_BREASTS, null, dildo))
@@ -92,11 +94,11 @@
 
 	user.update_inv_hands()
 	user.update_a_intents()
-	perform_sex_action(user, target, 0.5, pain_amt, 0)
+	perform_sex_action(target, user, 0.5, pain_amt, 0)
 	handle_passive_ejaculation()
 
 /datum/sex_action/hole_storage/boobs_remove //do_time
-	name = "Remove items from between boobs"
+	name = "Empty cleavage"
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	hole_id = ORGAN_SLOT_BREASTS
 
@@ -118,6 +120,8 @@
 /datum/sex_action/hole_storage/boobs_remove/can_perform(mob/living/user, mob/living/target)
 	. = ..()
 	if(!.)
+		return FALSE
+	if(!check_location_accessible(user, target, BODY_ZONE_CHEST, TRUE))
 		return FALSE
 	if(user.get_active_held_item())
 		return FALSE
@@ -165,6 +169,6 @@
 			user.visible_message(spanify_force("I fish out the [removed_item] from between [target]'s boobs..."))
 		removed_item.doMove(get_turf(user))
 		user.put_in_active_hand(removed_item)
-	perform_sex_action(user, target, 0.5, pain_amt, 0)
+	perform_sex_action(target, user, 0.5, pain_amt, 0)
 	handle_passive_ejaculation()
 

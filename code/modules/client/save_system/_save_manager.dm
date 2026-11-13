@@ -3,7 +3,7 @@
 	var/base_path
 	var/list/save_files = list() // List of save file datums
 	var/auto_save = TRUE
-	var/save_interval = 300 // 5 minutes in deciseconds
+	var/save_interval = 5 MINUTES
 	var/last_save_time = 0
 
 /datum/save_manager/New(target_ckey)
@@ -223,7 +223,11 @@
 
 	S.cd = "/"
 	save_data["last_saved"] = world.realtime
-	S["save_data"] << save_data
+	try
+		S["save_data"] << save_data
+	catch(var/exception/write_error)
+		stack_trace("Could not write [file_path]: [write_error]")
+		return FALSE
 	dirty = FALSE
 
 	return TRUE

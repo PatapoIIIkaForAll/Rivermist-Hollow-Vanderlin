@@ -226,7 +226,7 @@
 	var/content = generate_recipe_html()
 	recipe_browser.set_content(content)
 	recipe_browser.add_stylesheet("blueprintstyle", 'html/browser/buildmode.css')
-	recipe_browser.set_window_options("can_close=1;can_minimize=0;can_maximize=0;can_resize=1")
+	recipe_browser.set_window_options(can_minimize = FALSE, can_maximize = FALSE)
 	recipe_browser.open()
 	switch_state = BLUEPRINT_SWITCHSTATE_RECIPES
 

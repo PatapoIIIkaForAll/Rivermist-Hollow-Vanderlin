@@ -38,8 +38,10 @@
 	parent = raw_args[1]
 	var/list/arguments = raw_args.Copy(2)
 	if(Initialize(arglist(arguments)) == COMPONENT_INCOMPATIBLE)
+		// The forced qdel below clears parent, so read its type first.
+		var/incompatible_parent_type = parent?.type
 		qdel(src, TRUE, TRUE)
-		CRASH("Incompatible [type] assigned to a [parent.type]! args: [json_encode(arguments)]")
+		CRASH("Incompatible [type] assigned to a [incompatible_parent_type]! args: [json_encode(arguments)]")
 
 	_JoinParent(parent)
 

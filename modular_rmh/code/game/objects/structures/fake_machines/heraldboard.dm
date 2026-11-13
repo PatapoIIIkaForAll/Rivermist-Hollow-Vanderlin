@@ -452,7 +452,7 @@ GLOBAL_LIST_EMPTY(heraldboard_prune_log)
 		to_chat(H, span_warning("The posting must bear a title, a body, and a name."))
 		return
 	heraldboard_add_posting(title, body, poster_name, poster_title, H)
-	message_admins("[ADMIN_LOOKUPFLW(H)] has made a herald's board post. The message was: [body]")
+	message_admins("[ADMIN_LOOKUPFLW(H)] has made a herald's board post. The message was: [html_encode(body)]")
 
 /obj/structure/fake_machine/heraldboard/proc/handle_remove_post(mob/living/carbon/human/H, list/params)
 	var/posting_id = "[params["posting_id"]]"

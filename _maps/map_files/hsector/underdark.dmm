@@ -12,8 +12,7 @@
 "aj" = (
 /obj/structure/winch{
 	gid = "underdarkg";
-	redstone_id = "underdarkg";
-	dir = 2
+	redstone_id = "underdarkg"
 	},
 /turf/open/floor/concrete,
 /area/under/underdark/rmh/shar)
@@ -174,7 +173,6 @@
 /area/under/underdark/rmh/tavel)
 "bY" = (
 /obj/structure/table/wood{
-	dir = 2;
 	icon_state = "largetable"
 	},
 /turf/open/floor/carpet/red,
@@ -323,7 +321,6 @@
 /area/under/underdark/rmh/glimmerlakes)
 "dB" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 6
 	},
 /turf/open/floor/greenstone,
@@ -437,7 +434,6 @@
 /area/under/underdark/rmh/glimmerlakes)
 "eX" = (
 /obj/structure/stairs/stone/church{
-	pixel_y = 0;
 	dir = 1
 	},
 /turf/open/floor/church,
@@ -608,9 +604,7 @@
 "gu" = (
 /obj/structure/fluff/railing/wood/east,
 /obj/structure/fluff/railing/border{
-	dir = 4;
-	pixel_x = 0;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/ruinedwood/spiral,
 /area/under/underdark/rmh/main)
@@ -851,7 +845,6 @@
 /area/under/underdark/rmh/shar)
 "kt" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -933,7 +926,6 @@
 /area/under/underdark/rmh/shar)
 "lj" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -1060,7 +1052,6 @@
 /area/under/underdark/rmh/shar)
 "nl" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -1243,7 +1234,6 @@
 /area/under/underdark/rmh/shar)
 "qa" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -1697,8 +1687,7 @@
 /area/under/underdark/rmh/shar)
 "vY" = (
 /obj/effect/decal/cobbleedge{
-	dir = 4;
-	pixel_y = 0
+	dir = 4
 	},
 /turf/open/floor/greenstone,
 /area/under/underdark/rmh/caves)
@@ -1722,7 +1711,6 @@
 /area/under/underdark/rmh/shar)
 "ws" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -2199,7 +2187,6 @@
 /area/under/underdark/rmh/shar)
 "Ck" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -2512,7 +2499,6 @@
 /area/under/underdark/rmh)
 "Gf" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -2755,7 +2741,6 @@
 /area/under/underdark/rmh/shar)
 "JJ" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -3115,7 +3100,6 @@
 /area/under/underdark/rmh/main)
 "NF" = (
 /obj/effect/decal/cobbleedge{
-	pixel_y = 0;
 	dir = 5
 	},
 /turf/open/floor/greenstone/runed,
@@ -3129,8 +3113,7 @@
 /area/under/underdark/rmh/shar)
 "NP" = (
 /obj/effect/decal/cobbleedge{
-	dir = 10;
-	pixel_y = 0
+	dir = 10
 	},
 /turf/open/floor/greenstone,
 /area/under/underdark/rmh/caves)

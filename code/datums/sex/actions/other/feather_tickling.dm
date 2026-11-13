@@ -1,6 +1,6 @@
 /datum/sex_action/feather_tickling
 	parent_type = /datum/sex_action/held_item_zone
-	name = "Tickle selected area with feather"
+	name = "Feather tickle"
 	description = "Use a held feather on the body zone selected on your combat doll."
 	action_item_type = /obj/item/natural/feather
 

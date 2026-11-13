@@ -117,9 +117,15 @@
 		return FALSE
 	if(!iscarbon(src))
 		return FALSE
+	if((mob_biotypes & MOB_UNDEAD) && (!mind?.key || IS_DEADITE(src)))
+		return FALSE
+	// A lair's captive NPC is scenery for its denizens: no defeat, no kidnap of its own.
+	if(GetComponent(/datum/component/npc_in_distress))
+		return FALSE
 	if(defeat_system_ai_opt_in)
 		return TRUE
-	if(client || mind)
+	// NPCs like orc warlords carry a keyless mind; only a player's keyed mind earns the regular KO.
+	if(client || mind?.key)
 		return TRUE
 	return FALSE
 
@@ -175,6 +181,88 @@
 	if(has_status_effect(/datum/status_effect/mob_horny_knockout))
 		return FALSE
 	apply_status_effect(/datum/status_effect/mob_horny_knockout)
+	return TRUE
+
+/// Lets go of everything this mob holds, so a spent mob never keeps its prey pinned.
+/mob/living/proc/drop_all_grabs()
+	stop_pulling()
+	for(var/obj/item/grabbing/grab in held_items)
+		dropItemToGround(grab, silent = TRUE)
+
+/// Arms tied counts as bound: legs alone still leave it free to strike.
+/mob/living/proc/mob_horny_ko_arms_bound()
+	return HAS_TRAIT(src, TRAIT_RESTRAINED)
+
+/// Weakrefs to the bonds this mob woke up in. Only those exact items go unfought.
+/mob/living/var/list/docile_restraints
+
+/mob/living/proc/remember_docile_restraints()
+	return
+
+/mob/living/carbon/remember_docile_restraints()
+	LAZYNULL(docile_restraints)
+	if(handcuffed)
+		LAZYADD(docile_restraints, WEAKREF(handcuffed))
+	if(legcuffed)
+		LAZYADD(docile_restraints, WEAKREF(legcuffed))
+
+/mob/living/proc/is_docile_restraint(obj/item/restraint)
+	if(!restraint || client || !LAZYLEN(docile_restraints))
+		return FALSE
+	for(var/datum/weakref/ref as anything in docile_restraints)
+		if(ref.resolve() == restraint)
+			return TRUE
+	return FALSE
+
+/// TRUE when every bond on this clientless mob is one it accepted while spent.
+/mob/living/carbon/proc/restraints_all_docile()
+	if(!handcuffed && !legcuffed)
+		return FALSE
+	if(handcuffed && !is_docile_restraint(handcuffed))
+		return FALSE
+	if(legcuffed && !is_docile_restraint(legcuffed))
+		return FALSE
+	return TRUE
+
+/// Help-intent rescue for a spent mob. Returns TRUE when the click was used for it.
+/mob/living/proc/try_mob_horny_ko_help_up(mob/living/helper)
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout))
+		return FALSE
+	if(!istype(helper) || helper == src || helper.stat != CONSCIOUS)
+		return FALSE
+	helper.visible_message(span_notice("[helper] kneels and starts bringing [src] back to [p_their()] senses..."), span_notice("I start bringing [src] back to [p_their()] senses..."))
+	if(!do_after(helper, DEFEAT_MOB_HORNY_HELP_UP_TIME, src))
+		to_chat(helper, span_warning("I stop tending to [src]."))
+		return TRUE
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout))
+		return TRUE
+	remove_status_effect(/datum/status_effect/mob_horny_knockout)
+	helper.visible_message(span_notice("[helper] helps [src] back up."), span_notice("I help [src] back up."))
+	return TRUE
+
+/// Warns before lifting an unbound spent mob. Returns TRUE when the lift may go ahead.
+/mob/living/proc/confirm_mob_horny_ko_lift(mob/living/lifter)
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout) || mob_horny_ko_arms_bound())
+		return TRUE
+	if(!lifter?.client)
+		return TRUE
+	var/choice = tgui_alert(lifter, "[src] is not bound. [capitalize(p_they())] might come to while lifted and attack you. Lift [p_them()] anyway?", "Lift [src]?", list("Lift", "Leave"))
+	return choice == "Lift"
+
+/// After a lift, an unbound spent mob may wake, throw off its carrier and turn on them.
+/mob/living/proc/roll_mob_horny_ko_lash_out(mob/living/carrier)
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout) || mob_horny_ko_arms_bound())
+		return FALSE
+	if(!prob(DEFEAT_MOB_HORNY_LIFT_LASH_CHANCE))
+		return FALSE
+	remove_status_effect(/datum/status_effect/mob_horny_knockout)
+	if(buckled)
+		buckled.unbuckle_mob(src, force = TRUE)
+	carrier.visible_message(span_danger("[src] comes to on [carrier]'s shoulder and lashes out!"), span_userdanger("[src] comes to and lashes out at me!"))
+	carrier.Knockdown(DEFEAT_MOB_HORNY_LASH_KNOCKDOWN)
+	if(ai_controller)
+		ai_controller.add_blackboard_key_assoc_lazylist(BB_BASIC_MOB_RETALIATE_LIST, carrier, world.time)
+		ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, carrier)
 	return TRUE
 
 /// Arms the KO Only self-rescue (§8 anti-softlock) when nothing else can save the victim - i.e. a
@@ -462,7 +550,7 @@
 /mob/living/proc/defeat_is_near_death()
 	if(health <= HEALTH_THRESHOLD_DEAD)
 		return TRUE
-	if(blood_volume <= BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE))
+	if(blood_volume <= BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE) && !is_bloodless())
 		return TRUE
 	if(iscarbon(src))
 		var/mob/living/carbon/carbon_src = src
@@ -480,6 +568,21 @@
 	for(var/datum/quirk/quirk as anything in human_src.quirks)
 		mult *= quirk.defeat_threshold_mult
 	return max(1, round(threshold * mult))
+
+/// Damage measured against the defeat threshold: brute, weighted burn, toxin and clone, without oxygen.
+/mob/living/proc/get_defeat_damage_pool()
+	return getBruteLoss() + (getFireLoss() * DEFEAT_BURN_DAMAGE_WEIGHT) + getToxLoss() + getCloneLoss()
+
+/// Prosthetic limbs are left out: beating a wooden arm wears the device, not the wearer.
+/mob/living/carbon/get_defeat_damage_pool()
+	var/brute = 0
+	var/burn = 0
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		if(bodypart.is_prosthetic())
+			continue
+		brute += bodypart.brute_dam
+		burn += bodypart.burn_dam
+	return brute + (burn * DEFEAT_BURN_DAMAGE_WEIGHT) + getToxLoss() + getCloneLoss()
 
 /// Draws a blood tax from this mob to power the resurrection rune.
 /// Stub: currently just removes the blood. TODO: deposit the drawn blood into the
@@ -822,9 +925,14 @@ GLOBAL_LIST_EMPTY(kidnap_escape_markers)
 /// Drop point a kidnapped victim is teleported to inside the lair.
 /obj/effect/landmark/kidnap/entrance
 	name = "kidnap lair entrance"
+	/// Area type whose turfs count as inside this lair. Null takes the entrance's own area.
+	var/lair_area_type
 
 /obj/effect/landmark/kidnap/entrance/Initialize(mapload)
 	. = ..()
+	if(!lair_area_type)
+		var/area/entrance_area = get_area(src)
+		lair_area_type = entrance_area?.type
 	LAZYADDASSOCLIST(GLOB.kidnap_entrance_markers, lair_tag, src)
 
 /obj/effect/landmark/kidnap/entrance/Destroy()
@@ -882,12 +990,16 @@ GLOBAL_LIST_EMPTY(kidnap_escape_markers)
 	return length(spots) ? pick(spots) : null
 
 /// Toggle handed to a released captive: steel yourself and horny mobs leave you be. Granted on
-/// release_from_knockout, torn down when captivity ends (escape / rune / surrender), so it never
-/// follows the player out of the lair.
+/// release, torn down when captivity ends (escape / rune / surrender), so it never follows the player
+/// out of the lair. Its name shows the current state.
 /datum/action/innate/defeat_refuse_advances
-	name = "Refuse Advances"
-	desc = "Steel yourself and rebuff the lair - its denizens will leave you be. Toggle again to relent."
+	name = "Open to Advances"
+	desc = "The lair's denizens may keep at you. Toggle to steel yourself and make them leave you be."
 	button_icon_state = "shieldsparkles"
+
+/datum/action/innate/defeat_refuse_advances/Grant(mob/grant_to)
+	. = ..()
+	update_state()
 
 /datum/action/innate/defeat_refuse_advances/Activate()
 	if(!isliving(owner))
@@ -898,10 +1010,25 @@ GLOBAL_LIST_EMPTY(kidnap_escape_markers)
 	else
 		ADD_TRAIT(owner, TRAIT_DEFEAT_REFUSE_ADVANCES, KIDNAP_TRAIT)
 		to_chat(owner, span_notice("You steel yourself and rebuff the lair - its denizens will leave you be."))
+	update_state()
 
+/// The button reads as the current state, so a captive can see whether the lair ignores them.
+/datum/action/innate/defeat_refuse_advances/proc/update_state()
+	if(!owner)
+		return
+	if(HAS_TRAIT(owner, TRAIT_DEFEAT_REFUSE_ADVANCES))
+		name = "Refusing Advances"
+		desc = "You have steeled yourself: the lair's denizens leave you be. Toggle to relent."
+	else
+		name = "Open to Advances"
+		desc = "The lair's denizens may keep at you. Toggle to steel yourself and make them leave you be."
+	build_all_button_icons(UPDATE_BUTTON_NAME)
+
+/// The one captivity button. The rune's own call button stays hidden while this exists.
 /datum/action/innate/defeat_captivity_choices
-	name = "Captivity Choices"
-	desc = "Review your available ways forward: rune rescue, waking safely inside the lair, waiting, or permanently abandoning this character."
+	name = "Captivity"
+	desc = "Your ways forward: call the rune if it can answer, wake inside the lair, wait, or give this character up for good."
+	button_icon_state = "shieldsparkles"
 
 /datum/action/innate/defeat_captivity_choices/Activate()
 	if(!isliving(owner))
@@ -946,8 +1073,8 @@ GLOBAL_LIST_EMPTY(kidnap_escape_markers)
 /mob/living/proc/grant_kidnap_release_grace()
 	kidnap_protected_until = max(kidnap_protected_until, world.time + KIDNAP_RECAPTURE_GRACE)
 
-/// Can this mob drag the given freshly-defeated victim back to its lair right now?
-/// Everything that makes a downed victim claimable EXCEPT proximity/outnumbering, so the AI can spot
+/// Can this mob drag the given victim back to its lair right now?
+/// Everything that makes a victim claimable EXCEPT proximity/outnumbering, so the AI can spot
 /// a candidate across the room and path toward it. can_kidnap_defeated_prey adds the here-and-now gates.
 /mob/living/proc/is_kidnap_candidate(mob/living/victim, allow_own_reservation = FALSE)
 	if(!kidnap_lair_tag && !kidnap_captivity_profile)
@@ -961,18 +1088,102 @@ GLOBAL_LIST_EMPTY(kidnap_escape_markers)
 	var/mob/living/reserving_captor = victim.get_kidnap_reserver()
 	if(reserving_captor && (!allow_own_reservation || reserving_captor != src))
 		return FALSE
+	if(victim.GetComponent(/datum/component/kidnap_captivity) || victim.GetComponent(/datum/component/npc_in_distress))
+		return FALSE
+	return is_defeated_kidnap_prey(victim) || is_restrained_kidnap_prey(victim)
+
+/// Kept lighthearted: only a horny defeat gets someone hauled off, and only by the pack that did it.
+/mob/living/proc/is_defeated_kidnap_prey(mob/living/victim, require_pack = TRUE)
 	if(!victim.has_status_effect(/datum/status_effect/defeat_knockout))
 		return FALSE
-	// Kept lighthearted: only a *horny* defeat gets someone hauled off to a lair. A plain beatdown
-	// leaves them downed where they fell - no being dragged away just to be mauled again.
 	if(victim.last_defeat_snapshot?.reason != DEFEAT_REASON_HORNY)
 		return FALSE
-	if(victim.GetComponent(/datum/component/kidnap_captivity))
+	return !require_pack || victim.defeat_recent_source_is_packmate_of(src)
+
+/// Bound, prone prey this mob has played with, left unstruggling long enough, with no witness about.
+/mob/living/proc/is_restrained_kidnap_prey(mob/living/victim)
+	if(!victim.restrained_since || !HAS_TRAIT(victim, TRAIT_RESTRAINED))
 		return FALSE
-	// Only the mob that actually put them down gets to claim the prize.
-	if(!victim.defeat_recent_source_is(src))
+	if(victim.stat == DEAD || victim.body_position != LYING_DOWN)
+		return FALSE
+	if(world.time - victim.restrained_since < KIDNAP_RESTRAINED_DELAY)
+		return FALSE
+	if(victim.is_struggling_against_restraints())
+		return FALSE
+	if(!victim.had_horny_scene_with(src))
+		return FALSE
+	return !kidnap_has_witness(victim)
+
+/// A captive is taken knocked out, or bound and awake. Anyone else keeps their feet.
+/mob/living/proc/kidnap_can_be_taken()
+	return has_status_effect(/datum/status_effect/defeat_knockout) || HAS_TRAIT(src, TRAIT_RESTRAINED)
+
+/// TRUE while a cuff break runs, and for KIDNAP_STRUGGLE_WINDOW after any resist against bonds.
+/mob/living/proc/is_struggling_against_restraints()
+	if(last_restraint_struggle && world.time - last_restraint_struggle < KIDNAP_STRUGGLE_WINDOW)
+		return TRUE
+	if(iscarbon(src))
+		var/mob/living/carbon/carbon_src = src
+		if(carbon_src.handcuffed?.item_flags & BEING_REMOVED)
+			return TRUE
+	return FALSE
+
+/// Remembers a scene action by this captor without holding a reference to it.
+/mob/living/proc/note_horny_scene_captor(mob/living/captor)
+	if(!istype(captor) || captor == src)
+		return
+	LAZYINITLIST(horny_scene_captors)
+	horny_scene_captors[REF(captor)] = world.time
+
+/mob/living/proc/had_horny_scene_with(mob/living/captor)
+	if(!istype(captor) || !LAZYLEN(horny_scene_captors))
+		return FALSE
+	var/captor_key = REF(captor)
+	var/last_scene = horny_scene_captors[captor_key]
+	if(!last_scene)
+		return FALSE
+	if(world.time - last_scene > KIDNAP_SCENE_MEMORY)
+		LAZYREMOVE(horny_scene_captors, captor_key)
 		return FALSE
 	return TRUE
+
+/// Same real faction or a shared ally entry. Neutral is a placeholder every mob carries, not a bond.
+/mob/living/proc/kidnap_is_packmate(mob/living/other)
+	if(!istype(other) || other == src)
+		return FALSE
+	var/list/shared_factions = faction & other.faction
+	shared_factions -= FACTION_NEUTRAL
+	if(length(shared_factions))
+		return TRUE
+	if(LAZYLEN(allies) && LAZYLEN(other.allies) && length(allies & other.allies))
+		return TRUE
+	return FALSE
+
+/// The mob that put us down, or one of its pack: a hunting party shares the prize.
+/mob/living/proc/defeat_recent_source_is_packmate_of(mob/living/captor)
+	if(defeat_recent_source_is(captor))
+		return TRUE
+	var/mob/living/snapshot_source = last_defeat_snapshot?.source_weakref?.resolve()
+	if(istype(snapshot_source) && captor.kidnap_is_packmate(snapshot_source))
+		return TRUE
+	var/mob/living/recent_damage_source = recent_damage_source_attacker_weakref?.resolve()
+	return istype(recent_damage_source) && captor.kidnap_is_packmate(recent_damage_source)
+
+/// TRUE when a conscious player, or a player-owned body, outside this pack can see the prey.
+/mob/living/proc/kidnap_has_witness(mob/living/victim)
+	for(var/mob/living/nearby in view(KIDNAP_GUARD_VIEW, src))
+		if(nearby == src || nearby == victim)
+			continue
+		if(nearby.stat != CONSCIOUS)
+			continue
+		if(!nearby.client && !nearby.mind)
+			continue
+		if(nearby.has_status_effect(/datum/status_effect/defeat_knockout))
+			continue
+		if(kidnap_is_packmate(nearby))
+			continue
+		return TRUE
+	return FALSE
 
 /mob/living/proc/can_kidnap_defeated_prey(mob/living/victim, allow_own_reservation = FALSE)
 	if(!is_kidnap_candidate(victim, allow_own_reservation))
@@ -1104,6 +1315,15 @@ GLOBAL_LIST_EMPTY(kidnap_escape_markers)
 	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_MOVE_AND_PERFORM
 	required_distance = 1
 
+// A movement behaviour with no target is cancelled before its first perform; set it here.
+/datum/ai_behavior/kidnap_defeated_prey/setup(datum/ai_controller/controller, target_key)
+	. = ..()
+	var/mob/living/victim = controller.blackboard[target_key]
+	if(QDELETED(victim))
+		return FALSE
+	set_movement_target(controller, victim)
+	return TRUE
+
 /datum/ai_behavior/kidnap_defeated_prey/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
 	. = ..()
 	var/mob/living/pawn = controller.pawn
@@ -1179,6 +1399,28 @@ GLOBAL_LIST_INIT(npc_distress_thanks, list(
 	var/rescued = FALSE
 	var/next_plea = 0
 	var/decay_timer
+	/// The one lair denizen running a scene with this captive. The set piece never crowds them.
+	var/datum/weakref/scene_partner_ref
+
+/// A denizen of the captive's own pack may take up with them, one at a time.
+/datum/component/npc_in_distress/proc/can_be_claimed_by(mob/living/suitor)
+	var/mob/living/poor_soul = parent
+	if(rescued || !istype(suitor) || !poor_soul || poor_soul.stat == DEAD)
+		return FALSE
+	if(!suitor.kidnap_is_packmate(poor_soul))
+		return FALSE
+	var/mob/living/partner = scene_partner_ref?.resolve()
+	return !partner || QDELETED(partner) || partner == suitor
+
+/datum/component/npc_in_distress/proc/claim_scene(mob/living/suitor)
+	if(!can_be_claimed_by(suitor))
+		return FALSE
+	scene_partner_ref = WEAKREF(suitor)
+	return TRUE
+
+/datum/component/npc_in_distress/proc/release_scene(mob/living/suitor)
+	if(scene_partner_ref?.resolve() == suitor)
+		scene_partner_ref = null
 
 /datum/component/npc_in_distress/Initialize(decays = FALSE)
 	if(!ishuman(parent))
@@ -1306,8 +1548,7 @@ GLOBAL_LIST_INIT(npc_distress_thanks, list(
 	name = "wolfden distress captive spawner"
 	captive_faction = list(FACTION_WOLVES)
 
-/// Converts a (surrendered) human into a wretched NPC-in-distress: keeps look + worn clothes,
-/// drops everything carried, and sends the player off to spectate.
+/// Releases everything a given-up character still holds: job slot, rune bonds, roundstart list, name.
 /mob/living/carbon/proc/prepare_abandon_character()
 	var/datum/job/assigned_job = SSjob.GetJob(job)
 	if(assigned_job?.parent_job)
@@ -1320,8 +1561,12 @@ GLOBAL_LIST_INIT(npc_distress_thanks, list(
 		var/datum/resurrection_rune_controller/rune_controller = rune.resrunecontroler
 		if(rune_controller && (src in rune_controller.linked_users))
 			rune_controller.remove_user(src)
+	// A mind can stay linked without its body; sever those too, or the rune remakes the body later.
+	if(mind)
+		unlink_mind_from_other_resurrection_runes(mind, null)
+		mind.defeat_character_abandoned = TRUE
 	GLOB.rune_roundstart_mobs -= src
-	GLOB.chosen_names -= real_name
+	release_reserved_name()
 
 /mob/living/carbon/human/proc/become_npc_in_distress(decays = TRUE, list/captor_faction = null)
 	npc_in_distress_drop_carried()
@@ -1340,21 +1585,6 @@ GLOBAL_LIST_INIT(npc_distress_thanks, list(
 	for(var/obj/item/carried in list(backr, backl, belt, beltl, beltr, wear_neck))
 		if(carried)
 			dropItemToGround(carried)
-
-/mob/living/verb/kidnap_surrender()
-	set name = "Surrender to Captivity"
-	set category = "IC"
-	set src = usr
-	var/datum/component/kidnap_captivity/captivity = GetComponent(/datum/component/kidnap_captivity)
-	if(!captivity || !captivity.surrender_available)
-		to_chat(src, span_warning("There is nothing to surrender to right now."))
-		return
-	if(tgui_alert(usr, "Give yourself up to captivity? You will lose your character for good.", "Surrender", list("Yes", "No")) != "Yes")
-		return
-	captivity = GetComponent(/datum/component/kidnap_captivity) // re-fetch after the prompt
-	if(!captivity || !captivity.surrender_available)
-		return
-	captivity.do_surrender()
 
 /datum/defeat_snapshot
 	var/reason

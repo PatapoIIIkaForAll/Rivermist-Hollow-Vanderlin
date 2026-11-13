@@ -11,7 +11,7 @@
 
 	var/list/boons = list() // Get all boons that the player has
 	for(var/datum/quirk/Q in H.quirks)
-		if(Q.quirk_category == QUIRK_BOON)
+		if(Q.quirk_category == QUIRK_POSITIVE)
 			boons += Q
 	if(!length(boons))
 		return

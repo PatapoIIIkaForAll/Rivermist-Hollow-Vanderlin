@@ -5,6 +5,9 @@
 	var/egg_stage = 0
 	var/eggs_stored = 1
 	var/eggs_clutch_size = 1
+	/// Why the last single lay gave nothing, and the host's pleasure share of the last one that went in.
+	var/last_lay_reason
+	var/last_lay_share = 0
 	COOLDOWN_DECLARE(egg_timer)
 
 /datum/component/ovipositor/Initialize()
@@ -34,9 +37,6 @@
 /datum/component/ovipositor/proc/register_carrier()
 	RegisterSignal(carrier, COMSIG_LIVING_LIFE, PROC_REF(handle_life))
 	RegisterSignal(carrier, COMSIG_SEX_CLIMAX, PROC_REF(on_climax))
-	if(ishuman(carrier))
-		var/mob/living/carbon/human/human_carrier = carrier
-		human_carrier.grant_check_eggs_verb(TRUE)
 
 /datum/component/ovipositor/proc/unregister_carrier()
 	UnregisterSignal(carrier, COMSIG_LIVING_LIFE)
@@ -63,15 +63,19 @@
 /datum/component/ovipositor/proc/handle_life(seconds)
 	SIGNAL_HANDLER
 
+	// A full store grows nothing, so the egg after a lay starts from scratch.
+	if(eggs_stored >= get_max_stored_eggs())
+		if(egg_stage || COOLDOWN_FINISHED(src, egg_timer))
+			egg_stage = 0
+			COOLDOWN_START(src, egg_timer, get_egg_stage_time())
+		return
+
 	if(COOLDOWN_FINISHED(src, egg_timer))
 		egg_stage += 1
 		egg_stage = min(2, egg_stage)
 		COOLDOWN_START(src, egg_timer, get_egg_stage_time())
 
 	if(egg_stage == 2)
-		if(eggs_stored >= get_max_stored_eggs())
-			COOLDOWN_START(src, egg_timer, get_egg_stage_time())
-			return
 		var/obj/item/organ/genitals/penis/ovipositor/ovipositor = parent
 		if(ovipositor?.resource_dependent_yield)
 			var/cost = get_oviposition_nutrient_cost(ovipositor.ovi_egg_type, ovipositor.egg_scale, ovipositor.egg_traits, get_clutch_size())
@@ -95,6 +99,7 @@
 	stage_time *= get_oviposition_capacity_interval_multiplier(get_clutch_size())
 	stage_time *= sanitize_oviposition_scale(ovipositor.egg_scale)
 	stage_time *= get_oviposition_trait_interval_multiplier(ovipositor.egg_traits)
+	stage_time *= ovipositor.egg_stage_time_multiplier
 
 	if(ovipositor.resource_dependent_yield && carrier)
 		var/nutriment = carrier.get_reagent_amount(/datum/reagent/consumable/nutriment)
@@ -156,7 +161,7 @@
 				if(receiver_owner != carrier)
 					to_chat(carrier, span_warning("[receiver_owner]'s body is still recovering from too many recent births and rejects another implantation."))
 				return FALSE
-		if(lay_egg(receiver, force))
+		if(rush_eggs(receiver, force, get_rush_cap(action)))
 			return TRUE
 
 	return lay_egg(get_turf(carrier))
@@ -192,7 +197,8 @@
 		return FALSE
 
 	// Only direct penetrative sex acts should deposit eggs automatically.
-	return istype(action, /datum/sex_action/sex/vaginal) \
+	return istype(action, /datum/sex_action/sex/lay_eggs) \
+		|| istype(action, /datum/sex_action/sex/vaginal) \
 		|| istype(action, /datum/sex_action/sex/anal) \
 		|| istype(action, /datum/sex_action/sex/throat) \
 		|| istype(action, /datum/sex_action/sex/other/vagina) \
@@ -228,12 +234,13 @@
 	if(egg_type == initial(ovipositor.ovi_egg_type))
 		egg_type = get_species_oviposition_egg_type(carrier) || egg_type
 	// Apply player custom overrides before setting type (so profile apply respects them)
-	egg.apply_custom_overrides(ovipositor.custom_egg_name, ovipositor.custom_egg_desc, ovipositor.custom_egg_color, ovipositor.egg_scale, ovipositor.egg_traits, ovipositor.custom_auto_hatch)
+	egg.apply_custom_overrides(ovipositor.custom_egg_name, ovipositor.custom_egg_desc, ovipositor.custom_egg_color, ovipositor.egg_scale, ovipositor.egg_traits)
 	egg.set_egg_type(egg_type)
 	egg.set_oviposition_mother(carrier)
 	return egg
 
-/datum/component/ovipositor/proc/try_place_egg_in_host(obj/item/organ/receiver, obj/item/oviposition_egg/egg, force = FALSE)
+/// Puts [egg] where [receiver] routes it; [quiet] leaves the words to the caller.
+/datum/component/ovipositor/proc/try_place_egg_in_host(obj/item/organ/receiver, obj/item/oviposition_egg/egg, force = FALSE, quiet = FALSE)
 	if(!receiver || !egg || !receiver.owner)
 		return FALSE
 	if(iscarbon(receiver.owner))
@@ -243,30 +250,165 @@
 				to_chat(carrier, span_warning("[receiver_owner]'s body is still recovering from too many recent births and rejects another implantation."))
 			return FALSE
 
-	var/fit_result = SEND_SIGNAL(receiver, COMSIG_BODYSTORAGE_TRY_INSERT, egg, STORAGE_LAYER_DEEP, force)
+	// The hole decides where the egg rests: a free womb behind it, or its own depths.
+	var/obj/item/organ/host = receiver.get_oviposition_receiver(egg, force) || receiver
+	var/fit_result = SEND_SIGNAL(host, COMSIG_BODYSTORAGE_TRY_INSERT, egg, STORAGE_LAYER_DEEP, force)
 	switch(fit_result)
 		if(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_OK_OVERRIDE, INSERT_FEEDBACK_ALMOST_FULL)
-			var/started_growing = receiver.start_oviposition_egg_growth(egg, carrier)
+			var/started_growing = host.start_oviposition_egg_growth(egg, carrier)
+			if(quiet)
+				return TRUE
 			var/plants_maneater_seed = egg.egg_type == OVI_EGG_MANEATER
 			var/third_person_action = plants_maneater_seed ? "plants a seed in" : "lays an egg into"
 			var/first_person_action = plants_maneater_seed ? "plant a seed in" : "lay an egg into"
-			if(ishuman(receiver.owner))
-				var/mob/living/carbon/human/human_receiver = receiver.owner
-				human_receiver.grant_check_eggs_verb(TRUE)
 			carrier.visible_message(
-				span_love("[carrier] [third_person_action] [receiver.owner]'s [receiver.get_oviposition_location_name()]!"),
-				span_love("I [first_person_action] [receiver.owner]'s [receiver.get_oviposition_location_name()]!")
+				span_love("[carrier] [third_person_action] [receiver.owner]'s [host.get_oviposition_location_name()]!"),
+				span_love("I [first_person_action] [receiver.owner]'s [host.get_oviposition_location_name()]!")
 			)
 			if(receiver.owner != carrier)
-				to_chat(receiver.owner, span_love("[carrier] [third_person_action] my [receiver.get_oviposition_location_name()]!"))
-			if(started_growing)
+				to_chat(receiver.owner, span_love("[carrier] [third_person_action] my [host.get_oviposition_location_name()]!"))
+			if(started_growing == OVI_EGG_GROWTH_STARTED)
 				if(plants_maneater_seed)
-					to_chat(receiver.owner, span_love("The planted seed in my [receiver.get_oviposition_location_name()] immediately begins to grow."))
+					to_chat(receiver.owner, span_love("The planted seed in my [host.get_oviposition_location_name()] immediately begins to grow."))
 				else
-					to_chat(receiver.owner, span_love("One of the eggs in my [receiver.get_oviposition_location_name()] immediately begins to grow."))
+					to_chat(receiver.owner, span_love("One of the eggs in my [host.get_oviposition_location_name()] immediately begins to grow."))
 			return TRUE
 
 	return FALSE
+
+// ---- One egg at a time ----
+
+/// Width a fresh egg passes the opening with: the unripe floor a birth uses.
+/datum/component/ovipositor/proc/get_lay_girth(obj/item/oviposition_egg/egg)
+	var/datum/oviposition_egg_profile/profile = egg.get_egg_profile()
+	return (profile?.birth_girth || OVI_EGG_DEFAULT_BIRTH_GIRTH) * egg.get_egg_scale() * OVI_EGG_LAY_GIRTH_SHARE
+
+/// Why no egg can go into [receiver] right now, or null when one can.
+/datum/component/ovipositor/proc/get_lay_block_reason(obj/item/organ/receiver, feedback = FALSE)
+	if(!carrier)
+		return "Nothing to lay with."
+	if(eggs_stored <= 0)
+		return "I have no egg ready."
+	var/mob/living/host_owner = receiver?.owner
+	if(!host_owner || !receiver.supports_oviposition_pregnancy())
+		return "There is nowhere to lay."
+	if(iscarbon(host_owner))
+		var/mob/living/carbon/carbon_host = host_owner
+		if(!carbon_host.can_receive_oviposition_implant(feedback && host_owner == carrier))
+			return "[host_owner == carrier ? "My" : "[host_owner]'s"] body is still recovering from too many births."
+	if(host_owner != carrier && !target_allows_mob_erp_action(carrier, host_owner, /datum/erp_preference/boolean/allow_mob_oviposition))
+		return "[host_owner] will not take my eggs."
+	return null
+
+/// TRUE when [receiver] has room for one more egg, by the same routing and fit a lay uses.
+/datum/component/ovipositor/proc/has_room_for_egg(obj/item/organ/receiver, force = FALSE)
+	if(!receiver?.owner || !receiver.supports_oviposition_pregnancy())
+		return FALSE
+	var/obj/item/oviposition_egg/egg = create_egg()
+	if(!egg)
+		return FALSE
+	var/obj/item/organ/host = receiver.get_oviposition_receiver(egg, force) || receiver
+	var/fit_result = SEND_SIGNAL(host, COMSIG_BODYSTORAGE_CHECK_FIT, egg, STORAGE_LAYER_DEEP, force)
+	qdel(egg)
+	switch(fit_result)
+		if(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_OK_OVERRIDE, INSERT_FEEDBACK_ALMOST_FULL)
+			return TRUE
+	return FALSE
+
+/// Lays one egg into [receiver] by the hole's own routing; the egg, or null with last_lay_reason set.
+/datum/component/ovipositor/proc/lay_one_egg(obj/item/organ/receiver, force = FALSE)
+	last_lay_share = 0
+	last_lay_reason = get_lay_block_reason(receiver)
+	if(last_lay_reason)
+		return null
+	var/obj/item/oviposition_egg/egg = create_egg()
+	if(!egg)
+		last_lay_reason = "Nothing comes."
+		return null
+	if(!try_place_egg_in_host(receiver, egg, force, TRUE))
+		qdel(egg)
+		var/whose = receiver.owner == carrier ? "my" : "[receiver.owner]'s"
+		last_lay_reason = "There is no more room in [whose] [receiver.get_oviposition_location_name()]."
+		return null
+	eggs_stored = max(0, eggs_stored - 1)
+	var/obj/item/organ/resting = egg.loc
+	if(istype(resting))
+		last_lay_share = pass_egg_in(resting, egg, force)
+	return egg
+
+/// The egg's way in through the canal before [host]: stretch, coat, sound; the host's pleasure share.
+/datum/component/ovipositor/proc/pass_egg_in(obj/item/organ/host, obj/item/oviposition_egg/egg, force = FALSE)
+	var/obj/item/organ/genitals/filling_organ/canal = host.get_birth_canal()
+	if(!istype(canal) || !canal.orifice_type || !canal.owner)
+		return 0
+	var/datum/orifice/opening = canal.get_orifice()
+	var/girth = get_lay_girth(egg)
+	var/share = 0
+	if(iscarbon(canal.owner))
+		var/mob/living/carbon/host_owner = canal.owner
+		share = host_owner.get_birth_pleasure_share(opening, girth)
+	opening.pass_through(girth, force ? SEX_FORCE_HIGH : SEX_FORCE_MID, carrier)
+	canal.take_birth_residue(egg, OVI_EGG_DEPOSIT_RESIDUE_SHARE)
+	opening.play_passage_sound("pass", 30, canal.owner)
+	canal.owner.hole_shake_hook("insert", 1)
+	return share
+
+/// Lays one egg onto the floor under the carrier; the egg, or null with last_lay_reason set.
+/datum/component/ovipositor/proc/lay_one_egg_on_floor()
+	last_lay_share = 0
+	last_lay_reason = null
+	if(!carrier || eggs_stored <= 0)
+		last_lay_reason = "I have no egg ready."
+		return null
+	var/turf/floor = get_turf(carrier)
+	if(!floor)
+		last_lay_reason = "There is no ground to lay on."
+		return null
+	var/obj/item/oviposition_egg/egg = create_egg()
+	if(!egg)
+		return null
+	egg.forceMove(floor)
+	eggs_stored = max(0, eggs_stored - 1)
+	return egg
+
+/// Most eggs a climax in [action] rushes: fewer once the act laid its cap.
+/datum/component/ovipositor/proc/get_rush_cap(datum/sex_action/action)
+	if(action?.eggs_laid_this_act >= LAY_EGG_ACT_CAP)
+		return LAY_EGG_RUSH_CAP_AFTER_CAP
+	return LAY_EGG_RUSH_CAP
+
+/// The climax rush: up to [cap] eggs of a clutch into [receiver] at once. How many went in.
+/datum/component/ovipositor/proc/rush_eggs(obj/item/organ/receiver, force = FALSE, cap = LAY_EGG_RUSH_CAP)
+	var/count = 0
+	var/share_sum = 0
+	var/clutch = min(eggs_stored, get_clutch_size(), cap)
+	for(var/i in 1 to clutch)
+		var/obj/item/oviposition_egg/egg = lay_one_egg(receiver, force)
+		if(!egg)
+			break
+		count++
+		share_sum += last_lay_share
+	if(!count)
+		if(last_lay_reason)
+			to_chat(carrier, span_warning(last_lay_reason))
+		return 0
+	var/mob/living/host_owner = receiver.owner
+	var/location = receiver.get_oviposition_location_name()
+	var/seeds = get_egg_kind_is_seed()
+	var/what = count == 1 ? (seeds ? "a seed" : "an egg") : "[count] [seeds ? "seeds" : "eggs"]"
+	var/share = share_sum / count
+	if(host_owner == carrier)
+		carrier.visible_message(span_love_flash("[carrier] shudders and [what] slide[count == 1 ? "s" : ""] deep into [carrier.p_their()] own [location]!"), span_love_flash("I clench and [what] rush[count == 1 ? "es" : ""] deep into my own [location]!"))
+	else
+		carrier.visible_message(span_love_flash("[carrier] goes rigid and [what] burst[count == 1 ? "s" : ""] into [host_owner]'s [location]!"), span_love_flash("I clench hard and [what] burst[count == 1 ? "s" : ""] out of me into [host_owner]'s [location]!"))
+		to_chat(host_owner, share >= 0.66 ? span_love_flash("[what] rush[count == 1 ? "es" : ""] into my [location] in one hot, shuddering wave!") : span_love("[what] force[count == 1 ? "s" : ""] into my [location] in one hard rush!"))
+	playsound(carrier, 'sound/effects/wounds/splatter.ogg', 60, TRUE)
+	return count
+
+/// TRUE when this ovipositor's eggs are seeds, for the words.
+/datum/component/ovipositor/proc/get_egg_kind_is_seed()
+	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = parent
+	return istype(ovipositor) && ovipositor.ovi_egg_type == OVI_EGG_MANEATER
 
 /datum/component/ovipositor/proc/lay_egg(atom/location, force = FALSE)
 	if(!carrier || eggs_stored <= 0)

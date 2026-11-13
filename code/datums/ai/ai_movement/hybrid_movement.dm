@@ -245,6 +245,8 @@
 					// Generate the future path and store it in the controller's blackboard
 					var/list/new_future_path = get_path_to(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
 						max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+					if(QDELETED(controller.pawn)) // pathfinding can sleep, and the pawn may be gone after
+						continue
 					controller.set_blackboard_key(future_path_blackboard_key, new_future_path)
 					SEND_SIGNAL(controller.pawn, COMSIG_AI_FUTURE_PATH_GENERATED, new_future_path)
 			else
@@ -262,6 +264,8 @@
 					COOLDOWN_START(controller, repath_cooldown, 1.5 SECONDS)
 					controller.movement_path = get_path_to_closest_approach(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
 						max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+					if(QDELETED(controller.pawn))
+						continue
 					controller.clear_blackboard_key(future_path_blackboard_key)
 					if(!length(controller.movement_path))
 						controller.CancelActions()
@@ -274,6 +278,8 @@
 					if(path_to_closest_on_fail)
 						controller.movement_path = get_path_to_closest_approach(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
 							max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+						if(QDELETED(controller.pawn))
+							continue
 						controller.clear_blackboard_key(future_path_blackboard_key)
 						if(length(controller.movement_path))
 							controller.pathing_attempts = 0
@@ -289,5 +295,10 @@
 				COOLDOWN_START(controller, repath_cooldown, 1.5 SECONDS) // Reduced from 2 seconds
 				controller.movement_path = get_path_to(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
 					max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+				if(QDELETED(controller.pawn))
+					continue
+				// Only failed builds count toward giving up; chasing a moving target rebuilds often.
+				if(length(controller.movement_path))
+					controller.pathing_attempts = 0
 				controller.clear_blackboard_key(future_path_blackboard_key) // Clear any future path as we have a fresh main path
 				SEND_SIGNAL(controller.pawn, COMSIG_AI_PATH_GENERATED, controller.movement_path)

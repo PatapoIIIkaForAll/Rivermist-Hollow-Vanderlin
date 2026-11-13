@@ -25,6 +25,9 @@
 /datum/defeat_captivity_profile/per_captive/unit_test/get_wilds_destination(datum/component/kidnap_captivity/captivity)
 	return unit_test_wilds || ..()
 
+/datum/unit_test/defeat_captivity_shared_reuse_and_exit
+	needs_pocket_space = TRUE
+
 /datum/unit_test/defeat_captivity_shared_reuse_and_exit/Run()
 	var/mob/living/carbon/human/first = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/second = allocate(/mob/living/carbon/human, run_loc_floor_top_right)
@@ -59,6 +62,9 @@
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(shared_instance), "Explicit shared-lair teardown should still succeed.")
 	TEST_ASSERT(QDELETED(left_behind), "Explicit teardown should delete loose foreign contents instead of dumping them into the world.")
 
+/datum/unit_test/defeat_captivity_capacity
+	needs_pocket_space = TRUE
+
 /datum/unit_test/defeat_captivity_capacity/Run()
 	var/mob/living/carbon/human/first = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/second = allocate(/mob/living/carbon/human, run_loc_floor_top_right)
@@ -80,6 +86,9 @@
 	TEST_ASSERT(captor.kidnap_retry_after > world.time, "A failed admission should arm a bounded per-captor retry cooldown.")
 	TEST_ASSERT(!captor.is_kidnap_candidate(retry_victim), "The cooldown should keep a full pocket from hot-looping the same candidate.")
 	SSpocket_dimensions.delete_instance(captivity.resolve_instance())
+
+/datum/unit_test/defeat_captivity_carrier_keys_and_owner_teardown
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_captivity_carrier_keys_and_owner_teardown/Run()
 	var/turf/carrier_turf = run_loc_floor_bottom_left
@@ -108,6 +117,9 @@
 	TEST_ASSERT_EQUAL(get_turf(first), carrier_turf, "Carrier teardown should eject captives at the carrier's destruction turf.")
 	SSpocket_dimensions.delete_instance(isolated_captivity.resolve_instance())
 
+/datum/unit_test/defeat_captivity_per_captive_and_delete_paths
+	needs_pocket_space = TRUE
+
 /datum/unit_test/defeat_captivity_per_captive_and_delete_paths/Run()
 	var/mob/living/carbon/human/first = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/second = allocate(/mob/living/carbon/human, run_loc_floor_top_right)
@@ -129,6 +141,9 @@
 	TEST_ASSERT_NOTEQUAL(get_turf(first), first_pocket_turf, "Direct qdel must not leave the captive in deleted pocket turf.")
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(second_instance), "Subsystem deletion should tear down the second isolated pocket.")
 	TEST_ASSERT_NULL(second.GetComponent(/datum/component/kidnap_captivity), "Subsystem deletion should clear captivity exactly like direct qdel.")
+
+/datum/unit_test/defeat_captivity_wilds_first_and_forced_move_cleanup
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_captivity_wilds_first_and_forced_move_cleanup/Run()
 	var/turf/origin = run_loc_floor_bottom_left
@@ -156,6 +171,9 @@
 	TEST_ASSERT_NULL(moved_victim.GetComponent(/datum/component/kidnap_captivity), "A forced move out of the pocket should remove stale captivity state.")
 	TEST_ASSERT_EQUAL(SSpocket_dimensions.get_instance(moved_instance_key), moved_instance, "Forced movement cleanup should not destroy an emptied shared lair.")
 	SSpocket_dimensions.delete_instance(moved_instance)
+
+/datum/unit_test/defeat_captivity_rune_cleanup_and_rejection_aftermath
+	needs_pocket_space = TRUE
 
 /datum/unit_test/defeat_captivity_rune_cleanup_and_rejection_aftermath/Run()
 	var/turf/origin = run_loc_floor_bottom_left

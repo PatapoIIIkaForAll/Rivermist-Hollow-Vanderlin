@@ -144,6 +144,11 @@
 	SpitUp()
 	return ..()
 
+/mob/living/simple_animal/hostile/retaliate/headless/handle_atom_del(atom/A)
+	if(A == swallowed_mob)
+		swallowed_mob = null
+	return ..()
+
 /mob/living/simple_animal/hostile/retaliate/headless/proc/SwallowEnemy(mob/living/L)
 	if(swallowed_mob)
 		return

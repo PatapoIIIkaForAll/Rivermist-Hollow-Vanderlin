@@ -456,29 +456,36 @@
 		var/brute_per_part = rand(0, brute)
 
 		var/brute_was = picked.brute_dam
-		var/burn_was = picked.burn_dam
 		. += picked.get_damage()
 
 		var/list/mods = list()
 		if(no_crit)
 			mods = list(CRIT_MOD_CHANCE = -100)
 
+		// Injury hits only spend what fits this part, so organ and crit rolls never repeat on the next part.
+		var/headroom = max(picked.max_damage - picked.get_damage(), 0)
+		var/brute_here = min(brute, headroom)
+		var/burn_here = min(burn, headroom - brute_here)
+
 		// Each class lands on its own; folding them together turned every mixed hit into pure burn.
 		if(brute > 0)
 			if(damage_type)
 				update = TRUE
-				picked.bodypart_attacked_by(damage_type, brute, null, modifiers = mods)
+				picked.bodypart_attacked_by(damage_type, brute_here, null, modifiers = mods)
 			else
 				update |= picked.receive_damage(brute_per_part, 0, blocked = FALSE, updating_health = FALSE, required_status = BODYPART_ORGANIC)
 
-		if(burn > 0)
+		if(burn_here > 0)
 			update = TRUE
-			picked.bodypart_attacked_by(BCLASS_BURN, burn, null, modifiers = mods)
+			picked.bodypart_attacked_by(BCLASS_BURN, burn_here, null, modifiers = mods)
 
 		. -= picked.get_damage() // return the net amount of damage healed
 
-		brute = round(brute - (picked.brute_dam - brute_was), DAMAGE_PRECISION)
-		burn = round(burn - (picked.burn_dam - burn_was), DAMAGE_PRECISION)
+		if(damage_type)
+			brute = round(brute - brute_here, DAMAGE_PRECISION)
+		else
+			brute = round(brute - (picked.brute_dam - brute_was), DAMAGE_PRECISION)
+		burn = round(burn - burn_here, DAMAGE_PRECISION)
 
 		parts -= picked
 

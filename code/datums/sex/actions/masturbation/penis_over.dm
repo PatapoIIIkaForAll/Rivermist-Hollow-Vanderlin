@@ -1,5 +1,5 @@
 /datum/sex_action/masturbate/penis_over
-	name = "Jerk over them"
+	name = "Jerk over"
 	check_same_tile = FALSE
 	target_menu_zone_mask = SEX_UI_ZONE_MISC
 
@@ -35,7 +35,7 @@
 	var/chosen_verb = pick(list("jerks [user.p_their()] cock", "strokes [user.p_their()] cock", "masturbates", "jerks off"))
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] [chosen_verb] over [target]"))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	play_rub_sound("fap", user, 30)
 
 	perform_sex_action(user, user, 2, 0, 2)
 

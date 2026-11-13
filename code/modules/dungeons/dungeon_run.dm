@@ -458,9 +458,13 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 
 /// Creates a dungeon room instance with depth/run wired up BEFORE activate(),
 /// which get_or_create_instance cannot do; mirrors its registration steps.
-/datum/dungeon_run/proc/create_room_instance(datum/map_template/pocket/dungeon/room_template, room_depth, incoming_path = DUNGEON_PATH_COMBAT, promised_reward = DUNGEON_REWARD_MOTES, population_mode = DUNGEON_POP_COMBAT)
+/datum/dungeon_run/proc/create_room_instance(datum/map_template/pocket/dungeon/room_template, room_depth, incoming_path = DUNGEON_PATH_COMBAT, promised_reward = DUNGEON_REWARD_MOTES, population_mode = DUNGEON_POP_COMBAT, room_seed = 0, allow_fallback = TRUE)
 	var/instance_key = "dungeon_run::[REF(src)]::room[++room_serial]"
-	var/datum/pocket_dimension/dungeon/room = new(room_template, instance_key, SSpocket_dimensions.next_instance_id++, POCKET_LIFECYCLE_COLLAPSE, DUNGEON_DEFAULT_IDLE_TIMEOUT, get_entrance())
+	var/room_type = room_template.instance_type
+	if(!ispath(room_type, /datum/pocket_dimension/dungeon))
+		room_type = /datum/pocket_dimension/dungeon
+	var/datum/pocket_dimension/dungeon/room = new room_type(room_template, instance_key, SSpocket_dimensions.next_instance_id++, POCKET_LIFECYCLE_COLLAPSE, DUNGEON_DEFAULT_IDLE_TIMEOUT, get_entrance())
+	room.set_generation_seed(room_seed)
 	room.depth = room_depth
 	room.owning_run = src
 	// Set before activate(): setup_dungeon_contents spawns guardians during
@@ -469,8 +473,14 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 	room.promised_reward = promised_reward
 	room.population_mode = population_mode
 	room.delete_foreign_on_collapse = TRUE // run rooms swallow what's left behind
-	if(!room.activate())
+	if(!room.activate() || QDELETED(room) || QDELETED(src) || ending)
 		qdel(room)
+		if(QDELETED(src) || ending)
+			return null
+		var/datum/map_template/pocket/dungeon/fallback = allow_fallback ? room_template.get_fallback_template() : null
+		if(fallback)
+			log_game("Dungeon layout [room_template.id] failed (seed [room_seed]); using [fallback.id].")
+			return create_room_instance(fallback, room_depth, incoming_path, promised_reward, population_mode, room_seed, FALSE)
 		return null
 	SSpocket_dimensions.register_instance(room)
 	return room
@@ -499,6 +509,7 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 		if(gate.gate_role == DUNGEON_GATE_FORWARD)
 			gate.sealed = !room.cleared
 			gate.pre_rolled_template = roll_path_room_template(room, gate.path_type, rolled_sibling_ids)
+			gate.generation_seed = rand(1, 65535)
 			// Doors to boss/break/descent rooms promise nothing from the deck -
 			// what waits beyond is telegraphed instead (and never rolls special).
 			var/datum/map_template/pocket/dungeon/rolled_template = gate.pre_rolled_template
@@ -638,9 +649,11 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 /datum/dungeon_run/proc/instantiate_room_for_gate(obj/structure/dungeon_gate/gate)
 	if(ending || !gate?.pre_rolled_template || QDELETED(gate.source_room))
 		return null
-	var/datum/pocket_dimension/dungeon/room = create_room_instance(gate.pre_rolled_template, depth + 1, gate.path_type, gate.special_kind ? null : gate.reward_type, gate.special_kind || DUNGEON_POP_COMBAT)
+	var/datum/pocket_dimension/dungeon/room = create_room_instance(gate.pre_rolled_template, depth + 1, gate.path_type, gate.special_kind ? null : gate.reward_type, gate.special_kind || DUNGEON_POP_COMBAT, gate.generation_seed)
 	if(!room)
 		return null
+	// A failed procedural layout may have substituted an authored template.
+	gate.pre_rolled_template = room.get_dungeon_template()
 	var/new_room_kind = gate.pre_rolled_template.room_kind
 	if(new_room_kind == DUNGEON_ROOM_BREAK || new_room_kind == DUNGEON_ROOM_DESCENT)
 		room.stretch_position = 0

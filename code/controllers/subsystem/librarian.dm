@@ -5,9 +5,11 @@ SUBSYSTEM_DEF(librarian)
 	init_order = INIT_ORDER_PATH
 	flags = SS_NO_FIRE
 	var/list/books = list()
+	var/player_books_loaded = FALSE
 
 /datum/controller/subsystem/librarian/Initialize(start_timeofday)
-	update_books()
+	if(!player_books_loaded)
+		update_books()
 	return ..()
 
 /datum/controller/subsystem/librarian/proc/get_book(input)
@@ -80,7 +82,7 @@ SUBSYSTEM_DEF(librarian)
 		return "You have a feeling the newly written book will remain in the archive for a very long time..."
 	else
 		message_admins("!!! _book_titles.json no longer exists, previous book title list has been lost. making a new one without old books... !!!")
-		text2file(json_encode(list(book_title)), "data/player_generated_books/[LIBRARY_JSON].json")
+		text2file(json_encode(list(encoded_title)), "data/player_generated_books/[LIBRARY_JSON].json")
 		return "[LIBRARY_JSON].json no longer exists, yell at your server host that some books have been lost!"
 
 /datum/controller/subsystem/librarian/proc/file2playerbook(filename)
@@ -148,5 +150,19 @@ SUBSYSTEM_DEF(librarian)
 		if(!length(file2playerbook(book_file)))
 			continue
 		books[SANITIZE_FILENAME(book_file)] = file2playerbook(book_file)
+	player_books_loaded = TRUE
+
+/datum/controller/subsystem/librarian/proc/get_player_book_titles(list/categories)
+	if(!player_books_loaded)
+		update_books()
+	var/list/titles = list()
+	for(var/filename in books)
+		var/list/book_info = books[filename]
+		if(!islist(book_info) || !book_info["book_title"])
+			continue
+		if(categories && !(book_info["category"] in categories))
+			continue
+		titles += filename
+	return titles
 
 #undef LIBRARY_JSON

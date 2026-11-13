@@ -222,8 +222,7 @@
 	if(bonus_owner)
 		UnregisterSignal(bonus_owner, COMSIG_MOB_UNEQUIPPED_ITEM)
 	if(equipped_stat_bonus)
-		equipped_stat_bonus.RemoveComponent()
-		equipped_stat_bonus = null
+		QDEL_NULL(equipped_stat_bonus)
 	bonus_owner_ref = null
 
 /// Boss-tier quest reward ring. Raises a random stat to 16.
@@ -290,8 +289,7 @@
 		UnregisterSignal(bonus_owner, COMSIG_MOB_UNEQUIPPED_ITEM)
 
 	if(equipped_stat_bonus)
-		equipped_stat_bonus.RemoveComponent()
-		equipped_stat_bonus = null
+		QDEL_NULL(equipped_stat_bonus)
 
 	bonus_owner_ref = null
 
@@ -358,8 +356,7 @@
 /obj/item/clothing/ring/active/nomag/demagicify()
 	. = ..()
 	var/datum/component/magcom = GetComponent(/datum/component/anti_magic)
-	if(magcom)
-		magcom.RemoveComponent()
+	qdel(magcom)
 
 // ................... Ring of Protection ....................... (rare treasure, not for purchase)
 /obj/item/clothing/ring/gold/protection

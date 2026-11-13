@@ -1,0 +1,400 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/effect/decal/cleanable/debris/wood,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"b" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh)
+"c" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 4
+	},
+/area/indoors/town/rmh)
+"d" = (
+/turf/closed/wall/mineral/decowood,
+/area/indoors/town/rmh)
+"e" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/obj/structure/curtain/bluecurtain/dir{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"f" = (
+/turf/closed/wall/mineral/stonebrick,
+/area/indoors/town/rmh)
+"g" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 1
+	},
+/area/indoors/town/rmh)
+"h" = (
+/turf/open/floor/sand,
+/area/indoors/town/rmh)
+"i" = (
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"j" = (
+/turf/open/floor/dirt,
+/area/indoors/town/rmh)
+"k" = (
+/obj/structure/carpet/blue,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"l" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/obj/structure/curtain/bluecurtain/dir{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"m" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 8
+	},
+/obj/structure/curtain/bluecurtain/dir{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"n" = (
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 7
+	},
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"o" = (
+/turf/closed/wall/mineral/wooddark/end,
+/area/indoors/town/rmh)
+"p" = (
+/obj/structure/fluff/railing/wood/east,
+/obj/structure/closet/crate/chest/wickertrunk,
+/obj/structure/fake_machine/stockpile_withdraw,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"q" = (
+/obj/structure/stairs,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"r" = (
+/obj/structure/rack/shelf/biggest,
+/turf/open/floor/twig,
+/area/indoors/town/rmh)
+"s" = (
+/obj/structure/rack,
+/turf/open/floor/twig,
+/area/indoors/town/rmh)
+"t" = (
+/obj/structure/fluff/railing/wood/west,
+/turf/open/floor/sand,
+/area/indoors/town/rmh)
+"u" = (
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh)
+"v" = (
+/turf/open/floor/twig,
+/area/indoors/town/rmh)
+"w" = (
+/turf/open/floor/grass/mixyel,
+/area/outdoors/rmh_field/west)
+"x" = (
+/turf/closed/wall/mineral/wooddark/horizontal,
+/area/indoors/town/rmh)
+"y" = (
+/obj/structure/window/openclose/reinforced,
+/obj/structure/curtain/bluecurtain/dir,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"z" = (
+/obj/structure/door{
+	lockid = "housing4";
+	name = "C-House IV"
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"A" = (
+/obj/structure/sign/property_sign/claim{
+	pixel_y = -8
+	},
+/turf/closed/wall/mineral/decowood,
+/area/indoors/town/rmh)
+"B" = (
+/obj/machinery/tanningrack,
+/turf/open/floor/grass/mixyel,
+/area/outdoors/rmh_field/west)
+"C" = (
+/obj/item/natural/wood/plank,
+/turf/open/floor/dirt,
+/area/indoors/town/rmh)
+"D" = (
+/obj/structure/stairs/ccw,
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh)
+"E" = (
+/obj/item/natural/wood/plank,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"F" = (
+/obj/item/natural/stone,
+/turf/open/floor/dirt/road,
+/area/outdoors/rmh_field/west)
+"G" = (
+/obj/item/natural/stone,
+/turf/open/floor/sand,
+/area/indoors/town/rmh)
+"H" = (
+/obj/item/natural/wood/plank,
+/turf/open/floor/twig,
+/area/indoors/town/rmh)
+"I" = (
+/obj/structure/rack,
+/obj/effect/decal/cleanable/debris/wood,
+/turf/open/floor/twig,
+/area/indoors/town/rmh)
+"K" = (
+/obj/structure/fluff/railing/wood,
+/obj/effect/decal/cleanable/debris/wood,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"L" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+"M" = (
+/obj/effect/decal/cleanable/debris/wood,
+/obj/machinery/light/fueled/oven/west{
+	fueluse = 5
+	},
+/turf/open/floor/dirt,
+/area/indoors/town/rmh)
+"P" = (
+/obj/effect/decal/cleanable/debris/wood,
+/turf/open/floor/sand,
+/area/indoors/town/rmh)
+"R" = (
+/obj/structure/flora/grass/fullgrass_autumn,
+/turf/open/floor/grass/mixyel,
+/area/outdoors/rmh_field/west)
+"S" = (
+/turf/open/floor/dirt/road,
+/area/outdoors/rmh_field/west)
+"U" = (
+/obj/structure/flora/grass/herb/random,
+/turf/open/floor/grass/mixyel,
+/area/outdoors/rmh_field/west)
+"W" = (
+/turf/open/openspace,
+/area/outdoors/rmh_field/west)
+"X" = (
+/turf/open/openspace,
+/area/indoors/town/rmh)
+"Y" = (
+/obj/structure/carpet/blue,
+/obj/effect/decal/cleanable/debris/wood,
+/turf/open/floor/ruinedwood/alizeria/tiles/wood21,
+/area/indoors/town/rmh)
+
+(1,1,1) = {"
+U
+R
+u
+o
+d
+l
+d
+g
+b
+"}
+(2,1,1) = {"
+R
+x
+b
+p
+a
+i
+h
+G
+c
+"}
+(3,1,1) = {"
+w
+y
+v
+q
+i
+E
+i
+P
+d
+"}
+(4,1,1) = {"
+S
+d
+v
+r
+n
+k
+Y
+i
+e
+"}
+(5,1,1) = {"
+S
+z
+H
+s
+n
+Y
+k
+j
+d
+"}
+(6,1,1) = {"
+F
+A
+v
+I
+n
+k
+j
+j
+e
+"}
+(7,1,1) = {"
+w
+y
+v
+q
+h
+i
+C
+M
+f
+"}
+(8,1,1) = {"
+U
+x
+b
+t
+h
+h
+q
+f
+f
+"}
+(9,1,1) = {"
+w
+B
+u
+o
+d
+m
+d
+f
+f
+"}
+
+(1,1,2) = {"
+W
+W
+u
+o
+d
+l
+d
+g
+b
+"}
+(2,1,2) = {"
+W
+x
+b
+a
+X
+i
+a
+i
+c
+"}
+(3,1,2) = {"
+W
+y
+i
+i
+i
+a
+X
+X
+d
+"}
+(4,1,2) = {"
+W
+d
+i
+X
+X
+i
+i
+X
+e
+"}
+(5,1,2) = {"
+W
+y
+i
+X
+i
+i
+E
+i
+d
+"}
+(6,1,2) = {"
+W
+d
+a
+i
+i
+a
+i
+X
+e
+"}
+(7,1,2) = {"
+W
+y
+i
+X
+X
+i
+L
+a
+f
+"}
+(8,1,2) = {"
+W
+x
+b
+i
+i
+K
+X
+D
+f
+"}
+(9,1,2) = {"
+W
+W
+u
+o
+d
+m
+d
+g
+b
+"}

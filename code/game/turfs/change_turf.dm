@@ -9,7 +9,10 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	var/list/allowed_contents = typecache_filter_list_reverse(GetAllContentsIgnoring(ignore_typecache), ignored_atoms)
 	allowed_contents -= src
 	for(var/i in 1 to allowed_contents.len)
-		var/thing = allowed_contents[i]
+		var/atom/movable/thing = allowed_contents[i]
+		// A mob whose own qdel released this turf is already mid-Destroy; deleting it again is a qdel loop.
+		if(QDELETED(thing))
+			continue
 		qdel(thing, force=TRUE)
 
 	if(turf_type)

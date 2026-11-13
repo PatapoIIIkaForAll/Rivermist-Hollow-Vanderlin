@@ -162,7 +162,7 @@
 		if(captivity)
 			captivity.offer_release_choice(rune_controller)
 			return
-		var/list/choices = list(KIDNAP_CHOICE_CALL_RUNE, KIDNAP_CHOICE_WAIT)
+		var/list/choices = list(KIDNAP_CHOICE_CALL_RUNE, "Not yet")
 		// Spell out the price before they spend a charge - the return is powerful but far from free.
 		var/confirm = tgui_alert(carbon_owner, "Calling the rune will haul you to safety and mend your wounds - but it is not free:\n\n\
 			- You are torn from where you fell and wake beside the rune, far away (a compass points back to where you were taken).\n\
@@ -386,7 +386,7 @@
 	return get_active_noncarbon_shapeshift_source_body(linked_mind) == body
 
 /datum/resurrection_rune_controller/proc/can_offer_ghost_return(datum/mind/linked_mind, mob/dead/observer/ghost)
-	if(!linked_mind)
+	if(!linked_mind || linked_mind.defeat_character_abandoned)
 		return FALSE
 	if(!(linked_mind in linked_users_minds))
 		return FALSE
@@ -467,19 +467,23 @@
 		resurrecting -= linked_mind
 		return
 
+	var/outlaw_redirected = sub_rune.uses_outlaw_redirect(null, linked_mind)
 	var/mob/living/carbon/new_body = new mob_type(destination_turf)
 	var/mob/ghostie = linked_mind.get_ghost(TRUE)
 	if(ghostie?.client?.prefs)
-		ghostie.client.prefs.apply_prefs_to(new_body, TRUE)
+		linked_mind.apply_prefs_to_remade_body(ghostie.client.prefs, new_body)
 
 	// Mind transfer expects the new body to briefly be the current body first.
 	linked_mind.current = new_body
 	linked_mind.transfer_to(new_body)
 	linked_mind.grab_ghost(TRUE)
 	new_body.flash_act()
+	if(outlaw_redirected)
+		explain_outlaw_redirect(new_body)
 
 	replace_linked_body(linked_mind, new_body)
 	resurrecting -= linked_mind
+	fail_contracts_on_rune_rescue(new_body)
 	apply_revival_debuffs(new_body)
 	apply_revival_side_effects(new_body, FALSE, null)
 	playsound(destination_turf, 'sound/misc/vampirespell.ogg', 100, FALSE, -1)
@@ -680,7 +684,8 @@
 		linked_mind.current = null
 
 /datum/resurrection_rune_controller/proc/can_auto_remake_deleted_body(datum/mind/linked_mind)
-	if(!linked_mind)
+	// A character given up to captivity decays as a lair NPC; the rune must not rebuild them.
+	if(!linked_mind || linked_mind.defeat_character_abandoned)
 		return FALSE
 	if(!(linked_mind in linked_users_minds))
 		return FALSE
@@ -748,7 +753,11 @@
 		return
 
 	if(can_offer_defeat_rune_return(user))
-		ensure_rescue_action(user)
+		// A captive already holds the Captivity button, which offers the rune. Two buttons read as a bug.
+		if(user.GetComponent(/datum/component/kidnap_captivity))
+			clear_rescue_action(user)
+		else
+			ensure_rescue_action(user)
 		clear_hard_crit_deadline(user)
 		return
 
@@ -914,10 +923,12 @@
 		return FALSE
 	if(user.defeat_mode != DEFEAT_MODE_KO_RUNE)
 		return FALSE
-	if(!user.has_status_effect(/datum/status_effect/defeat_knockout))
-		return FALSE
 	var/datum/component/kidnap_captivity/captivity = user.GetComponent(/datum/component/kidnap_captivity)
-	if(captivity && !captivity.released)
+	if(captivity)
+		// A captive may call the rune once the hold has loosened, knocked out or awake inside the lair.
+		if(!captivity.released)
+			return FALSE
+	else if(!user.has_status_effect(/datum/status_effect/defeat_knockout))
 		return FALSE
 	return user.mind?.can_spend_defeat_rune_charge()
 
@@ -999,10 +1010,15 @@
 	playsound(get_turf(body), 'sound/magic/repulse.ogg', 100, FALSE, -1)
 	body.ExtinguishMob()
 	maybe_strip_revival_clothes(body, voluntary)
+	var/outlaw_redirected = sub_rune.uses_outlaw_redirect(body, null, allow_outlaw_redirect)
 	body.forceMove(destination_turf)
+	if(outlaw_redirected)
+		explain_outlaw_redirect(body)
 	body.defeat_suppress_heal_cleanup = TRUE
 	body.revive(ADMIN_HEAL_ALL, force_grab_ghost = TRUE)
 	body.defeat_suppress_heal_cleanup = FALSE
+	// After the strip and the move, so only quest items that came home count.
+	fail_contracts_on_rune_rescue(body)
 	if(had_defeat_knockout)
 		var/datum/defeat_recovery_profile/rune/rune_profile = new
 		rune_profile.additional_aftermath_severity = get_defeat_rune_trauma_severity(rune_charge_result)
@@ -1036,6 +1052,13 @@
 		var/rune_primer = "The rune runs on a handful of charges that return slowly over time. Each call after the first costs more of your coin and blood, and spending your last leaves the rune silent until it recharges. The rune-weariness and wounds it left behind can be mended by a town healer or at a shrine."
 		to_chat(body, span_notice("Steady yourself - and remember how [span_tooltip(rune_primer, "the rune that saved you")] works, lest your next fall be your last."))
 	apply_resurrection_trauma(body)
+
+/// Outlaws wake in the law's cell, not beside their own rune. Say so, or it reads as a teleport bug.
+/datum/resurrection_rune_controller/proc/explain_outlaw_redirect(mob/living/carbon/body)
+	if(!body)
+		return
+	to_chat(body, span_userdanger("Your name is on the outlaw rolls. The rune you bound yourself to will not shelter the condemned: the law's own rune seized your thread and remade you in its cell."))
+	to_chat(body, span_notice("Outlaws return this way until the decree is lifted. Vampires and town-hall officers are exempt."))
 
 /datum/resurrection_rune_controller/proc/body_has_rot(mob/living/carbon/target)
 	if(!target)

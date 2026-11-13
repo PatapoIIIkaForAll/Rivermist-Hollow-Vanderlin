@@ -65,6 +65,9 @@
 	if(iscarbon(owner.current))
 		overlord_body_ref = WEAKREF(owner.current)
 		RegisterSignal(owner.current, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+	if(ishuman(owner.current))
+		var/mob/living/carbon/human/overlord_human = owner.current
+		overlord_human.grant_reverie(REF(src), "Grave Vigil")
 	for(var/datum/action/spell as anything in spells)
 		owner.current.add_spell(spell, source = src)
 
@@ -84,6 +87,9 @@
 	var/mob/living/overlord_mob = owner.current
 	overlord_mob.remove_spells(source = src)
 	UnregisterSignal(overlord_mob, COMSIG_LIVING_DEATH)
+	if(ishuman(overlord_mob))
+		var/mob/living/carbon/human/overlord_human = overlord_mob
+		overlord_human.revoke_reverie(REF(src))
 	if(overlord_controller)
 		qdel(overlord_controller)
 

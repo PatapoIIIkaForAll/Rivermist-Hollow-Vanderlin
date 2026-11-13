@@ -120,27 +120,24 @@
 			to_chat(src, span_warning("[rider] tumbles off you as you fall!"))
 
 /mob/living/carbon/human/attackby(obj/item/I, mob/living/user, params)
-	if(buckled && istype(buckled, /mob/living/carbon/human))
-		var/mob/living/carbon/human/mount = buckled
-		if(HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
-			visible_message(span_warning("[user]'s attack is redirected to [mount]'s chest!"))
-			user.zone_selected = BODY_ZONE_CHEST
-			return mount.attackby(I, user, params)
+	var/mob/living/carbon/human/mount = get_pony_mount()
+	if(mount)
+		visible_message(span_warning("[user]'s attack is redirected to [mount]'s chest!"))
+		user.zone_selected = BODY_ZONE_CHEST
+		return mount.attackby(I, user, params)
 	return ..()
 
 /mob/living/carbon/human/attack_animal(mob/living/simple_animal/M)
-	if(buckled && istype(buckled, /mob/living/carbon/human))
-		var/mob/living/carbon/human/mount = buckled
-		if(HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
-			visible_message(span_warning("[M]'s attack is redirected to [mount]!"))
-			mount.attack_animal(M)
-			return TRUE
+	var/mob/living/carbon/human/mount = get_pony_mount()
+	if(mount)
+		visible_message(span_warning("[M]'s attack is redirected to [mount]!"))
+		mount.attack_animal(M)
+		return TRUE
 	return ..()
 
 /mob/living/carbon/human/bullet_act(obj/projectile/P)
-	if(buckled && istype(buckled, /mob/living/carbon/human))
-		var/mob/living/carbon/human/mount = buckled
-		if(HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
-			visible_message(span_warning("The [P] is redirected to [mount]!"))
-			return mount.bullet_act(P)
+	var/mob/living/carbon/human/mount = get_pony_mount()
+	if(mount)
+		visible_message(span_warning("The [P] is redirected to [mount]!"))
+		return mount.bullet_act(P)
 	return ..()

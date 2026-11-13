@@ -21,6 +21,11 @@
 	possible_ages = NORMAL_AGES_LIST
 	limbs_icon_m = 'modular_rmh/icons/mob/bodies/m/mta.dmi'
 	limbs_icon_f = 'modular_rmh/icons/mob/bodies/f/fma.dmi'
+	allowed_body_builds = HUMANOID_BODY_BUILDS
+	default_body_build_m = BODY_BUILD_BROAD
+	default_body_build_f = BODY_BUILD_SLIM
+	body_build_palette = BODY_PALETTE_GREY
+	body_hair_materials = BODY_HAIR_MATERIALS_FURRED
 
 	soundpack_m = /datum/voicepack/male/tabaxi
 	soundpack_f = /datum/voicepack/female/tabaxi
@@ -98,7 +103,11 @@
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/breasts/animal,
 		/datum/customizer/organ/genitals/vagina/animal,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/ears/tajaran,
+		/datum/customizer/bodypart_feature/body_hair/optional,
+		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/none,
@@ -126,6 +135,7 @@
 		/datum/body_marking/spotted,
 	)
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/stature,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,

@@ -112,16 +112,20 @@ SUBSYSTEM_DEF(tgui)
 	if(window.locked || window.status != TGUI_WINDOW_CLOSED)
 		return
 
+	var/client/user_client = user.client
 	window.status = TGUI_WINDOW_LOADING
 	window.initialize(
 		strict_mode = TRUE,
-		fancy = user.client.prefs.read_preference(/datum/preference/toggle/tgui_fancy),
+		fancy = user_client.prefs.read_preference(/datum/preference/toggle/tgui_fancy),
 		assets = list(
 			get_asset_datum(/datum/asset/simple/tgui),
 		))
-	winset(user.client, window.id, "is-visible=false")
+	// initialize() can sleep on asset sends; the client may have disconnected meanwhile.
+	if(QDELETED(user_client))
+		return
+	winset(user_client, window.id, "is-visible=false")
 	window.send_asset(get_asset_datum(/datum/asset/group/tgui_window_shared))
-	user.client.browse_queue_flush()
+	user_client.browse_queue_flush()
 
 /**
  * public

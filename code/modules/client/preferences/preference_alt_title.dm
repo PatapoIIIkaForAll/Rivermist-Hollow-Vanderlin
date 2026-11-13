@@ -257,6 +257,7 @@
 				"title_choices" = get_job_alt_choices(job, "title"),
 				"honorary_choices" = get_job_alt_choices(job, "honorary"),
 				"has_info" = !!job.class_setup_examine,
+				"details" = character_setup_job_details(job),
 			))
 		if(length(job_entries))
 			categories += list(list(
@@ -265,6 +266,58 @@
 				"jobs" = job_entries,
 			))
 	return categories
+
+/// Stat, trait and subclass facts for the role window, from the same sources as show_explain().
+/datum/preferences/proc/character_setup_job_details(datum/job/job)
+	var/list/details = list(
+		"stats" = character_setup_stat_lines(job.jobstats),
+		"stat_limits" = character_setup_stat_lines(job.stat_ceilings),
+		"spell_points" = job.spell_points || 0,
+		"traits" = character_setup_trait_lines(job.traits),
+		"subclasses" = list(),
+	)
+	for(var/subclass_type in job.job_subclasses)
+		var/datum/job/advclass/subclass_path = subclass_type
+		var/datum/job/advclass/subclass = SSrole_class_handler?.get_advclass_by_name(initial(subclass_path.title))
+		if(!subclass)
+			continue
+		var/list/languages = list()
+		for(var/datum/language/language as anything in subclass.languages)
+			languages += initial(language.name)
+		details["subclasses"] += list(list(
+			"title" = subclass.title,
+			"tutorial" = character_setup_chargen_clean_text(subclass.tutorial, 700),
+			"stats" = character_setup_stat_lines(subclass.jobstats),
+			"spell_points" = subclass.spell_points || 0,
+			"languages" = languages,
+			"traits" = character_setup_trait_lines(length(subclass.traits) ? subclass.traits : job.traits),
+			"skills" = character_setup_notable_skills(subclass.skills),
+		))
+	return details
+
+/datum/preferences/proc/character_setup_stat_lines(list/stats)
+	. = list()
+	for(var/stat in stats)
+		. += list(list("name" = capitalize(stat), "value" = stats[stat]))
+
+/datum/preferences/proc/character_setup_trait_lines(list/traits)
+	. = list()
+	for(var/trait in traits)
+		. += list(list("name" = trait, "desc" = character_setup_chargen_clean_text(GLOB.roguetraits[trait] || "", 400)))
+
+/// The five best skills past journeyman plus every combat skill, as the old popup listed them.
+/datum/preferences/proc/character_setup_notable_skills(list/skills)
+	. = list()
+	var/list/notable = list()
+	for(var/skill_type in skills)
+		if(skills[skill_type] > SKILL_LEVEL_JOURNEYMAN || ispath(skill_type, /datum/skill/combat))
+			notable[skill_type] = skills[skill_type]
+	notable = sortTim(notable, /proc/cmp_numeric_dsc, TRUE)
+	var/shown = 0
+	for(var/datum/skill/skill_type as anything in notable)
+		if(shown++ >= 5)
+			break
+		. += list(list("name" = initial(skill_type.name), "level" = SSskills.level_names[notable[skill_type]]))
 
 /datum/preferences/proc/character_setup_job_data(mob/user)
 	var/list/data = list(

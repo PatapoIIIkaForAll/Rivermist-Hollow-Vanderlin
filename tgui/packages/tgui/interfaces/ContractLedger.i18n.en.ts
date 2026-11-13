@@ -11,6 +11,7 @@ const contractGroups = {
   'Guild Errands': 'Guild Errands',
   Bounties: 'Bounties',
   'Player Commissions': 'Player Commissions',
+  'Carnal Contracts': 'Carnal Contracts',
 };
 
 const contractTypes = {
@@ -21,6 +22,9 @@ const contractTypes = {
   Raid: 'Raid',
   Boss: 'Boss',
   Commission: 'Commission',
+  'Fluid Harvest': 'Fluid Harvest',
+  'Clutch Recovery': 'Clutch Recovery',
+  'Sate and Mark': 'Sate and Mark',
 };
 
 const contractDescriptions = {
@@ -30,6 +34,9 @@ const contractDescriptions = {
   'Clear Out': 'Purge a hostile cluster from a known region.',
   Raid: 'Take on a heavy hostile force in organized numbers.',
   Boss: 'Hunt a singular elite threat with a much higher payout.',
+  'Fluid Harvest': "Bring back a creature's own seed or nectar, collected by any means.",
+  'Clutch Recovery': 'Bring back unhatched eggs from an egg-laying creature.',
+  'Sate and Mark': 'Wear creatures down to a lustful collapse, then tie a guild ribbon on each.',
 };
 
 const resolveText = (key, args = {}) => {

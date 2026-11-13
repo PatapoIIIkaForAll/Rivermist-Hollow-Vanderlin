@@ -288,6 +288,8 @@
 			if(!pref_species)
 				return FALSE
 			return !params["task"] && (params["ancestry"] in pref_species.get_skin_list())
+		if("character_setup_select_body_build")
+			return !params["task"] && pref_species?.is_body_build_valid(params["body_build"], read_preference(/datum/preference/choiced/gender))
 		if("character_setup_customizer")
 			return !params["task"] && is_allowed_customizer_action(params)
 		if("character_setup_set_choice")
@@ -466,7 +468,7 @@
 			"name" = capitalize(replacetext("[zone]", "_", " ")),
 			"entries" = entries,
 			"available" = available,
-			"can_add" = length(entries) < MAXIMUM_MARKINGS_PER_LIMB && length(available),
+			"can_add" = !!(length(entries) < MAXIMUM_MARKINGS_PER_LIMB && length(available)),
 		))
 	return zones
 
@@ -486,6 +488,9 @@
 		"use_skintones",
 		"gender",
 		"gender_short",
+		"body_build",
+		"body_build_name",
+		"body_build_options",
 		"age",
 		"age_index",
 		"age_min",
@@ -545,7 +550,7 @@
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "PreferencesMenu", "Create Disguise", 1298, 874)
+		ui = new(user, src, "CharacterCreator", "Create Disguise", 1180, 800)
 		ui.set_autoupdate(FALSE)
 		ui.open()
 	character_setup_ensure_view(user, ui)

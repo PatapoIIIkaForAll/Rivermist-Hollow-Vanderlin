@@ -233,7 +233,8 @@ GLOBAL_LIST_INIT(colorlist, list(
 				null, \
 				span_hear("I hear something moving in water.") \
 			)
-			if(do_after(user, 1 SECONDS, src))
+			// Another paint can finish and eject the item during the wait.
+			if(do_after(user, 1 SECONDS, src) && inserted)
 				if(href_list["type"] == "detail" && isitem(inserted))
 					var/obj/item/I = inserted
 					I.detail_color = active_color
@@ -245,6 +246,8 @@ GLOBAL_LIST_INIT(colorlist, list(
 					span_notice("[user] dyes [inserted] in [src]."), \
 					span_notice("I dye [inserted] in [src]."), \
 				)
+			if(!inserted)
+				return
 			inserted.forceMove(get_turf(src))
 			inserted = null
 			icon_state = initial(icon_state)

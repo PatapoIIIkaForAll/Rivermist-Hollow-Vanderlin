@@ -119,7 +119,7 @@
 	// We should be conscious to do this, first of all...
 	if(grabbee.stat < UNCONSCIOUS)
 		// Mouth grab while we're adjacent is good
-		if(grabbee.mouth == src && grabbee.Adjacent(grabbed))
+		if(grabbee.mouth == src && grabbee.bite_reach(grabbed))
 			return TRUE
 		// Other grab requires adjacency and pull status, unless we're grabbing ourselves
 		if(grabbee.Adjacent(grabbed) && (grabbee.pulling == grabbed || grabbee == grabbed))
@@ -174,6 +174,10 @@
 				part.grabbedby -= src
 				part = null
 				sublimb_grabbed = null
+	// The zone lookup above misses detached limbs and precise zones, so drop the direct ref too.
+	if(limb_grabbed)
+		limb_grabbed.grabbedby -= src
+		limb_grabbed = null
 
 	. = ..()
 
@@ -456,6 +460,10 @@
 	to_chat(user, span_warning("I twist [C]'s [parse_zone(sublimb_grabbed)].[C.next_attack_msg.Join()]"))
 	C.next_attack_msg.Cut()
 	log_combat(user, C, "limbtwisted [sublimb_grabbed] ")
+	if(limb_grabbed?.body_zone == BODY_ZONE_HEAD && grab_state >= GRAB_AGGRESSIVE && isdullahan(C))
+		var/mob/living/carbon/human/dullahan = C
+		var/datum/species/dullahan/dullahan_species = dullahan.dna.species
+		INVOKE_ASYNC(dullahan_species, TYPE_PROC_REF(/datum/species/dullahan, try_twist_off_head), user, src)
 
 /obj/item/grabbing/proc/headbutt(mob/living/carbon/human/H)
 	var/mob/living/carbon/C = grabbed
@@ -727,7 +735,7 @@
 	return 1
 
 /obj/item/grabbing/bite/proc/bitelimb(mob/living/user) //implies limb_grabbed and sublimb are things
-	if(!user.Adjacent(grabbed))
+	if(!user.bite_reach(grabbed))
 		qdel(src)
 		return
 	if(world.time <= user.next_move)
@@ -785,13 +793,14 @@
 					span_userdanger("[user] bites my [parse_zone(sublimb_grabbed)]![C.next_attack_msg.Join()]"), span_hear("I hear a sickening sound of chewing!"), COMBAT_MESSAGE_RANGE, user)
 	to_chat(user, span_danger("I bite [C]'s [parse_zone(sublimb_grabbed)].[C.next_attack_msg.Join()]"))
 	C.next_attack_msg.Cut()
+	user.leave_lipstick_bite(C, sublimb_grabbed)
 	if(C.client && C.stat != DEAD)
 		record_round_statistic(STATS_LIMBS_BITTEN)
 	log_combat(user, C, "limb chewed [sublimb_grabbed] ")
 
 //this is for carbon mobs being drink only
 /obj/item/grabbing/bite/proc/drinklimb(mob/living/user) //implies limb_grabbed and sublimb are things
-	if(!user.Adjacent(grabbed))
+	if(!user.bite_reach(grabbed))
 		qdel(src)
 		return
 	if(world.time <= user.next_move)

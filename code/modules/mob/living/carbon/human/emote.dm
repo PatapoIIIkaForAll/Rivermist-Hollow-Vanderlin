@@ -235,12 +235,12 @@
 
 /mob/living/carbon/human/species/rakshari/verb/emote_purr()
 	set name = "Purr"
-	set category = "Emotes.Noises"
+	set category = "Emotes.Wildtongue"
 	emote("purr", intentional = TRUE)
 
 /mob/living/carbon/human/species/rakshari/verb/emote_meow()
 	set name = "Meow"
-	set category = "Emotes.Noises"
+	set category = "Emotes.Wildtongue"
 	emote("meow", intentional = TRUE)
 
 /datum/emote/living/carbon/human/rawr

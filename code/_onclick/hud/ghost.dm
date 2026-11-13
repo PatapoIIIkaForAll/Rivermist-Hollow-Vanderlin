@@ -25,7 +25,8 @@
 				if(target_job)
 					if(target_job.job_reopens_slots_on_death)
 						target_job.current_positions = max(0, target_job.current_positions - 1)
-				ghost.returntolobby(0)
+			// Spectators have no mind, but must still be able to leave.
+			ghost.returntolobby(0)
 
 /datum/hud/ghost/New(mob/owner)
 	..()

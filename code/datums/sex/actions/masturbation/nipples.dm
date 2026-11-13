@@ -55,7 +55,7 @@
 			arousal_amt = 1.3
 			pain_amt = 1.1
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "pulls at"
 			arousal_amt = 1.0
 			pain_amt = 1.9
@@ -72,7 +72,8 @@
 	user.visible_message(span_warning("[user] stops touching [user.p_their()] nipples."))
 
 /datum/sex_action/masturbate/other/nipples
-	name = "Rub their nipples"
+	name = "Nipple rubbing"
+	remote_phrase = "Rub their nipples"
 	description = "Rub their nipples, with flavor matching the shape of their chest."
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	mage_hand_overlay_zone = MAGE_HAND_ZONE_CHEST
@@ -113,7 +114,7 @@
 			arousal_amt = 1.3
 			pain_amt = 1.1
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "pulls at"
 			arousal_amt = 1.0
 			pain_amt = 1.9

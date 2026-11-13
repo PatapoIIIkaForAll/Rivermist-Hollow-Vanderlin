@@ -17,6 +17,15 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	var/limbs_icon_m
 	/// Limb icon to use to build appearance for females
 	var/limbs_icon_f
+	/// BODY_BUILD_* ids offered in character setup; null keeps limbs_icon_m and limbs_icon_f.
+	var/list/allowed_body_builds
+	/// Build used when none or an invalid one is picked, so NPCs and old saves keep their body.
+	var/default_body_build_m
+	var/default_body_build_f
+	/// BODY_PALETTE_* sprite set the builds draw from.
+	var/body_build_palette = BODY_PALETTE_SKIN
+	var/lips_state_m
+	var/lips_state_f
 	/// if alien colors are disabled, this is the color that will be used by that race
 	var/default_color = "#FFF"
 	/// List of ages that can be selected in prefs for this species
@@ -95,6 +104,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		OFFSET_TESTICLES = list(0,0),\
 		OFFSET_VAGINA = list(0,-4),\
 	)
+
+	var/list/held_item_dir_offsets
 
 	/// Type of damage overlay to use
 	var/damage_overlay_type = "human"
@@ -257,6 +268,7 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 
 	/// List of descriptor choices this species gets in preferences customization
 	var/list/descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,
 		/datum/descriptor_choice/stature,
@@ -517,6 +529,17 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		limbs_id = name
 	..()
 
+/// Voicepacks stay typepaths until first use; species copied without on_species_gain build them here.
+/datum/species/proc/get_soundpack_m()
+	if(ispath(soundpack_m))
+		soundpack_m = new soundpack_m()
+	return soundpack_m
+
+/datum/species/proc/get_soundpack_f()
+	if(ispath(soundpack_f))
+		soundpack_f = new soundpack_f()
+	return soundpack_f
+
 /datum/species/proc/after_creation(mob/living/carbon/human/H)
 	if(H.mind)
 		H.dna.species.accent_language = H.dna.species.get_accent(H.dna.species.native_language)
@@ -696,7 +719,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 			continue
 		slots_to_iterate |= slot
 	// Remove the organs from the slots they should have nothing in
-	for(var/obj/item/organ/organ in C.internal_organs)
+	// Removing shrinks the list mid-loop and skips the next organ, so walk a copy.
+	for(var/obj/item/organ/organ in C.internal_organs.Copy())
 		if(organ.slot in slots_to_iterate)
 			continue
 		if(istype(organ, /obj/item/organ/artery)) ///these are children of the limbs not to be messed with
@@ -904,7 +928,20 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	if(ishuman(C) && !pref_load)
 		random_character(C)
 	else
-		regenerate_organs(C, old_species, pref_load = pref_load)
+		// Each swapped eye or visible organ would redraw the whole body; this proc redraws once at the end.
+		var/was_building_organs = C.status_flags & BUILDING_ORGANS
+		C.status_flags |= BUILDING_ORGANS
+		try
+			regenerate_organs(C, old_species, pref_load = pref_load)
+		catch(var/exception/organ_error)
+			// A stuck flag would freeze this body's icons and limb updates for good.
+			if(!was_building_organs)
+				C.status_flags &= ~BUILDING_ORGANS
+			throw organ_error
+		if(!was_building_organs)
+			C.status_flags &= ~BUILDING_ORGANS
+			// The flag also skipped limb-supporter efficiency; the redraw and organ needs follow below.
+			C.update_limb_efficiencies()
 
 	C.mob_biotypes = inherent_biotypes
 	if(ishuman(C))
@@ -955,8 +992,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		for(var/i in inherent_factions)
 			C.set_faction(C.get_faction() + i) //Using +=/-= for this in case you also gain the faction from a different source.
 
-	soundpack_m = new soundpack_m()
-	soundpack_f = new soundpack_f()
+	get_soundpack_m()
+	get_soundpack_f()
 
 	if(C.underwear)
 		qdel(C.underwear)
@@ -976,6 +1013,9 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 
 	on_gender_update(C)
 	C.update_organ_requirements() //post species trait gains
+
+	if(held_item_dir_offsets)
+		RegisterSignal(C, COMSIG_ATOM_POST_DIR_CHANGE, PROC_REF(on_holder_dir_change))
 
 	if(!(C.status_flags & BUILDING_ORGANS))
 		C.regenerate_icons()
@@ -1029,37 +1069,34 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		for(var/i in inherent_factions)
 			C.set_faction(C.get_faction() - i)
 
+	if(held_item_dir_offsets)
+		UnregisterSignal(C, COMSIG_ATOM_POST_DIR_CHANGE)
+
 	SEND_SIGNAL(C, COMSIG_SPECIES_LOSS, src)
+
+/datum/species/proc/get_held_item_offset(mob/living/carbon/holder, hand_index)
+	var/list/hand_offsets = held_item_dir_offsets?["[holder.dir]"]
+	if(!hand_offsets)
+		return null
+	return hand_offsets[(hand_index % 2) ? 1 : 2]
+
+/datum/species/proc/on_holder_dir_change(mob/living/carbon/holder, old_dir, new_dir)
+	SIGNAL_HANDLER
+	if(old_dir == new_dir || !(locate(/obj/item) in holder.held_items))
+		return
+	holder.update_inv_hands()
 
 /datum/species/proc/handle_body(mob/living/carbon/human/H)
 	H.remove_overlay(BODY_LAYER)
 	H.remove_overlay(ABOVE_BODY_FRONT_LAYER)
 
-	var/datum/species/species = H.dna?.species
-	var/use_female_sprites = FALSE
-	var/list/offsets
-	if(species)
-		if(species.sexes)
-			if(H.gender == FEMALE && !species.swap_female_clothes || H.gender == MALE && species.swap_male_clothes)
-				use_female_sprites = FEMALE_BOOB
-		if(use_female_sprites && !(H.gender == MALE && species.swap_male_clothes_but_not_offsets))
-			offsets = species.offset_features_f
-		else
-			offsets = species.offset_features_m
-
 	var/list/standing = list()
 
-	var/obj/item/bodypart/head/HD = H.get_bodypart(BODY_ZONE_HEAD)
-
-	if(HD && !(HAS_TRAIT(H, TRAIT_HUSK)) && !HD.skeletonized)
-		// lipstick
-		if(H.lip_style && (LIPS in species_traits))
-			var/mutable_appearance/lip_overlay = mutable_appearance('icons/mob/human_face.dmi', "lips_[H.lip_style]", -BODY_LAYER)
-			lip_overlay.color = H.lip_color
-			if(LAZYACCESS(offsets, OFFSET_FACE))
-				lip_overlay.pixel_x += offsets[OFFSET_FACE][1]
-				lip_overlay.pixel_y += offsets[OFFSET_FACE][2]
-			standing += lip_overlay
+	// lipstick
+	var/mutable_appearance/lip_overlay = H.get_lips_overlay()
+	if(lip_overlay)
+		standing += lip_overlay
+	standing += H.get_lipstick_mark_overlays()
 
 	//Underwear
 	/*if(!(NO_UNDERWEAR in species_traits))
@@ -1141,6 +1178,10 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		H.losebreath = 0
 	else if((H.health < H.crit_threshold) && !HAS_TRAIT(H, TRAIT_NOCRITDAMAGE))
 		H.adjustOxyLoss(1)
+
+/// The atom a human looks through when nothing asks for a specific one. Null keeps the mob's own eyes.
+/datum/species/proc/get_default_perspective(mob/living/carbon/human/H)
+	return null
 
 /datum/species/proc/spec_death(gibbed, mob/living/carbon/human/H)
 	return
@@ -1552,6 +1593,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>I don't want to harm [target]!</span>")
 		return FALSE
+	if(user.spares_ally(target, TRUE))
+		return FALSE
 	if(target.check_block())
 		target.visible_message("<span class='warning'>[target] blocks [user]'s attack!</span>", \
 						"<span class='danger'>I block [user]'s attack!</span>", "<span class='hear'>I hear a swoosh!</span>", COMBAT_MESSAGE_RANGE, user)
@@ -1787,6 +1830,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		return
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>I don't want to harm [target]!</span>")
+		return FALSE
+	if(user.spares_ally(target, TRUE))
 		return FALSE
 	if(HAS_TRAIT(user, TRAIT_FLOORED))
 		return FALSE

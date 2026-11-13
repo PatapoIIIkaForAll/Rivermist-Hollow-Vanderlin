@@ -1,5 +1,6 @@
 /datum/sex_action/spanking
-	name = "Spank their butt"
+	name = "Spank butt"
+	remote_phrase = "Spank their butt"
 	user_menu_zone_mask = SEX_UI_ZONE_ARMS
 	target_menu_zone_mask = SEX_UI_ZONE_BODY
 	// Allow through all clothes, so no body zone accessibility check for clothing
@@ -34,7 +35,7 @@
 
 /datum/sex_action/spanking/on_perform(mob/living/user, mob/living/target)
 	. = ..()
-	var/sound = pick('sound/foley/slap.ogg', 'sound/foley/smackspecial.ogg')
+	var/sound = get_slap_sound("spank")
 	playsound(target, sound, 50, TRUE, -2, ignore_walls = FALSE)
 
 	var/msg = "[user] [get_generic_force_adjective()] spanks [target]'s butt."
@@ -46,6 +47,9 @@
 	var/pain_amt = 2 * force
 	perform_sex_action(target, user, arousal_amt, pain_amt, arousal_amt)
 	handle_passive_ejaculation(target)
+	if(ishuman(target))
+		var/mob/living/carbon/human/spanked = target
+		spanked.take_impact_mark(user, BODY_ZONE_PRECISE_GROIN, force)
 
 	// Soreness messaging depending on force
 	if(force >= SEX_FORCE_HIGH)

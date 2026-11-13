@@ -7,9 +7,7 @@
 /turf/open/floor/wood,
 /area/template_noop)
 "c" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/ruinedwood,
 /area/template_noop)
 "d" = (
@@ -37,9 +35,7 @@
 /turf/open/floor/wood,
 /area/template_noop)
 "o" = (
-/obj/structure/stairs{
-	dir = 2
-	},
+/obj/structure/stairs,
 /turf/open/floor/dirt,
 /area/template_noop)
 "q" = (

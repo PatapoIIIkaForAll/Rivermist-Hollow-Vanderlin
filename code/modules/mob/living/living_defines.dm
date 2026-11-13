@@ -92,6 +92,12 @@
 	/// Optional exact per-type climax threshold for creature content. Zero uses the deterministic
 	/// immutable base-stat fallback; player bodies normally leave this unset.
 	var/horny_defeat_threshold_override = 0
+	/// world.time TRAIT_RESTRAINED was gained, 0 while free. Captors read it before hauling bound prey.
+	var/restrained_since = 0
+	/// world.time of the last try to break bonds or a buckle. A fresh struggle delays the haul.
+	var/last_restraint_struggle = 0
+	/// REF(captor) -> world.time of its last scene action on us. Lazy; never holds the captor.
+	var/list/horny_scene_captors
 	var/timeofdeath = 0
 
 	//Allows mobs to move through dense areas without restriction. For instance, in space or out of holder objects.

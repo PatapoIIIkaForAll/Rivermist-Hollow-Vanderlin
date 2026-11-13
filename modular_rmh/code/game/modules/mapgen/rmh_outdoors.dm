@@ -73,6 +73,7 @@
 		/obj/structure/flora/grass = 70,
 		/obj/item/natural/stone = 18,
 		/obj/structure/flora/grass/herb/random = 20,
+		/obj/structure/flora/grass/pumpkin = 3,
 		/obj/item/grown/log/tree/stick = 3
 							)
 	allowed_areas = list(/area/outdoors/rmh_field)

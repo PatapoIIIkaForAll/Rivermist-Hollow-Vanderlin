@@ -35,7 +35,7 @@
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 	blade_dulling = DULLING_BASHCHOP
 	hidingspot = TRUE
-	var/mob/living/hiddenguy = null // So we can find them with fixed eye search
+	hide_preposition = "under"
 
 /obj/structure/table/Initialize()
 	. = ..()
@@ -93,33 +93,18 @@
 				user.stop_pulling()
 	return ..()
 
-/obj/structure/table/proc/hideinside(mob/living/user)
-	var/sneak_level = GET_MOB_SKILL_VALUE_OLD(user, /datum/attribute/skill/misc/sneaking) || 0
-	var/sneaktime = max(10, 50 - (sneak_level * 10)) // Hard caps at 1 second at Expert and above.
-	if(user.loc == src)
-		unhide(user)
-		return
-	if(occupied)
-		to_chat(user, span_warning("Someone is already hiding under [src]!"))
-		return
-	if(!do_after(user, sneaktime, src))
-		return
-	user.forceMove(src)
-	occupied = TRUE
-	hiddenguy = user
-	to_chat(user, span_warning("I hide under [src]!"))
+/obj/structure/table/unhide(mob/living/user)
+	// Lying hiders come out still under the table.
+	if(ishuman(user))
+		var/mob/living/carbon/human/crawler = user
+		if(crawler.fits_under_table() && !HAS_TRAIT(crawler, TRAIT_UNDER_TABLE))
+			crawler.AddComponent(/datum/component/table_crawl)
+	return ..()
 
-/obj/structure/table/proc/unhide(mob/living/user)
-	var/turf/T = get_turf(src)
-	if(!T) return
-	user.forceMove(T)
-	occupied = FALSE
-	hiddenguy = null
-	to_chat(user, span_warning("I come out from under [src]!"))
-
-/obj/structure/table/relaymove(mob/user)
-	if(user.loc == src)
-		unhide(user)
+/obj/structure/table/relaymove(mob/living/user, direction)
+	if(user.loc == src && crawl_hidden_to(user, direction))
+		return
+	return ..()
 
 /obj/structure/table/proc/after_added_effects(obj/item/item, mob/user)
 
@@ -130,6 +115,8 @@
 	if(mover.throwing)
 		return TRUE
 	if(locate(/obj/structure/table) in get_turf(mover))
+		return TRUE
+	if(HAS_TRAIT(mover, TRAIT_UNDER_TABLE))
 		return TRUE
 
 /obj/structure/table/CanAStarPass(ID, dir, requester)

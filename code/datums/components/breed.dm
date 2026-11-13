@@ -50,6 +50,8 @@
 	UnregisterSignal(parent, COMSIG_HOSTILE_PRE_ATTACKINGTARGET)
 	REMOVE_TRAIT(parent, TRAIT_MOB_BREEDER, REF(src))
 	post_birth = null
+	// Gene callbacks hold this component as an argument; keeping one makes a GC cycle.
+	override_baby = null
 
 /// Called by component on male source
 /datum/component/breed/proc/breed_with_partner(mob/living/source, mob/living/target)

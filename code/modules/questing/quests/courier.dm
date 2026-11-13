@@ -55,6 +55,10 @@
 		return item_target
 	return get_nearest_tracked_atom(reference_turf, TRUE, preferred_atom)
 
+/// The rune would carry the parcel to town for free, so a rescue with it in hand voids the contract.
+/datum/quest/courier/fails_on_rune_rescue(mob/living/carbon/rescued)
+	return is_tracked_item_carried_by(rescued)
+
 /datum/quest/courier/get_risk_score(turf/target_turf)
 	return requested_tier + 1
 

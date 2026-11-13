@@ -123,6 +123,9 @@
 ///the bee hive we live inside
 #define BB_CURRENT_HOME "BB_current_home"
 #define BB_HOME_PATH "BB_home_path"
+/// Turf an idle random walker steps back toward once it strays past BB_IDLE_LEASH_RANGE.
+#define BB_IDLE_LEASH_TURF "BB_idle_leash_turf"
+#define BB_IDLE_LEASH_RANGE "BB_idle_leash_range"
 #define BB_WEAPON_TYPE "BB_weapon_type"
 #define BB_ARMOR_CLASS "BB_armorclass"
 /// Converts a probability/second chance to probability/seconds_per_tick chance

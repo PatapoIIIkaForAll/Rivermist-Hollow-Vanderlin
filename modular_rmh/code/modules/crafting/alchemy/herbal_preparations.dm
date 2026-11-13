@@ -21,7 +21,12 @@
 
 /obj/item/alch/herb/examine(mob/user)
 	. = ..()
-	. += span_notice("It is [dried ? "fully dried and ready for decoctions or wound pastes" : "fresh; dry it on a drying rack for stronger decoctions and wound pastes"].")
+	if(dried)
+		. += span_notice("It is fully dried and ready for decoctions or wound pastes.")
+	else if(drying_progress > 0)
+		. += span_notice("It is partly dried, about [round(100 * drying_progress / drying_time)]% of the way. Finish drying it on a drying rack for stronger decoctions and wound pastes.")
+	else
+		. += span_notice("It is fresh; dry it on a drying rack for stronger decoctions and wound pastes.")
 	if(!isliving(user) || !herbal_remedy)
 		return
 	var/alchemy_skill = GET_MOB_SKILL_VALUE_OLD(user, /datum/attribute/skill/craft/alchemy)
@@ -904,7 +909,7 @@ GLOBAL_LIST_INIT(herbal_mortar_recipes, init_subtypes(/datum/herbal_mortar_recip
 		<h2>From herb to remedy</h2>
 		<p>Gather herbs from their bushes or cultivate them. Examine an herb to check whether it is fresh or dried; trained alchemists can also recognize its preparation profile.</p>
 		<h3>Drying</h3>
-		<p>A drying rack holds twelve herb bundles. In steady conditions, drying takes about ten minutes outdoors, twelve beside an indoor fire, or twenty in still indoor air. Rain pauses outdoor drying. Take finished herbs from the rack by hand.</p>
+		<p>A drying rack holds twelve herb bundles. In steady conditions, drying takes about ten minutes outdoors, twelve beside an indoor fire, or twenty in still indoor air. Rain pauses drying on a rack under open sky; a roof keeps it drying. Examine the rack to see how long its herbs still need. A herb taken off early keeps its progress. Take finished herbs from the rack by hand.</p>
 		<h3>Decoctions: drinkable medicine</h3>
 		<p>Use the herbs listed in a Herbal Decoctions recipe with 25 measures of water in a cooking pot. Place the pot on a lit fire and heat it to 80&deg;C. Close its storage to begin brewing. Each batch yields 10 measures. All herbs must be dried for full strength; any fresh herb gives half strength. Mixing finished batches preserves the weaker strength, including after pouring them between vessels.</p>
 		<p>Drink decoctions for their medicinal effects and mild calming benefit. They do not deliver their effects through soaked bandages. Euphrasia Decoction is taken orally despite the old name 'eye wash'.</p>

@@ -23,7 +23,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	GLOB.quest_scrolls -= src
 	if(assigned_quest)
 		if(!assigned_quest.complete)
-			var/refund = assigned_quest.deposit_amount || assigned_quest.calculate_deposit(assigned_quest.reward_amount)
+			var/refund = assigned_quest.deposit_amount
 			if(refund > 0)
 				var/mob/giver = assigned_quest.quest_giver_reference?.resolve()
 				if(giver && (giver in SStreasury.bank_accounts))

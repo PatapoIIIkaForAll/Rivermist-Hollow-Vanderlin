@@ -38,7 +38,7 @@
 	var/turf/t = get_turf(pawn)
 	trufflesearch(t, 5)
 
-	controller.PauseAi(0)
+	controller.ResumeAi()
 	finish_action(controller, FALSE, target_key)
 
 /datum/ai_behavior/truffle_sniff/proc/trufflesearch(turf/T, range = world.view)

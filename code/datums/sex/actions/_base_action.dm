@@ -152,17 +152,21 @@
 	var/mage_hand_allowed = FALSE
 	/// Overlay zone used by Mage Hand while this action is active.
 	var/mage_hand_overlay_zone = null
+	var/remote_phrase
 	var/sex_volume = 50 //volume for plaps
 	/// User organ slots this action works on beyond its hole and stored penis; a covered organ disables it.
 	var/list/uses_user_organs
 	/// Target organ slots this action works on; see uses_user_organs.
 	var/list/uses_target_organs
+	/// Panel refusal text set when worn armor failed a reach check, or null.
+	var/tmp/armor_refusal
 
 /datum/sex_action/Destroy()
 	if(action_user)
 		UnregisterSignal(action_user, COMSIG_SEX_CLIMAX)
 	// A scene torn down without on_finish must still free the hand on the cock.
 	unlink_penis_grip()
+	end_orifice_penetration()
 	if(scene && !QDELETED(scene))
 		scene.forget_action(src)
 	proposal_controller = null
@@ -313,9 +317,7 @@
 		stop_runtime()
 		return
 
-	var/suppress_visible_messages = begin_remote_visible_message_suppression()
-	var/start_result = on_start(action_user, action_target)
-	end_remote_visible_message_suppression(suppress_visible_messages)
+	var/start_result = run_act_hook(PROC_REF(on_start), action_user, action_target)
 	if(start_result == FALSE || !is_runtime_active())
 		stop_runtime()
 		return
@@ -362,9 +364,18 @@
 			cycle_interrupted = FALSE
 			continue
 
-		suppress_visible_messages = begin_remote_visible_message_suppression()
-		on_perform(action_user, action_target)
-		end_remote_visible_message_suppression(suppress_visible_messages)
+		// Pressing against a hole that will not take it yet replaces the thrust.
+		if(orifice_pressing && run_orifice_press_cycle(action_user, action_target))
+			send_clench_prompt()
+			continue
+
+		send_action_tick(action_user, action_target)
+		run_act_hook(PROC_REF(on_perform), action_user, action_target)
+		leave_perform_lipstick_marks()
+		on_orifice_cycle()
+		play_perform_breast_anim()
+		play_perform_motion()
+		play_furniture_noise()
 		send_clench_prompt()
 		if(!is_runtime_active())
 			break
@@ -377,7 +388,7 @@
 			sex_shack.Shake(1, 3, 15)
 
 		// Remote work stays anonymous - hearts over the caster would point straight back at them.
-		if(action_user.has_kink(KINK_VISUAL_EFFECTS) && !action_remote_context)
+		if(action_user.has_kink(KINK_VISUAL_EFFECTS) && (!action_remote_context || action_remote_context.allows_visible_messages))
 			show_sex_effects(action_user)
 
 		if(is_finished(action_user, action_target) || !continous)
@@ -423,20 +434,61 @@
 		return FALSE
 	return TRUE
 
+/// Mutes the pair under a secret remote context; returns the muted mobs for the end call.
 /datum/sex_action/proc/begin_remote_visible_message_suppression()
-	if(!get_valid_remote_context())
-		return FALSE
-	action_user?.push_visible_message_suppression()
+	var/datum/sex_remote_context/suppressing_context = get_valid_remote_context()
+	if(!suppressing_context || suppressing_context.allows_visible_messages)
+		return null
+	var/list/muted = list()
+	if(action_user)
+		muted += action_user
 	if(action_target && action_target != action_user)
-		action_target.push_visible_message_suppression()
-	return TRUE
+		muted += action_target
+	for(var/mob/living/muted_mob as anything in muted)
+		muted_mob.push_visible_message_suppression()
+	return muted
 
-/datum/sex_action/proc/end_remote_visible_message_suppression(was_suppressed)
-	if(!was_suppressed)
+/// Unmutes the mobs the begin call muted, even if the act lost its pair meanwhile.
+/datum/sex_action/proc/end_remote_visible_message_suppression(list/muted)
+	for(var/mob/living/muted_mob as anything in muted)
+		muted_mob.pop_visible_message_suppression()
+
+/// Runs an act hook inside its message scopes; a runtime in the hook still closes them.
+/datum/sex_action/proc/run_act_hook(hook, mob/living/user, mob/living/target)
+	var/list/muted = begin_remote_visible_message_suppression()
+	begin_felt_lines(user, target)
+	try
+		. = call(src, hook)(user, target)
+	catch(var/exception/hook_error)
+		end_felt_lines(user, target)
+		end_remote_visible_message_suppression(muted)
+		throw hook_error
+	end_felt_lines(user, target)
+	end_remote_visible_message_suppression(muted)
+
+/// Both bodies in the act get its lines while blind or asleep; pair with end_felt_lines().
+/datum/sex_action/proc/begin_felt_lines(mob/living/user, mob/living/target)
+	user?.push_feels_own_body()
+	if(target && target != user)
+		target.push_feels_own_body()
+
+/datum/sex_action/proc/end_felt_lines(mob/living/user, mob/living/target)
+	user?.pop_feels_own_body()
+	if(target && target != user)
+		target.pop_feels_own_body()
+
+/// on_perform() inside its message scopes, for callers outside the act runtime.
+/datum/sex_action/proc/felt_perform(mob/living/user, mob/living/target)
+	send_action_tick(user, target)
+	run_act_hook(PROC_REF(on_perform), user, target)
+
+/// Tells both bodies a beat is about to be performed; handlers must not sleep.
+/datum/sex_action/proc/send_action_tick(mob/living/user, mob/living/target)
+	if(!user || !target)
 		return
-	action_user?.pop_visible_message_suppression()
-	if(action_target && action_target != action_user)
-		action_target.pop_visible_message_suppression()
+	SEND_SIGNAL(user, COMSIG_SEX_ACTION_TICK, src, user, target)
+	if(target != user)
+		SEND_SIGNAL(target, COMSIG_SEX_ACTION_TICK, src, user, target)
 
 /// Never returns null - the result divides do_time, so an unlisted speed would be a division by zero.
 /datum/sex_action/proc/get_speed_multiplier()
@@ -449,6 +501,8 @@
 			return 2.25
 		if(SEX_SPEED_EXTREME)
 			return 3
+		if(SEX_SPEED_UNRELENTING)
+			return 3.75
 	return 1.5
 
 /datum/sex_action/proc/get_stamina_cost_multiplier()
@@ -461,6 +515,8 @@
 			return 2.0
 		if(SEX_FORCE_EXTREME)
 			return 2.5
+		if(SEX_FORCE_UNRELENTING)
+			return 3.0
 	return 1.5
 
 /**
@@ -543,6 +599,10 @@
 	return TRUE
 
 /datum/sex_action/proc/perform_sex_action(mob/living/pleasure_receiver, mob/living/partner, arousal_amt, pain_amt, orgasm_prog_amt)
+	var/through_clothes = get_through_clothes_multiplier(pleasure_receiver)
+	arousal_amt *= through_clothes
+	orgasm_prog_amt *= through_clothes
+	strain_legwear(pleasure_receiver)
 	return apply_sex_action_stimulation(
 		src,
 		action_user,
@@ -554,6 +614,24 @@
 		force,
 		speed,
 	)
+
+/// Brutal handling can snag the receiver's bare stockings.
+/datum/sex_action/proc/strain_legwear(mob/living/receiver)
+	if(!ishuman(receiver) || !prob(get_legwear_snag_chance()))
+		return
+	var/mob/living/carbon/human/human_receiver = receiver
+	human_receiver.get_exposed_legwear()?.snag(get_legwear_snag_damage(), SLASH)
+
+/// Per-cycle percent chance that this force snags bare stockings.
+/datum/sex_action/proc/get_legwear_snag_chance()
+	if(force >= SEX_FORCE_UNRELENTING)
+		return SEX_LEGWEAR_SNAG_CHANCE_UNRELENTING
+	if(force >= SEX_FORCE_EXTREME)
+		return SEX_LEGWEAR_SNAG_CHANCE
+	return 0
+
+/datum/sex_action/proc/get_legwear_snag_damage()
+	return force >= SEX_FORCE_UNRELENTING ? SEX_LEGWEAR_SNAG_DAMAGE_UNRELENTING : SEX_LEGWEAR_SNAG_DAMAGE
 
 /datum/sex_action/proc/stop_runtime()
 	scene?.stop_action(src)
@@ -611,16 +689,25 @@
 			oxyloss_multiplier = 0.5
 		if(SEX_FORCE_EXTREME)
 			oxyloss_multiplier = 1.0
+		if(SEX_FORCE_UNRELENTING)
+			oxyloss_multiplier = 1.5
 	oxyloss_amt *= oxyloss_multiplier
 	if(oxyloss_amt <= 0 || affected_target.getOxyLoss() > 30)
 		return
 	affected_target.adjustOxyLoss(oxyloss_amt)
+	// The wet choke comes as the air runs short; the emote still fires on top at the old odds.
+	if(affected_target.oxyloss >= 15 && prob(35))
+		affected_target.make_mouth_noise("choke", 40)
 	if(affected_target.oxyloss >= 25 && prob(33))
 		affected_target.emote(pick(list("gag", "choke", "gasp")), forced = TRUE)
 
 /datum/sex_action/proc/considered_limp(mob/living/limper)
 	if(QDELETED(limper))
 		return TRUE
+	// A strapon toy is always hard.
+	var/obj/item/organ/genitals/penis/penis = limper.getorganslot(ORGAN_SLOT_PENIS)
+	if(penis?.is_false_organ())
+		return FALSE
 	var/list/arousal_data = list()
 	SEND_SIGNAL(limper, COMSIG_SEX_GET_AROUSAL, arousal_data)
 	return arousal_data["arousal"] < VISIBLE_AROUSAL_THRESHOLD
@@ -635,8 +722,11 @@
 			return pick(list("roughly", "carelessly", "forcefully", "fervently", "fiercely"))
 		if(SEX_FORCE_EXTREME)
 			return pick(list("brutally", "violently", "relentlessly", "savagely", "mercilessly"))
+		if(SEX_FORCE_UNRELENTING)
+			return pick(list("unrelentingly", "ferociously", "furiously", "without pause", "without mercy"))
 
 /datum/sex_action/proc/spanify_force(string)
+	string = add_through_clothes_suffix(string)
 	switch(force)
 		if(SEX_FORCE_LOW)
 			return "<span class='love_low'>[string]</span>"
@@ -644,15 +734,19 @@
 			return "<span class='love_mid'>[string]</span>"
 		if(SEX_FORCE_HIGH)
 			return "<span class='love_high'>[string]</span>"
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			return "<span class='love_extreme'>[string]</span>"
 
 /datum/sex_action/proc/get_force_sound()
 	switch(force)
 		if(SEX_FORCE_LOW, SEX_FORCE_MID)
 			return pick(SEX_SOUNDS_SLOW)
-		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
+		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			return pick(SEX_SOUNDS_HARD)
+
+/// TRUE when this action may be used on yourself even though it normally needs a partner.
+/datum/sex_action/proc/allows_self_use(mob/living/user)
+	return FALSE
 
 /datum/sex_action/proc/can_perform(mob/living/user, mob/living/target)
 	SHOULD_CALL_PARENT(TRUE)
@@ -719,6 +813,9 @@
 	return !!get_valid_remote_context()
 
 /datum/sex_action/proc/try_knot_on_climax(mob/living/user, mob/living/target)
+	// Nothing is inside while still pressing at the opening.
+	if(orifice_pressing)
+		return FALSE
 	if(!knot_on_finish)
 		return FALSE
 	if(!can_knot)
@@ -726,6 +823,10 @@
 	if(!scene)
 		return FALSE
 	return SEND_SIGNAL(user, COMSIG_SEX_TRY_KNOT, target, force, src)
+
+/// Keeps the panel refusal line for armor on [target] that stopped [actor].
+/datum/sex_action/proc/note_armor_refusal(mob/living/target, mob/living/actor)
+	armor_refusal = target == actor ? "My armor is in the way." : "[target]'s armor is in the way."
 
 /datum/sex_action/proc/check_location_accessible(mob/living/user, mob/living/target, location = BODY_ZONE_CHEST, grabs = TRUE, skipundies = TRUE)
 	var/obj/item/bodypart/bodypart = target.get_bodypart(location)
@@ -745,17 +846,18 @@
 		if((grabstate == null || grabstate < src.required_grab_state))
 			return FALSE
 
-	var/hidden_slots = NONE
-	for(var/obj/item/I in target.get_equipped_items())
-		if(istype(I, /obj/item/clothing))
-			var/obj/item/clothing/C = I
-			if(C.armor_class > AC_LIGHT && !C.allow_erp_equipped && !C.genital_access) //ig we can use genital access as a general allower
-				hidden_slots |= C.body_parts_covered
-	if(location in cover_flags2body_zones(hidden_slots))
+	// The holes window asks the same question, so the garment rule lives on the mob.
+	var/mob/living/actor = action_user || user
+	if(target.get_sex_covering_garment(location, actor))
+		note_armor_refusal(target, actor)
 		return FALSE
 
 	if(location == BODY_ZONE_PRECISE_MOUTH)
-		return target.has_mouth() && target.mouth_is_free()
+		if(target.mouth_is_free(actor))
+			return TRUE
+		if(target.mouth_is_free(actor, ignore_armor = TRUE))
+			note_armor_refusal(target, actor)
+		return FALSE
 
 	if(!bodypart)
 		if(iscarbon(target))
@@ -797,6 +899,12 @@
 	var/datum/component/body_storage/storage_comp = target_organ.GetComponent(/datum/component/body_storage)
 	if(!storage_comp)
 		return FALSE
+
+	// Too wide is no refusal for a penetration: the act starts by pressing against the opening.
+	if(is_orifice_penetration())
+		var/width_feedback = target_organ.get_body_storage_width_feedback(item_to_check, STORAGE_LAYER_INNER, force)
+		if(width_feedback != INSERT_FEEDBACK_OK && width_feedback != INSERT_FEEDBACK_OK_FORCE)
+			return TRUE
 
 	var/fit_result = storage_comp.check_fit(target_organ, item_to_check, STORAGE_LAYER_INNER, force)
 	switch(fit_result)
@@ -853,6 +961,14 @@
 		if(stored_item_name)
 			item_to_store.name = stored_item_name
 
+	item_to_store.on_penetration_standin_created(src)
+	// Too wide for the opening: the act starts by pressing against it instead of failing.
+	var/width_feedback = target_o.get_body_storage_width_feedback(item_to_store, STORAGE_LAYER_INNER, use_force)
+	if(width_feedback != INSERT_FEEDBACK_OK && width_feedback != INSERT_FEEDBACK_OK_FORCE)
+		qdel(item_to_store)
+		begin_orifice_pressing(user, target, width_feedback)
+		return TRUE
+
 	// Try to fit it in the hole
 	var/success = SEND_SIGNAL(target_o, COMSIG_BODYSTORAGE_TRY_INSERT, item_to_store, STORAGE_LAYER_INNER, use_force)
 	switch(success)
@@ -885,9 +1001,9 @@
 
 		if(INSERT_FEEDBACK_TRY_FORCE)
 			if(self)
-				to_chat(user, spanify_force("I feel like \the [item_to_store.name] might fit in my [hole_id] if I just use more force."))
+				to_chat(user, spanify_force("I feel like \the [item_to_store.name] might fit in my [hole_id] with more force, or something slick."))
 			else
-				user.visible_message(spanify_force("I feel like my [item_to_store.name] might fit in [target]'s [hole_id] if I just use more force."))
+				user.visible_message(spanify_force("I feel like my [item_to_store.name] might fit in [target]'s [hole_id] with more force, or something slick."))
 			SEND_SIGNAL(target_o, COMSIG_BODYSTORAGE_FORCE_REMOVE, item_to_store, STORAGE_LAYER_INNER)
 			addtimer(CALLBACK(src, PROC_REF(qdel), item_to_store), 2)
 			return FALSE
@@ -975,6 +1091,7 @@
 				return FALSE
 	lock_sex_object(user, target)
 	sync_penis_grip(user, target)
+	begin_orifice_penetration(user, target)
 	sex_volume = initial(sex_volume)
 	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
 		sex_volume *= 0.5
@@ -997,6 +1114,7 @@
 			remove_from_hole(target, user)
 		else
 			remove_from_hole(user, target)
+	end_orifice_penetration()
 	unlink_penis_grip()
 	unlock_sex_object(user, target)
 	sex_volume = initial(sex_volume)
@@ -1082,7 +1200,9 @@
 
 
 /datum/sex_action/proc/can_show_action_message(mob/living/user, mob/living/target)
-	if(can_mage_hand_reach(user, target))
+	// Secret contexts (the mage hand) stay silent; open ones (a held head) keep talking.
+	var/datum/sex_remote_context/message_context = get_valid_remote_context()
+	if(message_context && !message_context.allows_visible_messages)
 		return FALSE
 	if(user && (user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)) //stealth sex les go
 		return FALSE

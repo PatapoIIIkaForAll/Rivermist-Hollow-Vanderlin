@@ -1,4 +1,4 @@
-/datum/quirk/vice/addiction/lovefiend
+/datum/quirk/negative/addiction/lovefiend
 	name = "Nymphomaniac"
 	desc = "I must make love!"
 	time = 40 MINUTES
@@ -7,7 +7,7 @@
 	point_value = 3
 	debuff = /datum/status_effect/debuff/addiction/lovefiend
 
-/datum/quirk/vice/addiction/sadist
+/datum/quirk/negative/addiction/sadist
 	name = "Sadist"
 	desc = "There is no greater pleasure than the suffering of another."
 	time = 2 HOURS
@@ -27,8 +27,3 @@
 /atom/movable/screen/alert/status_effect/debuff/addiction/lovefiend
 	name = "Nymphomaniac Craving"
 	desc = "I need intimacy."
-
-// Hidden until existing saves have been migrated to the addiction subtype.
-/datum/quirk/vice/lovefiend
-	parent_type = /datum/quirk/vice/addiction/lovefiend
-	abstract_type = /datum/quirk/vice/lovefiend

@@ -110,7 +110,8 @@
 
 /mob/living/carbon/human/species/zizombie/proc/configure_mind()
 	if(!mind)
-		mind = new /datum/mind(src)
+		// No key: a keyed mind looks like a logged-off player, and ERP refuses those.
+		mind = new /datum/mind()
 	attributes?.add_sheet(/datum/attribute_holder/sheet/job/zizombie)
 
 
@@ -151,6 +152,7 @@
 	name = "zizombie"
 	real_name = "zizombie"
 	mob_biotypes |= MOB_UNDEAD
+	add_undead_burning()
 	ADD_TRAIT(src, TRAIT_NOSTAMINA, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)

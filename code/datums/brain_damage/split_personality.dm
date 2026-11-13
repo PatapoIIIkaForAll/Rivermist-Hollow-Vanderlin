@@ -32,9 +32,10 @@
 
 /datum/brain_trauma/severe/split_personality/proc/get_ghost()
 	set waitfor = FALSE
-	var/list/mob/dead/observer/candidates = pollCandidatesForMob("Do you want to play as [owner]'s split personality?", ROLE_ASPIRANT, null, null, 75, stranger_backseat, POLL_IGNORE_SPLITPERSONALITY)
+	var/list/mob/candidates = pollCandidatesForMob("Do you want to play as [owner]'s split personality?", ROLE_ASPIRANT, null, null, 75, stranger_backseat, POLL_IGNORE_SPLITPERSONALITY)
 	if(LAZYLEN(candidates))
-		var/mob/dead/observer/C = pick(candidates)
+		var/mob/C = pick(candidates)
+		C.leave_lobby_for_role()
 		stranger_backseat.key = C.key
 		log_game("[key_name(stranger_backseat)] became [key_name(owner)]'s split personality.")
 		message_admins("[ADMIN_LOOKUPFLW(stranger_backseat)] became [ADMIN_LOOKUPFLW(owner)]'s split personality.")
@@ -135,6 +136,7 @@
 /mob/living/split_personality/Life()
 	if(QDELETED(body))
 		qdel(src) //in case trauma deletion doesn't already do it
+		return
 
 	if((body.stat == DEAD && trauma.owner_backseat == src))
 		trauma.switch_personalities()
@@ -195,9 +197,10 @@
 
 /datum/brain_trauma/severe/split_personality/brainwashing/get_ghost()
 	set waitfor = FALSE
-	var/list/mob/dead/observer/candidates = pollCandidatesForMob("Do you want to play as [owner]'s brainwashed mind?", null, null, null, 75, stranger_backseat)
+	var/list/mob/candidates = pollCandidatesForMob("Do you want to play as [owner]'s brainwashed mind?", null, null, null, 75, stranger_backseat)
 	if(LAZYLEN(candidates))
-		var/mob/dead/observer/C = pick(candidates)
+		var/mob/C = pick(candidates)
+		C.leave_lobby_for_role()
 		stranger_backseat.key = C.key
 	else
 		qdel(src)

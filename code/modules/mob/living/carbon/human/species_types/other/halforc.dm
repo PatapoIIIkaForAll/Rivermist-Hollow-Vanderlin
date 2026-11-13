@@ -58,6 +58,9 @@
 
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mt_muscular.dmi'
 	limbs_icon_f = 'icons/roguetown/mob/bodies/f/ft_muscular.dmi'
+	allowed_body_builds = HUMANOID_BODY_BUILDS
+	default_body_build_m = BODY_BUILD_MUSCULAR
+	default_body_build_f = BODY_BUILD_MUSCULAR
 
 	dam_icon_f = 'icons/roguetown/mob/bodies/dam/dam_male.dmi'
 
@@ -105,11 +108,14 @@
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/genitals/penis/anthro,
 		/datum/customizer/organ/genitals/vagina/anthro,
+		/datum/customizer/organ/genitals/womb,
 		/datum/customizer/organ/genitals/breasts/human,
 		/datum/customizer/organ/genitals/belly/animal,
 		/datum/customizer/organ/genitals/butt/animal,
 		/datum/customizer/organ/genitals/testicles/anthro,
+		/datum/customizer/bodypart_feature/body_hair/optional,
 		/datum/customizer/bodypart_feature/pubic_hair,
+		/datum/customizer/bodypart_feature/armpit_hair/enabled,
 	)
 
 	bodypart_features = list(

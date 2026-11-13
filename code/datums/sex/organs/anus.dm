@@ -25,7 +25,6 @@
 	blocker = ITEM_SLOT_PANTS
 	bloatable = TRUE
 	additional_blocker = "underwear"
-	stretchable = TRUE
 	drips_as_drops = TRUE
 
 /obj/item/organ/genitals/filling_organ/anus/Insert(mob/living/M, special, drop_if_replaced, new_zone = null)

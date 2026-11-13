@@ -43,7 +43,7 @@
 	for(var/mob/target in players)
 		if(!isnewplayer(target) && target.can_hear())
 			to_chat(target, announcement)
-			if((target.client.prefs.read_preference(/datum/preference/bitwise/toggles) & SOUND_ANNOUNCEMENTS) && sound_to_play)
+			if((target.client?.prefs?.read_preference(/datum/preference/bitwise/toggles) & SOUND_ANNOUNCEMENTS) && sound_to_play)
 				target.playsound_local(target, sound_to_play, 100)
 
 /proc/minor_announce(message, title = "", alert, html_encode = TRUE, list/mob/players)

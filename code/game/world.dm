@@ -165,6 +165,11 @@ GLOBAL_VAR(restart_counter)
 	// log which is ultimately public.
 	log_runtime(GLOB.revdata.get_log_message())
 
+	// Startup runtimes went to the temporary log, which became config_error.log.
+	for(var/early_runtime in GLOB.early_runtime_logs)
+		log_runtime(early_runtime)
+	GLOB.early_runtime_logs = null
+
 /proc/set_db_log_directory()
 	set waitfor = FALSE
 	if(!GLOB.round_id || !SSdbcore.IsConnected())

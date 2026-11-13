@@ -203,7 +203,7 @@
 
 /obj/item/natural/stone/examine(mob/user)
 	. = ..()
-	if(user.mana_pool.amount >= STONE_TRANSFORMATION_MANA_COST)
+	if(user.mana_pool?.amount >= STONE_TRANSFORMATION_MANA_COST)
 		. += span_notice("RMB in hand to tranform [src] into the waystone chunk.")
 
 /obj/item/natural/stone/attack_self_secondary(mob/user, list/modifiers)

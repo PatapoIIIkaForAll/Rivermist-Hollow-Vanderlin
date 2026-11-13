@@ -61,6 +61,7 @@
 		/datum/pet_command/rescue_owner,
 		/datum/pet_command/aggressive,
 		/datum/pet_command/calm,
+		/datum/pet_command/pet_breed_other,
 	)
 	if(!spider.GetComponent(/datum/component/obeys_commands))
 		spider.AddComponent(/datum/component/obeys_commands, pet_commands)

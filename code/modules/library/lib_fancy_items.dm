@@ -49,46 +49,6 @@
 			I.forceMove(src)
 	update_appearance(UPDATE_ICON_STATE)
 
-/obj/structure/bookcase/fancy/attack_hand(mob/living/user)
-	. = ..()
-	if(.)
-		return
-	if(!istype(user))
-		return
-	if(contents.len)
-		var/obj/item/book/choice = input(user, "Which book would you like to remove from the shelf?") as null|obj in contents.Copy()
-		if(!choice || QDELETED(src) || QDELETED(user) || choice.loc != src)
-			return
-		if(!(user.mobility_flags & MOBILITY_USE) || user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED) || !in_range(loc, user))
-			return
-		if(ishuman(user))
-			if(!user.get_active_held_item())
-				user.put_in_hands(choice)
-		else
-			choice.forceMove(drop_location())
-		update_appearance(UPDATE_ICON_STATE)
-
-/obj/structure/bookcase/fancy/update_icon_state()
-	if((length(contents) >= 1) && (length(contents) <= 15))
-		icon_state = "[based][length(contents)]"
-	else
-		icon_state = "fancybookcase"
-	return ..()
-
-/obj/structure/bookcase/fancy/attackby(obj/item/I, mob/user, list/modifiers)
-	. = ..()
-	if(!is_type_in_list(I, allowed_books))
-		return
-	if(length(contents) >= 15)
-		return
-	user.visible_message("[user] starts to put [I] into [src].", "You start to put [I] into [src].")
-	if(!do_after(user, 0.75 SECONDS, src))
-		return
-	if(QDELETED(I) || QDELETED(user) || I.loc != user)
-		return
-	I.forceMove(src)
-	update_appearance(UPDATE_ICON_STATE)
-
 /obj/structure/bookcase/fancy/random_recipes
 	var/random_books = 4
 

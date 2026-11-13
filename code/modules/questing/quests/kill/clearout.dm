@@ -6,7 +6,6 @@
 	count_max = 6
 	minimum_tier = QUEST_TIER_RISKY
 	maximum_tier = QUEST_TIER_DEADLY
-	base_reward_value = QUEST_BASE_REWARD_CLEAR_OUT
 	type_risk_bonus = QUEST_CLEAR_OUT_RISK_BONUS
 
 /datum/quest/kill/clearout/get_title()

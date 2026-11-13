@@ -376,7 +376,8 @@
 /// A pattern shaped to a sprite: the sprite's silhouette filled white, then multiplied by the pattern.
 /proc/get_clipped_fluid_pattern(icon_file, icon_state, pattern_file, pattern_state, single_dir = FALSE)
 	var/static/list/pattern_cache = list()
-	var/cache_key = "[icon_file]|[icon_state]|[pattern_file]|[pattern_state]|[single_dir]"
+	// Generated icons all print as "", so key on the reference instead.
+	var/cache_key = "[REF(icon_file)]|[icon_state]|[pattern_file]|[pattern_state]|[single_dir]"
 	. = pattern_cache[cache_key]
 	if(.)
 		return

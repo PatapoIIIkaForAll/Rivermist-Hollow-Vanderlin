@@ -22,6 +22,16 @@
 	if(pref_species && islist(customizer_entries))
 		validate_customizer_entries()
 
+/// Rewrites quirk paths from before the positive/negative/neutral rename in saved or exported text.
+/proc/migrate_legacy_quirk_text(text)
+	var/static/regex/old_addictions = regex(@"/datum/quirk/vice/(alcoholic|smoker|junkie|kleptomaniac|godfearing|sadist|lovefiend|masochist)\b", "g")
+	var/static/regex/old_maniac = regex(@"/datum/quirk/vice/maniac\b", "g")
+	text = old_addictions.Replace(text, "/datum/quirk/negative/addiction/$1")
+	text = old_maniac.Replace(text, "/datum/quirk/negative/addiction/sadist")
+	text = replacetext(text, "/datum/quirk/vice/", "/datum/quirk/negative/")
+	text = replacetext(text, "/datum/quirk/boon/", "/datum/quirk/positive/")
+	return replacetext(text, "/datum/quirk/peculiarity/", "/datum/quirk/neutral/")
+
 /// Fills the quirk lists from the savefile without validating them. Returns FALSE when the slot has no quirk data.
 /datum/preferences/proc/read_saved_quirks(savefile/S)
 	quirks = list()
@@ -30,18 +40,6 @@
 
 	var/list/quirk_data
 	S["quirks"] >> quirk_data
-	var/static/list/legacy_addiction_paths = list(
-		/datum/quirk/vice/alcoholic = /datum/quirk/vice/addiction/alcoholic,
-		/datum/quirk/vice/smoker = /datum/quirk/vice/addiction/smoker,
-		/datum/quirk/vice/junkie = /datum/quirk/vice/addiction/junkie,
-		/datum/quirk/vice/pyromaniac = /datum/quirk/vice/addiction/pyromaniac,
-		/datum/quirk/vice/kleptomaniac = /datum/quirk/vice/addiction/kleptomaniac,
-		/datum/quirk/vice/godfearing = /datum/quirk/vice/addiction/godfearing,
-		/datum/quirk/vice/maniac = /datum/quirk/vice/addiction/sadist,
-		/datum/quirk/vice/sadist = /datum/quirk/vice/addiction/sadist,
-		/datum/quirk/vice/lovefiend = /datum/quirk/vice/addiction/lovefiend,
-		/datum/quirk/vice/masochist = /datum/quirk/vice/addiction/masochist,
-	)
 
 	if(!islist(quirk_data))
 		return FALSE
@@ -50,7 +48,6 @@
 		if(!islist(entry))
 			continue
 		var/quirk_type = entry["type"]
-		quirk_type = legacy_addiction_paths[quirk_type] || quirk_type
 		var/custom_val = entry["value"]
 		var/list/extra_val = entry["extra"]
 
@@ -161,7 +158,7 @@
 
 	// Check boon limit
 	var/boon_count = count_boons_in_list()
-	while(boon_count > MAX_BOONS)
+	while(boon_count > MAX_POSITIVE)
 		var/datum/quirk/first_boon = find_first_boon()
 		if(first_boon)
 			quirks -= first_boon
@@ -179,17 +176,19 @@
 			valid_extra_customizations[quirk_type] = extra_values.Copy()
 	quirk_customizations = valid_customizations
 	quirk_extra_customizations = valid_extra_customizations
+	trim_unaffordable_prosthetics() // RMH EDIT
 
 /datum/preferences/proc/calculate_quirk_balance()
 	var/balance = STARTING_QUIRK_POINTS
 	for(var/datum/quirk/quirk as anything in quirks)
 		balance += initial(quirk.point_value)
+	balance += prosthetic_point_value() // RMH EDIT - Prosthetics window choices share the quirk balance
 	return balance
 
 /datum/preferences/proc/count_boons_in_list()
 	var/count = 0
 	for(var/datum/quirk/quirk as anything in quirks)
-		if(initial(quirk.quirk_category) == QUIRK_BOON)
+		if(initial(quirk.quirk_category) == QUIRK_POSITIVE)
 			count++
 	return count
 
@@ -197,7 +196,7 @@
 	var/most_expensive = null
 	var/lowest_value = 0
 	for(var/datum/quirk/quirk as anything in quirks)
-		if(initial(quirk.quirk_category) == QUIRK_BOON)
+		if(initial(quirk.quirk_category) == QUIRK_POSITIVE)
 			if(initial(quirk.point_value) < lowest_value)
 				lowest_value = initial(quirk.point_value)
 				most_expensive = quirk
@@ -205,53 +204,49 @@
 
 /datum/preferences/proc/find_first_boon()
 	for(var/datum/quirk/quirk in quirks)
-		if(initial(quirk.quirk_category) == QUIRK_BOON)
+		if(initial(quirk.quirk_category) == QUIRK_POSITIVE)
 			return quirk
 	return null
 
 /datum/preferences/proc/can_add_quirk(quirk_type)
-	if(!ispath(quirk_type, /datum/quirk))
-		return FALSE
+	return isnull(quirk_refusal_reason(quirk_type))
 
-	// Check if already have this quirk
+/// Plain sentence saying why this character cannot take quirk_type, or null when it can.
+/datum/preferences/proc/quirk_refusal_reason(quirk_type)
+	var/datum/quirk/singleton = ispath(quirk_type, /datum/quirk) ? GLOB.quirk_singletons[quirk_type] : null
+	if(!singleton)
+		return "That quirk does not exist."
 	if(quirk_type in quirks)
-		return FALSE
-
-	var/datum/quirk/new_quirk = quirk_type
-
-	// Check if quirk is available for this character
-	var/datum/quirk/temp_quirk = new quirk_type()
-	if(!temp_quirk.is_available(src))
-		qdel(temp_quirk)
-		return FALSE
-	qdel(temp_quirk)
-
-	// Check boon limit
-	if(initial(new_quirk.quirk_category) == QUIRK_BOON)
-		if(count_boons_in_list() >= MAX_BOONS)
-			return FALSE
-
-	// Check point balance
+		return "You already have [singleton.name]."
+	if(!singleton.is_available(src))
+		return quirk_unavailable_reason(singleton)
+	if(singleton.quirk_category == QUIRK_POSITIVE && count_boons_in_list() >= MAX_POSITIVE)
+		return "You cannot take more than [MAX_POSITIVE] positive quirks."
 	var/balance = calculate_quirk_balance()
-	if(initial(new_quirk.point_value) < 0) // Costs points
-		if(balance + initial(new_quirk.point_value) < 0)
-			return FALSE
+	if(singleton.point_value < 0 && balance + singleton.point_value < 0)
+		return "Not enough quirk points: [singleton.name] costs [-singleton.point_value], you have [balance]."
+	for(var/existing_type in quirks)
+		var/datum/quirk/existing = GLOB.quirk_singletons[existing_type]
+		if((existing_type in singleton.incompatible_quirks) || (existing && (quirk_type in existing.incompatible_quirks)))
+			return "[singleton.name] conflicts with [existing ? existing.name : "a quirk you have"]."
+	return null
 
-	// Check incompatibilities
-	var/datum/quirk/singleton = GLOB.quirk_singletons[new_quirk]
-	var/list/incompatible = singleton.incompatible_quirks
-	for(var/quirk_type_existing in quirks)
-		if(quirk_type_existing in incompatible)
-			return FALSE
-		var/datum/quirk/existing_singleton = GLOB.quirk_singletons[quirk_type_existing]
-		var/list/existing_incompatible = existing_singleton.incompatible_quirks
-		if(quirk_type in existing_incompatible)
-			return FALSE
+/// Names the failed age or species gate of is_available(); other gates get a general line.
+/datum/preferences/proc/quirk_unavailable_reason(datum/quirk/singleton)
+	var/age = read_preference(/datum/preference/choiced/age)
+	if((length(singleton.allowed_ages) && !(age in singleton.allowed_ages)) || (age in singleton.blocked_ages))
+		return "[singleton.name] is not available at your character's age."
+	var/species_type = pref_species?.type
+	if((length(singleton.allowed_species) && !(species_type in singleton.allowed_species)) || (species_type in singleton.blocked_species))
+		return "[singleton.name] is not available to the [pref_species.name] species."
+	return "[singleton.name] does not fit your character's current setup."
 
-	return TRUE
-
-/datum/preferences/proc/add_quirk(quirk_type, custom_value = null)
-	if(!can_add_quirk(quirk_type))
+/// Adds quirk_type; when refused, tells user why in chat.
+/datum/preferences/proc/add_quirk(quirk_type, custom_value = null, mob/user = null)
+	var/refusal = quirk_refusal_reason(quirk_type)
+	if(refusal)
+		if(user)
+			to_chat(user, span_warning(refusal))
 		return FALSE
 	quirks += quirk_type
 	if(custom_value)
@@ -312,7 +307,7 @@
 			continue
 
 		// Special handling for backstory quirk
-		if(istype(Q, /datum/quirk/boon/backstory))
+		if(istype(Q, /datum/quirk/positive/backstory))
 			var/custom_val = quirk_customizations[quirk_type]
 			if(custom_val && ispath(custom_val, /datum/backstory))
 				var/datum/backstory/B = new custom_val()
@@ -377,7 +372,7 @@
 	dat += "<div class='quirk-stats'>"
 	dat += "<span class='stat-label'>Point Balance:</span> <span class='stat-value [balance < 0 ? "negative" : ""]'>[balance]</span>"
 	dat += "<span class='stat-separator'>|</span>"
-	dat += "<span class='stat-label'>Boons:</span> <span class='stat-value [boon_count >= MAX_BOONS ? "at-limit" : ""]'>[boon_count]/[MAX_BOONS]</span>"
+	dat += "<span class='stat-label'>Positive:</span> <span class='stat-value [boon_count >= MAX_POSITIVE ? "at-limit" : ""]'>[boon_count]/[MAX_POSITIVE]</span>"
 	dat += "</div>"
 	dat += "<div class='quirk-actions'>"
 	dat += "<a href='byond://?src=\ref[src];quirk_clear=1' class='action-button clear-button'>Clear All</a>"
@@ -393,9 +388,9 @@
 
 	// Tab navigation
 	dat += "<div class='quirk-tabs'>"
-	dat += "<button class='tab-button active' data-tab='boons'>Boons</button>"
-	dat += "<button class='tab-button' data-tab='vices'>Vices</button>"
-	dat += "<button class='tab-button' data-tab='peculiarities'>Peculiarities</button>"
+	dat += "<button class='tab-button active' data-tab='boons'>Positive</button>"
+	dat += "<button class='tab-button' data-tab='vices'>Negative</button>"
+	dat += "<button class='tab-button' data-tab='peculiarities'>Neutral</button>"
 	dat += "</div>"
 
 	// Tab content
@@ -403,17 +398,17 @@
 
 	// Boons tab
 	dat += "<div class='tab-panel active' id='tab-boons'>"
-	dat += get_quirk_category_content(QUIRK_BOON, "boon")
+	dat += get_quirk_category_content(QUIRK_POSITIVE, "positive")
 	dat += "</div>"
 
 	// Vices tab
 	dat += "<div class='tab-panel' id='tab-vices'>"
-	dat += get_quirk_category_content(QUIRK_VICE, "vice")
+	dat += get_quirk_category_content(QUIRK_NEGATIVE, "negative")
 	dat += "</div>"
 
 	// Peculiarities tab
 	dat += "<div class='tab-panel' id='tab-peculiarities'>"
-	dat += get_quirk_category_content(QUIRK_PECULIARITY, "peculiarity")
+	dat += get_quirk_category_content(QUIRK_NEUTRAL, "neutral")
 	dat += "</div>"
 
 	dat += "</div>" // tab-panels
@@ -439,7 +434,8 @@
 		var/is_selected = FALSE
 		if(quirk_type in quirks)
 			is_selected = TRUE
-		var/can_add = can_add_quirk(quirk_type)
+		var/refusal = is_selected ? null : quirk_refusal_reason(quirk_type)
+		var/can_add = isnull(refusal)
 
 		var/card_classes = "quirk-card [category_class]"
 		if(is_selected)
@@ -458,7 +454,7 @@
 		if(is_selected)
 			dat += "<div class='quirk-status'>Selected</div>"
 		else if(!can_add)
-			dat += "<div class='quirk-status disabled-text'>Cannot add</div>"
+			dat += "<div class='quirk-status disabled-text'>[html_encode(refusal)]</div>"
 		dat += "</div>"
 
 	dat += "</div>"
@@ -476,12 +472,12 @@
 		var/category_class = ""
 
 		switch(category)
-			if(QUIRK_BOON)
-				category_class = "boon"
-			if(QUIRK_VICE)
-				category_class = "vice"
-			if(QUIRK_PECULIARITY)
-				category_class = "peculiarity"
+			if(QUIRK_POSITIVE)
+				category_class = "positive"
+			if(QUIRK_NEGATIVE)
+				category_class = "negative"
+			if(QUIRK_NEUTRAL)
+				category_class = "neutral"
 
 		dat += "<div class='quirk-card [category_class] selected' data-quirk='\ref[quirk_type]'>"
 		dat += "<div class='quirk-card-header'>"
@@ -599,8 +595,8 @@
 	if(href_list["quirk_add"])
 		var/quirk_ref = locate(href_list["quirk_add"])
 		if(quirk_ref && ispath(quirk_ref, /datum/quirk))
-			prefs.add_quirk(quirk_ref)
-			prefs.open_quirk_menu(usr)
+			if(prefs.add_quirk(quirk_ref, user = usr))
+				prefs.open_quirk_menu(usr)
 		return TRUE
 
 	if(href_list["quirk_remove"])

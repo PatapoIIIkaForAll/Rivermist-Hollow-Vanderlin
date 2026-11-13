@@ -28,6 +28,7 @@
 	name = "Gnoll Champion"
 	id = "gnoll_champion"
 	desc = "A fully mature, supernatural champion of Gorellik's living pack."
+	changesource_flags = WABBAJACK
 	possible_ages = list(AGE_ADULT, AGE_MIDDLEAGED, AGE_OLD)
 	species_traits = list(NO_UNDERWEAR, NO_ORGAN_FEATURES, NO_BODYPART_FEATURES, NOEYESPRITES)
 	inherent_traits = list(TRAIT_LONGSTRIDER, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_HARDDISMEMBER, TRAIT_STEELHEARTED, TRAIT_STRONGBITE)
@@ -66,6 +67,13 @@
 	. = ..()
 	organs = organs.Copy()
 	organs[ORGAN_SLOT_EYES] = /obj/item/organ/eyes/night_vision/werewolf
+	var/static/list/paw_offsets = list(
+		"[SOUTH]" = list(list(9, 6), list(8, 5)),
+		"[NORTH]" = list(list(8, 5), list(9, 6)),
+		"[EAST]" = list(list(11, 4), list(4, 3)),
+		"[WEST]" = list(list(12, 3), list(6, 4)),
+	)
+	held_item_dir_offsets = paw_offsets
 
 /datum/species/gnoll_champion/check_roundstart_eligible()
 	return FALSE

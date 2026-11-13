@@ -1494,7 +1494,10 @@ GLOBAL_LIST_INIT(freon_color_matrix, list("#2E5E69", "#60A2A8", "#A1AFB1", rgb(0
 	if(is_valid_dmi_file(file_string) && fexists(file_string))
 		var/rustg_states = rustg_dmi_icon_states(file_string)
 		if(rustg_json_is_valid(rustg_states))
-			return json_decode(rustg_states)
+			var/list/states = json_decode(rustg_states)
+			// rust_g reads some sheets as empty; BYOND still knows their states, so only trust a non-empty answer.
+			if(length(states))
+				return states
 
 	return icon_states(file)
 

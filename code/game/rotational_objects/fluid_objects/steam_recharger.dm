@@ -71,7 +71,7 @@
 		return
 
 	var/mob/living/carbon/human/H = placed_mob
-	if(!istype(H.dna?.species, /datum/species/automaton))
+	if(!H.GetComponent(/datum/component/steam_life))
 		visible_message(span_warning("[src] ejects [H] - incompatible lifeform!"))
 		remove_placed_mob()
 		return
@@ -224,8 +224,8 @@
 	if(!ishuman(automaton))
 		return
 
-	if(!istype(automaton.dna?.species, /datum/species/automaton))
-		to_chat(user, span_warning("[automaton] is not an automaton!"))
+	if(!automaton.GetComponent(/datum/component/steam_life))
+		to_chat(user, span_warning("[automaton] has no steam engine to charge!"))
 		return
 
 	if(placed_atom || placed_mob)

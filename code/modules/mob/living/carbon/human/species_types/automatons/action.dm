@@ -90,21 +90,20 @@ GLOBAL_LIST_INIT(automaton_voice_lines, list(
 /datum/action/automaton_voice/Trigger(trigger_flags)
 	if(!ishuman(owner))
 		return
-
 	var/mob/living/carbon/human/H = owner
-	if(!istype(H.dna?.species, /datum/species/automaton))
-		return
+	H.play_voice_line(voice_line_key)
 
-	if(H.stat >= UNCONSCIOUS)
-		to_chat(H, span_warning("SYSTEMS OFFLINE - UNABLE TO VOCALIZE"))
+/mob/living/carbon/human/proc/play_voice_line(voice_key)
+	if(!istype(dna?.species, /datum/species/automaton))
 		return
-
-	var/list/voice_data = GLOB.automaton_voice_lines[voice_line_key]
+	if(stat >= UNCONSCIOUS)
+		to_chat(src, span_warning("SYSTEMS OFFLINE - UNABLE TO VOCALIZE"))
+		return
+	var/list/voice_data = GLOB.automaton_voice_lines[voice_key]
 	if(!voice_data)
 		return
-
-	playsound(H, voice_data["file"], 70, FALSE)
-	H.say(voice_data["text"], forced = TRUE)
+	playsound(src, voice_data["file"], 70, FALSE)
+	say(voice_data["text"], forced = TRUE)
 
 /datum/action/manage_voice_actions
 	name = "Manage Voice Lines"

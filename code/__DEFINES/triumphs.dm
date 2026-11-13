@@ -10,7 +10,6 @@
 // Character category and its buys
 #define TRIUMPH_CAT_CHALLENGES "CHALLENGES"
 
-#define TRIUMPH_BUY_LEPROSY "leprosy"
 #define TRIUMPH_BUY_CURSE "curse"
 
 // Storyteller category and its buys

@@ -20,6 +20,10 @@
 //	move_resist = MOVE_FORCE_STRONG
 	var/hidingspot = FALSE //safety measures, dw about it
 	var/occupied = FALSE
+	/// Who hides inside us, so look-around can find them.
+	var/mob/living/hiddenguy
+	/// Where hiders go, for messages: "in", "under" or "behind".
+	var/hide_preposition = "in"
 
 /obj/structure/Initialize()
 	. = ..()
@@ -81,7 +85,7 @@
 	. = ..()
 	if(isliving(AM) && !AM.throwing)
 		var/mob/living/user = AM
-		if(climb_offset)
+		if(climb_offset && !HAS_TRAIT(user, TRAIT_UNDER_TABLE))
 			user.set_mob_offsets("structure_climb", _x = 0, _y = climb_offset)
 
 /obj/structure/Uncrossed(atom/movable/AM)
@@ -90,6 +94,49 @@
 		var/mob/living/user = AM
 		if(climb_offset)
 			user.reset_offsets("structure_climb")
+
+/// Sneak hiding for hidingspot structures: hides the user inside us, or lets them out.
+/obj/structure/proc/hideinside(mob/living/user)
+	if(user.loc == src)
+		unhide(user)
+		return
+	if(occupied)
+		to_chat(user, span_warning("Someone is already hiding [hide_preposition] [src]!"))
+		return
+	var/sneak_level = GET_MOB_SKILL_VALUE_OLD(user, /datum/attribute/skill/misc/sneaking) || 0
+	var/sneaktime = max(10, 50 - (sneak_level * 10)) // Hard caps at 1 second at Expert and above.
+	if(!do_after(user, sneaktime, src))
+		return
+	if(occupied || !isturf(loc))
+		return
+	take_hider(user)
+	to_chat(user, span_warning("I hide [hide_preposition] [src]!"))
+
+/obj/structure/proc/take_hider(mob/living/user)
+	user.forceMove(src)
+	occupied = TRUE
+	hiddenguy = user
+
+/obj/structure/proc/unhide(mob/living/user)
+	var/turf/our_turf = get_turf(src)
+	if(!our_turf)
+		return
+	user.forceMove(our_turf)
+	to_chat(user, span_warning("I come out from [hide_preposition == "in" ? "" : "[hide_preposition] "][src]!"))
+
+// Hiding spots never nag mobs buckled to them, as the old per-type copies did.
+/obj/structure/relaymove(mob/living/user, direction)
+	if(!hidingspot)
+		return ..()
+	if(user.loc == src)
+		unhide(user)
+
+// Every way out clears the hiding spot, not only unhide().
+/obj/structure/Exited(atom/movable/gone, direction)
+	. = ..()
+	if(gone == hiddenguy)
+		hiddenguy = null
+		occupied = FALSE
 
 /obj/structure/ui_act(action, params)
 	..()
@@ -148,12 +195,8 @@
 
 /obj/structure/examine(mob/user)
 	. = ..()
-	if(in_range(user, src))
-		if(occupied)
-			var/mob/living/M = locate() in src
-			if(M)
-				M.forceMove(get_turf(src))
-				occupied = FALSE
+	if(isliving(user) && in_range(user, src) && user.loc != src && hiddenguy)
+		unhide(hiddenguy)
 
 	if(!(resistance_flags & INDESTRUCTIBLE))
 		var/examine_status = examine_status(user)

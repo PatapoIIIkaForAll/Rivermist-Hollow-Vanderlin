@@ -21,7 +21,14 @@
 	var/old_buckle_requires_restraints
 	var/old_max_buckled_mobs
 
+	/// Wearer zones the strapped victim covers; head, neck and arms stay open.
+	var/static/list/shielded_zones = list(BODY_ZONE_CHEST, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+
 #define BELLYRIDING_ESCAPE_INTERACTION_KEY "bellyriding_escape"
+/// Degrees either side of the wearer's facing that the victim covers; adjacent diagonals count.
+#define BELLYRIDING_FRONT_ARC 50
+/// Degrees either side of a taur's flank that the victim covers; adjacent diagonals do not count.
+#define BELLYRIDING_FLANK_ARC 40
 
 /datum/component/bellyriding/Initialize(atom/movable/buckle_relay)
 	if(!ishuman(parent) || !istype(buckle_relay))
@@ -97,15 +104,20 @@
 		restore_old_state(victim)
 		return
 
+	strap_victim(victim)
+
+/// Buckles a restrained victim to the harness at once. Call store_old_state() first.
+/datum/component/bellyriding/proc/strap_victim(mob/living/carbon/human/victim)
+	var/mob/living/carbon/human/wearer = parent
 	// The harness owns this passenger's pose and movement, not the riding component.
 	ADD_TRAIT(victim, TRAIT_CANT_RIDE, REF(src))
 	if(!wearer.buckle_mob(victim, force = TRUE, check_loc = FALSE))
 		restore_old_state(victim)
-		return
+		return FALSE
 
 	if(victim.buckled != wearer)
 		restore_old_state(victim)
-		return
+		return FALSE
 
 	stored_action.Grant(wearer)
 	if(!wearer.get_taur_tail())
@@ -113,6 +125,32 @@
 	current_victim = victim
 	RegisterSignal(current_victim, COMSIG_PARENT_QDELETING, PROC_REF(on_victim_deleted))
 	update_visuals()
+	return TRUE
+
+/// Returns the victim when a hit from source, aimed at zone, lands on them instead of the wearer.
+/datum/component/bellyriding/proc/get_shield(atom/source, zone)
+	var/mob/living/carbon/human/wearer = parent
+	if(QDELETED(current_victim) || current_victim.stat == DEAD || current_victim.buckled != wearer)
+		return null
+	if(!source || source == wearer || source == current_victim)
+		return null
+	if(!(check_zone(zone) in shielded_zones))
+		return null
+
+	var/turf/wearer_turf = get_turf(wearer)
+	var/turf/source_turf = get_turf(source)
+	if(!wearer_turf || !source_turf || wearer_turf == source_turf)
+		return null
+
+	var/offset = abs(closer_angle_difference(dir2angle(wearer.dir), get_angle(wearer_turf, source_turf)))
+	// A taur carries the victim under the belly, so it guards the flanks instead of the front.
+	var/obj/item/bodypart/taur/taur_body = wearer.get_taur_tail()
+	if(taur_body?.bellyride_quadruped)
+		if(abs(offset - 90) >= BELLYRIDING_FLANK_ARC)
+			return null
+	else if(offset >= BELLYRIDING_FRONT_ARC)
+		return null
+	return current_victim
 
 /datum/component/bellyriding/proc/try_unbuckle_victim(mob/living/carbon/human/user)
 	set waitfor = FALSE
@@ -373,7 +411,7 @@
 	perform_chosen_action:
 	var/datum/sex_action/chosen_action = SEX_ACTION(last_action_type)
 	if(chosen_action)
-		ASYNC chosen_action.on_perform(wearer, current_victim)
+		ASYNC chosen_action.felt_perform(wearer, current_victim)
 
 /datum/component/bellyriding/proc/ensure_sex_scene_controller()
 	if(!current_victim)
@@ -421,4 +459,24 @@
 		to_chat(comp.current_victim, span_notice("[owner] moves you out of [owner.p_their()] cock's way.. relief at last."))
 		to_chat(owner, span_notice("You move [comp.current_victim] out of your cock's way.. for now."))
 
+/// Returns the bellyride victim who takes this hit, and announces it; null when the wearer takes it.
+/mob/living/carbon/human/proc/bellyride_shield_for(atom/source, zone)
+	var/datum/component/bellyriding/belly_comp = GetComponent(/datum/component/bellyriding)
+	var/mob/living/carbon/human/shield = belly_comp?.get_shield(source, zone)
+	if(shield)
+		shield.visible_message(span_warning("[shield] takes the hit meant for [src]!"), span_userdanger("I take the hit meant for [src]!"))
+	return shield
+
+/// Returns the mount this mob rides; a victim strapped into the mount's harness rides nothing.
+/mob/living/carbon/human/proc/get_pony_mount()
+	var/mob/living/carbon/human/mount = buckled
+	if(!istype(mount) || !HAS_TRAIT(mount, TRAIT_PONYGIRL_RIDEABLE))
+		return null
+	var/datum/component/bellyriding/belly_comp = mount.GetComponent(/datum/component/bellyriding)
+	if(belly_comp?.current_victim == src)
+		return null
+	return mount
+
 #undef BELLYRIDING_ESCAPE_INTERACTION_KEY
+#undef BELLYRIDING_FRONT_ARC
+#undef BELLYRIDING_FLANK_ARC

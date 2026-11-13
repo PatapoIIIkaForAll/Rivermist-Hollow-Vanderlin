@@ -1,0 +1,202 @@
+@use 'sass:map';
+
+$roll-tooltip: (
+  good: #e8c96a,
+  bad: #d4607f,
+  neutral: #dcdcb4,
+  tempus: #c8665c,
+  helm: #9fb4c8,
+  oghma: #8eaee0,
+  lathander: #e8a06a,
+  ilmater: #cdb48a,
+  mask: #a89bc9,
+  tymora: #d8d8e0,
+  sune: #e07a9a,
+);
+
+$roll-light: (
+  good: #9a7410,
+  bad: #a3284a,
+  neutral: #6b6a3c,
+  tempus: #8f2f26,
+  helm: #3f5a73,
+  oghma: #2f5da3,
+  lathander: #a65314,
+  ilmater: #7a6037,
+  mask: #54467e,
+  tymora: #5c5c6e,
+  sune: #a8264f,
+);
+
+@each $name, $colour in $roll-tooltip {
+  .roll_#{$name} {
+    color: $colour;
+  }
+
+  .theme-light .roll_#{$name} {
+    color: map.get($roll-light, $name);
+  }
+}
+
+.roll_crit_good,
+.roll_crit_bad {
+  font-weight: bold;
+  animation: roll_crit_flicker 1s 4 alternate;
+}
+
+.roll_crit_good {
+  color: map.get($roll-tooltip, good);
+  text-shadow: 0 0 4px map.get($roll-tooltip, good);
+}
+
+.roll_crit_bad {
+  color: map.get($roll-tooltip, bad);
+  text-shadow: 0 0 4px map.get($roll-tooltip, bad);
+}
+
+.theme-light .roll_crit_good {
+  color: map.get($roll-light, good);
+}
+
+.theme-light .roll_crit_bad {
+  color: map.get($roll-light, bad);
+}
+
+@keyframes roll_crit_flicker {
+  from {
+    opacity: 0.75;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.RollTooltip {
+  text-align: center;
+}
+
+.RollTooltip__throws {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  justify-content: center;
+}
+
+.RollTooltip__throw {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  margin-bottom: 4px;
+
+  & + & {
+    border-left: 1px solid rgba(187, 187, 173, 0.5);
+  }
+}
+
+.RollTooltip__label {
+  color: #bbbbad;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+
+.RollTooltip__separator {
+  border-top: 1px solid rgba(187, 187, 173, 0.5);
+  margin: 4px 0;
+}
+
+.RollTooltip__extra {
+  margin-top: 2px;
+}
+
+.RollTooltip__dice {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+@mixin die-colour($colour) {
+  .die-bg {
+    fill: #000;
+    stroke: $colour;
+    stroke-width: 4;
+    rx: 12px;
+  }
+
+  .die-front,
+  .die-edge {
+    fill: none;
+    stroke: $colour;
+    stroke-opacity: 0.5;
+    stroke-width: 3.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .die-pip {
+    r: 8;
+    fill: $colour;
+  }
+
+  .die-number {
+    fill: $colour;
+    font-size: 44px;
+    font-weight: bold;
+    text-anchor: middle;
+
+    &--icosahedron {
+      font-size: 38px;
+    }
+  }
+}
+
+.RollTooltip__die {
+  @each $name, $colour in $roll-tooltip {
+    &--#{$name} {
+      @include die-colour($colour);
+    }
+  }
+
+  &--dim {
+    opacity: 0.45;
+  }
+
+  &--natural-high {
+    filter: drop-shadow(0 0 4px map.get($roll-tooltip, good));
+    animation: RollTooltip__glow 1.2s ease-in-out 4 alternate;
+  }
+
+  &--natural-low {
+    filter: drop-shadow(0 0 4px map.get($roll-tooltip, bad));
+    animation: RollTooltip__glow 1.2s ease-in-out 4 alternate;
+  }
+}
+
+$stat-gods: (
+  strength: tempus,
+  perception: helm,
+  intelligence: oghma,
+  constitution: lathander,
+  endurance: ilmater,
+  speed: mask,
+  fortune: tymora,
+  charisma: sune,
+);
+
+@each $stat, $god in $stat-gods {
+  .RollTooltip__die--#{$stat} {
+    @include die-colour(map.get($roll-tooltip, $god));
+  }
+}
+
+@keyframes RollTooltip__glow {
+  from {
+    opacity: 0.8;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

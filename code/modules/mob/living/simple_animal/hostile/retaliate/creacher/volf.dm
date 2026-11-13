@@ -8,6 +8,7 @@
 	icon_dead = "vvd"
 	var/icon_state_prefix = "volf"
 	var/eye_icon_state = "volf_eyes"
+	penis_organ = /obj/item/organ/genitals/penis/knotted
 
 	faction = list(FACTION_ORCS, FACTION_WOLVES)
 	emote_hear = null
@@ -79,6 +80,7 @@
 		/datum/pet_command/protect_owner,
 		/datum/pet_command/aggressive,
 		/datum/pet_command/calm,
+		/datum/pet_command/pet_breed_other,
 	)
 
 /obj/effect/decal/remains/wolf

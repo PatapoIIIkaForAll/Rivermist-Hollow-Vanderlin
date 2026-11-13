@@ -126,7 +126,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(href_list["ask_again"])
 		var/datum/schizohelp/schizo = locate(href_list["ask_again"])
 		var/mob/voice = locate(href_list["voice"])
-		if(QDELETED(schizo) || !voice.client)
+		// Old links can locate() a recycled ref of another type.
+		if(!istype(schizo) || QDELETED(schizo) || !istype(voice) || !voice.client)
 			return
 		var/msg = input("Ask again:", "To the voice of a [schizo.voice_names[voice.client.ckey]]") as text|null
 		if(msg)
@@ -138,7 +139,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(href_list["like"])
 		var/datum/schizohelp/schizo = locate(href_list["src"])
 		var/mob/voice = locate(href_list["like"])
-		if(schizo && voice && voice.client)
+		if(istype(schizo) && istype(voice) && voice.client)
 			var/voice_ckey = voice.client.ckey
 			if(!schizo.voted[voice_ckey])
 				schizo.voted[voice_ckey] = list()
@@ -171,7 +172,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(href_list["dislike"])
 		var/datum/schizohelp/schizo = locate(href_list["src"])
 		var/mob/voice = locate(href_list["dislike"])
-		if(schizo && voice && voice.client)
+		if(istype(schizo) && istype(voice) && voice.client)
 			var/voice_ckey = voice.client.ckey
 			if(!schizo.voted[voice_ckey])
 				schizo.voted[voice_ckey] = list()
@@ -653,7 +654,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		if (CONFIG_GET(flag/irc_first_connection_alert))
 			send2irc_adminless_only("new_byond_user", "[key_name(src)] (IP: [address], ID: [computer_id]) is a new BYOND account [account_age] day[(account_age==1?"":"s")] old, created on [account_join_date].")
 	get_message_output("watchlist entry", ckey)
-	check_overwatch()
+	// Async: a stalled IP lookup here once skipped the rest of login setup, leaving view_size null.
+	INVOKE_ASYNC(src, PROC_REF(check_overwatch))
 	validate_key_in_db()
 
 	// If we aren't already generating a ban cache, fire off a build request
@@ -769,8 +771,11 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	log_access("Logout: [key_name(src)]")
 	GLOB.ahelp_tickets.ClientLogout(src)
 
+	// Each credit removes itself from credits on Destroy, which nulls the list mid-loop.
 	if(length(credits))
-		QDEL_LIST(credits)
+		var/list/old_credits = credits
+		credits = null
+		QDEL_LIST(old_credits)
 
 	QDEL_NULL(loot_panel)
 

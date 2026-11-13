@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
   TextArea,
   Tooltip,
 } from 'tgui-core/components';
+import { resolveAsset } from '../assets';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
 
@@ -26,6 +27,10 @@ type ActionEntry = {
   can_perform: Booleanish;
   user_zones: number;
   target_zones: number;
+  fit_hint?: string;
+  category?: string;
+  tip?: string | null;
+  refusal?: string | null;
 };
 
 type ZoneOption = { name: string; value: number };
@@ -46,6 +51,8 @@ type ControlsData = {
   auto_clench: Booleanish;
   can_hold_it_in: Booleanish;
   hold_it_in: Booleanish;
+  reach_under_armor: Booleanish;
+  status_follows_examine: Booleanish;
 };
 
 type ArousalData = {
@@ -148,7 +155,10 @@ type IntimacyData = {
   yours: ErpCategory[];
   theirs: ErpCategory[];
   their_kinks: KinkCategory[];
+  your_kinks?: KinkCategory[];
 };
+
+type KinkEdit = { enabled: boolean; intensity: number; notes: string };
 
 type NoteEntry = { title: string; content: string; meta: string };
 type NotesData = { yours: NoteEntry[]; theirs: NoteEntry[] };
@@ -208,8 +218,8 @@ type Data = {
 
 const asBool = (value: Booleanish | undefined) => value === true || value === 1;
 
-const SPEED_LABELS = ['Slow', 'Steady', 'Quick', 'Unrelenting'];
-const FORCE_LABELS = ['Gentle', 'Firm', 'Rough', 'Brutal'];
+const SPEED_LABELS = ['Slow', 'Steady', 'Quick', 'Unrelenting', 'Furious'];
+const FORCE_LABELS = ['Gentle', 'Firm', 'Rough', 'Brutal', 'Unrelenting'];
 const RESIST_LABELS = ['None', 'Low', 'Medium', 'High'];
 const AROUSAL_LABELS = ['Natural', 'Unaroused', 'Partial', 'Full'];
 const INTENSITY_LABELS = [
@@ -220,61 +230,236 @@ const INTENSITY_LABELS = [
   'Very Intense',
 ];
 
-// One-click level picker: selected level shows its name, others show numbers.
-const LevelControl = (props: {
-  label: string;
-  value: number;
-  labels: string[];
-  onSet: (level: number) => void;
-}) => {
-  const { label, value, labels, onSet } = props;
+const levelName = (labels: string[], level: number) => labels[level - 1] ?? '?';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  mouth: 'Mouth',
+  hands: 'Hands',
+  sex: 'Penetration',
+  grind: 'Grinding',
+  breasts: 'Breasts',
+  feet: 'Feet and legs',
+  toys: 'Toys and items',
+  fluids: 'Fluids',
+  impact: 'Impact and sensation',
+  devices: 'Chastity and clamps',
+  tail: 'Tails and tentacles',
+  portal: 'Portal',
+  body: 'Body',
+  custom: 'Custom action',
+};
+
+/** Small pixel icon for an action's group. */
+const CategoryIcon = (props: { category?: string }) => {
+  const category =
+    props.category && CATEGORY_LABELS[props.category] ? props.category : 'body';
   return (
-    <Stack align="center">
-      <Stack.Item>
-        <Box color="label" fontSize="10px" bold>
-          {label}
-        </Box>
-      </Stack.Item>
-      {labels.map((name, idx) => {
-        const level = idx + 1;
-        return (
-          <Stack.Item key={name}>
-            <Button
-              compact
-              selected={value === level}
-              tooltip={name}
-              onClick={() => onSet(level)}
-            >
-              {value === level ? name : String(level)}
-            </Button>
-          </Stack.Item>
-        );
-      })}
-    </Stack>
+    <img
+      src={resolveAsset(`sexcat_${category}.png`)}
+      width={16}
+      height={16}
+      style={{
+        imageRendering: 'pixelated',
+        verticalAlign: 'middle',
+        marginRight: '4px',
+        marginTop: '-2px',
+      }}
+    />
   );
 };
 
-const ZoneFilterPanel = (props: {
+const actionTooltip = (action: ActionEntry) => (
+  <Box>
+    <Box bold>{action.name}</Box>
+    <Box color="label" fontSize="10px">
+      {CATEGORY_LABELS[action.category || 'body'] || 'Body'}
+    </Box>
+    {action.tip ? <Box mt={0.25}>{action.tip}</Box> : null}
+    {action.fit_hint ? (
+      <Box mt={0.25} color="average">
+        Fit: {action.fit_hint}
+      </Box>
+    ) : null}
+    {action.refusal ? (
+      <Box mt={0.25} color="bad">
+        {action.refusal}
+      </Box>
+    ) : null}
+  </Box>
+);
+
+const paceName = (speed: number, force: number) =>
+  `${levelName(SPEED_LABELS, speed)} / ${levelName(FORCE_LABELS, force)}`;
+
+/** Arrows joined to an inset value box; a fixed width keeps stacked steppers lined up. */
+const LevelControl = (props: {
+  value: number;
+  labels: string[];
+  disabled?: boolean;
+  width?: string;
+  onSet: (level: number) => void;
+}) => {
+  const { value, labels, disabled, width, onSet } = props;
+  const level = Math.min(Math.max(value || 1, 1), labels.length);
+  const valueWidth =
+    width || `${Math.max(...labels.map((name) => name.length)) + 1}ch`;
+  return (
+    <Box
+      inline
+      style={{
+        display: 'inline-flex',
+        alignItems: 'stretch',
+        verticalAlign: 'middle',
+      }}
+    >
+      <Button
+        compact
+        icon="chevron-left"
+        disabled={disabled || level <= 1}
+        style={{ margin: 0, borderRadius: '2px 0 0 2px' }}
+        onClick={() => onSet(level - 1)}
+      />
+      <Box
+        textAlign="center"
+        style={{
+          width: valueWidth,
+          padding: '0 4px',
+          lineHeight: '16px',
+          background: 'rgba(0, 0, 0, 0.35)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {levelName(labels, level)}
+      </Box>
+      <Button
+        compact
+        icon="chevron-right"
+        disabled={disabled || level >= labels.length}
+        style={{ margin: 0, borderRadius: '0 2px 2px 0' }}
+        onClick={() => onSet(level + 1)}
+      />
+    </Box>
+  );
+};
+
+/** An on/off switch: green with a tick when on, red with a cross when off. */
+const SwitchButton = (props: {
+  label: string;
+  on: Booleanish;
+  tooltip: string;
+  onClick: () => void;
+}) => (
+  <Button
+    compact
+    fluid
+    icon={asBool(props.on) ? 'check' : 'xmark'}
+    color={asBool(props.on) ? 'good' : 'bad'}
+    tooltip={props.tooltip}
+    onClick={props.onClick}
+  >
+    {props.label}
+  </Button>
+);
+
+/** A caption on a gold strip, for control groups and preference categories. */
+const GroupTitle = (props: { children: ReactNode; fontSize?: string }) => (
+  <Box
+    bold
+    style={{
+      fontSize: props.fontSize || '9px',
+      textTransform: 'uppercase',
+      letterSpacing: '1px',
+      color: '#ecdcaa',
+      padding: '1px 6px',
+      background:
+        'linear-gradient(90deg, rgba(207, 192, 138, 0.30), rgba(207, 192, 138, 0.06))',
+      borderBottom: '1px solid rgba(207, 192, 138, 0.35)',
+    }}
+  >
+    {props.children}
+  </Box>
+);
+
+/** A small framed box with a title strip, for one group of controls. */
+const ControlGroup = (props: { title: string; children: ReactNode }) => (
+  <Box
+    style={{
+      height: '100%',
+      border: '1px solid rgba(207, 192, 138, 0.25)',
+      borderRadius: '3px',
+      overflow: 'hidden',
+      background: 'rgba(0, 0, 0, 0.15)',
+    }}
+  >
+    <GroupTitle>{props.title}</GroupTitle>
+    <Box style={{ padding: '3px 6px 4px' }}>{props.children}</Box>
+  </Box>
+);
+
+/** One labelled stepper row; the label column keeps the arrows lined up. */
+const StepperRow = (props: {
+  label: string;
+  tooltip: string;
+  value: number;
+  labels: string[];
+  onSet: (level: number) => void;
+}) => (
+  <Stack align="center" mb={0.25}>
+    <Stack.Item basis="58px" shrink={0}>
+      <Tooltip content={props.tooltip} position="top">
+        <Box color="label" fontSize="11px">
+          {props.label}
+        </Box>
+      </Tooltip>
+    </Stack.Item>
+    <Stack.Item>
+      <LevelControl
+        value={props.value}
+        labels={props.labels}
+        width="11ch"
+        onSet={props.onSet}
+      />
+    </Stack.Item>
+  </Stack>
+);
+
+const ZoneFilterRow = (props: {
   title: string;
   options: ZoneOption[];
   value: number;
   onChange: (value: number) => void;
 }) => (
-  <Section title={props.title}>
-    {props.options.map((option) => (
-      <Button
-        key={option.value}
-        fluid
-        compact
-        mb={0.25}
-        textAlign="center"
-        selected={props.value === option.value}
-        onClick={() => props.onChange(option.value)}
+  <Stack align="center" mb={0.25}>
+    <Stack.Item basis="92px" shrink={0} style={{ minWidth: 0 }}>
+      <Box
+        bold
+        color="label"
+        fontSize="11px"
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
       >
-        {option.name}
-      </Button>
+        {props.title}
+      </Box>
+    </Stack.Item>
+    {props.options.map((option) => (
+      <Stack.Item key={option.value} grow basis={0} style={{ minWidth: 0 }}>
+        <Button
+          fluid
+          compact
+          textAlign="center"
+          selected={props.value === option.value}
+          onClick={() => props.onChange(option.value)}
+        >
+          {option.name}
+        </Button>
+      </Stack.Item>
     ))}
-  </Section>
+  </Stack>
 );
 
 const zoneMatches = (mask: number, filter: number) =>
@@ -293,8 +478,9 @@ export const SexScene = () => {
   const [noteContent, setNoteContent] = useState('');
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
-  const [connectionsOpen, setConnectionsOpen] = useState(false);
-  const [claimsOpen, setClaimsOpen] = useState(false);
+  const [sceneOpen, setSceneOpen] = useState(false);
+  const [kinkDraft, setKinkDraft] = useState<Record<string, KinkEdit>>({});
+  const [kinkNotesOpen, setKinkNotesOpen] = useState<string | null>(null);
 
   const controls = data.controls || ({} as ControlsData);
   const arousal = data.arousal || ({} as ArousalData);
@@ -354,75 +540,74 @@ export const SexScene = () => {
     </Stack.Item>
   );
 
-  const renderHeader = () => (
-    <Section>
-      <Stack>
-        <Stack.Item basis="18%" shrink={0} style={{ minWidth: 0 }}>
-          <Box bold color="label" fontSize="10px" mb={0.25}>
-            Participants
-          </Box>
-          <Stack vertical maxHeight="9rem" overflowY="auto">
-            {(data.scene_participants ?? []).map(renderParticipantButton)}
-          </Stack>
-        </Stack.Item>
-        <Stack.Item grow style={{ minWidth: 0 }}>
-          <Box bold fontSize="13px">
-            {asBool(data.is_self)
-              ? 'Interacting with yourself…'
-              : `Interacting with ${data.target_name}…`}
-          </Box>
-          <Box color="label" fontSize="9px">
-            Scene: {data.scene_name || data.target_name}
-          </Box>
-          <Box color="label" fontSize="10px" mt={0.25}>
-            {(data.status_lines ?? []).map((line) => (
-              <Box key={line}>…{line}</Box>
-            ))}
-          </Box>
-          {scenePatterns.length ? (
-            <Box color="pink" fontSize="10px" mt={0.5}>
-              <Box as="span" bold>
-                Active scene:{' '}
-              </Box>
-              {scenePatterns.map((pattern, index) => (
-                <Box as="span" key={pattern.key}>
-                  {index ? ', ' : ''}
-                  {pattern.name}
-                  {asBool(pattern.is_focus)
-                    ? ' (centered on you)'
-                    : pattern.focus_name
-                      ? ` (centered on ${pattern.focus_name})`
-                      : ''}
+  const renderBar = (label: string, pct: number, color: string) => (
+    <ProgressBar value={(pct || 0) / 100} color={color} height="15px" mb={0.25}>
+      <Box fontSize="10px" style={{ lineHeight: '13px' }}>
+        {label} {Math.round(pct || 0)}%
+      </Box>
+    </ProgressBar>
+  );
+
+  const renderHeader = () => {
+    const participants = data.scene_participants ?? [];
+    const sceneName = data.scene_name || data.target_name;
+    return (
+      <Section>
+        <Stack align="start">
+          <Stack.Item grow style={{ minWidth: 0 }}>
+            <Box bold fontSize="13px">
+              {asBool(data.is_self)
+                ? 'With yourself'
+                : `With ${data.target_name}`}
+              {sceneName !== data.target_name ? (
+                <Box as="span" color="label" fontSize="10px" ml={1}>
+                  Scene: {sceneName}
+                </Box>
+              ) : null}
+            </Box>
+            {participants.length > 1 ? (
+              <Stack wrap mt={0.25}>
+                {participants.map(renderParticipantButton)}
+              </Stack>
+            ) : null}
+            <Box color="label" fontSize="10px" mt={0.25}>
+              {(data.status_lines ?? []).map((line) => (
+                <Box as="span" key={line} mr={1}>
+                  …{line}
                 </Box>
               ))}
             </Box>
-          ) : null}
-        </Stack.Item>
-        <Stack.Item basis="38%">
-          <LabeledList>
-            <LabeledList.Item label="Orgasm">
-              <ProgressBar
-                value={(arousal.orgasm_pct || 0) / 100}
-                color="pink"
-              />
-            </LabeledList.Item>
-            <LabeledList.Item label="Arousal">
-              <ProgressBar
-                value={(arousal.arousal_pct || 0) / 100}
-                color="red"
-              />
-            </LabeledList.Item>
-            <LabeledList.Item label="Pain">
-              <ProgressBar value={(arousal.pain_pct || 0) / 100} color="grey" />
-            </LabeledList.Item>
-          </LabeledList>
-        </Stack.Item>
-      </Stack>
-    </Section>
-  );
+            {scenePatterns.length ? (
+              <Box color="pink" fontSize="10px" mt={0.25}>
+                <Box as="span" bold>
+                  Active scene:{' '}
+                </Box>
+                {scenePatterns.map((pattern, index) => (
+                  <Box as="span" key={pattern.key}>
+                    {index ? ', ' : ''}
+                    {pattern.name}
+                    {asBool(pattern.is_focus)
+                      ? ' (centered on you)'
+                      : pattern.focus_name
+                        ? ` (centered on ${pattern.focus_name})`
+                        : ''}
+                  </Box>
+                ))}
+              </Box>
+            ) : null}
+          </Stack.Item>
+          <Stack.Item basis="32%" shrink={0}>
+            {renderBar('Arousal', arousal.arousal_pct, 'red')}
+            {renderBar('Orgasm', arousal.orgasm_pct, 'pink')}
+            {renderBar('Pain', arousal.pain_pct, 'grey')}
+          </Stack.Item>
+        </Stack>
+      </Section>
+    );
+  };
 
   const renderActionButton = (action: ActionEntry) => (
-    <Stack.Item key={action.key} basis="49%" grow>
+    <Stack.Item key={action.key} basis="32%" grow>
       <Stack>
         <Stack.Item grow>
           <Button
@@ -430,14 +615,20 @@ export const SexScene = () => {
             compact
             disabled={!asBool(action.can_perform) && !asBool(action.active)}
             selected={asBool(action.active)}
-            tooltip={action.name}
+            tooltip={actionTooltip(action)}
             onClick={() =>
               act(asBool(action.active) ? 'stop' : 'action', {
                 key: action.key,
               })
             }
           >
+            <CategoryIcon category={action.category} />
             {action.name}
+            {action.fit_hint ? (
+              <Box as="span" color="label" fontSize="9px" ml={0.5}>
+                {action.fit_hint}
+              </Box>
+            ) : null}
           </Button>
         </Stack.Item>
         {asBool(action.active) ? (
@@ -455,133 +646,148 @@ export const SexScene = () => {
     </Stack.Item>
   );
 
-  const renderQuickBar = () => (
-    <Section>
-      <Stack align="center" wrap>
-        <Stack.Item>
-          <LevelControl
-            label="SPEED"
-            value={controls.speed}
-            labels={SPEED_LABELS}
-            onSet={(level) => act('set_speed', { value: level })}
-          />
-        </Stack.Item>
-        <Stack.Item>
-          <LevelControl
-            label="FORCE"
-            value={controls.force}
-            labels={FORCE_LABELS}
-            onSet={(level) => act('set_force', { value: level })}
-          />
-        </Stack.Item>
-        <Stack.Item>
-          <LevelControl
-            label="HOLD"
-            value={controls.resist}
-            labels={RESIST_LABELS}
-            onSet={(level) => act('set_resist', { value: level })}
-          />
-        </Stack.Item>
-        {asBool(controls.has_penis) ? (
+  const renderQuickBar = () => {
+    const switches = [
+      {
+        label: 'Stop at climax',
+        on: controls.do_until_finished,
+        shown: true,
+        tooltip:
+          'On: your actions stop when you climax. Off: they go on until you stop them.',
+        action: 'toggle_finished',
+      },
+      {
+        label: 'Edge partner',
+        on: controls.edging_other,
+        shown: !asBool(data.is_self),
+        tooltip: 'Try to hold your partner back from the edge.',
+        action: 'toggle_edging',
+      },
+      {
+        label: 'Finish outside',
+        on: controls.finish_outside,
+        shown: asBool(controls.has_penis),
+        tooltip:
+          'Pull out at the last moment and finish over your partner instead of inside them.',
+        action: 'toggle_finish_outside',
+      },
+      {
+        label: 'Leg lock',
+        on: controls.leg_lock,
+        shown: asBool(controls.can_leg_lock),
+        tooltip:
+          'Wrap your legs around whoever is inside you. If you are stronger, they will struggle to pull out.',
+        action: 'toggle_leg_lock',
+      },
+      {
+        label: 'Keep it in',
+        on: controls.hold_it_in,
+        shown: asBool(controls.can_hold_it_in),
+        tooltip:
+          'Clench to keep what is inside your holes from leaking out. Costs a little stamina while you hold something.',
+        action: 'toggle_hold_it_in',
+      },
+      {
+        label: 'Auto-clench',
+        on: controls.auto_clench,
+        shown: asBool(controls.cmode),
+        tooltip: 'Automatically resist actions performed on you. Costs stamina.',
+        action: 'toggle_auto_clench',
+      },
+      {
+        label: 'Armor reach',
+        on: controls.reach_under_armor,
+        shown: true,
+        tooltip:
+          'On: players, you included, can reach under your armor. Off: your armor must come off first. Mobs always strip it.',
+        action: 'toggle_reach_under_armor',
+      },
+      {
+        label: 'Status follows examine',
+        on: controls.status_follows_examine,
+        shown: true,
+        tooltip:
+          'On: the status lines list what examine shows. Off: they use the older rule, which only reads body coverage and underwear.',
+        action: 'toggle_status_follows_examine',
+      },
+    ].filter((entry) => entry.shown);
+    return (
+      <Section>
+        <Stack align="stretch">
           <Stack.Item>
-            <LevelControl
-              label="AROUSAL"
-              value={controls.manual_arousal}
-              labels={AROUSAL_LABELS}
-              onSet={(level) => act('set_manual_arousal', { value: level })}
-            />
+            <ControlGroup title="Pace">
+              <StepperRow
+                label="Speed"
+                tooltip="How fast your actions go."
+                value={controls.speed}
+                labels={SPEED_LABELS}
+                onSet={(level) => act('set_speed', { value: level })}
+              />
+              <StepperRow
+                label="Force"
+                tooltip="How hard your actions go. More force, more pain."
+                value={controls.force}
+                labels={FORCE_LABELS}
+                onSet={(level) => act('set_force', { value: level })}
+              />
+            </ControlGroup>
           </Stack.Item>
-        ) : null}
-        <Stack.Item grow />
-        <Stack.Item>
-          <Button
-            compact
-            selected={asBool(controls.do_until_finished)}
-            tooltip="Stop automatically after a climax?"
-            onClick={() => act('toggle_finished')}
-          >
-            {asBool(controls.do_until_finished)
-              ? "Until I'm Finished"
-              : 'Until I Stop'}
-          </Button>
-        </Stack.Item>
-        <Stack.Item>
-          <Button
-            compact
-            selected={asBool(controls.edging_other)}
-            tooltip="Try to hold your partner back from the edge"
-            onClick={() => act('toggle_edging')}
-          >
-            Edge {asBool(controls.edging_other) ? 'On' : 'Off'}
-          </Button>
-        </Stack.Item>
-        {asBool(controls.has_penis) ? (
           <Stack.Item>
-            <Button
-              compact
-              selected={asBool(controls.finish_outside)}
-              tooltip="Pull out at the last moment and finish over your partner instead of inside them."
-              onClick={() => act('toggle_finish_outside')}
-            >
-              {asBool(controls.finish_outside)
-                ? 'Finish Outside'
-                : 'Finish Inside'}
-            </Button>
+            <ControlGroup title="You">
+              <StepperRow
+                label="Hold back"
+                tooltip="How hard you fight your own pleasure. Higher slows your climax but costs stamina."
+                value={controls.resist}
+                labels={RESIST_LABELS}
+                onSet={(level) => act('set_resist', { value: level })}
+              />
+              {asBool(controls.has_penis) ? (
+                <StepperRow
+                  label="Arousal"
+                  tooltip="Natural follows your arousal; the others hold your cock at that state."
+                  value={controls.manual_arousal}
+                  labels={AROUSAL_LABELS}
+                  onSet={(level) => act('set_manual_arousal', { value: level })}
+                />
+              ) : null}
+            </ControlGroup>
           </Stack.Item>
-        ) : null}
-        {asBool(controls.can_leg_lock) ? (
-          <Stack.Item>
-            <Button
-              compact
-              selected={asBool(controls.leg_lock)}
-              tooltip="Wrap your legs around whoever is inside you. If you are stronger, they will struggle to pull out."
-              onClick={() => act('toggle_leg_lock')}
-            >
-              Leg Lock {asBool(controls.leg_lock) ? 'On' : 'Off'}
-            </Button>
+          <Stack.Item grow basis={0} style={{ minWidth: 0 }}>
+            <ControlGroup title="Options">
+              <Box
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(118px, 1fr))',
+                  gap: '3px',
+                }}
+              >
+                {switches.map((entry) => (
+                  <SwitchButton
+                    key={entry.action}
+                    label={entry.label}
+                    on={entry.on}
+                    tooltip={entry.tooltip}
+                    onClick={() => act(entry.action)}
+                  />
+                ))}
+                {controls.lying_direction ? (
+                  <Button
+                    compact
+                    fluid
+                    icon="rotate"
+                    tooltip={`Roll onto your other side (now ${controls.lying_direction})`}
+                    onClick={() => act('swap_side')}
+                  >
+                    Roll over
+                  </Button>
+                ) : null}
+              </Box>
+            </ControlGroup>
           </Stack.Item>
-        ) : null}
-        {asBool(controls.can_hold_it_in) ? (
-          <Stack.Item>
-            <Button
-              compact
-              selected={asBool(controls.hold_it_in)}
-              tooltip="Clench to keep what is inside your holes from leaking out. Costs a little stamina while you hold something."
-              onClick={() => act('toggle_hold_it_in')}
-            >
-              Hold It In {asBool(controls.hold_it_in) ? 'On' : 'Off'}
-            </Button>
-          </Stack.Item>
-        ) : null}
-        {asBool(controls.cmode) ? (
-          <Stack.Item>
-            <Button
-              compact
-              selected={asBool(controls.auto_clench)}
-              tooltip="Automatically resist actions performed on you. Costs stamina."
-              onClick={() => act('toggle_auto_clench')}
-            >
-              Auto-Clench {asBool(controls.auto_clench) ? 'On' : 'Off'}
-            </Button>
-          </Stack.Item>
-        ) : null}
-        <Stack.Item>
-          <Button
-            compact
-            disabled={!controls.lying_direction}
-            tooltip={
-              controls.lying_direction
-                ? `Currently ${controls.lying_direction}`
-                : 'Only while lying down'
-            }
-            onClick={() => act('swap_side')}
-          >
-            Swap Side
-          </Button>
-        </Stack.Item>
-      </Stack>
-    </Section>
-  );
+        </Stack>
+      </Section>
+    );
+  };
 
   const renderInteractions = () => {
     const actions = data.actions ?? [];
@@ -597,171 +803,124 @@ export const SexScene = () => {
     const claims = data.scene_claims ?? [];
     return (
       <Stack fill vertical>
-        <Stack.Item grow>
-          <Stack fill>
-            <Stack.Item basis="110px" shrink={0}>
-              <ZoneFilterPanel
-                title="You use"
-                options={data.zone_options ?? []}
-                value={userZone}
-                onChange={setUserZone}
-              />
-            </Stack.Item>
+        <Stack.Item>
+          <ZoneFilterRow
+            title="You use"
+            options={data.zone_options ?? []}
+            value={userZone}
+            onChange={setUserZone}
+          />
+          <ZoneFilterRow
+            title={
+              asBool(data.is_self) ? 'On yourself' : `On ${data.target_name}`
+            }
+            options={data.zone_options ?? []}
+            value={targetZone}
+            onChange={setTargetZone}
+          />
+          <Stack align="center">
             <Stack.Item grow>
-              <Section fill scrollable>
-                <Stack align="start" mb={0.75}>
-                  <Stack.Item grow basis={0} style={{ minWidth: 0 }}>
-                    <Section
-                      fitted
-                      title={`Scene Connections (${connections.length})`}
-                      buttons={
-                        <Button
-                          compact
-                          icon={connectionsOpen ? 'chevron-up' : 'chevron-down'}
-                          tooltip={
-                            connectionsOpen
-                              ? 'Collapse scene connections'
-                              : 'Expand scene connections'
-                          }
-                          onClick={() => setConnectionsOpen(!connectionsOpen)}
-                        />
-                      }
-                    >
-                      {connectionsOpen ? (
-                        <Stack vertical maxHeight="8rem" overflowY="auto">
-                          {connections.length ? (
-                            connections.map((connection) => (
-                              <Stack.Item key={connection.ref}>
-                                <Stack align="center">
-                                  <Stack.Item grow style={{ minWidth: 0 }}>
-                                    <Box fontSize="10px">
-                                      <Box as="span" bold>
-                                        {connection.actor_name}
-                                      </Box>{' '}
-                                      → {connection.target_name}:{' '}
-                                      {connection.name}
-                                    </Box>
-                                  </Stack.Item>
-                                  <Stack.Item>
-                                    <Box color="label" fontSize="9px">
-                                      S{connection.speed} / F{connection.force}
-                                    </Box>
-                                  </Stack.Item>
-                                  {asBool(connection.can_stop) ? (
-                                    <Stack.Item>
-                                      <Button
-                                        compact
-                                        icon="times"
-                                        color="bad"
-                                        tooltip="Stop this connection"
-                                        onClick={() =>
-                                          act('stop_scene_action', {
-                                            ref: connection.ref,
-                                          })
-                                        }
-                                      />
-                                    </Stack.Item>
-                                  ) : null}
-                                </Stack>
-                              </Stack.Item>
-                            ))
-                          ) : (
-                            <Stack.Item>
-                              <Box color="label" fontSize="10px" italic>
-                                No active scene connections.
-                              </Box>
-                            </Stack.Item>
-                          )}
-                        </Stack>
-                      ) : null}
-                    </Section>
-                  </Stack.Item>
-                  <Stack.Item grow basis={0} style={{ minWidth: 0 }}>
-                    <Section
-                      fitted
-                      title={`Claimed Resources (${claims.length})`}
-                      buttons={
-                        <Button
-                          compact
-                          icon={claimsOpen ? 'chevron-up' : 'chevron-down'}
-                          tooltip={
-                            claimsOpen
-                              ? 'Collapse claimed resources'
-                              : 'Expand claimed resources'
-                          }
-                          onClick={() => setClaimsOpen(!claimsOpen)}
-                        />
-                      }
-                    >
-                      {claimsOpen ? (
-                        <Stack vertical maxHeight="8rem" overflowY="auto">
-                          {claims.length ? (
-                            claims.map((claim, index) => (
-                              <Stack.Item
-                                key={`${claim.host_name}-${claim.resource_name}-${index}`}
-                              >
-                                <Box
-                                  color={asBool(claim.hard) ? 'bad' : 'average'}
-                                  fontSize="10px"
-                                >
-                                  {claim.host_name}: {claim.resource_name} —{' '}
-                                  {claim.action_name}
-                                  {asBool(claim.hard)
-                                    ? ' (exclusive)'
-                                    : ' (shared)'}
-                                </Box>
-                              </Stack.Item>
-                            ))
-                          ) : (
-                            <Stack.Item>
-                              <Box color="label" fontSize="10px" italic>
-                                No resources are currently claimed.
-                              </Box>
-                            </Stack.Item>
-                          )}
-                        </Stack>
-                      ) : null}
-                    </Section>
-                  </Stack.Item>
-                </Stack>
-                <Input
-                  fluid
-                  expensive
-                  placeholder="Search for an interaction…"
-                  value={search}
-                  onChange={setSearch}
-                />
-                <Box color="label" fontSize="10px" my={0.5}>
-                  Showing {available.length} of {inactive.length} available
-                  interactions for the current filters.
-                </Box>
-                {activeActions.length ? (
-                  <Section title="Active" fitted mb={1}>
-                    <Stack wrap>{activeActions.map(renderActionButton)}</Stack>
-                  </Section>
-                ) : null}
-                {available.length ? (
-                  <Stack wrap>{available.map(renderActionButton)}</Stack>
-                ) : (
-                  <Box color="label" textAlign="center" p={2} italic>
-                    No interactions match these filters.
-                  </Box>
-                )}
-              </Section>
-            </Stack.Item>
-            <Stack.Item basis="110px" shrink={0}>
-              <ZoneFilterPanel
-                title={
-                  asBool(data.is_self)
-                    ? 'On yourself'
-                    : `On ${data.target_name}`
-                }
-                options={data.zone_options ?? []}
-                value={targetZone}
-                onChange={setTargetZone}
+              <Input
+                fluid
+                expensive
+                placeholder="Search interactions…"
+                value={search}
+                onChange={setSearch}
               />
+            </Stack.Item>
+            <Stack.Item>
+              <Box color="label" fontSize="10px">
+                {available.length} / {inactive.length}
+              </Box>
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                compact
+                icon={sceneOpen ? 'chevron-up' : 'chevron-down'}
+                tooltip="Who does what to whom in this scene, and which body parts are taken."
+                onClick={() => setSceneOpen(!sceneOpen)}
+              >
+                Scene: {connections.length} acts, {claims.length} claims
+              </Button>
             </Stack.Item>
           </Stack>
+        </Stack.Item>
+        {sceneOpen ? (
+          <Stack.Item>
+            <Section fitted>
+              <Stack vertical maxHeight="7rem" overflowY="auto">
+                {connections.map((connection) => (
+                  <Stack.Item key={connection.ref}>
+                    <Stack align="center">
+                      <Stack.Item grow style={{ minWidth: 0 }}>
+                        <Box fontSize="10px">
+                          <Box as="span" bold>
+                            {connection.actor_name}
+                          </Box>{' '}
+                          → {connection.target_name}: {connection.name}
+                        </Box>
+                      </Stack.Item>
+                      <Stack.Item>
+                        <Box color="label" fontSize="9px">
+                          {paceName(connection.speed, connection.force)}
+                        </Box>
+                      </Stack.Item>
+                      {asBool(connection.can_stop) ? (
+                        <Stack.Item>
+                          <Button
+                            compact
+                            icon="times"
+                            color="bad"
+                            tooltip="Stop this act"
+                            onClick={() =>
+                              act('stop_scene_action', { ref: connection.ref })
+                            }
+                          />
+                        </Stack.Item>
+                      ) : null}
+                    </Stack>
+                  </Stack.Item>
+                ))}
+                {claims.map((claim, index) => (
+                  <Stack.Item
+                    key={`${claim.host_name}-${claim.resource_name}-${index}`}
+                  >
+                    <Box
+                      color={asBool(claim.hard) ? 'bad' : 'average'}
+                      fontSize="10px"
+                    >
+                      {claim.host_name}: {claim.resource_name} —{' '}
+                      {claim.action_name}
+                      {asBool(claim.hard) ? ' (exclusive)' : ' (shared)'}
+                    </Box>
+                  </Stack.Item>
+                ))}
+                {!connections.length && !claims.length ? (
+                  <Stack.Item>
+                    <Box color="label" fontSize="10px" italic>
+                      Nothing is going on in this scene yet.
+                    </Box>
+                  </Stack.Item>
+                ) : null}
+              </Stack>
+            </Section>
+          </Stack.Item>
+        ) : null}
+        <Stack.Item grow>
+          <Section fill scrollable>
+            {activeActions.length ? (
+              <Section title="Active" fitted mb={0.5}>
+                <Stack wrap>{activeActions.map(renderActionButton)}</Stack>
+              </Section>
+            ) : null}
+            {available.length ? (
+              <Stack wrap>{available.map(renderActionButton)}</Stack>
+            ) : (
+              <Box color="label" textAlign="center" p={2} italic>
+                No interactions match these filters.
+              </Box>
+            )}
+          </Section>
         </Stack.Item>
         <Stack.Item>{renderQuickBar()}</Stack.Item>
       </Stack>
@@ -1314,10 +1473,11 @@ export const SexScene = () => {
     <>
       {categories.length ? (
         categories.map((category) => (
-          <Section key={category.name} title={category.name} fitted mb={1}>
+          <Box key={category.name} mb={1}>
+            <GroupTitle fontSize="11px">{category.name}</GroupTitle>
             {(category.prefs ?? []).map((pref) => (
-              <Stack key={pref.type} align="baseline" mb={0.75}>
-                <Stack.Item grow basis={0}>
+              <Stack key={pref.type} align="baseline" mb={0.75} mt={0.5} px={0.5}>
+                <Stack.Item grow basis={0} style={{ minWidth: 0 }}>
                   <Box bold>{pref.name}</Box>
                   <Box color="label" fontSize="11px">
                     {pref.description}
@@ -1330,7 +1490,7 @@ export const SexScene = () => {
                 </Stack.Item>
               </Stack>
             ))}
-          </Section>
+          </Box>
         ))
       ) : (
         <Box color="label" textAlign="center" p={2} italic>
@@ -1380,43 +1540,232 @@ export const SexScene = () => {
     );
   };
 
-  const renderKinks = () => {
-    const categories = data.intimacy?.their_kinks ?? [];
+  const kinkView = (kink: KinkEntry): KinkEdit =>
+    kinkDraft[kink.name] ?? {
+      enabled: asBool(kink.enabled),
+      intensity: kink.intensity || 1,
+      notes: kink.notes || '',
+    };
+
+  const editKink = (kink: KinkEntry, change: Partial<KinkEdit>) => {
+    const stored = {
+      enabled: asBool(kink.enabled),
+      intensity: kink.intensity || 1,
+      notes: kink.notes || '',
+    };
+    const next = { ...kinkView(kink), ...change };
+    const draft = { ...kinkDraft };
+    if (
+      next.enabled === stored.enabled &&
+      next.intensity === stored.intensity &&
+      next.notes === stored.notes
+    ) {
+      delete draft[kink.name];
+    } else {
+      draft[kink.name] = next;
+    }
+    setKinkDraft(draft);
+  };
+
+  const saveKinks = () => {
+    act('save_kinks', {
+      changes: Object.entries(kinkDraft).map(([name, edit]) => ({
+        name,
+        enabled: edit.enabled,
+        intensity: edit.intensity,
+        notes: edit.notes,
+      })),
+    });
+    setKinkDraft({});
+    setKinkNotesOpen(null);
+  };
+
+  const renderOwnKink = (kink: KinkEntry, locked: boolean) => {
+    const view = kinkView(kink);
+    const edited = !!kinkDraft[kink.name];
     return (
-      <Section fill scrollable>
-        {categories.length ? (
-          categories.map((category) => (
-            <Section key={category.name} title={category.name} fitted mb={1}>
-              {category.kinks.map((kink) => (
-                <Box key={kink.name} mb={0.75}>
-                  <Stack align="baseline">
-                    <Stack.Item grow>
-                      <Box bold>{kink.name}</Box>
-                    </Stack.Item>
-                    <Stack.Item>
-                      <Box color="pink" bold fontSize="11px">
-                        {INTENSITY_LABELS[kink.intensity - 1] || 'Unknown'}
-                      </Box>
-                    </Stack.Item>
-                  </Stack>
-                  <Box color="label" fontSize="11px">
-                    {kink.description}
+      <Box key={kink.name} mb={0.25}>
+        <Stack align="center">
+          <Stack.Item>
+            <Button
+              compact
+              icon={view.enabled ? 'check' : 'xmark'}
+              color={view.enabled ? 'good' : 'bad'}
+              disabled={locked}
+              tooltip={view.enabled ? 'Enabled' : 'Disabled'}
+              onClick={() => editKink(kink, { enabled: !view.enabled })}
+            />
+          </Stack.Item>
+          <Stack.Item grow style={{ minWidth: 0 }}>
+            <Tooltip content={kink.description} position="top">
+              <Box
+                bold={view.enabled}
+                color={view.enabled ? undefined : 'label'}
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {kink.name}
+                {edited ? (
+                  <Box as="span" color="average">
+                    {' '}
+                    *
                   </Box>
-                  {kink.notes ? (
-                    <Box color="average" fontSize="11px" italic>
-                      Notes: {kink.notes}
-                    </Box>
-                  ) : null}
-                </Box>
-              ))}
-            </Section>
-          ))
-        ) : (
-          <Box color="label" textAlign="center" p={2} italic>
-            No kink preferences found for this character.
+                ) : null}
+              </Box>
+            </Tooltip>
+          </Stack.Item>
+          {view.enabled ? (
+            <>
+              <Stack.Item>
+                <LevelControl
+                  value={view.intensity}
+                  labels={INTENSITY_LABELS}
+                  disabled={locked}
+                  onSet={(level) => editKink(kink, { intensity: level })}
+                />
+              </Stack.Item>
+              <Stack.Item>
+                <Button
+                  compact
+                  icon="pen"
+                  disabled={locked}
+                  selected={kinkNotesOpen === kink.name}
+                  tooltip={view.notes || 'Add a note'}
+                  onClick={() =>
+                    setKinkNotesOpen(
+                      kinkNotesOpen === kink.name ? null : kink.name,
+                    )
+                  }
+                />
+              </Stack.Item>
+            </>
+          ) : null}
+        </Stack>
+        {view.enabled && kinkNotesOpen === kink.name ? (
+          <Input
+            fluid
+            mt={0.25}
+            maxLength={256}
+            placeholder="A note for your partners…"
+            value={view.notes}
+            onChange={(value) => editKink(kink, { notes: value })}
+          />
+        ) : null}
+      </Box>
+    );
+  };
+
+  const renderTheirKinks = (categories: KinkCategory[]) =>
+    categories.length ? (
+      categories.map((category) => (
+        <Box key={category.name} mb={0.75}>
+          <Box mb={0.25}>
+            <GroupTitle fontSize="11px">{category.name}</GroupTitle>
           </Box>
-        )}
-      </Section>
+          {category.kinks.map((kink) => (
+            <Box key={kink.name} mb={0.5}>
+              <Stack align="baseline">
+                <Stack.Item grow>
+                  <Tooltip content={kink.description} position="top">
+                    <Box bold>{kink.name}</Box>
+                  </Tooltip>
+                </Stack.Item>
+                <Stack.Item>
+                  <Box color="pink" bold fontSize="11px">
+                    {INTENSITY_LABELS[kink.intensity - 1] || 'Unknown'}
+                  </Box>
+                </Stack.Item>
+              </Stack>
+              {kink.notes ? (
+                <Box color="average" fontSize="11px" italic>
+                  Notes: {kink.notes}
+                </Box>
+              ) : null}
+            </Box>
+          ))}
+        </Box>
+      ))
+    ) : (
+      <Box color="label" textAlign="center" p={2} italic>
+        No kinks enabled.
+      </Box>
+    );
+
+  const renderKinks = () => {
+    const intimacy = data.intimacy || ({} as IntimacyData);
+    const locked = !!intimacy.lock_reason;
+    const yours = intimacy.your_kinks ?? [];
+    const editedCount = Object.keys(kinkDraft).length;
+    return (
+      <Stack fill vertical>
+        {intimacy.lock_reason ? (
+          <Stack.Item>
+            <NoticeBox mb={0}>{intimacy.lock_reason}</NoticeBox>
+          </Stack.Item>
+        ) : null}
+        <Stack.Item grow>
+          <Stack fill>
+            <Stack.Item grow basis={0} style={{ minWidth: 0 }}>
+              <Section
+                fill
+                scrollable
+                title="Your kinks"
+                buttons={
+                  <>
+                    <Button
+                      compact
+                      icon="undo"
+                      disabled={!editedCount}
+                      onClick={() => {
+                        setKinkDraft({});
+                        setKinkNotesOpen(null);
+                      }}
+                    >
+                      Discard
+                    </Button>
+                    <Button
+                      compact
+                      icon="save"
+                      disabled={!editedCount || locked}
+                      tooltip="Saves to your character, so the prefs menu shows it too."
+                      onClick={saveKinks}
+                    >
+                      {editedCount ? `Save (${editedCount})` : 'Save'}
+                    </Button>
+                  </>
+                }
+              >
+                {yours.length ? (
+                  yours.map((category) => (
+                    <Box key={category.name} mb={0.75}>
+                      <Box mb={0.25}>
+                        <GroupTitle fontSize="11px">{category.name}</GroupTitle>
+                      </Box>
+                      {category.kinks.map((kink) =>
+                        renderOwnKink(kink, locked),
+                      )}
+                    </Box>
+                  ))
+                ) : (
+                  <Box color="label" textAlign="center" p={2} italic>
+                    No kinks to set.
+                  </Box>
+                )}
+              </Section>
+            </Stack.Item>
+            {!asBool(data.is_self) ? (
+              <Stack.Item grow basis={0} style={{ minWidth: 0 }}>
+                <Section fill scrollable title={`${data.target_name}'s kinks`}>
+                  {renderTheirKinks(intimacy.their_kinks ?? [])}
+                </Section>
+              </Stack.Item>
+            ) : null}
+          </Stack>
+        </Stack.Item>
+      </Stack>
     );
   };
 
@@ -1599,7 +1948,7 @@ export const SexScene = () => {
   };
 
   return (
-    <Window title="Sate Desire" width={900} height={560} theme="vanderlin">
+    <Window title="Sate Desire" width={760} height={520} theme="vanderlin">
       <Window.Content>
         <Stack fill vertical>
           <Stack.Item>{renderHeader()}</Stack.Item>
@@ -1649,6 +1998,16 @@ export const SexScene = () => {
               >
                 Notes
               </Tabs.Tab>
+              <Box style={{ marginLeft: 'auto', alignSelf: 'center' }}>
+                <Button
+                  compact
+                  icon="circle-notch"
+                  tooltip="Open the holes window"
+                  onClick={() => act('view_holes')}
+                >
+                  View holes
+                </Button>
+              </Box>
             </Tabs>
           </Stack.Item>
           <Stack.Item grow>{renderActiveTab()}</Stack.Item>

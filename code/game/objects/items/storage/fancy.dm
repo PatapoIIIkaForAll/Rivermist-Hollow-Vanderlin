@@ -197,7 +197,7 @@
 
 /obj/item/storage/fancy/cigarettes/zig
 	item_weight = 32 GRAMS
-	name = "zigbox"
+	name = "cigarette box"
 	desc = ""
 	icon_state = "zig"
 	base_icon_state = "zig"

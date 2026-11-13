@@ -176,12 +176,6 @@
 			if(fueluse == 0)
 				burn_out()
 	else
-		// BUGFIX (fuel): STOP_PROCESSING clears the processing datum_flag.
-		// If we only return PROCESS_KILL, SSmachines drops us from its list but the
-		// PROCESSING_DEFAULT flag stays set on the machine, so any later
-		// START_PROCESSING becomes a silent no-op and a relit fire never
-		// consumes fuel again (eternal ovens/campfires).
-		STOP_PROCESSING(SSmachines, src)
 		return PROCESS_KILL
 
 

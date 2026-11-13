@@ -21,7 +21,7 @@
 /datum/dungeon_unlock/extra_cache
 	id = "extra_cache"
 	name = "Greedy Eye"
-	desc = "Reward caches grant one extra share."
+	desc = "Reward caches can be opened one extra time."
 	echo_cost = 120
 
 /datum/dungeon_unlock/deep_start

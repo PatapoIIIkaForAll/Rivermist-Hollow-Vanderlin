@@ -40,6 +40,9 @@ GLOBAL_LIST_EMPTY(required_map_items)
 	///The priority of the test, the larger it is the later it fires
 	var/priority = TEST_DEFAULT
 
+	/// Loads pocket dimensions; skipped under ABSOLUTE_MINIMUM_MODE, whose 25x35 world cannot reserve one.
+	var/needs_pocket_space = FALSE
+
 	//internal shit
 	var/list/allocated
 	var/focus = FALSE
@@ -77,6 +80,10 @@ GLOBAL_LIST_EMPTY(required_map_items)
 			if(istype(content, /obj/effect/landmark))
 				continue
 			qdel(content)
+		// Smells outlive their source and are capped per turf, so a leftover cloud blocks the next test's.
+		if(isopenturf(turf))
+			var/turf/open/open_turf = turf
+			QDEL_NULL(open_turf.pollution)
 	return ..()
 
 /datum/unit_test/proc/Run()
@@ -230,14 +237,21 @@ GLOBAL_LIST_EMPTY(required_map_items)
 
 	GLOB.current_test = test
 	var/duration = REALTIMEOFDAY
-	var/skip_test = (test_path in SSmapping.config?.skipped_tests)
+	var/skip_reason
+	if(test_path in SSmapping.config?.skipped_tests)
+		skip_reason = "Skipped run on map [SSmapping.config?.map_name]."
+#ifdef ABSOLUTE_MINIMUM_MODE
+	else if(test.needs_pocket_space)
+		skip_reason = "Needs pocket dimensions, which ABSOLUTE_MINIMUM_MODE cannot reserve."
+#endif
+	var/skip_test = !!skip_reason
 	var/test_output_desc = "[test_path]"
 	var/message = ""
 
 	log_world("::group::[test_path]")
 
 	if(skip_test)
-		log_world("SKIPPED Skipped run on map [SSmapping.config?.map_name].")
+		log_world("SKIPPED [skip_reason]")
 
 	else
 

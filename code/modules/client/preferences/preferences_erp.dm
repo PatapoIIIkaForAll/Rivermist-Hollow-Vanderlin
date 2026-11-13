@@ -5,8 +5,15 @@
 		return TRUE
 	return istype(current_area, /area/indoors/town/church/chapel)
 
-/datum/preferences/proc/get_erp_preference_edit_lock_reason(mob/user)
+/// Whether the spawned character still holds this player; back in the lobby the next character is a new one.
+/datum/preferences/proc/is_erp_spawn_locked(mob/user)
 	if(!has_spawned)
+		return FALSE
+	var/mob/viewer = user || parent?.mob
+	return !isnewplayer(viewer)
+
+/datum/preferences/proc/get_erp_preference_edit_lock_reason(mob/user)
+	if(!is_erp_spawn_locked(user))
 		return null
 
 	if(is_erp_preference_chapel_area(get_area(user)))
@@ -17,9 +24,9 @@
 		if(living_user.erp_preference_edit_grace_expires_at && world.time <= living_user.erp_preference_edit_grace_expires_at)
 			return null
 
-		return "Your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning have passed, and you are not in a chapel. ERP preferences can only be changed in the lobby before you spawn, during your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning, or while standing in a chapel."
+		return "Your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning have passed, and you are not in a chapel. ERP preferences can only be changed in the lobby, during your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning, or while standing in a chapel."
 
-	return "You have already spawned, so ERP preferences are no longer editable from the lobby. They can still be changed during your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning or while standing in a chapel."
+	return "Your character is still in the round, so ERP preferences cannot change while you are a ghost. Return to the lobby to change them for your next character."
 
 /datum/preferences/proc/mark_erp_preferences_dirty()
 	erp_preferences_revision++
@@ -180,7 +187,7 @@
 		for(var/pref_type in categories[category])
 			var/datum/erp_preference/pref = new pref_type()
 			dat += "<tr><td width='50%'><b>[pref.name]:</b><br><i>[pref.description]</i></td>"
-			dat += "<td width='50%'>[pref.show_pref_ui(src, lock_reason)]</td></tr>"
+			dat += "<td width='50%'>[pref.show_pref_ui(src, pref.get_edit_lock_reason(user, src))]</td></tr>"
 	dat += "</table>"
 	return dat
 
@@ -226,12 +233,13 @@
 	dat += "</a><br>"
 
 	if(enabled)
+		var/static/list/intensity_names = list("Very Light", "Light", "Moderate", "Intense", "Very Intense")
+		var/level = clamp(floor(intensity), 1, length(intensity_names))
+		var/intensity_href = "byond://?_src_=prefs;task=erp_pref;preference=kink;kink_name=[url_encode(kink.name)];action=set_intensity;intensity="
 		dat += "<b>Intensity:</b> "
-		for(var/i = 1 to 5)
-			if(i == intensity)
-				dat += "<b>[i]</b> "
-			else
-				dat += "<a href='byond://?_src_=prefs;task=erp_pref;preference=kink;kink_name=[url_encode(kink.name)];action=set_intensity;intensity=[i]'>[i]</a> "
+		dat += level > 1 ? "<a href='[intensity_href][level - 1]'>&lt;</a>" : "<a class='linkOff'>&lt;</a>"
+		dat += "<a class='linkOff'>[intensity_names[level]]</a>"
+		dat += level < length(intensity_names) ? "<a href='[intensity_href][level + 1]'>&gt;</a>" : "<a class='linkOff'>&gt;</a>"
 		dat += "<br>"
 
 		dat += "<b>Notes:</b> "
@@ -276,6 +284,36 @@
 			if(new_notes != null)
 				kink_data["notes"] = new_notes
 	mark_erp_preferences_dirty()
+
+/// Sets one kink from a panel edit; a null field keeps its stored value. FALSE for an unknown kink.
+/datum/preferences/proc/set_kink_preference(kink_name, enabled, intensity, notes)
+	if(!istext(kink_name) || !GLOB.available_kinks[kink_name])
+		return FALSE
+	var/list/kink_prefs = ensure_kink_preferences()
+	var/list/kink_data = kink_prefs[kink_name]
+	if(!islist(kink_data))
+		kink_data = get_default_kink_preference_data()
+		kink_prefs[kink_name] = kink_data
+	if(!isnull(enabled))
+		kink_data["enabled"] = (enabled == TRUE || enabled == "1")
+	var/level = isnull(intensity) ? null : text2num("[intensity]")
+	if(isnum(level))
+		kink_data["intensity"] = clamp(round(level), 1, 5)
+	if(!isnull(notes))
+		kink_data["notes"] = trim(STRIP_HTML_SIMPLE("[notes]", KINK_NOTES_MAX_LENGTH))
+	return TRUE
+
+/// Writes only the ERP block of the loaded slot, so other unsaved character edits stay unsaved.
+/datum/preferences/proc/save_erp_preferences()
+	if(!path)
+		return FALSE
+	var/savefile/S = new /savefile(path)
+	if(!S)
+		return FALSE
+	S.cd = "/character[default_slot]"
+	var/datum/preference/erp_entry = GLOB.preference_entries[/datum/preference/list_type/erp_preferences]
+	WRITE_FILE(S[erp_entry.savefile_key], erp_entry.serialize(ensure_erp_preferences()))
+	return TRUE
 
 /datum/preferences/proc/apply_character_kinks(mob/living/carbon/human/character)
 	var/list/erp_preferences = ensure_erp_preferences()

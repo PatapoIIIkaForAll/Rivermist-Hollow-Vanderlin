@@ -116,6 +116,9 @@
 			else if(copytext(name, -3) == ".js")
 				inline_assets_str += "Byond.loadJs('[url]', true);\n"
 		asset.send(client)
+	// Asset sends can sleep; the client may have disconnected meanwhile.
+	if(QDELETED(client))
+		return
 	if(length(inline_assets_str))
 		inline_assets_str = "<script>\n" + inline_assets_str + "</script>\n"
 	html = replacetextEx(html, "<!-- tgui:assets -->\n", inline_assets_str)
@@ -134,6 +137,8 @@
 	client << browse(html, "window=[id];[options]")
 	// Detect whether the control is a browser
 	is_browser = winexists(client, id) == "BROWSER"
+	if(QDELETED(client))
+		return
 	// Instruct the client to signal UI when the window is closed.
 	if(!is_browser)
 		winset(client, id, "on-close=\"uiclose [id]\"")

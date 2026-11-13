@@ -176,20 +176,7 @@
 	emote_overlay.color = overlay_typepath::draw_color
 	emote_overlay.alpha = overlay_typepath::draw_alpha
 
-	var/datum/species/species = dna?.species
-	var/list/offsets
-	if(species)
-		var/use_female_sprites = MALE_SPRITES
-		if(species.sexes)
-			if(gender == FEMALE && !species.swap_female_clothes || gender == MALE && species.swap_male_clothes || gender == MALE && species.swap_male_clothes_but_not_offsets)
-				use_female_sprites = FEMALE_SPRITES
-		if(use_female_sprites && !(gender == MALE && species.swap_male_clothes_but_not_offsets))
-			offsets = species.offset_features_f
-		else
-			offsets = species.offset_features_m
-	if(LAZYACCESS(offsets, OFFSET_FACE))
-		emote_overlay.pixel_x += offsets[OFFSET_FACE][1]
-		emote_overlay.pixel_y += offsets[OFFSET_FACE][2]
+	apply_offset(emote_overlay, OFFSET_FACE)
 	return emote_overlay
 
 /datum/bodypart_feature/visual_emote/tongue

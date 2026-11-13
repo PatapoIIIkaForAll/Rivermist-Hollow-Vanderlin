@@ -176,10 +176,6 @@ SUBSYSTEM_DEF(job)
 			JobDebug("GRJ incompatible with sex, Player: [player], Job: [job.title]")
 			continue
 
-		if(job.banned_leprosy && is_misc_banned(player.client.ckey, BAN_MISC_LEPROSY))
-			JobDebug("GRJ incompatible with leprosy, Player: [player], Job: [job.title]")
-			continue
-
 		if(job.banned_lunatic && is_misc_banned(player.client.ckey, BAN_MISC_LUNATIC))
 			JobDebug("GRJ incompatible with lunatic, Player: [player], Job: [job.title]")
 			continue
@@ -249,10 +245,6 @@ SUBSYSTEM_DEF(job)
 
 	if((player_prefs.lastclass == job.title) && (!job.bypass_lastclass))
 		JobDebug("Eligibility failed: lastclass, Player: [player], Job: [job.title]")
-		return FALSE
-
-	if(job.banned_leprosy && is_misc_banned(player.client.ckey, BAN_MISC_LEPROSY))
-		JobDebug("Eligibility failed: leprosy, Player: [player], Job: [job.title]")
 		return FALSE
 
 	if(job.banned_lunatic && is_misc_banned(player.client.ckey, BAN_MISC_LUNATIC))
@@ -908,9 +900,6 @@ SUBSYSTEM_DEF(job)
 		return
 
 	if((player_prefs.lastclass == job.title) && (!job.bypass_lastclass))
-		return
-
-	if(job.banned_leprosy && is_misc_banned(player.client.ckey, BAN_MISC_LEPROSY))
 		return
 
 	if(job.banned_lunatic && is_misc_banned(player.client.ckey, BAN_MISC_LUNATIC))

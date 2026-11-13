@@ -9,6 +9,44 @@
 	can_cauterize = FALSE
 	critical = FALSE
 	viable_zones = list(BODY_ZONE_HEAD)
+	/// Lighter wound a player body receives instead of this one; null means players take it as is.
+	var/datum/wound/player_stand_in
+
+/// The wound type victim really receives: player bodies swap facial gore for its stand-in.
+/proc/wound_type_for_victim(wound_type, mob/living/victim)
+	if(!ispath(wound_type, /datum/wound/facial) || !victim?.spared_from_gore())
+		return wound_type
+	var/datum/wound/facial/primordial = GLOB.primordial_wounds[wound_type]
+	return primordial?.player_stand_in || wound_type
+
+/// TRUE for player bodies, which never lose tongue, eyes, ears or face to gore.
+/mob/living/proc/spared_from_gore()
+	return is_player_character()
+
+/// Acid on the face: NPCs are disfigured for good, players only take the damage.
+/mob/living/proc/acid_scar_face()
+	if(!spared_from_gore())
+		ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
+
+/// Face stolen by the profane dagger: NPCs stay faceless, players get their face back after a while.
+/mob/living/proc/lose_face_to_thief()
+	if(!spared_from_gore())
+		ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
+		return
+	ADD_TRAIT(src, TRAIT_DISFIGURED, "stolen_face")
+	addtimer(CALLBACK(src, PROC_REF(restore_stolen_face)), 30 MINUTES, TIMER_UNIQUE|TIMER_OVERRIDE)
+
+/mob/living/proc/restore_stolen_face()
+	REMOVE_TRAIT(src, TRAIT_DISFIGURED, "stolen_face")
+
+/// Riddle failure: NPCs lose the tongue, players are silenced for five minutes. Returns the chat line.
+/mob/living/proc/riddle_tongue_penalty()
+	if(spared_from_gore())
+		apply_status_effect(/datum/status_effect/silenced, 5 MINUTES)
+		return "THE RIDDLE SILENCES YOU FOR FIVE MINUTES AS IT FLEES."
+	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
+	tongue?.Remove(src)
+	return "THE RIDDLE REMOVES YOUR LYING TONGUE AS IT FLEES."
 
 /datum/wound/facial/can_stack_with(datum/wound/other)
 	if(istype(other, /datum/wound/facial) && (type == other.type))
@@ -28,6 +66,7 @@
 	critical = TRUE
 	associated_bclasses = STAB_BCLASSES
 	viable_zones = list(BODY_ZONE_PRECISE_EARS)
+	player_stand_in = /datum/wound/puncture/large
 
 /datum/wound/facial/ears/can_apply_to_bodypart(obj/item/bodypart/affected)
 	. = ..()
@@ -63,6 +102,7 @@
 	can_cauterize = FALSE
 	critical = TRUE
 	viable_zones = list(BODY_ZONE_PRECISE_R_EYE, BODY_ZONE_PRECISE_L_EYE)
+	player_stand_in = /datum/wound/fracture/head/eyes
 
 /datum/wound/facial/eyes/on_mob_gain(mob/living/affected)
 	. = ..()
@@ -179,12 +219,8 @@
 	critical = TRUE
 	associated_bclasses = ARTERY_BCLASSES
 	viable_zones = list(BODY_ZONE_HEAD)
+	player_stand_in = /datum/wound/fracture/mouth
 	var/permanent = FALSE
-
-/datum/wound/facial/tongue/get_crit_prob(bclass, dam, damage_dividend, mob/living/user, obj/item/bodypart/affected, zone_precise, list/modifiers)
-	if(affected?.owner?.is_player_character())
-		return 0
-	return ..()
 
 /datum/wound/facial/tongue/can_apply_to_mob(mob/living/affected)
 	. = ..()
@@ -225,11 +261,7 @@
 	critical = TRUE
 	associated_bclasses = STAB_BCLASSES
 	viable_zones = list(BODY_ZONE_HEAD)
-
-/datum/wound/facial/disfigurement/get_crit_prob(bclass, dam, damage_dividend, mob/living/user, obj/item/bodypart/affected, zone_precise, list/modifiers)
-	if(affected?.owner?.is_player_character())
-		return 0
-	return ..()
+	player_stand_in = /datum/wound/puncture/large
 
 /datum/wound/facial/disfigurement/on_mob_gain(mob/living/affected)
 	. = ..()
@@ -248,6 +280,7 @@
 	)
 	mortal = TRUE
 	viable_zones = list(BODY_ZONE_PRECISE_NOSE)
+	player_stand_in = /datum/wound/fracture/head/nose
 
 /datum/wound/facial/disfigurement/nose/on_mob_gain(mob/living/affected)
 	. = ..()

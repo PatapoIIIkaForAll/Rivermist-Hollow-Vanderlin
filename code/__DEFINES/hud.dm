@@ -164,15 +164,28 @@
 #define rogueui_backr "WEST-4,SOUTH+5"
 #define rogueui_gloves "WEST-2,SOUTH+3"
 #define rogueui_head "WEST-3,SOUTH+6"
-#define rogueui_shoes "WEST-3:16,SOUTH+1"
+#define rogueui_shoes "WEST-3,SOUTH+1"
 #define rogueui_beltr "WEST-4,SOUTH+2"
 #define rogueui_beltl "WEST-2,SOUTH+2"
 #define rogueui_belt "WEST-3,SOUTH+2"
 #define rogueui_shirt "WEST-3,SOUTH+3"
-#define rogueui_pants "WEST-4:16,SOUTH+1"
+#define rogueui_pants "WEST-4,SOUTH+1"
 #define rogueui_armor "WEST-3,SOUTH+4"
 #define rogueui_cloak "WEST-3,SOUTH+5"
 #define rogueui_mouth "WEST-2,SOUTH+6"
+#define rogueui_smallclothes "WEST-2,SOUTH+1"
+#define rogueui_holes "WEST-2,SOUTH"
+
+// Smallclothes drawer beside the HUD; rows match the inventory rows and clear the action palette below.
+#define rogueui_earring_l "WEST+0,SOUTH+6"
+#define rogueui_earring_r "WEST+1,SOUTH+6"
+#define rogueui_choker "WEST+0,SOUTH+5"
+#define rogueui_bra "WEST+1,SOUTH+5"
+#define rogueui_undershirt "WEST+0,SOUTH+4"
+#define rogueui_armsleeves "WEST+1,SOUTH+4"
+#define rogueui_underwear "WEST+0,SOUTH+3"
+#define rogueui_garter "WEST+1,SOUTH+3"
+#define rogueui_socks "WEST+0:16,SOUTH+2"
 
 #define rogueui_drop "WEST-1:-16,SOUTH+7"
 #define rogueui_throw "WEST-1:-16,SOUTH+7"
@@ -203,7 +216,7 @@
 #define rogueui_vitae "WEST-5:-8,CENTER+2"
 
 #define rogueui_cmode "WEST-1:-16,CENTER+1"
-#define rogueui_def "WEST-2,NORTH-5"
+#define rogueui_interact "WEST-3,SOUTH"
 
 #define rogueui_rmbintents "WEST-4:-16,CENTER+1"
 

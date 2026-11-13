@@ -99,4 +99,22 @@
 				used = list('sound/vo/clap (1).ogg', 'sound/vo/clap (2).ogg', 'sound/vo/clap (3).ogg', 'sound/vo/clap (4).ogg')
 			if("rawr")
 				used = list('sound/vo/rawrf1.ogg', 'sound/vo/rawrf2.ogg', 'sound/vo/rawrf3.ogg')
+			if("blink")
+				used = 'sound/vo/blink.ogg'
+			if("salute")
+				used = 'sound/vo/salute.ogg'
+			if("shiver")
+				used = 'sound/vo/shiver.ogg'
+			if("sniff")
+				used = 'sound/vo/sniff.ogg'
+			if("sneeze")
+				used = 'sound/vo/female/female_sneeze.ogg'
+			if("flutter")
+				used = 'sound/vo/moth/moth_flutter.ogg'
+			if("warcry")
+				used = list('sound/vo/female/gen/warcry_female1.ogg', 'sound/vo/female/gen/warcry_female2.ogg', 'sound/vo/female/gen/warcry_female3.ogg')
+			if("hmph")
+				used = 'sound/vo/female/gen/hmph (1).ogg'
+			if("strain")
+				used = 'sound/vo/female/gen/strain.ogg'
 	return used

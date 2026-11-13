@@ -1,7 +1,8 @@
 
+// Own id, since sharing "bigboobs" removed the size 5 stats; the breast size status draws the alert.
 /datum/status_effect/debuff/boobs_quirk
-	id = "bigboobs"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/boobs_quirk
+	id = "endowed"
+	alert_type = null
 	examine_text = span_notice("They have massive MAGICAL GOODS!")
 	//effectedstats = list("constitution" = 2, "speed" = -2)
 	duration = -1

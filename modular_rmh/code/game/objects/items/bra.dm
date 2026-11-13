@@ -23,16 +23,6 @@
 	. = ..()
 	AddComponent(/datum/component/storage/concrete/bra)
 
-/obj/item/clothing/bra/attack(mob/M, mob/user, def_zone)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(!H.bra)
-			if(!get_location_accessible(H, BODY_ZONE_CHEST))
-				return
-			user.visible_message(span_notice("[user] tries to put [src] on [H]..."))
-			if(do_after(user, 50, target = H))
-				H.equip_to_slot_if_possible(src, ITEM_SLOT_UNDER_TOP, disable_warning = TRUE)
-
 /obj/item/clothing/bra/bikini
 	name = "bikini top"
 	desc = "The centerpiece of a bathing suit."

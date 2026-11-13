@@ -15,6 +15,13 @@
 /obj/structure/rack,
 /turf/open/floor/ruinedwood/herringbone,
 /area/indoors/rmh_darkforestbog/forest/abandonedvillage)
+"ae" = (
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/tunnels)
+"af" = (
+/obj/structure/fluff/traveltile/rmh_cc/gnollhub,
+/turf/open/floor/naturalstone,
+/area/indoors/cave/rmh_cave/gnolls/tunnels)
 "ag" = (
 /obj/structure/stairs{
 	dir = 1
@@ -385,7 +392,6 @@
 /area/outdoors/rmh_bog)
 "cs" = (
 /obj/effect/decal/edge{
-	dir = 2;
 	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
@@ -412,9 +418,7 @@
 /turf/closed/wall/mineral/wooddark/end,
 /area/indoors/rmh_darkforestbog/forest/treehouse)
 "cy" = (
-/mob/living/simple_animal/hostile/retaliate/bogbug{
-	dir = 2
-	},
+/mob/living/simple_animal/hostile/retaliate/bogbug,
 /turf/open/floor/dirt/road,
 /area/outdoors/rmh_bog/north)
 "cz" = (
@@ -619,9 +623,7 @@
 /turf/open/floor/dirt,
 /area/outdoors/rmh_air)
 "dH" = (
-/mob/living/simple_animal/hostile/retaliate/bogbug{
-	dir = 2
-	},
+/mob/living/simple_animal/hostile/retaliate/bogbug,
 /turf/open/floor/naturalstone,
 /area/under/rmh_bogforest_caves/cliffcaves)
 "dN" = (
@@ -1000,9 +1002,7 @@
 /turf/open/floor/cobblerock,
 /area/indoors/rmh_darkforestbog/forest/forestranger)
 "gl" = (
-/turf/closed/wall/mineral/tent{
-	dir = 2
-	},
+/turf/closed/wall/mineral/tent,
 /area/under/rmh_dungeon/goblindungeon)
 "gp" = (
 /mob/living/simple_animal/hostile/retaliate/gaseousform,
@@ -1055,7 +1055,6 @@
 /area/indoors/rmh_darkforestbog/forest/treehouse)
 "gN" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -1180,7 +1179,6 @@
 /area/outdoors/rmh_darkforest/goblincampfire)
 "hS" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -1225,8 +1223,7 @@
 /area/under/rmh_dungeon/goblindungeon)
 "ie" = (
 /obj/structure/door/weak/bolt{
-	dir = 1;
-	pixel_y = 0
+	dir = 1
 	},
 /turf/open/water/swamp/deep,
 /area/indoors/rmh_darkforestbog/bog/swampvillage)
@@ -1407,8 +1404,7 @@
 "jl" = (
 /obj/effect/decal/cobbleedge/alt{
 	dir = 10;
-	icon_state = "cobbleedgealt-e";
-	pixel_y = 0
+	icon_state = "cobbleedgealt-e"
 	},
 /obj/machinery/light/fueled/torchholder/r,
 /turf/open/floor/cobblerock,
@@ -2008,7 +2004,6 @@
 "mX" = (
 /obj/structure/flora/grass,
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -2184,9 +2179,7 @@
 /turf/open/floor/ruinedwood/spiral,
 /area/outdoors/rmh_air)
 "nZ" = (
-/mob/living/simple_animal/hostile/retaliate/bogbug{
-	dir = 2
-	},
+/mob/living/simple_animal/hostile/retaliate/bogbug,
 /turf/open/floor/dirt/road,
 /area/outdoors/rmh_bog/south)
 "oa" = (
@@ -2313,9 +2306,7 @@
 /obj/effect/decal/cobblerockedge{
 	dir = 8
 	},
-/obj/effect/decal/cobblerockedge/alt{
-	dir = 2
-	},
+/obj/effect/decal/cobblerockedge/alt,
 /turf/open/floor/cobble,
 /area/under/rmh_dungeon/orcpost)
 "oE" = (
@@ -2901,7 +2892,6 @@
 /area/outdoors/rmh_air)
 "sl" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -3123,8 +3113,7 @@
 	},
 /obj/effect/decal/edge_corner{
 	dir = 8;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_darkforestbog/forest/forestranger)
@@ -3465,7 +3454,6 @@
 /area/under/rmh_bedrock)
 "vY" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -3574,7 +3562,6 @@
 /area/indoors/rmh_darkforestbog/forest/goblincamp)
 "wG" = (
 /obj/structure/door/viewport{
-	dir = 2;
 	name = "Forest Tower's Door"
 	},
 /obj/effect/mapping_helpers/access/keyset/garrison/forest,
@@ -3713,8 +3700,7 @@
 	},
 /obj/effect/decal/edge_corner{
 	dir = 1;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_darkforestbog/forest/forestranger)
@@ -3983,9 +3969,7 @@
 /area/outdoors/rmh_bog)
 "zx" = (
 /obj/structure/flora/newleaf,
-/obj/structure/flora/newbranch/leafless{
-	dir = 2
-	},
+/obj/structure/flora/newbranch/leafless,
 /turf/open/openspace,
 /area/outdoors/rmh_darkforest)
 "zy" = (
@@ -4118,9 +4102,7 @@
 /turf/open/floor/twig,
 /area/indoors/rmh_darkforestbog/bog/swampvillage)
 "An" = (
-/mob/living/simple_animal/hostile/retaliate/bogbug{
-	dir = 2
-	},
+/mob/living/simple_animal/hostile/retaliate/bogbug,
 /turf/open/floor/dirt,
 /area/outdoors/rmh_bog/north)
 "Ao" = (
@@ -4154,7 +4136,6 @@
 /area/indoors/rmh_darkforestbog/bog/orcsdarfort)
 "Au" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -4491,7 +4472,6 @@
 	desc = "Мудрое дерево. Кажется, частица мудрости Сильвануса поcесилась в сердце этого древа."
 	},
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -4945,7 +4925,6 @@
 /area/indoors/rmh_darkforestbog/forest/forestranger)
 "Gb" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -5315,9 +5294,7 @@
 /turf/open/floor/dirt,
 /area/outdoors/rmh_darkforest/goblincampfire)
 "If" = (
-/turf/closed/wall/mineral/tent{
-	dir = 2
-	},
+/turf/closed/wall/mineral/tent,
 /area/indoors/rmh_darkforestbog/forest/goblincamp)
 "Ig" = (
 /obj/structure/flora/grass/thorn_bush,
@@ -5422,7 +5399,6 @@
 /area/outdoors/rmh_bog/south)
 "IK" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -5529,7 +5505,6 @@
 /area/outdoors/rmh_bog/south)
 "Jr" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -5760,9 +5735,7 @@
 /area/outdoors/rmh_bog)
 "KM" = (
 /obj/structure/flora/newleaf,
-/obj/structure/flora/newbranch/leafless{
-	dir = 2
-	},
+/obj/structure/flora/newbranch/leafless,
 /turf/open/openspace,
 /area/outdoors/rmh_air)
 "KN" = (
@@ -5915,9 +5888,7 @@
 /turf/open/floor/dirt,
 /area/outdoors/rmh_bog/south)
 "LI" = (
-/turf/open/floor/rooftop{
-	dir = 2
-	},
+/turf/open/floor/rooftop,
 /area/outdoors/rmh_air)
 "LJ" = (
 /obj/structure/rack,
@@ -6025,9 +5996,7 @@
 /turf/open/floor/cobblerock,
 /area/under/rmh_dungeon/orcsjail)
 "Mm" = (
-/obj/effect/decal/cobblerockedge/alt{
-	dir = 2
-	},
+/obj/effect/decal/cobblerockedge/alt,
 /turf/open/floor/cobblerock,
 /area/under/rmh_dungeon/orcpost)
 "Mn" = (
@@ -6239,7 +6208,6 @@
 /area/indoors/rmh_darkforestbog/forest/abandonedvillage)
 "Nv" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -6266,9 +6234,7 @@
 /turf/closed/wall/mineral/wood,
 /area/indoors/rmh_darkforestbog/bog/swampvillage)
 "NI" = (
-/obj/structure/door/weak/bolt{
-	dir = 2
-	},
+/obj/structure/door/weak/bolt,
 /turf/open/floor/ruinedwood/turned,
 /area/indoors/rmh_darkforestbog/forest/hunterpost)
 "NJ" = (
@@ -7035,9 +7001,7 @@
 /turf/open/floor/naturalstone,
 /area/under/rmh_bogforest_caves/moistcaves)
 "Sz" = (
-/turf/closed/wall/mineral/wooddark/end{
-	dir = 2
-	},
+/turf/closed/wall/mineral/wooddark/end,
 /area/indoors/rmh_darkforestbog/forest/hunterpost)
 "SA" = (
 /obj/structure/rack/shelf/big{
@@ -7376,9 +7340,7 @@
 /area/under/rmh_dungeon/orcpost)
 "UO" = (
 /obj/effect/decal/edge_corner{
-	dir = 2;
-	color = "#522f26";
-	pixel_y = 0
+	color = "#522f26"
 	},
 /turf/open/floor/blocks/stonered/tiny,
 /area/indoors/rmh_darkforestbog/forest/forestranger)
@@ -7555,7 +7517,6 @@
 /area/indoors/shelter/bog)
 "VR" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -7954,10 +7915,7 @@
 /turf/open/floor/ruinedwood/chevron,
 /area/indoors/rmh_darkforestbog/forest/abandonedvillage)
 "Yv" = (
-/obj/structure/door/weak/bolt{
-	dir = 2;
-	pixel_y = 0
-	},
+/obj/structure/door/weak/bolt,
 /turf/open/floor/ruinedwood/darker,
 /area/indoors/rmh_darkforestbog/bog/swampvillage)
 "Yz" = (
@@ -8123,7 +8081,6 @@
 /area/indoors/rmh_darkforestbog/bog/orcsdarfort)
 "Zs" = (
 /obj/effect/decal/cleanable/blood/footprints{
-	dir = 2;
 	pixel_y = -1
 	},
 /turf/open/floor/cobblerock,
@@ -8171,9 +8128,7 @@
 /turf/open/floor/dirt,
 /area/under/rmh_dungeon/goblindungeon)
 "ZM" = (
-/mob/living/simple_animal/hostile/retaliate/bogbug{
-	dir = 2
-	},
+/mob/living/simple_animal/hostile/retaliate/bogbug,
 /turf/open/floor/dirt,
 /area/outdoors/rmh_bog/south)
 "ZO" = (
@@ -8198,7 +8153,6 @@
 /area/under/rmh_bedrock)
 "ZX" = (
 /obj/effect/wisp/prestidigitation{
-	pixel_x = 0;
 	name = "Will-o'-the-wisp";
 	desc = "A small, fiery ball of light made up of mystical energy."
 	},
@@ -140156,11 +140110,11 @@ OK
 OK
 OK
 Pe
-Pe
-Pe
-Pe
-Pe
-Pe
+QH
+QH
+QH
+ae
+fr
 fr
 fr
 Pe
@@ -140373,12 +140327,12 @@ OK
 OK
 OK
 Pe
-Pe
-Pe
-Pe
-Pe
-Pe
-Pe
+QH
+QH
+ae
+ae
+ae
+fr
 fr
 Pe
 Pe
@@ -140590,12 +140544,12 @@ OK
 OK
 OK
 Pe
-Pe
-Pe
-Pe
-Pe
-Pe
-Pe
+QH
+af
+ae
+ae
+ae
+QH
 Pe
 Pe
 Pe
@@ -140807,12 +140761,12 @@ OK
 OK
 OK
 Pe
-Pe
-Pe
-Pe
-Pe
-Pe
-Pe
+QH
+af
+ae
+ae
+QH
+QH
 Pe
 Pe
 Pe
@@ -141024,12 +140978,12 @@ OK
 OK
 OK
 Pe
-Pe
-Pe
-Pe
-Pe
-Pe
-Pe
+QH
+QH
+ae
+QH
+QH
+QH
 Pe
 Pe
 Pe
@@ -141241,11 +141195,11 @@ OK
 OK
 OK
 Pe
-Pe
-Pe
-Pe
-Pe
-Pe
+QH
+QH
+QH
+QH
+QH
 Pe
 Pe
 Pe

@@ -61,7 +61,10 @@ SUBSYSTEM_DEF(garbage)
 
 	/// Toggle for enabling/disabling hard deletes. Objects that don't explicitly request hard deletion with this disabled will leak.
 	var/enable_hard_deletes = FALSE
+	/// The most recent objects that skipped a hard delete, kept only for inspection.
 	var/list/failed_hard_deletes = list()
+	/// How many objects skipped a hard delete this round.
+	var/failed_hard_delete_count = 0
 
 /datum/controller/subsystem/garbage/PreInit()
 	InitQueues()
@@ -89,6 +92,7 @@ SUBSYSTEM_DEF(garbage)
 		msg += "TGR:[round((totalgcs/(totaldels+totalgcs))*100, 0.01)]%"
 	msg += " P:[pass_counts.Join(",")]"
 	msg += "|F:[fail_counts.Join(",")]"
+	msg += "|HDS:[failed_hard_delete_count]"
 	return ..()
 
 /datum/controller/subsystem/garbage/Shutdown()
@@ -291,7 +295,11 @@ SUBSYSTEM_DEF(garbage)
 	if(!D)
 		return
 	if(!enable_hard_deletes && !override)
-		failed_hard_deletes |= D
+		// Keeping every failure pinned it, and all it referenced, for the round; the image table filled on long rounds.
+		failed_hard_delete_count++
+		failed_hard_deletes += D
+		if(length(failed_hard_deletes) > FAILED_HARD_DELETES_KEPT)
+			failed_hard_deletes.Cut(1, 2)
 		return
 	++delslasttick
 	++totaldels

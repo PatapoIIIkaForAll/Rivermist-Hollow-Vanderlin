@@ -1,3 +1,6 @@
+#define DRYING_RACK_MAX_HERBS 12
+#define DRYING_RACK_ENVIRONMENT_CHECK (30 SECONDS)
+
 /obj/machinery/tanningrack
 	name = "drying rack"
 	desc = "A drying rack for the preparation of food or curing of hides into leather, it can be moved with the help of a wooden stake."
@@ -6,12 +9,12 @@
 	var/obj/item/natural/hide/hide
 	/// Herbs currently spread across the rack.
 	var/list/drying_herbs = list()
-	/// World time of the previous drying update.
-	var/last_drying_process
+	/// World time drying progress was last applied to the herbs.
+	var/last_drying_process = 0
 	/// Cached environment multiplier, refreshed infrequently while active.
 	var/drying_modifier = 1
 	var/drying_condition = "slow indoor air"
-	var/next_drying_environment_check
+	var/next_drying_environment_check = 0
 	max_integrity = 200
 	density = TRUE
 	climbable = TRUE
@@ -26,6 +29,7 @@
 		. += span_warning("There is a piece of hide ready to be worked. I might need a knife for this.")
 	if(length(drying_herbs))
 		. += span_notice("[length(drying_herbs)] herb bundle[length(drying_herbs) == 1 ? " is" : "s are"] spread across the rack. The [drying_condition] governs their drying.")
+		. += drying_status_text()
 	if(!anchored)
 		. += span_warning("It is unanchored and able to be moved.")
 
@@ -41,12 +45,11 @@
 		var/obj/item/alch/herb/selected_herb = input(user, "Which herb do I take from the rack?", "Drying rack") as null|anything in drying_herbs
 		if(!selected_herb || selected_herb.loc != src || !user.CanReach(src))
 			return
-		drying_herbs -= selected_herb
+		// Credit the time since the last tick before the herb leaves.
+		update_drying()
+		// Exited() removes it from drying_herbs.
 		selected_herb.forceMove(get_turf(src))
 		user.put_in_active_hand(selected_herb)
-		update_appearance(UPDATE_OVERLAYS)
-		if(!length(drying_herbs))
-			STOP_PROCESSING(SSobj, src)
 
 /obj/machinery/tanningrack/attackby(obj/item/I, mob/living/user, list/modifiers)
 	if(istype(I, /obj/item/alch/herb))
@@ -54,17 +57,17 @@
 		if(herb.dried)
 			to_chat(user, span_warning("[herb] is already dry."))
 			return
-		if(length(drying_herbs) >= 12)
+		if(length(drying_herbs) >= DRYING_RACK_MAX_HERBS)
 			to_chat(user, span_warning("There is no room to spread another herb on [src]."))
 			return
+		// Settle the herbs already here so the new one starts from now.
+		next_drying_environment_check = 0
+		update_drying()
 		if(!user.transferItemToLoc(herb, src))
 			to_chat(user, span_warning("[herb] is stuck to my hand!"))
 			return
 		drying_herbs += herb
-		last_drying_process = world.time
-		next_drying_environment_check = 0
-		refresh_drying_environment()
-		START_PROCESSING(SSobj, src)
+		START_PROCESSING(SSmachines, src)
 		to_chat(user, span_notice("I spread [herb] across [src]."))
 		update_appearance(UPDATE_OVERLAYS)
 		return
@@ -115,36 +118,54 @@
 	. = ..()
 
 /obj/machinery/tanningrack/process()
-	if(!length(drying_herbs))
+	if(!update_drying())
 		return PROCESS_KILL
-	if(world.time >= next_drying_environment_check)
-		refresh_drying_environment()
+
+/// Applies drying since the last update; returns TRUE while any herb on the rack is still fresh.
+/obj/machinery/tanningrack/proc/update_drying()
 	var/elapsed_time = max(world.time - last_drying_process, 0)
 	last_drying_process = world.time
-	if(!drying_modifier || !elapsed_time)
-		return
 	var/has_fresh_herbs = FALSE
 	for(var/obj/item/alch/herb/herb as anything in drying_herbs)
 		if(herb.dried)
 			continue
 		herb.drying_progress += elapsed_time * drying_modifier
-		if(herb.drying_progress >= herb.drying_time)
-			herb.finish_drying()
-			visible_message(span_notice("[herb] finishes drying on [src]."))
-		else
+		if(herb.drying_progress < herb.drying_time)
 			has_fresh_herbs = TRUE
-	if(!has_fresh_herbs)
-		return PROCESS_KILL
+			continue
+		visible_message(span_notice("[herb] finishes drying on [src]."))
+		herb.finish_drying()
+	if(world.time >= next_drying_environment_check)
+		refresh_drying_environment()
+	return has_fresh_herbs
+
+/// Describes how many herbs are dry and how long the rest still need at the current pace.
+/obj/machinery/tanningrack/proc/drying_status_text()
+	var/dried_count = 0
+	var/longest_remaining = 0
+	for(var/obj/item/alch/herb/herb as anything in drying_herbs)
+		if(herb.dried)
+			dried_count++
+		else
+			longest_remaining = max(longest_remaining, herb.drying_time - herb.drying_progress)
+	if(longest_remaining <= 0)
+		return span_notice("Every herb on it is dry.")
+	var/subject = dried_count ? "[dried_count] [dried_count == 1 ? "is" : "are"] dry; the rest" : "They"
+	if(!drying_modifier)
+		return span_warning("[subject] are not drying while rain falls on them.")
+	var/minutes_left = CEILING(longest_remaining / drying_modifier / (1 MINUTES), 1)
+	return span_notice("[subject] need about [minutes_left] more minute[minutes_left == 1 ? "" : "s"].")
 
 /obj/machinery/tanningrack/proc/refresh_drying_environment()
-	next_drying_environment_check = world.time + 30 SECONDS
+	next_drying_environment_check = world.time + DRYING_RACK_ENVIRONMENT_CHECK
+	var/datum/particle_weather/current_weather = SSParticleWeather.runningWeather
+	// Same exposure test the weather uses on objects, so a roof keeps the herbs drying.
+	if(current_weather?.running && current_weather.target_trait == PARTICLEWEATHER_RAIN && current_weather.can_weather_act_obj(src))
+		drying_modifier = 0
+		drying_condition = "falling rain"
+		return
 	var/area/rack_area = get_area(src)
 	if(rack_area?.outdoors)
-		var/datum/particle_weather/current_weather = SSParticleWeather.runningWeather
-		if(current_weather?.running && current_weather.target_trait == PARTICLEWEATHER_RAIN)
-			drying_modifier = 0
-			drying_condition = "falling rain"
-			return
 		drying_modifier = 2
 		drying_condition = "open air"
 		return
@@ -158,15 +179,18 @@
 	drying_modifier = 1
 	drying_condition = "slow indoor air"
 
+/obj/machinery/tanningrack/Exited(atom/movable/AM, atom/newloc)
+	. = ..()
+	// Keeps drying_herbs in sync however a herb leaves, including deletion.
+	if(!(AM in drying_herbs))
+		return
+	drying_herbs -= AM
+	if(!QDELETED(src))
+		update_appearance(UPDATE_OVERLAYS)
+
 /obj/machinery/tanningrack/Destroy()
-	STOP_PROCESSING(SSobj, src)
-	var/turf/drop_turf = get_turf(src)
-	for(var/obj/item/alch/herb/herb as anything in drying_herbs)
-		herb.forceMove(drop_turf)
-	drying_herbs = null
-	if(hide)
-		hide.forceMove(drop_turf)
-		hide = null
+	hide = null
+	// Machinery Destroy drops the herbs and hide; Exited() empties drying_herbs.
 	return ..()
 
 /obj/machinery/tanningrack/update_overlays()
@@ -185,3 +209,6 @@
 		herb_overlays++
 		if(herb_overlays >= 3)
 			break
+
+#undef DRYING_RACK_MAX_HERBS
+#undef DRYING_RACK_ENVIRONMENT_CHECK

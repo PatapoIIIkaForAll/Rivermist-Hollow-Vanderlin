@@ -48,6 +48,8 @@
 
 /// Pulls out at the last moment and returns an onto-the-partner climax.
 /datum/component/arousal/proc/pull_out_for_climax(datum/sex_action/action, mob/living/climaxer, mob/living/partner)
+	if(action.orifice_pressing)
+		return climax_at_opening(action, climaxer)
 	var/from_mouth = action.hole_id == BODY_ZONE_PRECISE_MOUTH
 	var/place = from_mouth ? "[partner]'s mouth" : "[partner]"
 	climaxer.visible_message(span_love("[climaxer] pulls out of [place] at the last moment and cums all over [partner.p_them()]!"))
@@ -55,6 +57,27 @@
 		climaxer.lose_virginity()
 		partner.lose_virginity()
 	climax_zone_override = from_mouth ? FLUID_COAT_FACE : action.get_climax_coat_zone(climaxer)
+	return ORGASM_LOCATION_ONTO
+
+/// A climax while still pressing at an opening stays outside and takes no virginity; null spills it the generic way.
+/datum/component/arousal/proc/climax_at_opening(datum/sex_action/action, mob/living/climaxer)
+	var/mob/living/insertor = action.get_storage_insertor(action.action_user, action.action_target)
+	var/mob/living/receiver = action.get_storage_receiver(action.action_user, action.action_target)
+	var/datum/orifice/hole = action.get_penetrated_orifice(action.action_user, action.action_target, FALSE)
+	var/opening = hole ? hole.opening_name : "[action.hole_id]"
+	var/what = action.get_pressing_noun(insertor)
+	if(climaxer != insertor)
+		climaxer.visible_message(span_love("[climaxer] climaxes as [insertor] grinds [what] against [climaxer.p_their()] [opening]!"))
+		return null
+	if(climaxer == receiver)
+		climaxer.visible_message(span_love("[climaxer] climaxes grinding [what] against [climaxer.p_their()] [opening]!"))
+		return null
+	if(!ispath(action.stored_item_type, /obj/item/organ/genitals/penis))
+		climaxer.visible_message(span_love("[climaxer] climaxes while grinding [what] against [receiver]'s [opening]!"))
+		return null
+	// The cock never got in, so the load spills over the opening it pressed at.
+	climaxer.visible_message(span_love("[climaxer] cums against [receiver]'s [opening] without ever getting inside!"))
+	climax_zone_override = FLUID_COAT_GROIN
 	return ORGASM_LOCATION_ONTO
 
 /// Everyone whose cock is inside this mob's vagina or anus right now.
@@ -356,7 +379,10 @@
 	if(are_together() && prob(pull_out_fail_chance))
 		held_in = TRUE
 		var/mob/living/climaxer = get_climaxer()
+		// Timer-driven, outside the act's scope: the held-in partner feels it blind or asleep.
+		receiver?.push_feels_own_body()
 		climaxer.visible_message(span_love("[climaxer] tries to pull out of [receiver] mid-climax, but [get_failed_pull_out_reason(climaxer, receiver)]!"))
+		receiver?.pop_feels_own_body()
 		return FALSE
 	return TRUE
 
@@ -397,7 +423,7 @@
 		announce_overflow()
 
 /datum/climax_spurts/inside/proc/announce_overflow()
-	receiver.visible_message(span_love("It is too much for [receiver] to hold; seed spills out of [receiver.p_them()] and runs down [receiver.p_their()] thighs."), span_love("It is too much to hold. It spills out of me and runs down my thighs."), vision_distance = 1)
+	receiver.felt_visible_message(span_love("It is too much for [receiver] to hold; seed spills out of [receiver.p_them()] and runs down [receiver.p_their()] thighs."), span_love("It is too much to hold. It spills out of me and runs down my thighs."), vision_distance = 1)
 
 /// Pulled out mid-climax: the rest spurts over the partner, drifting down from where the cock left.
 /datum/climax_spurts/inside/proc/spurt_outside(amount)
@@ -426,7 +452,7 @@
 		to_chat(receiver, span_love("Another hot spurt fills my mouth."))
 
 /datum/climax_spurts/inside/oral/announce_overflow()
-	receiver.visible_message(span_love("It is too much for [receiver] to swallow; seed spills from [receiver.p_their()] lips."), span_love("It is too much to swallow. It spills from my lips."), vision_distance = 1)
+	receiver.felt_visible_message(span_love("It is too much for [receiver] to swallow; seed spills from [receiver.p_their()] lips."), span_love("It is too much to swallow. It spills from my lips."), vision_distance = 1)
 
 // --- Floor and container ---
 
@@ -507,7 +533,7 @@
 	var/mob/living/aimed_mob = isliving(landing) ? landing : null
 	var/zone = aimed_mob ? aim.resolve_zone(aimed_mob, drift_steps) : null
 	var/obj/item/clothing/shoes/heels/heels = aim.get_worn_heels(aimed_mob, zone)
-	var/into_mouth = zone == PENIS_AIM_MOUTH && aimed_mob.mouth_is_free()
+	var/into_mouth = zone == PENIS_AIM_MOUTH && aimed_mob.mouth_is_free(cloth_blocks = TRUE)
 	if(zone == PENIS_AIM_MOUTH && !into_mouth)
 		zone = FLUID_COAT_FACE
 	var/whose = aimed_mob ? get_aim_whose(aimed_mob, is_follow_up ? climaxer : aimer) : null
@@ -522,6 +548,8 @@
 		phrase = "onto the floor"
 	else
 		phrase = "[is_aim_container(landing) ? "into" : "onto"] \the [landing]"
+	// Follow-up spurts run on a timer; the mob they land on feels them blind or asleep.
+	aimed_mob?.push_feels_own_body()
 	if(is_follow_up)
 		climaxer.visible_message(span_love("[climaxer]'s cock spurts again, [phrase]!"), span_love("<i>Spurt!</i> Another rope lands [phrase]!"))
 	else if(!quiet)
@@ -529,6 +557,7 @@
 			climaxer.visible_message(span_love("[climaxer] shoots [climaxer.p_their()] load [phrase]!"))
 		else
 			aimer.visible_message(span_love("[aimer] aims [climaxer]'s cock as it shoots [phrase]!"))
+	aimed_mob?.pop_feels_own_body()
 	log_combat(climaxer, aimed_mob || climaxer, "came [phrase], aimed by [key_name(aimer)]")
 
 	if(into_mouth)

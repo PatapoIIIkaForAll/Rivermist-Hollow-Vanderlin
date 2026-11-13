@@ -1,5 +1,5 @@
 /datum/sex_action/crotch_nuzzle
-	name = "Nuzzle their crotch"
+	name = "Nuzzle crotch"
 	user_menu_zone_mask = SEX_UI_ZONE_MOUTH
 	target_menu_zone_mask = SEX_UI_ZONE_GENITALS
 

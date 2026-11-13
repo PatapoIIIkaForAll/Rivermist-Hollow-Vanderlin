@@ -113,12 +113,13 @@
 	return null
 
 /proc/considered_alive(datum/mind/M, enforce_human = TRUE)
-	if(M && M.current)
+	// mind.current can still point at a body that was deleted without ghosting.
+	if(M && !QDELETED(M.current))
 		if(enforce_human)
 			var/mob/living/carbon/human/H
 			if(ishuman(M.current))
 				H = M.current
-			return M.current.stat != DEAD && !isbrain(M.current) && (!H || H.dna.species.id != "memezombies")
+			return M.current.stat != DEAD && !isbrain(M.current) && (!H || H.dna?.species?.id != "memezombies")
 		else if(isliving(M.current))
 			return M.current.stat != DEAD
 	return FALSE
@@ -234,32 +235,27 @@
 		else
 			candidates -= M
 
-/proc/pollGhostCandidates(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, ignore_category = null, flashwindow = TRUE, new_players = FALSE)
+/// Observers and lobby players who accept role calls; whitelist_type filters both groups.
+/proc/get_ghost_poll_pool(new_players = TRUE, whitelist_type)
 	var/list/candidates = list()
-
 	for(var/mob/dead/observer/G in GLOB.player_list)
+		if(!G.client?.prefs?.accepts_role_calls() || (whitelist_type && !G.client.is_whitelisted(whitelist_type)))
+			continue
 		candidates += G
 	if(new_players)
 		for(var/mob/dead/new_player/G as anything in GLOB.new_player_list)
-			if(!G.client)
+			if(!G.can_answer_role_poll() || (whitelist_type && !G.client.is_whitelisted(whitelist_type)))
 				continue
 			candidates += G
+	return candidates
 
+/proc/pollGhostCandidates(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, ignore_category = null, flashwindow = TRUE, new_players = TRUE)
+	var/list/candidates = get_ghost_poll_pool(new_players)
 	return pollCandidates(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category, flashwindow, candidates)
 
 
-/proc/pollGhostCandidatesWhitelisted(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, ignore_category = null, flashwindow = TRUE, new_players = FALSE, whitelist_type)
-	var/list/candidates = list()
-
-	for(var/mob/dead/observer/G in GLOB.player_list)
-		if(G.client.is_whitelisted(whitelist_type))
-			candidates += G
-	if(new_players)
-		for(var/mob/dead/new_player/G as anything in GLOB.new_player_list)
-			if(!G.client)
-				continue
-			candidates += G
-
+/proc/pollGhostCandidatesWhitelisted(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, ignore_category = null, flashwindow = TRUE, new_players = TRUE, whitelist_type)
+	var/list/candidates = get_ghost_poll_pool(new_players, whitelist_type)
 	return pollCandidates(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category, flashwindow, candidates)
 
 
@@ -291,20 +287,20 @@
 
 	return result
 
-/proc/pollCandidatesForMob(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, mob/M, ignore_category = null, new_players = FALSE)
+/proc/pollCandidatesForMob(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, mob/M, ignore_category = null, new_players = TRUE)
 	var/list/L = pollGhostCandidates(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category, new_players = new_players)
 	if(!M || QDELETED(M) || !M.loc)
 		return list()
 	return L
 
-/proc/pollCandidatesForMobWhitelisted(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, mob/M, ignore_category = null, new_players = FALSE, whitelist_type)
+/proc/pollCandidatesForMobWhitelisted(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, mob/M, ignore_category = null, new_players = TRUE, whitelist_type)
 	var/list/L = pollGhostCandidatesWhitelisted(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category, new_players = new_players, whitelist_type = whitelist_type)
 	if(!M || QDELETED(M) || !M.loc)
 		return list()
 	return L
 
-/proc/pollCandidatesForMobs(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, list/mobs, ignore_category = null)
-	var/list/L = pollGhostCandidates(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category)
+/proc/pollCandidatesForMobs(Question, jobbanType, gametypeCheck, be_special_flag = 0, poll_time = 300, list/mobs, ignore_category = null, new_players = TRUE)
+	var/list/L = pollGhostCandidates(Question, jobbanType, gametypeCheck, be_special_flag, poll_time, ignore_category, new_players = new_players)
 	var/i=1
 	for(var/atom/A as anything in mobs)
 		if(!A || QDELETED(A) || !A.loc)

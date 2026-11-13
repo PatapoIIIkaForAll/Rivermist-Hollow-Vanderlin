@@ -6,6 +6,7 @@ GLOBAL_LIST_INIT(highwayman_aggro, world.file2list("strings/rt/highwaymanaggroli
 	ambushable = FALSE
 	dodgetime = 30
 	flee_in_pain = TRUE
+	horny_trap_type = /obj/item/rope/net/bola
 	d_intent = INTENT_PARRY
 	var/is_silent = FALSE /// Determines whether or not we will scream our funny lines at people.
 

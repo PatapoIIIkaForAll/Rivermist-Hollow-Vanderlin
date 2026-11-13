@@ -3,6 +3,9 @@
 	flipped = TRUE
 
 /datum/sex_action/sex/other/try_knot_on_climax(mob/living/user, mob/living/target)
+	// Nothing is inside while still pressing at the opening.
+	if(orifice_pressing)
+		return FALSE
 	if(!knot_on_finish)
 		return FALSE
 	if(!can_knot)
