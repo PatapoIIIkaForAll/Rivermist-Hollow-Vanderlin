@@ -23,6 +23,12 @@
 	var/drool_chance = BDSM_GAG_DROOL_CHANCE
 	var/muffled_words = "Mmf..."
 
+/// Concrete default gag used by the technician recipe catalogue. The DMI has
+/// no generic "gag" state, so use the existing black muzzle artwork.
+/obj/item/clothing/face/bdsm_gag/basic
+	name = "gag"
+	icon_state = "black_muzzle"
+
 /obj/item/clothing/face/bdsm_gag/Initialize(mapload, ...)
 	. = ..()
 	update_appearance(UPDATE_OVERLAYS)
@@ -275,6 +281,9 @@
 	name = "collar chain leash"
 	desc = "A chain with a clasp sized for a leather collar or body harness."
 	icon = 'modular_rmh/icons/clothing/bdsm_items.dmi'
+	// The custom DMI has black_chain_leash and brown_chain_leash, not "chain".
+	// The base item defaults to the black variant; the brown subtype overrides it.
+	icon_state = "black_chain_leash"
 
 /obj/item/leash/chain/bdsm/black
 	name = "black collar chain leash"

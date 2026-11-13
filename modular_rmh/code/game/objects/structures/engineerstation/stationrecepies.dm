@@ -3,6 +3,7 @@
 // values, not a finalized faction balance pass.
 
 /datum/technician_recipe/iron_chisel
+	required_station_service = "metalworking"
 	name = "Iron Chisel"
 	category = "Tools&Ammo"
 	desc = "A simple iron chisel produced by the faction workshop."
@@ -14,6 +15,7 @@
 	craft_time = 20 SECONDS
 
 /datum/technician_recipe/arrow
+	required_station_service = "metalworking"
 	name = "Arrows"
 	category = "Tools&Ammo"
 	desc = "Five hunting arrows. Does it matter, who are you hunting: the beast or a criminal?"
@@ -27,6 +29,7 @@
 	craft_time = 55 SECONDS
 
 /datum/technician_recipe/arrow/pyro
+	required_station_service = "metalworking"
 	name = "Incendiary Arrows"
 	category = "Tools&Ammo"
 	desc = "Five pyro arrows. Does it matter, what will be with them after you are done?"
@@ -41,6 +44,7 @@
 	craft_time = 55 SECONDS
 
 /datum/technician_recipe/crossbow_bolt
+	required_station_service = "metalworking"
 	name = "Crossbow bolts"
 	category = "Tools&Ammo"
 	desc = "Five crossbow bolts. Designed for maximum penetration and stopping power."
@@ -54,6 +58,7 @@
 	craft_time = 60 SECONDS
 
 /datum/technician_recipe/crossbow_bolt/pyro
+	required_station_service = "metalworking"
 	name = "Incendiary Crossbow bolts"
 	category = "Tools&Ammo"
 	desc = "Five crossbow bolts. Designed for maximum damage when there is no need to hesitate."
@@ -68,6 +73,7 @@
 	craft_time = 60 SECONDS
 
 /datum/technician_recipe/tinballs
+	required_station_service = "metalworking"
 	name = "Lead balls"
 	category = "Tools&Ammo"
 	desc = "Five lead balls. Fits every musket out there."
@@ -80,6 +86,7 @@
 	craft_time = 55 SECONDS
 
 /datum/technician_recipe/crafted_mantrap
+	required_station_service = "metalworking"
 	name = "Crafted Mantrap"
 	category = "Traps&Devices"
 	desc = "A crude but functional spring-loaded mantrap."
@@ -114,6 +121,7 @@
 	craft_time = 35 SECONDS
 
 /datum/technician_recipe/bola/electro
+	required_station_service = "metalworking"
 	name = "Shock Bola"
 	category = "Traps&Devices"
 	desc = "A crude but functional bola. Takes time to spin, stuns the opponent upon impact. Cruel."
@@ -127,6 +135,7 @@
 	craft_time = 60 SECONDS
 
 /datum/technician_recipe/bola/chain
+	required_station_service = "metalworking"
 	name = "Chain Bola"
 	category = "Traps&Devices"
 	desc = "A bola, made of iron chains and metal. Less than lethal option."
@@ -139,6 +148,7 @@
 	craft_time = 35 SECONDS
 
 /datum/technician_recipe/bola/thaumic
+	required_station_service = "metalworking"
 	name = "Thaumaturgical Bola"
 	category = "Traps&Devices"
 	desc = "A crude but functional bola. Drains victim's mana upon hit."
@@ -151,6 +161,7 @@
 	craft_time = 35 SECONDS
 
 /datum/technician_recipe/bola/silver
+	required_station_service = "metalworking"
 	name = "Silver Bola"
 	category = "Traps&Devices"
 	desc = "A bola, made of silver. Great for all werewolves and vampires."
@@ -162,19 +173,21 @@
 	service_fee = 25
 	craft_time = 35 SECONDS
 
-/datum/technician_recipe/mantrapbola
-	name = "Bola"
+/datum/technician_recipe/throwable_anti_magic_field
+	required_station_service = "metalworking"
+	name = "Throwable Anti-Magic Field"
 	category = "Traps&Devices"
-	desc = "A throwable trap. If someone tries to catch it, their arm will be fractured."
-	created_item = /obj/item/rope/net/bola/mantrap
+	desc = "A throwable device that creates an anti-magic field upon impact."
+	created_item = /obj/item/rope/net/bola/mantrap/anti_magic_field
 	resource_costs = list(
+		"silver" = 2,
 		"steel" = 2,
-		"iron" = 1,
 	)
-	service_fee = 20
+	service_fee = 45
 	craft_time = 35 SECONDS
 
 /datum/technician_recipe/iron_keyrings
+	required_station_service = "metalworking"
 	name = "Iron Keyrings"
 	category = "Equipment"
 	desc = "A small batch of three iron keyrings."
@@ -187,6 +200,7 @@
 	craft_time = 25 SECONDS
 
 /datum/technician_recipe/quiver
+	required_station_service = "sewing"
 	name = "Quiver"
 	category = "Equipment"
 	desc = "A leather quiver for holding arrows and bolts."
@@ -212,6 +226,7 @@
 	craft_time = 25 SECONDS
 
 /datum/technician_recipe/chain
+	required_station_service = "metalworking"
 	name = "Chain"
 	category = "Equipment"
 	desc = "A short, sturdy length of chain produced by the workshop."
@@ -224,6 +239,7 @@
 	craft_time = 20 SECONDS
 
 /datum/technician_recipe/gold_chain
+	required_station_service = "metalworking"
 	name = "Gold Chain"
 	category = "Equipment"
 	desc = "A short, sturdy length of gold chain produced by the workshop. Weak, but easier to put on."
@@ -236,6 +252,7 @@
 	craft_time = 40 SECONDS
 
 /datum/technician_recipe/silver_chain
+	required_station_service = "metalworking"
 	name = "Silver Chain"
 	category = "Equipment"
 	desc = "A short, sturdy length of silver chain. Weakens the cryptids, who are allergic to it."
@@ -248,6 +265,7 @@
 	craft_time = 30 SECONDS
 
 /datum/technician_recipe/leash/chain
+	required_station_service = "metalworking"
 	name = "Chain leash"
 	category = "Punishment"
 	desc = "A leash made of iron chain. Used to restrain prisoners and criminals."
@@ -276,7 +294,7 @@
 	name = "Gag"
 	category = "Punishment"
 	desc = "A fitted leather gag with adjustable straps."
-	created_item = /obj/item/clothing/face/bdsm_gag
+	created_item = /obj/item/clothing/face/bdsm_gag/basic
 	output_amount = 1
 	resource_costs = list(
 		"fiber" = 1,

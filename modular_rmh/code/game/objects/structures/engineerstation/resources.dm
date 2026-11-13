@@ -120,30 +120,31 @@
 /datum/technician_resource/iron
 	id = "iron"
 	name = "Iron"
+	icon_item_type = /obj/item/ingot/iron
 	accepted_item_types = list(
-		/obj/item/ore/iron,
 		/obj/item/ingot/iron,
 	)
 
 /datum/technician_resource/silver
 	id = "silver"
 	name = "Silver"
+	icon_item_type = /obj/item/ingot/silver
 	accepted_item_types = list(
-		/obj/item/ore/silver,
 		/obj/item/ingot/silver,
 	)
 
 /datum/technician_resource/gold
 	id = "gold"
 	name = "Gold"
+	icon_item_type = /obj/item/ingot/gold
 	accepted_item_types = list(
-		/obj/item/ore/gold,
 		/obj/item/ingot/gold,
 	)
 
 /datum/technician_resource/thaumic_iron
 	id = "thaumic_iron"
 	name = "Thaumic Iron"
+	icon_item_type = /obj/item/ingot/thaumic
 	accepted_item_types = list(
 		/obj/item/ingot/thaumic,
 	)
@@ -151,21 +152,24 @@
 /datum/technician_resource/steel
 	id = "steel"
 	name = "Steel"
+	icon_item_type = /obj/item/ingot/steel
 	accepted_item_types = list(
 		/obj/item/ingot/steel,
+		/obj/item/ingot/steel_slag,
 	)
 
 /datum/technician_resource/tin
 	id = "tin"
 	name = "Tin"
+	icon_item_type = /obj/item/ingot/tin
 	accepted_item_types = list(
-		/obj/item/ore/tin,
 		/obj/item/ingot/tin,
 	)
 
 /datum/technician_resource/blastpowder
 	id = "blastpowder"
 	name = "Blastpowder"
+	icon_item_type = /obj/item/reagent_containers/powder/blastpowder
 	accepted_item_types = list(
 		/obj/item/reagent_containers/powder/blastpowder,
 	)
@@ -173,14 +177,17 @@
 /datum/technician_resource/fiber
 	id = "fiber"
 	name = "Fiber"
+	icon_item_type = /obj/item/natural/fibers
 	accepted_item_types = list(
 		/obj/item/natural/fibers,
 	)
 	bundle_stacktype = /obj/item/natural/fibers
 
+
 /datum/technician_resource/stone
 	id = "stone"
 	name = "Stone"
+	icon_item_type = /obj/item/natural/stone
 	accepted_item_types = list(
 		/obj/item/natural/stone,
 	)
@@ -188,15 +195,17 @@
 /datum/technician_resource/wood
 	id = "wood"
 	name = "Wood planks"
+	icon_item_type = /obj/item/natural/wood/plank
 	accepted_item_types = list(
-		/obj/item/natural/wood,
+		/obj/item/natural/wood/plank,
 	)
-	bundle_stacktype = /obj/item/natural/wood
+	bundle_stacktype = /obj/item/natural/wood/plank
 
 /datum/technician_resource/cured
 	id = "cured"
 	name = "Cured Leather"
+	icon_item_type = /obj/item/natural/hide/cured
 	accepted_item_types = list(
 		/obj/item/natural/hide/cured,
 	)
-	bundle_stacktype = /obj/item/natural/bundle/curred_hide
+	bundle_stacktype = /obj/item/natural/hide/cured

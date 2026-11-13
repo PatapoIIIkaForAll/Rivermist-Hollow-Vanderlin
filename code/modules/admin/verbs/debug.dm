@@ -1306,3 +1306,87 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	to_chat(src, span_notice("Timeskip complete. Current TOD: [GLOB.tod]. Payroll day: [GLOB.payroll_day_number]."))
 
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Timeskip To")
+
+/// Admin: add a globally permitted magical action identifier.
+/client/proc/anti_magic_add_global_whitelist()
+	set name = "Add Anti-Magic Whitelist Entry"
+	set category = "Admin.Anti-Magic"
+	if(!check_rights(R_ADMIN))
+		return
+	var/action_id = input(src, "Enter a stable action ID (normally the full DM type path).", "Global Anti-Magic Whitelist") as text|null
+	if(!action_id)
+		return
+	action_id = trim(action_id)
+	if(!length(action_id))
+		return
+	if(!(action_id in GLOB.anti_magic_field_manager.global_whitelist))
+		GLOB.anti_magic_field_manager.global_whitelist += action_id
+	message_admins("[key_name_admin(src)] added [action_id] to the global Anti-Magic whitelist.")
+	to_chat(src, span_notice("Global Anti-Magic whitelist updated."))
+
+/// Admin: remove a globally permitted magical action identifier.
+/client/proc/anti_magic_remove_global_whitelist()
+	set name = "Remove Anti-Magic Whitelist Entry"
+	set category = "Admin.Anti-Magic"
+	if(!check_rights(R_ADMIN))
+		return
+	var/list/entries = GLOB.anti_magic_field_manager.global_whitelist.Copy()
+	if(!length(entries))
+		to_chat(src, span_notice("The global Anti-Magic whitelist is empty."))
+		return
+	var/action_id = input(src, "Choose an action ID to remove.", "Global Anti-Magic Whitelist") as null|anything in entries
+	if(!action_id)
+		return
+	GLOB.anti_magic_field_manager.global_whitelist -= action_id
+	message_admins("[key_name_admin(src)] removed [action_id] from the global Anti-Magic whitelist.")
+	to_chat(src, span_notice("Global Anti-Magic whitelist updated."))
+
+/// Admin: change a specific field's AoE and/or its local whitelist overrides.
+/client/proc/anti_magic_edit_field()
+	set name = "Configure Anti-Magic Field"
+	set category = "Admin.Anti-Magic"
+	if(!check_rights(R_ADMIN))
+		return
+	var/list/available_fields = list()
+	for(var/obj/structure/anti_magic_field/field as anything in GLOB.anti_magic_field_manager.fields)
+		if(!QDELETED(field))
+			available_fields += field
+	if(!length(available_fields))
+		to_chat(src, span_notice("There are no Anti-Magic field devices to configure."))
+		return
+	var/obj/structure/anti_magic_field/selected_field = input(src, "Choose a field device.", "Configure Anti-Magic Field") as null|anything in available_fields
+	if(!selected_field || QDELETED(selected_field))
+		return
+	var/choice = input(src, "Choose a configuration action.", "Configure Anti-Magic Field") as null|anything in list("Set width", "Set height", "Reset default AoE", "Allow action locally", "Deny action locally", "Clear local action override")
+	if(!choice || QDELETED(selected_field))
+		return
+	switch(choice)
+		if("Set width")
+			var/new_width = input(src, "New AoE width (1-32).", "Anti-Magic AoE", selected_field.field_width) as num|null
+			if(isnull(new_width) || QDELETED(selected_field))
+				return
+			selected_field.field_width = clamp(round(new_width), 1, 32)
+		if("Set height")
+			var/new_height = input(src, "New AoE height (1-32).", "Anti-Magic AoE", selected_field.field_height) as num|null
+			if(isnull(new_height) || QDELETED(selected_field))
+				return
+			selected_field.field_height = clamp(round(new_height), 1, 32)
+		if("Reset default AoE")
+			selected_field.field_width = initial(selected_field.field_width)
+			selected_field.field_height = initial(selected_field.field_height)
+		if("Allow action locally", "Deny action locally", "Clear local action override")
+			var/action_id = input(src, "Enter the exact action identifier.", "Field Whitelist Override") as text|null
+			if(!action_id || QDELETED(selected_field))
+				return
+			action_id = trim(action_id)
+			if(!length(action_id))
+				return
+			if(choice == "Allow action locally")
+				selected_field.whitelist_overrides[action_id] = TRUE
+			else if(choice == "Deny action locally")
+				selected_field.whitelist_overrides[action_id] = FALSE
+			else
+				selected_field.whitelist_overrides -= action_id
+	selected_field.update_appearance(UPDATE_ICON_STATE)
+	message_admins("[key_name_admin(src)] configured [selected_field] at [AREACOORD(selected_field)]: [choice].")
+	to_chat(src, span_notice("Anti-Magic field configuration updated."))

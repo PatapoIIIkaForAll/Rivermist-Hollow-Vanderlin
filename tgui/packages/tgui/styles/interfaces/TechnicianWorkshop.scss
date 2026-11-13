@@ -75,9 +75,28 @@
   cursor: default;
 }
 
-.TechnicianWorkshop__resource-value .DmIcon,
-.TechnicianWorkshop__resource-value img {
+.TechnicianWorkshop__sprite {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  line-height: 0;
   image-rendering: pixelated;
+}
+
+.TechnicianWorkshop__sprite img,
+.TechnicianWorkshop__sprite canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.TechnicianWorkshop__sprite.is-empty {
+  visibility: hidden;
 }
 
 .TechnicianWorkshop__resource-copy {
@@ -98,6 +117,99 @@
   flex: 0 0 100%;
   color: #999999;
   font-size: 10px;
+}
+
+.TechnicianWorkshop__equipment-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 3px 6px;
+  border: 1px solid var(--tw-border);
+  border-top: 0;
+  background: #191919;
+  overflow: hidden;
+}
+
+.TechnicianWorkshop__equipment-slots,
+.TechnicianWorkshop__service-statuses {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.TechnicianWorkshop__equipment-slots {
+  flex: 1 1 auto;
+}
+
+.TechnicianWorkshop__equipment-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  padding: 2px 4px;
+  border: 1px solid #393939;
+  background: #202020;
+  color: var(--tw-muted);
+  font-size: 9px;
+}
+
+.TechnicianWorkshop__equipment-slot.is-installed {
+  border-color: #75613e;
+  color: var(--tw-text);
+}
+
+.TechnicianWorkshop__equipment-slot.is-disabled {
+  opacity: 0.45;
+}
+
+.TechnicianWorkshop__equipment-slot b {
+  color: var(--tw-gold);
+  font-size: 9px;
+}
+
+.TechnicianWorkshop__equipment-placeholder {
+  color: #777777;
+  width: 18px;
+  text-align: center;
+}
+
+.TechnicianWorkshop__service-statuses {
+  flex: 0 1 auto;
+  justify-content: flex-end;
+  border-left: 1px solid var(--tw-border-soft);
+  padding-left: 6px;
+}
+
+.TechnicianWorkshop__service-status {
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.TechnicianWorkshop__service-status.is-available {
+  color: var(--tw-green);
+}
+
+.TechnicianWorkshop__service-status.is-locked {
+  color: var(--tw-gold);
+}
+
+.TechnicianWorkshop__service-status.is-disabled {
+  color: #777777;
+}
+
+.TechnicianWorkshop__operation-note {
+  margin-top: auto;
+  padding: 10px;
+  border-top: 1px solid var(--tw-border-soft);
+  color: var(--tw-muted);
+  font-size: 10px;
+  line-height: 1.4;
 }
 
 .TechnicianWorkshop__main {
@@ -144,15 +256,17 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 .TechnicianWorkshop__recipe-entry {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 7px;
   width: 100%;
-  min-height: 34px;
-  padding: 5px 9px;
+  min-height: 36px;
+  padding: 5px 8px;
   border: 0;
   border-bottom: 1px solid #343434;
   background: transparent;
@@ -170,6 +284,7 @@
 }
 
 .TechnicianWorkshop__recipe-entry-name {
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -178,7 +293,7 @@
 
 .TechnicianWorkshop__recipe-status {
   flex: 0 0 auto;
-  margin-left: 8px;
+  margin-left: 2px;
   color: #999999;
   font-size: 10px;
 }
@@ -247,13 +362,13 @@
   justify-content: center;
   transform: translateX(0);
   opacity: 1;
-  transition: transform 650ms cubic-bezier(0.45, 0, 0.55, 1), opacity 450ms ease;
+  transition: opacity 180ms ease;
   image-rendering: pixelated;
 }
 
 .TechnicianWorkshop__technician.is-busy .TechnicianWorkshop__portrait-sprite {
-  transform: translateX(145%);
-  opacity: 0;
+  transform: translateX(0);
+  opacity: 1;
 }
 
 .TechnicianWorkshop__busy-label {
@@ -329,7 +444,7 @@
 
 .TechnicianWorkshop__cost-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(105px, 0.38fr);
+  grid-template-columns: minmax(0, 1fr) 136px;
   flex: 0 0 112px;
   min-height: 112px;
 }
@@ -346,8 +461,12 @@
 }
 
 .TechnicianWorkshop__fee-cost {
+  min-width: 0;
+  overflow-x: hidden;
   text-align: center;
   background: #1a1a1a;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .TechnicianWorkshop__requirements {
@@ -364,8 +483,14 @@
   font-size: 11px;
 }
 
-.TechnicianWorkshop__requirement > span:first-child {
+.TechnicianWorkshop__requirement > .TechnicianWorkshop__sprite {
+  flex: 0 0 22px;
+}
+
+.TechnicianWorkshop__requirement-name {
   flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
 }
 
 .TechnicianWorkshop__requirement b {
@@ -383,6 +508,23 @@
   font-weight: 700;
   white-space: nowrap;
 }
+
+.TechnicianWorkshop__fee-warning {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  color: var(--tw-red);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  box-sizing: border-box;
+  padding: 0 2px;
+}
+
 
 .TechnicianWorkshop__empty-cost {
   color: var(--tw-muted);
@@ -470,16 +612,672 @@
   font-size: 10px;
 }
 
+.TechnicianWorkshop__footer-warning.is-hidden {
+  visibility: hidden;
+}
+
+.TechnicianWorkshop__time-label b,
+.TechnicianWorkshop__resource-copy b,
+.TechnicianWorkshop__requirement > b,
+.TechnicianWorkshop__fee-value,
+.TechnicianWorkshop__depot-value,
+.TechnicianWorkshop__missing-count {
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 650px) {
   .TechnicianWorkshop__main {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
   }
 
   .TechnicianWorkshop__cost-row {
-    grid-template-columns: minmax(0, 1fr) 100px;
+    grid-template-columns: minmax(0, 1fr) 136px;
   }
 
   .TechnicianWorkshop__craft-button {
     flex-basis: 94px;
   }
+}
+
+/* Item-service tabs: upgrade and fixing share one target/detail layout. */
+.TechnicianWorkshop__service-tabs {
+  display: flex;
+  flex: 0 0 32px;
+  min-height: 32px;
+  border-left: 1px solid var(--tw-border);
+  border-right: 1px solid var(--tw-border);
+  border-bottom: 1px solid var(--tw-border);
+  background: #191919;
+}
+
+.TechnicianWorkshop__service-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  border: 0;
+  border-right: 1px solid var(--tw-border-soft);
+  background: transparent;
+  color: var(--tw-muted);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.TechnicianWorkshop__service-tab:hover {
+  background: #282828;
+  color: var(--tw-text);
+}
+
+.TechnicianWorkshop__service-tab.is-active {
+  color: var(--tw-gold);
+  background: #302a20;
+  box-shadow: inset 0 2px 0 var(--tw-gold);
+}
+
+.TechnicianWorkshop__fix-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  color: var(--tw-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.TechnicianWorkshop__fix-summary-title {
+  color: var(--tw-gold);
+  font-weight: 700;
+}
+
+.TechnicianWorkshop__fix-summary b {
+  color: var(--tw-text);
+  font-size: 14px;
+}
+
+.TechnicianWorkshop__fix-summary small {
+  color: var(--tw-muted);
+}
+
+.TechnicianWorkshop__fix-reason {
+  margin-top: 6px;
+  color: var(--tw-red);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.TechnicianWorkshop__service-footer-copy {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 10px;
+  color: var(--tw-muted);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+/* Item-upgrade mode: first staged item is the workpiece; later items are inputs. */
+.TechnicianWorkshop__target-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--tw-border-soft);
+  background: #1b1b1b;
+  min-height: 46px;
+  box-sizing: border-box;
+}
+
+.TechnicianWorkshop__target-summary > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.TechnicianWorkshop__target-summary b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.TechnicianWorkshop__target-summary small {
+  color: var(--tw-muted);
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__surface-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 86px;
+  overflow-y: auto;
+  padding: 4px 7px;
+  border-bottom: 1px solid var(--tw-border-soft);
+  background: #101010;
+}
+
+.TechnicianWorkshop__surface-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+  color: var(--tw-muted);
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__surface-item span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.TechnicianWorkshop__surface-item small {
+  flex: 0 0 auto;
+  color: #858585;
+  font-size: 9px;
+}
+
+.TechnicianWorkshop__surface-item.is-target {
+  color: var(--tw-gold);
+}
+
+.TechnicianWorkshop__upgrade-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 5px 7px;
+  border-top: 1px solid var(--tw-border-soft);
+}
+
+.TechnicianWorkshop__upgrade-requirements .TechnicianWorkshop__cost-heading {
+  margin-top: 2px;
+}
+
+.TechnicianWorkshop__upgrade-fee {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+  padding: 7px 9px;
+  border-top: 1px solid var(--tw-border-soft);
+  background: #171717;
+}
+
+.TechnicianWorkshop__upgrade-fee .TechnicianWorkshop__cost-heading {
+  grid-column: 1 / -1;
+}
+
+.TechnicianWorkshop__upgrade-fee .TechnicianWorkshop__fee-value {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.TechnicianWorkshop__upgrade-fee .TechnicianWorkshop__depot-value {
+  margin-top: 0;
+  text-align: right;
+}
+
+.TechnicianWorkshop__upgrade-fee .TechnicianWorkshop__fee-warning {
+  grid-column: 1 / -1;
+  text-align: left;
+}
+
+.TechnicianWorkshop__detail-pane .TechnicianWorkshop__technician {
+  flex: 0 0 154px;
+}
+
+/* Upgrade/fixing selectors replace the ordinary crafting-category row. */
+.TechnicianWorkshop__service-categories {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.TechnicianWorkshop__service-category {
+  flex: 1 1 0;
+  min-width: 72px;
+  padding: 4px 8px;
+  border: 0;
+  border-right: 1px solid var(--tw-border);
+  background: #191919;
+  color: var(--tw-muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.TechnicianWorkshop__service-category:hover {
+  background: #282828;
+  color: var(--tw-text);
+}
+
+.TechnicianWorkshop__service-category.is-active {
+  background: #302a20;
+  color: var(--tw-gold);
+  box-shadow: inset 0 3px 0 var(--tw-gold);
+}
+
+.TechnicianWorkshop__upgrade-category-row {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 3px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-height: 27px;
+  padding: 3px 6px;
+  border-bottom: 1px solid var(--tw-border-soft);
+  background: #181818;
+}
+
+.TechnicianWorkshop__upgrade-category {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  border: 1px solid var(--tw-border-soft);
+  border-radius: 2px;
+  background: #202020;
+  color: var(--tw-muted);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.TechnicianWorkshop__upgrade-category.is-active {
+  border-color: var(--tw-gold);
+  background: #302a20;
+  color: var(--tw-gold);
+}
+
+.TechnicianWorkshop__smelt-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  color: var(--tw-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.TechnicianWorkshop__smelt-summary b {
+  color: var(--tw-gold);
+  font-size: 14px;
+}
+
+.TechnicianWorkshop__smelt-summary span {
+  color: var(--tw-muted);
+}
+
+.TechnicianWorkshop__footer .TechnicianWorkshop__service-footer-copy {
+  flex: 1 1 auto;
+}
+
+
+/* Administrator editor --------------------------------------------------- */
+.TechnicianWorkshop__admin-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 28px;
+  padding: 3px 8px;
+  border-right: 1px solid var(--tw-border);
+  border-left: 1px solid var(--tw-border);
+  background: #211f1a;
+  color: var(--tw-muted);
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__admin-bar button,
+.TechnicianWorkshop__admin-header > button,
+.TechnicianWorkshop__admin-actions button,
+.TechnicianWorkshop__admin-icon-controls button,
+.TechnicianWorkshop__admin-preset-list button {
+  padding: 5px 9px;
+  border: 1px solid #6e5c3b;
+  border-radius: 2px;
+  background: #302a20;
+  color: var(--tw-gold);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.TechnicianWorkshop__admin-panel {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--tw-border);
+  background: #141414;
+  overflow: hidden;
+}
+
+.TechnicianWorkshop__admin-header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--tw-border);
+  background: #201e19;
+}
+
+.TechnicianWorkshop__admin-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.TechnicianWorkshop__admin-header b {
+  color: var(--tw-gold);
+  font-size: 13px;
+}
+
+.TechnicianWorkshop__admin-header small {
+  color: var(--tw-muted);
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__admin-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 3px;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--tw-border);
+  background: #1b1b1b;
+}
+
+.TechnicianWorkshop__admin-tabs button {
+  padding: 6px 10px;
+  border: 1px solid var(--tw-border-soft);
+  border-radius: 2px;
+  background: #222222;
+  color: var(--tw-muted);
+  cursor: pointer;
+}
+
+.TechnicianWorkshop__admin-tabs button.is-active {
+  border-color: var(--tw-gold);
+  background: #302a20;
+  color: var(--tw-gold);
+}
+
+.TechnicianWorkshop__admin-workspace {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.32fr) minmax(0, 0.68fr);
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.TechnicianWorkshop__admin-recipe-list {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--tw-border);
+  background: #111111;
+  overflow-y: auto;
+}
+
+.TechnicianWorkshop__admin-recipe-list > button {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-bottom: 1px solid #333333;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.TechnicianWorkshop__admin-recipe-list > button.is-selected {
+  background: #302a20;
+  box-shadow: inset 3px 0 0 var(--tw-gold);
+}
+
+.TechnicianWorkshop__admin-recipe-list > button small {
+  color: var(--tw-muted);
+  font-size: 9px;
+}
+
+.TechnicianWorkshop__admin-editor,
+.TechnicianWorkshop__admin-single {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.TechnicianWorkshop__admin-editor-scroll {
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.TechnicianWorkshop__admin-single {
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.TechnicianWorkshop__admin-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 9px;
+}
+
+.TechnicianWorkshop__admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  color: var(--tw-muted);
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__admin-field.is-wide {
+  grid-column: 1 / -1;
+}
+
+.TechnicianWorkshop__admin-field input,
+.TechnicianWorkshop__admin-field textarea,
+.TechnicianWorkshop__admin-field select,
+.TechnicianWorkshop__admin-icon-controls input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 5px 6px;
+  border: 1px solid #4b4b4b;
+  border-radius: 2px;
+  background: #202020;
+  color: var(--tw-text);
+  font: inherit;
+}
+
+.TechnicianWorkshop__admin-field textarea {
+  resize: vertical;
+}
+
+.TechnicianWorkshop__admin-section-title {
+  margin: 10px 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--tw-border-soft);
+  color: var(--tw-gold);
+  font-weight: 700;
+}
+
+.TechnicianWorkshop__admin-help {
+  margin: 7px 0;
+  color: #a7a7a7;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.TechnicianWorkshop__admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 5px;
+  padding-top: 8px;
+  border-top: 1px solid var(--tw-border-soft);
+}
+
+.TechnicianWorkshop__admin-actions button.is-primary,
+.TechnicianWorkshop__admin-icon-controls button.is-primary {
+  background: #3a3323;
+  border-color: #94784b;
+  color: #f0d18e;
+}
+
+.TechnicianWorkshop__admin-actions button.is-danger,
+.TechnicianWorkshop__admin-preset-list button.is-danger {
+  border-color: #754343;
+  background: #321f1f;
+  color: #e99a9a;
+}
+
+.TechnicianWorkshop__admin-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex: 1 1 0;
+  gap: 12px;
+  min-height: 0;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.TechnicianWorkshop__admin-service-grid section {
+  min-width: 0;
+}
+
+.TechnicianWorkshop__admin-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid #393939;
+  border-bottom: 0;
+  background: #1c1c1c;
+  text-align: left;
+  cursor: pointer;
+}
+
+.TechnicianWorkshop__admin-toggle:last-child {
+  border-bottom: 1px solid #393939;
+}
+
+.TechnicianWorkshop__admin-toggle span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.TechnicianWorkshop__admin-toggle small {
+  color: var(--tw-muted);
+  font-size: 9px;
+}
+
+.TechnicianWorkshop__admin-toggle strong {
+  flex: 0 0 auto;
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__admin-toggle strong.is-enabled {
+  color: var(--tw-green);
+}
+
+.TechnicianWorkshop__admin-toggle strong.is-disabled {
+  color: #e18b8b;
+}
+
+.TechnicianWorkshop__admin-icon-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.TechnicianWorkshop__admin-portrait-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px 4px;
+}
+
+.TechnicianWorkshop__admin-portrait-grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 8px 4px;
+  border: 1px solid var(--tw-border-soft);
+  background: #1b1b1b;
+  color: var(--tw-gold);
+  font-size: 10px;
+}
+
+.TechnicianWorkshop__admin-preset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.TechnicianWorkshop__admin-preset-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--tw-border-soft);
+  background: #1b1b1b;
+}
+
+.TechnicianWorkshop__admin-preset-list > div > span {
+  display: flex;
+  gap: 5px;
+}
+
+@media (max-width: 760px) {
+  .TechnicianWorkshop__admin-workspace,
+  .TechnicianWorkshop__admin-service-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .TechnicianWorkshop__admin-recipe-list {
+    max-height: 125px;
+    border-right: 0;
+    border-bottom: 1px solid var(--tw-border);
+  }
+
+  .TechnicianWorkshop__admin-portrait-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.TechnicianWorkshop__access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 560px;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.TechnicianWorkshop__admin-confirm-copy {
+  align-self: center;
+  color: var(--color-warning);
+  font-size: 0.9em;
 }

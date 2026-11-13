@@ -6,9 +6,14 @@
 	var/name = "Unnamed recipe"
 	var/category = "Miscellaneous"
 	var/desc = ""
+	/// Optional service gate. The station profile decides which equipment unlocks it.
+	var/required_station_service = null
 
 	/// Output item type. Must be an /obj/item path.
 	var/atom/created_item
+	/// Optional DMI overrides for outputs whose icon differs from their default type icon.
+	var/output_icon_override
+	var/output_icon_state_override
 	/// Number of output items created when the job finishes.
 	var/output_amount = 1
 
