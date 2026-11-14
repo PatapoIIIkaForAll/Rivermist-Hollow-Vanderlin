@@ -67,14 +67,11 @@
 /datum/enterprise/proc/survey(list/turf/fresh)
 	build_floors()
 	scan_rooms()
-	if(fixtures_waiting)
-		drop_stray_fixtures()
 	var/list/datum/enterprise_fixture/taken = length(fresh) ? take_fixtures(fresh) : null
 	if(!SSticker.HasRoundStarted())
 		mark_start_stock(fresh)
 	furnish_rooms()
-	if(length(taken) || fixtures_waiting)
-		fixtures_waiting = FALSE
+	if(length(taken))
 		for(var/datum/enterprise_room/room as anything in rooms)
 			room.apply_inventory_level(max(room.level, ENTERPRISE_LEVEL_WOOD))
 	for(var/datum/enterprise_room/room as anything in rooms)

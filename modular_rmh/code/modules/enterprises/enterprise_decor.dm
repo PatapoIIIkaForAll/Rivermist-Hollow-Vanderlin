@@ -58,7 +58,6 @@
 	bed.remove_filter(ENTERPRISE_BED_OUTLINE)
 	switch(level)
 		if(ENTERPRISE_LEVEL_SILVER)
-			drapes = "curtain_purple"
 			bed.add_filter(ENTERPRISE_BED_OUTLINE, 1, outline_filter(1, "#3c1f5a59"))
 		if(ENTERPRISE_LEVEL_GOLD to INFINITY)
 			drapes = "curtain_red"

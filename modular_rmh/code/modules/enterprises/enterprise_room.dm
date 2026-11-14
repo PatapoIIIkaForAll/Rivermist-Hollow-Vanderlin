@@ -435,12 +435,13 @@
 			var/datum/enterprise_seating/seating = seating_of[table]
 			seating.chairs += seat
 			break
+	var/turf/bar_turf = enterprise.find_note_table()
 	for(var/datum/enterprise_seating/seating as anything in seatings)
 		if(!length(seating.chairs))
 			seatings -= seating
 			qdel(seating)
 			continue
-		seating.reseat()
+		seating.reseat(bar_turf)
 
 /datum/enterprise_room/proc/get_seating(obj/structure/chair/seat)
 	for(var/datum/enterprise_seating/seating as anything in seatings)
@@ -523,8 +524,13 @@
 	return !get_patron()
 
 /datum/enterprise_seating/proc/is_bar()
+	return has_table_at(room?.enterprise?.find_note_table())
+
+/datum/enterprise_seating/proc/has_table_at(turf/spot)
+	if(!spot)
+		return FALSE
 	for(var/datum/enterprise_fixture/fixture as anything in tables)
-		if(ispath(fixture.fixture_type, /obj/structure/table/wood/counter) || ispath(fixture.fixture_type, /obj/structure/table/wood/bar))
+		if(fixture.home == spot)
 			return TRUE
 	return FALSE
 
@@ -543,8 +549,8 @@
 			return TRUE
 	return FALSE
 
-/datum/enterprise_seating/proc/reseat()
-	if(is_bar())
+/datum/enterprise_seating/proc/reseat(turf/bar_turf)
+	if(has_table_at(bar_turf))
 		return
 	for(var/datum/enterprise_fixture/fixture as anything in chairs)
 		var/obj/structure/chair/seat = fixture.get_thing()

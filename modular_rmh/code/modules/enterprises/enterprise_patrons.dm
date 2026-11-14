@@ -356,11 +356,12 @@
 
 /datum/enterprise/proc/find_seating(bar, list/claimed, mob/living/asking)
 	var/list/datum/enterprise_seating/found = list()
+	var/turf/bar_turf = find_note_table()
 	for(var/datum/enterprise_room/room as anything in rooms)
 		if(!room.template?.seats_patrons)
 			continue
 		for(var/datum/enterprise_seating/seating as anything in room.seatings)
-			if(seating.is_bar() != bar || !seating.get_free_chair(claimed, asking))
+			if(seating.has_table_at(bar_turf) != bar || !seating.get_free_chair(claimed, asking))
 				continue
 			if(bar || seating.is_free())
 				found += seating

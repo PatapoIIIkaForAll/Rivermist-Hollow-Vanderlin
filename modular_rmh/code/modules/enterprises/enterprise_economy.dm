@@ -148,7 +148,6 @@
 	owner_earned = saved["earned"]
 	owner_grades = saved["grades"]
 	owner_level = get_prestige_level(owner_earned)
-	place_ledger()
 	if(!welcomed[ckey])
 		welcomed[ckey] = TRUE
 		if(grant_owner_rooms(owner_level))

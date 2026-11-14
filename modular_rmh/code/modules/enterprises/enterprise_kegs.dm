@@ -79,8 +79,8 @@
 	var/volume = get_level_entry(drink_caps, level)
 	var/slots = get_level_entry(drink_slot_caps, level)
 	if(russian)
-		return "Алкоголь, слитый сюда, оплачивает город, а выкупает его только персонал, за [ENTERPRISE_BUYOUT_PERCENT]% цены. Хранилище держит до [volume] ед.: пиво и вино[slots ? ", а ещё до [slots] других напитков" : ""]; воды — до [ENTERPRISE_WATER_CAP] ед., она бесплатна. [keg_cap ? "Пустых бочек на складе: до [keg_cap]." : "Пустые бочки здесь пока не хранят."]"
-	return "Alcohol poured in here is paid for by the town, and only the staff buy it out, at [ENTERPRISE_BUYOUT_PERCENT]% of the price. The store holds up to [volume] units: beer and wine[slots ? ", and up to [slots] other drinks" : ""]; water up to [ENTERPRISE_WATER_CAP] units, free. [keg_cap ? "It keeps up to [keg_cap] empty kegs." : "It keeps no empty kegs yet."]"
+		return "Алкоголь, слитый сюда, оплачивает город, а выкупает его только персонал, за [ENTERPRISE_BUYOUT_PERCENT]% цены из книги таверны. Хранилище держит до [volume] ед.: пиво и вино[slots ? ", а ещё до [slots] других напитков" : ""]; воды — до [ENTERPRISE_WATER_CAP] ед., она бесплатна. [keg_cap ? "Пустых бочек на складе: до [keg_cap]." : "Пустые бочки здесь пока не хранят."]"
+	return "Alcohol poured in here is paid for by the town, and only the staff buy it out, at [ENTERPRISE_BUYOUT_PERCENT]% of the price, from the house's book. The store holds up to [volume] units: beer and wine[slots ? ", and up to [slots] other drinks" : ""]; water up to [ENTERPRISE_WATER_CAP] units, free. [keg_cap ? "It keeps up to [keg_cap] empty kegs." : "It keeps no empty kegs yet."]"
 
 /datum/enterprise_stock
 	var/datum/enterprise_keg_store/kegs
@@ -222,17 +222,13 @@
 	var/datum/enterprise/enterprise = stock.enterprise
 	if(cost <= 0)
 		return TRUE
-	if(enterprise.is_manager(user))
-		return enterprise.can_pay(user, cost)
-	return enterprise.get_bank_balance(user) >= cost
+	return enterprise.can_pay(user, cost)
 
 /datum/enterprise_keg_store/proc/charge(mob/user, cost)
 	var/datum/enterprise/enterprise = stock.enterprise
 	if(cost <= 0)
 		return TRUE
-	if(enterprise.is_manager(user))
-		return enterprise.pay(user, cost, "[enterprise.name] drinks", FALSE)
-	return enterprise.take_from_account(user, cost)
+	return enterprise.pay(user, cost, "[enterprise.name] drinks", FALSE)
 
 /datum/enterprise_keg_store/proc/refresh(money_moved)
 	if(money_moved)
@@ -526,7 +522,7 @@
 		"keg_volume" = ENTERPRISE_KEG_VOLUME,
 		"share" = ENTERPRISE_BUYOUT_PERCENT,
 		"staff" = enterprise.is_staff(user),
-		"funds" = enterprise.is_manager(user) ? enterprise.book_balance + enterprise.get_bank_balance(user) : enterprise.get_bank_balance(user),
+		"funds" = enterprise.is_staff(user) ? enterprise.book_balance + enterprise.get_bank_balance(user) : enterprise.get_bank_balance(user),
 		"drinks" = drink_rows,
 	)
 

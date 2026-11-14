@@ -341,31 +341,6 @@
 /datum/enterprise
 	var/alist/fixture_refs = alist()
 	var/list/pressed = list()
-	var/fixtures_waiting = FALSE
-
-/datum/enterprise/proc/record_round_start()
-	if(length(claimed_by_z))
-		return FALSE
-	var/turf/spot = find_ledger_spot()
-	if(!spot)
-		return FALSE
-	claimed_by_z = scan_premises(spot)
-	build_floors()
-	var/list/turf/found = list()
-	for(var/list/turf/level as anything in claimed_by_z)
-		if(level)
-			found += level
-	fixtures_waiting = length(take_fixtures(found)) > 0
-	mark_start_stock(found)
-	return TRUE
-
-/datum/enterprise/proc/drop_stray_fixtures()
-	for(var/datum/enterprise_fixture/item as anything in fixtures.Copy())
-		if(contains(item.home))
-			continue
-		bind_fixture(item, null)
-		fixtures -= item
-		qdel(item)
 
 /datum/enterprise/proc/bind_fixture(datum/enterprise_fixture/item, obj/thing)
 	if(item.thing)

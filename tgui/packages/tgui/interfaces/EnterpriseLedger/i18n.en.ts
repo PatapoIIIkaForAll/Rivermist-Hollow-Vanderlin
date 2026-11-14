@@ -199,7 +199,7 @@ const locale: Locale = {
     fill: 'Pour',
     other: 'other',
     water: 'Water',
-    funds: 'Your money',
+    funds: 'Ledger and account together',
     share: 'You pay',
   },
   formatPremises: (floors, basements, tiles) =>

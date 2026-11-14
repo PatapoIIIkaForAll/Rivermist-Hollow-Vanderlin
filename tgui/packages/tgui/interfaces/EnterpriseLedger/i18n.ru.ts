@@ -198,7 +198,7 @@ const locale: Locale = {
     fill: 'Налить',
     other: 'другой',
     water: 'Вода',
-    funds: 'Ваши деньги',
+    funds: 'В книге и на счёте вместе',
     share: 'Вы платите',
   },
   formatPremises: (floors, basements, tiles) =>

@@ -52,7 +52,6 @@
 	var/list/needs = list(
 		/obj/structure/bed,
 		/obj/structure/closet,
-		/obj/structure/curtain,
 	)
 
 /datum/enterprise_room_template/guest_room/matches(datum/enterprise_room/room)
@@ -65,7 +64,7 @@
 
 /datum/enterprise_room_template/guest_room/report_unmatched(datum/enterprise_room/room)
 	var/turf/first = room.turfs[1]
-	log_mapping("Map issue: [room.name] at [AREACOORD(first)] has the lock of a guest room but lacks a bed, a wardrobe or curtains, so it is not let as one.")
+	log_mapping("Map issue: [room.name] at [AREACOORD(first)] has the lock of a guest room but lacks a bed or a wardrobe, so it is not let as one.")
 
 /datum/enterprise_room_template/guest_room/get_effect(datum/enterprise_room/room, level, russian)
 	var/datum/enterprise/enterprise = room.enterprise

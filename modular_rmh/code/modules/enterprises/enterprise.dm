@@ -7,7 +7,6 @@
 	var/list/ledger_pages = list("overview")
 	var/list/owner_pages = list("premises")
 	var/list/obj/structure/fake_machine/enterprise_ledger/ledgers = list()
-	var/ledger_type
 	var/shift_active = FALSE
 	var/list/datum/enterprise_floor/floors = list()
 	var/premises_hint = "Place the ledger on an area that belongs to the enterprise."
@@ -40,19 +39,6 @@
 	claimed_by_z = null
 	SSenterprises.enterprises -= type
 	return ..()
-
-/datum/enterprise/proc/find_ledger_spot()
-	return null
-
-/datum/enterprise/proc/place_ledger()
-	if(length(ledgers) || !ledger_type)
-		return FALSE
-	var/turf/spot = find_ledger_spot()
-	if(!spot)
-		return FALSE
-	new ledger_type(spot)
-	log_game("[name]: the ledger was set up at [AREACOORD(spot)]")
-	return TRUE
 
 /datum/enterprise/proc/is_owner(mob/user)
 	return is_type_in_list(user?.mind?.assigned_role, owner_jobs)
@@ -297,23 +283,9 @@
 	premises_hint = "Place the ledger on an area with tavern_area set."
 	staff_lock_ids = list(ACCESS_INN)
 	owner_keyring = /obj/item/storage/keyring/tavern_keeper
-	ledger_type = /obj/structure/fake_machine/enterprise_ledger/tavern
 
 /datum/enterprise/tavern/is_premises_area(area/place)
 	return place?.tavern_area
-
-/datum/enterprise/tavern/find_ledger_spot()
-	for(var/area/place as anything in GLOB.areas)
-		if(!is_premises_area(place))
-			continue
-		for(var/turf/member as anything in place.get_turfs_from_all_zlevels())
-			if(!(locate(/obj/structure/fake_machine/vendor/inn_rmh) in member))
-				continue
-			for(var/direction in GLOB.cardinals)
-				var/turf/spot = get_step(member, direction)
-				if(spot && !isclosedturf(spot) && is_premises_turf(spot) && !spot.is_blocked_turf(TRUE))
-					return spot
-	return null
 
 /area/under/town/rmh/basement/tavern
 	tavern_area = TRUE
@@ -396,8 +368,6 @@ SUBSYSTEM_DEF(enterprises)
 		enterprise.mark_round_start_stock()
 		for(var/obj/structure/fake_machine/enterprise_ledger/ledger as anything in enterprise.ledgers)
 			enterprise.claim_premises(ledger)
-		if(!length(enterprise.ledgers))
-			enterprise.record_round_start()
 		enterprise.recover_journal()
 	keys_ready = TRUE
 	for(var/datum/weakref/key_ref as anything in pending_keys)
