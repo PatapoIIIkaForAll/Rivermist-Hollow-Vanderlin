@@ -4592,6 +4592,7 @@
 #include "modular_rmh\code\game\objects\items\keys.dm"
 #include "modular_rmh\code\game\objects\items\leash.dm"
 #include "modular_rmh\code\game\objects\items\repair_kits.dm"
+#include "modular_rmh\code\game\objects\items\rings.dm"
 #include "modular_rmh\code\game\objects\items\rivermist_keyrings.dm"
 #include "modular_rmh\code\game\objects\items\sleeves.dm"
 #include "modular_rmh\code\game\objects\items\undershirt.dm"
