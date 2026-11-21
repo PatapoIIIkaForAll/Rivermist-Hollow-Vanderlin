@@ -346,73 +346,35 @@
 	name = "ring of protection"
 	desc = "Old ring, inscribed with arcyne words. Once held magical powers, perhaps it does still?"
 	icon_state = "ring_protection"
-	var/antileechy
-	var/antimagika	// will cause bugs if equipped roundstart to wizards
-	var/antishocky
-	var/health
-	var/fall
-	var/army
-	var/random_effect = TRUE
+	var/protection_trait
+	var/static/list/random_protection_traits = list(
+		TRAIT_LEECHIMMUNE,
+		TRAIT_LEECHIMMUNE,
+		TRAIT_SHOCKIMMUNE,
+		TRAIT_TRUE_GRIT,
+		TRAIT_NOFALLDAMAGE1,
+		TRAIT_TEMPO,
+		null,
+	)
 
 /obj/item/clothing/ring/gold/protection/Initialize()
 	. = ..()
-	if(!random_effect)
-		return
-
-	switch(rand(1,7))
-		if(1)
-			antileechy = TRUE
-		if(2)
-			antileechy = TRUE
-		if(3)
-			antishocky = TRUE
-		if(4)
-			health = TRUE
-		if(5)
-			fall = TRUE
-		if(6)
-			army = TRUE
-		if(7)
-			return
+	if(!protection_trait)
+		protection_trait = pick(random_protection_traits)
 
 /obj/item/clothing/ring/gold/protection/equipped(mob/user, slot)
 	. = ..()
-	if(antileechy)
-		if ((slot & ITEM_SLOT_RING) && istype(user))
-			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-			ADD_TRAIT(user, TRAIT_LEECHIMMUNE,"[REF(src)]")
-	if(antimagika)
-		if ((slot & ITEM_SLOT_RING) && istype(user))
-			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-			ADD_TRAIT(user, TRAIT_ANTIMAGIC,"[REF(src)]")
-	if(antishocky)
-		if ((slot & ITEM_SLOT_RING) && istype(user))
-			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-			ADD_TRAIT(user, TRAIT_SHOCKIMMUNE,"[REF(src)]")
-	if(health)
-		if ((slot & ITEM_SLOT_RING) && istype(user))
-			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-			ADD_TRAIT(user, TRAIT_TRUE_GRIT,"[REF(src)]")
-	if(fall)
-		if ((slot & ITEM_SLOT_RING) && istype(user))
-			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-			ADD_TRAIT(user, TRAIT_NOFALLDAMAGE1,"[REF(src)]")
-	if(army)
-		if ((slot & ITEM_SLOT_RING) && istype(user))
-			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-			ADD_TRAIT(user, TRAIT_TEMPO,"[REF(src)]")
+	if(!protection_trait || !(slot & ITEM_SLOT_RING))
+		return
+	RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed), override = TRUE)
+	ADD_TRAIT(user, protection_trait, REF(src))
 
 /obj/item/clothing/ring/gold/protection/proc/item_removed(mob/living/carbon/wearer, obj/item/dropped_item)
 	SIGNAL_HANDLER
 	if(dropped_item != src)
 		return
 	UnregisterSignal(wearer, COMSIG_MOB_UNEQUIPPED_ITEM)
-	REMOVE_TRAIT(wearer, TRAIT_LEECHIMMUNE,"[REF(src)]")
-	REMOVE_TRAIT(wearer, TRAIT_ANTIMAGIC,"[REF(src)]")
-	REMOVE_TRAIT(wearer, TRAIT_SHOCKIMMUNE,"[REF(src)]")
-	REMOVE_TRAIT(wearer, TRAIT_TRUE_GRIT,"[REF(src)]")
-	REMOVE_TRAIT(wearer, TRAIT_NOFALLDAMAGE1,"[REF(src)]")
-	REMOVE_TRAIT(wearer, TRAIT_TEMPO,"[REF(src)]")
+	REMOVE_TRAIT(wearer, protection_trait, REF(src))
 
 /obj/item/clothing/ring/gold/ravox
 	name = "ring of ravox"
