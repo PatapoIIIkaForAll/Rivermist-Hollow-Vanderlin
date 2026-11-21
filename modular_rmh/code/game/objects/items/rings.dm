@@ -74,7 +74,7 @@
 /datum/supply_pack/rings/falling_protection
 	name = "Ring of Falling Protection"
 	desc = "An old ring inscribed with arcyne words. Enhances protection against falling."
-	cost = 1000
+	cost = 200
 	contains = list(/obj/item/clothing/ring/gold/protection/fall)
 
 /datum/supply_pack/rings/army_protection
