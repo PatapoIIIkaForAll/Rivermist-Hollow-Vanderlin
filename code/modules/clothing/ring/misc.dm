@@ -349,10 +349,17 @@
 	var/antileechy
 	var/antimagika	// will cause bugs if equipped roundstart to wizards
 	var/antishocky
+	var/health
+	var/fall
+	var/army
+	var/random_effect = TRUE
 
 /obj/item/clothing/ring/gold/protection/Initialize()
 	. = ..()
-	switch(rand(1,4))
+	if(!random_effect)
+		return
+
+	switch(rand(1,7))
 		if(1)
 			antileechy = TRUE
 		if(2)
@@ -360,6 +367,12 @@
 		if(3)
 			antishocky = TRUE
 		if(4)
+			health = TRUE
+		if(5)
+			fall = TRUE
+		if(6)
+			army = TRUE
+		if(7)
 			return
 
 /obj/item/clothing/ring/gold/protection/equipped(mob/user, slot)
@@ -376,6 +389,18 @@
 		if ((slot & ITEM_SLOT_RING) && istype(user))
 			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
 			ADD_TRAIT(user, TRAIT_SHOCKIMMUNE,"[REF(src)]")
+	if(health)
+		if ((slot & ITEM_SLOT_RING) && istype(user))
+			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
+			ADD_TRAIT(user, TRAIT_TRUE_GRIT,"[REF(src)]")
+	if(fall)
+		if ((slot & ITEM_SLOT_RING) && istype(user))
+			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
+			ADD_TRAIT(user, TRAIT_NOFALLDAMAGE1,"[REF(src)]")
+	if(army)
+		if ((slot & ITEM_SLOT_RING) && istype(user))
+			RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
+			ADD_TRAIT(user, TRAIT_TEMPO,"[REF(src)]")
 
 /obj/item/clothing/ring/gold/protection/proc/item_removed(mob/living/carbon/wearer, obj/item/dropped_item)
 	SIGNAL_HANDLER
@@ -385,6 +410,9 @@
 	REMOVE_TRAIT(wearer, TRAIT_LEECHIMMUNE,"[REF(src)]")
 	REMOVE_TRAIT(wearer, TRAIT_ANTIMAGIC,"[REF(src)]")
 	REMOVE_TRAIT(wearer, TRAIT_SHOCKIMMUNE,"[REF(src)]")
+	REMOVE_TRAIT(wearer, TRAIT_TRUE_GRIT,"[REF(src)]")
+	REMOVE_TRAIT(wearer, TRAIT_NOFALLDAMAGE1,"[REF(src)]")
+	REMOVE_TRAIT(wearer, TRAIT_TEMPO,"[REF(src)]")
 
 /obj/item/clothing/ring/gold/ravox
 	name = "ring of ravox"

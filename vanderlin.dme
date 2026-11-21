@@ -4508,6 +4508,7 @@
 #include "modular_rmh\code\tweaks.dm"
 #include "modular_rmh\code\_DEFINES\autotranslate.dm"
 #include "modular_rmh\code\_DEFINES\gnoll.dm"
+#include "modular_rmh\code\_DEFINES\law_documents.dm"
 #include "modular_rmh\code\_DEFINES\mothbug.dm"
 #include "modular_rmh\code\_DEFINES\musk.dm"
 #include "modular_rmh\code\_DEFINES\partial_transformation.dm"
