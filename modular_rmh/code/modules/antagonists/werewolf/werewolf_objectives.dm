@@ -67,6 +67,8 @@
 		return FALSE
 
 	converted_player_minds += target.mind
+	var/datum/antagonist/werewolf/lesser/pup = target.mind.has_antag_datum(/datum/antagonist/werewolf/lesser)
+	pup?.set_elder(src)
 	record_contract_progress(/datum/contract_goal/werewolf/convert)
 	refresh_werewolf_objectives()
 	return TRUE
@@ -120,7 +122,21 @@
 		return FALSE
 	return TRUE
 
-/mob/living/carbon/human/proc/request_werewolf_conversion(datum/antagonist/werewolf/source_antag, mob/living/carbon/human/source, prompt_title, prompt_text)
+/// Odds that a beast's seed offers the curse; a knot doubles them and the full moon always offers.
+/proc/get_werewolf_seed_conversion_chance(knot_finished = FALSE, mob/living/target = null, mob/living/source = null)
+	if(is_full_moon_night())
+		return 100
+	var/conversion_chance = WW_CREAMPIE_CONVERSION_CHANCE
+	if(knot_finished)
+		conversion_chance *= WW_CREAMPIE_KNOT_MULTIPLIER
+	// A wolf breeding its own scent-marked mate again spreads the curse more surely.
+	var/datum/status_effect/werewolf_scent_mark/pack_mark = target?.has_status_effect(/datum/status_effect/werewolf_scent_mark)
+	if(pack_mark)
+		conversion_chance *= pack_mark.get_werewolf_conversion_multiplier(source)
+	return min(conversion_chance, 100)
+
+/// Offers the curse; [source] may be an NPC beast with no antag datum, so only [source_antag] gets credit.
+/mob/living/carbon/human/proc/request_werewolf_conversion(datum/antagonist/werewolf/source_antag, mob/living/source, prompt_title, prompt_text)
 	if(!can_receive_werewolf_conversion_offer())
 		return FALSE
 
@@ -138,7 +154,7 @@
 	return TRUE
 
 /mob/living/carbon/human/proc/prompt_werewolf_conversion_offer(datum/weakref/source_antag_ref, datum/weakref/source_ref, prompt_title, prompt_text)
-	var/mob/living/carbon/human/source = source_ref?.resolve()
+	var/mob/living/source = source_ref?.resolve()
 	var/choice = tgui_alert(src, prompt_text, prompt_title, list("Accept", "Reject"), WW_CONVERSION_PROMPT_TIMEOUT)
 
 	werewolf_conversion_prompt_pending = FALSE
@@ -188,11 +204,7 @@
 	if(!can_receive_werewolf_conversion_offer())
 		return FALSE
 
-	var/conversion_chance = WW_CREAMPIE_CONVERSION_CHANCE
-	if(knot_finished)
-		conversion_chance *= WW_CREAMPIE_KNOT_MULTIPLIER
-
-	if(!prob(min(conversion_chance, 100)))
+	if(!prob(get_werewolf_seed_conversion_chance(knot_finished, src, source)))
 		return FALSE
 
 	return request_werewolf_conversion(
@@ -344,6 +356,24 @@
 		if(considered_alive(wolf_mind))
 			return TRUE
 	return FALSE
+
+/datum/objective/werewolf/find_elder
+	name = "find elder"
+	explanation_text = "Stand beside my elder under a full moon."
+	triumph_count = 2
+
+/datum/objective/werewolf/pack_keeper
+	name = "pack keeper"
+	triumph_count = 3
+
+/datum/objective/werewolf/pack_keeper/on_creation()
+	explanation_text = "Keep [WW_PACK_KEEPER_PUP_TARGET] pups of my own making alive to the end."
+
+/datum/objective/werewolf/pack_keeper/check_completion()
+	var/datum/antagonist/werewolf/elder = owner?.has_antag_datum(/datum/antagonist/werewolf)
+	if(!elder)
+		return FALSE
+	return length(elder.get_living_pup_minds()) >= WW_PACK_KEEPER_PUP_TARGET
 
 /datum/objective/werewolf_counter/embrace_gift
 	name = "embrace"

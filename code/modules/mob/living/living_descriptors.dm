@@ -71,6 +71,8 @@
 /proc/build_cool_description(list/descriptors, mob/living/described, face_hidden = FALSE, mob/watcher)
 	var/list/lines = list()
 	var/list/desc_copy = descriptors.Copy()
+	// Spots and wordings already used by the marks that follow the genital lines.
+	var/list/marks_used = list()
 
 	if(face_hidden)
 		lines += build_coalesce_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_HEIGHT, MOB_DESCRIPTOR_SLOT_BODY, MOB_DESCRIPTOR_SLOT_STATURE), "You see %DESC1%, %DESC2% %DESC3%.", watcher)
@@ -79,12 +81,13 @@
 		lines += build_coalesce_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_HEIGHT, MOB_DESCRIPTOR_SLOT_BODY, MOB_DESCRIPTOR_SLOT_STATURE, MOB_DESCRIPTOR_SLOT_FACE_SHAPE, MOB_DESCRIPTOR_SLOT_FACE_EXPRESSION), "You see %DESC1%, %DESC2% %DESC3% with %DESC4%, %DESC5%.", watcher)
 		lines += build_coalesce_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_AGE, MOB_DESCRIPTOR_SLOT_SKIN, MOB_DESCRIPTOR_SLOT_VOICE), "%THEY% %DESC1%, %DESC2% and %DESC3%.", watcher)
 
+	lines += build_coalesce_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_TRAIT), "%THEY% %DESC1%.", watcher)
 	lines += build_joined_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_PROMINENT, MOB_DESCRIPTOR_SLOT_PROMINENT), watcher)
 	lines += build_joined_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_PROMINENT, MOB_DESCRIPTOR_SLOT_PROMINENT), watcher)
 	lines += build_coalesce_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_ARMPITS), "%THEY% %DESC1%.", watcher)
-	lines += build_joined_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_PENIS, MOB_DESCRIPTOR_SLOT_TESTICLES), watcher)
-	lines += build_joined_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_BREASTS), watcher)
-	lines += build_joined_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_VAGINA, MOB_DESCRIPTOR_SLOT_BUTT), watcher)
+	lines += build_marked_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_PENIS, MOB_DESCRIPTOR_SLOT_TESTICLES), watcher, marks_used)
+	lines += build_marked_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_BREASTS), watcher, marks_used)
+	lines += build_marked_description(desc_copy, described, list(MOB_DESCRIPTOR_SLOT_VAGINA, MOB_DESCRIPTOR_SLOT_BUTT), watcher, marks_used)
 
 	/// Print the remaining ones in seperate lines
 	for(var/descriptor_type in desc_copy)
@@ -111,6 +114,16 @@
 	if(!length(parts))
 		return
 	return treat_mob_descriptor_string("%THEY% [english_list(parts)].", described)
+
+/// A joined description followed by what the body carries on those parts, such as lipstick marks.
+/proc/build_marked_description(list/descriptors, mob/living/described, list/slots, mob/watcher, list/marks_used)
+	var/list/before = descriptors.Copy()
+	. = build_joined_description(descriptors, described, slots, watcher)
+	if(!.)
+		return
+	var/marks = described.get_descriptor_marks(before - descriptors, watcher, marks_used)
+	if(marks)
+		. = "[.] [marks]"
 
 /proc/build_coalesce_description(list/descriptors, mob/living/described, list/slots, string, mob/watcher)
 	var/list/descs = described.get_descriptor_slot_list(slots, descriptors)

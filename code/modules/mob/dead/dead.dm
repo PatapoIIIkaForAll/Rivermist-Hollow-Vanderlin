@@ -213,6 +213,9 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	spawning_mob.after_creation()
 	if(!(spawning_mob.real_name in GLOB.chosen_names))
 		GLOB.chosen_names += spawning_mob.real_name
+		spawning_mob.reserved_name = spawning_mob.real_name
+		if(spawning_mob.mind)
+			spawning_mob.mind.reserved_name = spawning_mob.real_name
 	new_character = spawning_mob
 	return spawning_mob
 

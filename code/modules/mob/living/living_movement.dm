@@ -21,9 +21,31 @@
 			var/mob/living/M = mover
 			if(M.wallpressed)
 				return !wallpressed
+			if(pixelshift_lets_pass(M))
+				return TRUE
 			// check src density instead of mover to prevent prone people from crawling under others
 			return (!density || wallpressed || body_position == LYING_DOWN)
 	return !mover.density || wallpressed || body_position == LYING_DOWN
+
+/// Pixels past the tile centre a pixel-shifted mob must sit before others can slip past it.
+#define PIXEL_SHIFT_PASS_OFFSET 8
+
+/// TRUE if [mover] enters our tile beside us: we are shifted to an edge and it comes in along the other axis.
+/mob/living/proc/pixelshift_lets_pass(mob/living/mover)
+	if(!pixelshifted)
+		return FALSE
+	var/entry_dir = get_dir(get_turf(src), get_turf(mover))
+	if(!entry_dir)
+		return FALSE
+	var/open_dirs = NONE
+	if(abs(pixelshift_y) > PIXEL_SHIFT_PASS_OFFSET)
+		open_dirs |= EAST|WEST
+	if(abs(pixelshift_x) > PIXEL_SHIFT_PASS_OFFSET)
+		open_dirs |= NORTH|SOUTH
+	// A diagonal entry must be open on both of its axes.
+	return open_dirs && (entry_dir & open_dirs) == entry_dir
+
+#undef PIXEL_SHIFT_PASS_OFFSET
 
 /mob/living/toggle_move_intent()
 	. = ..()

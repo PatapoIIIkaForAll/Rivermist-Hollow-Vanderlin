@@ -33,7 +33,7 @@
 
 /// Size queens and masochists enjoy the gape instead of minding it.
 /datum/status_effect/orifice_gaping/proc/enjoys_gaping()
-	return owner.has_kink(KINK_SIZE_QUEEN) || owner.has_quirk(/datum/quirk/vice/addiction/masochist)
+	return owner.has_kink(KINK_SIZE_QUEEN) || owner.has_quirk(/datum/quirk/negative/addiction/masochist)
 
 /datum/status_effect/orifice_gaping/on_apply()
 	. = ..()

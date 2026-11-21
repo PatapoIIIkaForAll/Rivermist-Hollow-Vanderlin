@@ -35,7 +35,7 @@
 		if(!choice)
 			continue
 		var/datum/descriptor_entry/entry = get_descriptor_entry_for_choice(choice_type)
-		if(entry)
+		if(entry || adopt_unused_descriptor_entry(choice))
 			continue
 		entry = make_default_descriptor_entry(choice_type)
 		if(entry)
@@ -57,6 +57,17 @@
 		var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[i]
 		custom_entry.prefix_type = sanitize_integer(custom_entry.prefix_type, 1, CUSTOM_PREFIX_AMOUNT, CUSTOM_PREFIX_HAS_A)
 		custom_entry.content_text = STRIP_HTML_SIMPLE(LOWER_TEXT(custom_entry.content_text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+
+/// Moves a pick from a choice the species no longer has, such as the old skin choice, when it is valid here.
+/datum/preferences/proc/adopt_unused_descriptor_entry(datum/descriptor_choice/choice)
+	for(var/datum/descriptor_entry/entry as anything in descriptor_entries)
+		if(entry.descriptor_choice_type in pref_species.descriptor_choices)
+			continue
+		if(!(entry.descriptor_type in choice.descriptors))
+			continue
+		entry.descriptor_choice_type = choice.type
+		return entry
+	return null
 
 /datum/preferences/proc/reset_descriptors()
 	descriptor_entries = list()

@@ -7,7 +7,7 @@
 	desc = "Fluvians are moth-folk wanderers known for moonlit pilgrimages, omen-reading, and a calm fascination with the uncanny. \
 	They are rare in settled lands, but their knack for charm, luck, and quiet mysticism makes them memorable wherever they travel. \
 	\n\n\
-	(+1 SPD, Blackleg Trait).\
+	(Blackleg Trait).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
@@ -32,6 +32,7 @@
 
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_SPLEEN = /obj/item/organ/spleen,
 		ORGAN_SLOT_HEART = /obj/item/organ/heart,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
 		ORGAN_SLOT_EYES = /obj/item/organ/eyes,
@@ -101,6 +102,20 @@
 		/datum/body_marking/moth/grayscale/jungle,
 		/datum/body_marking/moth/grayscale/witchwing,
 		/datum/body_marking/moth/grayscale/lovers,
+	)
+	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
+		/datum/descriptor_choice/height,
+		/datum/descriptor_choice/body,
+		/datum/descriptor_choice/stature,
+		/datum/descriptor_choice/face,
+		/datum/descriptor_choice/face_exp,
+		/datum/descriptor_choice/skin_all,
+		/datum/descriptor_choice/voice,
+		/datum/descriptor_choice/prominent_one_wild,
+		/datum/descriptor_choice/prominent_two_wild,
+		/datum/descriptor_choice/prominent_three_wild,
+		/datum/descriptor_choice/prominent_four_wild,
 	)
 
 	statsheet_male = /datum/attribute_holder/sheet/job/species/fluvian/stats/male

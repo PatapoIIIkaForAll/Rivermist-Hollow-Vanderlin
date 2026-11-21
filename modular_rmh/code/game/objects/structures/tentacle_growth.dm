@@ -1,7 +1,14 @@
 #define TENTACLE_GROWTH_GLOBAL_CAP 600
 #define TENTACLE_GROWTH_MOVESPEED_ID "tentacle_growth"
+#define TENTACLE_TRIP_COOLDOWN_KEY "tentacle_growth_trip"
+#define TENTACLE_TRIP_FACTION "tentacles"
+#define TENTACLE_TRIP_CORE_RANGE 15
+#define TENTACLE_TRIP_LOCAL_RADIUS 3
+#define TENTACLE_TRIP_LOCAL_CAP 3
 
 GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
+/// Active colony cores, so a tripping floor can find the core that feeds it.
+GLOBAL_LIST_EMPTY(tentacle_colony_cores)
 
 /**
  * A passive piece of the colony floor.
@@ -38,6 +45,20 @@ GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
 	var/initialized_growth = FALSE
 	/// Only initialized growth counts against the cap or decrements it on deletion.
 	var/counted_toward_global_cap = FALSE
+	/// Whether stepping on this floor can trip a carbon and raise a burrow tentacle.
+	var/trip_enabled = TRUE
+	/// Trip chance in percent for a running mover.
+	var/trip_chance_run = 12
+	/// Trip chance in percent for a walking mover.
+	var/trip_chance_walk = 4
+	/// Trip chance in percent for a sneaking mover.
+	var/trip_chance_sneak = 0
+	/// Knockdown applied by a successful trip.
+	var/trip_knockdown = 2 SECONDS
+	/// Time after a trip before the same mob can be tripped again.
+	var/trip_cooldown = 15 SECONDS
+	/// Time after a failed roll before the same mob rolls again.
+	var/trip_miss_cooldown = 2 SECONDS
 
 /obj/structure/tentacle_growth/floor/Initialize(mapload)
 	smoothing_icon = pick("growth_a", "growth_b")
@@ -102,6 +123,117 @@ GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
 		multiplicative_slowdown = 0.75,
 		movetypes = GROUND,
 	)
+	if(trip_enabled && iscarbon(living_mob))
+		try_trip(living_mob)
+
+/// Rolls a trip for a mover by its move intent. Cheap checks first; lookups only after a hit.
+/obj/structure/tentacle_growth/floor/proc/try_trip(mob/living/carbon/victim)
+	if(victim.stat == DEAD \
+		|| victim.body_position == LYING_DOWN \
+		|| victim.buckled \
+		|| victim.pulledby \
+		|| victim.throwing \
+		|| (victim.movement_type & (FLYING | FLOATING | PHASING | VENTCRAWLING)) \
+		|| TIMER_COOLDOWN_RUNNING(victim, TENTACLE_TRIP_COOLDOWN_KEY))
+		return FALSE
+
+	var/trip_chance
+	switch(victim.m_intent)
+		if(MOVE_INTENT_RUN)
+			trip_chance = trip_chance_run
+		if(MOVE_INTENT_SNEAK)
+			trip_chance = trip_chance_sneak
+		else
+			trip_chance = trip_chance_walk
+	if(trip_chance <= 0)
+		return FALSE
+	if(!prob(trip_chance))
+		TIMER_COOLDOWN_START(victim, TENTACLE_TRIP_COOLDOWN_KEY, trip_miss_cooldown)
+		return FALSE
+
+	if(victim.has_faction(TENTACLE_TRIP_FACTION) \
+		|| HAS_TRAIT(victim, TRAIT_LIGHT_STEP) \
+		|| victim.get_kidnap_reserver() \
+		|| victim.GetComponent(/datum/component/kidnap_captivity))
+		return FALSE
+
+	TIMER_COOLDOWN_START(victim, TENTACLE_TRIP_COOLDOWN_KEY, trip_cooldown)
+	var/turf/trip_turf = get_turf(src)
+	new /obj/effect/temp_visual/tentacle_trip_rise(trip_turf)
+	playsound(trip_turf, "plantcross", 60, FALSE, -1)
+	victim.visible_message(
+		span_warning("A tendril in the growth whips around [victim]'s ankle and pulls [victim.p_them()] down!"),
+		span_userdanger("Something in the mat coils around my ankle. I go down!"),
+	)
+	victim.Knockdown(trip_knockdown)
+	raise_trip_burrower(victim)
+	return TRUE
+
+/// Brings a burrow tentacle up beside a tripped victim, through the owning core if there is one.
+/obj/structure/tentacle_growth/floor/proc/raise_trip_burrower(mob/living/victim)
+	var/turf/victim_turf = get_turf(victim)
+	if(!victim_turf)
+		return null
+	var/turf/spawn_turf = find_burrower_turf(victim_turf)
+	if(!spawn_turf)
+		return null
+
+	var/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/burrower
+	var/obj/structure/tentacle_growth/colony_core/core = find_trip_core(victim_turf)
+	if(core)
+		burrower = core.try_spawn_trip_defender(spawn_turf)
+	else if(count_nearby_burrowers(victim_turf) < TENTACLE_TRIP_LOCAL_CAP)
+		burrower = new /mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/small(spawn_turf)
+		burrower.AddComponent(/datum/component/tentacle_trip_wither)
+	if(!burrower)
+		return null
+
+	burrower.emerge_from_ground()
+	burrower.visible_message(span_danger("A tentacle pushes up through the growth beside [victim]!"))
+	return burrower
+
+/// Picks a free growth tile next to the victim with no tentacle on it, else the victim's own tile.
+/obj/structure/tentacle_growth/floor/proc/find_burrower_turf(turf/victim_turf)
+	var/list/candidate_turfs
+	for(var/direction in GLOB.alldirs)
+		var/turf/candidate_turf = get_step(victim_turf, direction)
+		if(!candidate_turf || !(locate(/obj/structure/tentacle_growth/floor) in candidate_turf))
+			continue
+		if(candidate_turf.is_blocked_turf(TRUE))
+			continue
+		if(locate(/mob/living) in candidate_turf)
+			continue
+		LAZYADD(candidate_turfs, candidate_turf)
+	if(length(candidate_turfs))
+		return pick(candidate_turfs)
+	if(locate(/mob/living/simple_animal/hostile/retaliate/tentacle) in victim_turf)
+		return null
+	return victim_turf
+
+/// Returns the core that knows this turf, else the nearest active core in range on this z-level.
+/obj/structure/tentacle_growth/floor/proc/find_trip_core(turf/victim_turf)
+	var/obj/structure/tentacle_growth/colony_core/nearest_core
+	var/nearest_distance = INFINITY
+	for(var/obj/structure/tentacle_growth/colony_core/core as anything in GLOB.tentacle_colony_cores)
+		if(QDELETED(core) || core.z != victim_turf.z)
+			continue
+		var/distance = get_dist(core, victim_turf)
+		if(distance > TENTACLE_TRIP_CORE_RANGE)
+			continue
+		if(victim_turf in core.known_growth_turfs)
+			return core
+		if(distance < nearest_distance)
+			nearest_distance = distance
+			nearest_core = core
+	return nearest_core
+
+/// Counts living burrow tentacles around a turf, for the coreless spawn cap.
+/obj/structure/tentacle_growth/floor/proc/count_nearby_burrowers(turf/center_turf)
+	var/burrower_count = 0
+	for(var/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/burrower in range(TENTACLE_TRIP_LOCAL_RADIUS, center_turf))
+		if(burrower.stat != DEAD)
+			burrower_count++
+	return burrower_count
 
 /obj/structure/tentacle_growth/floor/Uncrossed(atom/movable/departing)
 	. = ..()
@@ -232,6 +364,7 @@ GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
 	known_growth_turfs = list()
 	tracked_defenders = list()
 	tracked_snares = list()
+	GLOB.tentacle_colony_cores += src
 	var/turf/core_turf = get_turf(src)
 	if(core_turf)
 		known_growth_turfs += core_turf
@@ -241,6 +374,7 @@ GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
 	schedule_growth()
 
 /obj/structure/tentacle_growth/colony_core/Destroy()
+	GLOB.tentacle_colony_cores -= src
 	if(growth_timer_id)
 		deltimer(growth_timer_id)
 		growth_timer_id = null
@@ -372,17 +506,31 @@ GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
 
 	if(!defender_turf)
 		return FALSE
+	return !!spawn_tracked_defender(defender_turf, colony_size)
+
+/// Creates one tracked defender on the turf. Returns the defender, or null.
+/obj/structure/tentacle_growth/colony_core/proc/spawn_tracked_defender(turf/defender_turf, colony_size)
 	var/defender_type = prob(get_medium_defender_chance(colony_size)) \
 		? medium_defender_type \
 		: lesser_defender_type
 	if(!defender_type)
-		return FALSE
+		return null
 
 	var/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/new_defender = new defender_type(defender_turf)
 	new_defender.set_colony_core(src)
 	tracked_defenders += new_defender
 	RegisterSignal(new_defender, COMSIG_PARENT_QDELETING, PROC_REF(on_defender_qdeleting))
-	return TRUE
+	return new_defender
+
+/// Raises a defender on a turf the floor already chose for a tripped victim, under the defender cap.
+/obj/structure/tentacle_growth/colony_core/proc/try_spawn_trip_defender(turf/spawn_turf)
+	if(!allowed_growth_area || !spawn_turf)
+		return null
+	var/colony_size = get_colony_size()
+	prune_defenders()
+	if(length(tracked_defenders) >= get_defender_limit(colony_size))
+		return null
+	return spawn_tracked_defender(spawn_turf, colony_size)
 
 /obj/structure/tentacle_growth/colony_core/proc/try_spawn_snare(turf/preferred_turf, colony_size)
 	prune_snares()
@@ -517,5 +665,74 @@ GLOBAL_VAR_INIT(tentacle_growth_tile_count, 0)
 		var_value = max(0, round(var_value))
 	return ..()
 
+/// Small tentacles that come up and sink again where the growth trips someone.
+/obj/effect/temp_visual/tentacle_trip_rise
+	name = "small tentacles"
+	icon = 'modular_rmh/icons/mob/monster/tentacles_grey.dmi'
+	icon_state = "tentacle_group_rise"
+	layer = BELOW_MOB_LAYER
+	randomdir = FALSE
+	duration = 1.1 SECONDS
+
+/obj/effect/temp_visual/tentacle_trip_rise/Initialize(mapload)
+	. = ..()
+	apply_tentacle_palette(tentacle_palette_for_turf(get_turf(src)))
+
+/// Deletes a coreless trip tentacle once it has stayed hidden without a target for wither_delay.
+/datum/component/tentacle_trip_wither
+	/// How long the tentacle must stay hidden and idle before it sinks away.
+	var/wither_delay = 3 MINUTES
+	/// Time between idle checks.
+	var/check_interval = 30 SECONDS
+	/// When the current idle stretch began, or null while the tentacle is active.
+	var/idle_since
+	/// Looping check timer.
+	var/check_timer_id
+
+/datum/component/tentacle_trip_wither/Initialize()
+	if(!istype(parent, /mob/living/simple_animal/hostile/retaliate/tentacle/ambusher))
+		return COMPONENT_INCOMPATIBLE
+	check_timer_id = addtimer(CALLBACK(src, PROC_REF(check_wither)), check_interval, TIMER_STOPPABLE | TIMER_LOOP | TIMER_DELETE_ME)
+
+/datum/component/tentacle_trip_wither/Destroy(force)
+	if(check_timer_id)
+		deltimer(check_timer_id)
+		check_timer_id = null
+	return ..()
+
+/// Whether the tentacle is hidden, holds nobody and has no target.
+/datum/component/tentacle_trip_wither/proc/is_idle(mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/tentacle)
+	if(!tentacle.ambush_hidden || tentacle.pulling)
+		return FALSE
+	var/datum/ai_controller/controller = tentacle.ai_controller
+	if(controller && (controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] || controller.blackboard[BB_BASIC_MOB_CURRENT_HORNY_TARGET]))
+		return FALSE
+	return TRUE
+
+/// Sinks and deletes the tentacle after a long enough idle stretch. Returns TRUE when it withered.
+/datum/component/tentacle_trip_wither/proc/check_wither()
+	var/mob/living/simple_animal/hostile/retaliate/tentacle/ambusher/tentacle = parent
+	if(QDELETED(tentacle))
+		return FALSE
+	if(tentacle.stat == DEAD)
+		qdel(src)
+		return FALSE
+	if(!is_idle(tentacle))
+		idle_since = null
+		return FALSE
+	if(isnull(idle_since))
+		idle_since = world.time
+		return FALSE
+	if(world.time - idle_since < wither_delay)
+		return FALSE
+	tentacle.visible_message(span_notice("The burrow closes and the growth knits shut over it."))
+	qdel(tentacle)
+	return TRUE
+
 #undef TENTACLE_GROWTH_GLOBAL_CAP
 #undef TENTACLE_GROWTH_MOVESPEED_ID
+#undef TENTACLE_TRIP_COOLDOWN_KEY
+#undef TENTACLE_TRIP_FACTION
+#undef TENTACLE_TRIP_CORE_RANGE
+#undef TENTACLE_TRIP_LOCAL_RADIUS
+#undef TENTACLE_TRIP_LOCAL_CAP

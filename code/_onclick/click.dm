@@ -59,6 +59,12 @@
 
 // Default behavior: ignore double clicks (the second click that makes the doubleclick call already calls for a normal click)
 /mob/proc/DblClickOn(atom/clicked_atom, params)
+	//RMH EDITED START - a shift double-click is the second, closer examine
+	var/list/modifiers = params2list(params)
+	if(LAZYACCESS(modifiers, SHIFT_CLICKED) && !LAZYACCESS(modifiers, CTRL_CLICKED) && !LAZYACCESS(modifiers, ALT_CLICKED))
+		if(client && (client.eye == src || client.eye == loc))
+			DEFAULT_QUEUE_OR_CALL_VERB(VERB_CALLBACK(src, PROC_REF(run_examinate), clicked_atom, TRUE))
+	//RMH EDITED END
 	return
 
 /atom/MouseWheel(delta_x, delta_y, location, control, params)

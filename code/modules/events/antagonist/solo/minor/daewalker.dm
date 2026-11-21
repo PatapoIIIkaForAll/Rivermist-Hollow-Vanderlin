@@ -12,7 +12,7 @@ GLOBAL_VAR_INIT(vamp_detection, FALSE)
 	antag_flag = ROLE_VAMPIRE
 	shared_occurence_type = null
 	minor_roleset = TRUE
-	max_occurrences = 1
+	max_occurrences = 0
 	allowed_storytellers = DIVINE_STORYTELLERS
 	dedicated_storytellers = list(/datum/storyteller/astrata)
 

@@ -7,10 +7,6 @@
 	var/shifting = FALSE
 	//the maximum amount we/an item can move
 	var/maximum_pixel_shift = 16
-	//If we are shifted
-	var/is_shifted = FALSE
-	//Amount of shifting necessary to make the parent passthroughable
-	var/passthrough_threshold = 8
 
 /datum/component/pixel_shift/Initialize(...)
 	. = ..()
@@ -62,7 +58,7 @@
 	SIGNAL_HANDLER
 	shifting = FALSE
 
-/// In-turf pixel movement which can allow things to pass through if the threshold is met.
+/// In-turf pixel movement. A mob shifted far enough to one edge can be walked past; see pixelshift_lets_pass().
 /datum/component/pixel_shift/proc/pixel_shift(mob/source, direct)
 	var/mob/living/owner = parent
 	switch(shifting)
@@ -85,24 +81,33 @@
 					if(pulled_item.pixel_x >= -maximum_pixel_shift)
 						pulled_item.pixel_x--
 		if(SHIFTING_PARENT)
+			// An empty hand with a grab in the other hand poses the grabbed mob.
+			var/mob/living/target = owner.get_pixel_shift_target()
+			if(!isliving(target))
+				return
 			switch(direct)
 				if(NORTH)
-					if(owner.pixelshift_y <= maximum_pixel_shift)
-						owner.pixelshift_y++
-						owner.pixelshifted = TRUE
+					if(target.pixelshift_y <= maximum_pixel_shift)
+						target.pixelshift_y++
+						target.pixelshifted = TRUE
 				if(EAST)
-					if(owner.pixelshift_x <= maximum_pixel_shift)
-						owner.pixelshift_x++
-						owner.pixelshifted = TRUE
+					if(target.pixelshift_x <= maximum_pixel_shift)
+						target.pixelshift_x++
+						target.pixelshifted = TRUE
 				if(SOUTH)
-					if(owner.pixelshift_y >= -maximum_pixel_shift)
-						owner.pixelshift_y--
-						owner.pixelshifted = TRUE
+					if(target.pixelshift_y >= -maximum_pixel_shift)
+						target.pixelshift_y--
+						target.pixelshifted = TRUE
 				if(WEST)
-					if(owner.pixelshift_x >= -maximum_pixel_shift)
-						owner.pixelshift_x--
-						owner.pixelshifted = TRUE
-			owner.set_mob_offsets("pixel_shift", _x = owner.pixelshift_x, _y = owner.pixelshift_y)
+					if(target.pixelshift_x >= -maximum_pixel_shift)
+						target.pixelshift_x--
+						target.pixelshifted = TRUE
+			target.set_mob_offsets("pixel_shift", _x = target.pixelshift_x, _y = target.pixelshift_y)
+
+/// TRUE while the mob holds the Pixel Shift key for itself, not for items.
+/mob/proc/is_pixel_shifting()
+	var/datum/component/pixel_shift/shift = GetComponent(/datum/component/pixel_shift)
+	return shift?.shifting == SHIFTING_PARENT
 
 #undef SHIFTING_PARENT
 #undef SHIFTING_ITEMS

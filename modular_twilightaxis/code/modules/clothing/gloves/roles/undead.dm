@@ -1,0 +1,20 @@
+/obj/item/clothing/gloves/bloodraider
+	name = "raiders gauntlets"
+	desc = "Clawed plate gauntlets, capable of tormenting N'wah with their tips"
+	icon = 'modular_twilightaxis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilightaxis/icons/clothing/onmob/bloodraider.dmi'
+	sleeved = 'modular_twilightaxis/icons/clothing/onmob/gloves.dmi'
+	icon_state = "bloodgauntlets"
+	item_state = "bloodgauntlets"
+	armor_type = /datum/armor/plate
+	resistance_flags = FIRE_PROOF
+	blocksound = PLATEHIT
+	max_integrity = ARMOR_INT_SIDE_STEEL
+	break_sound = 'sound/foley/breaksound.ogg'
+	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
+	pickup_sound = 'sound/foley/equip/equip_armor_plate.ogg'
+	equip_sound = 'sound/foley/equip/equip_armor_plate.ogg'
+	anvilrepair = /datum/attribute/skill/craft/armor_repair
+	smeltresult = /obj/item/ingot/steel
+	ported_clothing = TRUE
+	misc_flags = CRAFTING_TEST_EXCLUDE

@@ -34,6 +34,9 @@
 		return
 	return isliving(cast_on)
 
+/datum/action/cooldown/spell/status/is_hostile_to(atom/cast_on)
+	return ispath(status_effect, /datum/status_effect/debuff)
+
 /datum/action/cooldown/spell/status/cast(mob/living/cast_on)
 	. = ..()
 	var/new_duration = duration ? duration : initial(status_effect.duration)

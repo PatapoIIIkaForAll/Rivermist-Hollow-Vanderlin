@@ -70,6 +70,26 @@
 	default_value = TRUE
 	category = "Mobs"
 
+/datum/erp_preference/boolean/allow_reach_under_armor
+	name = "Reach Under My Armor"
+	description = "If players, you included, can touch and use what your armor covers. Mobs always strip armor first"
+	default_value = FALSE
+	category = "General"
+
+// Withdrawing or giving this consent must work mid-round, so the spawn lock never applies.
+/datum/erp_preference/boolean/allow_reach_under_armor/get_edit_lock_reason(mob/user, datum/preferences/prefs)
+	return null
+
+/datum/erp_preference/boolean/panel_status_follows_examine
+	name = "Status Follows Examine"
+	description = "On: the panel's status lines list what examine shows. Off: they use the older rule, which only reads body coverage and underwear"
+	default_value = TRUE
+	category = "General"
+
+// A display choice for the viewer, so it can change at any time.
+/datum/erp_preference/boolean/panel_status_follows_examine/get_edit_lock_reason(mob/user, datum/preferences/prefs)
+	return null
+
 /datum/erp_preference/boolean/auto_clench
 	name = "Auto-Clench In Combat Mode"
 	description = "Automatically resist sex actions performed on you while combat mode is on. Costs stamina each attempt."

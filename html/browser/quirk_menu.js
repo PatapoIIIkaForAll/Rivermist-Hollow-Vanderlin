@@ -274,11 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		var card = e.target.closest('.quirk-card');
 		if (!card) return;
 
-		// Don't do anything if disabled
-		if (card.classList.contains('disabled')) {
-			return;
-		}
-
 		var quirkRef = card.getAttribute('data-quirk');
 		if (!quirkRef) return;
 

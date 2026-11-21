@@ -156,7 +156,7 @@
 		qdel(tool)
 		return ITEM_INTERACT_SUCCESS
 
-	if(tool.anvilrepair)
+	if(tool.anvilrepair && !user.cmode)
 		user.visible_message("<span class='info'>[user] places \a [tool] on the anvil.</span>")
 		tool.forceMove(loc)
 		return ITEM_INTERACT_SUCCESS

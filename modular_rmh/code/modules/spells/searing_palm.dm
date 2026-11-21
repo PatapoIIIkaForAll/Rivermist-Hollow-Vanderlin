@@ -83,57 +83,63 @@
 	branding_in_progress = FALSE
 
 /datum/action/cooldown/spell/undirected/touch/searing_palm/proc/do_brand(obj/item/melee/touch_attack/hand, mob/living/carbon/patient, mob/living/carbon/caster)
+	if(!ishuman(patient))
+		to_chat(caster, span_warning("The sigil finds no purchase on [patient]."))
+		return FALSE
+	var/mob/living/carbon/human/human_patient = patient
 	if(!is_held_still(patient, caster))
 		to_chat(caster, span_warning("[patient] would need to be restrained or helpless to hold still for this."))
 		return FALSE
 
-	var/target_zone = caster.zone_selected
-	var/obj/item/bodypart/limb = patient.get_bodypart(check_zone(target_zone))
-	if(!limb)
-		to_chat(caster, span_warning("[patient] is missing that limb."))
+	var/brand_zone = human_patient.pick_brand_zone(caster, caster.zone_selected)
+	if(!brand_zone || !hand_still_ready(hand, caster))
 		return FALSE
-	if(limb.brand_text)
-		to_chat(caster, span_warning("[patient] is already branded there."))
+
+	var/brand_kind = tgui_alert(caster, "Burn a plain brand, or a glowing arcane sigil?", "Searing Palm", list("Plain brand", "Arcane sigil"))
+	if(!brand_kind || !hand_still_ready(hand, caster))
 		return FALSE
-	if(!get_location_accessible(patient, target_zone))
-		to_chat(caster, span_warning("The clothing is in the way!"))
-		return FALSE
+	var/arcane = brand_kind == "Arcane sigil"
 
 	// max_length is deliberately not passed: stripped_input trims with copytext,
 	// which cuts by bytes and halves Cyrillic input. Clamp by character instead.
-	var/chosen_text = stripped_input(caster, "Что выжечь на [parse_zone(target_zone)]? (максимум [max_brand_length] символов)", "Клеймо", "")
+	var/chosen_text = stripped_input(caster, "Что выжечь на [tattoo_zone_name(brand_zone)]? (максимум [max_brand_length] символов)", "Клеймо", "")
 	if(!chosen_text)
 		return FALSE
 	chosen_text = trimtext(copytext_char(chosen_text, 1, max_brand_length + 1))
-	if(!length(chosen_text))
-		return FALSE
-	if(QDELETED(patient) || QDELETED(limb) || limb != patient.get_bodypart(limb.body_zone) || limb.brand_text)
-		return FALSE
-	if(!hand_still_ready(hand, caster))
+	if(!length(chosen_text) || QDELETED(patient) || !hand_still_ready(hand, caster))
 		return FALSE
 
-	patient.visible_message(span_danger("[caster] presses a burning palm against [patient]'s [parse_zone(target_zone)]!"), \
-		span_userdanger("[caster] presses a burning palm against your [parse_zone(target_zone)]!"))
+	var/zone_name = tattoo_zone_name(brand_zone)
+	patient.visible_message(span_danger("[caster] presses a burning palm against [patient]'s [zone_name]!"), \
+		span_userdanger("[caster] presses a burning palm against your [zone_name]!"))
 	playsound(patient, 'sound/foley/burning_sacrifice.ogg', 50, TRUE)
 
 	if(!do_after(caster, 4 SECONDS, patient))
 		return FALSE
 	// Re-check everything: do_after only watches the caster's own position, so the
 	// victim can break free, walk off or pull armour on while the prompt is open.
-	if(QDELETED(patient) || QDELETED(limb) || limb != patient.get_bodypart(limb.body_zone) || limb.brand_text)
+	if(QDELETED(patient))
 		return FALSE
 	if(!hand_still_ready(hand, caster))
 		to_chat(caster, span_warning("The flame is no longer on my palm."))
 		return FALSE
-	if(!caster.Adjacent(patient) || !is_held_still(patient, caster) || !get_location_accessible(patient, target_zone))
+	if(!caster.Adjacent(patient) || !is_held_still(patient, caster))
 		to_chat(caster, span_warning("The branding is interrupted."))
 		return FALSE
+	var/problem = human_patient.brand_zone_problem(brand_zone, caster)
+	if(problem)
+		to_chat(caster, span_warning(problem))
+		return FALSE
+	if(!human_patient.add_skin_brand(brand_zone, chosen_text, arcane))
+		return FALSE
 
-	limb.brand_text = chosen_text
-	limb.brand_zone = target_zone
-	patient.apply_damage(10, BURN, limb.body_zone)
-	patient.visible_message(span_danger("[patient]'s [parse_zone(target_zone)] sizzles as the sigil bites in!"), \
-		span_userdanger("The sigil bites into your [parse_zone(target_zone)]. It will stay with you forever."))
+	patient.apply_damage(10, BURN, tattoo_zone_limb(brand_zone))
+	if(arcane)
+		patient.visible_message(span_danger("An amber sigil flares on [patient]'s [zone_name] and settles into a steady glow!"), \
+			span_userdanger("The sigil bites into your [zone_name] and keeps glowing. Only cleansing magic will lift it."))
+	else
+		patient.visible_message(span_danger("[patient]'s [zone_name] sizzles as the sigil bites in!"), \
+			span_userdanger("The sigil bites into your [zone_name]. It will stay with you forever."))
 
 	remove_hand(caster)
 	return TRUE

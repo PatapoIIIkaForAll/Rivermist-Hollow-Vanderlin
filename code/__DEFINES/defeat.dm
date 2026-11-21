@@ -176,3 +176,9 @@
 #define DEFEAT_MOB_HORNY_KO_RECHECK (30 SECONDS)
 /// How far the KO cleanup looks for a watching player before it deletes a lone mob.
 #define DEFEAT_MOB_HORNY_CLEANUP_VIEW 7
+/// How long a helper works to bring a KO'd mob back to its senses.
+#define DEFEAT_MOB_HORNY_HELP_UP_TIME (4 SECONDS)
+/// Percent chance an unbound KO'd mob comes to and lashes out when lifted.
+#define DEFEAT_MOB_HORNY_LIFT_LASH_CHANCE 35
+/// How long the lash-out floors the carrier.
+#define DEFEAT_MOB_HORNY_LASH_KNOCKDOWN (2 SECONDS)

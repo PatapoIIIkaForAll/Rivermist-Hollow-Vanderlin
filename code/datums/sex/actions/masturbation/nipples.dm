@@ -55,7 +55,7 @@
 			arousal_amt = 1.3
 			pain_amt = 1.1
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "pulls at"
 			arousal_amt = 1.0
 			pain_amt = 1.9
@@ -114,7 +114,7 @@
 			arousal_amt = 1.3
 			pain_amt = 1.1
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "pulls at"
 			arousal_amt = 1.0
 			pain_amt = 1.9

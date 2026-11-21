@@ -179,12 +179,12 @@
 		best_word = "boozy"
 	return best_word
 
-/// Stamps own fluid with its maker and a hint of their meals each tick, so both travel with it.
+/// Stamps the main own fluid with its maker and meals each tick; mixed-in extras stay plain.
 /obj/item/organ/genitals/filling_organ/proc/stamp_own_fluids()
 	if(!owner || !reagents?.total_volume)
 		return
 	var/hint = get_diet_hint()
-	for(var/reagent_type in get_own_fluid_types())
+	for(var/reagent_type in get_main_fluid_types())
 		var/datum/reagent/fluid = reagents.get_reagent(reagent_type)
 		if(!fluid)
 			continue

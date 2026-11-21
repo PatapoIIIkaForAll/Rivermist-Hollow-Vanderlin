@@ -43,7 +43,7 @@ GLOBAL_LIST_INIT(valid_honse_colors, list("White" = COLOR_WHITE, "Gray" = COLOR_
 	base_constitution = 8
 	base_strength = 12
 	base_endurance = 15
-	pixel_x = -8
+	SET_BASE_PIXEL(-8, 0) // Rivermist change - фикс положения всадника
 	attack_sound = list('sound/vo/mobs/saiga/attack (1).ogg','sound/vo/mobs/saiga/attack (2).ogg')
 	can_buckle = TRUE
 	buckle_lying = 0
@@ -78,21 +78,24 @@ GLOBAL_LIST_INIT(valid_honse_colors, list("White" = COLOR_WHITE, "Gray" = COLOR_
 	update_icon()
 
 // BEHAVIORS
-/mob/living/simple_animal/hostile/retaliate/honse/update_icon()
-	cut_overlays()
-	..()
-	if(stat != DEAD)
-		if(ssaddle)
-			var/mutable_appearance/saddlet = mutable_appearance(icon, "saddle-above", 4.3)
-			saddlet.appearance_flags = RESET_ALPHA|RESET_COLOR
-			add_overlay(saddlet)
-			saddlet = mutable_appearance(icon, "saddle")
-			saddlet.appearance_flags = RESET_ALPHA|RESET_COLOR
-			add_overlay(saddlet)
-		if(has_buckled_mobs())
-			var/mutable_appearance/mounted = mutable_appearance(icon, "[icon_state]_mounted", 4.3)
-			add_overlay(mounted)
 
+// RIVERMIST REMOVAL START - прок переопределен ниже
+// /mob/living/simple_animal/hostile/retaliate/honse/update_icon()
+// 	cut_overlays()
+// 	..()
+// 	if(stat != DEAD)
+// 		if(ssaddle)
+// 			var/mutable_appearance/saddlet = mutable_appearance(icon, "saddle-above", 4.3)
+// 			saddlet.appearance_flags = RESET_ALPHA|RESET_COLOR
+// 			add_overlay(saddlet)
+// 			saddlet = mutable_appearance(icon, "saddle", 4.3) // Rivermist change - фикс положения всадника
+// 			saddlet.appearance_flags = RESET_ALPHA|RESET_COLOR
+// 			add_overlay(saddlet)
+// 		if(has_buckled_mobs())
+// 			var/mutable_appearance/mounted = mutable_appearance(icon, "[icon_state]_mounted", 4.3)
+// 			mounted.appearance_flags = RESET_ALPHA|RESET_COLOR // Rivermist change - фикс оверлеев
+// 			add_overlay(mounted)
+//RIVERMIST REMOVAL END
 
 /mob/living/simple_animal/hostile/retaliate/honse/get_sound(input)
 	switch(input)
@@ -114,9 +117,23 @@ GLOBAL_LIST_INIT(valid_honse_colors, list("White" = COLOR_WHITE, "Gray" = COLOR_
 	if(can_buckle)
 		AddElement(/datum/element/ridable, /datum/component/riding/creature/saiga)
 
-/mob/living/simple_animal/hostile/retaliate/honse/death()
-	unbuckle_all_mobs()
-	return ..()
+// RIVERMIST REMOVAL START - прок переопределен ниже
+// /mob/living/simple_animal/hostile/retaliate/honse/death()
+// 	unbuckle_all_mobs()
+// 	return ..()
+// RIVERMIST REMOVAL END
+
+
+
+
+
+
+// Rivermist change start - фикс оверлеев
+/mob/living/simple_animal/hostile/retaliate/honse/death(gibbed)
+	unbuckle_all_mobs(force = TRUE)
+	. = ..()
+	update_appearance(UPDATE_ICON)
+// Rivermist change end
 
 /mob/living/simple_animal/hostile/retaliate/honse/simple_limb_hit(zone)
 	if(!zone)
@@ -250,3 +267,25 @@ GLOBAL_LIST_INIT(valid_honse_colors, list("White" = COLOR_WHITE, "Gray" = COLOR_
 	canparry = TRUE
 	item_damage_type = "blunt"
 	clickcd = CLICK_CD_MELEE * 1.1
+
+// RIVERMIST CHANGE START - Overlay fix
+/mob/living/simple_animal/hostile/retaliate/honse/update_icon(updates = ALL)
+	// Preserve the existing behaviour: every icon update also refreshes equipment.
+	// Сохраняем прежнее поведение: каждое обновление иконки обновляет и снаряжение.
+	return ..(updates | UPDATE_OVERLAYS)
+
+/mob/living/simple_animal/hostile/retaliate/honse/update_overlays()
+	// The parent supplies barding and caparison; add the saddle to the same list.
+	// Родитель добавляет броню и попону; в тот же список добавляем седло.
+	. = ..()
+	if(stat != DEAD && ssaddle)
+		for(var/saddle_state in list("saddle-above", "saddle"))
+			var/mutable_appearance/saddle_overlay = mutable_appearance(icon, saddle_state, 4.3)
+			. += saddle_overlay
+
+	// Keep equipment colours independent of the animal's coat, as before.
+	// Сохраняем прежнее поведение: цвет снаряжения не зависит от окраса животного.
+	var/list/equipment_overlays = .
+	for(var/mutable_appearance/equipment_overlay in equipment_overlays)
+		equipment_overlay.appearance_flags |= RESET_COLOR
+// RIVERMIST CHANGE END

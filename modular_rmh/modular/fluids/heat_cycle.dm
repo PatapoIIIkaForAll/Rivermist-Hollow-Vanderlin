@@ -222,22 +222,34 @@
 	for(var/mob/living/carbon/human/smeller as anything in smellers)
 		smell_pheromones(smeller)
 
-/// One whiff: it arouses only if the smeller's preference takes this scent; anyone else just smells it.
 /datum/status_effect/in_heat/proc/smell_pheromones(mob/living/carbon/human/smeller)
+	smell_pheromones_of(owner, smeller, get_scent_flag(), get_scent_name())
+
+/// One whiff: it arouses only if the smeller's preference takes this scent; anyone else just smells it.
+/proc/smell_pheromones_of(mob/living/source, mob/living/carbon/human/smeller, scent_flag, scent_name)
 	if(smeller.stat != CONSCIOUS || !smeller.can_smell() || HAS_TRAIT(smeller, TRAIT_NOBREATH) || HAS_TRAIT(smeller, TRAIT_DEADNOSE))
 		return
-	var/aroused = smeller.get_erp_pref(/datum/erp_preference/bitflag/pheromones) & get_scent_flag()
+	var/aroused = smeller.get_erp_pref(/datum/erp_preference/bitflag/pheromones) & scent_flag
 	if(aroused)
 		smeller.apply_status_effect(/datum/status_effect/pheromone_haze)
 	var/last_smelled = smeller.mob_timers["pheromone_smell"]
 	if(last_smelled && world.time < last_smelled + PHEROMONE_MESSAGE_COOLDOWN)
 		return
 	smeller.mob_timers["pheromone_smell"] = world.time
-	var/source_text = (owner in view(smeller)) ? " from [owner]" : ""
+	var/source_text = (source in view(smeller)) ? " from [source]" : ""
 	if(aroused)
-		to_chat(smeller, span_love("I catch [get_scent_name()][source_text]. It makes my thoughts wander."))
+		to_chat(smeller, span_love("I catch [scent_name][source_text]. It makes my thoughts wander."))
 	else
-		to_chat(smeller, span_notice("I catch [get_scent_name()][source_text]."))
+		to_chat(smeller, span_notice("I catch [scent_name][source_text]."))
+
+/// One pheromone pulse reaching people near the source, without the lingering trail a heat leaves.
+/proc/pulse_pheromones(mob/living/source, scent_flag, scent_name)
+	var/turf/source_turf = get_turf(source)
+	if(!source_turf)
+		return
+	for(var/mob/living/carbon/human/smeller in hearers(PHEROMONE_RANGE, source_turf))
+		if(smeller != source)
+			smell_pheromones_of(source, smeller, scent_flag, scent_name)
 
 /// Pauses the heat's arousal pull and reminders after a climax.
 /datum/status_effect/heat_sated
@@ -297,16 +309,16 @@
 		"Rut scent" = "The scent of a body in rut. It comes from anyone with a penis and no vagina.",
 	)
 
-/datum/quirk/peculiarity/heat_cycles
+/datum/quirk/neutral/heat_cycles
 	name = "Heat Cycles"
 	desc = "Every few hours my body goes into heat, or rut, and craves a mate."
 	desc_hint = "Every 2-3 hours you go into heat for 30 minutes: more fluids, rising arousal and a musky smell. A climax gives some relief."
 
-/datum/quirk/peculiarity/heat_cycles/on_spawn()
+/datum/quirk/neutral/heat_cycles/on_spawn()
 	. = ..()
 	owner?.grant_heat_cycle(HEAT_SOURCE_QUIRK)
 
-/datum/quirk/peculiarity/heat_cycles/on_remove()
+/datum/quirk/neutral/heat_cycles/on_remove()
 	if(!QDELETED(owner))
 		owner.revoke_heat_cycle(HEAT_SOURCE_QUIRK)
 	return ..()

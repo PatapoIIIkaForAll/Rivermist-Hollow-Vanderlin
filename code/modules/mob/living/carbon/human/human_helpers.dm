@@ -10,7 +10,7 @@
 		if(istype(wear_neck, /obj/item/clothing/neck/talkstone))
 			return TRUE
 	if(!has_language(language))
-		if(has_quirk(/datum/quirk/vice/paranoid))
+		if(has_quirk(/datum/quirk/negative/paranoid))
 			V.add_stress(/datum/stress_event/para/talk)
 
 /mob/living/carbon/human/canBeHandcuffed()
@@ -46,7 +46,29 @@
 		return face_name
 	if(id_name != if_none)
 		return id_name
-	return if_none || "Unknown"
+	// Callers that ask for their own blank value test for it; everyone else gets body words.
+	if(if_none == "Unknown")
+		return get_descriptor_name() || if_none
+	return if_none
+
+/// "Tall Thug": the trait and stature descriptors of a person whose face is hidden.
+/mob/living/carbon/proc/get_descriptor_name()
+	var/trait_word = get_descriptor_word(MOB_DESCRIPTOR_SLOT_TRAIT)
+	var/stature_word = get_descriptor_word(MOB_DESCRIPTOR_SLOT_STATURE)
+	if(trait_word && stature_word)
+		return "[trait_word] [stature_word]"
+	return trait_word || stature_word
+
+/// The capitalized plain word of the descriptor in this slot, or null when the slot is empty.
+/mob/living/proc/get_descriptor_word(descriptor_slot)
+	var/desc_type = get_descriptor_of_slot(descriptor_slot, mob_descriptors)
+	if(!desc_type)
+		return
+	var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(desc_type)
+	if(!descriptor.can_describe(src))
+		return
+	var/word = descriptor.get_description(src)
+	return word ? capitalize(word) : null
 
 /// Returns "Unknown" if facially disfigured and real_name if not. Useful for setting name when Fluacided or when updating a human's name variable
 /mob/living/carbon/proc/get_face_name(if_no_face = "Unknown", list/html_tags, include_honoraries=TRUE)
@@ -98,8 +120,11 @@
 		if(HAS_TRAIT(src, TRAIT_CHUNKYFINGERS))
 			to_chat(src, "<span class='warning'>My meaty finger is much too large for the trigger guard!</span>")
 			return FALSE
+	if(HAS_TRAIT(src, TRAIT_ROTFINGERS))
+		to_chat(src, "<span class='warning'>My fingers are too rotted and swollen to use ranged weaponry!</span>")
+		return FALSE
 	if(HAS_TRAIT(src, TRAIT_NOGUNS))
-		to_chat(src, "<span class='warning'>I can't bring myself to use a ranged weapon!</span>")
+		to_chat(src, "<span class='warning'>I'm not good enough to use a ranged weapon!</span>")
 		return FALSE
 
 /mob/living/carbon/human/get_policy_keywords()

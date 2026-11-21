@@ -155,6 +155,7 @@ type HoleData = {
   fill: FillData;
   can_hold_in: boolean;
   items: ItemData[];
+  can_push_out: boolean;
   insert: InsertData;
   eggs: EggData[];
   egg_count: number;
@@ -179,7 +180,18 @@ type LabourData = {
   births: number;
 } | null;
 
+type BirthsData = {
+  limit: number;
+  births: number;
+  growing: number;
+  held: number;
+  free: number;
+  next_free_seconds: number;
+  clear_seconds: number;
+} | null;
+
 type StatusData = {
+  births: BirthsData;
   show_art: boolean;
   nutriment: number;
   holding_in: boolean;
@@ -194,6 +206,20 @@ type ActiveTab = 'status' | 'settings' | 'genetics';
 
 export type HoleStatusLocale = {
   windowTitle: string;
+  births: {
+    title: string;
+    ofLimit: string;
+    window: string;
+    growing: string;
+    room: string;
+    full: string;
+    freeOnHatch: string;
+    nextSlot: string;
+    clears: string;
+    dormant: string;
+    min: string;
+    sec: string;
+  };
   emptyState: string;
   tabs: Record<ActiveTab, string>;
   art: {
@@ -239,6 +265,8 @@ export type HoleStatusLocale = {
     stuck: string;
     takeOut: string;
     pushDeeper: string;
+    pushOut: string;
+    pushOutHint: string;
     insert: string;
     tuckIn: string;
     cleavage: string;
@@ -489,6 +517,7 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
     holding_in = false,
     labour = null,
     show_art = false,
+    births = null,
   } = data;
   const [activeTab, setActiveTab] = useState<ActiveTab>('status');
   const vagina = holes.find((hole) => hole.id === 'vagina') || null;
@@ -543,6 +572,11 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
 
         {activeTab === 'status' && (
           <>
+            {births && !nothing && (
+              <Section>
+                <BirthsLine births={births} locale={locale} />
+              </Section>
+            )}
             {vagina && (
               <Section
                 title={
@@ -755,6 +789,31 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
   );
 };
 
+const formatWait = (seconds: number, locale: HoleStatusLocale) =>
+  seconds >= 60
+    ? `${Math.ceil(seconds / 60)} ${locale.births.min}`
+    : `${seconds} ${locale.births.sec}`;
+
+/** How many creature births the body may still carry in the window, and when slots free. */
+const BirthsLine = (props: { births: NonNullable<BirthsData>; locale: HoleStatusLocale }) => {
+  const { births, locale } = props;
+  const t = locale.births;
+  const used = births.births + births.growing;
+  return (
+    <Box color="label">
+      <Icon name="egg" mr={0.5} />
+      {`${t.title}: ${used} ${t.ofLimit} ${births.limit} ${t.window}`}
+      {births.growing > 0 && ` (${births.growing} ${t.growing})`}
+      {'. '}
+      {births.free > 0 ? `${t.room} ${births.free}.` : t.full}
+      {births.free <= 0 && births.births <= 0 && ` ${t.freeOnHatch}`}
+      {births.births > 0 &&
+        ` ${t.nextSlot} ${formatWait(births.next_free_seconds, locale)}, ${t.clears} ${formatWait(births.clear_seconds, locale)}.`}
+      {births.held > 0 && ` ${births.held} ${t.dormant}`}
+    </Box>
+  );
+};
+
 const HoleBody = (props: {
   act: any;
   hole: HoleData;
@@ -807,6 +866,17 @@ const HoleBody = (props: {
             locale={locale}
             flat={cleavage}
           />
+          {hole.can_push_out && (
+            <Button
+              ml={0.5}
+              compact
+              icon="hand"
+              tooltip={locale.items.pushOutHint}
+              onClick={() => act('push_out', { hole: hole.id })}
+            >
+              {locale.items.pushOut}
+            </Button>
+          )}
         </LabeledList.Item>
       </LabeledList>
       {hole.insert && (

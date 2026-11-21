@@ -43,6 +43,14 @@
 // RMH object smoothing groups. S_OBJ(1-7) are occupied by core structures.
 #define SMOOTH_GROUP_TENTACLE_GROWTH S_OBJ(8)
 
+// Gradient-map palettes for the greyscale tentacle sheets. Colours are in GLOB.tentacle_palettes.
+#define TENTACLE_PALETTE_PINK "pink"
+#define TENTACLE_PALETTE_CAVE "cave"
+#define TENTACLE_PALETTE_GROUND "ground"
+#define TENTACLE_PALETTE_GRASS "grass"
+#define TENTACLE_PALETTE_COLONY "colony"
+#define TENTACLE_PALETTE_VINE "vine"
+
 // Oviposition egg type identifiers.
 #define OVI_EGG_NORMAL "normal_ovi"
 #define OVI_EGG_AVIAN "avian_ovi"
@@ -68,6 +76,23 @@
 #define OVI_EGG_RESIDUE_APHRODISIAC 2
 #define OVI_EGG_RESIDUE_VENOM 0.5
 #define OVI_EGG_RESIDUE_VENOM_SORENESS 5
+/// Aphrodisiac units a laced egg holds and leaves behind.
+#define OVI_EGG_LACE_UNITS 2
+/// Share of the birth residue an egg leaves in the canal on the way in.
+#define OVI_EGG_DEPOSIT_RESIDUE_SHARE 0.5
+/// A fresh egg passes the opening at this share of its ripe width.
+#define OVI_EGG_LAY_GIRTH_SHARE 0.5
+/// Act cycles per egg in a lay act; speed shortens the cycles, not the count.
+#define LAY_EGG_CYCLES_PER_EGG 4
+/// Eggs one lay act lays before it ends spent for now.
+#define LAY_EGG_ACT_CAP 3
+/// Eggs a climax rush pushes at most, and after an act that laid its cap.
+#define LAY_EGG_RUSH_CAP 2
+#define LAY_EGG_RUSH_CAP_AFTER_CAP 1
+/// Creature ovipositors regrow eggs this many times slower than a player's.
+#define OVI_CREATURE_STAGE_TIME_MULTIPLIER 2
+/// Chance per minute that a ripe egg starts labour, for kinds without a fixed delay.
+#define OVI_EGG_LABOUR_CHANCE 10
 // How an egg kind hatches: on the floor once laid, inside its host, or either by a roll.
 #define OVI_HATCH_OUTSIDE 1
 #define OVI_HATCH_INSIDE 2
@@ -87,11 +112,141 @@
 #define OVI_EGG_MAX_CUSTOM_NAME_LENGTH 96
 #define OVI_EGG_MAX_CUSTOM_DESC_LENGTH 512
 #define OVI_EGG_STAGE_TIME 1 MINUTES
-#define OVIPOSITION_BIRTH_LIMIT 8
+/// Creatures one body may hatch from eggs and embryos in the window; growing creature eggs hold slots too.
+#define OVIPOSITION_BIRTH_LIMIT 6
 #define OVIPOSITION_BIRTH_LIMIT_WINDOW (30 MINUTES)
+/// How often a body with eggs held by the limit checks for a free slot, at most.
+#define OVIPOSITION_HELD_EGG_RECHECK (1 MINUTES)
+// What start_oviposition_egg_growth() did; HELD is truthy: the egg landed and lies dormant.
+#define OVI_EGG_GROWTH_STARTED 1
+#define OVI_EGG_GROWTH_HELD 2
 
 // Oviposition egg modifier flags.
 #define OVI_EGG_TRAIT_APHRODISIAC "aphrodisiac"
 #define OVI_EGG_TRAIT_POISON "poison"
 #define OVI_EGG_TRAIT_PARASITE "parasite"
 #define OVI_EGG_TRAIT_FAST_GROWTH "fast_growth"
+
+//Social stealth related defines including factions
+//
+#define SOCIAL_RELATION_ALLIED             "allied"
+#define SOCIAL_RELATION_HOSTILE            "hostile"
+#define SOCIAL_RELATION_PROTECT_DUTY       "protect_duty"
+#define SOCIAL_RELATION_DIPLOMATIC_HOSTILE "diplomatic_hostile"
+#define SOCIAL_RELATION_HOSTILE_TO_WATCH   "hostile_to_watch"
+#define SOCIAL_RELATION_TENSE              "tense"
+#define SOCIAL_RELATION_NEUTRAL            "neutral"
+#define SOCIAL_RELATION_COOPERATIVE       "cooperative"
+#define SOCIAL_RELATION_HIGHER_RANK       "higher_rank"
+#define SOCIAL_RELATION_LOYAL              "loyal"
+#define SOCIAL_RELATION_FEARFUL	    		"fearful"
+#define SOCIAL_RELATION_SEPARATED_AUTHORITY "separated_authority"
+#define SOCIAL_RELATION_DISAGREEING         "disagreeing"
+
+
+#define SOCIAL_SOURCE_KNOWLEDGE   (1 << 0)
+#define SOCIAL_SOURCE_COSMETIC    (1 << 1)
+#define SOCIAL_SOURCE_IDENTITY    (1 << 2)
+#define SOCIAL_SOURCE_PERSONNEL   (1 << 3)
+#define SOCIAL_SOURCE_STATUS      (1 << 4)
+#define SOCIAL_SOURCE_ELITE       (1 << 5)
+#define SOCIAL_SOURCE_PRESTIGE    (1 << 6)
+
+#define SOCIAL_LEVEL_UNKNOWN      0
+#define SOCIAL_LEVEL_APPARENT     1
+#define SOCIAL_LEVEL_KNOWN        2
+
+#define SOCIAL_PRESENTATION_INSUFFICIENT 0
+#define SOCIAL_PRESENTATION_RECOGNIZABLE 1
+#define SOCIAL_PRESENTATION_CONVINCING   2
+
+#define SOCIAL_LEGITIMACY_UNKNOWN       "unknown"
+#define SOCIAL_LEGITIMACY_PARTIAL       "partial"
+#define SOCIAL_LEGITIMACY_SOLID         "solid"
+#define SOCIAL_LEGITIMACY_SUSPICIOUS    "suspicious"
+#define SOCIAL_LEGITIMACY_DISGUISED     "disguised"
+
+#define SOCIAL_PRESTIGE_THRESHOLD 5
+
+#define TOWNWATCH_COMMAND_MEMBER 0
+#define TOWNWATCH_COMMAND_SERGEANT 1
+#define TOWNWATCH_COMMAND_CAPTAIN 2
+
+#define TOWNWATCH_ORDER_ATTACK "attack"
+#define TOWNWATCH_ORDER_MOVEMENT "movement"
+#define TOWNWATCH_ORDER_DEFENSE "defense"
+
+#define TOWNWATCH_COMMAND_MODE_TARGETED "targeted"
+#define TOWNWATCH_COMMAND_MODE_GLOBAL "global"
+
+#define TOWNWATCH_COMMAND_RANGE 7
+#define TOWNWATCH_TARGETED_COMMAND_COOLDOWN (20 SECONDS)
+#define TOWNWATCH_GLOBAL_COMMAND_COOLDOWN (60 SECONDS)
+/// What kind of part a slot takes. Prosthetic options and implants list the kinds they fit.
+#define PROSTHETIC_KIND_ARM "arm"
+#define PROSTHETIC_KIND_LEG "leg"
+#define PROSTHETIC_KIND_EYE "eye"
+#define PROSTHETIC_KIND_HEART "heart"
+#define PROSTHETIC_KIND_LUNGS "lungs"
+#define PROSTHETIC_KIND_TONGUE "tongue"
+// Hypnosis
+#define HYPNOSIS_RANGE 2
+#define HYPNOSIS_PENDING_TIME (10 MINUTES)
+#define HYPNOSIS_REMINDER_TIME (20 MINUTES)
+#define HYPNOSIS_MAX_DURATION (90 MINUTES)
+#define HYPNOSIS_PROMPT_TIMEOUT (15 SECONDS)
+#define HYPNOSIS_SELF_RELEASE_TIME (15 SECONDS)
+#define HYPNOSIS_DAZE_DURATION (30 SECONDS)
+#define HYPNOSIS_TRIGGER_COOLDOWN (1 MINUTES)
+#define HYPNOSIS_TRIGGER_MAX_LENGTH 60
+#define HYPNOSIS_EXAMINE_MAX_LENGTH 100
+/// Willpower at which a target may refuse each trance.
+#define HYPNOSIS_WILL_PROMPT 13
+/// Willpower at which a hypnotized person may break free alone.
+#define HYPNOSIS_WILL_SELF_RELEASE 15
+#define HYPNOSIS_MODE_SUGGESTION "suggestion"
+#define HYPNOSIS_MODE_TRIGGER "trigger"
+#ifndef HEARING_RADIO_FREQ
+#define HEARING_RADIO_FREQ 5
+#endif
+#ifndef HEARING_MESSAGE_MODE
+#define HEARING_MESSAGE_MODE 7
+#endif
+
+/// Added to the victim's perception when a sneaking thief goes for their underwear.
+#define UNDERWEAR_STEAL_PERCEPTION_BONUS 3
+/// Multiplies pickpocket time for underwear theft.
+#define UNDERWEAR_STEAL_TIME_MULT 2
+
+
+// Character creator stats: a point budget spent on the eight stats, plus two bonuses.
+
+/// Points a character spends on stats in the character creator. Some species add to it.
+#define STAT_ALLOC_BUDGET 26
+/// Value of a stat before any point is spent. Lower values give no points back.
+#define STAT_ALLOC_FREE 8
+/// Highest value points can buy. The two bonuses go on top.
+#define STAT_ALLOC_BUY_MAX 15
+/// Each step above this value costs two points instead of one.
+#define STAT_ALLOC_STEEP_ABOVE 13
+/// Lowest value a player can set.
+#define STAT_ALLOC_FLOOR 3
+/// Value of every stat on a character with no saved choice.
+#define STAT_ALLOC_DEFAULT 10
+/// The two bonuses a player puts on two different stats.
+#define STAT_ALLOC_BONUS_MAJOR 2
+#define STAT_ALLOC_BONUS_MINOR 1
+
+/// Charisma at or below this gives a poor impression on examine.
+#define CHARISMA_POOR_MAX 7
+/// Charisma at or above this gives a strong impression on examine.
+#define CHARISMA_STRONG_MIN 14
+/// The impression a character gives, from Charisma.
+#define IMPRESSION_POOR -1
+#define IMPRESSION_ORDINARY 0
+#define IMPRESSION_STRONG 1
+/// Longest custom impression line a player can write.
+#define IMPRESSION_TEXT_MAX 200
+
+/// Trait source for traits an origin gives.
+#define ORIGIN_TRAIT "origin"

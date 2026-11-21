@@ -186,6 +186,19 @@
 #define VOICE_PACK_FEM		"Feminine"
 #define VOICE_PACK_FEM_DAINTY	"Dainty (Fem)"
 #define VOICE_PACK_FEM_HAUGHTY	"Haughty (Fem)"
+#define VOICE_PACK_MASC_ELF	"Elvish (Masc)"
+#define VOICE_PACK_MASC_DWARF	"Dwarvish (Masc)"
+#define VOICE_PACK_MASC_EVIL	"Evil (Masc)"
+#define VOICE_PACK_MASC_ZETH	"Zeth (Masc)"
+#define VOICE_PACK_MASC_WIZARD	"Wizardly (Masc)"
+#define VOICE_PACK_MASC_STERN	"Stern (Masc)"
+#define VOICE_PACK_MASC_GOBLIN	"Goblin (Masc)"
+#define VOICE_PACK_FEM_ELF	"Elvish (Fem)"
+#define VOICE_PACK_FEM_DWARF	"Dwarvish (Fem)"
+#define VOICE_PACK_FEM_WARRIOR	"Warrior (Fem)"
+#define VOICE_PACK_FEM_GOBLIN	"Goblin (Fem)"
+/// Speech bark choice that turns barks off.
+#define SPEECH_BARK_NONE "None"
 
 GLOBAL_LIST_INIT(voice_packs_list, list(
 	VOICE_PACK_DEFAULT = null,
@@ -193,9 +206,20 @@ GLOBAL_LIST_INIT(voice_packs_list, list(
 	VOICE_PACK_MASC_FOPPISH = /datum/voicepack/male/foppish,
 	VOICE_PACK_MASC_KNIGHT = /datum/voicepack/male/knight,
 	VOICE_PACK_MASC_WARRIOR = /datum/voicepack/male/warrior,
+	VOICE_PACK_MASC_ELF = /datum/voicepack/male/elf,
+	VOICE_PACK_MASC_DWARF = /datum/voicepack/male/dwarf,
+	VOICE_PACK_MASC_EVIL = /datum/voicepack/male/evil,
+	VOICE_PACK_MASC_ZETH = /datum/voicepack/male/zeth,
+	VOICE_PACK_MASC_WIZARD = /datum/voicepack/male/wizard,
+	VOICE_PACK_MASC_STERN = /datum/voicepack/male/stern,
+	VOICE_PACK_MASC_GOBLIN = /datum/voicepack/male/goblin,
 	VOICE_PACK_FEM = /datum/voicepack/female,
 	VOICE_PACK_FEM_DAINTY = /datum/voicepack/female/dainty,
 	VOICE_PACK_FEM_HAUGHTY = /datum/voicepack/female/haughty,
+	VOICE_PACK_FEM_ELF = /datum/voicepack/female/elf,
+	VOICE_PACK_FEM_DWARF = /datum/voicepack/female/dwarf,
+	VOICE_PACK_FEM_WARRIOR = /datum/voicepack/female/warrior,
+	VOICE_PACK_FEM_GOBLIN = /datum/voicepack/female/goblin,
 ))
 
 // Moan types

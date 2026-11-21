@@ -84,6 +84,12 @@
 	show_obscured = TRUE
 	verbage = "%ARE%"
 
+/datum/mob_descriptor/prominent/thick_tail
+	name = "Thick Tail"
+	verbage = "%HAVE%"
+	prefix = "a"
+	show_obscured = TRUE
+
 /datum/mob_descriptor/prominent/thick_tail/can_describe(mob/living/described)
 	if(!ishuman(described))
 		return TRUE
@@ -181,6 +187,7 @@
 	name = "Adorable Presence"
 	verbage = "%HAVE%"
 	prefix = "an"
+	show_obscured = TRUE
 
 /datum/mob_descriptor/prominent/lordly_presence
 	name = "Lordly Presence"
@@ -192,11 +199,13 @@
 	name = "Doting Presence"
 	verbage = "%HAVE%"
 	prefix = "a"
+	show_obscured = TRUE
 
 /datum/mob_descriptor/prominent/aristocratic_haughtiness
 	name = "Aristocratic Disdain"
 	verbage = "%HAVE%"
 	prefix = "an"
+	show_obscured = TRUE
 
 /datum/mob_descriptor/prominent/ghastly_pale
 	name = "Ghastly Pale"
@@ -256,6 +265,7 @@
 	verbage = "%HAVE%"
 	prefix = "an"
 	suffix = "about %HIM%"
+	show_obscured = TRUE
 
 /datum/mob_descriptor/prominent/dim_look
 	name = "Dim Look"
@@ -366,3 +376,75 @@
 	name = "Large Ears"
 	verbage = "%HAVE%"
 
+/datum/mob_descriptor/prominent/promiscuous_mannerisms
+	name = "Sensual Manners"
+	verbage = "%HAVE%"
+	show_obscured = TRUE
+
+/datum/mob_descriptor/prominent/canine_features
+	name = "Canine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/feline_features
+	name = "Feline Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/hyaenidae_features
+	name = "Hyaenidae Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/equine_features
+	name = "Equine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/bovine_features
+	name = "Bovine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/ursine_features
+	name = "Ursine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/cervine_features
+	name = "Cervine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/lapine_features
+	name = "Lapine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/rodent_features
+	name = "Rodent Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/primate_features
+	name = "Primate Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/marsupial_features
+	name = "Marsupial Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/lizard_features
+	name = "Lizard Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/avian_features
+	name = "Avian Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/amphibian_features
+	name = "Amphibian Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/insectoid_features
+	name = "Insectoid Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/marine_features
+	name = "Marine Features"
+	verbage = "%HAVE%"
+
+/datum/mob_descriptor/prominent/vulpine_features
+	name = "Vulpine Features"
+	verbage = "%HAVE%"

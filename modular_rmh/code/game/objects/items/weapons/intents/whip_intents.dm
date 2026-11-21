@@ -35,6 +35,8 @@
 
 	SEND_SIGNAL(victim, COMSIG_SEX_GENERIC_ACTION, user, arousal, pain, climax, src)
 	playsound(src, pick('modular_rmh/sound/effects/slap1.ogg', 'modular_rmh/sound/effects/slap2.ogg'), 100)
+	if(istype(victim))
+		victim.take_impact_mark(user, user.zone_selected, get_punish_mark_force(user), src)
 
 	var/zone = user.zone_selected
 	var/bodypart = "body"
@@ -74,6 +76,10 @@
 			("<span class='aphrodisiac'>[victim] shudders slightly from the whip's impact.</span>"),
 			("<span class='aphrodisiac'>A tingling sensation spreads through your body.</span>"))
 
+/// A punish strike marks as a rough act, or a brutal one with the strong stance.
+/proc/get_punish_mark_force(mob/living/user)
+	return istype(user?.rmb_intent, /datum/rmb_intent/strong) ? SEX_FORCE_EXTREME : SEX_FORCE_HIGH
+
 /obj/item/storage/belt
 	possible_item_intents = list(BELT_PUNISH, INTENT_USE)
 
@@ -103,6 +109,8 @@
 
 	SEND_SIGNAL(victim, COMSIG_SEX_GENERIC_ACTION, user, arousal, pain, climax, src)
 	playsound(src, pick('modular_rmh/sound/effects/slap1.ogg', 'modular_rmh/sound/effects/slap2.ogg'), 100)
+	if(istype(victim))
+		victim.take_impact_mark(user, user.zone_selected, get_punish_mark_force(user), src)
 
 	var/zone = user.zone_selected
 	var/bodypart = "body"

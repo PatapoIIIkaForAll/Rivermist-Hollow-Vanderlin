@@ -90,7 +90,7 @@
 	desc = list("<span class='red'>I think I'm bleeding.</span>","<span class='red'>I'm bleeding.</span>")
 
 /datum/stress_event/bleeding/can_apply(mob/living/user)
-	if(user.has_quirk(/datum/quirk/vice/addiction/masochist))
+	if(user.has_quirk(/datum/quirk/negative/addiction/masochist))
 		return FALSE
 	return TRUE
 
@@ -100,7 +100,7 @@
 	desc = "<span class='red'>THE PAIN!</span>"
 
 /datum/stress_event/painmax/can_apply(mob/living/user)
-	if(user.has_quirk(/datum/quirk/vice/addiction/masochist))
+	if(user.has_quirk(/datum/quirk/negative/addiction/masochist))
 		return FALSE
 	return TRUE
 
@@ -246,7 +246,7 @@
 
 // this is a hell of a lot easier than checking in the moment
 /datum/stress_event/para/str/can_apply(mob/living/user)
-	if(!user.has_quirk(/datum/quirk/vice/paranoid))
+	if(!user.has_quirk(/datum/quirk/negative/paranoid))
 		return FALSE
 	return ..()
 
@@ -292,7 +292,7 @@
 	desc = span_red("I can't see their face! Have they found me!?")
 
 /datum/stress_event/hunted/can_apply(mob/living/user)
-	return user.has_quirk(/datum/quirk/vice/wanted)
+	return user.has_quirk(/datum/quirk/negative/wanted)
 /datum/stress_event/profane // When a non-assassin touches a profane dagger
 	timer = 3 MINUTES
 	stress_change = 2
@@ -770,3 +770,33 @@
 
 /datum/stress_event/malaguero/can_show(mob/living/user)
 	return istiefling(user) || ..()
+
+/datum/stress_event/outlaw_near_watch
+	timer = 1 MINUTES
+	stress_change = 2
+	desc = span_red("I feel the eyes of the law upon me.")
+
+/datum/stress_event/townwatch_disguised_authority
+	timer = 2 MINUTES
+	stress_change = 1
+	desc = span_red("Who the hell is that? That's not the captain!")
+
+/datum/stress_event/paranoia
+	timer = 1 MINUTES
+	stress_change = 2
+	desc = span_red("Who is this?")
+
+/datum/stress_event/unease
+	timer = 1 MINUTES
+	stress_change = 1
+	desc = span_red("Better don't stay here for too long...")
+
+/datum/stress_event/tense
+	timer = 2 MINUTES
+	stress_change = 1
+	desc = span_red("Not feeling good sharing a boat with them.")
+
+/datum/stress_event/fearful
+	timer = 2 MINUTES
+	stress_change = 4
+	desc = span_red("This isn't happening, not them!")

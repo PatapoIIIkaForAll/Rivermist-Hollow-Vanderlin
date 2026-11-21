@@ -52,6 +52,8 @@
 	for(var/atom/nearby_thing in range(aoe_radius, center))
 		if(nearby_thing == owner || nearby_thing == center)
 			continue
+		if(owner?.spares_ally(nearby_thing))
+			continue
 		if(!is_valid_target(nearby_thing))
 			continue
 

@@ -4,14 +4,25 @@
 	var/egg_type = OVI_EGG_NORMAL
 	var/display_name = "hardshell egg"
 	var/display_desc = "A soft, warm egg that feels alive even before it starts to twitch."
-	var/display_icon_state = "egg"
-	var/display_icon = null
-	var/display_color = null
+	/// Greyscale body, tinted by display_color or the player's colour.
+	var/display_icon_state = "egg_hardshell"
+	var/display_icon = 'modular_rmh/icons/obj/items/ovi_eggs.dmi'
+	var/display_color = "#e8dcc4"
+	/// Untinted overlay over the body: speckles, silk, roots. Null for none.
+	var/display_marks_state = "egg_hardshell_marks"
 	var/default_scale = OVI_EGG_DEFAULT_SCALE
 	/// Width in centimetres a ripe egg of this kind passes the opening with, before the egg's own scale.
 	var/birth_girth = OVI_EGG_DEFAULT_BIRTH_GIRTH
 	/// What a birth leaves in the canal, reagent type to units; traits add theirs on top.
 	var/list/residue_reagents
+	/// What the egg holds when eaten, reagent type to units at scale one.
+	var/list/egg_reagents = list(/datum/reagent/consumable/nutriment = 3)
+	/// Chance in percent that an egg of this kind forms laced with aphrodisiac.
+	var/aphrodisiac_chance = 15
+	/// A ripe egg starts labour this long after ripening; zero keeps the per-minute roll.
+	var/labour_delay = 0
+	/// Chance per minute that a ripe egg starts labour, without a delay.
+	var/labour_chance = OVI_EGG_LABOUR_CHANCE
 	var/list/default_traits = null
 	var/production_interval_multiplier = 1
 	var/resource_cost_multiplier = 1
@@ -56,7 +67,7 @@
 	// Apply base profile values, then let player custom overrides take priority
 	egg.name = egg.custom_egg_name ? egg.custom_egg_name : display_name
 	egg.desc = egg.custom_egg_desc ? egg.custom_egg_desc : display_desc
-	egg.icon_state = egg.custom_egg_color ? "egg_color" : display_icon_state
+	egg.icon_state = display_icon_state
 	egg.color = egg.custom_egg_color ? egg.custom_egg_color : display_color
 	var/list/profile_traits = get_default_traits()
 	if(isnull(egg.egg_traits))
@@ -67,6 +78,14 @@
 		egg.egg_scale = default_scale
 	if(display_icon)
 		egg.icon = display_icon
+	// The lace is rolled once per kind, so the egg, its coat and its birth residue agree.
+	if(egg.has_egg_trait(OVI_EGG_TRAIT_APHRODISIAC))
+		egg.laced = TRUE
+	else if(isnull(egg.laced) || egg.laced_for_type != egg_type)
+		egg.laced = prob(aphrodisiac_chance)
+	egg.laced_for_type = egg_type
+	egg.fill_egg_reagents(src)
+	egg.update_appearance(UPDATE_OVERLAYS)
 	egg.auto_hatch_when_laid = auto_hatch_when_laid
 	egg.hatch_inside_host = (hatch_mode == OVI_HATCH_INSIDE)
 	egg.body_storage_manual_removal = allow_manual_host_removal
@@ -85,8 +104,9 @@
 	egg_type = OVI_EGG_SPIDER
 	display_name = "spider egg"
 	display_desc = "A soft, web-slick egg with a faint, unsettling pulse."
-	display_icon_state = "egg_color"
-	display_color = "#6d7685"
+	display_icon_state = "egg_spider"
+	display_marks_state = "egg_spider_marks"
+	display_color = "#8d96a6"
 	hatch_result_type = /mob/living/simple_animal/hostile/retaliate/spider
 	poll_for_ghost = FALSE
 	require_ghost_to_hatch = FALSE
@@ -97,13 +117,16 @@
 	inside_behaviour_type = /datum/hatchling_inside_behaviour/spider
 	ready_message = "The spider egg in my %CONTAINER% twitches with hungry little movements."
 	hatch_message = "%EGG% splits open in a spray of web and skittering legs!"
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/egg_slime = 1, /datum/reagent/toxin/spidervenom_paralytic = 0.5)
+	aphrodisiac_chance = 25
 
 /datum/oviposition_egg_profile/bog_bug
 	egg_type = OVI_EGG_BOG_BUG
 	display_name = "bog bug egg"
 	display_desc = "A damp, swamp-dark egg with a shell that flexes around something hungry."
-	display_icon_state = "egg_color"
-	display_color = "#4d6a3f"
+	display_icon_state = "egg_bogbug"
+	display_marks_state = "egg_bogbug_marks"
+	display_color = "#6d8a5b"
 	hatch_result_type = /mob/living/simple_animal/hostile/retaliate/bogbug
 	poll_for_ghost = FALSE
 	require_ghost_to_hatch = FALSE
@@ -115,13 +138,16 @@
 	inside_behaviour_type = /datum/hatchling_inside_behaviour/bog_bug
 	ready_message = "The bog bug egg in my %CONTAINER% churns like a swamp creature is kicking to get free."
 	hatch_message = "%EGG% bursts with a wet pop, spilling out a ravenous bog bug!"
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/water = 2, /datum/reagent/poison/herbal/swamp_miasma = 0.5)
+	aphrodisiac_chance = 20
 
 /datum/oviposition_egg_profile/tentacle
 	egg_type = OVI_EGG_TENTACLE
 	display_name = "tentacle egg"
 	display_desc = "A soft, wine-dark egg whose slick shell twitches beneath the fingers."
-	display_icon_state = "egg_color"
-	display_color = "#713e63"
+	display_icon_state = "egg_tentacle"
+	display_marks_state = "egg_tentacle_marks"
+	display_color = "#9a5a88"
 	hatch_result_type = /mob/living/simple_animal/hostile/retaliate/tentacle
 	requires_fertilization = FALSE
 	poll_for_ghost = FALSE
@@ -134,50 +160,70 @@
 	inside_behaviour_type = /datum/hatchling_inside_behaviour/tentacle
 	ready_message = "The tentacle egg in my %CONTAINER% squirms with impatient coils."
 	hatch_message = "%EGG% splits with a wet tear, spilling out a writhing tentacle mass!"
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/consumable/egg_slime = 4)
+	aphrodisiac_chance = 70
 
 /datum/oviposition_egg_profile/maneater
 	egg_type = OVI_EGG_MANEATER
 	display_name = "maneater seed egg"
 	display_desc = "A soft green egg threaded through with fine roots and restless veins."
-	display_icon_state = "egg_color"
-	display_color = "#6f843b"
+	display_icon_state = "egg_maneater"
+	display_marks_state = "egg_maneater_marks"
+	display_color = "#8fa653"
 	hatch_result_type = /obj/item/maneaterseed/seedling
 	requires_fertilization = FALSE
 	poll_for_ghost = FALSE
 	require_ghost_to_hatch = FALSE
-	incubation_stage_duration = 4 MINUTES
+	incubation_stage_duration = 90 SECONDS
 	birth_girth = 18
 	ready_message = "The green egg in my %CONTAINER% tightens around a vigorously rooting seedling."
 	hatch_message = "%EGG% peels open like a wet flower, releasing a maneater seedling!"
+	residue_reagents = list(/datum/reagent/consumable/egg_slime = 2)
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/tree_sap = 2, /datum/reagent/consumable/egg_slime = 1)
+	aphrodisiac_chance = 40
+	labour_delay = 1 MINUTES
+	stage_messages = list(
+		"Something settles deep in my %CONTAINER% and sends out a thin, questing root.",
+		"A green ache spreads low in my belly; the seed in my %CONTAINER% is swelling.",
+		"The pod in my %CONTAINER% is heavy now, roots pressing at my walls.",
+		"The seed in my %CONTAINER% strains against me. It wants out.",
+	)
 
 /datum/oviposition_egg_profile/harpy
 	egg_type = OVI_EGG_HARPY
 	display_name = "hardshell egg"
 	display_desc = "A smooth, birdlike egg with a sturdy shell and a gentle, nest-warm weight."
-	display_icon_state = "egg_chicken"
-	display_color = "#eee3c7"
+	display_icon_state = "egg_avian"
+	display_marks_state = "egg_avian_marks"
+	display_color = "#f0e4ca"
 	default_scale = 1.15
 	production_interval_multiplier = 1.15
 	birth_girth = 13
 	ready_message = "The harpy egg in my %CONTAINER% feels full and heavy, like a ripe nesting egg ready to be laid."
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	aphrodisiac_chance = 10
 
 /datum/oviposition_egg_profile/avian
 	egg_type = OVI_EGG_AVIAN
 	display_name = "avian egg"
 	display_desc = "A warm birdlike egg with a smooth shell, faint speckles, and a nesting weight."
-	display_icon_state = "egg_chicken"
-	display_color = "#f0e0bd"
+	display_icon_state = "egg_avian"
+	display_marks_state = "egg_avian_marks"
+	display_color = "#f2e3c2"
 	default_scale = 1.1
 	production_interval_multiplier = 1.1
 	birth_girth = 13
 	ready_message = "The avian egg in my %CONTAINER% feels heavy, warm, and ready to be laid."
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	aphrodisiac_chance = 10
 
 /datum/oviposition_egg_profile/softshell
 	egg_type = OVI_EGG_SOFTSHELL
 	display_name = "softshell egg"
 	display_desc = "A flexible, translucent egg whose shell gives gently under the fingers."
-	display_icon_state = "egg_color"
-	display_color = "#e9b6a9"
+	display_icon_state = "egg_softshell"
+	display_marks_state = "egg_softshell_marks"
+	display_color = "#efc2b6"
 	default_scale = 0.85
 	production_interval_multiplier = 0.8
 	resource_cost_multiplier = 0.8
@@ -185,13 +231,16 @@
 	birth_girth = 13
 	residue_reagents = list(/datum/reagent/consumable/egg_slime = 2)
 	ready_message = "The softshell egg in my %CONTAINER% feels pliant, warm, and ready to pass."
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/egg_slime = 2)
+	aphrodisiac_chance = 35
 
 /datum/oviposition_egg_profile/parasitic
 	egg_type = OVI_EGG_PARASITIC
 	display_name = "parasitic egg"
 	display_desc = "A clinging, slick egg with a faint pulse and an unsettling hunger."
-	display_icon_state = "egg_color"
-	display_color = "#8aa05b"
+	display_icon_state = "egg_parasitic"
+	display_marks_state = "egg_parasitic_marks"
+	display_color = "#a4b56e"
 	default_scale = 0.9
 	default_traits = list(OVI_EGG_TRAIT_PARASITE, OVI_EGG_TRAIT_FAST_GROWTH)
 	production_interval_multiplier = 1.35
@@ -200,13 +249,16 @@
 	birth_girth = 12
 	residue_reagents = list(/datum/reagent/consumable/egg_slime = 2)
 	ready_message = "The parasitic egg in my %CONTAINER% twitches with needy, invasive warmth."
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/consumable/egg_slime = 2, /datum/reagent/toxin/venom = 0.5)
+	aphrodisiac_chance = 50
 
 /datum/oviposition_egg_profile/embryo
 	egg_type = OVI_EGG_EMBRYO
 	display_name = "embryo sac"
 	display_desc = "A fleshy pseudo-egg, soft and alive with a growing creature inside."
-	display_icon_state = "egg_color"
-	display_color = "#d7a29d"
+	display_icon_state = "egg_embryo"
+	display_marks_state = "egg_embryo_marks"
+	display_color = "#e0a9a3"
 	incubation_stage_duration = 8 MINUTES
 	stage_messages = list(
 		"Something fertile settles deep in my %CONTAINER%.",
@@ -225,13 +277,16 @@
 	internal_hatch_message = "Something alive hatches inside my %CONTAINER%, forcing it to clench around the newborn."
 	internal_contraction_message = "My %CONTAINER% clenches in sharp contractions around the hatchling inside."
 	internal_birth_message = "%CARRIER% doubles over as a newborn forces its way out of %CONTAINER%!"
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 2)
+	aphrodisiac_chance = 0
 
 /datum/oviposition_egg_profile/leech
 	egg_type = OVI_EGG_LEECH
 	display_name = "leech egg"
 	display_desc = "A small dark egg, slick and faintly twitching."
-	display_icon_state = "egg_color"
-	display_color = "#3c244d"
+	display_icon_state = "egg_leech"
+	display_marks_state = "egg_leech_marks"
+	display_color = "#5a3f6e"
 	hatch_result_type = /obj/item/natural/worms/leech/erotic/burrowing
 	requires_fertilization = FALSE
 	poll_for_ghost = FALSE
@@ -249,6 +304,8 @@
 	hatch_mode = OVI_HATCH_INSIDE
 	allow_manual_host_removal = TRUE
 	internal_hatch_layer = STORAGE_LAYER_DEEP
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 0.5, /datum/reagent/consumable/egg_slime = 0.5)
+	aphrodisiac_chance = 0
 
 /proc/get_oviposition_egg_profile(egg_type)
 	var/profile_type = /datum/oviposition_egg_profile
@@ -480,6 +537,12 @@
 	var/egg_scale = null
 	/// Optional modifier flags applied to this egg. Null means profile default.
 	var/list/egg_traits = null
+	/// Rolled once from the kind's chance: the egg, its coat and its residue carry aphrodisiac. Null until rolled.
+	var/laced = null
+	/// The kind the lace was rolled for; a kind change at creation rerolls it.
+	var/laced_for_type
+	/// Kind, scale and lace the reagents were last filled for, so a bite is not refilled.
+	var/filled_signature
 	var/auto_hatch_when_laid = TRUE
 	var/hatch_inside_host = FALSE
 	var/newborn_start_scale = 0.5
@@ -531,6 +594,35 @@
 	if(!profile)
 		return
 	profile.apply_to_egg(src)
+
+/// The kind's own mix, scaled, plus the lace; refilled only when kind, scale or lace changed.
+/obj/item/oviposition_egg/proc/fill_egg_reagents(datum/oviposition_egg_profile/profile)
+	var/scale = get_egg_scale()
+	var/signature = "[egg_type]|[scale]|[laced]"
+	if(signature == filled_signature)
+		return
+	filled_signature = signature
+	if(!reagents)
+		create_reagents(20)
+	reagents.clear_reagents()
+	for(var/reagent_type in profile.egg_reagents)
+		reagents.add_reagent(reagent_type, profile.egg_reagents[reagent_type] * scale, length(tastes) ? list("tastes" = tastes) : null)
+	if(laced)
+		reagents.add_reagent(/datum/reagent/consumable/aphrodisiac, OVI_EGG_LACE_UNITS * scale)
+
+/// The kind's untinted marks over the tinted body.
+/obj/item/oviposition_egg/update_overlays()
+	. = ..()
+	var/datum/oviposition_egg_profile/profile = get_egg_profile()
+	if(profile?.display_marks_state)
+		var/mutable_appearance/marks = mutable_appearance(icon, profile.display_marks_state)
+		marks.appearance_flags |= RESET_COLOR
+		. += marks
+
+/obj/item/oviposition_egg/examine(mob/user)
+	. = ..()
+	if(laced && !istype(loc, /obj/item/organ))
+		. += span_love("A heady, sweet scent clings to it.")
 
 /obj/item/oviposition_egg/proc/requires_fertilization()
 	var/datum/oviposition_egg_profile/profile = get_egg_profile()
@@ -612,7 +704,7 @@
 /obj/item/oviposition_egg/proc/get_birth_residue()
 	var/datum/oviposition_egg_profile/profile = get_egg_profile()
 	var/list/residue = islist(profile?.residue_reagents) ? profile.residue_reagents.Copy() : list()
-	if(has_egg_trait(OVI_EGG_TRAIT_APHRODISIAC))
+	if(laced)
 		residue[/datum/reagent/consumable/aphrodisiac] += OVI_EGG_RESIDUE_APHRODISIAC
 	if(has_egg_trait(OVI_EGG_TRAIT_POISON))
 		residue[/datum/reagent/toxin/venom] += OVI_EGG_RESIDUE_VENOM
@@ -644,8 +736,8 @@
 		return
 	if(!hatch_item.reagents)
 		hatch_item.create_reagents(10)
-	if(has_egg_trait(OVI_EGG_TRAIT_APHRODISIAC))
-		hatch_item.reagents.add_reagent(/datum/reagent/consumable/aphrodisiac, 2)
+	if(laced)
+		hatch_item.reagents.add_reagent(/datum/reagent/consumable/aphrodisiac, OVI_EGG_LACE_UNITS)
 	if(has_egg_trait(OVI_EGG_TRAIT_POISON))
 		hatch_item.reagents.add_reagent(/datum/reagent/toxin/venom, 1)
 

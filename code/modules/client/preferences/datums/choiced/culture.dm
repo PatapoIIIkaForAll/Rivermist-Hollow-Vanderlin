@@ -23,6 +23,14 @@
 
 /datum/preference/choiced/culture/deserialize(input, datum/preferences/prefs)
 	var/path = ispath(input) ? input : text2path(input)
+	// A removed origin falls back to its nearest surviving parent type.
+	if(!path && istext(input))
+		var/parent_text = input
+		var/slash = findlasttext(parent_text, "/")
+		while(!path && slash > 1)
+			parent_text = copytext(parent_text, 1, slash)
+			path = text2path(parent_text)
+			slash = findlasttext(parent_text, "/")
 	return sanitize_inlist(path, get_choices(), create_default_value(prefs))
 
 /datum/preference/choiced/culture/apply_to_human(mob/living/carbon/human/H, value, datum/preferences/prefs)

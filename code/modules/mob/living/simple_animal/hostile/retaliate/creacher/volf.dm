@@ -8,6 +8,7 @@
 	icon_dead = "vvd"
 	var/icon_state_prefix = "volf"
 	var/eye_icon_state = "volf_eyes"
+	penis_organ = /obj/item/organ/genitals/penis/knotted
 
 	faction = list(FACTION_ORCS, FACTION_WOLVES)
 	emote_hear = null

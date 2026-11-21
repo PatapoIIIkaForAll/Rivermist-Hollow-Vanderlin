@@ -3,7 +3,6 @@
 // Used on admin testing area only.
 
 GLOBAL_LIST_INIT(IconStates_cache, list())
-GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list searches
 
 // 32x32 in-hand helper item
 /obj/item/inhand_tester
@@ -24,10 +23,12 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 	if(GET_ATOM_BLOOD_DNA_LENGTH(src))
 		used_index += "_b"
 	var/static/list/onmob_sprites = list()
-	var/icon/onmob = onmob_sprites["[tag][behind][mirrored][used_index]"]
+	// The icon file is part of the key: many sheets reuse the same state names.
+	var/cache_key = "[icon]|[tag]|[behind]|[mirrored]|[used_index]"
+	var/icon/onmob = onmob_sprites[cache_key]
 	if(!onmob || force_reupdate_inhand)
 		onmob = fcopy_rsc(generateonmob(tag, prop, behind, mirrored))
-		onmob_sprites["[tag][behind][mirrored][used_index]"] = onmob
+		onmob_sprites[cache_key] = onmob
 	return onmob
 
 /obj/item/proc/get_extra_onmob_index()
@@ -38,7 +39,7 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 	if(tag)
 		switch(tag)
 			if("gen")
-				return list("shrink" = 0.2,"sx" = -7,"sy" = -4,"nx" = 7,"ny" = -4,"wx" = -4,"wy" = -4,"ex" = 2,"ey" = -4,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+				return list("shrink" = generic_inhand_shrink(),"sx" = -7,"sy" = -4,"nx" = 7,"ny" = -4,"wx" = -4,"wy" = -4,"ex" = 2,"ey" = -4,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 			if("wielded")
 				return null
 			if("altgrip")
@@ -47,6 +48,13 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 			if("onback")
 				return list("shrink" = 0.5,"sx" = 1,"sy" = -1,"nx" = 1,"ny" = -1,"wx" = 4,"wy" = -1,"ex" = -1,"ey" = -1,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
+
+/// Shrink for the generic held sprite: 32 px art is shrunk less so it stays readable in the hand.
+/obj/item/proc/generic_inhand_shrink()
+	if(!isfile(icon))
+		return 0.2
+	var/list/dimensions = get_icon_dimensions(icon)
+	return dimensions["height"] == 32 ? 0.4 : 0.2
 
 /obj/item/proc/mirror_fix(shrink, big)
 	if(!shrink)
@@ -62,6 +70,13 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 		if(0.7)
 			return 1
 
+/// Whether this item's own icon_state has a "_behind" variant; icon() of a missing state returns the whole sheet.
+/obj/item/proc/has_behind_inhand_state()
+	var/behind_state = "[icon_state]_behind"
+	if(isfile(icon))
+		return icon_exists(icon, behind_state)
+	return (behind_state in icon_states(icon))
+
 /obj/item/proc/generateonmob(tag, prop, behind, mirrored)
 	var/list/used_prop = prop
 	var/UH = 64
@@ -70,17 +85,9 @@ GLOBAL_LIST_INIT(has_behind_cache, list()) // cheaty hack to avoid repeated list
 	var/icon/returned = icon(used_mask, "blank")
 	var/icon/blended
 	var/skipoverlays = FALSE
-	if(behind)
-		if(!GLOB.IconStates_cache[icon])
-			var/list/istates = icon_states(icon)
-			GLOB.IconStates_cache[icon] = istates
-			GLOB.has_behind_cache[icon] = ("[icon_state]_behind" in istates)
-
-		if(GLOB.has_behind_cache[icon])
-			blended = icon(icon = icon, icon_state = "[icon_state]_behind")
-			skipoverlays = TRUE
-		else
-			blended = icon(icon = icon, icon_state = icon_state)
+	if(behind && has_behind_inhand_state())
+		blended = icon(icon = icon, icon_state = "[icon_state]_behind")
+		skipoverlays = TRUE
 	else
 		blended = icon(icon = icon, icon_state = icon_state)
 

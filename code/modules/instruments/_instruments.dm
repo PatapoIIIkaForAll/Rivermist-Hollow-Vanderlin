@@ -224,19 +224,19 @@
 				buffs2pick += list("Mystra's Brilliance (+1 INT)" = /datum/status_effect/bardicbuff/intelligence,
 								"Moradin's Perseverance (+1 END)" = /datum/status_effect/bardicbuff/endurance,
 								"Ilmater's Blessing (+1 CON)" = /datum/status_effect/bardicbuff/constitution,
-								"Tymora's Alacrity (+1 SPD)" = /datum/status_effect/bardicbuff/speed)
+								"Tymora's Alacrity (+1 DEX)" = /datum/status_effect/bardicbuff/speed)
 			if(1 to 5) // T5
 				buffs2pick += list("Mystra's Brilliance (+1 INT)" = /datum/status_effect/bardicbuff/intelligence,
 								"Moradin's Perseverance (+1 END)" = /datum/status_effect/bardicbuff/endurance,
 								"Ilmater's Blessing (+1 CON)" = /datum/status_effect/bardicbuff/constitution,
-								"Tymora's Alacrity (+1 SPD)" = /datum/status_effect/bardicbuff/speed,
-								"Tempus's Righteous Fury (+1 STR, +1 PER)" = /datum/status_effect/bardicbuff/ravox)
+								"Tymora's Alacrity (+1 DEX)" = /datum/status_effect/bardicbuff/speed,
+								"Tempus's Righteous Fury (+1 STR, +1 WIS)" = /datum/status_effect/bardicbuff/ravox)
 			if(6 to INFINITY) // Legendary onwards
 				buffs2pick += list("Mystra's Brilliance (+1 INT)" = /datum/status_effect/bardicbuff/intelligence,
 								"Moradin's Perseverance (+1 END)" = /datum/status_effect/bardicbuff/endurance,
 								"Ilmater's Blessing (+1 CON)" = /datum/status_effect/bardicbuff/constitution,
-								"Tymora's Alacrity (+1 SPD)" = /datum/status_effect/bardicbuff/speed,
-								"Tempus's Righteous Fury (+1 STR, +1 PER)" = /datum/status_effect/bardicbuff/ravox,
+								"Tymora's Alacrity (+1 DEX)" = /datum/status_effect/bardicbuff/speed,
+								"Tempus's Righteous Fury (+1 STR, +1 WIS)" = /datum/status_effect/bardicbuff/ravox,
 								"Lathander's Awakening (+energy, +stamina, +1 FOR)" = /datum/status_effect/bardicbuff/awaken) // TAKE THE LAND THAT MUST BE TAKEN
 			else // debug
 				message_admins("<span class='warning'>[key_name(usr)] is a bard with zero music skill and couldn't choose a buff.</span>")

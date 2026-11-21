@@ -104,6 +104,14 @@
 	M.adjust_stamina(-5 * efficiency)
 	M.apply_status_effect(/datum/status_effect/buff/vigor)
 
+/datum/reagent/consumable/caffeine/on_mob_metabolize(mob/living/L)
+	. = ..()
+	ADD_TRAIT(L, TRAIT_CAFFEINATED, "[type]")
+
+/datum/reagent/consumable/caffeine/on_mob_end_metabolize(mob/living/L)
+	. = ..()
+	REMOVE_TRAIT(L, TRAIT_CAFFEINATED, "[type]")
+
 /datum/reagent/consumable/caffeine/overdose_process(mob/living/carbon/M)
 	. = ..()
 	M.adjust_jitter(4 SECONDS)

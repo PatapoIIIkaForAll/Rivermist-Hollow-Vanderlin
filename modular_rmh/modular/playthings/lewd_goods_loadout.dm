@@ -1,5 +1,5 @@
 // Lewd goods in the loadout. Flat types on purpose: every loadout subtype becomes a menu entry.
-// Toys arrive unshaped and take their shape and size in hand; chastity devices bring their key.
+// Toys arrive unshaped and take their shape and size in hand; chastity devices and harnesses bring their key.
 
 /datum/loadout_item/lewd_dildo_wood
 	name = "Wooden Dildo"
@@ -278,6 +278,16 @@
 	name = "Leather Gloves"
 	item_path = /obj/item/clothing/gloves/bdsm_leather
 	point_cost = 1
+
+/datum/loadout_item/lewd_strapon_harness
+	name = "Strap-on Harness"
+	item_path = /obj/item/strapon_harness
+	point_cost = 1
+
+/datum/loadout_item/lewd_strapon_harness_double
+	name = "Double-Ended Strap-on Harness"
+	item_path = /obj/item/strapon_harness/double
+	point_cost = 2
 
 /datum/loadout_item/lewd_chastity_belt
 	name = "Chastity Belt"

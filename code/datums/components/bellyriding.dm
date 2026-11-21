@@ -411,7 +411,7 @@
 	perform_chosen_action:
 	var/datum/sex_action/chosen_action = SEX_ACTION(last_action_type)
 	if(chosen_action)
-		ASYNC chosen_action.on_perform(wearer, current_victim)
+		ASYNC chosen_action.felt_perform(wearer, current_victim)
 
 /datum/component/bellyriding/proc/ensure_sex_scene_controller()
 	if(!current_victim)

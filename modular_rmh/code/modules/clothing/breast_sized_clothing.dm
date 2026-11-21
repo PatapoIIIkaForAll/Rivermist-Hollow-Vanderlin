@@ -40,7 +40,8 @@ GLOBAL_LIST_INIT(breast_sized_slots, list(
 	if(wearer.gender != FEMALE || wearer.get_body_cut() != BODY_CUT_FEMININE)
 		return null
 	var/obj/item/organ/genitals/filling_organ/breasts/breasts = wearer.getorganslot(ORGAN_SLOT_BREASTS)
-	if(!istype(breasts) || !ispath(breasts.accessory_type, /datum/sprite_accessory/genitals/breasts/pair))
+	// Quad and sextuple breasts wear the pair-shaped sheet too; a plain fallback would hide them.
+	if(!istype(breasts) || !ispath(breasts.accessory_type, /datum/sprite_accessory/genitals/breasts))
 		return null
 	var/tag = wearer.get_clothing_custom_tag()
 	var/size_key = "[breasts.get_visible_size()][tag ? "_[tag]" : ""]"
@@ -206,11 +207,15 @@ GLOBAL_LIST_INIT(breast_sized_slots, list(
 	return FALSE
 
 /// is_human_part_visible(owner, HIDEBOOB|HIDEJUMPSUIT) that lets breast-sized garments through.
-/proc/breasts_visible_under_clothes(mob/living/carbon/owner)
+/// skip_under_layers ignores layers worn beneath the sized garments, such as a leotard under a gown.
+/proc/breasts_visible_under_clothes(mob/living/carbon/owner, skip_under_layers = FALSE)
 	if(!istype(owner))
 		return TRUE
+	var/list/under_layers = skip_under_layers ? list(owner.undershirt, owner.underwear, owner.legwear_socks, owner.garter, owner.armsleeves) : null
 	for(var/obj/item/item as anything in get_all_worn_items(owner))
 		if(!(item.flags_inv & (HIDEBOOB|HIDEJUMPSUIT)))
+			continue
+		if(under_layers && (item in under_layers))
 			continue
 		if(ishuman(owner) && item.uses_breast_sized_layers(owner))
 			continue
@@ -237,9 +242,9 @@ GLOBAL_LIST_INIT(breast_sized_slots, list(
 	breast_sized_icon = 'modular_rmh/icons/clothing/onmob/breast_sized/silkdress.dmi'
 
 // Princess and prince subtypes find no states for their icon_state and fall back.
+// The low neckline shows the top of the breasts, so the gown is not closed.
 /obj/item/clothing/shirt/dress/royal
 	breast_sized_icon = 'modular_rmh/icons/clothing/onmob/breast_sized/royaldress.dmi'
-	breast_sized_closed = TRUE
 
 /obj/item/clothing/bra
 	breast_sized_icon = 'modular_rmh/icons/clothing/onmob/breast_sized/bra.dmi'

@@ -23,6 +23,9 @@
 		/obj/item/weapon/mace/warhammer,
 	))
 
+/datum/action/cooldown/spell/hammer_fall/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/hammer_fall/can_cast_spell(feedback)
 	. = ..()
 	if(!.)
@@ -63,6 +66,8 @@
 		animate(Lava, alpha = 255, time = 5)
 	sleep(delay)
 	for (var/mob/living/carbon/shaken in view(shakeradius, T))
+		if(owner?.spares_ally(shaken))
+			continue
 		shake_camera(shaken, 5, 5)
 		if(shaken == owner)
 			continue

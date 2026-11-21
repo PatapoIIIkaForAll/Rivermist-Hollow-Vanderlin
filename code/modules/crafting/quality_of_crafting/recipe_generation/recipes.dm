@@ -537,8 +537,11 @@
 	data["blocker_requirements"] = raw_reqs[4]
 
 	data["skill_name"] = skill_used::name
-	data["min_skill"] = SSskills.level_names[FLOOR(skill_min * 0.1, 1)]
-	data["median_skill"] = SSskills.level_names[FLOOR(skill_min * 0.1, 1)]
+	// level_names starts at Weak (1), so no minimum skill has no name of its own.
+	var/min_index = clamp(FLOOR(skill_min * 0.1, 1), 0, length(SSskills.level_names))
+	var/median_index = clamp(FLOOR(skill_median * 0.1, 1), 1, length(SSskills.level_names))
+	data["min_skill"] = min_index ? SSskills.level_names[min_index] : "None"
+	data["median_skill"] = SSskills.level_names[median_index]
 
 	data["looping"] = (operation_flags & OPERATION_LOOPING)
 

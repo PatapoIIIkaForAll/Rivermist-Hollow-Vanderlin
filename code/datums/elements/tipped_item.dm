@@ -22,10 +22,18 @@
 	RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
 	RegisterSignal(target, COMSIG_ITEM_INTERACTING_WITH_ATOM, PROC_REF(check_dip))
 	RegisterSignal(target, COMSIG_ITEM_SPEC_ATTACKEDBY, PROC_REF(try_inject))
+	RegisterSignal(target, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(on_clean))
 
 /datum/element/tipped_item/Detach(datum/source)
 	. = ..()
-	UnregisterSignal(source, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_INTERACTING_WITH_ATOM, COMSIG_ITEM_SPEC_ATTACKEDBY))
+	UnregisterSignal(source, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_INTERACTING_WITH_ATOM, COMSIG_ITEM_SPEC_ATTACKEDBY, COMSIG_COMPONENT_CLEAN_ACT))
+
+/// Washing or scrubbing removes the coating. Returns NONE so other cleaning still runs.
+/datum/element/tipped_item/proc/on_clean(atom/movable/source, clean_types)
+	SIGNAL_HANDLER
+	if((clean_types & CLEAN_WASH) == CLEAN_WASH)
+		source.reagents?.clear_reagents()
+	return NONE
 
 /datum/element/tipped_item/proc/check_dip(obj/item/dipper, mob/living/attacker, obj/item/reagent_containers/attacked_container, list/modifiers)
 	SIGNAL_HANDLER

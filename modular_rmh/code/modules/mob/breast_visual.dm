@@ -149,6 +149,8 @@ GLOBAL_LIST_INIT(breast_emote_shots, list(
 	else
 		visual.vis_flags |= VIS_HIDE
 	refresh_garments(breasts)
+	update_lipstick_child()
+	update_piercing_child()
 	// The body drops its south view once the child exists.
 	if(created)
 		human.update_body_parts()
@@ -170,7 +172,8 @@ GLOBAL_LIST_INIT(breast_emote_shots, list(
 /datum/component/breast_animation/proc/refresh_garments(obj/item/organ/genitals/filling_organ/breasts/breasts)
 	var/mob/living/carbon/human/human = parent
 	// A child draws above every overlay, so a plain garment over the chest leaves no garment child.
-	if(breasts.visible_through_clothes == DRAW_ABOVE || !breasts_visible_under_clothes(human))
+	// Plain layers beneath the sized garments only hide the breasts; the garments keep their front cloth.
+	if(breasts.visible_through_clothes == DRAW_ABOVE || !breasts_visible_under_clothes(human, skip_under_layers = TRUE))
 		remove_garment_visuals()
 		return
 	var/list/garments = human.get_breast_sized_garments()
@@ -319,6 +322,8 @@ GLOBAL_LIST_INIT(breast_emote_shots, list(
 /datum/component/breast_animation/proc/set_visual_state()
 	var/gait = jiggling ? "jiggle_" : (running ? "run_" : "")
 	set_child_look(visual, BREAST_VISUAL_ICON, "pair_[size]_[gait]front_ADJ")
+	update_lipstick_child()
+	update_piercing_child()
 
 /// Sets a child's icon and state, and its emissive blocker with them.
 /datum/component/breast_animation/proc/set_child_look(atom/movable/breast_visual/child, new_icon, new_state)
@@ -329,6 +334,8 @@ GLOBAL_LIST_INIT(breast_emote_shots, list(
 	child.update_appearance(UPDATE_OVERLAYS)
 
 /datum/component/breast_animation/proc/remove_visual()
+	remove_lipstick_child()
+	remove_piercing_child()
 	remove_garment_visuals()
 	running = FALSE
 	size = null
@@ -349,15 +356,18 @@ GLOBAL_LIST_INIT(breast_emote_shots, list(
 		return
 	if(!(visual.vis_flags & VIS_HIDE))
 		flick("pair_[size]_[shot]_front_ADJ", visual)
+		flick_lipstick_child(shot)
+		flick_piercing_child(shot)
 	for(var/slot in garment_visuals)
 		var/atom/movable/breast_visual/child = garment_visuals[slot]
 		var/obj/item/garment = human.get_chest_slot_item(slot)
 		if(!garment || (child.vis_flags & VIS_HIDE))
 			continue
-		flick("[garment.icon_state]_f_[size]_[shot]_front", child)
+		// The prefix carries the race clothing tag, so small races flick their own frames.
+		flick("[get_garment_state_prefix(garment, FALSE)]_[shot]_front", child)
 		var/atom/movable/breast_visual/detail = LAZYACCESS(garment_detail_visuals, slot)
 		if(detail)
-			flick("[garment.icon_state]_f_detail_[size]_[shot]_front", detail)
+			flick("[get_garment_state_prefix(garment, TRUE)]_[shot]_front", detail)
 
 /datum/component/breast_animation/proc/set_running(new_running)
 	if(running == new_running || !visual)
@@ -485,7 +495,8 @@ GLOBAL_LIST_INIT(breast_emote_shots, list(
 			active = TRUE
 			running = animation.running
 	// Breasts shown above clothes draw on another layer, so they need their own cache slot.
-	return "[.]_anim[active]_run[running]_jiggle[jiggling]_vis[visible_through_clothes]"
+	// Worn clothing hides the breasts and their piercing, so covered and bare bodies keep apart.
+	return "[.]_anim[active]_run[running]_jiggle[jiggling]_vis[visible_through_clothes]_bare[breasts_visible_under_clothes(owner)]"
 
 #undef BREAST_VISUAL_ICON
 #undef BREAST_VISUAL_LAYER

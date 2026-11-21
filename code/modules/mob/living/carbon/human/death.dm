@@ -106,9 +106,9 @@
 						if(HU.dna?.species && dna?.species)
 							if(HU.dna.species.id == dna.species.id)
 								var/mob/living/carbon/D = HU
-								if(D.has_quirk(/datum/quirk/vice/addiction/sadist))
+								if(D.has_quirk(/datum/quirk/negative/addiction/sadist))
 									D.add_stress(/datum/stress_event/viewdeathmaniac)
-									D.sate_addiction(/datum/quirk/vice/addiction/sadist)
+									D.sate_addiction(/datum/quirk/negative/addiction/sadist)
 								else
 									D.add_stress(/datum/stress_event/viewdeath)
 
@@ -145,9 +145,9 @@
 			if(HAS_TRAIT(CA, TRAIT_STEELHEARTED))
 				continue
 			var/mob/living/carbon/V = CA
-			if(V.has_quirk(/datum/quirk/vice/addiction/sadist))
+			if(V.has_quirk(/datum/quirk/negative/addiction/sadist))
 				V.add_stress(/datum/stress_event/viewgibmaniac)
-				V.sate_addiction(/datum/quirk/vice/addiction/sadist)
+				V.sate_addiction(/datum/quirk/negative/addiction/sadist)
 				continue
 			V.add_stress(/datum/stress_event/viewgib)
 	. = ..()

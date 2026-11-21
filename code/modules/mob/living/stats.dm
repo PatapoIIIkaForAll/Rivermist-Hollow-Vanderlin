@@ -103,12 +103,19 @@
 		STAT_INTELLIGENCE = list(-1, 1),
 		STAT_SPEED = list(-1, 1),
 		STAT_FORTUNE = list(-1, 1),
+		STAT_CHARISMA = list(-1, 1),
 	)
+
+/// TRUE for characters whose stats come from the character creator: jobs and the spawn roll leave them alone.
+/mob/living/proc/uses_creator_stats()
+	return FALSE
+
 /mob/living/proc/roll_mob_stats()
 	if(has_rolled_for_stats)
 		return FALSE
 
-	attributes?.add_sheet(/datum/attribute_holder/sheet/job/random_stats)
+	if(!uses_creator_stats())
+		attributes?.add_sheet(/datum/attribute_holder/sheet/job/random_stats)
 
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
@@ -169,6 +176,8 @@
 /mob/living/proc/set_stat_modifier(source, stat_or_list, amount = null)
 	if(!source || !attributes)
 		return
+	if(source == STATMOD_JOB && uses_creator_stats())
+		return
 
 	var/list/stat_list
 	if(islist(stat_or_list))
@@ -208,6 +217,8 @@
  */
 /mob/living/proc/adjust_stat_modifier(source, stat_or_list, amount = null)
 	if(!source || !attributes)
+		return
+	if(source == STATMOD_JOB && uses_creator_stats())
 		return
 
 	var/list/stat_list
@@ -281,6 +292,7 @@
 		STAT_INTELLIGENCE = nulltozero(GET_MOB_ATTRIBUTE_VALUE(src, STAT_INTELLIGENCE)),
 		STAT_SPEED        = nulltozero(GET_MOB_ATTRIBUTE_VALUE(src, STAT_SPEED)),
 		STAT_FORTUNE      = nulltozero(GET_MOB_ATTRIBUTE_VALUE(src, STAT_FORTUNE)),
+		STAT_CHARISMA     = nulltozero(GET_MOB_ATTRIBUTE_VALUE(src, STAT_CHARISMA)),
 	)
 
 /**

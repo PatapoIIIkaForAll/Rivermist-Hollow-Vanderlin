@@ -348,8 +348,11 @@
 
 /// Comfort girth: relaxed tissue plus bonuses, and being open already is comfortable too.
 /datum/orifice/proc/get_comfort_girth()
-	var/relaxed = get_rest_girth() * get_elasticity() * (1 + arousal_bonus * get_arousal_fraction() + ORIFICE_LUBE_BONUS * get_lube_level())
-	return max(get_current_girth(), relaxed)
+	return max(get_current_girth(), get_relaxed_comfort_girth())
+
+/// What the tissue relaxes to on its own: rest times elasticity, eased further by arousal and lube.
+/datum/orifice/proc/get_relaxed_comfort_girth()
+	return get_rest_girth() * get_elasticity() * (1 + arousal_bonus * get_arousal_fraction() + ORIFICE_LUBE_BONUS * get_lube_level())
 
 /// How snug an insertion feels right now.
 /datum/orifice/proc/get_fit(girth)
@@ -418,6 +421,8 @@
 			return 1.3
 		if(SEX_FORCE_EXTREME)
 			return 1.6
+		if(SEX_FORCE_UNRELENTING)
+			return 1.9
 	return 1
 
 /// Speed scaling for gape strain, shared with the pain table.
@@ -429,6 +434,8 @@
 			return SEX_SPEED_PAIN_MULT_HIGH
 		if(SEX_SPEED_EXTREME)
 			return SEX_SPEED_PAIN_MULT_EXTREME
+		if(SEX_SPEED_UNRELENTING)
+			return SEX_SPEED_PAIN_MULT_UNRELENTING
 	return SEX_SPEED_PAIN_MULT_MID
 
 /// One adaptation step toward [girth]; returns the new current girth.
@@ -693,17 +700,17 @@
 
 // ---- Gape ----
 
-/// The smaller of the stretch and [girth]'s ratio, scaled from zero at onset to one at the gape ratio.
+/// Full thrusts one thrust of [girth] counts as: none within the relaxed comfort, one at the full strain, capped.
 /datum/orifice/proc/get_gape_ratio_scale(girth)
-	// A small toy in a still-stretched hole wears nothing.
-	var/ratio = min(get_stretch_ratio(), girth / max(get_rest_girth(), 1))
-	return max(0, (ratio - ORIFICE_GAPE_ONSET_RATIO) / max(gape_ratio - ORIFICE_GAPE_ONSET_RATIO, 0.01))
+	// Wear is strain past what the tissue relaxes to: a ready hole is worn by less, a stretched one is no softer.
+	var/strain = girth / max(get_relaxed_comfort_girth(), 1)
+	return clamp((strain - ORIFICE_GAPE_ONSET_STRAIN) / max(ORIFICE_GAPE_FULL_STRAIN - ORIFICE_GAPE_ONSET_STRAIN, 0.01), 0, ORIFICE_GAPE_SCALE_CAP)
 
 /// Gape strain one thrust of [girth] adds at this force and speed.
 /datum/orifice/proc/get_thrust_gape_gain(girth, force, speed)
 	return get_gape_ratio_scale(girth) * (ORIFICE_GAPE_STRAIN_MAX / ORIFICE_GAPE_THRUSTS) * get_force_factor(force) * get_speed_factor(speed)
 
-/// Gape strain a passage of [girth] adds; anything past the maximum fills it at once.
+/// Gape strain a passage of [girth] adds; a birth within comfort adds none, anything past the maximum fills it at once.
 /datum/orifice/proc/get_passage_gape_gain(girth)
 	if(girth > get_max_girth())
 		return ORIFICE_GAPE_STRAIN_MAX
@@ -786,7 +793,7 @@
 	return
 
 /// A knot torn out opens the hole it was tied in.
-/datum/component/knotting/proc/gape_knotted_hole(mob/living/carbon/human/top)
+/datum/component/knotting/proc/gape_knotted_hole(mob/living/top)
 	var/obj/item/organ/genitals/filling_organ/hole = knotted_hole_ref?.resolve()
 	if(!istype(hole) || !hole.orifice_type)
 		return

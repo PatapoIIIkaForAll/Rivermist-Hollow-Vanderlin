@@ -35,7 +35,7 @@
 	effectedstats = list(STAT_PERCEPTION = 6)
 
 /atom/movable/screen/alert/status_effect/buff/alch/perceptionpot
-	name = "Perception"
+	name = "Wisdom"
 
 /datum/status_effect/buff/alch/intelligencepot
 	id = "Intelligence Potion"
@@ -101,7 +101,7 @@
 
 
 /atom/movable/screen/alert/status_effect/buff/alch/speedpot
-	name = "Speed"
+	name = "Dexterity"
 
 /datum/status_effect/buff/alch/fortunepot
 	id = "Fortune Potion"

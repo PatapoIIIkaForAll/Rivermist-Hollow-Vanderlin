@@ -27,13 +27,18 @@
 /// Strain this close to full snaps to full, since sums of fractional gains land a hair short.
 #define ORIFICE_GAPE_STRAIN_SNAP 0.01
 /// Strain lost per minute while not gaping.
-#define ORIFICE_GAPE_STRAIN_DECAY_PER_MINUTE 10
-/// Stretch ratio from which thrusts and passages wear the ring toward a gape.
+#define ORIFICE_GAPE_STRAIN_DECAY_PER_MINUTE 15
+/// Stretch ratio a hole must have reached before full strain can gape it.
 #define ORIFICE_GAPE_ONSET_RATIO 1.3
-/// Mid-force, mid-speed thrusts at the gape ratio that fill the strain; decay between them adds one more in play.
-#define ORIFICE_GAPE_THRUSTS 11
-/// Strain one passage at the gape ratio adds.
-#define ORIFICE_GAPE_PASSAGE_STRAIN 25
+/// Strain past the relaxed comfort from which thrusts and passages wear the ring, and where one thrust counts in full.
+#define ORIFICE_GAPE_ONSET_STRAIN 1.15
+#define ORIFICE_GAPE_FULL_STRAIN 1.5
+/// A monstrous fit never counts as more than this many full thrusts per thrust.
+#define ORIFICE_GAPE_SCALE_CAP 2
+/// Full-strain thrusts at mid force and speed that fill the strain; decay between them adds more in play.
+#define ORIFICE_GAPE_THRUSTS 30
+/// Strain one full-strain passage adds.
+#define ORIFICE_GAPE_PASSAGE_STRAIN 15
 /// From this strain the menu hint warns that a gape is near.
 #define ORIFICE_GAPE_WARN_STRAIN 60
 /// The owner feels the ring giving way at these strains; the lines repeat once strain falls below the reset.

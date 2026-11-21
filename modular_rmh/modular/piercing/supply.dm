@@ -7,7 +7,7 @@
 					/obj/item/piercings/rings/emerald,
 					/obj/item/piercings/rings/gold,
 					/obj/item/piercings/rings/silver,
-					/obj/item/piercings/rings/tag,
+					/obj/item/piercings/beads/tag,
 					/obj/item/piercings/beads/emerald,
 					/obj/item/piercings/beads/gold,
 					/obj/item/piercings/beads/silver,

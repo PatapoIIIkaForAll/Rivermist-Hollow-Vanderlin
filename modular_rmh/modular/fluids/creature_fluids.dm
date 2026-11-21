@@ -49,6 +49,18 @@
 	color = "#d4dccd"
 	taste_description = "sticky bitterness"
 
+/datum/reagent/consumable/cum/creature/spider/honeyed
+	name = "Honeyed Seed"
+	description = "Stringy seed from a beespider, golden and sweet with honey."
+	color = "#e2c770"
+	taste_description = "honeyed silk"
+
+/datum/reagent/consumable/femcum/creature/spider/honeyed
+	name = "Honeyed Nectar"
+	description = "Tacky slick from a beespider that smells of warm honey."
+	color = "#e8d28a"
+	taste_description = "sticky honey"
+
 /datum/reagent/consumable/cum/creature/bog_bug
 	name = "Bog Bug Seed"
 	description = "Swamp-green, gelatinous seed from a bog bug."
@@ -106,7 +118,17 @@
 	cum = /datum/reagent/consumable/cum/creature/bobcat
 	femcum = /datum/reagent/consumable/femcum/creature/bobcat
 
+// Beespider glands make real honey with their seed and nectar, two parts in five.
 /mob/living/simple_animal/hostile/retaliate/spider
+	cum = list(/datum/reagent/consumable/cum/creature/spider/honeyed = 0.6, /datum/reagent/consumable/honey = 0.4)
+	femcum = list(/datum/reagent/consumable/femcum/creature/spider/honeyed = 0.6, /datum/reagent/consumable/honey = 0.4)
+
+// Beespiders that make no honey keep the plain spider fluids.
+/mob/living/simple_animal/hostile/retaliate/spider/robotic
+	cum = /datum/reagent/consumable/cum/creature/spider
+	femcum = /datum/reagent/consumable/femcum/creature/spider
+
+/mob/living/simple_animal/hostile/retaliate/spider/companion
 	cum = /datum/reagent/consumable/cum/creature/spider
 	femcum = /datum/reagent/consumable/femcum/creature/spider
 

@@ -16,7 +16,7 @@
 #define ENTHUSIAST_CRIT_AROUSAL_MULT 4
 #define ENTHUSIAST_CRIT_STUN (0.5 SECONDS)
 
-/datum/quirk/vice/breast_enthusiast
+/datum/quirk/negative/breast_enthusiast
 	name = "Breast Enthusiast"
 	desc = "I can't help it - a generous bosom makes my heart race. Too long without one and I get restless and miserable."
 	point_value = 2
@@ -33,17 +33,17 @@
 	var/list/looked_at = list()
 	var/list/caught_by = list()
 
-/datum/quirk/vice/breast_enthusiast/on_spawn()
+/datum/quirk/negative/breast_enthusiast/on_spawn()
 	last_satisfied = world.time
 	next_admire = world.time + rand(3 MINUTES, 6 MINUTES)
 	next_look = world.time + rand(1 MINUTES, 2 MINUTES)
 	return ..()
 
-/datum/quirk/vice/breast_enthusiast/on_examined(mob/user, list/P, list/examine_contents)
+/datum/quirk/negative/breast_enthusiast/on_examined(mob/user, list/P, list/examine_contents)
 	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
 		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Breast-obsessed..."))
 
-/datum/quirk/vice/breast_enthusiast/on_life(mob/living/user)
+/datum/quirk/negative/breast_enthusiast/on_life(mob/living/user)
 	if(!ishuman(user) || user.stat == DEAD)
 		return
 	var/mob/living/carbon/human/holder = user
@@ -59,7 +59,7 @@
 
 // Hunger.
 
-/datum/quirk/vice/breast_enthusiast/proc/update_hunger(mob/living/carbon/human/holder)
+/datum/quirk/negative/breast_enthusiast/proc/update_hunger(mob/living/carbon/human/holder)
 	var/elapsed = world.time - last_satisfied
 	var/stage = 0
 	if(elapsed >= ENTHUSIAST_HUNGER_START)
@@ -92,7 +92,7 @@
 	to_chat(holder, span_warning(pick(lines)))
 
 /// A breast interaction involving holder and breasts of the given visible size; own: holder's own breasts.
-/datum/quirk/vice/breast_enthusiast/proc/satisfy(mob/living/carbon/human/holder, size, own, mob/living/owner)
+/datum/quirk/negative/breast_enthusiast/proc/satisfy(mob/living/carbon/human/holder, size, own, mob/living/owner)
 	if(size < ENTHUSIAST_MIN_SIZE)
 		return
 	var/tier = min(size, 7) - 3 // 4 -> 1 ... 7 and 8 -> 4
@@ -133,7 +133,7 @@
 
 // My own.
 
-/datum/quirk/vice/breast_enthusiast/proc/admire_self(mob/living/carbon/human/holder)
+/datum/quirk/negative/breast_enthusiast/proc/admire_self(mob/living/carbon/human/holder)
 	var/obj/item/organ/genitals/filling_organ/breasts/breasts = holder.getorganslot(ORGAN_SLOT_BREASTS)
 	var/size = breasts ? breasts.get_visible_size() : 0
 	if(size < ENTHUSIAST_MIN_SIZE)
@@ -167,7 +167,7 @@
 	holder.add_stress(/datum/stress_event/enthusiast_admiring)
 
 /// Someone looked me over (examine) or another enthusiast noticed me: nice, when mine are big.
-/datum/quirk/vice/breast_enthusiast/proc/admired_by(mob/living/carbon/human/holder, mob/living/watcher)
+/datum/quirk/negative/breast_enthusiast/proc/admired_by(mob/living/carbon/human/holder, mob/living/watcher)
 	if(world.time < next_admired || get_breast_visible_size(holder) < ENTHUSIAST_MIN_SIZE)
 		return
 	next_admired = world.time + 5 MINUTES
@@ -189,7 +189,7 @@
 		return null
 	return length(target.get_breast_sized_garments()) ? "clothed" : "bare"
 
-/datum/quirk/vice/breast_enthusiast/proc/look_around(mob/living/carbon/human/holder)
+/datum/quirk/negative/breast_enthusiast/proc/look_around(mob/living/carbon/human/holder)
 	prune_cooldowns(looked_at)
 	prune_cooldowns(caught_by)
 	var/own_size = get_breast_visible_size(holder)
@@ -216,12 +216,12 @@
 	glance(holder, best, best_size, own_size, count)
 
 /// Drops the entries of a REF to world.time list whose time has passed.
-/datum/quirk/vice/breast_enthusiast/proc/prune_cooldowns(list/cooldowns)
+/datum/quirk/negative/breast_enthusiast/proc/prune_cooldowns(list/cooldowns)
 	for(var/key in cooldowns.Copy())
 		if(cooldowns[key] <= world.time)
 			cooldowns -= key
 
-/datum/quirk/vice/breast_enthusiast/proc/glance(mob/living/carbon/human/holder, mob/living/carbon/human/target, size, own_size, count)
+/datum/quirk/negative/breast_enthusiast/proc/glance(mob/living/carbon/human/holder, mob/living/carbon/human/target, size, own_size, count)
 	var/exposure = get_breast_exposure(target)
 	var/obj/item/organ/genitals/filling_organ/breasts/breasts = target.getorganslot(ORGAN_SLOT_BREASTS)
 	var/running = target.m_intent == MOVE_INTENT_RUN
@@ -263,7 +263,7 @@
 	if(own_size >= ENTHUSIAST_MIN_SIZE && size > own_size && prob(40))
 		to_chat(holder, span_warning(pick("[capitalize(their)] breasts are even bigger than mine...", "How are [their] breasts bigger than mine? Unfair.", "Fine. [target]'s [lewd_breast_word()] win. This time.")))
 		holder.add_stress(/datum/stress_event/enthusiast_envious)
-	var/datum/quirk/vice/breast_enthusiast/their_vice = target.get_quirk(/datum/quirk/vice/breast_enthusiast)
+	var/datum/quirk/negative/breast_enthusiast/their_vice = target.get_quirk(/datum/quirk/negative/breast_enthusiast)
 	their_vice?.admired_by(target, holder)
 	if(target.stat == CONSCIOUS && prob(ENTHUSIAST_CAUGHT_CHANCE) && caught_by[REF(target)] <= world.time)
 		caught_by[REF(target)] = world.time + ENTHUSIAST_CAUGHT_COOLDOWN
@@ -272,7 +272,7 @@
 		holder.add_stress(/datum/stress_event/enthusiast_caught)
 
 /// Gawking openly: people nearby notice, the holder blushes and freezes, and arousal quadruples.
-/datum/quirk/vice/breast_enthusiast/proc/critical_stare(mob/living/carbon/human/holder, mob/living/carbon/human/target, arousal)
+/datum/quirk/negative/breast_enthusiast/proc/critical_stare(mob/living/carbon/human/holder, mob/living/carbon/human/target, arousal)
 	var/message = pick(
 		"[holder] freezes mid-step, staring at [target]'s cleavage with [holder.p_their()] mouth hanging open.",
 		"[holder] completely forgets what [holder.p_they()] [holder.p_were()] doing and gawks at [target]'s breasts.",
@@ -293,13 +293,13 @@
 	holder.add_stress(/datum/stress_event/enthusiast_eyeful)
 	caught_by[REF(target)] = world.time + ENTHUSIAST_CAUGHT_COOLDOWN
 	holder.add_stress(/datum/stress_event/enthusiast_caught)
-	var/datum/quirk/vice/breast_enthusiast/their_vice = target.get_quirk(/datum/quirk/vice/breast_enthusiast)
+	var/datum/quirk/negative/breast_enthusiast/their_vice = target.get_quirk(/datum/quirk/negative/breast_enthusiast)
 	their_vice?.admired_by(target, holder)
 	if(target.stat == CONSCIOUS)
 		to_chat(target, span_notice("[holder] is staring at your breasts like [holder.p_theyve()] never seen one before."))
 
 /// A breast show (bounce, squeeze together, heft) in sight.
-/datum/quirk/vice/breast_enthusiast/proc/saw_show(mob/living/carbon/human/holder, mob/living/shower, show_kind)
+/datum/quirk/negative/breast_enthusiast/proc/saw_show(mob/living/carbon/human/holder, mob/living/shower, show_kind)
 	if(shower == holder || world.time < next_show_thought)
 		return
 	next_show_thought = world.time + 1 MINUTES
@@ -317,11 +317,11 @@
 // Hooks.
 
 /mob/living/carbon/human/saw_breast_show(mob/living/shower, show_kind)
-	var/datum/quirk/vice/breast_enthusiast/vice = get_quirk(/datum/quirk/vice/breast_enthusiast)
+	var/datum/quirk/negative/breast_enthusiast/vice = get_quirk(/datum/quirk/negative/breast_enthusiast)
 	vice?.saw_show(src, shower, show_kind)
 
 /mob/living/carbon/human/get_breast_show_arousal_multiplier()
-	return get_quirk(/datum/quirk/vice/breast_enthusiast) ? 1.5 : 1
+	return get_quirk(/datum/quirk/negative/breast_enthusiast) ? 1.5 : 1
 
 /// Whether watcher has its back turned to thing (thing is behind it, not beside or in front).
 /proc/is_back_turned_to(mob/living/watcher, atom/thing)
@@ -354,7 +354,7 @@
 /// Every cycle of a breast interaction (see play_perform_breast_anim()): the vice of everyone taking part is fed.
 /datum/sex_action/proc/notify_breast_interaction(list/breast_owners)
 	for(var/mob/living/carbon/human/participant in list(action_user, action_target))
-		var/datum/quirk/vice/breast_enthusiast/vice = participant.get_quirk(/datum/quirk/vice/breast_enthusiast)
+		var/datum/quirk/negative/breast_enthusiast/vice = participant.get_quirk(/datum/quirk/negative/breast_enthusiast)
 		if(!vice)
 			continue
 		for(var/mob/living/owner as anything in breast_owners)

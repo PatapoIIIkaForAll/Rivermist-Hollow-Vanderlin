@@ -1126,6 +1126,10 @@
 		return
 
 	var/log_text = "[key_name(src)] [message] [loc_name(src)]"
+	// Round Log: only lines whose actor is a player (NPC lines would flood it on a busy map).
+	var/mob/actor = src
+	if(ismob(actor) && actor.ckey)
+		round_log_add(round_log_category_of(message_type), log_text, actor.ckey, get_turf(src))
 	switch(message_type)
 		if(LOG_ATTACK)
 			log_attack(log_text)
@@ -1216,6 +1220,12 @@
 
 	var/message = "has [what_done] [starget][postfix][typing_info]"
 	user.log_message(message, LOG_ATTACK, color="red")
+
+	// Round Log: an NPC hurting a player is kept under the player (player attackers are kept by log_message()).
+	var/mob/hurt_player = target
+	var/mob/attacker = user
+	if(ismob(hurt_player) && hurt_player.ckey && !(ismob(attacker) && attacker.ckey))
+		round_log_add("attack", "[ssource] [message] [loc_name(user)]", hurt_player.ckey, get_turf(target))
 
 	if(user != target)
 		var/reverse_message = "has been [what_done] by [ssource][postfix][typing_info]"

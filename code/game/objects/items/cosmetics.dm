@@ -79,6 +79,11 @@ GLOBAL_LIST_INIT(lipstick_shades, list(
 	if(!open)
 		return ITEM_INTERACT_BLOCKING
 
+	//RMH EDITED START - away from the mouth, lipstick writes on the skin
+	if(user.zone_selected != BODY_ZONE_PRECISE_MOUTH)
+		return write_on_skin(interacting_with, user)
+	//RMH EDITED END
+
 	var/mob/living/carbon/human/H = interacting_with
 
 	if(!can_apply_to(H, user))

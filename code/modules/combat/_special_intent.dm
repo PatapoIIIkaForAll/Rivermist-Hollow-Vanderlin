@@ -285,6 +285,8 @@
 	damage_zone,
 	damage_class,
 )
+	if(user.spares_ally(victim))
+		return
 	var/message = "[victim] is struck by [name]!"
 	if(!ishuman(victim))
 		victim.attacked_by(weapon, user)

@@ -256,13 +256,15 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 			"value" = value,
 		))
 
+/// What a species gives a creator-made character's stats: extra stat points, if any.
 /datum/preferences/proc/character_setup_species_stat_modifiers(datum/species/species)
-	if(!species)
+	if(!species?.creator_stat_points)
 		return list()
-	var/sheet_type = species.statsheet_male
-	if(read_preference(/datum/preference/choiced/gender) == FEMALE && species.statsheet_female)
-		sheet_type = species.statsheet_female
-	return character_setup_stat_modifiers_for_sheet(sheet_type)
+	return list(list(
+		"name" = "Stat points",
+		"label" = "PTS",
+		"value" = species.creator_stat_points,
+	))
 
 /datum/preferences/proc/character_setup_age_sheet_type(age_name)
 	switch(age_name)
@@ -388,6 +390,7 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	var/had_mutant_colors = has_mutant_color_preferences()
 	write_preference(/datum/preference/choiced/selected_accent, ACCENT_NONE)
 	set_species_preference(new_species)
+	validate_stat_allocation() // RMH EDIT: the new species can give fewer stat points
 
 	to_chat(user, "<em>[pref_species.name]</em>")
 	if(pref_species.desc)
@@ -677,7 +680,7 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 			"name" = pref.name,
 			"description" = pref.description,
 		)
-		if(pref.locked_after_spawn && has_spawned)
+		if(pref.locked_after_spawn && is_erp_spawn_locked(user))
 			entry["lock_reason"] = pref.get_edit_lock_reason(user, src)
 		if(istype(pref, /datum/erp_preference/bitflag))
 			var/datum/erp_preference/bitflag/flag_pref = pref
@@ -935,6 +938,9 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	data["voice_type"] = voice_type || "Default"
 	data["voice_color"] = voice_color ? "#[voice_color]" : "#a0a0a0"
 	data["voice_pack"] = voice_pack || VOICE_PACK_DEFAULT
+	data["speech_bark"] = read_preference(/datum/preference/choiced/speech_bark)
+	data["speech_moans"] = !!read_preference(/datum/preference/toggle/speech_moans)
+	data["strength_voice_pitch"] = !!read_preference(/datum/preference/toggle/strength_voice_pitch)
 	data["moan_selection"] = moan_selection || MOANPACK_TYPE_DEF
 	data["selected_accent"] = selected_accent || "None"
 
@@ -954,26 +960,13 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	var/mob/dead/new_player/new_player
 	if(istype(user, /mob/dead/new_player))
 		new_player = user
-	if(new_player && SSticker)
-		if(SSticker.IsRoundInProgress())
-			data["round_start_state"] = "started"
-		else if(SSticker.current_state == GAME_STATE_SETTING_UP)
-			data["round_start_state"] = "setup"
-		else if(SSticker.current_state <= GAME_STATE_PREGAME)
-			var/time_remaining = SSticker.GetTimeLeft()
-			if(time_remaining > 0)
-				data["round_start_state"] = "countdown"
-				data["round_start_seconds"] = max(0, round(time_remaining / 10))
-			else if(time_remaining == -10)
-				data["round_start_state"] = "delayed"
-			else
-				data["round_start_state"] = "soon"
-			var/ready_count = 0
-			for(var/mob/dead/new_player/lobby_player as anything in GLOB.new_player_list)
-				if(lobby_player.ready == PLAYER_READY_TO_PLAY)
-					ready_count++
-			data["round_ready_players"] = ready_count
-			data["round_total_players"] = length(GLOB.new_player_list)
+	if(new_player && SSticker && SSticker.current_state <= GAME_STATE_PREGAME)
+		var/ready_count = 0
+		for(var/mob/dead/new_player/lobby_player as anything in GLOB.new_player_list)
+			if(lobby_player.ready == PLAYER_READY_TO_PLAY)
+				ready_count++
+		data["round_ready_players"] = ready_count
+		data["round_total_players"] = length(GLOB.new_player_list)
 	data["round_action_label"] = "Unavailable"
 	data["round_action_icon"] = "ban"
 	data["round_action_color"] = null
@@ -1017,6 +1010,7 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 		"windowflashing" = !!windowflashing,
 		"lobby_music" = !!(toggles & SOUND_LOBBY),
 		"hear_midis" = !!(toggles & SOUND_MIDI),
+		"hear_speech_barks" = !!read_preference(/datum/preference/toggle/hear_speech_barks),
 		"ambientocclusion" = !!ambientocclusion,
 		"auto_fit_viewport" = !!auto_fit_viewport,
 		"descriptor_color" = !!descriptor_color,

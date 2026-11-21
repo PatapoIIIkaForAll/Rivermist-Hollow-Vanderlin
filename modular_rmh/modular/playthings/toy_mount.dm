@@ -87,10 +87,24 @@
 /obj/item/dildo
 	/// World time the last ride on this toy ended.
 	var/last_ridden = 0
+	/// TRUE while the toy stands on a surface; it then shows its straight sprite.
+	var/standing_sprite = FALSE
 
 /obj/item/dildo/Initialize(mapload)
 	. = ..()
 	RegisterSignal(src, COMSIG_ITEM_INTERACTING_WITH_ATOM_SECONDARY, PROC_REF(on_secondary_interact))
+
+/obj/item/dildo/proc/get_toy_icon_state()
+	return "dildo_[dildo_type]_[dildo_size][standing_sprite ? "_stand" : ""]"
+
+/// Swaps between the leaning item sprite and the straight standing sprite.
+/obj/item/dildo/proc/set_standing_sprite(standing)
+	standing_sprite = standing
+	icon_state = get_toy_icon_state()
+
+// Plugs have one sprite for both.
+/obj/item/dildo/plug/set_standing_sprite(standing)
+	standing_sprite = standing
 
 /obj/item/dildo/proc/get_toy_mount()
 	RETURN_TYPE(/datum/component/toy_mount)
@@ -220,6 +234,8 @@
 	if(surface)
 		RegisterSignals(surface, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING), PROC_REF(on_surface_lost))
 		RegisterSignal(surface, COMSIG_MOVABLE_PREBUCKLE, PROC_REF(on_surface_prebuckle))
+	var/obj/item/dildo/toy = parent
+	toy.set_standing_sprite(TRUE)
 
 /datum/component/toy_mount/UnregisterFromParent()
 	UnregisterSignal(parent, list(COMSIG_MOVABLE_MOVED, COMSIG_ATOM_ATTACK_HAND, COMSIG_ATOM_ATTACK_HAND_SECONDARY, COMSIG_PARENT_EXAMINE))
@@ -232,6 +248,7 @@
 	toy.pixel_x = toy.base_pixel_x
 	toy.pixel_y = toy.base_pixel_y
 	toy.layer = initial(toy.layer)
+	toy.set_standing_sprite(FALSE)
 
 /datum/component/toy_mount/Destroy(force)
 	set_rider(null)

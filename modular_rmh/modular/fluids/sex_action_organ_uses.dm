@@ -111,9 +111,6 @@
 /datum/sex_action/npc/npc_handjob
 	uses_user_organs = list(ORGAN_SLOT_PENIS)
 
-/datum/sex_action/npc/npc_rimming
-	uses_target_organs = list(ORGAN_SLOT_ANUS)
-
 /datum/sex_action/npc/npc_throat_sex
 	uses_user_organs = list(ORGAN_SLOT_PENIS)
 

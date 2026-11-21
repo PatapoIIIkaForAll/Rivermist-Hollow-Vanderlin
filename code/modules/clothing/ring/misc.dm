@@ -199,17 +199,9 @@
 	return ..()
 
 /obj/item/clothing/ring/gold/quest_deadly_prize/proc/assign_random_bonus()
-	var/static/list/stat_names = list(
-		STATKEY_STR = "Strength",
-		STATKEY_PER = "Perception",
-		STATKEY_END = "Endurance",
-		STATKEY_CON = "Constitution",
-		STATKEY_INT = "Intelligence",
-		STATKEY_SPD = "Speed",
-		STATKEY_LCK = "Fortune",
-	)
 	boosted_stat = pick(MOBSTATS)
-	name = "Ring of [stat_names[boosted_stat]]"
+	var/datum/attribute/stat/stat = GET_ATTRIBUTE_DATUM(boosted_stat)
+	name = "Ring of [stat.name]"
 
 /obj/item/clothing/ring/gold/quest_deadly_prize/proc/apply_stat_bonus(mob/living/user)
 	remove_stat_bonus()
@@ -264,18 +256,9 @@
 	return ..()
 
 /obj/item/clothing/ring/gold/boss_prize/proc/assign_random_bonus()
-	var/static/list/stat_names = list(
-		STATKEY_STR = "Strength",
-		STATKEY_PER = "Perception",
-		STATKEY_END = "Endurance",
-		STATKEY_CON = "Constitution",
-		STATKEY_INT = "Intelligence",
-		STATKEY_SPD = "Speed",
-		STATKEY_LCK = "Fortune",
-	)
-
 	boosted_stat = pick(MOBSTATS)
-	name = "Ring of [stat_names[boosted_stat]]"
+	var/datum/attribute/stat/stat = GET_ATTRIBUTE_DATUM(boosted_stat)
+	name = "Ring of [stat.name]"
 
 /obj/item/clothing/ring/gold/boss_prize/proc/apply_stat_bonus(mob/living/user)
 	remove_stat_bonus()

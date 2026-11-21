@@ -37,11 +37,11 @@
 	clear_moods(wearer)
 	if(!wearer || !get_front_anatomy())
 		return
-	if(wearer.has_quirk(/datum/quirk/vice/addiction/godfearing) && patron_blesses_chastity(wearer.patron))
+	if(wearer.has_quirk(/datum/quirk/negative/addiction/godfearing) && patron_blesses_chastity(wearer.patron))
 		wearer.add_stress(/datum/stress_event/chastity_devout)
 	if(wearer.mind?.assigned_role?.department_flag & CHAPEL)
 		wearer.add_stress(/datum/stress_event/chastity_church)
-	if(wearer.has_quirk(/datum/quirk/vice/addiction/lovefiend) || is_pleasure_patron(wearer.patron))
+	if(wearer.has_quirk(/datum/quirk/negative/addiction/lovefiend) || is_pleasure_patron(wearer.patron))
 		wearer.add_stress(/datum/stress_event/chastity_frustration)
 	if(flat_cage && cages_cock())
 		var/obj/item/organ/genitals/penis/penis = wearer.getorganslot(ORGAN_SLOT_PENIS)

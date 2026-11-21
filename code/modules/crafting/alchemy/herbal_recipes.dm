@@ -151,7 +151,7 @@
 
 /datum/reagent/buff/herbal/artemisia_luck
 	name = "Artemisia Fortune Tea"
-	description = "A tea that slightly improves fortune and speed."
+	description = "A tea that slightly improves fortune and dexterity."
 	color = "#c0c0c0"
 	taste_description = "wormwood"
 	scent_description = "artemisia"

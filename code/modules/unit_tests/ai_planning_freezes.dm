@@ -74,14 +74,22 @@
 	hunger.current_hunger = 0
 	var/datum/ai_behavior/search = GET_AI_BEHAVIOR(/datum/ai_behavior/find_and_set/dead_bodies)
 
+	var/field_key = BB_FIND_TARGETS_FIELD(/datum/ai_behavior/find_and_set/dead_bodies)
+	// One behavior runs per tick, and the other finders are queued ahead of the body search.
 	ai_test_plan(controller)
-	ai_test_ticks(controller, 6)
-	TEST_ASSERT(ai_test_has_field(controller, BB_FIND_TARGETS_FIELD(/datum/ai_behavior/find_and_set/dead_bodies)), "Test setup: a hungry beespider should leave a body search field.")
+	for(var/i in 1 to 12)
+		ai_test_ticks(controller, 1)
+		if(ai_test_has_field(controller, field_key))
+			break
+	TEST_ASSERT(ai_test_has_field(controller, field_key), "Test setup: a hungry beespider should leave a body search field.")
 
 	victim.death()
 	controller.modify_cooldown(search, world.time)
 	ai_test_plan(controller)
-	ai_test_ticks(controller, 6)
+	for(var/i in 1 to 12)
+		ai_test_ticks(controller, 1)
+		if(controller.blackboard[BB_BASIC_MOB_FOOD_TARGET])
+			break
 	TEST_ASSERT_EQUAL(controller.blackboard[BB_BASIC_MOB_FOOD_TARGET], victim, "The slow re-scan should still find a body that died where it stood.")
 
 /datum/unit_test/ai_planning_freeze/waiting_finder_does_not_block_planning

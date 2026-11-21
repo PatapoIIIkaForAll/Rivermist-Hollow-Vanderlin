@@ -24,7 +24,7 @@
 	if(length(cast_on.quirks))
 
 		to_chat(owner, span_green("You discover [cast_on]'s flaws:"))
-		for(var/datum/quirk/vice/vice in cast_on.quirks)
+		for(var/datum/quirk/negative/vice in cast_on.quirks)
 			to_chat(owner, span_green("<b>[vice.name]</b>"))
 			SEND_SIGNAL(owner, COMSIG_FLAW_FOUND, vice, cast_on)
 		return

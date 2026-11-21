@@ -1,435 +1,384 @@
-import { useBackend, useLocalState } from '../backend';
-import {
-  Box,
-  Button,
-  Input,
-  NumberInput,
-  Stack,
-  Tooltip,
-} from 'tgui-core/components';
+/**
+ * Attribute Editor: the attributes and skills of one character.
+ *
+ * Each row reads left to right as a sum: Base + Admin bonus (+ other modifiers) = Total.
+ * Base is permanent. The admin bonus is a modifier of its own, so it never overwrites buffs.
+ */
+import { useState } from 'react';
+import { Button, Icon, Input, NumberInput, Tooltip } from 'tgui-core/components';
+
+import { useBackend } from '../backend';
 import { Window } from '../layouts';
-import { TutorialOverlay, TutorialStep, PP } from '../interfaces/_common/TutorialOverlay';
 
-type Attribute = {
+type Entry = {
   name: string;
+  desc?: string;
   type: string;
-  value: number;
-  raw_value: number;
+  /** Effective value, with every modifier applied. */
+  value: number | null;
+  /** Permanent base value; null means "use the default". */
+  raw_value: number | null;
+  /** The bonus set from this window. */
+  admin_bonus: number;
+  /** Skills only: combat, craft, labor, magic, misc. */
+  group?: string;
 };
 
-type Skill = {
-  name: string;
-  type: string;
-  value: number;
-  raw_value: number;
-};
+type SkillLevel = { name: string; value: number };
 
 type AttributeEditorData = {
   parent: string;
-  attribute_min: number;
-  attribute_max: number;
-  attribute_default: number;
-  skill_min: number;
-  skill_max: number;
-  skill_default: number;
+  attribute_min: number | null;
+  attribute_max: number | null;
+  attribute_default: number | null;
+  skill_min: number | null;
+  skill_max: number | null;
+  skill_default: number | null;
   cached_diceroll_modifier: number;
-  attributes: Attribute[];
-  skills: Skill[];
+  attributes: Entry[];
+  skills: Entry[];
+  skill_levels: SkillLevel[];
 };
 
-const EDITOR_TUTORIAL_STEPS: TutorialStep[] = [
-  {
-    title: 'Attribute Editor',
-    body: "This tool lets you directly edit a character's attributes and skills. Changes take effect immediately.",
-    popupAnchor: 'center',
-  },
-  {
-    title: 'Global Variables',
-    body: 'The top band sets system-wide limits, the min/max range attributes and skills can reach, their fallback defaults, and the diceroll modifier.',
-    highlight: { top: 4, left: 0, width: 100, height: 24 },
-    popupAnchor: 'bottom',
-  },
-  {
-    title: 'Attributes (left) & Skills (right)',
-    body: 'The bottom half is split into two scrollable columns. Each row has a BONUS field and a RAW field. RAW is the permanent base. BONUS is added on top, effective value = RAW + BONUS.',
-    highlight: { top: 28, left: 0, width: 100, height: 72 },
-    popupAnchor: 'center',
-  },
-  {
-    title: 'BONUS',
-    body: 'Type a positive or negative number. It is added directly to RAW. Setting BONUS to -22 subtracts 22 from the effective value. NULL removes the bonus entirely, this is its own modifier so it will not override buffs.',
-    popupAnchor: 'center',
-  },
-  {
-    title: 'RAW',
-    body: 'The permanent base value stored on the character. Edit this for lasting changes. NULL sets it to the system default.',
-    popupAnchor: 'center',
-  },
-  {
-    title: "That's it!",
-    body: 'Changes apply immediately. No undo.',
-    popupAnchor: 'center',
-  },
-];
+const GROUP_NAMES: Record<string, string> = {
+  combat: 'Combat',
+  craft: 'Crafting',
+  labor: 'Labor',
+  magic: 'Magic',
+  misc: 'Miscellaneous',
+  other: 'Other',
+};
+
+const GROUP_ORDER = ['combat', 'magic', 'craft', 'labor', 'misc', 'other'];
+
+const signed = (value: number) => (value > 0 ? `+${value}` : `${value}`);
+
+const levelOf = (levels: SkillLevel[], value: number): SkillLevel | undefined => {
+  let found: SkillLevel | undefined;
+  for (const level of levels) {
+    if (value >= level.value) {
+      found = level;
+    }
+  }
+  return found;
+};
 
 const EntryRow = (props: {
-  name: string;
-  type: string;
-  value: number;
-  raw_value: number;
-  min: number;
-  max: number;
-  act: any;
-  isOdd: boolean;
+  entry: Entry;
+  min: number | null;
+  max: number | null;
+  fallback: number | null;
+  levels?: SkillLevel[];
 }) => {
-  const { name, type, value, raw_value, min, max, act, isOdd } = props;
-  const bonus = value - raw_value;
-  const bonusColor = bonus > 0 ? PP.green : bonus < 0 ? PP.red : PP.text;
+  const { act } = useBackend<AttributeEditorData>();
+  const { entry, min, max, fallback, levels } = props;
+  const usesDefault = entry.raw_value === null || entry.raw_value === undefined;
+  const base = usesDefault ? (fallback ?? 0) : (entry.raw_value as number);
+  const total = entry.value ?? base;
+  const other = total - base - entry.admin_bonus;
+  const level = levels ? levelOf(levels, total) : undefined;
+  const setBase = (value: number) =>
+    act('change_raw_attribute', { attribute_type: entry.type, new_value: value });
+  // Skills move one whole level per chevron click.
+  const stepLevel = (direction: 1 | -1) => {
+    if (!levels) {
+      return;
+    }
+    const ordered = levels.map((entryLevel) => entryLevel.value);
+    const next =
+      direction === 1
+        ? ordered.find((value) => value > base)
+        : [...ordered].reverse().find((value) => value < base);
+    if (next !== undefined) {
+      setBase(next);
+    }
+  };
 
   return (
-    <tr style={{
-      background: isOdd ? 'rgba(255,255,255,0.025)' : 'transparent',
-    }}>
-      <td style={{
-        padding: '5px 8px',
-        color: PP.textTitle,
-        fontSize: '105%',
-        borderBottom: '1px solid rgba(90,76,76,0.2)',
-      }}>
-        {name}
-      </td>
-
-      <td style={{
-        padding: '3px 4px',
-        whiteSpace: 'nowrap',
-        verticalAlign: 'middle',
-        borderBottom: '1px solid rgba(90,76,76,0.2)',
-      }}>
-        <Box style={{ fontSize: '75%', color: PP.textMuted, textAlign: 'center',
-          letterSpacing: '0.05em', marginBottom: '1px' }}>BONUS</Box>
-        <NumberInput
-          value={bonus}
-          step={1}
-          onChange={(val: number) =>
-            act('change_attribute', { attribute_type: type, new_value: val })
-          }
-          style={{ color: bonusColor }}
-        />
-      </td>
-
-      <td style={{
-        padding: '3px 6px 3px 2px',
-        whiteSpace: 'nowrap',
-        verticalAlign: 'bottom',
-        borderBottom: '1px solid rgba(90,76,76,0.2)',
-      }}>
-        <Tooltip content="Remove admin bonus, effective value will equal RAW" position="top">
-          <Button color="transparent"
-            onClick={() => act('null_attribute', { attribute_type: type })}
-            style={{ border: `1px solid ${PP.border}`, color: PP.textMuted,
-              padding: '1px 5px', fontSize: '80%' }}>
-            NULL
-          </Button>
+    <tr className="AttrEdit__row">
+      <td className="AttrEdit__name">
+        <Tooltip content={entry.desc || entry.type} position="bottom-start">
+          <span>{entry.name}</span>
         </Tooltip>
       </td>
-
-      <td style={{
-        padding: '0 4px',
-        borderBottom: '1px solid rgba(90,76,76,0.2)',
-      }}>
-        <Box style={{ width: '1px', height: '28px', background: PP.border }} />
-      </td>
-
-      <td style={{
-        padding: '3px 4px',
-        whiteSpace: 'nowrap',
-        verticalAlign: 'middle',
-        borderBottom: '1px solid rgba(90,76,76,0.2)',
-      }}>
-        <Box style={{ fontSize: '75%', color: PP.textMuted, textAlign: 'center',
-          letterSpacing: '0.05em', marginBottom: '1px' }}>RAW</Box>
+      <td className="AttrEdit__cell">
+        {!!levels && (
+          <Button
+            icon="chevron-left"
+            tooltip="One skill level down"
+            onClick={() => stepLevel(-1)}
+          />
+        )}
         <NumberInput
-          value={raw_value ?? 0}
-          minValue={min ?? 0}
-          maxValue={max ?? 0}
+          width="52px"
+          value={base}
+          minValue={min ?? -1000}
+          maxValue={max ?? 1000}
           step={1}
-          onChange={(val: number) =>
-            act('change_raw_attribute', { attribute_type: type, new_value: val })
+          onChange={setBase}
+        />
+        {!!levels && (
+          <Button icon="chevron-right" tooltip="One skill level up" onClick={() => stepLevel(1)} />
+        )}
+        <Button
+          icon="undo"
+          disabled={usesDefault}
+          tooltip={
+            usesDefault
+              ? 'Already using the default'
+              : `Reset the base to the default (${fallback ?? 0})`
           }
+          onClick={() => act('null_raw_attribute', { attribute_type: entry.type })}
         />
       </td>
-
-      <td style={{
-        padding: '3px 8px 3px 2px',
-        whiteSpace: 'nowrap',
-        verticalAlign: 'bottom',
-        borderBottom: '1px solid rgba(90,76,76,0.2)',
-      }}>
-        <Tooltip content="Set RAW to NULL, system default applies" position="top">
-          <Button color="transparent"
-            onClick={() => act('null_raw_attribute', { attribute_type: type })}
-            style={{ border: `1px solid ${PP.border}`, color: PP.textMuted,
-              padding: '1px 5px', fontSize: '80%' }}>
-            NULL
-          </Button>
-        </Tooltip>
+      <td className="AttrEdit__cell">
+        <NumberInput
+          width="48px"
+          value={entry.admin_bonus}
+          minValue={-1000}
+          maxValue={1000}
+          step={1}
+          format={signed}
+          onChange={(value) =>
+            act('change_attribute', { attribute_type: entry.type, new_value: value })
+          }
+        />
+        <Button
+          icon="times"
+          disabled={!entry.admin_bonus}
+          tooltip="Remove the admin bonus"
+          onClick={() => act('null_attribute', { attribute_type: entry.type })}
+        />
+      </td>
+      <td className="AttrEdit__other">
+        {other !== 0 && (
+          <Tooltip content="Buffs, debuffs and other modifiers that are not set from this window">
+            <span className={other > 0 ? 'AttrEdit__good' : 'AttrEdit__bad'}>{signed(other)}</span>
+          </Tooltip>
+        )}
+      </td>
+      <td className="AttrEdit__total">
+        <span className={total > base ? 'AttrEdit__good' : total < base ? 'AttrEdit__bad' : ''}>
+          {total}
+        </span>
+        {!!level && <span className="AttrEdit__level">{level.name}</span>}
       </td>
     </tr>
   );
 };
 
 const EntryTable = (props: {
-  entries: (Attribute | Skill)[];
-  min: number;
-  max: number;
-  act: any;
-  emptyText: string;
-}) => {
-  const { entries, min, max, act, emptyText } = props;
-  return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'auto' }}>
-      <thead>
-        <tr style={{ borderBottom: `1px dotted ${PP.dot}` }}>
-          <th style={{ padding: '2px 8px', fontSize: '72%', color: PP.textMuted,
-            letterSpacing: '0.07em', fontWeight: 'normal', textAlign: 'left' }}>
-            NAME
-          </th>
-          <th colSpan={2} style={{ padding: '2px 4px', fontSize: '72%', color: PP.textMuted,
-            letterSpacing: '0.07em', fontWeight: 'normal', textAlign: 'center', whiteSpace: 'nowrap' }}>
-            BONUS · NULL
-          </th>
-          <th style={{ padding: 0 }} />
-          <th colSpan={2} style={{ padding: '2px 4px', fontSize: '72%', color: PP.textMuted,
-            letterSpacing: '0.07em', fontWeight: 'normal', textAlign: 'center', whiteSpace: 'nowrap' }}>
-            RAW · NULL
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {entries.length === 0 ? (
-          <tr>
-            <td colSpan={6} style={{ padding: '12px 8px', color: PP.textMuted, fontStyle: 'italic' }}>
-              {emptyText}
-            </td>
-          </tr>
-        ) : entries.map((e, i) => (
-          <EntryRow key={e.type} name={e.name} type={e.type}
-            value={e.value} raw_value={e.raw_value}
-            min={min} max={max}
-            act={act} isOdd={i % 2 === 1} />
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const GlobalsTable = (props: {
-  rows: [string, string, number, boolean][];  // [label, varName, value, nullable]
-  act: any;
+  entries: Entry[];
+  min: number | null;
+  max: number | null;
+  fallback: number | null;
+  levels?: SkillLevel[];
 }) => (
-  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+  <table className="AttrEdit__table">
     <tbody>
-      {props.rows.map(([label, varName, value, nullable], i) => (
-        <tr key={varName} style={{
-          background: i % 2 === 1 ? 'rgba(255,255,255,0.02)' : 'transparent',
-          borderBottom: '1px solid rgba(90,76,76,0.2)',
-        }}>
-          <td style={{ padding: '5px 10px', color: PP.text }}>{label}</td>
-          <td style={{ padding: '3px 4px', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>
-            <NumberInput value={value ?? 0} step={1}
-              onChange={(val: number) =>
-                varName === 'diceroll'
-                  ? props.act('change_diceroll_modifier', { new_value: val })
-                  : props.act('change_var', { var_name: varName, var_value: val })
-              }
-            />
-          </td>
-          {nullable && (
-            <td style={{ padding: '3px 8px 3px 4px', whiteSpace: 'nowrap', verticalAlign: 'bottom' }}>
-              <Tooltip content="Set to NULL (unset)" position="top">
-                <Button color="transparent"
-                  onClick={() => props.act('null_var', { var_name: varName })}
-                  style={{ border: `1px solid ${PP.border}`, color: PP.textMuted,
-                    padding: '1px 6px', fontSize: '80%' }}>
-                  NULL
-                </Button>
-              </Tooltip>
-            </td>
-          )}
-          {!nullable && <td />}
-        </tr>
+      {props.entries.map((entry) => (
+        <EntryRow
+          key={entry.type}
+          entry={entry}
+          min={props.min}
+          max={props.max}
+          fallback={props.fallback}
+          levels={props.levels}
+        />
       ))}
     </tbody>
   </table>
 );
 
-const SectionBar = (props: { title: string; count?: number; right?: React.ReactNode }) => (
-  <Box style={{
-    background: PP.headerBg,
-    borderBottom: `2px solid ${PP.border}`,
-    padding: '4px 8px',
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-  }}>
-    <Box style={{ flexGrow: 1, fontSize: '115%', fontWeight: 'bold',
-      color: PP.textTitle, letterSpacing: '0.04em' }}>
-      {props.title}
-      {props.count !== undefined && (
-        <Box as="span" style={{ fontSize: '76%', color: PP.textMuted,
-          marginLeft: '6px', fontWeight: 'normal' }}>
-          ({props.count})
-        </Box>
-      )}
-    </Box>
-    {props.right}
-  </Box>
+const ColumnHead = () => (
+  <table className="AttrEdit__table AttrEdit__table--head">
+    <tbody>
+      <tr>
+        <td className="AttrEdit__name">Name</td>
+        <td className="AttrEdit__cell">Base</td>
+        <td className="AttrEdit__cell">Admin bonus</td>
+        <td className="AttrEdit__other">Other</td>
+        <td className="AttrEdit__total">Total</td>
+      </tr>
+    </tbody>
+  </table>
 );
 
-export const AttributeEditor = (props: object, context: object) => {
-  const { act, data } = useBackend<AttributeEditorData>(context);
-  const {
-    parent,
-    attribute_min = 0, attribute_max = 0, attribute_default = 0,
-    skill_min = 0, skill_max = 0, skill_default = 0,
-    cached_diceroll_modifier = 0,
-    attributes = [], skills = [],
-  } = data;
-
-  const [showTutorial, setShowTutorial] = useLocalState('show_editor_tutorial', false);
-  const [skillSearch, setSkillSearch] = useLocalState('editor_skill_search', '');
-
-  const filteredSkills = skills.filter(
-    (s) => !skillSearch.trim() || s.name.toLowerCase().includes(skillSearch.toLowerCase())
+const LimitField = (props: {
+  label: string;
+  varName: string;
+  value: number | null;
+}) => {
+  const { act } = useBackend<AttributeEditorData>();
+  const { label, varName, value } = props;
+  const unset = value === null || value === undefined;
+  return (
+    <div className="AttrEdit__limit">
+      <span>{label}</span>
+      <NumberInput
+        width="56px"
+        value={value ?? 0}
+        minValue={-1000}
+        maxValue={1000}
+        step={1}
+        onChange={(newValue) => act('change_var', { var_name: varName, var_value: newValue })}
+      />
+      <Button
+        icon="ban"
+        selected={unset}
+        tooltip={unset ? 'Unset (null): no limit applies' : 'Unset this limit (null)'}
+        onClick={() => act('null_var', { var_name: varName })}
+      />
+    </div>
   );
+};
 
-  const CONTENT_H = 668;
+export const AttributeEditor = () => {
+  const { act, data } = useBackend<AttributeEditorData>();
+  const { parent, attributes = [], skills = [], skill_levels = [] } = data;
+  const [search, setSearch] = useState('');
+  const [onlyTrained, setOnlyTrained] = useState(false);
+  const [showLimits, setShowLimits] = useState(false);
+
+  const query = search.trim().toLowerCase();
+  const matches = (entry: Entry) => !query || entry.name.toLowerCase().includes(query);
+  const shownAttributes = attributes.filter(matches);
+  const shownSkills = skills.filter(
+    (skill) =>
+      matches(skill) && (!onlyTrained || (skill.value ?? 0) > 0 || skill.admin_bonus !== 0),
+  );
+  const bonusCount =
+    attributes.filter((entry) => entry.admin_bonus).length +
+    skills.filter((entry) => entry.admin_bonus).length;
+
+  const groups = GROUP_ORDER.map((id): [string, Entry[]] => [
+    id,
+    shownSkills.filter((skill) => (skill.group || 'other') === id),
+  ]).filter(([, list]) => list.length > 0);
 
   return (
     <Window
       title={parent ? `${parent} - Attribute Editor` : 'Attribute Editor'}
-      width={900}
-      height={700}>
+      width={960}
+      height={720}
+    >
       <Window.Content>
-        <Box style={{
-          position: 'relative',
-          width: '100%',
-          height: `${CONTENT_H}px`,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}>
-
-          {showTutorial && (
-            <TutorialOverlay
-              steps={EDITOR_TUTORIAL_STEPS}
-              stateKey="attribute_editor_tutorial"
-              onClose={() => setShowTutorial(false)}
+        <div className="AttrEdit">
+          <div className="AttrEdit__top">
+            <div className="AttrEdit__who">{parent || 'Character'}</div>
+            <Input
+              className="AttrEdit__search"
+              fluid
+              autoFocus
+              placeholder="Search attributes and skills..."
+              value={search}
+              onChange={setSearch}
             />
+            <Button.Checkbox
+              checked={onlyTrained}
+              tooltip="Hide skills that are at zero"
+              onClick={() => setOnlyTrained(!onlyTrained)}
+            >
+              Trained only
+            </Button.Checkbox>
+            <Button
+              icon="eraser"
+              disabled={!bonusCount}
+              tooltip="Remove every admin bonus set from this window. Base values stay."
+              onClick={() => act('reset_bonuses')}
+            >
+              Clear bonuses ({bonusCount})
+            </Button>
+            <Button
+              icon="sliders-h"
+              selected={showLimits}
+              tooltip="Minimum, maximum and default values, and the dice roll modifier"
+              tooltipPosition="bottom-end"
+              onClick={() => setShowLimits(!showLimits)}
+            >
+              Limits
+            </Button>
+          </div>
+
+          {showLimits && (
+            <div className="AttrEdit__limits">
+              <LimitField label="Attribute min" varName="attribute_min" value={data.attribute_min} />
+              <LimitField label="Attribute max" varName="attribute_max" value={data.attribute_max} />
+              <LimitField
+                label="Attribute default"
+                varName="attribute_default"
+                value={data.attribute_default}
+              />
+              <LimitField label="Skill min" varName="skill_min" value={data.skill_min} />
+              <LimitField label="Skill max" varName="skill_max" value={data.skill_max} />
+              <LimitField label="Skill default" varName="skill_default" value={data.skill_default} />
+              <div className="AttrEdit__limit">
+                <span>Dice roll modifier</span>
+                <NumberInput
+                  width="56px"
+                  value={data.cached_diceroll_modifier ?? 0}
+                  minValue={-1000}
+                  maxValue={1000}
+                  step={1}
+                  onChange={(value) => act('change_diceroll_modifier', { new_value: value })}
+                />
+              </div>
+            </div>
           )}
 
-          <Box style={{
-            background: PP.headerBg,
-            borderBottom: `2px dotted ${PP.dot}`,
-            padding: '6px 10px',
-            display: 'flex',
-            alignItems: 'center',
-            flexShrink: 0,
-          }}>
-            <Box style={{ flexGrow: 1, fontSize: '130%', fontWeight: 'bold', color: PP.textTitle }}>
-              {parent || 'Character'}
-            </Box>
-            <Tooltip content="Show tutorial" position="bottom">
-              <Box
-                onClick={() => setShowTutorial(true)}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  width: '22px', height: '22px', borderRadius: '50%',
-                  border: `1px solid ${PP.border}`, color: PP.textMuted,
-                  fontSize: '120%', fontWeight: 'bold', cursor: 'pointer',
-                  userSelect: 'none', lineHeight: 1, background: 'rgba(90,76,76,0.2)',
-                }}>
-                ?
-              </Box>
-            </Tooltip>
-          </Box>
+          <div className="AttrEdit__legend">
+            <Icon name="info-circle" /> Total = Base + Admin bonus + Other. Base is permanent; the
+            admin bonus is a separate modifier and never overwrites buffs. Changes apply at once.
+          </div>
 
-          <Box style={{
-            borderBottom: `2px solid ${PP.border}`,
-            flexShrink: 0,
-          }}>
-            <SectionBar title="Global Variables" />
-            <Box style={{ display: 'flex' }}>
-              <Box style={{ width: '50%', borderRight: `1px solid ${PP.border}` }}>
-                <GlobalsTable act={act} rows={[
-                  ['Attribute Max',     'attribute_max',     attribute_max,     true],
-                  ['Attribute Min',     'attribute_min',     attribute_min,     true],
-                  ['Attribute Default', 'attribute_default', attribute_default, true],
-                ]} />
-              </Box>
-              <Box style={{ width: '50%' }}>
-                <GlobalsTable act={act} rows={[
-                  ['Skill Max',         'skill_max',         skill_max,         true],
-                  ['Skill Min',         'skill_min',         skill_min,         true],
-                  ['Skill Default',     'skill_default',     skill_default,     true],
-                  ['Diceroll Modifier', 'diceroll',          cached_diceroll_modifier, false],
-                ]} />
-              </Box>
-            </Box>
-          </Box>
-
-          <Box style={{
-            display: 'flex',
-            flexGrow: 1,
-            overflow: 'hidden',
-          }}>
-
-            <Box style={{
-              width: '50%',
-              borderRight: `2px solid ${PP.border}`,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-            }}>
-              <SectionBar title="Attributes" count={attributes.length} />
-              <Box style={{ overflowY: 'auto', flexGrow: 1 }}>
+          <div className="AttrEdit__main">
+            <div className="AttrEdit__panel AttrEdit__panel--attributes">
+              <div className="AttrEdit__head">
+                Attributes <span className="AttrEdit__count">{shownAttributes.length}</span>
+              </div>
+              <ColumnHead />
+              <div className="AttrEdit__scroll">
                 <EntryTable
-                  entries={attributes}
-                  min={attribute_min} max={attribute_max}
-                  act={act} emptyText="No attributes." />
-              </Box>
-            </Box>
+                  entries={shownAttributes}
+                  min={data.attribute_min}
+                  max={data.attribute_max}
+                  fallback={data.attribute_default}
+                />
+                {shownAttributes.length === 0 && (
+                  <div className="AttrEdit__empty">No attribute matches.</div>
+                )}
+              </div>
+            </div>
 
-            <Box style={{
-              width: '50%',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-            }}>
-              <SectionBar
-                title="Skills"
-                count={filteredSkills.length}
-                right={
-                  <Input
-                    placeholder="Search..."
-                    value={skillSearch}
-                    onInput={(e) => setSkillSearch(e.target.value)}
-                    style={{ width: '120px', fontSize: '90%' }}
-                  />
-                }
-              />
-              <Box style={{ overflowY: 'auto', flexGrow: 1 }}>
-                <EntryTable
-                  entries={filteredSkills}
-                  min={skill_min} max={skill_max}
-                  act={act}
-                  emptyText={skillSearch ? 'No matching skills.' : 'No skills.'} />
-              </Box>
-            </Box>
-
-          </Box>
-
-        </Box>
+            <div className="AttrEdit__panel">
+              <div className="AttrEdit__head">
+                Skills <span className="AttrEdit__count">{shownSkills.length}</span>
+              </div>
+              <ColumnHead />
+              <div className="AttrEdit__scroll">
+                {groups.map(([id, list]) => (
+                  <div key={id}>
+                    <div className="AttrEdit__group">
+                      {GROUP_NAMES[id] || id} <span className="AttrEdit__count">{list.length}</span>
+                    </div>
+                    <EntryTable
+                      entries={list}
+                      min={data.skill_min}
+                      max={data.skill_max}
+                      fallback={data.skill_default}
+                      levels={skill_levels}
+                    />
+                  </div>
+                ))}
+                {shownSkills.length === 0 && (
+                  <div className="AttrEdit__empty">
+                    {onlyTrained && !query ? 'No trained skills.' : 'No skill matches.'}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </Window.Content>
     </Window>
   );

@@ -3,6 +3,7 @@
 	ambushable = FALSE
 	dodgetime = 30
 	flee_in_pain = TRUE
+	horny_trap_type = /obj/item/rope/net
 	a_intent = INTENT_HELP
 	m_intent = MOVE_INTENT_SNEAK
 	d_intent = INTENT_DODGE

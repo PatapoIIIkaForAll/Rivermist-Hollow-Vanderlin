@@ -17,6 +17,9 @@
 	cooldown_time = 60 SECONDS
 	spell_cost = 65
 
+/datum/action/cooldown/spell/eoran_bloom/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/eoran_bloom/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/carbon/human/to_pacify
@@ -33,6 +36,9 @@
 			new /obj/item/clothing/head/peaceflower(cast_on)
 		else
 			to_chat(owner, span_warning("The targeted location is blocked. The flowers of Sharess refuse to bloom."))
+		return
+
+	if(owner?.spares_ally(to_pacify))
 		return
 
 	if(to_pacify.get_item_by_slot(ITEM_SLOT_HEAD))

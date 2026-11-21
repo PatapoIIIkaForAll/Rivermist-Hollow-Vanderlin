@@ -38,15 +38,9 @@
 	if(target && LAZYACCESS(controller.planned_behaviors, horny_behavior))
 		return SUBTREE_RETURN_FINISH_PLANNING // Once horny actually has the wheel, don't queue later combat finders behind it.
 
+/// One hunt behaviour for every family; the family profile carries the differences.
 /datum/ai_planning_subtree/horny/proc/get_horny_behavior_type(datum/ai_controller/controller)
-	if(ishuman(controller.pawn))
-		return /datum/ai_behavior/horny/human
-	if(controller.pawn?.ai_controller?.horny_pref_family_flag == HORNY_MOB_TYPE_SPIDERS)
-		return /datum/ai_behavior/horny/simple_mob/spider
-	if(controller.pawn?.ai_controller?.horny_pref_family_flag == HORNY_MOB_TYPE_TENTACLES)
-		return /datum/ai_behavior/horny/simple_mob/tentacle
-
-	return /datum/ai_behavior/horny/simple_mob
+	return /datum/ai_behavior/horny
 
 /// TRUE while a horny scene with this attacker runs; the horny behavior counts their hits itself.
 /proc/horny_ai_counts_partner_hits(datum/ai_controller/controller, atom/attacker)

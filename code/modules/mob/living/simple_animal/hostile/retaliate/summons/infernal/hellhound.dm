@@ -8,6 +8,7 @@
 	summon_primer = "You are a hellhound, a moderate sized canine made of heat and flame. You spend time in the infernal plane hunting and incinerating things to your hearts content. Now you've been pulled from your home into a new world, that is decidedly lacking in fire. How you react to these events, only time can tell."
 	tier = 2
 	gender = MALE
+	penis_organ = /obj/item/organ/genitals/penis/knotted/big
 	emote_hear = null
 	emote_see = null
 	speak_chance = 1

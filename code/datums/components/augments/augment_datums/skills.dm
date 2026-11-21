@@ -40,156 +40,200 @@
 	return info
 
 /datum/augment/skill/combat_matrix
-	name = "combat analysis matrix"
-	desc = "Advanced combat prediction algorithms enhance melee capabilities."
+	name = "brawler's knuckle-works"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at wrestling and unarmed fighting."
 	skill_changes = list(/datum/attribute/skill/combat/wrestling = 1, /datum/attribute/skill/combat/unarmed = 1)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/blade_processor
-	name = "blade trajectory processor"
-	desc = "Calculates optimal cutting angles and improves sword technique."
+	name = "swordsman's wrist-gimbal"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better with swords."
 	skill_changes = list(/datum/attribute/skill/combat/swords = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 18 SECONDS
 
 /datum/augment/skill/whip_servo
-	name = "whip articulation servo"
-	desc = "Precise joint control improves whip and flail technique."
+	name = "whipcord reel"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better with whips and flails."
 	skill_changes = list(/datum/attribute/skill/combat/whipsflails = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 18 SECONDS
 
 /datum/augment/skill/polearm_stabilizer
-	name = "polearm stability enhancer"
-	desc = "Balance optimization for polearm combat."
+	name = "pikeman's brace"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better with polearms."
 	skill_changes = list(/datum/attribute/skill/combat/polearms = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 18 SECONDS
 
 /datum/augment/skill/shield_actuator
-	name = "shield response actuator"
-	desc = "Rapid reaction systems for improved shield defense."
+	name = "buckler spring"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better with shields."
 	skill_changes = list(/datum/attribute/skill/combat/shields = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/crossbow_targeting
-	name = "crossbow targeting system"
-	desc = "Integrated rangefinding and trajectory calculation."
+	name = "arbalest sight"
+	socket_kinds = list(PROSTHETIC_KIND_EYE)
+	point_value = -1
+	desc = "Better with crossbows."
 	skill_changes = list(/datum/attribute/skill/combat/crossbows = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 20 SECONDS
 
 /datum/augment/skill/bow_stabilizer
-	name = "bow draw stabilizer"
-	desc = "Stabilizes draw and release for improved archery."
+	name = "archer's draw-lens"
+	socket_kinds = list(PROSTHETIC_KIND_EYE)
+	point_value = -1
+	desc = "Better with bows."
 	skill_changes = list(/datum/attribute/skill/combat/bows = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 20 SECONDS
 
 /datum/augment/skill/smithing_optimizer
-	name = "smithing precision optimizer"
-	desc = "Enhances hammer control and metal working precision."
+	name = "smith's hammer cam"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at blacksmithing and smelting."
 	skill_changes = list(/datum/attribute/skill/craft/blacksmithing = 1, /datum/attribute/skill/craft/smelting = 1)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/weaponcraft_matrix
-	name = "weapon fabrication matrix"
-	desc = "Advanced weapon construction knowledge database."
+	name = "bladewright's jig"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at weaponsmithing."
 	skill_changes = list(/datum/attribute/skill/craft/weaponsmithing = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 18 SECONDS
 
 /datum/augment/skill/armorcraft_matrix
-	name = "armor fabrication matrix"
-	desc = "Armor construction optimization routines."
+	name = "armourer's riveter"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at armorsmithing."
 	skill_changes = list(/datum/attribute/skill/craft/armorsmithing = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 18 SECONDS
 
 /datum/augment/skill/carpentry_guide
-	name = "carpentry guidance system"
-	desc = "Woodworking pattern recognition and optimization."
+	name = "joiner's plumb"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at carpentry."
 	skill_changes = list(/datum/attribute/skill/craft/carpentry = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/masonry_analyzer
-	name = "masonry structural analyzer"
-	desc = "Stone cutting and placement optimization."
+	name = "mason's level"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at masonry."
 	skill_changes = list(/datum/attribute/skill/craft/masonry = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/engineering_core
-	name = "advanced engineering core"
-	desc = "Complex mechanical systems comprehension module."
+	name = "artificer's calipers"
+	socket_kinds = list(PROSTHETIC_KIND_EYE)
+	point_value = -1
+	desc = "Better at engineering."
 	skill_changes = list(/datum/attribute/skill/craft/engineering = 2)
 	engineering_difficulty = SKILL_RANK_MASTER
 	installation_time = 25 SECONDS
 
 /datum/augment/skill/alchemy_database
-	name = "alchemical database"
-	desc = "Stored formulas and reagent interaction data."
+	name = "alchemist's taste-reed"
+	socket_kinds = list(PROSTHETIC_KIND_TONGUE)
+	point_value = -1
+	desc = "Better at alchemy."
 	skill_changes = list(/datum/attribute/skill/craft/alchemy = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 20 SECONDS
 
 // Skill augments - Labor skills
 /datum/augment/skill/mining_efficiency
-	name = "mining efficiency module"
-	desc = "Ore vein detection and optimal extraction patterns."
+	name = "miner's pick-driver"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at mining."
 	skill_changes = list(/datum/attribute/skill/labor/mining = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/farming_analyzer
-	name = "agricultural analysis system"
-	desc = "Soil composition and crop health monitoring."
+	name = "furrow gauge"
+	socket_kinds = list(PROSTHETIC_KIND_EYE)
+	point_value = -1
+	desc = "Better at farming."
 	skill_changes = list(/datum/attribute/skill/labor/farming = 2)
 	engineering_difficulty = SKILL_RANK_APPRENTICE
 	installation_time = 12 SECONDS
 
 /datum/augment/skill/butchering_guide
-	name = "butchering precision guide"
-	desc = "Anatomical mapping for optimal material extraction."
+	name = "butcher's cleaver cam"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at butchering."
 	skill_changes = list(/datum/attribute/skill/labor/butchering = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/lumberjack_optimizer
-	name = "lumber harvesting optimizer"
-	desc = "Tree structural analysis and efficient cutting patterns."
+	name = "woodsman's axe-swing"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at lumberjacking."
 	skill_changes = list(/datum/attribute/skill/labor/lumberjacking = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/medicine_database
-	name = "medical knowledge database"
-	desc = "Extensive anatomical and medical procedure library."
+	name = "chirurgeon's lens"
+	socket_kinds = list(PROSTHETIC_KIND_EYE)
+	point_value = -1
+	desc = "Better at medicine."
 	skill_changes = list(/datum/attribute/skill/misc/medicine = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 20 SECONDS
 
 /datum/augment/skill/lockpick_analyzer
-	name = "lock mechanism analyzer"
-	desc = "Advanced tumbler pattern recognition."
+	name = "locksmith's feeler"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -1
+	desc = "Better at lockpicking."
 	skill_changes = list(/datum/attribute/skill/misc/lockpicking = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 15 SECONDS
 
 /datum/augment/skill/climbing_optimizer
-	name = "climbing optimization module"
-	desc = "Grip strength distribution and path finding."
+	name = "climber's grip-spikes"
+	socket_kinds = list(PROSTHETIC_KIND_LEG)
+	point_value = -1
+	desc = "Better at climbing."
 	skill_changes = list(/datum/attribute/skill/misc/climbing = 2)
 	engineering_difficulty = SKILL_RANK_APPRENTICE
 	installation_time = 12 SECONDS
 
 /datum/augment/skill/stealth_dampener
-	name = "acoustic dampening system"
-	desc = "Noise reduction and movement pattern optimization."
+	name = "muffled joints"
+	socket_kinds = list(PROSTHETIC_KIND_LEG)
+	point_value = -1
+	desc = "Better at sneaking."
 	skill_changes = list(/datum/attribute/skill/misc/sneaking = 2)
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 18 SECONDS

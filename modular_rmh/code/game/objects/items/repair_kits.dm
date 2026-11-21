@@ -19,42 +19,36 @@
 	var/repair_percent = 5
 
 
-/obj/item/repair_kit/attack_atom(atom/attacked_atom, mob/living/user)
-	if(!isobj(attacked_atom))
-		return ..()
-	if(!isliving(user) || !user.mind || user.cmode)
-		return ..()
-	var/obj/O = attacked_atom
-	//var/datum/mind/blacksmith_mind = user.mind
+// Runs before storage insertion, so clothing with pockets gets repaired instead of filled.
+/obj/item/repair_kit/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	// Worn, held or stored clothing falls through, so the kit can still go into bags.
+	if(!isclothing(interacting_with) || !isturf(interacting_with.loc))
+		return NONE
+	if(!user.mind || user.cmode)
+		return NONE
+	var/obj/item/clothing/attacked_item = interacting_with
 
-	if(locate(/obj/machinery/anvil) in O.loc)
-		repair_percent *= 2
-	if(!isclothing(O))
-		if(isitem(O))
-			to_chat(user, span_warning("[src] only for clothing or armor!"))
-		return
-	. = TRUE
-	var/obj/item/attacked_item = O
-	if(for_armor == TRUE && attacked_item.sewrepair)
+	if(for_armor && attacked_item.sewrepair)
 		to_chat(user, span_warning("[src] only for armor!"))
-		return
-	if(for_clothing == TRUE && attacked_item.anvilrepair)
+		return ITEM_INTERACT_BLOCKING
+	if(for_clothing && attacked_item.anvilrepair)
 		to_chat(user, span_warning("[src] only for clothing!"))
-		return
-	if(!attacked_item.max_integrity || (attacked_item.get_integrity() >= attacked_item.max_integrity) || !isturf(attacked_item.loc))
+		return ITEM_INTERACT_BLOCKING
+	if(!attacked_item.max_integrity || (attacked_item.get_integrity() >= attacked_item.max_integrity))
 		to_chat(user, span_warning("[attacked_item] cannot be repaired any further."))
-		return
-	//playsound(src,'sound/items/bsmithfail.ogg', 40, FALSE) другой саунд
-	attacked_item.repair_damage( attacked_item.max_integrity * repair_percent)
-	if(attacked_item.obj_broken == 1)
-		attacked_item.obj_broken = 0
+		return ITEM_INTERACT_BLOCKING
+
+	var/percent = repair_percent
+	if(locate(/obj/machinery/anvil) in attacked_item.loc)
+		percent *= 2
+	attacked_item.repair_damage(attacked_item.max_integrity * percent)
+	attacked_item.obj_broken = FALSE
 	user.visible_message(span_info("[user] repairs most important parts [attacked_item]!"))
 	amount_repair -= 1
 	if(amount_repair <= 0)
 		to_chat(user, span_warning("There was nothing left of the repair kit"))
 		qdel(src)
-		return TRUE
-	return TRUE
+	return ITEM_INTERACT_SUCCESS
 
 /obj/item/repair_kit/poor_armorkit
 	name = "Poor armor repair kit"

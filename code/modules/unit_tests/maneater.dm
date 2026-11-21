@@ -109,28 +109,76 @@
 		var/obj/structure/flora/grass/maneater/maneater = allocate(maneater_type)
 		TEST_ASSERT_EQUAL(maneater.icon_state, "maneater-hidden", "[maneater_type] spawned with a random grass icon state.")
 
-/// Each strip tick peels the outermost garment off the victim being swallowed, then stops once they are bare.
+/// The vines take gear first, then clothes by slot, tear stockings in place, keep jewellery, and swallow only once done.
 /datum/unit_test/maneater_strips_swallowed_victim
+	needs_pocket_space = TRUE
 
 /datum/unit_test/maneater_strips_swallowed_victim/Run()
 	var/obj/structure/flora/grass/maneater/real/maneater = allocate(/obj/structure/flora/grass/maneater/real)
 	var/mob/living/carbon/human/victim = allocate(/mob/living/carbon/human)
+	for(var/obj/item/default_wear in list(victim.underwear, victim.bra, victim.undershirt, victim.legwear_socks))
+		qdel(default_wear)
 	var/obj/item/clothing/cloak/raincloak/cloak = allocate(/obj/item/clothing/cloak/raincloak)
 	var/obj/item/clothing/pants/trou/trousers = allocate(/obj/item/clothing/pants/trou)
-	TEST_ASSERT(victim.equip_to_slot_if_possible(cloak, ITEM_SLOT_CLOAK, disable_warning = TRUE, bypass_equip_delay_self = TRUE), "Setup failed: the cloak must go on.")
-	TEST_ASSERT(victim.equip_to_slot_if_possible(trousers, ITEM_SLOT_PANTS, disable_warning = TRUE, bypass_equip_delay_self = TRUE), "Setup failed: the trousers must go on.")
+	var/obj/item/storage/belt/leather/belt = allocate(/obj/item/storage/belt/leather)
+	var/obj/item/clothing/wrists/bracers/bracers = allocate(/obj/item/clothing/wrists/bracers)
+	var/obj/item/clothing/legwears/white/stockings = allocate(/obj/item/clothing/legwears/white)
+	var/obj/item/clothing/face/spectacles/spectacles = allocate(/obj/item/clothing/face/spectacles)
+	var/obj/item/clothing/ring/silver/ring = allocate(/obj/item/clothing/ring/silver)
+	var/obj/item/clothing/neck/goldamulet/amulet = allocate(/obj/item/clothing/neck/goldamulet)
+	var/obj/item/clothing/garter/garter = allocate(/obj/item/clothing/garter)
+	var/list/outfit = list()
+	outfit[stockings] = ITEM_SLOT_SOCKS
+	outfit[trousers] = ITEM_SLOT_PANTS
+	outfit[belt] = ITEM_SLOT_BELT
+	outfit[cloak] = ITEM_SLOT_CLOAK
+	outfit[bracers] = ITEM_SLOT_WRISTS
+	outfit[spectacles] = ITEM_SLOT_MASK
+	outfit[ring] = ITEM_SLOT_RING
+	outfit[amulet] = ITEM_SLOT_NECK
+	outfit[garter] = ITEM_SLOT_GARTER
+	for(var/obj/item/piece as anything in outfit)
+		TEST_ASSERT(victim.equip_to_slot_if_possible(piece, outfit[piece], disable_warning = TRUE, bypass_equip_delay_self = TRUE), "Setup failed: [piece.type] must go on.")
 	TEST_ASSERT(maneater.buckle_mob(victim, TRUE, check_loc = FALSE), "Setup failed: the victim must be buckled.")
 	maneater.horny_victim_ref = WEAKREF(victim)
+	var/bracers_integrity = bracers.get_integrity()
 
-	TEST_ASSERT_EQUAL(maneater.strip_next_garment(), cloak, "The vines should peel the cloak off first.")
-	TEST_ASSERT(cloak.loc != victim, "The stripped cloak is still worn.")
-	TEST_ASSERT(maneater.strip_timer, "Stripping stopped while clothes remained.")
-	maneater.stop_stripping()
-	TEST_ASSERT_EQUAL(maneater.strip_next_garment(), trousers, "The vines should peel the trousers off next.")
-	maneater.stop_stripping()
-	TEST_ASSERT(!maneater.strip_next_garment(), "The vines found a garment on a bare victim.")
+	var/list/expected = list(belt, cloak, bracers, trousers, stockings)
+	for(var/obj/item/piece as anything in expected)
+		TEST_ASSERT_EQUAL(maneater.strip_next_garment(), piece, "The vines took the wrong piece.")
+		TEST_ASSERT(maneater.strip_timer, "Stripping stopped while clothes remained.")
+		maneater.stop_stripping()
+	TEST_ASSERT(!maneater.strip_next_garment(), "The vines found something to take on a stripped victim.")
 	TEST_ASSERT_NULL(maneater.strip_timer, "Stripping kept ticking with nothing left to strip.")
-	maneater.unbuckle_mob(victim, TRUE)
+	TEST_ASSERT_EQUAL(victim.buckled, maneater, "The plant swallowed before swallow_time was up.")
+
+	for(var/obj/item/piece as anything in list(belt, cloak, bracers, trousers))
+		TEST_ASSERT(piece.loc != victim, "[piece.type] is still worn after the strip.")
+	for(var/obj/item/piece as anything in list(spectacles, ring, amulet, garter, stockings))
+		TEST_ASSERT_EQUAL(piece.loc, victim, "[piece.type] should stay on the victim.")
+	TEST_ASSERT(stockings.obj_broken, "The stockings were not torn.")
+	TEST_ASSERT(cloak.get_integrity() < cloak.max_integrity, "The cloth cloak came off untorn.")
+	TEST_ASSERT(!cloak.obj_broken, "The tear broke the cloak.")
+	TEST_ASSERT_EQUAL(bracers.get_integrity(), bracers_integrity, "Metal bracers should come off undamaged.")
+
+	// A late garment holds the swallow until it is off.
+	var/obj/item/clothing/cloak/raincloak/late_cloak = allocate(/obj/item/clothing/cloak/raincloak)
+	TEST_ASSERT(victim.equip_to_slot_if_possible(late_cloak, ITEM_SLOT_CLOAK, disable_warning = TRUE, bypass_equip_delay_self = TRUE), "Setup failed: the second cloak must go on.")
+	maneater.strip_interval = 1
+	maneater.swallow_time_up()
+	TEST_ASSERT(late_cloak.loc != victim, "The due swallow did not strip the last garment first.")
+	TEST_ASSERT_EQUAL(victim.buckled, maneater, "The plant swallowed a victim who still had clothes on.")
+	for(var/i in 1 to 50)
+		if(victim.buckled != maneater)
+			break
+		sleep(1)
+	var/datum/component/kidnap_captivity/captivity = victim.GetComponent(/datum/component/kidnap_captivity)
+	var/datum/pocket_dimension/defeat_captivity/maneater/stomach = captivity?.resolve_instance()
+	if(stomach)
+		victim.remove_status_effect(/datum/status_effect/defeat_knockout)
+		captivity.release_to_context()
+		SSpocket_dimensions.delete_instance(stomach)
+	TEST_ASSERT_NOTNULL(stomach, "The plant did not swallow once the strip was done and the time was up.")
 
 /// A swallow fills the stomach: the plant shows its full sprite, and the greater vines root in a grassless stomach.
 /datum/unit_test/maneater_full_while_occupied

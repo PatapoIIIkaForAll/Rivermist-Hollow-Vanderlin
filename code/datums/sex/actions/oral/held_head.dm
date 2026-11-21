@@ -59,7 +59,7 @@
 		return FALSE
 	if(check_sex_lock(giver, BODY_ZONE_PRECISE_MOUTH))
 		return FALSE
-	if(!giver.mouth_is_free())
+	if(!giver.mouth_is_free(action_user || user))
 		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_GROIN, TRUE))
 		return FALSE

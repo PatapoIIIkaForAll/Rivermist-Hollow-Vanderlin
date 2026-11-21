@@ -1468,6 +1468,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			continue
 		if(!istext(verb_to_init.category))
 			continue
+		if(admin_menu_hides_verb(verb_to_init)) // reached through the Admin Menu instead
+			continue
 		panel_tabs |= verb_to_init.category
 		verblist[++verblist.len] = list(verb_to_init.category, verb_to_init.name)
 	stat_panel.send_message("init_verbs", list(panel_tabs = panel_tabs, verblist = verblist))

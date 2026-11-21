@@ -1,0 +1,33 @@
+#define MUSK_LEVEL_MAX 4
+#define MUSK_LEVEL_COST_MIN_PERCENT 45
+#define MUSK_LEVEL_COST_MAX_PERCENT 55
+#define MUSK_LEVEL_FADE_TIME (15 MINUTES)
+#define MUSK_AURA_INTERVAL (3 SECONDS)
+#define MUSK_SCENT_RANGE_BY_LEVEL list(1, 2, 3, 3)
+#define MUSK_INTELLIGENCE_PENALTY_BY_LEVEL list(1, 1, 2, 2)
+#define MUSK_AROUSAL_FLOOR_BY_LEVEL list(5, 10, 15, 25)
+#define MUSK_HAZE_DURATION (2 MINUTES)
+#define MUSK_HAZE_CLIMAX_GRACE (15 MINUTES)
+
+#define MUSK_ZONE_ARMPITS "armpits"
+#define MUSK_ZONE_GROIN "groin"
+#define MUSK_ZONE_BUTT "butt"
+
+#define MUSK_SWEAT_MAX_STACKS 4
+#define MUSK_SWEAT_BARE_GAIN 1
+#define MUSK_SWEAT_HAIRY_GAIN 2
+
+#define MUSK_QUALITY_BARE 1
+#define MUSK_QUALITY_HAIRY 2
+#define MUSK_QUALITY_VERY_HAIRY 3
+
+#define MUSK_TIER_MAX 3
+
+#define MUSK_LICK_AROUSAL_PER_STACK 20
+#define MUSK_PRESS_TIME (5 SECONDS)
+#define MUSK_PRESS_OXYLOSS 2
+#define MUSK_PRESS_BURST_COOLDOWN (5 MINUTES)
+/// Most climaxes one press can chain; more would stack orgasm strain into lasting debuffs.
+#define MUSK_PRESS_MAX_CLIMAXES 2
+#define MUSK_PRESS_BURST_TIMER "musk_press_burst"
+#define MUSK_CLIMAX_CHAIN_DELAY (2.5 SECONDS)

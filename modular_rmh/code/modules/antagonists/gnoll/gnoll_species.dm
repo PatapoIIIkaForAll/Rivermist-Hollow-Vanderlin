@@ -36,6 +36,7 @@
 	no_equip = list(ITEM_SLOT_SHIRT, ITEM_SLOT_HEAD, ITEM_SLOT_MASK, ITEM_SLOT_ARMOR, ITEM_SLOT_GLOVES, ITEM_SLOT_SHOES, ITEM_SLOT_PANTS, ITEM_SLOT_CLOAK)
 	statsheet_male = /datum/attribute_holder/sheet/job/species/gnoll_champion
 	statsheet_female = /datum/attribute_holder/sheet/job/species/gnoll_champion
+	forced_attribute_sheets = TRUE
 	offset_features_m = list(OFFSET_HANDS = list(0, 2))
 	offset_features_f = list(OFFSET_HANDS = list(0, 2))
 	soundpack_m = /datum/voicepack/gnoll_champion

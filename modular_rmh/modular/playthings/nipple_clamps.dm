@@ -18,7 +18,7 @@
 	return "[icon_state]-[clamp(breasts?.organ_size || 1, 1, 5)]"
 
 /datum/sprite_accessory/nipple_clamps/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_SUIT, OFFSET_SUIT)
+	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_BREASTS)
 
 /datum/sprite_accessory/nipple_clamps/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/obj/item/organ/genitals/filling_organ/breasts/breasts = owner.getorganslot(ORGAN_SLOT_BREASTS)
@@ -59,14 +59,14 @@
 	if(wearer.nipple_clamps)
 		to_chat(user, span_warning("[wearer == user ? "My" : "[wearer]'s"] nipples are already clamped."))
 		return
-	var/obj/item/clothing/cover = wearer.get_sex_covering_garment(BODY_ZONE_CHEST)
+	var/obj/item/clothing/cover = wearer.get_sex_covering_garment(BODY_ZONE_CHEST, user)
 	if(cover)
 		to_chat(user, span_warning("[cover] is in the way."))
 		return
 	user.visible_message(span_warning("[user] opens [src] over [wearer == user ? user.p_their() : "[wearer]'s"] nipples..."))
 	if(!do_after(user, wearer == user ? 3 SECONDS : 5 SECONDS, target = wearer))
 		return
-	if(wearer.nipple_clamps || wearer.get_sex_covering_garment(BODY_ZONE_CHEST))
+	if(wearer.nipple_clamps || wearer.get_sex_covering_garment(BODY_ZONE_CHEST, user))
 		return
 	if(!user.temporarilyRemoveItemFromInventory(src))
 		return

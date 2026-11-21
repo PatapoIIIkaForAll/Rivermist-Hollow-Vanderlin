@@ -838,9 +838,7 @@
 	else
 		action.remote_context?.clear_action_overlay(action)
 
-	var/suppress_visible_messages = action.begin_remote_visible_message_suppression()
-	action.on_finish(action_user, action_target)
-	action.end_remote_visible_message_suppression(suppress_visible_messages)
+	action.run_act_hook(TYPE_PROC_REF(/datum/sex_action, on_finish), action_user, action_target)
 	action.unbind_runtime()
 	qdel(action)
 

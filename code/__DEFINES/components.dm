@@ -363,6 +363,12 @@
 #define COMSIG_DOOR_OPENED "door_open"
 
 #define COMSIG_HORNY_TARGET_SET "comsig_horny_target_set"
+/// Sent on a hunter when its horny hunt changes phase: (old_phase, new_phase, mob/living/target)
+#define COMSIG_HORNY_HUNT_PHASE_CHANGED "comsig_horny_hunt_phase_changed"
+/// Sent on the hunted target when the hunter's phase changes; null ends the hunt: (mob/living/hunter, new_phase)
+#define COMSIG_LIVING_HUNTED "comsig_living_hunted"
+/// Sent on a hunter after horny_react() applied a reaction: (reaction, atom/source, strength)
+#define COMSIG_HORNY_REACTION "comsig_horny_reaction"
 /// send this signal to add /datum/component/vis_radius to a list of mobs or one mob: (mob/mob_or_mobs)
 #define COMSIG_SHOW_RADIUS "show_radius"
 /// send this signal to remove /datum/component/vis_radius to a mobs: ()

@@ -820,6 +820,31 @@ h2.alert {
 
 
 // Chat animations must end: an infinite one repaints every frame while its message stays in chat.
+// The pink flash for the best beats of a scene; four pulses, then it rests.
+.love_flash {
+  color: #f07ad8;
+  text-shadow: 0 0 6px #e85bc8;
+  font-size: 105%;
+  animation: love_flash 750ms 4;
+}
+
+@keyframes love_flash {
+  0% {
+    color: #f07ad8;
+    text-shadow: 0 0 4px #e85bc8;
+  }
+
+  50% {
+    color: #ff3fd0;
+    text-shadow: 0 0 10px #ff6ad9;
+  }
+
+  100% {
+    color: #f07ad8;
+    text-shadow: 0 0 4px #e85bc8;
+  }
+}
+
 .animatedpain {
   color: #BA55D3;
   text-shadow: 0 0 6px #c75be2;

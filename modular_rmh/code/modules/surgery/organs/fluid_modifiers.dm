@@ -20,6 +20,8 @@
 	var/conception_multiplier = 1
 	/// Multiplies the virility of seed this organ gives.
 	var/virility_multiplier = 1
+	/// Lets a vagina's own wetness fill all free room instead of stopping at its small lube reserve.
+	var/lifts_wetness_cap = FALSE
 
 /datum/fluid_modifier/proc/affects(obj/item/organ/genitals/filling_organ/organ)
 	return !affected_slots || (organ.slot in affected_slots)
@@ -36,6 +38,7 @@
 /datum/fluid_modifier/fluid_surge
 	rate_multiplier = 2
 	climax_multiplier = 1.5
+	lifts_wetness_cap = TRUE
 
 /datum/fluid_modifier/fluid_ebb
 	rate_multiplier = 0.5

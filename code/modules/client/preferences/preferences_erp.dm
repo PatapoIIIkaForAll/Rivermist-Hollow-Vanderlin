@@ -5,8 +5,15 @@
 		return TRUE
 	return istype(current_area, /area/indoors/town/church/chapel)
 
-/datum/preferences/proc/get_erp_preference_edit_lock_reason(mob/user)
+/// Whether the spawned character still holds this player; back in the lobby the next character is a new one.
+/datum/preferences/proc/is_erp_spawn_locked(mob/user)
 	if(!has_spawned)
+		return FALSE
+	var/mob/viewer = user || parent?.mob
+	return !isnewplayer(viewer)
+
+/datum/preferences/proc/get_erp_preference_edit_lock_reason(mob/user)
+	if(!is_erp_spawn_locked(user))
 		return null
 
 	if(is_erp_preference_chapel_area(get_area(user)))
@@ -17,9 +24,9 @@
 		if(living_user.erp_preference_edit_grace_expires_at && world.time <= living_user.erp_preference_edit_grace_expires_at)
 			return null
 
-		return "Your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning have passed, and you are not in a chapel. ERP preferences can only be changed in the lobby before you spawn, during your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning, or while standing in a chapel."
+		return "Your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning have passed, and you are not in a chapel. ERP preferences can only be changed in the lobby, during your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning, or while standing in a chapel."
 
-	return "You have already spawned, so ERP preferences are no longer editable from the lobby. They can still be changed during your first [ERP_PREFERENCE_EDIT_GRACE_MINUTES] minutes after spawning or while standing in a chapel."
+	return "Your character is still in the round, so ERP preferences cannot change while you are a ghost. Return to the lobby to change them for your next character."
 
 /datum/preferences/proc/mark_erp_preferences_dirty()
 	erp_preferences_revision++

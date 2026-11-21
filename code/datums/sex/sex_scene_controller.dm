@@ -274,6 +274,8 @@
 		return
 	var/datum/sex_action_proposal/proposal = create_action_proposal(action_type, source)
 	var/datum/sex_action/action = proposal?.accept()
+	if(!action && proposal?.action?.armor_refusal)
+		to_chat(user, span_warning(proposal.action.armor_refusal))
 	qdel(proposal)
 	return action
 

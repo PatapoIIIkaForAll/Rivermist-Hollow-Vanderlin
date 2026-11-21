@@ -56,7 +56,8 @@
 		perform_sex_action(user, target, 2.4, 9, 2.4)
 	handle_passive_ejaculation()
 
-	perform_sex_action(target, user, 2, 4, 2)
+	// The cock under the rider feels no pain, as in "Fuck ass".
+	perform_sex_action(target, user, 2, 0, 2)
 
 
 /datum/sex_action/sex/other/anal/handle_climax_message(mob/living/user, mob/living/target, must_flip)

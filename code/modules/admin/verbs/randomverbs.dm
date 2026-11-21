@@ -1,6 +1,7 @@
 /client/proc/cmd_admin_drop_everything(mob/M in GLOB.mob_list)
 	set category = null
 	set name = "Drop Everything"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	if(!check_rights(R_ADMIN))
 		return
 
@@ -22,6 +23,7 @@
 /client/proc/cmd_admin_subtle_message(mob/target in GLOB.mob_list)
 	set category = "GameMaster.Gods"
 	set name = "Subtle Message"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!ismob(target))
 		return FALSE
@@ -185,6 +187,7 @@
 /client/proc/send_to_cryo(mob/M in GLOB.mob_list)
 	set category = "Admin.Admin"
 	set name = "Send To Cryo"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -206,6 +209,7 @@
 /client/proc/cmd_admin_direct_narrate(mob/M)
 	set category = "GameMaster.Narrate"
 	set name = "Direct Narrate"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -231,6 +235,7 @@
 /client/proc/cmd_admin_local_narrate(atom/A)
 	set category = "GameMaster.Narrate"
 	set name = "Local Narrate"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -252,6 +257,7 @@
 /client/proc/cmd_admin_godmode(mob/M in GLOB.mob_list)
 	set category = "GameMaster.Fun"
 	set name = "Godmode"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	if(!check_rights(R_ADMIN))
 		return
 
@@ -428,6 +434,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 /client/proc/cmd_admin_rejuvenate(mob/living/M in GLOB.mob_list)
 	set category = "GameMaster.Gods"
 	set name = "Rejuvenate"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -448,6 +455,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 /client/proc/cmd_admin_delete(atom/A as obj|mob|turf in world)
 	set category = "Admin.Admin"
 	set name = "Delete"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_SPAWN|R_DEBUG))
 		return
@@ -466,6 +474,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 /client/proc/cmd_admin_explosion(atom/O as obj|mob|turf in world)
 	set category = "GameMaster.Fun"
 	set name = "Explosion"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -505,6 +514,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 /client/proc/cmd_admin_gib(mob/M in GLOB.mob_list)
 	set category = "GameMaster.Fun"
 	set name = "Gib"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -551,6 +561,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 /client/proc/cmd_admin_check_contents(mob/living/M in GLOB.mob_list)
 	set category = "GameMaster.Equipping"
 	set name = "Check Contents"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 
 	var/list/L = M.get_contents()
 	for(var/t in L)
@@ -700,6 +711,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 /client/proc/smite(mob/living/target as mob)
 	set name = "Smite"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set category = "GameMaster.Gods"
 	if(!check_rights(R_ADMIN) || !check_rights(R_FUN))
 		return
@@ -834,6 +846,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 /client/proc/heart_attack(mob/living/carbon/target as mob)
 	set name = "Heart Attack"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set category = "GameMaster.Gods"
 	if(!check_rights(R_ADMIN) || !check_rights(R_FUN))
 		return
@@ -979,6 +992,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 /client/proc/send_bird_letter(mob/M in GLOB.player_list)
 	set name = "Send Messenger Bird Letter"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set category = "GameMaster.Interactions"
 
 	if(!ismob(M))

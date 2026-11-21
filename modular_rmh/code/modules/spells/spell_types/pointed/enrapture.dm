@@ -39,5 +39,5 @@
 	cast_on.add_stress(/datum/stress_event/enrapture)
 	cast_on.emote(pick("twitch","drool","moan"))
 	SEND_SIGNAL(cast_on, COMSIG_SEX_ADJUST_AROUSAL, 50)
-	if(cast_on.has_quirk(/datum/quirk/vice/addiction/lovefiend))
-		cast_on.sate_addiction(/datum/quirk/vice/addiction/lovefiend)
+	if(cast_on.has_quirk(/datum/quirk/negative/addiction/lovefiend))
+		cast_on.sate_addiction(/datum/quirk/negative/addiction/lovefiend)

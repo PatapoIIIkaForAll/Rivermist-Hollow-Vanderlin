@@ -43,7 +43,7 @@
 	TEST_ASSERT_NULL(controller.blackboard[BB_HIGHEST_THREAT_MOB], "A threat that walked out of range should leave the aggro board.")
 	var/datum/ai_planning_subtree/planner = GLOB.ai_subtrees[/datum/ai_planning_subtree/horny]
 	TEST_ASSERT(!planner.horny_ai_should_yield_to_aggro(controller), "Horny planning must not yield to a threat that walked away.")
-	var/datum/ai_behavior/horny/scene = GET_AI_BEHAVIOR(/datum/ai_behavior/horny/human)
+	var/datum/ai_behavior/horny/scene = GET_AI_BEHAVIOR(/datum/ai_behavior/horny)
 	TEST_ASSERT(!scene.is_valid_aggro_interrupt_target(skeleton, controller.blackboard[BB_TARGETTING_DATUM], bystander), "A running scene must not stop for a threat that walked away.")
 
 	// Someone shooting at the NPC still counts, however far away they stand.
@@ -115,7 +115,7 @@
 	SEND_SIGNAL(goblin, COMSIG_ATOM_WAS_ATTACKED, partner, 5)
 	TEST_ASSERT_EQUAL(controller.blackboard[BB_HORNY_AGGRO_TARGET], partner, "Outside a scene, a hit from a wanted partner should still turn the NPC hostile.")
 
-/// Human health ignores brute, so a hurt NPC still needed four partner hits instead of two.
+/// Light blows from a partner never make the hunter lethal; a hurt hunter turns once the damage adds up.
 /datum/unit_test/ai_horny_interruption/hurt_npc_tires_of_rough_partner
 
 /datum/unit_test/ai_horny_interruption/hurt_npc_tires_of_rough_partner/Run()
@@ -125,18 +125,17 @@
 	var/datum/ai_controller/controller = goblin.ai_controller
 	controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET, partner)
 	controller.set_blackboard_key(BB_HORNY_TIME_START, world.time)
-	var/datum/ai_behavior/horny/scene = GET_AI_BEHAVIOR(/datum/ai_behavior/horny/human)
+	var/datum/ai_behavior/horny/scene = GET_AI_BEHAVIOR(/datum/ai_behavior/horny)
+	var/light_hit = goblin.maxHealth * HORNY_LETHAL_HURT_DAMAGE_SHARE * 0.5
 
 	for(var/i in 1 to 2)
-		scene.on_attacked(goblin, partner, 5)
-	TEST_ASSERT_NULL(controller.blackboard[BB_HORNY_AGGRO_TARGET], "Test setup: an unhurt NPC should shrug off two partner hits.")
+		scene.on_attacked(goblin, partner, light_hit)
+	TEST_ASSERT_NULL(controller.blackboard[BB_HORNY_AGGRO_TARGET], "An unhurt NPC should shrug off light partner hits.")
+	TEST_ASSERT(controller.blackboard[BB_HORNY_TEMPER] > 0, "Partner hits should still raise the hunter's temper.")
 
-	controller.set_blackboard_key(BB_HORNY_TARGET_ATTACK_COUNT, 0)
-	goblin.traumatic_shock = SHOCK_STAGE_2 // the pain a few hard hits would leave
-	scene.on_attacked(goblin, partner, 5)
-	TEST_ASSERT_NULL(controller.blackboard[BB_HORNY_AGGRO_TARGET], "One partner hit should not turn even a hurt NPC hostile.")
-	scene.on_attacked(goblin, partner, 5)
-	TEST_ASSERT_EQUAL(controller.blackboard[BB_HORNY_AGGRO_TARGET], partner, "A hurt NPC should turn on a rough partner after two hits.")
+	goblin.traumatic_shock = SHOCK_STAGE_4 // badly hurt: the lethal budget shrinks
+	scene.on_attacked(goblin, partner, light_hit)
+	TEST_ASSERT_EQUAL(controller.blackboard[BB_HORNY_AGGRO_TARGET], partner, "A hurt NPC should turn on a partner who keeps hurting it.")
 
 /// Prep steps ran back to back once planning stopped stalling; each now waits a moment after the last.
 /datum/unit_test/ai_horny_interruption/prep_steps_pause_between
@@ -152,14 +151,19 @@
 	var/datum/ai_controller/controller = skeleton.ai_controller
 	controller.set_blackboard_key(BB_TARGETTING_DATUM, allocate(/datum/targetting_datum/basic/unit_test_allow_clientless_horny))
 	controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET, partner)
-	controller.queue_behavior(/datum/ai_behavior/horny/human, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM)
-	var/datum/ai_behavior/horny/horny = GET_AI_BEHAVIOR(/datum/ai_behavior/horny/human)
+	controller.queue_behavior(/datum/ai_behavior/horny, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM)
+	var/datum/ai_behavior/horny/horny = GET_AI_BEHAVIOR(/datum/ai_behavior/horny)
 	TEST_ASSERT(LAZYACCESS(controller.current_behaviors, horny), "Test setup: the horny behavior should start.")
 	partner.SetKnockdown(10 SECONDS) // already down, so the first step strips the warrior's own armour
 	TEST_ASSERT_EQUAL(partner.body_position, LYING_DOWN, "Test setup: the partner should be on the ground.")
 
-	horny.perform(0.1, controller, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM)
-	TEST_ASSERT(!skeleton.wear_armor || !skeleton.wear_pants, "Test setup: the first step should strip part of the warrior's armour.")
+	// The catch takes a few beats (grab, second grip, pin); the first prep step then strips the warrior's own armour.
+	for(var/beat in 1 to 12)
+		skeleton.next_move = 0
+		horny.perform(0.1, controller, BB_BASIC_MOB_CURRENT_HORNY_TARGET, BB_TARGETTING_DATUM)
+		if(!skeleton.wear_armor || !skeleton.wear_pants)
+			break
+	TEST_ASSERT(!skeleton.wear_armor || !skeleton.wear_pants, "Test setup: the first prep step should strip part of the warrior's armour.")
 	TEST_ASSERT(controller.behavior_cooldowns[horny] - world.time >= 1 SECONDS, "The next prep step should wait at least a second after the last one ends.")
 	// Teardown deletes the partner, and a floored, grabbed mob runtimes in its async get_up().
 	skeleton.stop_pulling()

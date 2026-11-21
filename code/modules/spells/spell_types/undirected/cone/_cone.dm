@@ -33,7 +33,7 @@
 		for(var/atom/movable/movable_content as anything in target_turf)
 			if(isobj(movable_content))
 				do_obj_cone_effect(movable_content, caster, level)
-			else if(isliving(movable_content))
+			else if(isliving(movable_content) && !owner?.spares_ally(movable_content))
 				do_mob_cone_effect(movable_content, caster, level)
 
 ///This proc deterimines how the spell will affect turfs.

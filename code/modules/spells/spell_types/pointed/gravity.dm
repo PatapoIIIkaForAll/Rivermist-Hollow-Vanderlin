@@ -18,6 +18,9 @@
 	cooldown_time = 25 SECONDS
 	spell_cost = 35
 
+/datum/action/cooldown/spell/gravity/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/gravity/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

@@ -739,6 +739,8 @@ GLOBAL_LIST_INIT(sex_custom_action_templates, build_sex_custom_action_templates(
 			return "rough"
 		if(SEX_FORCE_EXTREME)
 			return "brutal"
+		if(SEX_FORCE_UNRELENTING)
+			return "unrelenting"
 	return "steady"
 
 /datum/sex_action/custom/proc/get_custom_speed_word()
@@ -751,6 +753,8 @@ GLOBAL_LIST_INIT(sex_custom_action_templates, build_sex_custom_action_templates(
 			return "quick"
 		if(SEX_SPEED_EXTREME)
 			return "relentless"
+		if(SEX_SPEED_UNRELENTING)
+			return "furious"
 	return "steady"
 
 /datum/sex_action/custom/proc/build_default_custom_climax_message(mob/living/user, mob/living/target, location)

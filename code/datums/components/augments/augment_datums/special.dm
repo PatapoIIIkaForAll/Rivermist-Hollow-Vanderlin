@@ -20,19 +20,25 @@
 	return info
 
 /datum/augment/special/dualwield
-	name = "C.C.M.S implant"
-	desc = "Short for Complementary Combat Maneuvering System. Processes spinal nerve signals to enact forced complementary maneuvers, allowing dual wielding of weapons."
+	name = "twin-blade harness"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -3
+	desc = "In combat mode, the off-hand weapon also strikes after each main-hand attack."
 	stability_cost = -20
 	engineering_difficulty = SKILL_RANK_EXPERT
 	installation_time = 25 SECONDS
 
+/datum/augment/special/dualwield
+	/// TRUE while the off-hand blow lands, so it does not start another.
+	var/complementing = FALSE
+
 /datum/augment/special/dualwield/on_install(mob/living/carbon/human/H)
 	RegisterSignal(H, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_item_attack))
-	to_chat(H, span_notice("Your motor systems synchronize with the C.C.M.S implant."))
+	to_chat(H, span_notice("The twin-blade harness is ready."))
 
 /datum/augment/special/dualwield/on_remove(mob/living/carbon/human/H)
 	UnregisterSignal(H, COMSIG_MOB_ITEM_ATTACK)
-	to_chat(H, span_notice("The C.C.M.S implant's connection to your motor systems fades."))
+	to_chat(H, span_notice("The twin-blade harness stops working."))
 
 /datum/augment/special/dualwield/proc/on_item_attack(datum/source, mob/target, mob/user, list/modifiers, obj/item/weapon)
 	SIGNAL_HANDLER
@@ -51,6 +57,8 @@
 	if(!offhand)
 		return
 
+	if(complementing)
+		return
 	var/attack_time = (user.next_move - world.time) * 0.5
 	addtimer(CALLBACK(src, PROC_REF(complement_attack), H, offhand, target), attack_time, TIMER_UNIQUE)
 
@@ -65,16 +73,19 @@
 		return
 
 	if(H.CanReach(target, item))
-		UnregisterSignal(H, COMSIG_MOB_ITEM_ATTACK)
+		// The off-hand blow sends the same signal; the flag keeps it from chaining.
+		complementing = TRUE
 		item.attack(target, H)
-		RegisterSignal(H, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_item_attack))
+		complementing = FALSE
 
 /datum/augment/special/dualwield/proc/handle_side_effects(mob/living/carbon/human/H, obj/item/item, mob/target)
 	return FALSE
 
 /datum/augment/special/dualwield/refurbished
-	name = "refurbished C.C.M.S implant"
-	desc = "A refurbished dual wielding implant. The nerve filaments have degraded and may misfire or cause damage."
+	name = "worn twin-blade harness"
+	socket_kinds = list(PROSTHETIC_KIND_ARM)
+	point_value = -2
+	desc = "Like the twin-blade harness, but it can misfire or hurt your arm."
 	stability_cost = -10
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN
 	installation_time = 20 SECONDS
@@ -83,7 +94,7 @@
 	if(prob(20))
 		H.visible_message(
 			span_warning("[H]'s arm twitches."),
-			span_danger("Your C.C.M.S misfires!")
+			span_danger("My twin-blade harness misfires!")
 		)
 		return TRUE
 
@@ -93,7 +104,10 @@
 			span_danger("Your arm spazzes out!")
 		)
 		var/obj/item/bodypart/arm = H.get_holding_bodypart_of_item(item)
-		arm?.receive_damage(brute = 10)
+		if(arm)
+			arm.create_injury(WOUND_BLUNT, 10)
+			arm.update_damages()
+			H.updatehealth()
 
 	return FALSE
 
@@ -101,8 +115,8 @@
 	var/datum/augment/augment
 
 /datum/action/augment/sandevistan
-	name = "Sandevistan Activation"
-	desc = "Activate your sandevistan to slow time around you."
+	name = "Release the Quickening Coil"
+	desc = "Slow time around you for a few seconds."
 	button_icon_state = "time_slow"
 
 /datum/action/augment/sandevistan/Trigger(trigger_flags)
@@ -115,8 +129,10 @@
 	return TRUE
 
 /datum/augment/special/sandevistan
-	name = "Militech Apogee Sandevistan"
-	desc = "Experimental timeslowing implant. Activates a localized chrono-distortion field, slowing time for everything around you while you move at normal speed."
+	name = "quickening coil"
+	socket_kinds = list(PROSTHETIC_KIND_HEART)
+	point_value = -3
+	desc = "Gives an ability that slows time around you for a few seconds."
 	stability_cost = -25
 	engineering_difficulty = SKILL_RANK_MASTER
 	installation_time = 30 SECONDS
@@ -129,7 +145,7 @@
 
 /datum/augment/special/sandevistan/on_install(mob/living/carbon/human/H)
 	. = ..()
-	to_chat(H, span_notice("Neural interface established. Sandevistan ready."))
+	to_chat(H, span_notice("The quickening coil is ready."))
 
 /datum/augment/special/sandevistan/proc/activate()
 	var/mob/living/carbon/human/H = parent
@@ -137,11 +153,11 @@
 		return
 
 	if(active)
-		to_chat(H, span_warning("The sandevistan is already active!"))
+		to_chat(H, span_warning("The quickening coil is already active!"))
 		return
 
 	if(!COOLDOWN_FINISHED(src, in_the_zone))
-		to_chat(H, span_warning("The implant is recharging... ([DisplayTimeText(COOLDOWN_TIMELEFT(src, in_the_zone))] remaining)"))
+		to_chat(H, span_warning("The quickening coil is recharging... ([DisplayTimeText(COOLDOWN_TIMELEFT(src, in_the_zone))] remaining)"))
 		return
 
 	COOLDOWN_START(src, in_the_zone, cooldown_time)
@@ -154,9 +170,14 @@
 
 	addtimer(CALLBACK(src, PROC_REF(deactivate)), active_time)
 
+/datum/augment/special/sandevistan/on_remove(mob/living/carbon/human/H)
+	if(active)
+		deactivate()
+	return ..()
+
 /datum/augment/special/sandevistan/proc/deactivate()
 	var/mob/living/carbon/human/H = parent
-	if(!istype(H))
+	if(!active || !istype(H))
 		return
 
 	active = FALSE
@@ -178,8 +199,10 @@
 	return info
 
 /datum/augment/special/sandevistan/refurbished
-	name = "refurbished sandevistan"
-	desc = "A hastily refurbished sandevistan. The chrono-field generator is unstable and may cause neural feedback."
+	name = "cracked quickening coil"
+	socket_kinds = list(PROSTHETIC_KIND_HEART)
+	point_value = -2
+	desc = "Like the quickening coil, but it recharges slower and can damage your brain."
 	stability_cost = -15
 	engineering_difficulty = SKILL_RANK_EXPERT
 	cooldown_time = 65 SECONDS

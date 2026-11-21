@@ -2,8 +2,11 @@
 	egg_type = OVI_EGG_MOTHBUG
 	display_name = "silken egg sac"
 	display_desc = "A soft sac of pale silk with a single downy egg curled inside."
-	display_icon_state = "egg_color"
-	display_color = "#ece4d0"
+	display_icon_state = "egg_mothbug"
+	display_marks_state = "egg_mothbug_marks"
+	display_color = "#efe7d6"
+	egg_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/honey = 1)
+	aphrodisiac_chance = 30
 	hatch_result_type = /obj/item/mothbug_egg/well_fed
 	requires_fertilization = FALSE
 	poll_for_ghost = FALSE

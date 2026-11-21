@@ -87,6 +87,7 @@ abstract types are automatically excluded.
 		/obj/item/clothing/neck/psycross/silver/divine/eora, // deity-specific alias, not player craftable
 		/obj/item/clothing/neck/psycross/silver/divine/pestra, // deity-specific alias, not player craftable
 		/obj/item/clothing/neck/psycross/silver/divine/malum, // deity-specific alias, not player craftable
+		/obj/item/clothing/face/bdsm_gag/basic, // generic default gag, used only by the technician station
 
 		/obj/item/clothing/wrists/bracers/naledi //Inqstuff
 	)

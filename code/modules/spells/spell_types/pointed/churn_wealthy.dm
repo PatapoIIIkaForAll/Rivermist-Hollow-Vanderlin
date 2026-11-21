@@ -15,6 +15,9 @@
 
 	var/stacks_to_add = 3
 
+/datum/action/cooldown/spell/churn_wealthy/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/churn_wealthy/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

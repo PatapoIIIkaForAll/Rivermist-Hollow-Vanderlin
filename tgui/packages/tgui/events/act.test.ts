@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 
 import '../__mocks__/byond';
 
-import { __testables__, sendAct } from './act';
+import { __testables__, payloadChunkCount, sendAct } from './act';
 import { chunkingAtom, store } from './store';
 
 const MAX_PAYLOAD_CHUNK_MESSAGE_URL_SIZE = 1500;
@@ -67,5 +67,63 @@ describe('tgui act chunking', () => {
         __testables__.estimateMessageUrlSize('payloadChunk', { id, chunk }),
       ).toBeLessThanOrEqual(MAX_PAYLOAD_CHUNK_MESSAGE_URL_SIZE);
     }
+  });
+});
+
+describe('law document preflight', () => {
+  it('finds the exact 64/65 chunk boundary for a complete Cyrillic action', () => {
+    const count = (length: number) =>
+      payloadChunkCount('publish', {
+        document: 'lawbook',
+        epoch: 'round',
+        revision: 7,
+        editor_key: 'editor',
+        content: JSON.stringify({
+          title: 'Книга',
+          chapters: [{ intro: 'З'.repeat(length) }],
+        }),
+      });
+    let low = 0,
+      high = 50000;
+    while (low + 1 < high) {
+      const middle = Math.floor((low + high) / 2);
+      if (count(middle) <= 64) low = middle;
+      else high = middle;
+    }
+    expect(count(low)).toBe(64);
+    expect(count(high)).toBe(65);
+  });
+  it('measures the complete encoded action, including double JSON escaping', () => {
+    for (const text of [
+      '10% tax A+B & 100%',
+      'Закон 😀 '.repeat(7000),
+      'x'.repeat(90000),
+    ]) {
+      const payload = {
+        document: 'lawbook',
+        epoch: 'round',
+        editor_key: 'editor',
+        revision: 7,
+        content: JSON.stringify({ title: text, chapters: [] }),
+      };
+      const count = payloadChunkCount('publish', payload);
+      if (count)
+        expect(count).toBe(
+          __testables__.splitPayloadIntoChunks(
+            JSON.stringify(payload),
+            String(Date.now()),
+          ).length,
+        );
+    }
+  });
+  it('rejects a large Cyrillic document before the server refuses 64 chunks', () => {
+    const payload = {
+      content: JSON.stringify({
+        title: 'Книга',
+        chapters: [{ intro: 'З'.repeat(50000) }],
+      }),
+    };
+    expect(payloadChunkCount('save_draft', payload)).toBeGreaterThan(64);
+    expect(payloadChunkCount('save_draft', { content: '[]' })).toBe(0);
   });
 });

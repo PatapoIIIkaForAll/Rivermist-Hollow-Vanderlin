@@ -229,63 +229,35 @@
 	daily_skill_xp = list()
 
 /datum/sleep_adv/proc/show_ui(mob/living/user)
-	var/list/dat = list()
-	SSassets.transport.send_assets(user.client, list("try4_border.png", "try4.png", "slop_menustyle2.css", "gragstar.gif"))
-	dat += {"
-		<!DOCTYPE html>
-		<html lang='en'>
-		<head>
-			<meta charset='UTF-8'>
-			<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'/>
-			<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-			<style>
-				@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
-				@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
-				@import url('https://fonts.googleapis.com/css2?family=Charm:wght@700&display=swap');
-				body {
-					background-color: rgb(31, 20, 24);
-					background:
-						url('[SSassets.transport.get_asset_url("try4_border.png")]'),
-						url('[SSassets.transport.get_asset_url("try4.png")]');
-					background-repeat: no-repeat;
-					background-attachment: fixed;
-					background-size: 100% 100%;
-				}
-			</style>
-			<link rel='stylesheet' type='text/css' href='[SSassets.transport.get_asset_url("slop_menustyle2.css")]'>
-		</head>
-		"}
-	dat += "<body>"
-	dat += "<div id='top_handwriting'><center>Cycle \Roman[sleep_adv_cycle]</center></div>"
-	dat += "<div id='class_select_box_div'>"
-	dat += "<br><center>Dream, for those who dream may reach higher heights</center><br>"
-	dat += "<center>\Roman[sleep_adv_points]</center>"
-	dat += "<br>"
+	var/list/entries = list()
 	for(var/skill_type in GLOB.all_skills)
 		var/datum/skill/skill = GetSkillRef(skill_type)
 		if(!skill || !length(skill.name))
 			continue
 		if(!enough_sleep_xp_to_advance(skill_type, 1))
 			continue
-		var/can_buy = can_buy_skill(skill_type)
-		var/link_class = can_buy ? "vagrant" : "vagrant linkOff"
 		var/next_level = get_next_level_for_skill(skill_type)
 		var/level_name = get_skill_tier_name(skill_type, next_level)
-		dat += "<div class='class_bar_div'><a class='[link_class]' href='byond://?src=[REF(src)];task=buy_skill;skill_type=[skill_type]'><img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>[skill.name] ([level_name]) - \Roman[get_skill_cost(skill_type)]<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32></a></div>"
-	dat += "<br>"
+		entries += "<a class='rp-pick[can_buy_skill(skill_type) ? "" : " rp-off"]' href='byond://?src=[REF(src)];task=buy_skill;skill_type=[skill_type]'><span class='rp-pick-name'>[skill.name]<span class='rp-pick-level'>Raise to [level_name]</span></span><span class='rp-pick-cost'>[get_skill_cost(skill_type)]</span></a>"
 	if(rolled_specials > 0)
-		var/can_buy = can_buy_special()
-		var/link_class = can_buy ? "vagrant" : "vagrant linkOff"
-		dat += "<div class='class_bar_div'><a class='[link_class]' href='byond://?src=[REF(src)];task=buy_special'><img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32>Dream something <b>special</b> - \Roman[get_special_cost()]<img class='ninetysskull' src='[SSassets.transport.get_asset_url("gragstar.gif")]' width=32 height=32></a></div>"
-		dat += "<br><a [can_buy ? "" : "class='linkOff'"] href='byond://?src=[REF(src)];task=buy_special'>Dream something <b>special</b></a> - \Roman[get_special_cost()]"
-		dat += "<br>Specials can have negative or positive effects"
-	dat += "<div class='footer'>"
-	dat += "<br><br><center>Your points will be retained<br><a href='byond://?src=[REF(src)];task=continue'>Continue</a></center>"
-	dat += {"
-			</body>
-		</html>
-	"}
-	var/datum/browser/popup = new(user, "dreams", "<center>Dreams</center>", 350, 450, src)
+		entries += "<a class='rp-pick rp-special[can_buy_special() ? "" : " rp-off"]' href='byond://?src=[REF(src)];task=buy_special'><span class='rp-pick-name'>Dream something special<span class='rp-pick-level'>Can be good or bad</span></span><span class='rp-pick-cost'>[get_special_cost()]</span></a>"
+
+	var/list/dat = list()
+	dat += "<div class='rp'>"
+	dat += "<div class='rp-frame rp-head'><div class='rp-title'>Dreams, cycle [sleep_adv_cycle]</div><div class='rp-sub'>Spend dream points to raise skills you practised.</div><div class='rp-points'>Points: [sleep_adv_points]</div></div>"
+	dat += "<div class='rp-frame rp-body'><div class='rp-list'>"
+	if(length(entries))
+		dat += entries
+	else
+		dat += "<div class='rp-empty'>No skill is ready to raise. Practise skills while awake.</div>"
+	dat += "</div></div>"
+	dat += "<div class='rp-foot'>"
+	dat += "<a class='rp-main' href='byond://?src=[REF(src)];task=continue'>Continue</a>"
+	dat += "<div class='rp-hint'>Unspent points are kept for the next dream.</div>"
+	dat += "</div>"
+	dat += "</div>"
+	var/datum/browser/popup = new(user, "dreams", "", 380, 520, src)
+	popup.add_stylesheet("role_pick_menu", 'html/browser/role_pick_menu.css')
 	popup.set_window_options(can_close = FALSE)
 	popup.set_content(dat.Join())
 	popup.open(TRUE)

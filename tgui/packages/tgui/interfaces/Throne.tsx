@@ -1,17 +1,29 @@
-//RMH EDITED - new file: TGUI "Ducal Court" interface for the throne, wrapping
-//the TITAN command hub (/obj/structure/fake_machine/titan). Voice commands keep
-//working; this is a parallel, button-driven path with the same permission gates.
-import type { CSSProperties } from 'react';
-import type { ReactNode } from 'react';
-import { useState } from 'react';
+﻿// RMH: visual adaptation of PatapoIIIa's Twilight-Axis Throne TGUI, PR #1279.
+// Design commit 34fef544c90a21223b6c0c04a93a1f283cc2ea8a; upstream AGPL-3.0.
+// Uses RMH's existing THROAT actions and authority checks.
+import { type CSSProperties, useState } from 'react';
+import {
+  Button,
+  DmIcon,
+  Icon,
+  Input,
+  Section,
+  TextArea,
+} from 'tgui-core/components';
 import type { BooleanLike } from 'tgui-core/react';
-
-import { DmIcon } from 'tgui-core/components';
-
+import { decodeHtmlEntities } from 'tgui-core/string';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
+import '../styles/interfaces/RmhThrone.scss';
+import { Prose } from './RmhScribeStand/Layout';
+import {
+  RmhLocaleProvider,
+  useRmhLanguage,
+  useRmhText,
+} from './RmhScribeStand/locale';
 
-type ThroneData = {
+export type ThroneData = {
+  language?: string;
   wearing_crown: BooleanLike;
   is_ruler: BooleanLike;
   is_regent: BooleanLike;
@@ -26,504 +38,640 @@ type ThroneData = {
   lord_secondary: string | null;
   flag_icon: string;
   flag_state: string;
-  laws: string[];
-  decrees: string[];
+  throat_mode: string;
+  crown_present: BooleanLike;
+  key_present: BooleanLike;
+  decree_records: {
+    id: string;
+    text: string;
+    text_en?: string;
+    revision: number;
+  }[];
   outlaws: string[];
+  voice_commands: string[];
 };
-
-type ActFn = (action: string, params?: Record<string, unknown>) => void;
-
-// --- Dark royal palette (matches the Azure court screenshot) ---------------
-const SERIF = '"Lora", Georgia, serif';
-const BG = '#15100b';
-const PANEL = 'linear-gradient(180deg, #2a2018 0%, #1c1510 100%)';
-const PANEL_FLAT = '#221a12';
-const CARD = 'linear-gradient(180deg, #3a2c1d 0%, #241a11 100%)';
-const GOLD = '#d8b96a';
-const GOLD_DIM = '#9c855450';
-const GOLD_SOFT = '#b89a5a';
-const INK = '#e8dcc2';
-const INK_SOFT = '#b9a884';
-const GREEN = '#5f8c52';
-const RED = '#a8433a';
-const BORDER = '#5a4528';
-
-const pageStyle: CSSProperties = {
-  minHeight: '100%',
-  background: BG,
-  color: INK,
-  fontFamily: SERIF,
-  fontSize: '13px',
-  padding: '0 0 18px 0',
-};
-
-const headerStyle: CSSProperties = {
-  background: PANEL,
-  borderBottom: `2px solid ${BORDER}`,
-  padding: '12px 24px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-};
-
-const titleStyle: CSSProperties = {
-  fontSize: '26px',
-  fontWeight: 'bold',
-  color: GOLD,
-  letterSpacing: '1px',
-  fontFamily: '"MedievalSharp", Georgia, serif',
-};
-
-const tabBarStyle: CSSProperties = {
-  display: 'flex',
-  gap: '6px',
-  padding: '12px 24px 0 24px',
-};
-
-const tabStyle = (active: boolean): CSSProperties => ({
-  fontFamily: SERIF,
-  fontSize: '13px',
-  padding: '6px 16px',
-  color: active ? '#1a1209' : GOLD,
-  background: active ? GOLD : 'transparent',
-  border: `1px solid ${active ? GOLD : BORDER}`,
-  borderBottom: active ? `1px solid ${GOLD}` : `1px solid ${BORDER}`,
-  borderRadius: '3px 3px 0 0',
-  cursor: 'pointer',
-  fontWeight: active ? 'bold' : 'normal',
-});
-
-const sectionStyle: CSSProperties = {
-  margin: '14px 24px',
-  background: PANEL_FLAT,
-  border: `1px solid ${BORDER}`,
-  borderRadius: '4px',
-};
-
-const sectionTitleStyle: CSSProperties = {
-  background: PANEL,
-  borderBottom: `1px solid ${BORDER}`,
-  padding: '8px 14px',
-  color: GOLD,
-  fontWeight: 'bold',
-  textTransform: 'uppercase',
-  letterSpacing: '1px',
-  fontSize: '13px',
-};
-
-const sectionBodyStyle: CSSProperties = { padding: '12px 14px' };
-
-const cardStyle: CSSProperties = {
-  background: CARD,
-  border: `1px solid ${BORDER}`,
-  borderRadius: '3px',
-  padding: '10px 12px',
-};
-
-const btn = (opts: { disabled?: boolean; tone?: 'gold' | 'green' | 'red' } = {}): CSSProperties => {
-  const tone = opts.tone || 'gold';
-  const col = tone === 'green' ? GREEN : tone === 'red' ? RED : GOLD;
-  return {
-    fontFamily: SERIF,
-    fontSize: '13px',
-    fontWeight: 'bold',
-    padding: '4px 14px',
-    color: opts.disabled ? INK_SOFT : '#1a1209',
-    background: opts.disabled ? 'transparent' : col,
-    border: `1px solid ${opts.disabled ? GOLD_DIM : col}`,
-    borderRadius: '3px',
-    cursor: opts.disabled ? 'default' : 'pointer',
-    opacity: opts.disabled ? 0.55 : 1,
-    whiteSpace: 'nowrap',
-  };
-};
-
-const inputStyle: CSSProperties = {
-  width: '100%',
-  boxSizing: 'border-box',
-  background: '#100c08',
-  border: `1px solid ${BORDER}`,
-  borderRadius: '3px',
-  color: INK,
-  fontFamily: SERIF,
-  fontSize: '13px',
-  padding: '6px 8px',
-  outline: 'none',
-};
-
-// --- Small pieces ----------------------------------------------------------
-const StatusCard = (props: { label: string; value: string; tone?: string }) => (
-  <div style={{ ...cardStyle, flex: 1, minWidth: '150px' }}>
-    <div style={{ color: INK_SOFT, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-      {props.label}
-    </div>
-    <div style={{ color: props.tone || GOLD, fontWeight: 'bold', fontSize: '16px' }}>{props.value}</div>
-  </div>
-);
-
-const Section = (props: { title: string; children: ReactNode }) => (
-  <div style={sectionStyle}>
-    <div style={sectionTitleStyle}>{props.title}</div>
-    <div style={sectionBodyStyle}>{props.children}</div>
-  </div>
-);
-
-// A labelled colour chip for the heraldry preview.
-const Swatch = (props: { label: string; color: string | null }) => (
-  <div style={{ textAlign: 'center' }}>
-    <div
-      style={{
-        width: '34px',
-        height: '34px',
-        borderRadius: '3px',
-        border: `1px solid ${BORDER}`,
-        background: props.color || 'repeating-linear-gradient(45deg, #2a2018, #2a2018 4px, #181109 4px, #181109 8px)',
-      }}
-    />
-    <div style={{ color: INK_SOFT, fontSize: '11px', marginTop: '2px' }}>
-      {props.label}
-      {!props.color && <span style={{ display: 'block', color: GOLD_SOFT }}>unset</span>}
-    </div>
-  </div>
-);
-
-// --- Tabs ------------------------------------------------------------------
-const Overview = (props: { data: ThroneData }) => {
-  const { data } = props;
+type Act = (action: string, params?: Record<string, unknown>) => void;
+type Text = (russian: string) => string;
+type Page =
+  | 'overview'
+  | 'decrees'
+  | 'commands'
+  | 'justice'
+  | 'heraldry'
+  | 'voice';
+const pages: { id: Page; ru: string; en: string; icon: string }[] = [
+  { id: 'overview', ru: 'Двор', en: 'Court', icon: 'crown' },
+  { id: 'decrees', ru: 'Указы', en: 'Decrees', icon: 'scroll' },
+  { id: 'commands', ru: 'Управление', en: 'Governance', icon: 'landmark' },
+  { id: 'justice', ru: 'Правосудие', en: 'Justice', icon: 'scale-balanced' },
+  { id: 'heraldry', ru: 'Геральдика', en: 'Heraldry', icon: 'shield-halved' },
+  {
+    id: 'voice',
+    ru: 'Голосовые команды',
+    en: 'Voice commands',
+    icon: 'bullhorn',
+  },
+];
+function useCourtText(): Text {
+  return useRmhText();
+}
+export function Throne() {
+  const { data, act } = useBackend<ThroneData>();
+  const width = Math.min(1180, (window.screen.availWidth || 1280) - 40);
+  const height = Math.min(760, (window.screen.availHeight || 900) - 60);
   return (
-    <Section title="Court Standing">
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-        <StatusCard label="Current Ruler" value={data.ruler_name} />
-        <StatusCard label="Regent" value={data.regent_name} tone={data.regent_name === 'None' ? INK_SOFT : GOLD} />
-        <StatusCard
-          label="Your Crown"
-          value={data.wearing_crown ? 'Worn' : 'Absent'}
-          tone={data.wearing_crown ? GREEN : RED}
+    <RmhLocaleProvider language={data.language}>
+      <Window width={width} height={height} theme="rmh-court">
+        <Window.Content>
+          <CourtWorkspace data={data} act={act} />
+        </Window.Content>
+      </Window>
+    </RmhLocaleProvider>
+  );
+}
+export function CourtWorkspace({ data, act }: { data: ThroneData; act: Act }) {
+  const t = useCourtText();
+  const [page, setPage] = useState<Page>('overview');
+  const [selected, setSelected] = useState<string | null>(null);
+  const [previewEnglish, setPreviewEnglish] = useState(
+    useRmhLanguage() === 'en',
+  );
+  const command = !!data.can_command && !!data.cooldown_ok;
+  const announcement = !!data.can_announce && !!data.cooldown_ok;
+  const reason = !data.wearing_crown
+    ? t('Нужна корона.')
+    : !data.worthy
+      ? t('Только правитель или регент.')
+      : !data.cooldown_ok
+        ? t('THROAT набирается сил.')
+        : '';
+  const records = data.decree_records || [];
+  return (
+    <div className="RmhThrone">
+      <div
+        className="RmhThrone__board"
+        style={
+          {
+            '--ducal-primary': data.lord_primary || '#183a56',
+            '--ducal-secondary': data.lord_secondary || '#e0cc9b',
+          } as CSSProperties
+        }
+      >
+        <CourtHeader data={data} act={act} t={t} />
+        <div className="RmhThrone__courtShell">
+          <CourtNavigation page={page} onPage={setPage} t={t} />
+          <main className="RmhThrone__centerPanel">
+            <div className="RmhThrone__statusGrid">
+              <CourtStatus
+                label={t('Корона')}
+                value={data.wearing_crown ? t('Надета') : t('Не надета')}
+                icon="crown"
+                good={!!data.wearing_crown}
+              />
+              <CourtStatus
+                label={t('Налог')}
+                value={`${data.tax_percent}%`}
+                icon="coins"
+                good
+              />
+              <CourtStatus
+                label={t('Глас трона')}
+                value={data.cooldown_ok ? t('Готов') : t('Набирается сил')}
+                icon="bullhorn"
+                good={!!data.cooldown_ok}
+              />
+            </div>
+            <div className="RmhThrone__contentStack">
+              {page === 'overview' && (
+                <Section title={t('Положение двора')}>
+                  <div className="RmhThrone__overviewFacts">
+                    <CourtFact
+                      label={t('Действующие указы')}
+                      value={String(records.length)}
+                    />
+                    <CourtFact
+                      label={t('Вне закона')}
+                      value={String(data.outlaws.length)}
+                    />
+                    <CourtFact
+                      label={t('Корона в землях')}
+                      value={data.crown_present ? t('Есть') : t('Не найдена')}
+                    />
+                    <CourtFact
+                      label={t('Ключ правителя')}
+                      value={data.key_present ? t('Есть') : t('Не найден')}
+                    />
+                  </div>
+                  <p>
+                    {t(
+                      'Законы града публикуются на стенде писаря. Здесь издаются и отзываются указы.',
+                    )}
+                  </p>
+                  {!!data.throat_mode && data.throat_mode !== 'None' && (
+                    <p>
+                      {t('Голосовой режим: ')}
+                      <b>{data.throat_mode}</b>
+                    </p>
+                  )}
+                </Section>
+              )}
+              {page === 'decrees' && (
+                <Section
+                  title={t('Действующие указы')}
+                  buttons={
+                    <Button onClick={() => setPreviewEnglish(!previewEnglish)}>
+                      {previewEnglish ? 'RU' : 'EN'}
+                    </Button>
+                  }
+                >
+                  {!records.length && <p>{t('Действующих указов нет.')}</p>}
+                  {records.map((entry, index) => (
+                    <div className="RmhThrone__decree" key={entry.id}>
+                      <Button
+                        className="RmhThrone__decreeHeading"
+                        selected={selected === entry.id}
+                        onClick={() =>
+                          setSelected(selected === entry.id ? null : entry.id)
+                        }
+                      >
+                        {t('Указ')} {index + 1}
+                      </Button>
+                      {(selected === entry.id || records.length === 1) && (
+                        <Prose
+                          text={
+                            previewEnglish && entry.text_en?.trim()
+                              ? entry.text_en
+                              : entry.text
+                          }
+                        />
+                      )}
+                      <Button.Confirm
+                        icon="ban"
+                        color="bad"
+                        disabled={!command}
+                        tooltip={reason}
+                        confirmContent={t('Подтвердить')}
+                        onClick={() =>
+                          act('remove_decree', {
+                            index: String(index + 1),
+                            id: entry.id,
+                            revision: entry.revision,
+                          })
+                        }
+                      >
+                        {t('Отозвать')}
+                      </Button.Confirm>
+                    </div>
+                  ))}
+                  <CourtTextForm
+                    action="make_decree"
+                    param="text"
+                    title={t('Новый указ')}
+                    button={t('Издать указ')}
+                    enabled={command}
+                    reason={reason}
+                    act={act}
+                  />
+                </Section>
+              )}
+              {page === 'commands' && (
+                <Governance
+                  data={data}
+                  act={act}
+                  command={command}
+                  announcement={announcement}
+                  reason={reason}
+                />
+              )}
+              {page === 'justice' && (
+                <Justice
+                  data={data}
+                  act={act}
+                  enabled={command}
+                  reason={reason}
+                />
+              )}
+              {page === 'heraldry' && (
+                <Section title={t('Знамя града')}>
+                  <div className="RmhThrone__heraldry">
+                    <DmIcon
+                      icon={data.flag_icon}
+                      icon_state={data.flag_state}
+                      width="96px"
+                      height="96px"
+                    />
+                    <span
+                      style={{ background: data.lord_primary || '#183a56' }}
+                    >
+                      {t('Основной цвет')}
+                    </span>
+                    <span
+                      style={{ background: data.lord_secondary || '#e0cc9b' }}
+                    >
+                      {t('Второй цвет')}
+                    </span>
+                  </div>
+                  <CourtAction
+                    icon="palette"
+                    title={t('Изменить цвета')}
+                    description={t(
+                      'Выбрать гербовые цвета существующим порядком.',
+                    )}
+                    enabled={command}
+                    reason={reason}
+                    onClick={() => act('change_colors')}
+                  />
+                </Section>
+              )}
+              {page === 'voice' && (
+                <Section title={t('Голосовые команды THROAT')}>
+                  <p>
+                    {t(
+                      'Команды произносятся рядом с троном. Действуют обычные проверки полномочий.',
+                    )}
+                  </p>
+                  <ul className="RmhThrone__voiceList">
+                    {(data.voice_commands || []).map((text) => (
+                      <li key={text}>
+                        <code className="RmhThrone__voiceCommand">{text}</code>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button icon="circle-question" onClick={() => act('help')}>
+                    {t('Справка THROAT')}
+                  </Button>
+                </Section>
+              )}
+            </div>
+          </main>
+          <CourtRegalia
+            data={data}
+            act={act}
+            command={command}
+            announcement={announcement}
+            reason={reason}
+            t={t}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+function CourtStatus({
+  label,
+  value,
+  icon,
+  good,
+}: {
+  label: string;
+  value: string;
+  icon: string;
+  good: boolean;
+}) {
+  return (
+    <div
+      className={`RmhThrone__statusCard RmhThrone__statusCard--${good ? 'good' : 'warning'}`}
+    >
+      <span className="RmhThrone__statusIcon">
+        <Icon name={icon} />
+      </span>
+      <div className="RmhThrone__statusBody">
+        <div className="RmhThrone__statusLabel">{label}</div>
+        <div className="RmhThrone__statusValue">{value}</div>
+      </div>
+    </div>
+  );
+}
+function CourtFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="RmhThrone__overviewFact">
+      <b>{label}</b>
+      <span>{value}</span>
+    </div>
+  );
+}
+function CourtAction({
+  icon,
+  title,
+  description,
+  enabled,
+  reason,
+  onClick,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  enabled: BooleanLike;
+  reason?: string;
+  onClick: () => void;
+}) {
+  return (
+    <Button
+      className="RmhThrone__action"
+      disabled={!enabled}
+      tooltip={!enabled ? reason : description}
+      onClick={onClick}
+    >
+      <span className="RmhThrone__actionIcon">
+        <Icon name={icon} />
+      </span>
+      <span className="RmhThrone__actionBody">
+        <span className="RmhThrone__actionTitle">{title}</span>
+        <span className="RmhThrone__actionDesc">{description}</span>
+      </span>
+    </Button>
+  );
+}
+function CourtTextForm({
+  action,
+  param,
+  title,
+  button,
+  enabled,
+  reason,
+  act,
+}: {
+  action: string;
+  param: string;
+  title: string;
+  button: string;
+  enabled: boolean;
+  reason: string;
+  act: Act;
+}) {
+  const [text, setText] = useState('');
+  return (
+    <div className="RmhThrone__desk">
+      <h3>{title}</h3>
+      <TextArea
+        fluid
+        height={6}
+        maxLength={500}
+        value={text}
+        onChange={setText}
+      />
+      <div className="RmhThrone__deskFooter">
+        <span>{Array.from(text).length} / 500</span>
+        <Button
+          icon="stamp"
+          disabled={!enabled || !text.trim()}
+          tooltip={!enabled ? reason : undefined}
+          onClick={() => {
+            act(action, { [param]: text });
+            setText('');
+          }}
+        >
+          {button}
+        </Button>
+      </div>
+    </div>
+  );
+}
+function Governance({
+  data,
+  act,
+  command,
+  announcement,
+  reason,
+}: {
+  data: ThroneData;
+  act: Act;
+  command: boolean;
+  announcement: boolean;
+  reason: string;
+}) {
+  const t = useCourtText();
+  return (
+    <>
+      <Section title={t('Объявления')}>
+        <CourtTextForm
+          action="make_announcement"
+          param="text"
+          title={t('Объявить всем землям')}
+          button={t('Объявить')}
+          enabled={announcement}
+          reason={
+            !data.wearing_crown
+              ? t('Нужна корона.')
+              : t('THROAT набирается сил.')
+          }
+          act={act}
         />
-        <StatusCard label="Realm Tax" value={`${data.tax_percent}%`} />
-      </div>
-      <div style={{ marginTop: '12px', color: INK_SOFT, fontStyle: 'italic' }}>
-        {data.worthy
-          ? 'You hold authority over this court. Don the crown to issue commands.'
-          : 'Only the rightful Ruler or appointed Regent may command from this throne.'}
-        {!data.cooldown_ok && (
-          <span style={{ color: RED }}> The throne must gather its strength before speaking again.</span>
-        )}
-      </div>
+      </Section>
+      <Section title={t('Управление градом')}>
+        <CourtFact label={t('Текущий налог')} value={`${data.tax_percent}%`} />
+        <CourtAction
+          icon="coins"
+          title={t('Изменить налог')}
+          description={t('Открыть существующий выбор налога.')}
+          enabled={command}
+          reason={reason}
+          onClick={() => act('set_taxes')}
+        />
+      </Section>
+    </>
+  );
+}
+function Justice({
+  data,
+  act,
+  enabled,
+  reason,
+}: {
+  data: ThroneData;
+  act: Act;
+  enabled: boolean;
+  reason: string;
+}) {
+  const t = useCourtText();
+  const [outlaw, setOutlaw] = useState(''),
+    [pardon, setPardon] = useState('');
+  return (
+    <Section title={t('Правосудие')}>
+      <h3>{t('Объявить вне закона')}</h3>
+      <Input fluid value={outlaw} onChange={setOutlaw} maxLength={128} />
+      <Button
+        color="bad"
+        disabled={!enabled || !outlaw.trim()}
+        tooltip={reason}
+        onClick={() => {
+          act('declare_outlaw', { name: outlaw });
+          setOutlaw('');
+        }}
+      >
+        {t('Объявить вне закона')}
+      </Button>
+      <h3>{t('Помиловать')}</h3>
+      <Input fluid value={pardon} onChange={setPardon} maxLength={128} />
+      <Button
+        color="good"
+        disabled={!enabled || !pardon.trim()}
+        tooltip={reason}
+        onClick={() => {
+          act('pardon_outlaw', { name: pardon });
+          setPardon('');
+        }}
+      >
+        {t('Помиловать')}
+      </Button>
+      <ul>
+        {data.outlaws.map((name) => (
+          <li key={name}>{decodeHtmlEntities(name)}</li>
+        ))}
+      </ul>
     </Section>
   );
-};
+}
 
-const CommandsTab = (props: { data: ThroneData; act: ActFn }) => {
-  const { data, act } = props;
-  const [announce, setAnnounce] = useState('');
-  const [decree, setDecree] = useState('');
-  const [outlaw, setOutlaw] = useState('');
-  const [pardon, setPardon] = useState('');
-  const canAnnounce = !!data.can_announce;
-  const canCommand = !!data.can_command;
-
+function CourtHeader({
+  data,
+  act,
+  t,
+}: {
+  data: ThroneData;
+  act: Act;
+  t: Text;
+}) {
   return (
-    <>
-      <Section title="Public Writs">
-        <div style={{ color: INK_SOFT, marginBottom: '6px' }}>Broadcast a realm-wide message. (Requires the crown.)</div>
-        <textarea
-          style={{ ...inputStyle, height: '54px', resize: 'none' }}
-          value={announce}
-          placeholder="Speak your announcement to the realm..."
-          onChange={(e) => setAnnounce(e.target.value)}
+    <header className="RmhThrone__titleRow">
+      <span className="RmhThrone__standard RmhThrone__standard--left">
+        <Icon name="crown" />
+      </span>
+      <div className="RmhThrone__rulerBlock">
+        <div>
+          <b>{t('Правитель')}</b>
+          <span>{data.ruler_name === 'None' ? t('Нет') : data.ruler_name}</span>
+        </div>
+        <div>
+          <b>{t('Регент')}</b>
+          <span>
+            {data.regent_name === 'None' ? t('Нет') : data.regent_name}
+          </span>
+        </div>
+      </div>
+      <div>
+        <div className="RmhThrone__eyebrow">Rivermist Hollow</div>
+        <h1 className="RmhThrone__title">{t('Двор Ривермиста')}</h1>
+        <div className="RmhThrone__subtitle">
+          {t('Воля града звучит через THROAT')}
+        </div>
+      </div>
+      <div className="RmhThrone__rulerBlock">
+        <div>
+          <b>{t('Ваш статус')}</b>
+          <span>
+            {data.is_ruler
+              ? t('Правитель')
+              : data.is_regent
+                ? t('Регент')
+                : t('Подданный')}
+          </span>
+        </div>
+        <Button icon="rotate" onClick={() => act('refresh')}>
+          {t('Обновить')}
+        </Button>
+      </div>
+      <span className="RmhThrone__standard RmhThrone__standard--right">
+        <Icon name="shield-halved" />
+      </span>
+    </header>
+  );
+}
+
+function CourtNavigation({
+  page,
+  onPage,
+  t,
+}: {
+  page: Page;
+  onPage: (page: Page) => void;
+  t: Text;
+}) {
+  return (
+    <aside className="RmhThrone__leftRail">
+      <div className="RmhThrone__throneEmblem">
+        <Icon name="chess-king" />
+      </div>
+      <nav className="RmhThrone__nav" aria-label={t('Разделы двора')}>
+        {pages.map((item) => (
+          <Button
+            key={item.id}
+            className={`RmhThrone__navButton${page === item.id ? ' RmhThrone__navButton--active' : ''}`}
+            icon={item.icon}
+            onClick={() => onPage(item.id)}
+          >
+            {t(item.ru)}
+          </Button>
+        ))}
+      </nav>
+    </aside>
+  );
+}
+
+function CourtRegalia({
+  data,
+  act,
+  command,
+  announcement,
+  reason,
+  t,
+}: {
+  data: ThroneData;
+  act: Act;
+  command: boolean;
+  announcement: boolean;
+  reason: string;
+  t: Text;
+}) {
+  return (
+    <aside className="RmhThrone__rightRail">
+      <Section title={t('Регалии')}>
+        <CourtAction
+          icon="crown"
+          title={t('Призвать корону')}
+          description={t('Позвать существующую корону.')}
+          enabled
+          onClick={() => act('summon_crown')}
         />
-        <div style={{ marginTop: '6px', textAlign: 'right' }}>
-          <button
-            type="button"
-            style={btn({ disabled: !canAnnounce || !announce.trim() })}
-            disabled={!canAnnounce || !announce.trim()}
-            onClick={() => {
-              act('make_announcement', { text: announce });
-              setAnnounce('');
-            }}
-          >
-            Make Announcement
-          </button>
-        </div>
-      </Section>
-
-      <Section title="Governance">
-        <div style={{ color: INK_SOFT, marginBottom: '6px' }}>Issue a royal decree. (Ruler or Regent, crown required.)</div>
-        <textarea
-          style={{ ...inputStyle, height: '48px', resize: 'none' }}
-          value={decree}
-          placeholder="Decree the will of the crown..."
-          onChange={(e) => setDecree(e.target.value)}
+        <CourtAction
+          icon="key"
+          title={t('Призвать ключ')}
+          description={t('Нужна надетая корона.')}
+          enabled={announcement}
+          reason={
+            !data.wearing_crown
+              ? t('Нужна корона.')
+              : t('THROAT набирается сил.')
+          }
+          onClick={() => act('summon_key')}
         />
-        <div style={{ marginTop: '6px', textAlign: 'right' }}>
-          <button
-            type="button"
-            style={btn({ disabled: !canCommand || !decree.trim() })}
-            disabled={!canCommand || !decree.trim()}
-            onClick={() => {
-              act('make_decree', { text: decree });
-              setDecree('');
-            }}
-          >
-            Issue Decree
-          </button>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
-          <button type="button" style={btn({ disabled: !canCommand })} disabled={!canCommand} onClick={() => act('set_taxes')}>
-            Set Taxes
-          </button>
-          <button type="button" style={btn({ disabled: !canCommand })} disabled={!canCommand} onClick={() => act('appoint_regent')}>
-            Appoint Regent
-          </button>
-          <button type="button" style={btn({ disabled: !canCommand })} disabled={!canCommand} onClick={() => act('change_position')}>
-            Change Position
-          </button>
-          <button type="button" style={btn({ disabled: !canCommand, tone: 'red' })} disabled={!canCommand} onClick={() => act('silence')}>
-            SILENCE!!
-          </button>
-        </div>
       </Section>
-
-      <Section title="Justice">
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
-          <input
-            style={{ ...inputStyle, flex: 1 }}
-            value={outlaw}
-            placeholder="Name to outlaw..."
-            onChange={(e) => setOutlaw(e.target.value)}
-          />
-          <button
-            type="button"
-            style={btn({ disabled: !canCommand || !outlaw.trim(), tone: 'red' })}
-            disabled={!canCommand || !outlaw.trim()}
-            onClick={() => {
-              act('declare_outlaw', { name: outlaw });
-              setOutlaw('');
-            }}
-          >
-            Declare Outlaw
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <input
-            style={{ ...inputStyle, flex: 1 }}
-            value={pardon}
-            placeholder="Name to pardon..."
-            onChange={(e) => setPardon(e.target.value)}
-          />
-          <button
-            type="button"
-            style={btn({ disabled: !canCommand || !pardon.trim(), tone: 'green' })}
-            disabled={!canCommand || !pardon.trim()}
-            onClick={() => {
-              act('pardon_outlaw', { name: pardon });
-              setPardon('');
-            }}
-          >
-            Pardon
-          </button>
-        </div>
+      <Section title={t('Приказы двору')}>
+        <CourtAction
+          icon="user-tie"
+          title={t('Назначить регента')}
+          description={t('Назначить представителя правителя.')}
+          enabled={command}
+          reason={reason}
+          onClick={() => act('appoint_regent')}
+        />
+        <CourtAction
+          icon="users"
+          title={t('Изменить должность')}
+          description={t('Изменить службу подданного.')}
+          enabled={command}
+          reason={reason}
+          onClick={() => act('change_position')}
+        />
+        <CourtAction
+          icon="volume-xmark"
+          title="SILENCE!!"
+          description={t('Потребовать тишины в зале.')}
+          enabled={command}
+          reason={reason}
+          onClick={() => act('silence')}
+        />
       </Section>
-
-      <Section title="Regalia">
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <button type="button" style={btn()} onClick={() => act('summon_crown')}>
-            Summon Crown
-          </button>
-          <button type="button" style={btn({ disabled: !canAnnounce })} disabled={!canAnnounce} onClick={() => act('summon_key')}>
-            Summon Key
-          </button>
-          <button type="button" style={btn({ tone: 'gold' })} onClick={() => act('help')}>
-            Help
-          </button>
-        </div>
-      </Section>
-
-      <Section title="Heraldry">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '56px',
-              height: '56px',
-              background: '#100c08',
-              border: `1px solid ${BORDER}`,
-              borderRadius: '3px',
-              flexShrink: 0,
-            }}
-          >
-            <DmIcon icon={data.flag_icon} icon_state={data.flag_state} width="48px" height="48px" />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', gap: '14px', marginBottom: '8px' }}>
-              <Swatch label="Primary" color={data.lord_primary} />
-              <Swatch label="Secondary" color={data.lord_secondary} />
-            </div>
-            <button
-              type="button"
-              style={btn({ disabled: !canCommand })}
-              disabled={!canCommand}
-              onClick={() => act('change_colors')}
-            >
-              Change Heraldry Colour
-            </button>
-          </div>
-        </div>
-      </Section>
-    </>
+    </aside>
   );
-};
-
-const ListTab = (props: { data: ThroneData; act: ActFn }) => {
-  const { data, act } = props;
-  const [law, setLaw] = useState('');
-  const canCommand = !!data.can_command;
-
-  return (
-    <>
-      <Section title="Laws of the Land">
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px' }}>
-          <input
-            style={{ ...inputStyle, flex: 1 }}
-            value={law}
-            placeholder="Proclaim a new law..."
-            onChange={(e) => setLaw(e.target.value)}
-          />
-          <button
-            type="button"
-            style={btn({ disabled: !canCommand || !law.trim() })}
-            disabled={!canCommand || !law.trim()}
-            onClick={() => {
-              act('make_law', { text: law });
-              setLaw('');
-            }}
-          >
-            Make Law
-          </button>
-          <button
-            type="button"
-            style={btn({ disabled: !canCommand || data.laws.length === 0, tone: 'red' })}
-            disabled={!canCommand || data.laws.length === 0}
-            onClick={() => act('purge_laws')}
-          >
-            Purge All
-          </button>
-        </div>
-        {data.laws.length === 0 ? (
-          <div style={{ color: INK_SOFT, fontStyle: 'italic' }}>No laws have been declared.</div>
-        ) : (
-          data.laws.map((text, i) => (
-            <div
-              key={i}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 0', borderBottom: `1px solid ${BORDER}` }}
-            >
-              <span style={{ color: GOLD_SOFT, flexShrink: 0, width: '22px' }}>{i + 1}.</span>
-              <span style={{ flex: 1 }}>{text}</span>
-              <button
-                type="button"
-                style={btn({ disabled: !canCommand, tone: 'red' })}
-                disabled={!canCommand}
-                onClick={() => act('remove_law', { index: i + 1 })}
-              >
-                Remove
-              </button>
-            </div>
-          ))
-        )}
-      </Section>
-
-      <Section title="Royal Decrees">
-        {data.decrees.length === 0 ? (
-          <div style={{ color: INK_SOFT, fontStyle: 'italic' }}>No decrees stand. Issue one from the Commands tab.</div>
-        ) : (
-          data.decrees.map((text, i) => (
-            <div
-              key={i}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 0', borderBottom: `1px solid ${BORDER}` }}
-            >
-              <span style={{ color: GOLD_SOFT, flexShrink: 0, width: '22px' }}>{i + 1}.</span>
-              <span style={{ flex: 1 }}>{text}</span>
-              <button
-                type="button"
-                style={btn({ disabled: !canCommand, tone: 'red' })}
-                disabled={!canCommand}
-                onClick={() => act('remove_decree', { index: i + 1 })}
-              >
-                Remove
-              </button>
-            </div>
-          ))
-        )}
-      </Section>
-
-      <Section title="Outlaws">
-        {data.outlaws.length === 0 ? (
-          <div style={{ color: INK_SOFT, fontStyle: 'italic' }}>No outlaws are named.</div>
-        ) : (
-          data.outlaws.map((name, i) => (
-            <div key={i} style={{ padding: '3px 0', borderBottom: `1px solid ${BORDER}`, color: RED }}>
-              {name}
-            </div>
-          ))
-        )}
-      </Section>
-    </>
-  );
-};
-
-// --- Root ------------------------------------------------------------------
-export const Throne = () => {
-  const { act, data } = useBackend<ThroneData>();
-  const [tab, setTab] = useState('overview');
-
-  return (
-    <Window width={880} height={720}>
-      <Window.Content scrollable>
-        <div style={pageStyle}>
-          <div style={headerStyle}>
-            <div>
-              <div style={titleStyle}>Ducal Court</div>
-              <div style={{ color: INK_SOFT, fontStyle: 'italic' }}>Hold court from the throne of Rivermist Hollow</div>
-            </div>
-            <div style={{ textAlign: 'right', fontSize: '12px' }}>
-              <div>
-                <span style={{ color: INK_SOFT }}>Ruler: </span>
-                <span style={{ color: GOLD, fontWeight: 'bold' }}>{data.ruler_name}</span>
-              </div>
-              <div>
-                <span style={{ color: INK_SOFT }}>Regent: </span>
-                <span style={{ color: GOLD, fontWeight: 'bold' }}>{data.regent_name}</span>
-              </div>
-              <div>
-                <span style={{ color: INK_SOFT }}>Your Standing: </span>
-                <span style={{ color: data.worthy ? GREEN : INK_SOFT, fontWeight: 'bold' }}>
-                  {data.is_ruler ? 'Ruler' : data.is_regent ? 'Regent' : 'Subject'}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div style={tabBarStyle}>
-            <button type="button" style={tabStyle(tab === 'overview')} onClick={() => setTab('overview')}>
-              Overview
-            </button>
-            <button type="button" style={tabStyle(tab === 'commands')} onClick={() => setTab('commands')}>
-              Ducal Commands
-            </button>
-            <button type="button" style={tabStyle(tab === 'laws')} onClick={() => setTab('laws')}>
-              Laws &amp; Decrees
-            </button>
-          </div>
-
-          {tab === 'overview' && <Overview data={data} />}
-          {tab === 'commands' && <CommandsTab data={data} act={act} />}
-          {tab === 'laws' && <ListTab data={data} act={act} />}
-        </div>
-      </Window.Content>
-    </Window>
-  );
-};
+}

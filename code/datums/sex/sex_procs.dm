@@ -125,6 +125,13 @@
 /mob/living/proc/has_penis()
 	return getorganslot(ORGAN_SLOT_PENIS) || gender == MALE
 
+/// Like has_penis(), but a worn strapon does not count.
+/mob/living/proc/has_real_penis()
+	var/obj/item/organ/genitals/penis/penis = getorganslot(ORGAN_SLOT_PENIS)
+	if(penis?.is_false_organ())
+		return FALSE
+	return has_penis()
+
 /mob/living/proc/has_testicles()
 	return getorganslot(ORGAN_SLOT_TESTICLES) || gender == MALE
 
@@ -163,8 +170,31 @@
 	RETURN_TYPE(/obj/item/organ/genitals/filling_organ/breasts)
 	return getorganslot(ORGAN_SLOT_BREASTS)
 
-/mob/living/proc/mouth_is_free()
-	return has_mouth() && !mouth_blocked && !is_muzzled() && !is_mouth_covered()
+/// Gags over the mouth, grabs and mouth items stop it; cloth only with cloth_blocks; armor unless [actor] may reach under.
+/mob/living/proc/mouth_is_free(mob/living/actor, cloth_blocks = FALSE, ignore_armor = FALSE)
+	if(!has_mouth() || mouth_blocked)
+		return FALSE
+	if(iscarbon(src))
+		var/mob/living/carbon/carbon_self = src
+		if(carbon_self.mouth?.muteinmouth)
+			return FALSE
+	for(var/obj/item/clothing/worn in get_equipped_items())
+		// A gag that leaves the mouth open, like a ring gag, only muffles speech.
+		if((worn.clothing_flags & BLOCKS_SPEECH) && (cloth_blocks || (worn.flags_cover & (HEADCOVERSMOUTH|MASKCOVERSMOUTH))))
+			return FALSE
+	var/obj/item/clothing/cover = is_mouth_covered()
+	if(!cover)
+		return TRUE
+	if(cloth_blocks || !istype(cover))
+		return FALSE
+	var/list/covers = list(cover)
+	for(var/obj/item/clothing/worn in get_equipped_items())
+		if(worn.flags_cover & (HEADCOVERSMOUTH|MASKCOVERSMOUTH))
+			covers |= worn
+	for(var/obj/item/clothing/worn as anything in covers)
+		if(worn.blocks_sex_reach())
+			return ignore_armor || allows_reach_under_armor(actor)
+	return TRUE
 
 /mob/living/proc/get_worn_choker()
 	return null
@@ -257,71 +287,73 @@
 
 	return "[state_summary]."
 
-/mob/living/proc/return_character_information()
+/// Status lines for the panel; examine_rule FALSE uses the older coverage and underwear rule.
+/mob/living/proc/return_character_information(examine_rule = TRUE)
 	var/list/data = list()
 	if(has_hands())
 		data += get_character_information_line("have hands, which are [has_free_sex_hands() ? "free" : "blocked"]")
 	if(has_mouth())
-		data += get_character_information_line("have a mouth, which is [mouth_is_free() ? "uncovered" : "covered"]")
+		data += get_character_information_line("have a mouth, which is [mouth_is_free(cloth_blocks = TRUE) ? "uncovered" : "covered"]")
 	var/general_state_summary = get_general_sex_state_summary()
 	if(general_state_summary)
 		data += get_character_information_line(general_state_summary)
 	return data
 
-/mob/living/carbon/human/proc/get_visible_groin_summary_description(descriptor_type)
-	if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = FALSE))
-		return null
+/// A groin line by examine's rule, or by body coverage and underwear when examine_rule is FALSE.
+/mob/living/carbon/human/proc/get_visible_groin_summary_description(descriptor_type, examine_rule = TRUE)
 	var/datum/mob_descriptor/descriptor = new descriptor_type()
+	if(examine_rule ? !descriptor.can_describe(src) : !get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = FALSE))
+		return null
 	return descriptor.get_description(src)
 
-/mob/living/carbon/human/proc/get_visible_chest_summary_description(descriptor_type)
-	if(!get_location_accessible(src, BODY_ZONE_CHEST))
-		return null
-	if(underwear?.covers_breasts)
-		return null
+/// A chest line by examine's rule, or by body coverage and breast-covering underwear when examine_rule is FALSE.
+/mob/living/carbon/human/proc/get_visible_chest_summary_description(descriptor_type, examine_rule = TRUE)
 	var/datum/mob_descriptor/descriptor = new descriptor_type()
+	if(examine_rule ? !descriptor.can_describe(src) : (!get_location_accessible(src, BODY_ZONE_CHEST) || underwear?.covers_breasts))
+		return null
 	return descriptor.get_description(src)
 
-/mob/living/carbon/human/proc/get_visible_anus_summary()
+/mob/living/carbon/human/proc/get_visible_anus_summary(examine_rule = TRUE)
 	var/obj/item/organ/genitals/filling_organ/anus/anus = getorganslot(ORGAN_SLOT_ANUS)
 	if(!anus)
 		return null
-	if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = FALSE))
+	// Examine's rule takes the butt and crotch hide flags together.
+	if(examine_rule ? !is_genital_exposed(anus, HIDEBUTT|HIDEUNDIESBOT|HIDECROTCH) : !get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = FALSE))
 		return null
 	var/list/adjectives = anus.orifice?.get_examine_adjectives()
 	if(length(adjectives))
 		return "have an exposed anus, [jointext(adjectives, ", ")]."
 	return "have an exposed anus."
 
-/mob/living/carbon/human/return_character_information()
+/mob/living/carbon/human/return_character_information(examine_rule = TRUE)
 	var/list/data = ..()
 	if(!data)
 		data = list()
 
-	var/breasts_summary = get_visible_chest_summary_description(/datum/mob_descriptor/breasts)
+	var/breasts_summary = get_visible_chest_summary_description(/datum/mob_descriptor/breasts, examine_rule)
 	if(breasts_summary)
 		data += get_character_information_line("have [breasts_summary]")
 
 	var/obj/item/organ/genitals/penis/penis = getorganslot(ORGAN_SLOT_PENIS)
-	var/penis_summary = get_visible_groin_summary_description(/datum/mob_descriptor/penis)
+	var/penis_summary = get_visible_groin_summary_description(/datum/mob_descriptor/penis, examine_rule)
 	if(penis_summary)
 		data += get_character_information_line("have [penis_summary]")
 
 	var/testicles_summary = null
 	if(!penis || penis.sheath_type != SHEATH_TYPE_SLIT)
-		testicles_summary = get_visible_groin_summary_description(/datum/mob_descriptor/testicles)
+		testicles_summary = get_visible_groin_summary_description(/datum/mob_descriptor/testicles, examine_rule)
 	if(testicles_summary)
 		data += get_character_information_line("have [testicles_summary]")
 
-	var/vagina_summary = get_visible_groin_summary_description(/datum/mob_descriptor/vagina)
+	var/vagina_summary = get_visible_groin_summary_description(/datum/mob_descriptor/vagina, examine_rule)
 	if(vagina_summary)
 		data += get_character_information_line("have [vagina_summary]")
 
-	var/butt_summary = get_visible_groin_summary_description(/datum/mob_descriptor/butt)
+	var/butt_summary = get_visible_groin_summary_description(/datum/mob_descriptor/butt, examine_rule)
 	if(butt_summary)
 		data += get_character_information_line("have [butt_summary]")
 
-	var/anus_summary = get_visible_anus_summary()
+	var/anus_summary = get_visible_anus_summary(examine_rule)
 	if(anus_summary)
 		data += get_character_information_line(anus_summary)
 
@@ -619,10 +651,8 @@
 
 		var/obj/item/organ/genitals/penis/penis = getorganslot(ORGAN_SLOT_PENIS)
 		if(!penis)
-			if(!show_genitals)
-				penis = new /obj/item/organ/genitals/penis
-			else
-				penis = new penis_organ
+			// The penis type shapes the body, so a hidden one keeps it; show_genitals only changes looks.
+			penis = new penis_organ
 			penis.length_cm = get_random_penis_length()
 			penis.organ_size = get_penis_visual_size(penis.length_cm)
 			penis.Insert(src, TRUE)
@@ -773,6 +803,33 @@
 /mob/living/proc/get_dry_climax_message()
 	return "[src] climaxes, yet nothing is released!"
 
+/// TRUE when a climax releases nothing: no testicles, and a penis or no vagina.
+/mob/living/proc/climaxes_dry()
+	if(getorganslot(ORGAN_SLOT_TESTICLES))
+		return FALSE
+	if(!getorganslot(ORGAN_SLOT_VAGINA))
+		return TRUE
+	// An ovipositor lays eggs on the climax signal and a strapon spills nothing, so the vagina still climaxes.
+	var/obj/item/organ/genitals/penis/penis = getorganslot(ORGAN_SLOT_PENIS)
+	return penis && !istype(penis, /obj/item/organ/genitals/penis/ovipositor) && !penis.is_false_organ()
+
+/// TRUE when [action] works this mob's strapon with no testicles behind it, so only the vagina climaxes.
+/mob/living/proc/climaxes_behind_strapon(datum/sex_action/action)
+	if(!action || getorganslot(ORGAN_SLOT_TESTICLES) || !getorganslot(ORGAN_SLOT_VAGINA))
+		return FALSE
+	var/obj/item/organ/genitals/penis/penis = getorganslot(ORGAN_SLOT_PENIS)
+	return penis?.is_false_organ() && action.uses_penis_of(src)
+
+/// Whether this act works [holder]'s penis slot: penetrating with it, its scene slot, or its organ-use lists.
+/datum/sex_action/proc/uses_penis_of(mob/living/holder)
+	if(!holder)
+		return FALSE
+	if(ispath(stored_item_type, /obj/item/organ/genitals/penis) && get_storage_insertor(action_user, action_target) == holder)
+		return TRUE
+	if(holder == action_user && (get_scene_user_slot() == ORGAN_SLOT_PENIS || (ORGAN_SLOT_PENIS in uses_user_organs)))
+		return TRUE
+	return holder == action_target && (get_scene_target_slot() == ORGAN_SLOT_PENIS || (ORGAN_SLOT_PENIS in uses_target_organs))
+
 /mob/living/proc/give_genitals()
 	var/mob/living/user = src
 	var/obj/item/organ/genitals/filling_organ/anus/anus = user.getorganslot(ORGAN_SLOT_ANUS)
@@ -790,10 +847,8 @@
 			testicles.Insert(user, TRUE)
 		var/obj/item/organ/genitals/penis/penis = user.getorganslot(ORGAN_SLOT_PENIS)
 		if(!penis)
-			if(!show_genitals)
-				penis = new /obj/item/organ/genitals/penis
-			else
-				penis = new penis_organ
+			// The penis type shapes the body, so a hidden one keeps it; show_genitals only changes looks.
+			penis = new penis_organ
 			penis.length_cm = get_random_penis_length()
 			penis.organ_size = get_penis_visual_size(penis.length_cm)
 			penis.Insert(user, TRUE)
@@ -832,10 +887,8 @@
 				testicles.Insert(user, TRUE)
 			var/obj/item/organ/genitals/penis/penis = user.getorganslot(ORGAN_SLOT_PENIS)
 			if(!penis)
-				if(!show_genitals)
-					penis = new /obj/item/organ/genitals/penis
-				else
-					penis = new penis_organ
+				// The penis type shapes the body, so a hidden one keeps it; show_genitals only changes looks.
+				penis = new penis_organ
 				penis.length_cm = get_random_penis_length()
 				penis.organ_size = get_penis_visual_size(penis.length_cm)
 				penis.Insert(user, TRUE)

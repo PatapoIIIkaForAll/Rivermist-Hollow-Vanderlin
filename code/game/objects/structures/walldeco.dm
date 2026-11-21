@@ -46,8 +46,8 @@
 			var/icon/credit_icon = SScrediticons.get_credit_icon(outlaw, TRUE)
 			if(credit_icon)
 				var/reason
-				if(outlaw.get_quirk(/datum/quirk/vice/wanted))
-					var/datum/quirk/vice/wanted/w_quirk = outlaw.get_quirk(/datum/quirk/vice/wanted)
+				if(outlaw.get_quirk(/datum/quirk/negative/wanted))
+					var/datum/quirk/negative/wanted/w_quirk = outlaw.get_quirk(/datum/quirk/negative/wanted)
 					reason = w_quirk.customization_value
 				outlaws += list(list(
 					"name" = outlaw.real_name,

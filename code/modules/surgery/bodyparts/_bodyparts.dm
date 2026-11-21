@@ -1408,9 +1408,16 @@
 	else
 		limb.icon = species_icon
 		limb.icon_state = "pr_[body_zone]"
+		//RMH EDITED START - prosthetic material tint
+		var/list/tint_matrix = prosthetic_tint ? prosthetic_tint_matrix(prosthetic_tint) : null
+		if(tint_matrix)
+			limb.color = tint_matrix
+		//RMH EDITED END
 		if(aux_zone)
 			if(!hideaux)
 				aux = image(limb.icon, "pr_[aux_zone]", -aux_layer, image_dir)
+				if(tint_matrix) // RMH EDIT
+					aux.color = tint_matrix
 				. += aux
 		return
 

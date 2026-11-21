@@ -1,0 +1,522 @@
+/proc/get_mammons_in_atom(atom/movable/movable)
+	var/static/list/coins_types = typecacheof(/obj/item/coin)
+	var/mammons = 0
+	if(coins_types[movable.type])
+		var/obj/item/coin/coin = movable
+		mammons += coin.quantity * coin.sellprice
+	for(var/atom/movable/content in movable.contents)
+		mammons += get_mammons_in_atom(content)
+	return mammons
+
+/datum/status_effect/debuff/addiction
+	id = "addiction"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction
+	effectedstats = list(STAT_ENDURANCE = -1, STAT_FORTUNE = -1)
+	duration = 100
+
+/datum/status_effect/debuff/addiction/alcoholic
+	id = "addiction_alcoholic"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/alcoholic
+
+/datum/status_effect/debuff/addiction/smoker
+	id = "addiction_smoker"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/smoker
+
+/datum/status_effect/debuff/addiction/junkie
+	id = "addiction_junkie"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/junkie
+
+/datum/status_effect/debuff/addiction/kleptomaniac
+	id = "addiction_kleptomaniac"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/kleptomaniac
+
+/datum/status_effect/debuff/addiction/godfearing
+	id = "addiction_godfearing"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/godfearing
+
+/datum/status_effect/debuff/addiction/sadist
+	id = "addiction_sadist"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/sadist
+
+/datum/status_effect/debuff/addiction/greedy
+	id = "addiction_greedy"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/greedy
+
+/datum/status_effect/debuff/addiction/masochist
+	id = "addiction_masochist"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/addiction/masochist
+
+/atom/movable/screen/alert/status_effect/debuff/addiction
+	name = "Addiction"
+	desc = "I need to sate my vice."
+	icon_state = "debuff"
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/alcoholic
+	name = "Alcohol Craving"
+	desc = "I need a drink."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/smoker
+	name = "Smoke Craving"
+	desc = "I need a smoke."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/junkie
+	name = "Drug Craving"
+	desc = "I need a high."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/kleptomaniac
+	name = "Theft Craving"
+	desc = "I need to steal something."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/godfearing
+	name = "Prayer Craving"
+	desc = "I need to pray."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/sadist
+	name = "Blood Craving"
+	desc = "I need bloodshed."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/greedy
+	name = "Greed Craving"
+	desc = "I need more amnas."
+
+/atom/movable/screen/alert/status_effect/debuff/addiction/masochist
+	name = "Pain Craving"
+	desc = "I need pain."
+
+/datum/quirk/negative/greedy
+	name = "Greedy"
+	desc = "I can't get enough of amnas, I need more and more!"
+	point_value = 4
+	var/last_checked_mammons = 0
+	var/required_mammons = 0
+	var/next_mammon_increase = 0
+	var/last_passed_check = 0
+	var/first_tick = FALSE
+	var/extra_increment_value = 0
+
+/datum/quirk/negative/greedy/on_examined(mob/user, list/P, list/examine_contents)
+	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
+		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Greed..."))
+
+/datum/quirk/negative/greedy/on_spawn()
+	next_mammon_increase = world.time + rand(15 MINUTES, 25 MINUTES)
+	last_passed_check = world.time
+
+/datum/quirk/negative/greedy/on_life(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(!first_tick)
+		var/starting_mammons = get_mammons_in_atom(H)
+		required_mammons = round(starting_mammons * 0.7)
+		extra_increment_value = round(starting_mammons * 0.15)
+		first_tick = TRUE
+		return
+
+	if(world.time >= next_mammon_increase)
+		if(last_passed_check + (50 MINUTES) < world.time)
+			required_mammons -= rand(10, 20)
+			to_chat(H, span_blue("Maybe a little less amnas is enough..."))
+		else
+			required_mammons += rand(25, 35) + extra_increment_value
+		required_mammons = min(required_mammons, 250)
+		next_mammon_increase = world.time + rand(35 MINUTES, 40 MINUTES)
+		var/current_mammons = get_mammons_in_atom(H)
+		if(current_mammons >= required_mammons)
+			to_chat(H, span_blue("I'm quite happy with the amount of amnas I have..."))
+		else
+			to_chat(H, span_boldwarning("I need more amnas, what I have is not enough..."))
+		last_checked_mammons = current_mammons
+
+	var/new_mammon_amount = get_mammons_in_atom(H)
+	var/ascending = (new_mammon_amount > last_checked_mammons)
+	var/do_update_msg = TRUE
+
+	if(new_mammon_amount >= required_mammons)
+		if(H.has_stress_type(/datum/stress_event/vice))
+			to_chat(H, span_blue("[new_mammon_amount] amnas... That's more like it.."))
+		H.remove_stress(/datum/stress_event/vice)
+		H.remove_status_effect(/datum/status_effect/debuff/addiction/greedy)
+		last_passed_check = world.time
+		do_update_msg = FALSE
+	else
+		H.add_stress(/datum/stress_event/vice)
+		H.apply_status_effect(/datum/status_effect/debuff/addiction/greedy)
+
+	if(new_mammon_amount == last_checked_mammons)
+		do_update_msg = FALSE
+
+	if(do_update_msg)
+		if(ascending)
+			to_chat(H, span_warning("Only [new_mammon_amount] amnas.. I need more..."))
+		else
+			to_chat(H, span_boldwarning("No! My precious amnas..."))
+
+	last_checked_mammons = new_mammon_amount
+
+/datum/quirk/negative/paranoid
+	name = "Paranoid"
+	desc = "I'm even more anxious than most towners. I'm extra paranoid of other species, the price of higher intelligence."
+	point_value = 3
+	var/last_check = 0
+
+/datum/quirk/negative/paranoid/on_life(mob/living/user)
+	if(world.time < last_check + 10 SECONDS)
+		return
+	if(!ishuman(user))
+		return
+
+	last_check = world.time
+	var/mob/living/carbon/human/H = user
+	var/cnt = 0
+
+	for(var/mob/living/carbon/human/L in hearers(7, user))
+		if(L == user)
+			continue
+		if(L.stat)
+			continue
+		if(L.dna?.species && H.dna?.species)
+			if(L.dna.species.id != H.dna.species.id)
+				cnt++
+		if(cnt > 2)
+			break
+
+	if(cnt > 2)
+		H.add_stress(/datum/stress_event/para/crowd)
+
+	cnt = 0
+	for(var/obj/effect/decal/cleanable/blood/B in view(7, user))
+		cnt++
+		if(cnt > 3)
+			break
+
+	if(cnt > 6)
+		H.add_stress(/datum/stress_event/para/blood)
+
+/datum/quirk/negative/paranoid/on_examined(mob/user, list/P, list/examine_contents)
+	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
+		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Paranoid..."))
+
+/datum/quirk/negative/clingy
+	name = "Clingy"
+	desc = "I like being around people, it's just so lively..."
+	point_value = 2
+	incompatible_quirks = list(
+		/datum/quirk/negative/isolationist
+	)
+	var/last_check = 0
+
+/datum/quirk/negative/clingy/on_examined(mob/user, list/P, list/examine_contents)
+	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
+		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Clingy..."))
+
+/datum/quirk/negative/clingy/on_life(mob/living/user)
+	if(world.time < last_check + 10 SECONDS)
+		return
+	if(!user)
+		return
+
+	last_check = world.time
+	var/cnt = 0
+
+	for(var/mob/living/carbon/human/L in hearers(7, user))
+		if(L == user)
+			continue
+		if(L.stat)
+			continue
+		if(L.dna?.species)
+			cnt++
+		if(cnt > 2)
+			break
+
+	if(cnt < 2)
+		var/mob/living/carbon/P = user
+		P.add_stress(/datum/stress_event/nopeople)
+
+/datum/quirk/negative/isolationist
+	name = "Isolationist"
+	desc = "I don't like being near people. They might be trying to do something to me..."
+	point_value = 2
+	incompatible_quirks = list(
+		/datum/quirk/negative/clingy
+	)
+	var/last_check = 0
+
+/datum/quirk/negative/isolationist/on_examined(mob/user, list/P, list/examine_contents)
+	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
+		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Introvert..."))
+
+/datum/quirk/negative/isolationist/on_life(mob/living/user)
+	if(world.time < last_check + 10 SECONDS)
+		return
+	if(!user)
+		return
+
+	last_check = world.time
+	var/cnt = 0
+
+	for(var/mob/living/carbon/human/L in hearers(7, user))
+		if(L == user)
+			continue
+		if(L.stat)
+			continue
+		if(L.dna?.species)
+			cnt++
+		if(cnt > 2)
+			break
+
+	if(cnt > 2)
+		var/mob/living/carbon/P = user
+		P.add_stress(/datum/stress_event/crowd)
+
+/datum/quirk/negative/narcoleptic
+	name = "Narcoleptic"
+	desc = "I get drowsy during the day and tend to fall asleep suddenly, but I can sleep easier if I want to, and moon dust can help me stay awake."
+	point_value = 4
+	var/last_unconsciousness = 0
+	var/next_sleep = 0
+	var/concious_timer = (10 MINUTES)
+	var/do_sleep = FALSE
+	var/pain_pity_charges = 3
+	var/drugged_up = FALSE
+
+/datum/quirk/negative/narcoleptic/on_examined(mob/user, list/P, list/examine_contents)
+	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
+		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Sleepy..."))
+
+/datum/quirk/negative/narcoleptic/on_spawn()
+	ADD_TRAIT(owner, TRAIT_FASTSLEEP, "[type]")
+	last_unconsciousness = world.time
+	concious_timer = rand(7 MINUTES, 15 MINUTES)
+	pain_pity_charges = rand(2, 4)
+
+/datum/quirk/negative/narcoleptic/on_life(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(H.stat != CONSCIOUS)
+		do_sleep = FALSE
+		last_unconsciousness = world.time
+		concious_timer = rand(7 MINUTES, 15 MINUTES)
+		pain_pity_charges = rand(2, 4)
+		return
+
+	if(do_sleep)
+		if(next_sleep <= world.time)
+			var/pain = H.getShockStage()
+			if(pain >= SHOCK_STAGE_2 && pain_pity_charges > 0)
+				pain_pity_charges--
+				concious_timer = rand(1 MINUTES, 2 MINUTES)
+				to_chat(H, span_warning("The pain keeps me awake..."))
+			else
+				if(prob(40) || drugged_up)
+					drugged_up = FALSE
+					concious_timer = rand(4 MINUTES, 6 MINUTES)
+					to_chat(H, span_info("The feeling has passed."))
+				else
+					concious_timer = rand(7 MINUTES, 15 MINUTES)
+					to_chat(H, span_boldwarning("I can't keep my eyes open any longer..."))
+					H.Sleeping(rand(30 SECONDS, 50 SECONDS))
+					H.visible_message(span_warning("[H] suddenly collapses!"))
+			do_sleep = FALSE
+			last_unconsciousness = world.time
+	else
+		if(last_unconsciousness + concious_timer < world.time)
+			drugged_up = FALSE
+			to_chat(H, span_blue("I'm getting drowsy..."))
+			H.emote("yawn", forced = TRUE)
+			next_sleep = world.time + rand(7 SECONDS, 11 SECONDS)
+			do_sleep = TRUE
+
+/datum/quirk/negative/narcoleptic/on_remove()
+	if(owner)
+		REMOVE_TRAIT(owner, TRAIT_FASTSLEEP, "[type]")
+
+/proc/narcolepsy_drug_up(mob/living/living)
+	var/datum/quirk/negative/narcoleptic/narco = living.get_quirk(/datum/quirk/negative/narcoleptic)
+	if(!narco)
+		return
+	narco.drugged_up = TRUE
+
+/datum/quirk/negative/addiction/masochist
+	name = "Masochist"
+	desc = "I love the feeling of pain, so much I can't get enough of it."
+	point_value = 4
+	var/next_paincrave = 0
+	var/last_pain_threshold = NONE
+
+/datum/quirk/negative/addiction/masochist/on_examined(mob/user, list/P, list/examine_contents)
+	if(HAS_TRAIT(user, TRAIT_RECOGNIZE_ADDICTS))
+		LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_PREGEAR, span_info("Masochist!"))
+
+/datum/quirk/negative/addiction/masochist/on_spawn()
+	. = ..()
+	next_paincrave = world.time + rand(15 MINUTES, 25 MINUTES)
+
+/datum/quirk/negative/addiction/masochist/on_life(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(next_paincrave > world.time)
+		last_pain_threshold = NONE
+		return
+
+	H.add_stress(/datum/stress_event/vice)
+	H.apply_status_effect(/datum/status_effect/debuff/addiction/masochist)
+
+	var/current_pain = H.getShock()
+	var/bloodloss_factor = clamp(1.0 - (H.blood_volume / BLOOD_VOLUME_NORMAL), 0.0, 0.5)
+	var/new_pain_threshold = get_pain_threshold(current_pain * (1.0 + (bloodloss_factor * 1.4)) * clamp(2 - (GET_MOB_ATTRIBUTE_VALUE(H, STAT_ENDURANCE) / 10), 0.5, 1.5))
+
+	if(last_pain_threshold == NONE)
+		to_chat(H, span_boldwarning("I could really use some pain right now..."))
+	else if(new_pain_threshold != last_pain_threshold)
+		var/ascending = (new_pain_threshold > last_pain_threshold)
+		switch(new_pain_threshold)
+			if(MASO_THRESHOLD_ONE)
+				to_chat(H, span_warning("The pain is gone..."))
+			if(MASO_THRESHOLD_TWO)
+				if(ascending)
+					to_chat(H, span_blue("Yes, more pain!"))
+				else
+					to_chat(H, span_warning("No, my pain!"))
+			if(MASO_THRESHOLD_THREE)
+				to_chat(H, span_blue("More, I love it!"))
+
+	last_pain_threshold = new_pain_threshold
+	if(new_pain_threshold == MASO_THRESHOLD_FOUR)
+		sate(H)
+
+/datum/quirk/negative/addiction/masochist/sate(mob/living/carbon/human/user)
+	if(next_paincrave <= world.time)
+		to_chat(user, span_blue("<b>[sated_text]</b>"))
+	next_paincrave = world.time + rand(35 MINUTES, 45 MINUTES)
+	last_pain_threshold = NONE
+	user.remove_stress(/datum/stress_event/vice)
+	user.remove_status_effect(/datum/status_effect/debuff/addiction/masochist)
+
+/datum/quirk/negative/addiction/masochist/proc/get_pain_threshold(pain_amt)
+	switch(pain_amt)
+		if(-INFINITY to 25)
+			return MASO_THRESHOLD_ONE
+		if(25 to 50)
+			return MASO_THRESHOLD_TWO
+		if(50 to 95)
+			return MASO_THRESHOLD_THREE
+		if(95 to INFINITY)
+			return MASO_THRESHOLD_FOUR
+
+// Chronic Pain Vices
+/datum/quirk/negative/chronic_arthritis
+	name = "Chronic Arthritis"
+	desc = "Your joints ache constantly, causing periodic pain flares and reduced mobility."
+	point_value = 3
+
+/datum/quirk/negative/chronic_arthritis/on_spawn()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	var/list/joint_parts = list()
+	for(var/obj/item/bodypart/BP in H.bodyparts)
+		if(BP.body_zone in list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
+			joint_parts += BP
+
+	if(joint_parts.len)
+		var/affected_parts = min(rand(1, 3), joint_parts.len)
+		for(var/i = 1 to affected_parts)
+			var/obj/item/bodypart/BP = pick_n_take(joint_parts)
+			BP.add_pain(rand(10, 20))
+			BP.limb_flags |= BODYPART_CHRONIC_ARTHRITIS
+			BP.update_chronic()
+
+	to_chat(H, span_warning("Your joints feel stiff and painful - a reminder of your chronic arthritis."))
+
+/datum/quirk/negative/chronic_back_pain
+	name = "Chronic Back Pain"
+	desc = "Years of wear and tear have left you with persistent lower back pain that affects your mobility."
+	point_value = 3
+
+/datum/quirk/negative/chronic_back_pain/on_spawn()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	var/obj/item/bodypart/BP = H.get_bodypart(BODY_ZONE_CHEST)
+	BP?.add_pain(rand(20, 32.5))
+	BP?.limb_flags |= pick(BODYPART_CHRONIC_FRACTURE, BODYPART_CHRONIC_SCAR)
+	BP?.update_chronic()
+	to_chat(H, span_warning("Your lower back aches with familiar, persistent pain."))
+
+/datum/quirk/negative/old_war_wound
+	name = "Old War Wound"
+	desc = "An old injury from your past still haunts you, causing chronic pain and occasional flare-ups."
+	point_value = 5
+
+/datum/quirk/negative/old_war_wound/on_spawn()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	var/list/major_parts = list()
+	for(var/obj/item/bodypart/BP in H.bodyparts)
+		if(BP.body_zone in list(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG))
+			major_parts += BP
+
+	if(length(major_parts))
+		for(var/rand in 1 to rand(1, 2))
+			var/obj/item/bodypart/wounded = pick(major_parts)
+			wounded.add_pain(rand(10, 17.5))
+			var/list/remove_one = list(BODYPART_CHRONIC_FRACTURE, BODYPART_CHRONIC_SCAR, BODYPART_CHRONIC_NERVE_DAMAGE)
+			pick_n_take(remove_one)
+			for(var/i in remove_one)
+				wounded.limb_flags |= i
+			wounded.update_chronic()
+			var/damage = rand(5, 9)
+			wounded.bodypart_attacked_by(pick(BCLASS_BLUNT, BCLASS_BITE, BCLASS_CUT, BCLASS_LASHING, BCLASS_BURN), damage, modifiers = list(CRIT_MOD_CHANCE = -100))
+			var/wound_location = wounded.name
+			var/wound_desc = pick("shrapnel wound", "arrow wound", "deep scar", "poorly healed fracture")
+			to_chat(H, span_warning("You feel the familiar ache of your old [wound_desc] in your [wound_location]."))
+
+/datum/quirk/negative/nimrod
+	name = "Nimrod"
+	desc = "In the past I learned slower than my peers, and I tend to be clumsy."
+	point_value = 6
+
+/datum/quirk/negative/nimrod/on_spawn()
+	var/mob/living/carbon/human/H = owner
+	H.change_stat("speed", -2)
+	H.change_stat("intelligence", -4)
+
+/datum/quirk/negative/unlucky
+	name = "Unlucky"
+	desc = "Ever since you knocked over that glass vase, you just feel... off"
+	point_value = 6
+
+/datum/quirk/negative/unlucky/on_spawn()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	H.STALUC = rand(1, 10)
+
+/datum/quirk/negative/jesterphobia
+	name = "Jesterphobic"
+	desc = "I have a severe, irrational fear of Jesters"
+	point_value = 1
+
+/datum/quirk/negative/jesterphobia/on_spawn()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	ADD_TRAIT(H, TRAIT_JESTERPHOBIA, "[type]")
+
+/datum/quirk/negative/nude_sleeper
+	name = "Picky Sleeper"
+	desc = "I just can't seem to fall asleep unless I'm <i>truly</i> comfortable..."
+	point_value = 3 //Sleeping people are already rather vulnerable. Having to take off literally everything is more than just bothersome.
+
+/datum/quirk/negative/nude_sleeper/on_spawn()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	ADD_TRAIT(H, TRAIT_NUDE_SLEEPER, "[type]")

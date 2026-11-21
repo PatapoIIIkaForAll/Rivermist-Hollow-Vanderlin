@@ -212,11 +212,17 @@
 	if(!length(parts))
 		return
 	. += span_info("[capitalize(p_their())] [underwear.name] doesn't cover [p_them()] from behind.")
-	. += span_info(treat_mob_descriptor_string("%THEY% [length(used_verbage) ? "" : "%HAVE% "][english_list(parts)].", src))
+	var/rear_line = treat_mob_descriptor_string("%THEY% [length(used_verbage) ? "" : "%HAVE% "][english_list(parts)].", src)
+	// Marks on what this view shows; parts the main lines described are left out.
+	if(anus && !length(list(/datum/mob_descriptor/butt, /datum/mob_descriptor/vagina) & shown_descriptors))
+		rear_descriptors |= /datum/mob_descriptor/butt
+	var/rear_marks = get_descriptor_marks(rear_descriptors, user, list(), trust_shown = TRUE)
+	. += span_info(rear_marks ? "[rear_line] [rear_marks]" : rear_line)
 
 /mob/living/carbon/human/get_examine_body(mob/user, list/P, list/examine_list)
 	. = get_body_description_lines(user)
 	. += ..()
+	. += get_torn_clothes_examine_lines(P)
 	var/list/organ_desc = list()
 	var/show_undie_desc = FALSE
 	var/list/arousal_data = list()

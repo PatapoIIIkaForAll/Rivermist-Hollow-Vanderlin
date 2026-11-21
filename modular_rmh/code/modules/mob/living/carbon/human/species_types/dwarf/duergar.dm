@@ -14,9 +14,7 @@
 	n\n\
 	Though often cruel and merciless, their harsh nature is forged from generations of oppression rather than inherent malice. \
 	n\n\
-	(+1 STR, 2+ CON, +1 END, -1 LCK, Poison Resistance, Darkvision, Sunlight Sensitivity, Dwarvish Language).\
-	\n\n\
-	Proficiencies: Axemaces(4), Polearms(3), Sneaking(3), Blacksmithing(3), Smelting(3), Mining(4), Arcane(2).\
+	(Poison Resistance, Darkvision, Sunlight Sensitivity, Dwarvish Language).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
@@ -39,6 +37,7 @@
 
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_SPLEEN = /obj/item/organ/spleen,
 		ORGAN_SLOT_HEART = /obj/item/organ/heart,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
 		ORGAN_SLOT_EYES = /obj/item/organ/eyes/night_vision,
@@ -223,18 +222,14 @@
 		qdel(D)
 
 /datum/attribute_holder/sheet/job/species/duergar/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/combat/axesmaces = 40,
-		/datum/attribute/skill/combat/polearms = 30,
-
-		/datum/attribute/skill/misc/sneaking = 30,
-
-		/datum/attribute/skill/craft/blacksmithing = 30,
-		/datum/attribute/skill/craft/smelting = 30,
-
-		/datum/attribute/skill/labor/mining = 40,
-
-		/datum/attribute/skill/magic/arcane = 20,
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/axesmaces = list(30, 30),
+		/datum/attribute/skill/combat/polearms = list(30, 30),
+		/datum/attribute/skill/misc/sneaking = list(30, 30),
+		/datum/attribute/skill/craft/blacksmithing = list(10, 20),
+		/datum/attribute/skill/craft/smelting = list(10, 20),
+		/datum/attribute/skill/labor/mining = list(20, 40),
+		/datum/attribute/skill/magic/arcane = list(10, 10),
 	)
 
 

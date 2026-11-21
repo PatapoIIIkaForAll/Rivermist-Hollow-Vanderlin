@@ -65,8 +65,8 @@
 	limb.drop_limb()
 
 /datum/surgery_operation/limb/amputate/pegleg
-	name = "Detach Wooden Limb"
-	desc = "Saw off a patient's wooden limb."
+	name = "Detach Prosthetic"
+	desc = "Remove a patient's prosthetic limb."
 
 	required_bodytype = BODYPART_ROBOTIC
 	operation_flags = parent_type::operation_flags | OPERATION_MECHANIC
@@ -80,6 +80,8 @@
 	time = 3 SECONDS
 
 	skill_used = /datum/attribute/skill/craft/engineering
+	// Anyone may try; engineering only improves the odds and the speed.
+	skill_min = SKILL_LEVEL_NONE
 
 	preop_sound = 'sound/foley/sewflesh.ogg'
 	success_sound = 'sound/items/wood_sharpen.ogg'
@@ -88,4 +90,4 @@
 
 /datum/surgery_operation/limb/amputate/pegleg/all_required_strings()
 	. = ..()
-	. += "the limb must be wooden"
+	. += "the limb must be a prosthetic"

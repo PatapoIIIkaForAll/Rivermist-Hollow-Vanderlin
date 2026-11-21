@@ -11,6 +11,10 @@
 	/// This value determines if the cone penetrates walls.
 	var/respect_density = FALSE
 
+/datum/action/cooldown/spell/cone/get_examine_effects()
+	. = ..()
+	. += "<b>AREA:</b> cone, [cone_levels] tiles long"
+
 /datum/action/cooldown/spell/cone/cast(atom/cast_on)
 	. = ..()
 	var/list/cone_turfs = get_cone_turfs(get_turf(cast_on), cast_on.dir, cone_levels)
@@ -35,7 +39,7 @@
 		for(var/atom/movable/movable_content as anything in target_turf)
 			if(isobj(movable_content))
 				do_obj_cone_effect(movable_content, caster, level)
-			else if(isliving(movable_content))
+			else if(isliving(movable_content) && !owner?.spares_ally(movable_content))
 				do_mob_cone_effect(movable_content, caster, level)
 
 ///This proc deterimines how the spell will affect turfs.

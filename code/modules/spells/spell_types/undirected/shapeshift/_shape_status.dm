@@ -181,6 +181,8 @@
 	id = "shapechange_from_spell"
 	/// The shapechange spell that's caused our change
 	var/datum/weakref/source_weakref
+	/// Shape health right after the shift; only damage below it carries back to the caster.
+	var/shape_health_after_shift
 
 /datum/status_effect/shapechange_mob/from_spell/on_creation(mob/living/new_owner, mob/living/caster, keep_skills = TRUE, datum/action/cooldown/spell/undirected/shapeshift/source_spell)
 	if(!istype(source_spell))
@@ -203,6 +205,7 @@
 
 			owner.apply_damage(damage_to_apply, source_spell.convert_damage_type, forced = TRUE)
 			owner.blood_volume = caster_mob.blood_volume
+			shape_health_after_shift = owner.health
 
 	for(var/datum/action/bodybound_action as anything in caster_mob.actions)
 		if(bodybound_action.target != caster_mob)
@@ -236,10 +239,15 @@
 		return
 
 	if(caster_mob.stat != DEAD)
-		caster_mob.revive(HEAL_DAMAGE|HEAL_BLOOD)
-
-		var/damage_to_apply = caster_mob.maxHealth * ((owner.maxHealth - owner.health) / owner.maxHealth)
-		caster_mob.apply_damage(damage_to_apply, source_spell.convert_damage_type, forced = TRUE, spread_damage = TRUE)
+		// The caster keeps its wounds and gains only the damage the shape took after the shift.
+		var/shape_start_health = isnull(shape_health_after_shift) ? owner.maxHealth : shape_health_after_shift
+		var/damage_taken = max(0, shape_start_health - owner.health)
+		if(damage_taken > 0)
+			var/damage_to_apply = caster_mob.maxHealth * (damage_taken / owner.maxHealth)
+			caster_mob.apply_damage(damage_to_apply, source_spell.convert_damage_type, forced = TRUE, spread_damage = TRUE)
+		if(iscarbon(caster_mob))
+			var/mob/living/carbon/carbon_caster = caster_mob
+			carbon_caster.defeat_stabilize_active_injuries()
 
 	if(iscarbon(owner))
 		caster_mob.blood_volume = owner.blood_volume

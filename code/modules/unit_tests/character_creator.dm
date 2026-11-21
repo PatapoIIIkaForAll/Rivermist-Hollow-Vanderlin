@@ -3,18 +3,18 @@
 /// A crafted export must not turn a quirk option into an arbitrary path: the pet quirk spawns it.
 /datum/unit_test/character_creator_import_quirk_value/Run()
 	var/datum/preferences/prefs = allocate(/datum/preferences)
-	var/datum/quirk/pet = GLOB.quirk_singletons[/datum/quirk/boon/pet]
+	var/datum/quirk/pet = GLOB.quirk_singletons[/datum/quirk/positive/pet]
 	TEST_ASSERT_NOTNULL(pet, "The pet quirk singleton should exist")
 	TEST_ASSERT(length(pet.customization_options), "The pet quirk should offer at least one pet")
 	var/offered = pet.customization_options[1]
 
-	TEST_ASSERT_EQUAL(prefs.character_creator_quirk_value(/datum/quirk/boon/pet, "[offered]"), offered, "An offered pet should be kept")
-	TEST_ASSERT_NULL(prefs.character_creator_quirk_value(/datum/quirk/boon/pet, "/mob/living/simple_animal/hostile"), "A mob type the quirk does not offer must be dropped")
-	TEST_ASSERT_NULL(prefs.character_creator_quirk_value(/datum/quirk/boon/pet, "/obj/item"), "A non-mob path must be dropped")
-	TEST_ASSERT_NULL(prefs.character_creator_quirk_value(/datum/quirk/boon/pet, 5), "A number must be dropped for a select quirk")
+	TEST_ASSERT_EQUAL(prefs.character_creator_quirk_value(/datum/quirk/positive/pet, "[offered]"), offered, "An offered pet should be kept")
+	TEST_ASSERT_NULL(prefs.character_creator_quirk_value(/datum/quirk/positive/pet, "/mob/living/simple_animal/hostile"), "A mob type the quirk does not offer must be dropped")
+	TEST_ASSERT_NULL(prefs.character_creator_quirk_value(/datum/quirk/positive/pet, "/obj/item"), "A non-mob path must be dropped")
+	TEST_ASSERT_NULL(prefs.character_creator_quirk_value(/datum/quirk/positive/pet, 5), "A number must be dropped for a select quirk")
 
-	prefs.character_creator_import_quirks(list(list("type" = "[/datum/quirk/boon/pet]", "value" = "/mob/living/simple_animal/hostile")))
-	TEST_ASSERT(prefs.quirk_customizations[/datum/quirk/boon/pet] != /mob/living/simple_animal/hostile, "The importer must never store an unoffered pet path")
+	prefs.character_creator_import_quirks(list(list("type" = "[/datum/quirk/positive/pet]", "value" = "/mob/living/simple_animal/hostile")))
+	TEST_ASSERT(prefs.quirk_customizations[/datum/quirk/positive/pet] != /mob/living/simple_animal/hostile, "The importer must never store an unoffered pet path")
 
 /// The customizer importer may only write the fields the editor itself changes.
 /datum/unit_test/character_creator_import_customizer_fields/Run()
@@ -64,6 +64,33 @@
 			high_count++
 	TEST_ASSERT_EQUAL(high_count, 1, "Exactly one imported job may stay at High")
 	TEST_ASSERT(!("Character Creator Test Job" in prefs.job_preferences), "Unknown jobs must be skipped")
+
+/// Job priorities must survive a save and reload, or old saves keep their stale job list.
+/datum/unit_test/character_creator_job_priorities_save
+	var/save_path
+
+/datum/unit_test/character_creator_job_priorities_save/Destroy()
+	if(save_path)
+		fdel(save_path)
+	return ..()
+
+/datum/unit_test/character_creator_job_priorities_save/Run()
+	var/datum/preferences/prefs = allocate(/datum/preferences)
+	save_path = "[GLOB.log_directory]/character_creator_jobs_test.sav"
+	fdel(save_path)
+	prefs.path = save_path
+	prefs.job_preferences = list("Saved Old Job" = JP_HIGH)
+	TEST_ASSERT(prefs.save_character(), "The first save should succeed")
+
+	prefs.job_preferences = list("Saved High Job" = JP_HIGH, "Saved Medium Job" = JP_MEDIUM, "Saved Low Job" = JP_LOW)
+	TEST_ASSERT(prefs.save_character(), "The second save should succeed")
+	prefs.job_preferences = list()
+	TEST_ASSERT(prefs.load_character(prefs.default_slot), "The saved character should load")
+
+	TEST_ASSERT_EQUAL(length(prefs.job_preferences), 3, "Every saved job priority should load back")
+	TEST_ASSERT_EQUAL(prefs.job_preferences["Saved High Job"], JP_HIGH, "The High job should load back")
+	TEST_ASSERT_EQUAL(prefs.job_preferences["Saved Medium Job"], JP_MEDIUM, "The Medium job should load back")
+	TEST_ASSERT(!("Saved Old Job" in prefs.job_preferences), "A later save must replace the earlier job list")
 
 /// The preferred subclass only moves an already rolled class to the front.
 /datum/unit_test/character_creator_preferred_class_order/Run()

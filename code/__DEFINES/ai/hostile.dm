@@ -64,6 +64,31 @@
 #define BB_BASIC_FOODS "BB_basic_foods"
 ///What creature we want to cocoon
 #define BB_BASIC_MOB_COCOON_TARGET "BB_basic_mob_cocoon_target"
+/// The partner a spider just came with; only they may be wrapped while merely yielding.
+#define BB_SPIDER_SATED_WITH "BB_spider_sated_with"
+/// The unsealed cocoon a spider walks to and lays its eggs into.
+#define BB_SPIDER_BROOD_COCOON "BB_spider_brood_cocoon"
+/// world.time the brood began; the walk gives up after a while.
+#define BB_SPIDER_BROOD_SINCE "BB_spider_brood_since"
+/// world.time the spider parted the silk; a climax after it ends the brood.
+#define BB_SPIDER_BROOD_OPENED_AT "BB_spider_brood_opened_at"
+/// The lay act last started, and the eggs stored just before it.
+#define BB_SPIDER_BROOD_LAST_ACT "BB_spider_brood_last_act"
+#define BB_SPIDER_BROOD_EGGS_BEFORE "BB_spider_brood_eggs_before"
+/// Lay acts that took no egg this brood; they are not tried again.
+#define BB_SPIDER_BROOD_REFUSED "BB_spider_brood_refused"
+/// The occupied cocoon a spider keeps away from, and the world.time that ends.
+#define BB_SPIDER_SHUNNED_COCOON "BB_spider_shunned_cocoon"
+#define BB_SPIDER_SHUNNED_UNTIL "BB_spider_shunned_until"
+/// world.time until a spider that cannot leave its cocoon makes no idle noise.
+#define BB_SPIDER_HUSHED_UNTIL "BB_spider_hushed_until"
+/// The turf a spider walks to away from a cocoon, and the world.time it first set out.
+#define BB_SPIDER_DISPERSE_TURF "BB_spider_disperse_turf"
+#define BB_SPIDER_DISPERSE_SINCE "BB_spider_disperse_since"
+/// world.time of the hunter's last web spit; a fall on the web soon after presents the target.
+#define BB_HORNY_WEB_SPAT_AT "BB_horny_web_spat_at"
+/// world.time until which a webbed, fallen target lies presented: the bear-down needs no roll.
+#define BB_HORNY_PRESENTED_UNTIL "BB_horny_presented_until"
 
 /// Flag to set on or off if you want your mob to prioritise running away
 #define BB_BASIC_MOB_FLEEING "BB_basic_fleeing"
@@ -102,17 +127,46 @@
 
 
 #define BB_BASIC_MOB_CURRENT_HORNY_TARGET "BB_basic_current_horny_target"
+/// Target a pet order pointed this mob at; while it is the horny target, it passes the ally gate.
+#define BB_HORNY_DIRECTED_TARGET "BB_horny_directed_target"
 #define BB_HORNY_AGGRO_TARGET "BB_horny_aggro_target"
 #define BB_HORNY_HOSTILE_TARGETS "BB_horny_hostile_targets"
-#define BB_HORNY_TARGET_ATTACK_COUNT "BB_horny_target_attack_count"
 #define BB_HORNY_SEEK_COOLDOWN "BB_horny_seek_cooldown"
-#define BB_HORNY_SEEK_START_TIME "BB_horny_seek_start_time"
-#define BB_HORNY_STUN_COOLDOWN "BB_horny_stun_cooldown"
-#define BB_HORNY_SEARCH_COOLDOWN "BB_horny_search_cooldown"
 #define BB_HORNY_TIME_START "BB_horny_time_start"
 #define BB_HORNY_INITIAL_STRIP_DONE "BB_horny_initial_strip_done"
 #define BB_HORNY_STAND_UP_COUNTER "BB_horny_stand_up_counter"
 #define BB_HORNY_ACTIONLESS_TICKS "BB_horny_actionless_ticks"
-#define BB_HORNY_WRONG_ACTION "BB_horny_wrong_action"
-#define BB_HORNY_KNOCKDOWN_NEED "BB_horny_knockdown_need"
 #define BB_HORNY_PORTAL_LIGHT "BB_horny_portal_light"
+/// Hunt phase (HORNY_PHASE_*) and when it began.
+#define BB_HORNY_PHASE "BB_horny_phase"
+#define BB_HORNY_PHASE_SINCE "BB_horny_phase_since"
+/// Temper 0-100 with its last decay stamp; lust 0-100 persists between hunts.
+#define BB_HORNY_TEMPER "BB_horny_temper"
+#define BB_HORNY_TEMPER_TIME "BB_horny_temper_time"
+#define BB_HORNY_LUST "BB_horny_lust"
+/// Damage the hunted target dealt this hunt; past the budget the hunt becomes a fight.
+#define BB_HORNY_TARGET_DAMAGE "BB_horny_target_damage"
+#define BB_HORNY_LAST_SEEN_TURF "BB_horny_last_seen_turf"
+#define BB_HORNY_LAST_SEEN_TIME "BB_horny_last_seen_time"
+#define BB_HORNY_CHASE_BEST_DISTANCE "BB_horny_chase_best_distance"
+#define BB_HORNY_CHASE_GAIN_TIME "BB_horny_chase_gain_time"
+#define BB_HORNY_RUSH_UNTIL "BB_horny_rush_until"
+#define BB_HORNY_BASE_MOVE_DELAY "BB_horny_base_move_delay"
+#define BB_HORNY_SPRINTING "BB_horny_sprinting"
+#define BB_HORNY_BREAK_OFF_UNTIL "BB_horny_break_off_until"
+#define BB_HORNY_BREAK_OFF_COOLDOWN "BB_horny_break_off_cooldown"
+#define BB_HORNY_PRESENT_UNTIL "BB_horny_present_until"
+#define BB_HORNY_POUNCE_COOLDOWN "BB_horny_pounce_cooldown"
+#define BB_HORNY_LASH_COOLDOWN "BB_horny_lash_cooldown"
+#define BB_HORNY_CIRCLE_UNTIL "BB_horny_circle_until"
+#define BB_HORNY_SCENT_UNTIL "BB_horny_scent_until"
+#define BB_HORNY_PACK_CALLED "BB_horny_pack_called"
+#define BB_HORNY_TRAP_COOLDOWN "BB_horny_trap_cooldown"
+/// Failed takedowns this catch; every miss makes the next body roll easier.
+#define BB_HORNY_WRESTLE_PRESSURE "BB_horny_wrestle_pressure"
+/// Set once the pin has landed on a floored target; cleared when the target is on their feet again.
+#define BB_HORNY_PINNED "BB_horny_pinned"
+/// world.time at which a knotted hunter lets its tie go; set once per tie.
+#define BB_HORNY_TIE_UNTIL "BB_horny_tie_until"
+/// world.time of the next tug beat while a knotted hunter is tied.
+#define BB_HORNY_TIE_NEXT_TUG "BB_horny_tie_next_tug"

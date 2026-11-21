@@ -58,3 +58,27 @@
 	key = "wink"
 	key_third_person = "winks"
 	message = "winks."
+
+/mob/living/carbon/human/verb/emote_blink()
+	set name = "Blink"
+	set category = "Emotes.Noises"
+	emote("blink", intentional = TRUE)
+
+/mob/living/carbon/human/verb/emote_clap()
+	set name = "Clap"
+	set category = "Emotes.Noises"
+	emote("clap", intentional = TRUE)
+
+/datum/emote/living/carbon/slowclap
+	key = "slowclap"
+	key_third_person = "claps slowly"
+	message = "claps slowly."
+	muzzle_ignore = TRUE
+	hands_use_check = TRUE
+	emote_type = EMOTE_AUDIBLE
+	sound = 'modular_rmh/sound/emotes/slowclap.ogg'
+
+/mob/living/carbon/human/verb/emote_slowclap()
+	set name = "Slow Clap"
+	set category = "Emotes.Noises"
+	emote("slowclap", intentional = TRUE)

@@ -16,6 +16,9 @@
 
 	has_visual_effects = FALSE
 
+/datum/action/cooldown/spell/vicious_mockery/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/vicious_mockery/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)
@@ -49,6 +52,8 @@
 
 /datum/action/cooldown/spell/vicious_mockery/cast(mob/living/cast_on)
 	. = ..()
+	if(owner?.spares_ally(cast_on))
+		return
 	if(cast_on.can_hear())
 		SEND_SIGNAL(owner, COMSIG_VICIOUSLY_MOCKED, cast_on)
 		cast_on.apply_status_effect(/datum/status_effect/debuff/viciousmockery)

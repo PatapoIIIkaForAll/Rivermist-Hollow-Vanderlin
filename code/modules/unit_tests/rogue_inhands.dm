@@ -94,3 +94,41 @@
 	if(unset_inhand_var_message)
 		log_test("\tNotice - Possible inhand icon matches found. It is best to be explicit with inhand sprite values.[unset_inhand_var_message]")
 
+/// Generated held sprites: readable size for small art, per-file cache, own "_behind" state only.
+/datum/unit_test/generated_inhand_sprites
+
+/datum/unit_test/generated_inhand_sprites/Run()
+	// Small 32 px art keeps a readable size in the hand.
+	for(var/small_path in list(/obj/item/reagent_containers/food/snacks/cheese, /obj/item/perfume/rose))
+		var/obj/item/small = allocate(small_path)
+		var/list/small_prop = small.getonmobprop("gen")
+		TEST_ASSERT_NOTNULL(small_prop, "[small_path] has no generic held prop")
+		TEST_ASSERT_EQUAL(small_prop["shrink"], 0.4, "[small_path] held sprite shrink")
+
+	// Two sheets with the same state name must not share one cached held sprite.
+	var/obj/item/rope = allocate(/obj/item/rope)
+	var/obj/item/rope_belt = allocate(/obj/item/storage/belt/leather/rope)
+	TEST_ASSERT_EQUAL(rope.icon_state, rope_belt.icon_state, "the test pair needs one shared state name")
+	TEST_ASSERT_NOTEQUAL(rope.icon, rope_belt.icon, "the test pair needs two sheets")
+	var/list/rope_prop = rope.getonmobprop("gen")
+	var/list/belt_prop = rope_belt.getonmobprop("gen")
+	TEST_ASSERT_NOTNULL(rope_prop, "rope has no generic held prop")
+	TEST_ASSERT_NOTNULL(belt_prop, "rope belt has no generic held prop")
+	var/icon/rope_sprite = rope.getmoboverlay("gen", rope_prop)
+	var/icon/belt_sprite = rope_belt.getmoboverlay("gen", belt_prop)
+	TEST_ASSERT(rope_sprite != belt_sprite, "rope and rope belt share one cached held sprite")
+
+	// A "_behind" state of one item must not decide the behind sprite of another item on the sheet.
+	var/obj/item/shield = allocate(/obj/item/weapon/shield/tower/metal)
+	TEST_ASSERT(shield.has_behind_inhand_state(), "kite shield lost its ironsh_behind state")
+	var/plain_state
+	var/list/sheet_states = icon_states(shield.icon)
+	for(var/state in sheet_states)
+		if(findtext(state, "_behind") || ("[state]_behind" in sheet_states))
+			continue
+		plain_state = state
+		break
+	TEST_ASSERT_NOTNULL(plain_state, "shield sheet has no state without a behind variant")
+	var/obj/item/plain = allocate(/obj/item/weapon/shield/tower/metal)
+	plain.icon_state = plain_state
+	TEST_ASSERT(!plain.has_behind_inhand_state(), "state [plain_state] reported a behind variant it lacks")

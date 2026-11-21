@@ -7,6 +7,12 @@
 	var/pre_append = ""
 	/// Optional accent made available by this culture.
 	var/accent
+	/// Stat changes this origin gives: STAT_* typepath = amount, positive or negative.
+	var/list/stat_bonuses
+	/// Skill levels this origin gives: skill typepath = amount on the 0-60 scale.
+	var/list/skill_bonuses
+	/// Traits this origin gives.
+	var/list/granted_traits
 
 /// If selectable based on preferences (remove when datumised prefs)
 /datum/culture/proc/is_selectable(datum/preferences/prefs)

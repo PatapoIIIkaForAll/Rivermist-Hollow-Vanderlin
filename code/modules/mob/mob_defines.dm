@@ -73,6 +73,8 @@
 
 	/// What is the mobs real name (name is overridden for disguises etc)
 	var/real_name = null
+	/// The name this mob holds in GLOB.chosen_names; stays put when real_name changes directly.
+	var/reserved_name = null
 
 	/// can this mob move freely in space (should be a trait)
 	var/spacewalk = FALSE

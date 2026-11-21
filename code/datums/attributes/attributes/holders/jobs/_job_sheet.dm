@@ -37,10 +37,12 @@
 				continue
 			clamped_adjustment[thing] = list(og_adj[1], og_adj[2])
 
-/datum/attribute_holder/sheet/job/on_add(datum/attribute_holder/plagiarist)
+/datum/attribute_holder/sheet/job/on_add(datum/attribute_holder/plagiarist, skills_only = FALSE)
 	. = ..()
 	if(attribute_variance)
 		for(var/path in plagiarist.raw_attribute_list)
+			if(skills_only && !ispath(path, SKILL))
+				continue
 			if(LAZYLEN(attribute_variance[path]) < 2)
 				continue
 			var/random = rand(attribute_variance[path][1], attribute_variance[path][2])
@@ -51,6 +53,8 @@
 
 	if(clamped_adjustment)
 		for(var/path in plagiarist.raw_attribute_list)
+			if(skills_only && !ispath(path, SKILL))
+				continue
 			var/list/adj = clamped_adjustment[path]
 			if(!adj || LAZYLEN(adj) < 1)
 				continue
@@ -59,4 +63,23 @@
 			var/cap = isnull(adj[2]) ? (ispath(path, SKILL) ? plagiarist.skill_max : plagiarist.attribute_max) : adj[2]
 			if(current >= cap)
 				continue
-			plagiarist.raw_attribute_list[path] = clamp(current + num, 0, cap)
+			var/new_level = clamp(current + num, 0, cap)
+			LAZYINITLIST(plagiarist.clamped_sheet_gains)
+			LAZYINITLIST(plagiarist.clamped_sheet_gains[type])
+			plagiarist.clamped_sheet_gains[type][path] = (plagiarist.clamped_sheet_gains[type][path] || 0) + (new_level - current)
+			plagiarist.raw_attribute_list[path] = new_level
+
+/datum/attribute_holder/sheet/job/on_remove(datum/attribute_holder/plagiarist)
+	. = ..()
+	var/list/gains = plagiarist.clamped_sheet_gains?[type]
+	if(!gains)
+		return
+	for(var/path in gains)
+		var/amount = gains[path]
+		if(!amount || isnull(plagiarist.raw_attribute_list[path]))
+			continue
+		if(ispath(path, SKILL))
+			plagiarist.raw_attribute_list[path] = clamp(plagiarist.raw_attribute_list[path] - amount, plagiarist.skill_min, plagiarist.skill_max)
+		else
+			plagiarist.raw_attribute_list[path] = clamp(plagiarist.raw_attribute_list[path] - amount, plagiarist.attribute_min, plagiarist.attribute_max)
+	plagiarist.clamped_sheet_gains -= type

@@ -14,8 +14,9 @@
 #define MOB_DESCRIPTOR_SLOT_HEIGHT 14
 #define MOB_DESCRIPTOR_SLOT_BUTT 15
 #define MOB_DESCRIPTOR_SLOT_ARMPITS 16
+#define MOB_DESCRIPTOR_SLOT_TRAIT 17
 
-#define CUSTOM_DESCRIPTOR_AMOUNT 11
+#define CUSTOM_DESCRIPTOR_AMOUNT 12
 #define CUSTOM_DESCRIPTOR_TEXT_LENGTH 32
 
 /// Custom descriptor types by custom_index; append new ones so saved slots keep their text.
@@ -30,7 +31,8 @@
 	/datum/mob_descriptor/face/custom,\
 	/datum/mob_descriptor/face_exp/custom,\
 	/datum/mob_descriptor/skin/custom,\
-	/datum/mob_descriptor/voice/custom\
+	/datum/mob_descriptor/voice/custom,\
+	/datum/mob_descriptor/trait/custom\
 )
 
 #define CUSTOM_PREFIX_MODE_NONE 0

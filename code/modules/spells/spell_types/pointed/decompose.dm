@@ -21,6 +21,9 @@
 	cooldown_time = 30 SECONDS
 	spell_cost = 50
 
+/datum/action/cooldown/spell/decompose/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/decompose/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

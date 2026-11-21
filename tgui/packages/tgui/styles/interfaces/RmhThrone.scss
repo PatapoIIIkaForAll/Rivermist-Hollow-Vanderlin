@@ -1,0 +1,916 @@
+// RMH: adapted from Twilight-Axis PR #1279, PatapoIIIa.
+// Commit 34fef544c90a21223b6c0c04a93a1f283cc2ea8a (AGPL-3.0).
+// Foreign rites/fullscreen controls and azure_base dependencies are intentionally absent.
+.theme-rmh-court:root {
+  --color-base: #090806; --color-text: #efe1b8; --color-primary: #c99b45;
+  --input-background: #f0dfb1; --input-color: #25180d; --input-border-color: #765229;
+  --font-family: 'Palatino Linotype', Georgia, serif;
+  .Window__contentPadding { margin: 0; height: 100%; }
+  .TitleBar { background: #14110c; border-bottom: 1px solid #7b6030; }
+  .TitleBar__title { visibility: hidden; } .TitleBar__statusIcon { display: none; }
+}
+.RmhThrone {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: #090806;
+}
+
+
+.RmhThrone__board {
+  --ducal-ink: #efe1b8;
+  --ducal-muted: #b9a376;
+  --ducal-gold: #c99b45;
+  --ducal-gold-soft: rgba(201, 155, 69, 0.2);
+  --ducal-blue: var(--ducal-primary, #183a56);
+  --ducal-standard-light: var(--ducal-secondary, #ffffff);
+  --ducal-red: #6e1b18;
+  --ducal-green: #3e7040;
+  --ducal-parchment: #d6bd85;
+  --ducal-paper: #c8ae77;
+  --ducal-shadow: rgba(0, 0, 0, 0.62);
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: clamp(76px, 14vh, 112px) minmax(0, 1fr);
+  gap: 8px;
+  color: var(--ducal-ink);
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  padding: 8px;
+  overflow: auto;
+  background:
+    linear-gradient(180deg, rgba(255, 226, 137, 0.08), transparent 18%),
+    radial-gradient(circle at 6% 22%, rgba(112, 27, 24, 0.34), transparent 24%),
+    radial-gradient(circle at 96% 30%, rgba(112, 27, 24, 0.3), transparent 24%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 2px,
+      rgba(0, 0, 0, 0.08) 2px,
+      rgba(0, 0, 0, 0.08) 6px
+    ),
+    #10100e;
+}
+
+
+.RmhThrone__board *,
+.RmhThrone__board *::before,
+.RmhThrone__board *::after {
+  box-sizing: border-box;
+}
+
+
+.RmhThrone__titleRow {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 0;
+  height: 100%;
+  padding: clamp(8px, 1.4vh, 12px) 72px;
+  border: 2px solid rgba(201, 155, 69, 0.52);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.28), transparent 25%, transparent 75%, rgba(24, 58, 86, 0.28)),
+    linear-gradient(180deg, rgba(255, 240, 185, 0.08), rgba(0, 0, 0, 0.36)),
+    #14120e;
+  box-shadow:
+    inset 0 0 46px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 230, 157, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+
+.RmhThrone__titleRow::before,
+.RmhThrone__titleRow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  background: var(--ducal-standard-light);
+  opacity: 0.72;
+}
+
+
+.RmhThrone__titleRow::before {
+  left: 48px;
+}
+
+
+.RmhThrone__titleRow::after {
+  right: 48px;
+}
+
+
+.RmhThrone__standard {
+  position: absolute;
+  top: -1px;
+  display: grid;
+  place-items: start center;
+  width: 42px;
+  height: calc(100% - 4px);
+  padding-top: 22px;
+  color: var(--ducal-standard-light);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 35%),
+    var(--ducal-blue);
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  border: 1px solid rgba(0, 0, 0, 0.72);
+  box-shadow:
+    inset 0 0 16px rgba(0, 0, 0, 0.42),
+    0 2px 7px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+
+.RmhThrone__standard--left {
+  left: 12px;
+}
+
+
+.RmhThrone__standard--right {
+  right: 12px;
+  color: var(--ducal-blue);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 35%),
+    var(--ducal-standard-light);
+}
+
+
+.RmhThrone__standard .Icon {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.65));
+}
+
+
+.RmhThrone__titleRow > div:not(.RmhThrone__standard) {
+  position: relative;
+  z-index: 2;
+}
+
+
+.RmhThrone__titleRow > div:nth-child(3) {
+  grid-column: 2;
+  text-align: center;
+}
+
+
+.RmhThrone__eyebrow {
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+
+.RmhThrone__title {
+  margin: 3px 0;
+  color: #f0cf83;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
+}
+
+
+.RmhThrone__subtitle {
+  font-size: 14px;
+  font-style: italic;
+}
+
+
+.RmhThrone__rulerBlock {
+  display: grid;
+  grid-column: 3;
+  gap: 5px;
+  min-width: clamp(160px, 18vw, 220px);
+  color: #ead49b;
+  font-size: 12px;
+  justify-self: end;
+}
+
+
+.RmhThrone__rulerBlock div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px dashed rgba(201, 155, 69, 0.28);
+}
+
+
+.RmhThrone__rulerBlock span {
+  color: #f5dfaa;
+  font-weight: 700;
+  text-align: right;
+}
+
+
+.RmhThrone__courtShell {
+  display: grid;
+  grid-template-columns: clamp(136px, 15vw, 190px) minmax(0, 1fr) clamp(172px, 19vw, 238px);
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+
+.RmhThrone__leftRail,
+.RmhThrone__rightRail {
+  min-height: 0;
+  overflow: auto;
+  border: 2px solid rgba(201, 155, 69, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 157, 0.06), rgba(0, 0, 0, 0.3)),
+    radial-gradient(circle at 50% 100%, rgba(110, 27, 24, 0.32), transparent 40%),
+    #11110f;
+  box-shadow:
+    inset 0 0 34px rgba(0, 0, 0, 0.72),
+    0 2px 6px rgba(0, 0, 0, 0.42);
+}
+
+
+.RmhThrone__leftRail {
+  display: grid;
+  grid-template-rows: clamp(76px, 16vh, 136px) minmax(0, 1fr);
+  gap: 6px;
+}
+
+
+.RmhThrone__rightRail {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: 8px;
+  padding: 8px;
+}
+
+
+.RmhThrone__throneEmblem {
+  display: grid;
+  place-items: center;
+  margin: 8px;
+  color: #edcf84;
+  font-size: 44px;
+  border: 1px solid rgba(201, 155, 69, 0.35);
+  background:
+    radial-gradient(circle at 50% 32%, rgba(201, 155, 69, 0.2), transparent 35%),
+    linear-gradient(180deg, rgba(110, 27, 24, 0.4), rgba(0, 0, 0, 0.32)),
+    #181511;
+  box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.7);
+}
+
+
+.RmhThrone__nav {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 8px 8px;
+}
+
+
+:root .RmhThrone .RmhThrone__navButton {
+  width: 100%;
+  min-height: clamp(34px, 5.4vh, 44px);
+  padding: 8px 10px;
+  white-space: normal;
+  color: #e8d39b;
+  border: 1px solid rgba(201, 155, 69, 0.28);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.18), transparent 45%),
+    #151512;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.42);
+  text-align: left;
+}
+
+
+.RmhThrone__navButton > .Button__content {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+
+:root .RmhThrone .RmhThrone__navButton:hover:not(:disabled),
+:root .RmhThrone .RmhThrone__navButton--active {
+  color: #ffe8a8;
+  border-color: rgba(201, 155, 69, 0.72);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.72), rgba(110, 27, 24, 0.18)),
+    #1b1712;
+}
+
+
+.RmhThrone__centerPanel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+
+.RmhThrone__contentStack {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+
+:root .RmhThrone .Section {
+  overflow: visible;
+  color: #25180d;
+  border: 2px solid rgba(52, 31, 14, 0.76);
+  background:
+    linear-gradient(180deg, rgba(255, 246, 204, 0.76), rgba(189, 155, 95, 0.56)),
+    var(--ducal-paper);
+  box-shadow:
+    inset 0 0 24px rgba(72, 44, 18, 0.16),
+    0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+
+:root .RmhThrone .Section .Section__title {
+  border-bottom: 1px solid rgba(84, 52, 22, 0.5);
+}
+
+
+:root .RmhThrone .Section .Section__titleText {
+  color: #58180d;
+}
+
+
+:root .RmhThrone .Section .Button {
+  color: #2a1a0d;
+  background: rgba(122, 86, 22, 0.16);
+  border: 1px solid rgba(84, 52, 22, 0.55);
+}
+
+
+:root .RmhThrone .Section .Button:hover:not(:disabled) {
+  background: rgba(122, 86, 22, 0.28);
+  border-color: rgba(110, 20, 20, 0.65);
+}
+
+
+:root .RmhThrone .Section .Button:disabled {
+  color: #5f4e33;
+}
+
+
+:root .RmhThrone .RmhThrone__lawTools .NumberInput {
+  color: #f2dfb4;
+  background: #15120e;
+  border-color: rgba(84, 52, 22, 0.72);
+}
+
+
+:root .RmhThrone .RmhThrone__rightRail .Section {
+  color: #ead49b;
+  border-color: rgba(201, 155, 69, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 157, 0.08), rgba(0, 0, 0, 0.18)),
+    #171512;
+}
+
+
+.RmhThrone__statusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+  gap: 8px;
+  min-height: 0;
+}
+
+
+.RmhThrone__statusCard {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-height: 64px;
+  padding: 8px;
+  color: #ead49b;
+  border: 1px solid rgba(201, 155, 69, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 157, 0.08), rgba(0, 0, 0, 0.24)),
+    #151512;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.48);
+}
+
+
+.RmhThrone__statusCard::after {
+  content: '';
+  position: absolute;
+  right: -18px;
+  top: -18px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--ducal-blue);
+  opacity: 0.14;
+}
+
+
+.RmhThrone__statusCard--good {
+  border-color: rgba(62, 112, 64, 0.8);
+}
+
+
+.RmhThrone__statusCard--warning {
+  border-color: rgba(201, 155, 69, 0.9);
+}
+
+
+.RmhThrone__statusCard--bad {
+  border-color: rgba(157, 39, 34, 0.82);
+}
+
+
+.RmhThrone__statusIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  height: 34px;
+  color: #0f0c08;
+  background: var(--ducal-gold);
+  border: 1px solid rgba(255, 231, 157, 0.52);
+  box-shadow: 0 1px 3px var(--ducal-shadow);
+  z-index: 1;
+}
+
+
+.RmhThrone__statusCard--good .RmhThrone__statusIcon {
+  background: var(--ducal-green);
+  color: #f4e7c6;
+}
+
+
+.RmhThrone__statusCard--bad .RmhThrone__statusIcon {
+  background: var(--ducal-red);
+  color: #f4e7c6;
+}
+
+
+.RmhThrone__statusBody {
+  min-width: 0;
+  z-index: 1;
+}
+
+
+.RmhThrone__statusValue {
+  margin: 2px 0;
+  color: #f2d78b;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+
+.RmhThrone__statusLabel,
+.RmhThrone__statusDetail {
+  font-size: 11px;
+}
+
+
+.RmhThrone__statusDetail {
+  white-space: normal;
+}
+
+
+.RmhThrone__actionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+
+.RmhThrone__toolGrid,
+.RmhThrone__quickTools {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+
+.RmhThrone__actionGroups {
+  display: grid;
+  gap: 10px;
+}
+
+
+.RmhThrone__actionGroup {
+  min-width: 0;
+}
+
+
+.RmhThrone__actionGroupTitle {
+  margin: 0 0 6px;
+  color: #5b3219;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+
+.RmhThrone__rightRail .RmhThrone__actionGroupTitle {
+  color: var(--ducal-muted);
+}
+
+
+.RmhThrone__overviewFacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+
+.RmhThrone__overviewFact {
+  display: grid;
+  gap: 3px;
+  min-height: 54px;
+  padding: 8px;
+  background: rgba(255, 239, 189, 0.46);
+  border: 1px solid rgba(54, 31, 14, 0.34);
+}
+
+
+.RmhThrone__overviewFact b {
+  color: #5b3219;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+
+.RmhThrone__overviewFact span {
+  color: #1e1208;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+
+:root .RmhThrone .RmhThrone__rightRail .Section .Section__title {
+  border-bottom: 1px solid rgba(201, 155, 69, 0.4);
+}
+
+
+:root .RmhThrone .RmhThrone__rightRail .Section .Section__titleText {
+  color: #efe1b8;
+}
+
+
+:root .RmhThrone .RmhThrone__action {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 54px;
+  padding: 8px;
+  white-space: normal;
+  color: #ead49b;
+  border: 2px solid rgba(201, 155, 69, 0.34);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.32), transparent 45%),
+    linear-gradient(180deg, rgba(255, 231, 157, 0.08), rgba(0, 0, 0, 0.22)),
+    #151512;
+  box-shadow:
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+  text-align: left;
+  text-shadow: none;
+}
+
+
+:root .RmhThrone .Section .RmhThrone__action {
+  color: #2a1a0d;
+  border-color: rgba(54, 31, 14, 0.72);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(255, 239, 189, 0.76), rgba(128, 88, 42, 0.34)),
+    #2a2319;
+}
+
+
+:root .RmhThrone .RmhThrone__rightRail .RmhThrone__action {
+  color: #ead49b;
+  border-color: rgba(201, 155, 69, 0.34);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.42), transparent 42%),
+    #151512;
+}
+
+
+:root .RmhThrone .RmhThrone__action:hover:not(:disabled) {
+  border-color: var(--ducal-gold);
+  box-shadow:
+    inset 0 0 20px rgba(201, 155, 69, 0.18),
+    0 1px 5px rgba(0, 0, 0, 0.45);
+}
+
+
+:root .RmhThrone .RmhThrone__action:disabled {
+  opacity: 0.65;
+  filter: saturate(0.6);
+}
+
+
+.RmhThrone__action > .Button__content {
+  display: flex;
+  width: 100%;
+  gap: 9px;
+  align-items: flex-start;
+  text-shadow: none;
+}
+
+
+.RmhThrone__actionIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  height: 34px;
+  color: #0f0c08;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent),
+    var(--ducal-gold);
+  border: 1px solid rgba(55, 31, 14, 0.68);
+}
+
+
+.RmhThrone__rightRail .RmhThrone__actionIcon {
+  color: #f4e7c6;
+  background: var(--ducal-blue);
+  border-color: rgba(201, 155, 69, 0.72);
+}
+
+
+.RmhThrone__actionTitle,
+.RmhThrone__actionDesc,
+.RmhThrone__badges {
+  display: block;
+}
+
+
+.RmhThrone__actionTitle {
+  color: #140b05;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.15;
+  text-shadow: none;
+}
+
+
+.RmhThrone__actionDesc {
+  margin-top: 2px;
+  color: #3c2817;
+  font-size: 11px;
+  line-height: 1.2;
+  text-shadow: none;
+  white-space: normal;
+}
+
+
+.RmhThrone__badges {
+  margin-top: 5px;
+}
+
+
+.RmhThrone__badge {
+  display: inline-block;
+  margin: 0 4px 3px 0;
+  padding: 1px 5px;
+  color: #f3d78b;
+  border: 1px solid rgba(201, 155, 69, 0.55);
+  background: rgba(0, 0, 0, 0.34);
+  font-size: 9px;
+  line-height: 1.35;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+
+
+.RmhThrone__rightRail .RmhThrone__actionTitle,
+.RmhThrone__rightRail .RmhThrone__actionDesc {
+  color: #ead49b;
+}
+
+
+.RmhThrone .Section .RmhThrone__badge {
+  color: #4b2a14;
+  background: rgba(255, 238, 185, 0.48);
+  border-color: rgba(78, 46, 20, 0.48);
+}
+
+
+.RmhThrone__desk {
+  display: grid;
+  gap: 8px;
+}
+
+
+:root .RmhThrone .RmhThrone__desk .TextArea {
+  color: #f2dfb4;
+  background: #15120e;
+  border: 2px solid rgba(54, 31, 14, 0.72);
+}
+
+
+.RmhThrone__deskFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.RmhThrone__deskButtons,
+.RmhThrone__lawTools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+
+.RmhThrone__lawTools span {
+  color: #5b3219;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+
+.RmhThrone__voiceList {
+  min-height: 0;
+  margin: 0;
+  padding: 2px 0 0 18px;
+  overflow: auto;
+  color: #ead49b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+
+.RmhThrone__voiceList li {
+  margin-bottom: 5px;
+}
+
+
+.RmhThrone__voiceList li::marker {
+  color: var(--ducal-gold);
+}
+
+
+.RmhThrone__voiceCommand,
+.RmhThrone__voiceDesc {
+  display: block;
+}
+
+
+.RmhThrone__voiceCommand {
+  color: #f5d87a;
+  font-weight: 700;
+}
+
+
+.RmhThrone__voiceDesc {
+  color: #cdbb88;
+  font-size: 11px;
+}
+
+
+@media (max-width: 1100px) {
+  .RmhThrone__courtShell {
+    grid-template-columns: 136px minmax(0, 1fr) 184px;
+  }
+
+  .RmhThrone__statusGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .RmhThrone__riteActionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+@media (max-width: 840px) {
+  .RmhThrone__board {
+    grid-template-rows: clamp(68px, 14vh, 90px) minmax(0, 1fr);
+    padding: 6px;
+  }
+
+  .RmhThrone__titleRow {
+    padding: 8px 58px;
+  }
+
+  .RmhThrone__subtitle,
+  .RmhThrone__rulerBlock {
+    display: none;
+  }
+
+  .RmhThrone__courtShell {
+    grid-template-columns: 118px minmax(0, 1fr) 162px;
+    gap: 6px;
+  }
+
+  .RmhThrone__throneEmblem,
+  .RmhThrone__voiceList {
+    display: none;
+  }
+
+  .RmhThrone__rightRail > .Section:nth-child(2) {
+    display: none;
+  }
+
+  .RmhThrone__leftRail {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .RmhThrone__rightRail {
+    grid-template-rows: auto;
+  }
+
+  .RmhThrone__statusGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .RmhThrone__actionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-height: 650px) {
+  .RmhThrone__board {
+    grid-template-rows: 72px minmax(0, 1fr);
+  }
+
+  .RmhThrone__title {
+    font-size: 24px;
+  }
+
+  .RmhThrone__subtitle,
+  .RmhThrone__rightRail > .Section:nth-child(2) {
+    display: none;
+  }
+
+  .RmhThrone__leftRail {
+    grid-template-rows: 52px minmax(0, 1fr);
+  }
+
+  .RmhThrone__throneEmblem {
+    min-height: 0;
+    margin: 6px;
+    font-size: 32px;
+  }
+}
+
+.RmhThrone {
+  .RmhThrone__board { grid-template-rows: minmax(92px, auto) minmax(0, 1fr); }
+  &__centerPanel { grid-template-rows: auto minmax(0, 1fr); }
+  &__actionBody { min-width: 0; flex: 1; }
+  &__action { margin-bottom: 6px; }
+  &__action.Button--disabled { opacity: 0.6; }
+  &__desk h3 { font-size: 18px; color: #58180d; }
+  &__deskFooter { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+  &__decree { padding: 10px 0; border-bottom: 1px solid #7e5a30; }
+  &__decreeHeading.Button { display: block; margin-bottom: 8px; }
+  &__heraldry { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; align-items: center;
+    > span { display: grid; place-items: center; padding: 12px; color: #14110c; border: 1px solid #7b6030; text-shadow: 0 0 3px #fff; }
+  }
+  &__voiceCommand { color: #58180d; white-space: normal; }
+  .RmhCodex__prose { font-size: 16px; }
+  .Section { min-width: 0; }
+  .Section__title { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .Section__buttons { position: static; margin-left: auto; }
+  .Section__content { overflow-wrap: anywhere; }
+}
+@media (max-width: 1000px) {
+ .RmhThrone__courtShell { grid-template-columns: 145px minmax(0,1fr) 190px; }
+ .RmhThrone__titleRow { gap: 8px; padding-left: 65px; padding-right: 65px; }
+ .RmhThrone__title { font-size: 24px; }
+ .RmhThrone__subtitle { font-size: 12px; }
+ .RmhThrone__rulerBlock { font-size: 11px; }
+}
+@media (max-width: 760px) {
+ .RmhThrone__courtShell { grid-template-columns: 120px minmax(0,1fr); overflow: auto; }
+ .RmhThrone__rightRail { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+ .RmhThrone__titleRow { grid-template-columns: 1fr; padding: 8px 65px; }
+ .RmhThrone__titleRow > div:not(:nth-child(3)) { display: none; }
+ .RmhThrone__titleRow > div:nth-child(3) { grid-column: 1; }
+}
+
+// RMH has separate ruler and viewer blocks; the reference had only one right block.
+.RmhThrone__titleRow > .RmhThrone__rulerBlock:nth-child(2) { grid-column: 1; grid-row: 1; justify-self: start; min-width: 0; width: 100%; }
+.RmhThrone__titleRow > div:nth-child(3) { grid-row: 1; }
+.RmhThrone__titleRow > .RmhThrone__rulerBlock:nth-child(4) { grid-column: 3; grid-row: 1; min-width: 0; width: 100%; }
+.RmhThrone__title { padding: 0; }

@@ -14,6 +14,9 @@ import { setupHotReloading } from 'tgui-dev-server/link/client';
 import { App } from './app';
 import { bus } from './events/listeners';
 import { setupPanelFocusHacks } from './panelFocus';
+// RMH EDITED START - nothing else imports this module
+import './chat/translation';
+// RMH EDITED END
 
 const root = createRoot(document.getElementById('react-root')!);
 

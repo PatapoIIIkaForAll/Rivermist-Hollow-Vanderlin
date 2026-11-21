@@ -29,14 +29,15 @@
 	additional_blocker = "underwear"
 	bloatable = TRUE
 	drips_as_drops = TRUE
-	/// Own femcum held at full arousal; less arousal keeps it lower.
-	var/max_wetness = 10
+	/// Own femcum kept at full arousal, a little more than full lube needs; less arousal keeps less.
+	var/max_wetness = 6
 	/// Units of a climax burst still free to drip to the floor at any arousal.
 	var/burst_to_drip = 0
 
 /obj/item/organ/genitals/filling_organ/vagina/Insert(mob/living/M, special, drop_if_replaced, new_zone = null)
-	if(M?.femcum)
-		set_reagent_to_make(M.femcum)
+	var/list/nectar = M?.get_femcum_mix()
+	if(nectar)
+		set_reagent_to_make(nectar)
 	. = ..()
 	if(!.)
 		return FALSE
@@ -64,18 +65,34 @@
 	tag_femcum_donor()
 	stage_seed_into_womb()
 
-/// Arousal drives wetness instead of nutrition: own femcum tops up toward an arousal-scaled target.
+/// Arousal drives wetness instead of nutrition: own femcum moves toward an arousal-scaled target, fading when above it.
 /obj/item/organ/genitals/filling_organ/vagina/produce_fluid(seconds)
-	if(!is_producing())
+	var/own_fluid = get_own_fluid_amount()
+	var/target = is_producing() ? get_wetness_target() : 0
+	if(own_fluid > target)
+		fade_wetness(min(own_fluid - target, VAGINA_WETNESS_FADE_RATE * seconds))
 		return
-	var/missing = get_wetness_target() - get_own_fluid_amount()
+	var/missing = target - own_fluid
 	if(missing > 0)
-		pay_for_fluid(add_produced_fluid(min(production_rate * get_production_multiplier() * seconds, missing)))
+		pay_for_fluid(add_produced_fluid(min(get_base_production(seconds), missing)))
 
-/// Zero at visible arousal, max_wetness at the climax threshold, scaled by capacity modifiers.
+/// Zero at visible arousal, the full wetness cap at the climax threshold.
 /obj/item/organ/genitals/filling_organ/vagina/proc/get_wetness_target()
 	var/arousal_fraction = clamp((get_owner_arousal() - VISIBLE_AROUSAL_THRESHOLD) / (ACTIVE_EJAC_THRESHOLD - VISIBLE_AROUSAL_THRESHOLD), 0, 1)
-	return max_wetness * arousal_fraction * get_capacity_multiplier()
+	return get_wetness_cap() * arousal_fraction
+
+/// Most own femcum kept inside: a small lube reserve, or all the room while a fluid potion lifts the cap.
+/obj/item/organ/genitals/filling_organ/vagina/proc/get_wetness_cap()
+	for(var/datum/fluid_modifier/modifier as anything in owner?.get_fluid_modifiers(src))
+		if(modifier.lifts_wetness_cap)
+			return reagents.maximum_volume
+	return max_wetness * get_capacity_multiplier()
+
+/// Takes back own femcum without leaking it, the natural mix evenly before any swap; foreign fluid stays.
+/obj/item/organ/genitals/filling_organ/vagina/proc/fade_wetness(amount)
+	amount -= remove_fluid_types(get_natural_fluid_types(), amount)
+	if(amount > 0)
+		remove_fluid_types(get_own_fluid_types(), amount)
 
 /obj/item/organ/genitals/filling_organ/vagina/proc/get_owner_arousal()
 	var/list/arousal_data = list()
@@ -108,6 +125,10 @@
 	. = add_produced_fluid(FEMCUM_ORGASM_VOLUME * get_climax_multiplier())
 	pay_for_fluid(.)
 	burst_to_drip += .
+	// What the wetness cap cannot keep gushes out now instead of filling the opening.
+	var/excess = get_own_fluid_amount() - get_wetness_cap()
+	if(excess > 0)
+		leak_reagents(excess)
 
 /// Stamps held femcum with its producer each tick, so the donor survives transfer out of the organ.
 /obj/item/organ/genitals/filling_organ/vagina/proc/tag_femcum_donor()

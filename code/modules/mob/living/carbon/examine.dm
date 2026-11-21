@@ -74,6 +74,8 @@
 	. = alist()
 	// Our name
 	LAZYADDASSOCLIST(., EXAMINE_SECT_NAME, span_larger("[get_examine_string(user, TRUE)]."))
+	// Social context check.
+	LAZYADDASSOC(., EXAMINE_SECT_SOCIALCONTEXT+0.5, get_examine_social(user, P, .))
 	// Our face
 	var/can_see_face = IsAdminGhost(user) || is_human_part_visible(src, HIDEFACE)
 	LAZYADDASSOC(., EXAMINE_SECT_FACE+0.5, can_see_face ? get_examine_face(user, P, .) : get_examine_noface(user, P, .))
@@ -85,11 +87,9 @@
 	LAZYADDASSOC(., EXAMINE_SECT_WARNING+0.5, get_examine_warnings(user, P, .))
 	/// Our health
 	LAZYADDASSOC(., EXAMINE_SECT_HEALTH+0.5, get_examine_health(user, P, .))
-
 	// Antag stuff. This throws itself wherever it feels like.
 	for(var/datum/antagonist/antag_datum in user.mind?.antag_datums)
 		antag_datum.examine_target(user, src, P, .)
-
 
 // Details we will only surmise by seeing their face
 /mob/living/carbon/proc/get_examine_face(mob/user, list/P, list/examine_list)
@@ -124,20 +124,15 @@
 	else //if youre a fish face you cant cancel it out
 		var/ugly = HAS_ANY_OF_TRAITS(src, list(TRAIT_UGLY, TRAIT_ABOMINATION, TRAIT_DISFIGURED)) //todo: ABOMINATION descriptor
 		var/beautiful = HAS_TRAIT(src, TRAIT_BEAUTIFUL)
-		if(ugly ^ beautiful)
-			if(beautiful)
-				var/beauty_desc = "gorgeous"
-				if(pronouns == SHE_HER) beauty_desc = "beautiful"
-				else if(pronouns == HE_HIM) beauty_desc = "handsome"
-				. += span_rose("[P[THEYRE]] [beauty_desc]!")
-				user.add_stress(self_inspect ? /datum/stress_event/beautiful_self : /datum/stress_event/beautiful)
-			else // you can only be ugly then, huh.
-				. += span_necrosis("[P[THEYRE]] hideous!")
-				user.add_stress(self_inspect ? /datum/stress_event/ugly_self : /datum/stress_event/ugly)
-
-	if(HAS_TRAIT(src, TRAIT_ALLURE))
-		. += span_love(span_bold("[P[THEYVE]] quite a tempting appeal"))
-		user.add_stress(self_inspect ? /datum/stress_event/allure_self : /datum/stress_event/allure)
+		// RMH EDIT: Charisma sets the impression; the rare looks traits are read together with it.
+		var/looks = (ugly ^ beautiful) ? (beautiful ? 1 : -1) : 0
+		var/impression = get_impression()
+		var/appeal_line = get_appeal_line(looks, impression, P)
+		if(appeal_line)
+			. += appeal_line
+		var/appeal_event = get_appeal_stress_event(looks, impression, self_inspect)
+		if(appeal_event)
+			user.add_stress(appeal_event)
 
 	// Self inspections
 	if(!self_inspect)
@@ -216,7 +211,7 @@
 				disgust_msg = span_necrosis("[P[THEY]] look[pl] really disgusted.")
 			if(DISGUST_LEVEL_DISGUSTED to INFINITY)
 				disgust_msg = span_necrosis(html_tag("B", "[P[THEY]] look[pl] extremely disgusted."))
-		if(disgust_msg && HAS_TRAIT(user, TRAIT_EMPATH) || disgust >= DISGUST_LEVEL_DISGUSTED)
+		if(disgust_msg && (HAS_TRAIT(user, TRAIT_EMPATH) || disgust >= DISGUST_LEVEL_DISGUSTED))
 			. += disgust_msg
 
 		// Stress
@@ -232,7 +227,7 @@
 				stress_msg = span_tinywarning("[P[THEY]] look[pl] stressed.")
 			if(STRESS_NEUTRAL to STRESS_BAD)
 				stress_msg = span_tinynotice("[P[THEY]] look[pl] a little stressed.")
-		if(stress_msg && HAS_TRAIT(user, TRAIT_EMPATH) || stress >= STRESS_INSANE)
+		if(stress_msg && (HAS_TRAIT(user, TRAIT_EMPATH) || stress >= STRESS_INSANE))
 			. += stress_msg
 
 		//Drunkenness
@@ -262,7 +257,7 @@
 	. = list()
 	if(stat < UNCONSCIOUS && isliving(user))
 		var/mob/living/living_user = user
-		if(living_user.has_quirk(/datum/quirk/vice/wanted) && user != src)
+		if(living_user.has_quirk(/datum/quirk/negative/wanted) && user != src)
 			user.add_stress(/datum/stress_event/hunted)
 
 
@@ -357,9 +352,6 @@
 	// Maniac, higher up than others
 	if(HAS_TRAIT(src, TRAIT_MANIAC_AWOKEN))
 		LAZYADDASSOCLIST(examine_list, EXAMINE_SECT_FACE, span_big(span_phobia("THE WORLD TWISTS! MANIAC!")))
-	// Leper
-	if(HAS_TRAIT(src, TRAIT_LEPROSY))
-		. += span_necrosis("A LEPER...")
 	// Fat
 	if(HAS_TRAIT(src, TRAIT_FAT))
 		. += span_boldnotice("[P[THEYRE]] obese!")
@@ -450,13 +442,6 @@
 
 /// General miscellaneous stuff that's typically good to know about someone.
 /mob/living/carbon/proc/get_examine_warnings(mob/user, list/P, list/examine_list)
-	//var/self_inspect = user == src
-	//var/pl = self_inspect ? "" : p_s()
-	//var/mob/dead/observer/O = isobserver(user) ? user : null
-	var/mob/living/L = isliving(user) ? user : null
-	//var/mob/living/carbon/C = iscarbon(user) ? user : null
-	//var/mob/living/carbon/human/H = ishuman(user) ? user : null
-
 	. = list()
 
 	//Cuffs
@@ -476,9 +461,6 @@
 	var/fire_str
 	if(on_fire)
 		fire_str = span_boldwarning("on fire!")
-		if(L?.has_quirk(/datum/quirk/vice/addiction/pyromaniac)) // living only
-			fire_str += span_boldred(" IT'S BEAUTIFUL!")
-			L.sate_addiction(/datum/quirk/vice/addiction/pyromaniac)
 	else if(fire_stacks + divine_fire_stacks > 0)
 		fire_str += "covered in something flammable."
 	else if(fire_stacks < 0 && !on_fire)
@@ -551,6 +533,8 @@
 
 	if(has_status_effect(/datum/status_effect/defeat_knockout))
 		. += span_boldwarning("[P[THEYRE]] defeated and unable to rise.")
+	else if(has_status_effect(/datum/status_effect/mob_horny_knockout))
+		. += span_boldwarning("[P[THEYRE]] spent and senseless. A gentle hand could bring [P[THEM]] round.")
 
 	// Health statuses
 	if(stat == DEAD || (HAS_TRAIT(src, TRAIT_FAKEDEATH)))
@@ -570,10 +554,10 @@
 	//The Nymphomaniac Underground
 	if(isliving(user))
 		var/mob/living/living_user = user
-		if((!appears_dead) && stat == CONSCIOUS && src.has_quirk(/datum/quirk/vice/addiction/lovefiend))
-			var/datum/quirk/vice/addiction/bonercheck = src.get_quirk(/datum/quirk/vice/addiction/lovefiend)
+		if((!appears_dead) && stat == CONSCIOUS && src.has_quirk(/datum/quirk/negative/addiction/lovefiend))
+			var/datum/quirk/negative/addiction/bonercheck = src.get_quirk(/datum/quirk/negative/addiction/lovefiend)
 			if((bonercheck) && (bonercheck.sated == 0))
-				if(living_user.has_quirk(/datum/quirk/vice/addiction/lovefiend)) //Takes one to know one
+				if(living_user.has_quirk(/datum/quirk/negative/addiction/lovefiend)) //Takes one to know one
 					switch(rand(1,5))
 						if(1)
 							. += span_love("I can sense [P[THEIR]] <B>need</B> for fun...")

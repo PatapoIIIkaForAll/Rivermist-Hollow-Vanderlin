@@ -143,26 +143,32 @@ GLOBAL_VAR_INIT(mobids, 1)
 /mob/proc/show_message(msg, type, alt_msg, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
 	if(!client)
 		return
+	msg = get_perceived_message(msg, type, alt_msg, alt_type)
+	if(isnull(msg))
+		return
+	to_chat(src, msg)
 
+/// The line this mob perceives of a message, or null when its sight and hearing both miss it.
+/mob/proc/get_perceived_message(msg, type, alt_msg, alt_type)
 	msg = copytext(msg, 1, MAX_MESSAGE_LEN)
 
 	if(type)
-		if(type & MSG_VISUAL && is_blind() )//Vision related
+		if(type & MSG_VISUAL && is_blind() && !feels_own_body_count)//Vision related
 			if(!alt_msg)
-				return
+				return null
 			else
 				msg = alt_msg
 				type = alt_type
 
 		if(type & MSG_AUDIBLE && !can_hear())//Hearing related
 			if(!alt_msg)
-				return
+				return null
 			else
 				msg = alt_msg
 				type = alt_type
-				if(type & MSG_VISUAL && is_blind())
-					return
-	to_chat(src, msg)
+				if(type & MSG_VISUAL && is_blind() && !feels_own_body_count)
+					return null
+	return msg
 
 /mob/proc/get_portal_visible_message_recipients()
 	return null
@@ -272,6 +278,21 @@ GLOBAL_VAR_INIT(mobids, 1)
 	. = ..()
 	if(self_message)
 		show_message(self_message, MSG_VISUAL, blind_message, MSG_AUDIBLE)
+
+/// While above zero, visual lines reach this mob blind or asleep: something is done to its own body.
+/mob/var/tmp/feels_own_body_count = 0
+
+/mob/proc/push_feels_own_body()
+	feels_own_body_count++
+
+/mob/proc/pop_feels_own_body()
+	feels_own_body_count = max(feels_own_body_count - 1, 0)
+
+/// visible_message() from this mob that it gets too while blind or asleep; use for acts on its own body.
+/mob/proc/felt_visible_message(message, self_message, blind_message, vision_distance = DEFAULT_MESSAGE_RANGE)
+	push_feels_own_body()
+	visible_message(message, self_message, blind_message, vision_distance)
+	pop_feels_own_body()
 
 /**
  * Show a message to all mobs in earshot of this atom
@@ -483,6 +504,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 	DEFAULT_QUEUE_OR_CALL_VERB(VERB_CALLBACK(src, PROC_REF(run_examinate), examinify))
 
+//RMH EDITED START
+/// REF of the atom this mob last examined closer, and when, so one double-click gives one closer look.
+/mob/var/last_examined_more_ref
+/mob/var/last_examined_more_time = 0
+//RMH EDITED END
+
 /mob/proc/run_examinate(atom/examinify, force_examinate_more = FALSE)
 	if(QDELETED(examinify)) // since this can run async we might have had the atom get qdeleted already
 		return
@@ -534,6 +561,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 	var/ref_to_atom = REF(examinify)
 	var/recent_examine_time = LAZYACCESS(client?.recent_examines, ref_to_atom)
 	if(force_examinate_more || (!isnull(recent_examine_time) && world.time - recent_examine_time < EXAMINE_MORE_WINDOW))
+		//RMH EDITED START - a double-click whose second click already looked closer shows nothing twice
+		if(force_examinate_more && last_examined_more_ref == ref_to_atom && world.time - last_examined_more_time < EXAMINE_MORE_WINDOW)
+			return
+		last_examined_more_ref = ref_to_atom
+		last_examined_more_time = world.time
+		//RMH EDITED END
 		var/list/closer_result = examinify.examine_more(src)
 		if(!length(closer_result))
 			closer_result += span_notice("<i>I examine [examinify] closer, but find nothing of interest...</i>")
@@ -1139,10 +1172,10 @@ GLOBAL_VAR_INIT(mobids, 1)
 ///Can this mob use storage
 /mob/proc/canUseStorage()
 	return FALSE
-/mob/living/proc/ai_targeting_ally_check(mob/living/target)
+/mob/living/proc/ai_targeting_ally_check(mob/living/target, ignore_neutral = FALSE)
 	if(!target)
 		return FALSE
-	if(faction_check_atom(target, exact_match = FALSE))
+	if(ignore_neutral ? ai_targeting_shares_sworn_faction(target) : faction_check_atom(target, exact_match = FALSE))
 		return TRUE
 	if(ai_targeting_related_faction_check(target))
 		return TRUE
@@ -1151,6 +1184,17 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(ai_targeting_same_family(target))
 		return TRUE
 	return FALSE
+
+/// faction_check_atom without the Neutral placeholder every mob starts with.
+/mob/living/proc/ai_targeting_shares_sworn_faction(mob/living/target)
+	var/list/shared_factions = LAZYCOPY(faction) & target.get_faction()
+	shared_factions -= FACTION_NEUTRAL
+	if(length(shared_factions))
+		return TRUE
+	if(LAZYLEN(allies) && LAZYLEN(target.allies) && length(allies & target.allies))
+		return TRUE
+	// Legacy name-based allegiances, as in /mob/faction_check_atom.
+	return has_faction(target.name) || has_ally(target.name)
 
 /mob/living/proc/ai_targeting_related_faction_check(mob/living/target)
 	if(!target)
@@ -1215,10 +1259,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 	log_played_names(ckey,newname)
 
 	GLOB.chosen_names += newname
+	reserved_name = newname
 	real_name = newname
 	name = newname
 	if(mind)
 		mind.name = newname
+		mind.reserved_name = newname
 		if(mind.key)
 			log_played_names(mind.key,newname) //Just in case the mind is unsynced at the moment.
 
@@ -1237,6 +1283,29 @@ GLOBAL_VAR_INIT(mobids, 1)
 				if(obj.target?.current?.real_name == name)
 					obj.update_explanation_text()
 	return TRUE
+
+/// Frees this mob's GLOB.chosen_names entry when it leaves, so the character can return under that name.
+/mob/proc/release_reserved_name()
+	var/name_to_free = reserved_name || real_name
+	reserved_name = null
+	if(mind?.reserved_name == name_to_free)
+		mind.reserved_name = null
+	if(name_to_free)
+		GLOB.chosen_names -= name_to_free
+
+/// Applies prefs to a body remade for this character; the lost body's own reservation must not force a new name.
+/datum/mind/proc/apply_prefs_to_remade_body(datum/preferences/prefs, mob/living/carbon/human/new_body)
+	if(!prefs || !ishuman(new_body))
+		return
+	// A different prefs name means another character, so the old name stays reserved as for any death.
+	var/keeps_old_name = reserved_name && reserved_name == prefs.read_preference(/datum/preference/text/real_name)
+	if(keeps_old_name)
+		GLOB.chosen_names -= reserved_name
+	prefs.apply_prefs_to(new_body, TRUE)
+	if(!(new_body.real_name in GLOB.chosen_names))
+		GLOB.chosen_names += new_body.real_name
+		new_body.reserved_name = new_body.real_name
+		reserved_name = new_body.real_name
 
 ///Updates GLOB.data_core records with new name , see mob/living/carbon/human
 /mob/proc/replace_records_name(oldname,newname)

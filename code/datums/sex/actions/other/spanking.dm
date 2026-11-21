@@ -47,6 +47,9 @@
 	var/pain_amt = 2 * force
 	perform_sex_action(target, user, arousal_amt, pain_amt, arousal_amt)
 	handle_passive_ejaculation(target)
+	if(ishuman(target))
+		var/mob/living/carbon/human/spanked = target
+		spanked.take_impact_mark(user, BODY_ZONE_PRECISE_GROIN, force)
 
 	// Soreness messaging depending on force
 	if(force >= SEX_FORCE_HIGH)

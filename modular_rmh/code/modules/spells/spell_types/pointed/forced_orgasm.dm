@@ -40,5 +40,5 @@
 	aro?.ejaculate(null, cast_on, null, FALSE)
 	SEND_SIGNAL(cast_on, COMSIG_SEX_ADJUST_AROUSAL, 80)
 	SEND_SIGNAL(cast_on, COMSIG_SEX_ADJUST_ORGASM_PROG, 50)
-	if(cast_on.has_quirk(/datum/quirk/vice/addiction/lovefiend))
-		cast_on.sate_addiction(/datum/quirk/vice/addiction/lovefiend)
+	if(cast_on.has_quirk(/datum/quirk/negative/addiction/lovefiend))
+		cast_on.sate_addiction(/datum/quirk/negative/addiction/lovefiend)

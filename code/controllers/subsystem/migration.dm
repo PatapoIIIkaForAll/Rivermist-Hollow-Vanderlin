@@ -417,8 +417,6 @@ SUBSYSTEM_DEF(migrants)
 	var/datum/job/migrant_job = SSjob.GetJobType(role.migrant_job)
 	if(!migrant_job)
 		return FALSE
-	if(migrant_job.banned_leprosy && is_misc_banned(player.ckey, BAN_MISC_LEPROSY))
-		return FALSE
 	if(migrant_job.banned_lunatic && is_misc_banned(player.ckey, BAN_MISC_LUNATIC))
 		return FALSE
 	if(migrant_job.antag_role)

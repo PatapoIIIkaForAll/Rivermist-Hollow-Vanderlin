@@ -3,7 +3,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/fox
 	icon = 'icons/roguetown/mob/monster/fox.dmi'
-	name = "venard"
+	name = "fox"
 	desc = "A majestic beast of Silvanus's realm, hopping through the local fauna."
 	icon_state = "fox"
 	icon_living = "fox"

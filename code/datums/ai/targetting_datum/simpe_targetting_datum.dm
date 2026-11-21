@@ -354,6 +354,10 @@
 	// A captive who has steeled themselves (the "Refuse Advances" opt-out) is off-limits to horny mobs.
 	if(HAS_TRAIT(the_target, TRAIT_DEFEAT_REFUSE_ADVANCES))
 		return FALSE
+	// Someone just freed from a cocoon or a lair keeps their grace from every horny mob.
+	var/mob/living/spared = the_target
+	if(istype(spared) && world.time < spared.kidnap_protected_until)
+		return FALSE
 	if(issimple(living_mob))
 		var/mob/living/simple_animal/attacker = living_mob
 		if(attacker.binded == TRUE)
@@ -383,9 +387,22 @@
 		if(distress)
 			return distress.can_be_claimed_by(living_mob)
 
-		if(is_selected_horny_target(living_mob, th))
-			return TRUE
+		if(!is_selected_horny_target(living_mob, th))
+			return FALSE
+		// Allies are off-limits unless an order pointed this mob at them.
+		if(faction_check(living_mob, th, ignore_neutral = TRUE) && !is_directed_horny_target(living_mob, th))
+			return FALSE
+		return TRUE
 	return FALSE
+
+/// TRUE while a pet order's target is still this mob's horny target.
+/datum/targetting_datum/proc/is_directed_horny_target(mob/living/living_mob, atom/target)
+	var/datum/ai_controller/controller = living_mob?.ai_controller
+	if(!controller || !target)
+		return FALSE
+	if(controller.blackboard[BB_HORNY_DIRECTED_TARGET] != target)
+		return FALSE
+	return controller.blackboard[BB_BASIC_MOB_CURRENT_HORNY_TARGET] == target
 
 /datum/targetting_datum/basic/is_horny_pref_target(mob/living/living_mob, atom/target)
 	if(!ishuman(target))
@@ -401,18 +418,19 @@
 
 	return (((mobs_flags & HORNY_MOBS_TAG_MALES) && living_mob.gender == MALE) || ((mobs_flags & HORNY_MOBS_TAG_FEMALES) && living_mob.gender == FEMALE))
 
-/datum/targetting_datum/basic/proc/faction_check(mob/living/living_mob, mob/living/the_target)
+/// ignore_neutral: the shared Neutral placeholder alone is no alliance.
+/datum/targetting_datum/basic/proc/faction_check(mob/living/living_mob, mob/living/the_target, ignore_neutral = FALSE)
 	if(!living_mob || !the_target)
 		return FALSE
 	if((living_mob in SSmatthios_mobs.matthios_mobs) && (the_target in SSmatthios_mobs.matthios_mobs))
 		return TRUE
-	return living_mob.ai_targeting_ally_check(the_target)
+	return living_mob.ai_targeting_ally_check(the_target, ignore_neutral)
 
 /// Subtype which doesn't care about faction
 /// Mobs which retaliate but don't otherwise target seek should just attack anything which annoys them
 /datum/targetting_datum/basic/ignore_faction
 
-/datum/targetting_datum/basic/ignore_faction/faction_check(mob/living/living_mob, mob/living/the_target)
+/datum/targetting_datum/basic/ignore_faction/faction_check(mob/living/living_mob, mob/living/the_target, ignore_neutral = FALSE)
 	return FALSE
 
 /datum/targetting_datum/basic/zizoid/can_attack(mob/living/living_mob, atom/the_target)

@@ -81,9 +81,9 @@
 				if(stress2give == /datum/stress_event/viewdismember)
 					if(HAS_TRAIT(CA, TRAIT_STEELHEARTED))
 						continue
-					if(CA.has_quirk(/datum/quirk/vice/addiction/sadist))
+					if(CA.has_quirk(/datum/quirk/negative/addiction/sadist))
 						CA.add_stress(/datum/stress_event/viewdismembermaniac)
-						CA.sate_addiction(/datum/quirk/vice/addiction/sadist)
+						CA.sate_addiction(/datum/quirk/negative/addiction/sadist)
 						continue
 					if(CA.gender == FEMALE)
 						CA.add_stress(/datum/stress_event/fviewdismember)
@@ -201,7 +201,7 @@
 		was_owner.dropItemToGround(owner.get_item_for_held_index(held_index), force = TRUE)
 		was_owner.hand_bodyparts[held_index] = null
 	was_owner.remove_bodypart(src)
-	owner = null
+	set_owner(null) // RMH EDIT - a bare owner = null left trait signals on the old owner
 	update_icon_dropped()
 	was_owner.update_health_hud() //update the healthdoll
 	was_owner.update_body()

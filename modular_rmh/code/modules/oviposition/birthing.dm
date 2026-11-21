@@ -111,7 +111,7 @@
 	if(!opening)
 		return 0
 	var/share = clamp((BIRTH_PAIN_STRAIN - opening.get_strain(girth)) / (BIRTH_PAIN_STRAIN - 1), 0, 1)
-	if(include_kinks && has_quirk(/datum/quirk/vice/addiction/masochist))
+	if(include_kinks && has_quirk(/datum/quirk/negative/addiction/masochist))
 		share = max(share, BIRTH_MASOCHIST_FLOOR)
 	return share
 
@@ -128,8 +128,9 @@
 	hole_shake_hook("birth", 2)
 
 /// A birth leaves what the egg carried in the canal: slime counts as lube, venom stings, the rest soaks in.
-/obj/item/organ/genitals/filling_organ/proc/take_birth_residue(obj/item/oviposition_egg/egg)
-	if(!egg || !reagents)
+/// [share] scales it: a birth leaves all of it, an egg on the way in only its coat.
+/obj/item/organ/genitals/filling_organ/proc/take_birth_residue(obj/item/oviposition_egg/egg, share = 1)
+	if(!egg || !reagents || share <= 0)
 		return
 	var/list/residue = egg.get_birth_residue()
 	if(!length(residue))
@@ -138,7 +139,7 @@
 	var/lube_before = opening?.get_lube_level() || 0
 	var/stings = FALSE
 	for(var/reagent_type in residue)
-		var/amount = min(residue[reagent_type], max(0, reagents.maximum_volume - reagents.total_volume))
+		var/amount = min(residue[reagent_type] * share, max(0, reagents.maximum_volume - reagents.total_volume))
 		if(amount <= 0)
 			continue
 		reagents.add_reagent(reagent_type, amount)
@@ -217,16 +218,16 @@
 		if(istype(passenger, /obj/item/mob_holder/internal_womb))
 			return "It clings to me too tightly to push out yet."
 		return "That one is too deep, or too much a part of me, to push out."
-	return get_passage_block_reason(passenger, container)
+	return get_passage_block_reason(passenger, container, src)
 
-/// What the body itself puts in the way out, or null: clothes, a worn device, a plug, a penetration, size.
-/mob/living/carbon/human/proc/get_passage_block_reason(obj/item/passenger, obj/item/organ/container)
+/// What the body puts in the way out for [actor], or null: armor, a worn device, a plug, a penetration, size.
+/mob/living/carbon/human/proc/get_passage_block_reason(obj/item/passenger, obj/item/organ/container, mob/living/actor)
 	var/obj/item/organ/genitals/filling_organ/canal = container.get_birth_canal()
 	if(!istype(canal) || !canal.orifice_type)
 		return null
 	// The panel's rules: only armor above light keeps hands off, and a worn device seals its slot.
-	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN))
-		return "My clothes are in the way."
+	if(get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, actor))
+		return "My armor is in the way."
 	if(is_organ_slot_blocked(canal.slot))
 		return "Something worn seals the way out."
 	var/datum/component/body_storage/passage = canal.GetComponent(/datum/component/body_storage)
@@ -344,7 +345,7 @@
 		return istype(passenger, /obj/item/mob_holder/internal_womb) ? "It clings too tightly to bring up." : "That one is too much a part of me to bring up."
 	if(get_passenger_birth_girth(passenger) > OVI_RETCH_MAX_GIRTH)
 		return "It is too big to bring up. It will have to go the other way."
-	if(!has_mouth() || !mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		return "My mouth is not free."
 	return null
 

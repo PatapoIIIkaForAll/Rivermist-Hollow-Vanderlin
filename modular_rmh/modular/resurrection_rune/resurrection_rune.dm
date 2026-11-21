@@ -471,7 +471,7 @@
 	var/mob/living/carbon/new_body = new mob_type(destination_turf)
 	var/mob/ghostie = linked_mind.get_ghost(TRUE)
 	if(ghostie?.client?.prefs)
-		ghostie.client.prefs.apply_prefs_to(new_body, TRUE)
+		linked_mind.apply_prefs_to_remade_body(ghostie.client.prefs, new_body)
 
 	// Mind transfer expects the new body to briefly be the current body first.
 	linked_mind.current = new_body
@@ -701,10 +701,8 @@
 	if(is_active_noncarbon_shapeshift_source_body(target))
 		return RUNE_STAGE_NONE
 
-	var/turf/target_turf = get_turf(target)
-	if(istype(target_turf, /turf/open/lava))
-		return RUNE_STAGE_IMMEDIATE
-	if(istype(target_turf, /turf/open/lava/acid))
+	var/turf/open/lava/lava_turf = get_turf(target)
+	if(istype(lava_turf) && lava_turf.would_burn(target))
 		return RUNE_STAGE_IMMEDIATE
 	if(target.is_dead())
 		return RUNE_STAGE_IMMEDIATE

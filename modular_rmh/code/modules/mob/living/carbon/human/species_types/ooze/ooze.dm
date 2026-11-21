@@ -5,7 +5,7 @@
 /datum/species/ooze
 	name = "Ooze"
 	id = SPEC_ID_OOZE
-	desc = "Oozes arise where the land consumes the dead and remembers them. Some take a humanoid form and carry fragments of a former life. Their mutable bodies have no blood or bones, and lost limbs can grow back while they sleep. (+2 CON, -1 INT)"
+	desc = "Oozes arise where the land consumes the dead and remembers them. Some take a humanoid form and carry fragments of a former life. Their mutable bodies have no blood or bones, and lost limbs can grow back while they sleep."
 	default_color = "79F299"
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY, MUTCOLORS, NOBLOOD)
 	use_skintones = FALSE

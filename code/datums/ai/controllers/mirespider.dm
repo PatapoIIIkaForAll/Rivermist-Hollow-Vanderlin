@@ -1,67 +1,20 @@
+/// Mire crawlers: the shared habits, then trailing a lurker.
 /datum/ai_controller/mirespider
-	movement_delay = 0.4 SECONDS
-
-	ai_movement = /datum/ai_movement/hybrid_pathing
-	horny_pref_family_flag = HORNY_MOB_TYPE_SPIDERS
-
-	blackboard = list(
-		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic()
+	parent_type = /datum/ai_controller/spider_base
+	tail_subtrees = list(
+		/datum/ai_planning_subtree/being_a_minion/mirespider,
 	)
 
-	planning_subtrees = list(
-		/datum/ai_planning_subtree/target_retaliate,
-		/datum/ai_planning_subtree/aggro_find_target,
-
-		/datum/ai_planning_subtree/simple_find_horny,
-		/datum/ai_planning_subtree/horny,
-
-		/datum/ai_planning_subtree/simple_self_recovery,
-		/datum/ai_planning_subtree/find_food,
-		/datum/ai_planning_subtree/basic_melee_attack_subtree/agile,
-		/datum/ai_planning_subtree/being_a_minion/mirespider
-	)
-
-	idle_behavior = /datum/idle_behavior/idle_random_walk
-
+/// Mire lurkers: the shared habits plus web globs before the melee.
 /datum/ai_controller/mirespider_lurker
-	movement_delay = 0.4 SECONDS
-
-	ai_movement = /datum/ai_movement/hybrid_pathing
-	horny_pref_family_flag = HORNY_MOB_TYPE_SPIDERS
-
-	blackboard = list(
-		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic()
-	)
-
-	planning_subtrees = list(
-		/datum/ai_planning_subtree/target_retaliate,
-		/datum/ai_planning_subtree/aggro_find_target,
+	parent_type = /datum/ai_controller/spider_base
+	attack_subtrees = list(
 		/datum/ai_planning_subtree/basic_ranged_attack_subtree/mirespider_lurker,
-		/datum/ai_planning_subtree/find_cocoon_target,
-		/datum/ai_planning_subtree/cocoon_target
 	)
 
-	idle_behavior = /datum/idle_behavior/idle_random_walk
-
+/// Aragns: the shared habits and nothing else; the venom lives on the mob.
 /datum/ai_controller/mirespider_paralytic
-	movement_delay = 0.4 SECONDS
-
-	ai_movement = /datum/ai_movement/hybrid_pathing
-	horny_pref_family_flag = HORNY_MOB_TYPE_SPIDERS
-
-	blackboard = list(
-		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic()
-	)
-
-	planning_subtrees = list(
-		/datum/ai_planning_subtree/target_retaliate,
-		/datum/ai_planning_subtree/aggro_find_target,
-		/datum/ai_planning_subtree/basic_melee_attack_subtree,
-		/datum/ai_planning_subtree/find_cocoon_target,
-		/datum/ai_planning_subtree/cocoon_target
-	)
-
-	idle_behavior = /datum/idle_behavior/idle_random_walk
+	parent_type = /datum/ai_controller/spider_base
 
 /datum/ai_planning_subtree/being_a_minion/mirespider
 	/// Blackboard key where we travel a place
@@ -136,13 +89,11 @@
 	if(QDELETED(target))
 		return
 
-	if(isliving(target))
-		var/mob/living/carbon/L = target
-		if(L)
-			if(L.stat || L.getBruteLoss() > 500 || L.has_status_effect(/datum/status_effect/defeat_knockout))
-				controller.set_blackboard_key(BB_BASIC_MOB_COCOON_TARGET, L)
-				controller.queue_behavior(/datum/ai_behavior/cocoon_target, BB_BASIC_MOB_COCOON_TARGET)
-				return SUBTREE_RETURN_FINISH_PLANNING
+	// A downed target is wrapped, not shot.
+	if(isliving(target) && spider_can_wrap(controller.pawn, target))
+		controller.set_blackboard_key(BB_BASIC_MOB_COCOON_TARGET, target)
+		controller.queue_behavior(/datum/ai_behavior/cocoon_target, BB_BASIC_MOB_COCOON_TARGET)
+		return SUBTREE_RETURN_FINISH_PLANNING
 
 	var/mob/living/simple_animal/hostile/mirespider_lurker/lurker = controller.pawn
 	if (istype(lurker))
@@ -151,104 +102,19 @@
 	controller.queue_behavior(ranged_attack_behavior, BB_BASIC_MOB_CURRENT_TARGET, BB_TARGETTING_DATUM, BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
-/datum/ai_behavior/cocoon_target
-	behavior_flags = AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_REQUIRE_MOVEMENT
-	action_cooldown = 1 SECONDS
-
-/datum/ai_behavior/cocoon_target/setup(datum/ai_controller/controller, target_key)
-	. = ..()
-	var/mob/living/target = controller.blackboard[target_key]
-	if (!target || QDELETED(target) || !isliving(target))
-		return FALSE
-
-	set_movement_target(controller, (target))
-
-/datum/ai_behavior/cocoon_target/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
-	. = ..()
-	var/mob/living/simple_animal/pawn = controller.pawn
-	var/mob/living/target = controller.blackboard[target_key]
-	if (!target || QDELETED(target) || !isliving(target))
-		finish_action(controller, FALSE, target_key)
-		return
-
-	if (istype(target.loc, /obj/structure/spider/cocoon))
-		finish_action(controller, TRUE, target_key)
-		return
-
-	// A defeat knockout leaves the victim conscious but just as helpless.
-	if (target.stat || target.has_status_effect(/datum/status_effect/defeat_knockout))
-		if (do_after(pawn, 5 SECONDS, target))
-			if (istype(target.loc, /obj/structure/spider/cocoon))
-				finish_action(controller, TRUE, target_key)
-				return
-			var/turf/T = get_turf(target)
-			var/cocoon = new /obj/structure/spider/cocoon(T)
-			target.forceMove(cocoon)
-			// Very gentle healing effect that restores a lot of bloodloss. Allows the target to break out later.
-			target.apply_status_effect(/datum/status_effect/buff/healing/spider_cocoon, 0.25)
-			finish_action(controller, TRUE, target_key)
-
-/datum/ai_behavior/cocoon_target/finish_action(datum/ai_controller/controller, succeeded, target_key)
-	. = ..()
-	if(!succeeded)
-		controller.clear_blackboard_key(target_key)
-	controller.clear_blackboard_key(target_key)
-
-/datum/ai_planning_subtree/cocoon_target
-	var/datum/ai_behavior/cocoon_target/behavior = /datum/ai_behavior/cocoon_target
-
-/datum/ai_planning_subtree/cocoon_target/SelectBehaviors(datum/ai_controller/controller, delta_time)
-	. = ..()
-	var/obj/item/target = controller.blackboard[BB_BASIC_MOB_COCOON_TARGET]
-	if(QDELETED(target))
-		controller.clear_blackboard_key(BB_BASIC_MOB_COCOON_TARGET)
-		return
-	var/mob/living/pawn = controller.pawn
-	if(pawn.doing())
-		return
-	if(!istype(target, /mob/living/carbon))
-		behavior = /datum/ai_behavior/cocoon_target
-
-	controller.queue_behavior(behavior, BB_BASIC_MOB_COCOON_TARGET)
-	return SUBTREE_RETURN_FINISH_PLANNING
-
-/datum/ai_planning_subtree/find_cocoon_target
-	var/vision_range = 6
-	var/datum/ai_behavior/find_and_set/cocoon_target/behavior = /datum/ai_behavior/find_and_set/cocoon_target
-	var/cocoon_target_key = BB_BASIC_MOB_COCOON_TARGET
-
-/datum/ai_planning_subtree/find_cocoon_target/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
-	. = ..()
-
-	var/atom/target = controller.blackboard[cocoon_target_key]
-	if(!QDELETED(target))
-		// Busy with something
-		return
-
-	controller.queue_behavior(behavior, cocoon_target_key, controller.blackboard[BB_BASIC_FOODS], vision_range)
-
-/datum/ai_behavior/find_and_set/cocoon_target
-	action_cooldown = 20 SECONDS
-
-/datum/ai_behavior/find_and_set/cocoon_target/search_tactic(datum/ai_controller/controller, locate_paths, search_range)
-	var/list/found = list()
-	for(var/mob/living/carbon/mob in oview(search_range, controller.pawn))
-		var/obj/structure/spider/cocoon/cocoon = mob.loc
-		if(istype(cocoon, /obj/structure/spider/cocoon))
-			continue
-		if(mob.stat == DEAD)
-			continue
-		if(mob.stat == CONSCIOUS && !mob.has_status_effect(/datum/status_effect/defeat_knockout))
-			continue
-		found |= mob
-	if(!length(found))
-		return null
-	return pick(found)
-
 /atom/movable/screen/alert/status_effect/buff/healing/spider_cocoon
 	name = "Spider loogies"
-	desc = "Arachnid weave is stitching some of my wounds up slowly."
+	desc = "Arachnid weave is stitching some of my wounds up slowly. While I am inside a cocoon, click here to struggle out."
 	icon_state = "buff"
+
+/atom/movable/screen/alert/status_effect/buff/healing/spider_cocoon/Click(location, control, params)
+	if(LAZYACCESS(params2list(params), SHIFT_CLICKED))
+		return ..()
+	if(usr != mob_viewer || !isliving(mob_viewer))
+		return
+	var/obj/structure/spider/cocoon/cocoon = mob_viewer.loc
+	if(istype(cocoon))
+		cocoon.start_escape(mob_viewer)
 
 #define COCOON_FILTER "cocoon_glow"
 
@@ -260,8 +126,17 @@
 	healing_on_tick = 1
 	outline_colour = "#4e4c4c00"
 	var/blood_healing_on_tick = 20
+	/// Heal per tick asked for; the parent's slot for it doubles as the duration.
+	var/silk_heal_per_tick = 1
+
+/// Keeps the 30 minutes: a bare number in the parent's slot would become the duration.
+/datum/status_effect/buff/healing/spider_cocoon/on_creation(mob/living/new_owner, new_healing_on_tick)
+	if(isnum(new_healing_on_tick))
+		silk_heal_per_tick = new_healing_on_tick
+	return ..(new_owner, null)
 
 /datum/status_effect/buff/healing/spider_cocoon/on_apply()
+	healing_on_tick = silk_heal_per_tick
 	. = ..()
 	//The hardier you are, the more likely you are to recover from grievous wounds.
 	var/stat_bonus = 0

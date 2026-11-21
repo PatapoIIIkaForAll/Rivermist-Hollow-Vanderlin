@@ -332,8 +332,8 @@ All effects don't start immediately, but rather get worse over time; the rate is
 				remove_status_effect(/datum/status_effect/buff/drunk_master)
 		if(drunkenness >= 1)
 			SEND_SIGNAL(src, COMSIG_DRUG_INDULGE)
-			if(has_quirk(/datum/quirk/vice/addiction/alcoholic))
-				sate_addiction(/datum/quirk/vice/addiction/alcoholic)
+			if(has_quirk(/datum/quirk/negative/addiction/alcoholic))
+				sate_addiction(/datum/quirk/negative/addiction/alcoholic)
 		if(drunkenness >= 3)
 			if(prob(3))
 				slurring += 2

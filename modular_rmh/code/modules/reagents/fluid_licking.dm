@@ -17,7 +17,7 @@
 	if(user.get_active_held_item())
 		return FALSE
 	var/mob/living/carbon/licker = user
-	if(!licker.has_mouth() || !licker.mouth_is_free())
+	if(!licker.mouth_is_free(licker, cloth_blocks = TRUE))
 		return FALSE
 	return TRUE
 

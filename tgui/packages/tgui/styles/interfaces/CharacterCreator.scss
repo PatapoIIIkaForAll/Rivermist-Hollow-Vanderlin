@@ -909,7 +909,7 @@
 }
 .cc-stats {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   gap: 2px;
   text-align: center;
 }
@@ -2402,4 +2402,396 @@
 .cc-tat-controls {
   gap: 4px;
 }
+.cc-tat-kinds {
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 4px 0 2px;
+}
+.cc-tat-medium {
+  width: 14px;
+  flex: none;
+  text-align: center;
+  font-size: 10px;
+  color: var(--cc-muted);
+}
+.cc-tat-entry {
+  border-left: 2px solid transparent;
+  padding-left: 4px;
+}
+.cc-tat-brand {
+  border-left-color: #c48e42;
+}
+.cc-tat-brand .cc-tat-medium {
+  color: #e0803a;
+}
+.cc-tat-arcane {
+  border-left-color: #ffb02e;
+  box-shadow: -3px 0 6px -3px #ffb02e;
+}
+.cc-tat-arcane .cc-tat-medium {
+  color: #ffd27a;
+}
+.cc-tat-writing {
+  border-left-style: dashed;
+  border-left-color: var(--cc-muted);
+}
+.cc-tat-note {
+  font-size: 10px;
+  font-style: italic;
+  white-space: nowrap;
+}
 /* End of tattoo editor */
+
+/* Prosthetics window: artificer's schematic and parts drawer */
+.cc-pros {
+  display: flex;
+  gap: 10px;
+  min-height: 100%;
+}
+.cc-pros-slots {
+  flex: 0 0 44%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.cc-pros-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cc-pros-group-title {
+  color: var(--cc-heading);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(200, 163, 90, 0.3);
+}
+.cc-pros-slot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 6px;
+  border: 1px solid rgba(200, 163, 90, 0.18);
+  border-radius: 3px;
+  background: rgba(22, 17, 12, 0.55);
+  cursor: pointer;
+}
+.cc-pros-slot:hover {
+  border-color: rgba(255, 210, 122, 0.55);
+}
+.cc-pros-slot.active {
+  border-color: #ffd27a;
+  background: rgba(255, 210, 122, 0.08);
+  box-shadow: 0 0 6px rgba(255, 210, 122, 0.3);
+}
+.cc-pros-slot.off {
+  opacity: 0.4;
+}
+.cc-pros-slot-icon {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(200, 163, 90, 0.45);
+  color: #c8a35a;
+  font-size: 11px;
+}
+.cc-pros-slot.changed .cc-pros-slot-icon {
+  border-color: #ffd27a;
+  color: #ffd27a;
+}
+.cc-pros-slot-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cc-pros-slot-name {
+  font-size: 11px;
+}
+.cc-pros-slot-choice {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--cc-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cc-pros-slot-implant {
+  color: #ffe9a8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cc-pros-swatch.small {
+  width: 8px;
+  height: 8px;
+}
+.cc-pros-drawer {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.cc-pros-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cc-heading);
+  border-bottom: 1px solid rgba(200, 163, 90, 0.35);
+  padding-bottom: 4px;
+}
+.cc-pros-missing,
+.cc-pros-locked {
+  color: #e9a497;
+  font-style: italic;
+  font-size: 11px;
+}
+.cc-pros-locked {
+  padding: 16px;
+  text-align: center;
+}
+.cc-pros-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.cc-pros-card {
+  padding: 5px 7px;
+  border: 1px solid rgba(200, 163, 90, 0.25);
+  border-radius: 3px;
+  background: rgba(22, 17, 12, 0.6);
+  cursor: pointer;
+}
+.cc-pros-card:hover {
+  border-color: rgba(255, 210, 122, 0.6);
+}
+.cc-pros-card.active {
+  border-color: #ffd27a;
+  box-shadow: 0 0 6px rgba(255, 210, 122, 0.35);
+  cursor: default;
+}
+.cc-pros-card.disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.cc-pros-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cc-pros-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid #c8a35a;
+  flex: none;
+}
+.cc-pros-swatch.missing {
+  border-style: dashed;
+}
+.cc-pros-points {
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 8px;
+  border: 1px solid var(--cc-muted);
+  color: var(--cc-muted);
+}
+.cc-pros-points.gives {
+  color: #8fd18f;
+  border-color: #5f9e5f;
+}
+.cc-pros-points.costs {
+  color: #e9c46a;
+  border-color: #b0903c;
+}
+.cc-pros-desc {
+  font-size: 11px;
+  color: var(--cc-muted);
+  margin: 2px 0 2px 18px;
+}
+.cc-pros-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin-left: 18px;
+  font-size: 10px;
+}
+.cc-pros-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cc-pros-pips {
+  display: inline-flex;
+  gap: 2px;
+}
+.cc-pros-pip {
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  border: 1px solid rgba(200, 163, 90, 0.6);
+}
+.cc-pros-pip.on {
+  background: #c8a35a;
+}
+.cc-pros-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(200, 163, 90, 0.35);
+  padding-top: 4px;
+  font-size: 11px;
+}
+.cc-pros-neg {
+  color: #e9a497;
+}
+.cc-pros-socketbox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(200, 163, 90, 0.35);
+}
+.cc-pros-subtitle {
+  color: var(--cc-heading);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+.cc-pros-implant {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 5px;
+  font-size: 11px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.cc-pros-implant:hover {
+  border-color: rgba(200, 163, 90, 0.4);
+}
+.cc-pros-implant.active {
+  border-color: #ffd27a;
+  background: rgba(255, 210, 122, 0.08);
+  cursor: default;
+}
+.cc-pros-rivet {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid #c8a35a;
+}
+.cc-pros-rivet.on {
+  background: #ffe9a8;
+  box-shadow: 0 0 5px #ffd27a;
+}
+/* End of prosthetics window */
+
+/* Stat editor (Ability window) */
+.cc-se-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+.cc-se-head .cc-btn {
+  align-self: center;
+}
+.cc-se-left {
+  font-family: var(--cc-serif);
+  font-size: 20px;
+  color: var(--cc-text);
+}
+.cc-se-left.unspent {
+  color: var(--cc-gold);
+}
+.cc-se-grid {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) auto auto 26px;
+  gap: 4px 8px;
+  align-items: center;
+}
+.cc-se-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.cc-se-name-tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: help;
+}
+.cc-se-step {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cc-se-value {
+  width: 22px;
+  text-align: center;
+  font-family: var(--cc-serif);
+  font-size: 15px;
+  color: var(--cc-text);
+}
+.cc-se-value.low {
+  color: #e9a497;
+}
+.cc-se-bonus {
+  display: flex;
+  gap: 3px;
+}
+.cc-btn.cc-se-pip {
+  min-width: 30px;
+  padding: 0 4px;
+  color: var(--cc-muted);
+}
+.cc-btn.cc-se-pip.on {
+  border-color: var(--cc-gold);
+  color: #f3e3bf;
+  background: linear-gradient(180deg, #4a3b22, #2b2214);
+}
+.cc-se-total {
+  text-align: right;
+}
+.cc-se-impression {
+  text-align: center;
+  font-size: 12px;
+}
+.cc-field-label.cc-se-now {
+  color: var(--cc-gold);
+}
+.cc-se-band {
+  font-family: var(--cc-serif);
+  color: var(--cc-text);
+}
+.cc-se-band.poor {
+  color: #e9a497;
+}
+.cc-se-band.strong {
+  color: #a9d68a;
+}
+.cc-se-line {
+  width: 100%;
+  background: #0f0c09;
+  color: var(--cc-text);
+  border: 1px solid #3a3024;
+  font-family: var(--cc-serif);
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.cc-se-line:focus {
+  outline: none;
+  border-color: var(--cc-gold-dim);
+}
+/* End of stat editor */

@@ -176,6 +176,9 @@ GLOBAL_LIST_INIT(oldhc, sortList(
 		return FALSE
 	if(!isnum(delay))
 		CRASH("do_after was passed a non-number delay: [delay || "null"].")
+	// Admin ghosts using held items: timed actions finish at once.
+	if(is_instant_admin_ghost(user))
+		return !(target && QDELETED(target))
 
 	/* V: */
 	if(!(timed_action_flags & IGNORE_USER_DOING) && user.doing())

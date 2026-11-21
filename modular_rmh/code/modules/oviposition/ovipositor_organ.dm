@@ -13,6 +13,8 @@
 	var/egg_scale = OVI_EGG_DEFAULT_SCALE
 	var/list/egg_traits = list()
 	var/resource_dependent_yield = FALSE
+	/// Scales the egg growth time; creatures grow eggs slower than players.
+	var/egg_stage_time_multiplier = 1
 
 /obj/item/organ/genitals/penis/ovipositor/Insert(mob/living/M, special, drop_if_replaced, new_zone = null)
 	. = ..()
@@ -77,7 +79,8 @@
 		qdel(ovipositor_component)
 	return TRUE
 
-/proc/ensure_typed_ovipositor(mob/living/owner, egg_type = OVI_EGG_NORMAL)
+/// Gives [owner] a working ovipositor of [egg_type]; a creature's clutch, store size and starting store follow.
+/proc/ensure_typed_ovipositor(mob/living/owner, egg_type = OVI_EGG_NORMAL, clutch = null, capacity = null, stored = null)
 	if(!owner)
 		return null
 
@@ -100,13 +103,34 @@
 
 	ovipositor.set_egg_type(egg_type)
 	set_ovipositor_functionality(ovipositor, TRUE)
+	if(!isnull(clutch))
+		ovipositor.set_clutch_size(clutch)
+	if(!isnull(capacity))
+		ovipositor.set_storage_capacity(capacity)
+	if(!isnull(stored))
+		var/datum/component/ovipositor/component = ovipositor.GetComponent(/datum/component/ovipositor)
+		component?.eggs_stored = clamp(round(stored), 0, component.get_max_stored_eggs())
 	return ovipositor
 
+/// A creature's ovipositor: spawns gravid with a small store that regrows slower than a player's.
+/proc/ensure_creature_ovipositor(mob/living/owner, egg_type, clutch, capacity, stored)
+	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = ensure_typed_ovipositor(owner, egg_type, clutch, capacity, stored)
+	if(ovipositor)
+		ovipositor.egg_stage_time_multiplier = OVI_CREATURE_STAGE_TIME_MULTIPLIER
+	return ovipositor
+
+// Creature stores as clutch, capacity, stored.
 /proc/ensure_spider_ovipositor(mob/living/owner)
-	return ensure_typed_ovipositor(owner, OVI_EGG_SPIDER)
+	return ensure_creature_ovipositor(owner, OVI_EGG_SPIDER, 2, 5, 3)
 
 /proc/ensure_bog_bug_ovipositor(mob/living/owner)
-	return ensure_typed_ovipositor(owner, OVI_EGG_BOG_BUG)
+	return ensure_creature_ovipositor(owner, OVI_EGG_BOG_BUG, 2, 4, 2)
+
+/proc/ensure_tentacle_ovipositor(mob/living/owner)
+	return ensure_creature_ovipositor(owner, OVI_EGG_TENTACLE, 1, 4, 2)
+
+/proc/ensure_maneater_ovipositor(mob/living/owner)
+	return ensure_creature_ovipositor(owner, OVI_EGG_MANEATER, 1, 2, 1)
 
 /proc/get_oviposition_egg_type_option_name(option)
 	switch(option)
@@ -149,15 +173,15 @@
 	if(istype(entry, /datum/customizer_entry/organ/genitals/vagina))
 		var/datum/customizer_entry/organ/genitals/vagina/vagina_entry = entry
 		if(vagina_entry.disabled)
-			if(remove_quirk(/datum/quirk/peculiarity/egg_layer))
+			if(remove_quirk(/datum/quirk/neutral/egg_layer))
 				. = TRUE
 		return
 
 	if(istype(entry, /datum/customizer_entry/organ/genitals/penis))
-		if(has_selected_quirk(/datum/quirk/peculiarity/ovipositor))
+		if(has_selected_quirk(/datum/quirk/neutral/ovipositor))
 			. |= force_ovipositor_genital_entry()
 
-/datum/quirk/peculiarity/ovipositor
+/datum/quirk/neutral/ovipositor
 	name = "Oviposition"
 	desc = "My 'penis' is a functional ovipositor and can be used to lay eggs."
 	customization_label = "Choose Egg Type"
@@ -180,7 +204,7 @@
 		list("key" = "resource_dependent", "label" = "Resource-Dependent Yield", "type" = QUIRK_SELECT, "default" = "No", "options" = list("No", "Yes"))
 	)
 
-/datum/quirk/peculiarity/ovipositor/is_available(datum/preferences/prefs)
+/datum/quirk/neutral/ovipositor/is_available(datum/preferences/prefs)
 	if(!..())
 		return FALSE
 	if(!prefs)
@@ -188,7 +212,7 @@
 
 	return prefs.can_support_ovipositor_genitals()
 
-/datum/quirk/peculiarity/ovipositor/on_spawn()
+/datum/quirk/neutral/ovipositor/on_spawn()
 	if(!customization_value || !(customization_value in customization_options))
 		customization_value = OVI_EGG_NORMAL
 
@@ -219,14 +243,14 @@
 
 	set_ovipositor_functionality(ovipositor_organ, TRUE)
 
-/datum/quirk/peculiarity/ovipositor/on_remove()
+/datum/quirk/neutral/ovipositor/on_remove()
 	var/obj/item/organ/genitals/penis/ovipositor/ovipositor_organ = owner?.getorganslot(ORGAN_SLOT_PENIS)
 	set_ovipositor_functionality(ovipositor_organ, FALSE)
 
-/datum/quirk/peculiarity/ovipositor/get_option_name(option)
+/datum/quirk/neutral/ovipositor/get_option_name(option)
 	return get_oviposition_egg_type_option_name(option)
 
-/datum/quirk/peculiarity/egg_layer
+/datum/quirk/neutral/egg_layer
 	name = "Egg Layer"
 	desc = "My womb slowly forms eggs on its own."
 	customization_label = "Choose Egg Type"
@@ -248,7 +272,7 @@
 		list("key" = "resource_dependent", "label" = "Resource-Dependent Yield", "type" = QUIRK_SELECT, "default" = "No", "options" = list("No", "Yes"))
 	)
 
-/datum/quirk/peculiarity/egg_layer/is_available(datum/preferences/prefs)
+/datum/quirk/neutral/egg_layer/is_available(datum/preferences/prefs)
 	if(!..())
 		return FALSE
 	if(!prefs)
@@ -257,7 +281,7 @@
 	var/datum/customizer_entry/organ/genitals/vagina/vagina_entry = prefs.get_customizer_entry_of_type(/datum/customizer_entry/organ/genitals/vagina)
 	return vagina_entry && !vagina_entry.disabled
 
-/datum/quirk/peculiarity/egg_layer/on_spawn()
+/datum/quirk/neutral/egg_layer/on_spawn()
 	if(!customization_value || !(customization_value in customization_options))
 		customization_value = OVI_EGG_NORMAL
 
@@ -285,7 +309,7 @@
 		womb.resource_dependent_yield = (get_extra_value("resource_dependent", "No") == "Yes")
 		womb.update_custom_organ_desc()
 
-/datum/quirk/peculiarity/egg_layer/on_remove()
+/datum/quirk/neutral/egg_layer/on_remove()
 	if(!owner)
 		return
 
@@ -303,7 +327,7 @@
 		womb.resource_dependent_yield = FALSE
 		womb.update_custom_organ_desc()
 
-/datum/quirk/peculiarity/egg_layer/get_option_name(option)
+/datum/quirk/neutral/egg_layer/get_option_name(option)
 	return get_oviposition_egg_type_option_name(option)
 
 /// Validates a hex color string for oviposition egg tinting. Returns null if invalid.

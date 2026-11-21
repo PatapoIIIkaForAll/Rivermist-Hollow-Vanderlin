@@ -4,6 +4,7 @@
 /client/proc/debug_variables(datum/thing in world)
 	set category = "Debug.Core"
 	set name = "View Variables"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	//set src in world
 	var/static/cookieoffset = rand(1, 9999) //to force cookies to reset after the round.
 
@@ -29,11 +30,12 @@
 	var/icon/sprite
 	var/hash
 
-	var/type = islist ? /list : thing.type
+	var/is_alist = istype(thing, /alist)
+	var/type = islist ? (is_alist ? /alist : /list) : thing.type
 	var/no_icon = FALSE
 
 	if(isatom(thing))
-		sprite = getFlatIcon(thing)
+		sprite = vv_preview_icon(thing)
 		if(!sprite)
 			no_icon = TRUE
 
@@ -67,7 +69,36 @@
 	title = "[thing] ([REF(thing)]) = [type]"
 	var/formatted_type = replacetext("[type]", "/", "<wbr>/")
 
-	var/list/header = islist ? list("<b>/list</b>") : thing.vv_get_header()
+	// Navigation history (Back / Forward / Recent) and quick links to related tools.
+	var/history_html = ""
+	if(holder)
+		// Special lists cannot be found again through their reference, so they are not worth remembering.
+		if(!islist || !isnull(locate(refid)))
+			holder.vv_history_record(thing, islist ? "[type] ([length(thing)]) [refid]" : "[thing] ([type])", "[type]")
+		history_html = holder.vv_history_html()
+
+	var/list/quick_links = list()
+	if(!islist)
+		quick_links += VV_HREF_TARGETREF(refid, VV_HK_MARK, "Mark")
+		quick_links += VV_HREF_TARGETREF(refid, VV_HK_CALLPROC, "Call Proc")
+	if(isatom(thing))
+		var/atom/atom_thing = thing
+		var/turf/thing_turf = get_turf(atom_thing)
+		if(thing_turf)
+			quick_links += "<a href='byond://?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[thing_turf.x];Y=[thing_turf.y];Z=[thing_turf.z]' title='Jump to its location'>Jump</a>"
+		if(ismovable(atom_thing) && atom_thing.loc)
+			quick_links += "<a href='byond://?_src_=vars;[HrefToken()];Vars=[REF(atom_thing.loc)]' title='Open what contains it'>Loc</a>"
+	if(ismob(thing))
+		var/mob/mob_thing = thing
+		quick_links += "<a href='byond://?_src_=holder;[HrefToken()];adminplayeropts=[refid]' title='Open the player panel for this mob'>Player Panel</a>"
+		quick_links += "<a href='byond://?_src_=holder;[HrefToken()];adminplayerobservefollow=[refid]' title='Follow as a ghost'>Follow</a>"
+		if(mob_thing.mind)
+			quick_links += "<a href='byond://?_src_=vars;[HrefToken()];Vars=[REF(mob_thing.mind)]' title='Open its mind'>Mind</a>"
+		if(mob_thing.client)
+			quick_links += "<a href='byond://?_src_=vars;[HrefToken()];Vars=[REF(mob_thing.client)]' title='Open its client'>Client</a>"
+	var/quick_html = length(quick_links) ? "<div class='vvquick'>[quick_links.Join(" &middot; ")]</div>" : ""
+
+	var/list/header = islist ? list("<b>[is_alist ? "/alist" : "/list"]</b>") : thing.vv_get_header()
 
 	var/ref_line = "@[copytext(refid, 2, -1)]" // get rid of the brackets, add a @ prefix for copy pasting in asay
 
@@ -108,7 +139,14 @@
 	sleep(1 TICKS)
 
 	var/list/variable_html = list()
-	if(islist)
+	if(is_alist)
+		// alists (ported from Azure Peak): walk by key, the row links carry the position
+		var/alist/alist_value = thing
+		var/alist_position = 0
+		for(var/alist_key in alist_value)
+			alist_position++
+			variable_html += debug_variable(alist_key, alist_value[alist_key], 0, alist_value, alist_index = alist_position)
+	else if(islist)
 		var/list/list_value = thing
 		for(var/i in 1 to list_value.len)
 			var/key = list_value[i]
@@ -120,7 +158,12 @@
 		names = sortList(names)
 		for(var/varname in names)
 			if(thing.can_vv_get(varname))
-				variable_html += thing.vv_get_var(varname)
+				var/row_html = thing.vv_get_var(varname)
+				// Flag variables that no longer hold the value their type starts with.
+				var/current_value = thing.vars[varname]
+				if(!islist(current_value) && !isdatum(current_value) && varname != "vars" && current_value != initial(thing.vars[varname]) && findtext(row_html, "<li") == 1)
+					row_html = "<li class='vv-changed'[copytext(row_html, 4)]"
+				variable_html += row_html
 
 	var/html = {"
 <html>
@@ -136,11 +179,15 @@
 				var filter_text = document.getElementById('filter');
 				filter_text.focus();
 				filter_text.select();
+				var lastmode = getCookie("vvsearchmode");
+				if (lastmode == 'name' || lastmode == 'value') {
+					document.getElementById('search_mode').value = lastmode;
+				}
 				var lastsearch = getCookie("[refid][cookieoffset]search");
 				if (lastsearch) {
-					filter_text.value = lastsearch;
-					updateSearch();
+					filter_text.value = decodeURIComponent(lastsearch);
 				}
+				updateSearch();
 			}
 			function getCookie(cname) {
 				var name = cname + "=";
@@ -154,44 +201,68 @@
 			}
 
 			// main search functionality
-			var last_filter = "";
-			function updateSearch() {
-				var filter = document.getElementById('filter').value.toLowerCase();
-				var vars_ol = document.getElementById("vars");
-
-				if (filter === last_filter) {
-					// An event triggered an update but nothing has changed.
-					return;
-				} else if (filter.indexOf(last_filter) === 0) {
-					// The new filter starts with the old filter, fast path by removing only.
-					var children = vars_ol.childNodes;
-					for (var i = children.length - 1; i >= 0; --i) {
-						try {
-							var li = children\[i];
-							if (li.innerText.toLowerCase().indexOf(filter) == -1) {
-								vars_ol.removeChild(li);
-							}
-						} catch(err) {}
-					}
-				} else {
-					// Remove everything and put back what matches.
-					while (vars_ol.hasChildNodes()) {
-						vars_ol.removeChild(vars_ol.lastChild);
-					}
-
-					for (var i = 0; i < complete_list.length; ++i) {
-						try {
-							var li = complete_list\[i];
-							if (!filter || li.innerText.toLowerCase().indexOf(filter) != -1) {
-								vars_ol.appendChild(li);
-							}
-						} catch(err) {}
+			// search_mode: "all" = name and value, "name" = variable names only, "value" = values only
+			var last_state = null;
+			function first_name_text(li) {
+				var spans = li.getElementsByTagName('span');
+				for (var i = 0; i < spans.length; ++i) {
+					if (spans\[i].className == 'vn') return spans\[i].innerText;
+				}
+				return null;
+			}
+			function row_matches(li, filter, mode, changed_only) {
+				if (changed_only && (' ' + li.className + ' ').indexOf(' vv-changed ') == -1) return false;
+				if (!filter) return true;
+				var text = li.innerText;
+				if (mode != 'all') {
+					var name = first_name_text(li);
+					if (name !== null) {
+						if (mode == 'name') {
+							text = name;
+						} else {
+							var at = text.indexOf(name);
+							text = at == -1 ? text : text.substr(at + name.length);
+						}
 					}
 				}
+				return text.toLowerCase().indexOf(filter) != -1;
+			}
+			function updateSearch() {
+				var filter = document.getElementById('filter').value.toLowerCase();
+				var mode = document.getElementById('search_mode').value;
+				var changed_only = document.getElementById('changed_only').checked;
+				var state = mode + '|' + (changed_only ? 1 : 0) + '|' + filter;
+				if (state === last_state) {
+					// An event triggered an update but nothing has changed.
+					return;
+				}
+				var vars_ol = document.getElementById("vars");
+				// Remove everything and put back what matches.
+				while (vars_ol.hasChildNodes()) {
+					vars_ol.removeChild(vars_ol.lastChild);
+				}
+				var shown = 0;
+				for (var i = 0; i < complete_list.length; ++i) {
+					try {
+						var li = complete_list\[i];
+						if (row_matches(li, filter, mode, changed_only)) {
+							vars_ol.appendChild(li);
+							shown++;
+						}
+					} catch(err) {}
+				}
+				document.getElementById('search_count').innerHTML = shown + ' of ' + complete_list.length;
+				document.getElementById('search_empty').style.display = (shown || !complete_list.length) ? 'none' : 'block';
 
-				last_filter = filter;
+				last_state = state;
 				document.cookie="[refid][cookieoffset]search="+encodeURIComponent(filter);
-
+				document.cookie="vvsearchmode="+mode;
+			}
+			function clearSearch() {
+				var filter_text = document.getElementById('filter');
+				filter_text.value = '';
+				updateSearch();
+				filter_text.focus();
 			}
 
 			// onkeydown
@@ -249,8 +320,10 @@
 					</td>
 					<td width='50%'>
 						<div align='center'>
-							<a id='refresh_link' href='byond://?_src_=vars;
-datumrefresh=[refid];[HrefToken()]'>Refresh</a>
+							<div class='vvnav'>[history_html]</div>
+							<a id='refresh_link' class='vvbtn' href='byond://?_src_=vars;
+datumrefresh=[refid];[HrefToken()]' title='Reload this window (F5)'>Refresh</a>
+							[quick_html]
 							<form>
 								<select name="file" size="1"
 									onchange="handle_dropdown(this)"
@@ -269,21 +342,40 @@ datumrefresh=[refid];[HrefToken()]'>Refresh</a>
 			<b>E</b> - Edit, tries to determine the variable type by itself.<br>
 			<b>C</b> - Change, asks you for the var type first.<br>
 			<b>M</b> - Mass modify: changes this variable for all objects of this type.<br>
+			<span class='vt'>type</span> after a name is the kind of value it holds. <span class='vv-changed'><span class='vn'>Highlighted names</span></span> differ from the type's starting value.<br>
 		</font>
 		<hr>
 		<table width='100%'>
 			<tr>
-				<td width='20%'>
+				<td width='12%'>
 					<div align='center'>
 						<b>Search:</b>
 					</div>
 				</td>
-				<td width='80%'>
+				<td>
 					<input type='text' id='filter' name='filter_text' value='' style='width:100%;'>
+				</td>
+				<td width='1%' nowrap>
+					<select id='search_mode' onchange='updateSearch()' title='What the search looks at'>
+						<option value='all' selected>Names &amp; values</option>
+						<option value='name'>Names only</option>
+						<option value='value'>Values only</option>
+					</select>
+					<a class='vvbtn' href='#' onclick='clearSearch(); return false;' title='Clear the search'>Clear</a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan='2'>
+					<font size='1'>
+						<label title='Only variables that differ from the starting value of the type'><input type='checkbox' id='changed_only' onclick='updateSearch()'> Changed only</label>
+						&nbsp; Showing <span id='search_count'></span>
+					</font>
 				</td>
 			</tr>
 		</table>
 		<hr>
+		<div id='search_empty' class='vvempty'>Nothing matches the search. Try "Names &amp; values", or clear it.</div>
 		<ol id='vars'>
 			[variable_html.Join()]
 		</ol>
@@ -302,3 +394,17 @@ datumrefresh=[refid];[HrefToken()]'>Refresh</a>
 
 #undef ICON_STATE_CHECKED
 #undef ICON_STATE_NULL
+
+/**
+ * The small picture at the top of a VV window.
+ *
+ * getFlatIcon() blends every overlay, and without no_anim it does so for every animation frame:
+ * on an animated turf or a dressed mob that alone could stall the server for a long moment.
+ * One frame is enough for a preview, and atoms with a pile of overlays only show their base icon.
+ */
+/proc/vv_preview_icon(atom/thing)
+	if(length(thing.overlays) + length(thing.underlays) > 30)
+		if(!thing.icon)
+			return null
+		return icon(thing.icon, thing.icon_state, thing.dir, 1)
+	return getFlatIcon(thing, no_anim = TRUE)

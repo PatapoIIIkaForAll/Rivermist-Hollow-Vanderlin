@@ -66,7 +66,7 @@ GLOBAL_LIST_EMPTY(breast_test_panels)
 		html += "<a href='byond://?src=[REF(src)];fill=custom'>other...</a><br><br>"
 	html += "Swelling Glands (trait): <b>[HAS_TRAIT(target, TRAIT_FLUID_ENGORGEMENT) ? "on" : "off"]</b> "
 	html += "<a href='byond://?src=[REF(src)];swelling=1'>toggle</a><br>"
-	var/datum/quirk/vice/breast_enthusiast/vice = target.get_quirk(/datum/quirk/vice/breast_enthusiast)
+	var/datum/quirk/negative/breast_enthusiast/vice = target.get_quirk(/datum/quirk/negative/breast_enthusiast)
 	html += "Breast Enthusiast (vice): <b>[vice ? "on, hunger stage [vice.hunger_stage]" : "off"]</b> "
 	html += "<a href='byond://?src=[REF(src)];enthusiast=1'>toggle</a><br>"
 	html += "<hr><small>refreshes every [BREAST_PANEL_REFRESH_MS / 1000] s</small> <a href='byond://?src=[REF(src)];refresh=1'>refresh now</a>"
@@ -109,11 +109,11 @@ GLOBAL_LIST_EMPTY(breast_test_panels)
 		redraw()
 		log_change("toggled Swelling Glands on [key_name(target)]")
 	if(href_list["enthusiast"])
-		if(target.get_quirk(/datum/quirk/vice/breast_enthusiast))
-			target.remove_quirk(/datum/quirk/vice/breast_enthusiast)
+		if(target.get_quirk(/datum/quirk/negative/breast_enthusiast))
+			target.remove_quirk(/datum/quirk/negative/breast_enthusiast)
 			log_change("removed the Breast Enthusiast vice from [key_name(target)]")
 		else
-			target.add_quirk(/datum/quirk/vice/breast_enthusiast)
+			target.add_quirk(/datum/quirk/negative/breast_enthusiast)
 			log_change("gave the Breast Enthusiast vice to [key_name(target)]")
 	show(usr)
 

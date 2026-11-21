@@ -5,7 +5,7 @@
 //	You do not need to raise this if you are adding new values that have sane defaults.
 //	Only raise this value when changing the meaning/format/name/layout of an existing value
 //	where you would want the updater procs below to run
-#define SAVEFILE_VERSION_MAX 37
+#define SAVEFILE_VERSION_MAX 40
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -157,6 +157,32 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		// Accents are opt-in now, so clear whatever the old default left on the slot.
 		write_preference(/datum/preference/choiced/selected_accent, ACCENT_NONE)
 
+	if(current_version < 38)
+		// Unknown type paths load as null, so the old quirk paths are rewritten as text first.
+		var/quirk_text = S.ExportText("quirks")
+		if(quirk_text)
+			S.ImportText("quirks", migrate_legacy_quirk_text(quirk_text))
+
+	if(current_version < 39)
+		// RMH EDIT - the Branded quirk became a creator brand. Its dead path reads back as the base quirk type.
+		var/quirk_text = S.ExportText("quirks")
+		if(quirk_text && findtext(quirk_text, "/datum/quirk/negative/branded"))
+			var/static/regex/branded_path = regex(@"/datum/quirk/negative/branded\b", "g")
+			S.ImportText("quirks", branded_path.Replace(quirk_text, "/datum/quirk"))
+			var/list/quirk_data
+			S["quirks"] >> quirk_data
+			if(islist(quirk_data))
+				for(var/list/entry in quirk_data.Copy())
+					if(!islist(entry) || entry["type"] != /datum/quirk)
+						continue
+					quirk_data -= list(entry)
+					migrate_branded_quirk_save(S, entry["value"], entry["extra"])
+				WRITE_FILE(S["quirks"], quirk_data)
+
+	if(current_version < 40)
+		// RMH EDIT - prosthetic, Missing Arm/Leg and Cyclops quirks became Prosthetics window choices.
+		migrate_prosthetic_quirk_save(S)
+
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)
 		return
@@ -234,7 +260,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["triumphs"], triumphs)
 	WRITE_FILE(S["admin_ghost_icon"], admin_ghost_icon)
 	WRITE_FILE(S["lastclass"], lastclass)
-	WRITE_FILE(S["preferred_ui_language"], parent ? sanitize_preferred_ui_language(parent.preferred_ui_language) : "en")
+	WRITE_FILE(S["preferred_ui_language"], (parent ? sanitize_preferred_ui_language(parent.preferred_ui_language) : "en"))
 	WRITE_FILE(S["lastchangelog"], lastchangelog)
 	WRITE_FILE(S["be_special"], be_special)
 	WRITE_FILE(S["default_slot"], default_slot)
@@ -520,6 +546,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["tattoos"] >> tattoos
 	tattoos = SANITIZE_LIST(tattoos)
 	validate_tattoos()
+	S["prosthetics"] >> prosthetics
+	prosthetics = SANITIZE_LIST(prosthetics)
+	S["implants"] >> implants
+	implants = SANITIZE_LIST(implants)
+	validate_prosthetics()
 	// RMH EDITED END
 
 	S["descriptor_entries"] >> descriptor_entries
@@ -633,10 +664,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["emissive_markings"], emissive_markings) 	// RMH edit
 	// RMH EDITED START - custom self-written tattoos, separate from GLOB.body_markings
 	WRITE_FILE(S["tattoos"], tattoos)
+	WRITE_FILE(S["prosthetics"], prosthetics)
+	WRITE_FILE(S["implants"], implants)
 	// RMH EDITED END
 	// Descriptor entries
 	WRITE_FILE(S["descriptor_entries"], descriptor_entries)
 	WRITE_FILE(S["custom_descriptors"], custom_descriptors)
+	WRITE_FILE(S["job_preferences"], job_preferences)
 	WRITE_FILE(S["alt_job_selections"], alt_job_selections)
 
 	save_quirks(S)

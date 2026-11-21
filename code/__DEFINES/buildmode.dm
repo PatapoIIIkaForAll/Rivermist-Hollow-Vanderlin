@@ -3,19 +3,28 @@
 #define BM_SWITCHSTATE_MODE 1
 #define BM_SWITCHSTATE_DIR 2
 
-// Item browser categories
-#define BM_CATEGORY_TURF 1
-#define BM_CATEGORY_OBJ 2
-#define BM_CATEGORY_MOB 3
-#define BM_CATEGORY_ITEM 4
-#define BM_CATEGORY_WEAPON 5
-#define BM_CATEGORY_CLOTHING 6
-#define BM_CATEGORY_FOOD 7
-#define BM_CATEGORY_REAGENT_CONTAINERS 8
-
-/// Entries per item browser page; each entry is one icon request on the client.
-#define BM_ITEMS_PER_PAGE 60
-/// Longest accepted item browser search text.
+// Spawn catalogue (item browser) limits
+/// Cards per catalogue page.
+#define BM_ITEMS_PER_PAGE 48
+/// Longest accepted catalogue search text.
 #define BM_SEARCH_MAX_LENGTH 100
-/// Window id of the item browser popup.
-#define BM_BROWSER_WINDOW "buildmode_browser"
+/// Most favourites one admin can keep.
+#define BM_MAX_FAVORITES 100
+/// How many recently picked types are remembered.
+#define BM_MAX_RECENT 24
+/// Largest manual pixel offset, in either direction.
+#define BM_MAX_OFFSET 32
+
+// Basic mode tools: what a plain left click does. Modifier hotkeys work whatever tool is picked.
+#define BM_TOOL_PLACE "place"
+#define BM_TOOL_PIXEL "pixel"
+#define BM_TOOL_AREA "area"
+#define BM_TOOL_ERASE "erase"
+#define BM_TOOL_COPY "copy"
+#define BM_TOOL_PICK "pick"
+#define BM_TOOL_DELETE "delete"
+
+/// Area paint/erase over this many tiles asks for confirmation.
+#define BM_AREA_CONFIRM_TILES 400
+/// Area paint/erase over this many tiles is refused.
+#define BM_AREA_MAX_TILES 4096

@@ -20,7 +20,7 @@
 
 /// A held lube beats spit; with no lube and a covered mouth there is nothing to use.
 /datum/sex_action/lube_up/proc/has_lube_source(mob/living/user)
-	return user.get_held_lube_container() || user.mouth_is_free()
+	return user.get_held_lube_container() || user.mouth_is_free(user, cloth_blocks = TRUE)
 
 /datum/sex_action/lube_up/proc/has_lube_target(mob/living/user, mob/living/target)
 	if(!get_hole(target))

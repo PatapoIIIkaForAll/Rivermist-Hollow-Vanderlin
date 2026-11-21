@@ -152,6 +152,7 @@
 		/datum/body_marking/eyeliner,
 	)
 	descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/stature,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,
@@ -240,6 +241,13 @@
 	"orange - flame" = "b24c2e",
 	))
 
+/// Keen nose: crowd bearing radius, per-mob line radius, crowd cell size, and distance wording bands.
+#define KEEN_NOSE_RANGE 40
+#define KEEN_NOSE_DETAIL_RANGE 20
+#define KEEN_NOSE_CROWD_CELL_SIZE 8
+#define KEEN_NOSE_CLOSE_DISTANCE 6
+#define KEEN_NOSE_FAR_DISTANCE 12
+
 /datum/action/cooldown/keen_nose
 	name = "Sniff for scents"
 	desc = "Smell the air to detect living beings at a distance."
@@ -256,6 +264,9 @@
 
 		if(IS_WEREWOLF(target_human) && IS_WEREWOLF(sniffer))
 			return "You smell [target_human.name], a fellow werewolf"
+		var/datum/status_effect/werewolf_scent_mark/pack_mark = target_human.has_status_effect(/datum/status_effect/werewolf_scent_mark)
+		if(pack_mark?.is_smelled_by(sniffer))
+			return "You smell [target_human.name], heavy with the scent of the pack"
 		if((target_human.mob_biotypes & MOB_UNDEAD) || target_human.stat == DEAD || target_human.hygiene <= HYGIENE_LEVEL_DIRTY)
 			return "Eugh! You smell something rotten"
 		if(!target_species || !sniffer_species)
@@ -302,15 +313,21 @@
 	if(!owner)
 		return
 
-	var/list/smelled_targets = list()
-	for(var/mob/living/smell_target in range(20, owner))
-		if(smell_target != owner)
-			smelled_targets += smell_target
-
+	var/list/smelled_targets = get_smelled_targets()
 	owner.visible_message(span_notice("[owner] sniffs the air!"))
 	playsound(owner, 'sound/items/sniff.ogg', 70, TRUE)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), owner, 'sound/items/sniff.ogg', 70, TRUE), 0.5 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(finish_sniff), smelled_targets), 1.5 SECONDS)
+
+/// Every other living mob within the nose's range on the owner's z-level; one range() pass.
+/datum/action/cooldown/keen_nose/proc/get_smelled_targets()
+	. = list()
+	var/turf/owner_turf = get_turf(owner)
+	if(!owner_turf)
+		return
+	for(var/mob/living/smell_target in range(KEEN_NOSE_RANGE, owner_turf))
+		if(smell_target != owner)
+			. += smell_target
 
 /datum/action/cooldown/keen_nose/proc/finish_sniff(list/smelled_targets)
 	if(QDELETED(owner) || QDELETED(src))
@@ -320,13 +337,10 @@
 	var/mob/living/sniffer = owner
 	if(istype(sniffer))
 		sniffer.reveal_fluid_scent_trails()
-	if(!length(smelled_targets))
-		to_chat(owner, span_notice("You smell the air! No creatures are nearby, save yourself."))
-		return
-
 	var/turf/owner_turf = get_turf(owner)
 	if(!owner_turf)
 		return
+	var/reported = FALSE
 	for(var/mob/living/smell_target as anything in smelled_targets)
 		if(QDELETED(smell_target))
 			continue
@@ -334,18 +348,79 @@
 		if(!target_turf || target_turf.z != owner_turf.z)
 			continue
 		var/distance = get_dist(owner_turf, target_turf)
-		var/direction = dir2text(get_dir(owner, smell_target))
+		// Past the detail range only a pack-marked scent stands out on its own.
+		if(distance > KEEN_NOSE_DETAIL_RANGE && !smells_pack_mark(smell_target))
+			continue
 		var/distance_phrase
 		if(smell_target.loc == owner.loc)
 			distance_phrase = " right beside you"
-		else if(distance <= 6)
-			distance_phrase = " close to the [direction]"
-		else if(distance > 12)
-			distance_phrase = " far to the [direction]"
 		else
-			distance_phrase = " to the [direction]"
+			distance_phrase = " [get_distance_phrase(distance, dir2text(get_dir(owner, smell_target)))]"
 
 		var/message = get_smell_message(smell_target)
 		if(message)
 			to_chat(owner, span_notice("[message][get_fluid_scent_note(smell_target)][distance_phrase]!"))
+			reported = TRUE
+
+	var/crowd_line = get_crowd_bearing_line(smelled_targets)
+	if(crowd_line)
+		to_chat(owner, span_notice(crowd_line))
+	else if(!reported)
+		to_chat(owner, span_notice("You smell the air, but it is empty of every scent save your own."))
+
+/datum/action/cooldown/keen_nose/proc/smells_pack_mark(mob/living/target)
+	var/datum/status_effect/werewolf_scent_mark/pack_mark = target.has_status_effect(/datum/status_effect/werewolf_scent_mark)
+	return pack_mark?.is_smelled_by(owner)
+
+/datum/action/cooldown/keen_nose/proc/get_distance_phrase(distance, direction)
+	if(distance <= KEEN_NOSE_CLOSE_DISTANCE)
+		return "close to the [direction]"
+	if(distance > KEEN_NOSE_FAR_DISTANCE)
+		return "far to the [direction]"
+	return "to the [direction]"
+
+/// Bearing to the densest 8x8 cell of living, non-adjacent mobs; people with a mind count double.
+/datum/action/cooldown/keen_nose/proc/get_crowd_bearing_line(list/smelled_targets)
+	var/turf/owner_turf = get_turf(owner)
+	if(!owner_turf)
+		return null
+	var/list/cell_weights = list()
+	var/list/cell_x_totals = list()
+	var/list/cell_y_totals = list()
+	var/list/cell_counts = list()
+	var/best_cell
+	for(var/mob/living/smell_target as anything in smelled_targets)
+		if(QDELETED(smell_target) || smell_target.stat == DEAD)
+			continue
+		var/turf/target_turf = get_turf(smell_target)
+		if(!target_turf || target_turf.z != owner_turf.z || get_dist(owner_turf, target_turf) <= 1)
+			continue
+		var/cell = "[round(target_turf.x / KEEN_NOSE_CROWD_CELL_SIZE)]_[round(target_turf.y / KEEN_NOSE_CROWD_CELL_SIZE)]"
+		cell_weights[cell] += ((ishuman(smell_target) && (smell_target.client || smell_target.mind)) ? 2 : 1)
+		cell_x_totals[cell] += target_turf.x
+		cell_y_totals[cell] += target_turf.y
+		cell_counts[cell] += 1
+		if(!best_cell || cell_weights[cell] > cell_weights[best_cell])
+			best_cell = cell
+	if(!best_cell)
+		return null
+	var/crowd_count = cell_counts[best_cell]
+	var/turf/crowd_turf = locate(round(cell_x_totals[best_cell] / crowd_count), round(cell_y_totals[best_cell] / crowd_count), owner_turf.z)
+	return "The thickest scent of people lies [get_crowd_bearing_text(owner_turf, crowd_turf)]."
+
+/// Werewolves read the distance like their lair tracker; other noses use the per-mob wording.
+/datum/action/cooldown/keen_nose/proc/get_crowd_bearing_text(turf/from_turf, turf/to_turf)
+	var/direction = get_precise_direction_between(from_turf, to_turf)
+	if(!direction)
+		return "all around you"
+	var/datum/antagonist/werewolf/wolf = IS_WEREWOLF(owner)
+	if(wolf)
+		return "[wolf.get_werewolf_lair_distance_text(from_turf, to_turf)] to the [direction]"
+	return get_distance_phrase(get_dist(from_turf, to_turf), direction)
+
+#undef KEEN_NOSE_RANGE
+#undef KEEN_NOSE_DETAIL_RANGE
+#undef KEEN_NOSE_CROWD_CELL_SIZE
+#undef KEEN_NOSE_CLOSE_DISTANCE
+#undef KEEN_NOSE_FAR_DISTANCE
 

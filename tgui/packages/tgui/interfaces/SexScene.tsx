@@ -30,6 +30,7 @@ type ActionEntry = {
   fit_hint?: string;
   category?: string;
   tip?: string | null;
+  refusal?: string | null;
 };
 
 type ZoneOption = { name: string; value: number };
@@ -50,6 +51,8 @@ type ControlsData = {
   auto_clench: Booleanish;
   can_hold_it_in: Booleanish;
   hold_it_in: Booleanish;
+  reach_under_armor: Booleanish;
+  status_follows_examine: Booleanish;
 };
 
 type ArousalData = {
@@ -215,8 +218,8 @@ type Data = {
 
 const asBool = (value: Booleanish | undefined) => value === true || value === 1;
 
-const SPEED_LABELS = ['Slow', 'Steady', 'Quick', 'Unrelenting'];
-const FORCE_LABELS = ['Gentle', 'Firm', 'Rough', 'Brutal'];
+const SPEED_LABELS = ['Slow', 'Steady', 'Quick', 'Unrelenting', 'Furious'];
+const FORCE_LABELS = ['Gentle', 'Firm', 'Rough', 'Brutal', 'Unrelenting'];
 const RESIST_LABELS = ['None', 'Low', 'Medium', 'High'];
 const AROUSAL_LABELS = ['Natural', 'Unaroused', 'Partial', 'Full'];
 const INTENSITY_LABELS = [
@@ -275,6 +278,11 @@ const actionTooltip = (action: ActionEntry) => (
     {action.fit_hint ? (
       <Box mt={0.25} color="average">
         Fit: {action.fit_hint}
+      </Box>
+    ) : null}
+    {action.refusal ? (
+      <Box mt={0.25} color="bad">
+        {action.refusal}
       </Box>
     ) : null}
   </Box>
@@ -685,6 +693,22 @@ export const SexScene = () => {
         shown: asBool(controls.cmode),
         tooltip: 'Automatically resist actions performed on you. Costs stamina.',
         action: 'toggle_auto_clench',
+      },
+      {
+        label: 'Armor reach',
+        on: controls.reach_under_armor,
+        shown: true,
+        tooltip:
+          'On: players, you included, can reach under your armor. Off: your armor must come off first. Mobs always strip it.',
+        action: 'toggle_reach_under_armor',
+      },
+      {
+        label: 'Status follows examine',
+        on: controls.status_follows_examine,
+        shown: true,
+        tooltip:
+          'On: the status lines list what examine shows. Off: they use the older rule, which only reads body coverage and underwear.',
+        action: 'toggle_status_follows_examine',
       },
     ].filter((entry) => entry.shown);
     return (

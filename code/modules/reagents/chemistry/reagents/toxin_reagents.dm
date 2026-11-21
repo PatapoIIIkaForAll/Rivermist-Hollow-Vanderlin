@@ -252,6 +252,10 @@
 
 /datum/reagent/toxin/spidervenom_paralytic/on_mob_life(mob/living/carbon/M, efficiency)
 	..()
+	venom_tick(M, efficiency)
+
+/// The aragn's paralysis and late purge each cycle; milder spider venoms replace it.
+/datum/reagent/toxin/spidervenom_paralytic/proc/venom_tick(mob/living/carbon/M, efficiency)
 	if(!(current_cycle % 5) && !(prob(venom_resistance / 5)))
 		M.Paralyze(50 * efficiency)
 	if(current_cycle >= 60 && !(current_cycle % 5) && prob(venom_resistance))

@@ -43,9 +43,8 @@
 	//Radio freq/name display
 	var/freqpart = radio_freq ? "\[[get_radio_name(radio_freq)]__~~\]~~__ " : ""
 	//Speaker name
-	var/namepart = "[speaker.GetVoice()]"
-	if(speaker.get_alt_name())
-		namepart = "[speaker.get_alt_name()]"
+	var/known_voice = recognizes_voice(speaker)
+	var/namepart = get_speaker_name_part(speaker, known_voice)
 	var/colorpart = null
 	if(ishuman(speaker))
 		var/mob/living/carbon/human/H = speaker
@@ -106,19 +105,9 @@
 				arrowpart += " ⇈"
 			if(speakturf.z < sourceturf.z)
 				arrowpart += " ⇊"
-			if(!HAS_TRAIT(src, TRAIT_KEENEARS))
-				if(istype(speaker, /mob/living))
-					var/mob/living/L = speaker
-					// This isn't accurate purposely
-					var/appendage = "Figure"
-					switch(L.client?.prefs?.read_preference(/datum/preference/choiced/voice_type))
-						if(VOICE_TYPE_FEM)
-							appendage = "Woman"
-						if(VOICE_TYPE_MASC)
-							appendage = "Man"
-					namepart = "Unknown [appendage]"
-				else
-					namepart = "Unknown"
+			// Keen ears name an unseen person only if known; unseen creatures are named by keen ears alone.
+			if(!known_voice && !(HAS_TRAIT(src, TRAIT_KEENEARS) && !ishuman(speaker)))
+				namepart = get_unseen_speaker_name(speaker)
 			spanpart1 = "<span class='smallyell[collective_span]'>"
 
 	var/languageicon = ""
@@ -247,6 +236,37 @@
 	return 1
 
 /atom/movable/proc/get_alt_name()
+
+/// Whether this hearer names the speaker from the voice alone: keen ears and an acquaintance both needed.
+/atom/movable/proc/recognizes_voice(atom/movable/speaker)
+	return FALSE
+
+/mob/recognizes_voice(atom/movable/speaker)
+	if(!HAS_TRAIT(src, TRAIT_KEENEARS))
+		return FALSE
+	if(!mind || !ismob(speaker) || speaker == src)
+		return FALSE
+	var/mob/mob_speaker = speaker
+	return !!mob_speaker.mind && mind.do_i_know(mob_speaker.mind)
+
+/// Name before a speaker's words: the voice, or the alt name unless the hearer knows them.
+/atom/movable/proc/get_speaker_name_part(atom/movable/speaker, known_voice)
+	var/alt_name = speaker.get_alt_name()
+	if(!alt_name)
+		return "[speaker.GetVoice()]"
+	if(known_voice && ismob(speaker))
+		var/mob/mob_speaker = speaker
+		return mob_speaker.real_name
+	return alt_name
+
+/// Name for a speaker out of sight: a human gives the voice name, anything else a bare figure.
+/atom/movable/proc/get_unseen_speaker_name(atom/movable/speaker)
+	if(ishuman(speaker))
+		var/mob/living/carbon/human/human_speaker = speaker
+		return human_speaker.get_alt_name(TRUE)
+	if(isliving(speaker))
+		return "Unknown Figure"
+	return "Unknown"
 
 //HACKY VIRTUALSPEAKER STUFF BEYOND THIS POINT
 //these exist mostly to deal with the AIs hrefs and job stuff.

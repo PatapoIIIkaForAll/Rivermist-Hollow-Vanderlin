@@ -62,6 +62,8 @@
 	if(QDELETED(departing_mob))
 		return "Tried to cryo a deleted mob!"
 	GLOB.actors_list -= departing_mob.mobid // mob cryod - get him outta here.
+	// Every path below deletes the mob, so free the name first.
+	departing_mob.release_reserved_name()
 	var/mob/dead/new_player/newguy = new()
 	newguy.ckey = departing_mob.ckey
 	var/mob_name = departing_mob.real_name
@@ -86,7 +88,6 @@
 
 			rr.resrunecontroler.remove_user(departing_mob)
 			GLOB.rune_roundstart_mobs -= departing_mob
-	GLOB.chosen_names -= departing_mob.real_name
 	departing_mob.returntolobby()
 	qdel(departing_mob)
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_HUMAN_ENTER_CRYO, departing_mob, admin)

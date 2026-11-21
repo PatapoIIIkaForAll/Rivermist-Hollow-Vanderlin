@@ -75,6 +75,7 @@
 
 /atom/movable/screen/alert/status_effect/knot_tied
 	name = "Knotted"
+	desc = "A knot is swollen tight inside me. Pulling away would tear."
 
 /datum/status_effect/knot_fucked_stupid
 	id = "knot_fucked_stupid"

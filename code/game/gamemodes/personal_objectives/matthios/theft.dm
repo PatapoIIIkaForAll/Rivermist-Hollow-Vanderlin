@@ -2,7 +2,7 @@
 	name = "Steal Items"
 	category = "Mask's Chosen"
 	triumph_count = 2
-	rewards = list("2 Triumphs", "Mask grows stronger", "Pickpocketing knowledge", "Mask blesses you (+1 Speed)")
+	rewards = list("2 Triumphs", "Mask grows stronger", "Pickpocketing knowledge", "Mask blesses you (+1 Dexterity)")
 	var/stolen_count = 0
 	var/required_count = 2
 

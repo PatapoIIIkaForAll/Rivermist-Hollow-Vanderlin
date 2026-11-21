@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>SCOM</title>
+<style>
+
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #060407; }
+.scom-shell { position: relative; width: 100%; height: 100%; background: url(@FRAME@) center / 100% 100% no-repeat; }
+.scom-shell.is-glowing { background-image: url(@ACTIVE@); }
+.scom-drag { position: absolute; left: 0; top: 0; width: 100%; height: 12.5%; cursor: move; user-select: none; -webkit-user-select: none; }
+.scom-header { position: absolute; left: 10%; top: 13.5%; width: 79%; height: 5%; color: #fff; font: 17px Georgia, serif; }
+.scom-header button {
+  cursor: pointer; background: #060407; color: #c6c9c2; border: 1px solid #46514b;
+  padding: 3px 6px; margin: 0;
+}
+.scom-header button:hover { color: #fff; border-color: #aeb9b0; }
+#scom-language { float: right; font: bold 13px Georgia, serif; }
+#scom-text {
+  position: absolute; box-sizing: border-box; left: 10%; top: 19.5%; width: 82%; height: 50%;
+  padding: 0 14px 0 0; overflow-x: hidden; overflow-y: scroll; background: #060407;
+  color: #fff; font: 21px/1.5 "Courier New", Courier, monospace; overflow-wrap: break-word; word-wrap: break-word;
+  /* IE fallback. Keep scrollbar-color/scrollbar-width unset: on Chromium those
+     override the square WebKit pseudo-elements with native rounded controls. */
+  scrollbar-face-color: #337ec1; scrollbar-track-color: #100a08; scrollbar-arrow-color: #fff;
+}
+#scom[data-mode="muted"] #scom-text { scrollbar-face-color: #c13b36; }
+#scom[data-mode="garrison"] #scom-text { scrollbar-face-color: #d48028; }
+#scom-text::-webkit-scrollbar { width: 14px; border-radius: 0; }
+#scom-text::-webkit-scrollbar-track { background: #100a08; border-radius: 0; }
+#scom-text::-webkit-scrollbar-thumb { background: #337ec1; border: 2px solid #100a08; border-radius: 0; }
+#scom[data-mode="muted"] #scom-text::-webkit-scrollbar-thumb { background: #c13b36; }
+#scom[data-mode="garrison"] #scom-text::-webkit-scrollbar-thumb { background: #d48028; }
+#scom-text::-webkit-scrollbar-button { display: none; height: 0; }
+#scom-text p { margin: 0 0 14px; white-space: pre-wrap; }
+#scom-text .scom-fallback { display: block; font: 0.525em Georgia, serif; color: #b6aa98; }
+.scom-close { position: absolute; display: block; left: 12%; top: 77%; width: 76%; height: 20%; outline: none; }
+.scom-close:focus { outline: 1px dotted #b62626; }
+</style>
+<script>
+/* Plain laws-only browser UI: no TGUI state, polling or remote device actions. */
+(function () {
+  "use strict";
+  var data = null;
+  var language = null;
+  var interfaceLanguage = null;
+  var textSize = 21;
+  function text(id, value) { document.getElementById(id).textContent = value; }
+  function render() {
+    if (!data) return;
+    var box = document.getElementById("scom-text");
+    var scroll = box.scrollTop;
+    while (box.firstChild) box.removeChild(box.firstChild);
+    var rows = data.laws || [];
+    var english = language === "en";
+    text("scom-language", english ? "RU" : "EN");
+    document.documentElement.lang = interfaceLanguage;
+    box.lang = language;
+    if (!rows.length) {
+      var empty = document.createElement("p");
+      empty.textContent = interfaceLanguage === "en" ? "No published laws." : "Опубликованных законов нет.";
+      box.appendChild(empty);
+    }
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      var paragraph = document.createElement("p");
+      var translated = english && row.text_en && row.text_en.trim();
+      paragraph.appendChild(document.createTextNode(String(i + 1) + ". " + (translated ? row.text_en : row.text)));
+      if (english && !translated) {
+        var fallback = document.createElement("small");
+        fallback.className = "scom-fallback";
+        fallback.textContent = interfaceLanguage === "en"
+          ? "Original text — English translation not supplied."
+          : "Показан исходник — английский перевод не заполнен.";
+        paragraph.appendChild(fallback);
+      }
+      box.appendChild(paragraph);
+    }
+    box.scrollTop = scroll;
+  }
+  window.rmhScomMode = function (mode) {
+    if (mode !== "muted" && mode !== "garrison") mode = "normal";
+    document.getElementById("scom").setAttribute("data-mode", mode);
+  };
+  window.rmhScomInitial = function (encoded) {
+    window.rmhScomUpdate(decodeURIComponent(encoded.replace(/\+/g, " ")));
+  };
+  window.rmhScomUpdate = function (encoded) {
+    data = JSON.parse(encoded);
+    if (language === null) language = data.language === "en" ? "en" : "ru";
+    interfaceLanguage = data.language === "ru" ? "ru" : "en";
+    var closeLabel = interfaceLanguage === "ru" ? "Закрыть" : "Close";
+    document.getElementById("scom-close").setAttribute("title", closeLabel);
+    document.getElementById("scom-close").setAttribute("aria-label", closeLabel);
+    rmhScomMode(data.mode);
+    render();
+  };
+  window.rmhScomLanguage = function () {
+    language = language === "en" ? "ru" : "en";
+    render();
+  };
+  window.rmhScomGlow = function (active) {
+    document.getElementById("scom").className = active ? "scom-shell is-glowing" : "scom-shell";
+  };
+  var drag = null;
+  var pendingLegacyDrag = null;
+  function clientCall(url) {
+    if (typeof window.cef_to_byond === "function") window.cef_to_byond(url);
+    else window.location.href = url;
+  }
+  function moveWindow(state) {
+    if (!state.position) return;
+    var x = Math.round(state.position.x + (state.x - state.startX) * state.scale);
+    var y = Math.round(state.position.y + (state.y - state.startY) * state.scale);
+    if (x === state.sentX && y === state.sentY) return;
+    state.sentX = x;
+    state.sentY = y;
+    if (window.BYOND && typeof window.BYOND.winset === "function") {
+      window.BYOND.winset("rmh_scom_laws", {pos:x + "," + y});
+    } else {
+      clientCall("byond://winset?id=rmh_scom_laws&pos=" + x + "," + y);
+    }
+  }
+  function scheduleDrag(state) {
+    if (!state.position || state.frame) return;
+    state.frame = window.requestAnimationFrame(function () {
+      state.frame = 0;
+      if (drag === state) moveWindow(state);
+    });
+  }
+  function receivePosition(state, reply) {
+    if (drag !== state) return;
+    var pos = reply && reply.pos;
+    if (!pos || typeof pos.x !== "number" || typeof pos.y !== "number" ||
+        !isFinite(pos.x) || !isFinite(pos.y)) {
+      stopDrag();
+      return;
+    }
+    state.position = pos;
+    state.sentX = pos.x;
+    state.sentY = pos.y;
+    scheduleDrag(state);
+  }
+  window.rmhScomDragPosition = function (reply) {
+    var state = pendingLegacyDrag;
+    pendingLegacyDrag = null;
+    if (state) receivePosition(state, reply);
+  };
+  function stopDrag(event) {
+    if (!drag) return;
+    var state = drag;
+    drag = null;
+    if (event && typeof event.screenX === "number") {
+      state.x = event.screenX;
+      state.y = event.screenY;
+    }
+    if (state.frame) window.cancelAnimationFrame(state.frame);
+    moveWindow(state);
+  }
+  document.addEventListener("mousedown", function (event) {
+    if (event.button !== 0 || event.target.id !== "scom-drag") return;
+    consume(event);
+    if (pendingLegacyDrag) return;
+    stopDrag();
+    var state = drag = {
+      startX:event.screenX, startY:event.screenY,
+      x:event.screenX, y:event.screenY,
+      scale:window.devicePixelRatio || 1, frame:0, position:null
+    };
+    if (window.BYOND && typeof window.BYOND.winget === "function") {
+      window.BYOND.winget("rmh_scom_laws", "pos").then(function (reply) {
+        receivePosition(state, reply);
+      }, function () {
+        if (drag === state) stopDrag();
+      });
+    } else {
+      pendingLegacyDrag = state;
+      clientCall("byond://winget?callback=rmhScomDragPosition&id=rmh_scom_laws&property=pos");
+    }
+  });
+  document.addEventListener("mousemove", function (event) {
+    if (!drag) return;
+    if (event.buttons === 0) {
+      stopDrag();
+      return;
+    }
+    consume(event);
+    drag.x = event.screenX;
+    drag.y = event.screenY;
+    scheduleDrag(drag);
+  });
+  document.addEventListener("mouseup", stopDrag);
+  window.addEventListener("blur", function () { stopDrag(); });
+  function resizeText(step) {
+    textSize = Math.max(12, Math.min(36, textSize + step));
+    document.getElementById("scom-text").style.fontSize = textSize + "px";
+  }
+  function consume(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && !event.altKey && !event.metaKey) {
+      var key = event.key;
+      var code = event.keyCode;
+      if (key === "+" || key === "=" || code === 107 || code === 187) {
+        resizeText(1);
+      } else if (key === "-" || key === "_" || code === 109 || code === 189) {
+        resizeText(-1);
+      } else if (key === "0" || code === 48 || code === 96) {
+        textSize = 21;
+        resizeText(0);
+      } else {
+        return;
+      }
+      consume(event);
+      return;
+    }
+    if (event.keyCode === 27) document.getElementById("scom-close").click();
+  });
+  document.addEventListener("onwheel" in document ? "wheel" : "mousewheel", function (event) {
+    if (!event.ctrlKey || event.altKey || event.metaKey) return;
+    var direction = typeof event.deltaY === "number" ? -event.deltaY : event.wheelDelta;
+    if (!direction) return;
+    resizeText(direction > 0 ? 1 : -1);
+    // Change only legal text: prevent native zoom from scaling the SCOM frame.
+    consume(event);
+  }, { passive: false });
+}());
+</script>
+</head>
+<body>
+<div id="scom" class="scom-shell" data-mode="normal">
+  <div id="scom-drag" class="scom-drag" aria-hidden="true"></div>
+  <div class="scom-header">
+    <button id="scom-language" type="button" onclick="rmhScomLanguage()" title="RU / EN">EN</button>
+  </div>
+  <main id="scom-text" tabindex="0" aria-live="polite"></main>
+  <a id="scom-close" class="scom-close" href="byond://?src=@REF@;close=1"
+     aria-label="Close / Закрыть" title="Close / Закрыть"
+     onmouseenter="rmhScomGlow(true)" onmouseleave="rmhScomGlow(false)"
+     onfocus="rmhScomGlow(true)" onblur="rmhScomGlow(false)"></a>
+</div>
+<script>
+// DM url_encode uses '+' for spaces; unescape percent sequences exactly once.
+rmhScomInitial('@DATA@');
+window.location.href = 'byond://?src=@REF@;ready=1';
+</script>
+</body>
+</html>

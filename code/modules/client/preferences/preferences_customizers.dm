@@ -135,13 +135,13 @@
 	return islist(quirks) && (quirk_type in quirks)
 
 /datum/preferences/proc/has_extra_genital_customizer_unlock()
-	return pref_species?.id == SPEC_ID_OOZE || has_selected_quirk(/datum/quirk/peculiarity/extra_genitals)
+	return pref_species?.id == SPEC_ID_OOZE || has_selected_quirk(/datum/quirk/neutral/extra_genitals)
 
 /datum/preferences/proc/has_ovipositor_customizer_override()
-	return has_selected_quirk(/datum/quirk/peculiarity/ovipositor)
+	return has_selected_quirk(/datum/quirk/neutral/ovipositor)
 
 /datum/preferences/proc/has_generous_figure_size_unlock()
-	return has_selected_quirk(/datum/quirk/peculiarity/generous_figure)
+	return has_selected_quirk(/datum/quirk/neutral/generous_figure)
 
 /datum/preferences/proc/get_max_breast_size()
 	return has_generous_figure_size_unlock() ? MAX_BREASTS_SIZE : BREAST_SIZE_LARGE

@@ -204,7 +204,6 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 /// Display names for abstract culture parents that group selectable sub-origins.
 /datum/preferences/proc/character_creator_origin_group_name(group_type)
 	var/static/list/group_names = list(
-		/datum/culture/species/elven = "Elven Tribes",
 		/datum/culture/species/half_orc = "Orc Clans",
 	)
 	return group_names[group_type] || "Kindred"
@@ -367,34 +366,6 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 
 // ---- Abilities, quirks, descriptors, markings ----
 
-/datum/preferences/proc/character_creator_stats()
-	. = list()
-	var/list/species_mods = list()
-	var/sheet_type = pref_species?.statsheet_male
-	if(read_preference(/datum/preference/choiced/gender) == FEMALE && pref_species?.statsheet_female)
-		sheet_type = pref_species.statsheet_female
-	for(var/list/modifier as anything in character_setup_stat_modifiers_for_sheet(sheet_type))
-		species_mods[modifier["label"]] = modifier["value"]
-	var/list/age_mods = list()
-	for(var/list/modifier as anything in character_setup_stat_modifiers_for_sheet(character_setup_age_sheet_type(read_preference(/datum/preference/choiced/age))))
-		age_mods[modifier["label"]] = modifier["value"]
-	for(var/stat_type in MOBSTATS)
-		var/datum/attribute/stat/stat = GET_ATTRIBUTE_DATUM(stat_type)
-		var/label = stat ? stat.shorthand : "[stat_type]"
-		var/species_value = species_mods[label] || 0
-		var/age_value = age_mods[label] || 0
-		. += list(list(
-			"name" = stat ? stat.name : "[stat_type]",
-			"desc" = stat ? character_setup_chargen_clean_text(stat.desc, 600) : "",
-			"icon" = stat ? "[stat.icon]" : null,
-			"icon_state" = stat?.icon_state,
-			"label" = label,
-			"base" = 10,
-			"species" = species_value,
-			"age" = age_value,
-			"total" = 10 + species_value + age_value,
-		))
-
 /datum/preferences/proc/character_creator_quirks()
 	var/list/names = list()
 	var/list/entries = list()
@@ -518,6 +489,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	.["cc_loadout_catalog"] = character_creator_loadout_catalog()
 	.["cc_loadout_roles"] = character_creator_loadout_roles()
 	.["cc_loadout_locked"] = character_creator_loadout_locked(user)
+	.["cc_stat_rules"] = character_creator_stat_rules()
 
 /datum/preferences/ui_data(mob/user)
 	. = ..()
@@ -528,12 +500,14 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	.["cc_cultures_available"] = character_creator_available_cultures()
 	.["cc_subclass_prefs"] = character_creator_subclasses || list()
 	.["cc_stats"] = character_creator_stats()
+	.["cc_stat_points"] = character_creator_stat_points()
 	.["cc_quirks"] = character_creator_quirks()
 	.["cc_descriptors"] = character_creator_descriptors()
 	.["cc_markings"] = character_creator_marking_data()
 	.["cc_rivals"] = read_preference(/datum/preference/numeric/rival_count) || 0
 	.["cc_tattoo_count"] = character_creator_tattoo_count()
 	.["cc_tattoos"] = character_creator_tattoo_data()
+	.["cc_prosthetics"] = character_creator_prosthetic_data()
 	.["cc_texts"] = list(
 		"flavortext" = read_preference(/datum/preference/text/flavortext) || "",
 		"nsfwflavortext" = read_preference(/datum/preference/text/nsfwflavortext) || "",
@@ -570,6 +544,12 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	switch(action)
 		if("cc_tattoo")
 			return character_creator_tattoo_act(user, params)
+		if("cc_prosthetic")
+			return character_creator_prosthetic_act(user, params)
+		if("cc_implant")
+			return character_creator_implant_act(user, params)
+		if("cc_stat_set", "cc_stat_bonus", "cc_stat_reset", "cc_stat_text")
+			return character_creator_stat_act(user, action, params)
 		if("cc_set_lang")
 			character_creator_lang = (params["lang"] == CC_LANG_RU) ? CC_LANG_RU : CC_LANG_EN
 			save_preferences()
@@ -811,6 +791,8 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 		"markings" = body_markings,
 		"emissive_markings" = emissive_markings,
 		"tattoos" = tattoos,
+		"prosthetics" = prosthetics,
+		"implants" = implants,
 		"descriptors" = descriptors,
 		"custom_descriptors" = custom_descriptor_list,
 		"quirks" = quirk_list,
@@ -819,6 +801,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 		"alt_jobs" = alt_job_selections,
 		"subclasses" = character_creator_subclasses,
 		"loadout_state" = character_creator_loadout_state(),
+		"stat_allocation" = stat_alloc_state(),
 	)
 
 /datum/preferences/proc/character_creator_export(mob/user)
@@ -971,6 +954,9 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 		tattoos = imported_tattoos
 		validate_tattoos()
 
+	prosthetics = islist(payload["prosthetics"]) ? payload["prosthetics"] : list()
+	implants = islist(payload["implants"]) ? payload["implants"] : list()
+	validate_prosthetics()
 	character_creator_import_quirks(payload["quirks"])
 	// Genital set rules depend on quirks, so they are enforced once both halves are in place.
 	validate_customizer_entries()
@@ -982,6 +968,9 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	alt_job_selections = islist(imported_alt_jobs) ? imported_alt_jobs : list()
 	sanitize_alt_job_selections()
 	character_creator_subclasses = character_creator_sanitize_subclasses(payload["subclasses"])
+	// An export from before the stat editor has no entry; the character then gets the default stats.
+	stat_alloc_read(islist(payload["stat_allocation"]) ? payload["stat_allocation"] : list())
+	validate_stat_allocation()
 
 	validate_culinary_preferences()
 	validate_smallclothes_preferences()
@@ -1123,7 +1112,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	for(var/list/quirk_data in imported)
 		if(!islist(quirk_data))
 			continue
-		var/quirk_type = text2path("[quirk_data["type"]]")
+		var/quirk_type = text2path(migrate_legacy_quirk_text("[quirk_data["type"]]"))
 		if(!ispath(quirk_type, /datum/quirk) || (quirk_type in quirks))
 			continue
 		quirks += quirk_type
@@ -1133,7 +1122,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	validate_quirks()
 	// Extra fields go through the regular per-field sanitizer once the quirk list is final.
 	for(var/list/quirk_data in imported)
-		var/quirk_type = text2path("[quirk_data["type"]]")
+		var/quirk_type = text2path(migrate_legacy_quirk_text("[quirk_data["type"]]"))
 		var/list/extra = quirk_data["extra"]
 		if(!(quirk_type in quirks) || !islist(extra))
 			continue

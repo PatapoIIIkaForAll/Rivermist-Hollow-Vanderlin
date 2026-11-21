@@ -17,6 +17,9 @@
 	cooldown_time = 2 MINUTES
 	spell_cost = 40
 
+/datum/action/cooldown/spell/heat_metal/is_hostile_to(atom/cast_on)
+	return TRUE
+
 /datum/action/cooldown/spell/heat_metal/cast(atom/cast_on)
 	. = ..()
 	if(istype(cast_on, /obj/item))

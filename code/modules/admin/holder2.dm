@@ -132,6 +132,8 @@ GLOBAL_PROTECT(href_token)
 		message_admins("[key_name_admin(usr)][msg]")
 		log_admin("[key_name(usr)][msg]")
 		return
+	if(admin_menu)
+		SStgui.close_uis(admin_menu)
 	if(owner)
 		GLOB.admins -= owner
 		owner.remove_admin_verbs()

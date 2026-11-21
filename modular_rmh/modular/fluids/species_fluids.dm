@@ -1,5 +1,7 @@
 // Species body fluids: flavoured milk, seed and nectar, build-based production modifiers and heat cycles.
 
+// Fluid vars take one reagent type or a weighted list; the first list entry is the main fluid.
+
 /mob/living
 	var/breast_milk = /datum/reagent/consumable/milk
 	var/cum = /datum/reagent/consumable/cum
@@ -40,13 +42,58 @@
 	cum = cum_in
 	var/obj/item/organ/genitals/filling_organ/testicles/testes = getorganslot(ORGAN_SLOT_TESTICLES)
 	if(testes)
-		testes.set_reagent_to_make(cum)
+		testes.set_reagent_to_make(get_cum_mix())
 		testes.sync_cum_source_data()
 
 /mob/living/proc/set_girlcum(femcum_in)
 	femcum = femcum_in
 	var/obj/item/organ/genitals/filling_organ/vagina/vag = getorganslot(ORGAN_SLOT_VAGINA)
-	vag?.set_reagent_to_make(femcum)
+	vag?.set_reagent_to_make(get_femcum_mix())
+
+/// The seed this body makes as reagent type = share; the first entry carries the father's data.
+/mob/living/proc/get_cum_mix()
+	return normalize_fluid_mix(cum)
+
+/// The nectar this body makes as reagent type = share; the first entry carries the maker's data.
+/mob/living/proc/get_femcum_mix()
+	return normalize_fluid_mix(femcum)
+
+/// A fluid var as reagent type = share, shares summing to 1; a bare entry weighs 1.
+/proc/normalize_fluid_mix(fluid)
+	if(ispath(fluid, /datum/reagent))
+		var/list/single = list()
+		single[fluid] = 1
+		return single
+	if(!islist(fluid))
+		return null
+	var/list/weights = fluid
+	var/total = 0
+	for(var/reagent_type in weights)
+		total += get_fluid_mix_weight(weights, reagent_type)
+	if(total <= 0)
+		return null
+	var/list/mix = list()
+	for(var/reagent_type in weights)
+		var/weight = get_fluid_mix_weight(weights, reagent_type)
+		if(weight > 0)
+			mix[reagent_type] = weight / total
+	return mix
+
+/// The weight of one entry in a fluid list; non-reagents weigh nothing.
+/proc/get_fluid_mix_weight(list/weights, reagent_type)
+	if(!ispath(reagent_type, /datum/reagent))
+		return 0
+	var/weight = weights[reagent_type]
+	return isnum(weight) ? max(weight, 0) : 1
+
+/// Whether two normalised mixes hold the same types at the same shares; null matches null.
+/proc/fluid_mixes_match(list/mix_a, list/mix_b)
+	if(length(mix_a) != length(mix_b))
+		return FALSE
+	for(var/reagent_type in mix_a)
+		if(mix_a[reagent_type] != mix_b[reagent_type])
+			return FALSE
+	return TRUE
 
 // Species blocks. Subtypes inherit their parent's fluids unless they set their own.
 

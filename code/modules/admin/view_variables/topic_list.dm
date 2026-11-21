@@ -1,11 +1,14 @@
 //LISTS - CAN NOT DO VV_DO_TOPIC BECAUSE LISTS AREN'T DATUMS :(
 /client/proc/vv_do_list(list/target, href_list)
 	var/target_index = text2num(GET_VV_VAR_TARGET)
-	if(!isnum(target_index) || target_index < 1 || target_index > target.len)
-	{
-		to_chat(src, span_warning("VV: list changed, refresh the panel."))
+	if(istype(target, /alist)) // alists have their own handler: they are addressed by key, not by index
+		vv_do_alist(target, href_list, target_index)
 		return
-	}
+	// Only the per-item links carry an index. Add / Remove Nulls / Remove Dupes / Set len / Shuffle do not,
+	// and used to be refused here together with stale item links.
+	if((href_list[VV_HK_LIST_EDIT] || href_list[VV_HK_LIST_CHANGE] || href_list[VV_HK_LIST_REMOVE]) && (!isnum(target_index) || target_index < 1 || target_index > target.len))
+		to_chat(src, span_warning("VV: that list item no longer exists (the list changed). Refresh the window and try again."))
+		return
 	if(check_rights(R_VAREDIT))
 		if(href_list[VV_HK_LIST_EDIT])
 			mod_list(target, null, "list", "contents", target_index, autodetect_class = TRUE)
@@ -14,11 +17,6 @@
 			mod_list(target, null, "list", "contents", target_index, autodetect_class = FALSE)
 
 		if(href_list[VV_HK_LIST_REMOVE])
-			if(target_index < 1 || target_index > target.len)
-			{
-				to_chat(src, span_warning("VV: cannot remove item, list has changed."))
-				return
-			}
 			var/variable = target[target_index]
 			var/prompt = alert("Do you want to remove item number [target_index] from list?", "Confirm", "Yes", "No")
 			if (prompt != "Yes")

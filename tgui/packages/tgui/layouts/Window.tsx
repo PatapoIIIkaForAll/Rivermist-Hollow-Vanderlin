@@ -38,6 +38,8 @@ type Props = Partial<{
   buttons: ReactNode;
   canClose: BooleanLike;
   height: number;
+  /** Reopen at the size the user last gave this window. */
+  rememberSize: boolean;
   theme: string;
   title: string;
   width: number;
@@ -55,6 +57,7 @@ export function Window(props: Props) {
     buttons,
     width,
     height,
+    rememberSize = false,
   } = props;
 
   const [isReadyToRender, setIsReadyToRender] = useState(false);
@@ -76,6 +79,7 @@ export function Window(props: Props) {
         const options = {
           ...config.window,
           size: DEFAULT_SIZE,
+          rememberSize,
         };
 
         if (width && height) {
@@ -100,7 +104,7 @@ export function Window(props: Props) {
     return () => {
       logger.log('unmounting');
     };
-  }, [isReadyToRender, width, height, scale]);
+  }, [isReadyToRender, width, height, scale, rememberSize]);
 
   // Determine when to show dimmer
   const showDimmer =

@@ -4,10 +4,10 @@
 /mob/living/simple_animal/hostile/retaliate/maneater_tendrils
 	name = "flowering maneater vines"
 	desc = "The unseen feeding vines of a maneater."
-	icon = 'modular_rmh/icons/mob/monster/maneater_tentacles.dmi'
-	icon_state = "tentacle_medium"
-	icon_living = "tentacle_medium"
-	icon_dead = "tentacle_big_dead"
+	icon = 'modular_rmh/icons/mob/monster/tentacles_grey.dmi'
+	icon_state = "vine_medium"
+	icon_living = "vine_medium"
+	icon_dead = "vine_medium_dead"
 	faction = list("maneater")
 	gender = PLURAL
 	ai_controller = null
@@ -21,7 +21,8 @@
 
 /mob/living/simple_animal/hostile/retaliate/maneater_tendrils/Initialize(mapload)
 	. = ..()
-	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = ensure_typed_ovipositor(src, OVI_EGG_MANEATER)
+	apply_tentacle_palette(TENTACLE_PALETTE_VINE)
+	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = ensure_maneater_ovipositor(src)
 	if(ovipositor)
 		ovipositor.name = "seed-bearing vine"
 		ovipositor.desc = "A flowering tendril adapted to implant soft, root-filled seeds."
@@ -215,6 +216,10 @@
 	/// How often the vines peel one garment off a victim being swallowed.
 	var/strip_interval = 3 SECONDS
 	var/strip_timer
+	/// TRUE once swallow_time has passed; the plant then swallows as soon as nothing is left to strip.
+	var/swallow_due = FALSE
+	/// Share of max_integrity a removed cloth or leather garment loses to the vines.
+	var/strip_tear_ratio = 0.15
 	/// This plant's stomach pocket, held weakly so a torn-down pocket is simply forgotten.
 	var/datum/weakref/stomach_ref
 
@@ -344,47 +349,99 @@
 			var/action_type = pick_n_take(action_choices)
 			if(scene_controller.try_start_action(action_type, "ai"))
 				break
-		scene_controller.set_current_force(rand(SEX_FORCE_MID, SEX_FORCE_MAX))
-		scene_controller.set_current_speed(rand(SEX_SPEED_MID, SEX_SPEED_MAX))
+		scene_controller.set_current_force(rand(SEX_FORCE_MID, SEX_FORCE_EXTREME))
+		scene_controller.set_current_speed(rand(SEX_SPEED_MID, SEX_SPEED_EXTREME))
 
 	visible_message(span_warningbig("[src]'s flowering vines close around [victim] and begin drawing them toward its maw!"))
-	to_chat(victim, span_userdanger("The maneater's vines tease and restrain you, peeling your clothes away while its throat slowly opens beneath you. You have [DisplayTimeText(swallow_time)] to break free!"))
-	swallow_timer = addtimer(CALLBACK(src, PROC_REF(complete_horny_swallow)), swallow_time, TIMER_STOPPABLE | TIMER_DELETE_ME)
+	to_chat(victim, span_userdanger("The maneater's vines hold you and start to take your clothes off, one piece at a time. Its throat opens below you. It will not swallow you while you still have clothes on, and not before [DisplayTimeText(swallow_time)] have passed. Get free!"))
+	swallow_timer = addtimer(CALLBACK(src, PROC_REF(swallow_time_up)), swallow_time, TIMER_STOPPABLE | TIMER_DELETE_ME)
 	strip_timer = addtimer(CALLBACK(src, PROC_REF(strip_next_garment)), strip_interval, TIMER_STOPPABLE | TIMER_DELETE_ME)
 	return TRUE
 
-/// Peels the outermost strippable garment off the victim being swallowed and flings it beside the plant.
+/// Ends swallow_time; the plant swallows now if nothing is left to take, else right after the last garment.
+/obj/structure/flora/grass/maneater/real/proc/swallow_time_up()
+	swallow_timer = null
+	swallow_due = TRUE
+	if(!strip_timer)
+		strip_next_garment()
+
+/// Takes one piece off the victim being swallowed and returns it; swallows once nothing is left and time is up.
 /obj/structure/flora/grass/maneater/real/proc/strip_next_garment()
 	strip_timer = null
 	var/mob/living/carbon/human/victim = horny_victim_ref?.resolve()
 	if(!istype(victim) || QDELETED(victim) || victim.buckled != src)
+		reset_horny_capture()
 		return FALSE
-	var/list/garments = list(victim.cloak, victim.wear_armor, victim.wear_shirt, victim.wear_pants, victim.head, victim.gloves, victim.shoes, victim.legwear_socks, victim.undershirt, victim.underwear)
-	for(var/obj/item/garment as anything in garments)
+	var/list/gear = list(victim.beltl, victim.beltr, victim.belt, victim.backl, victim.backr)
+	for(var/obj/item/garment as anything in get_strip_order(victim))
 		if(!garment || garment.loc != victim || !garment.canStrip(sex_proxy, victim))
 			continue
-		// Stockings are shredded where they sit rather than peeled off; already torn ones stay.
-		if(garment == victim.legwear_socks && istype(garment, /obj/item/clothing/legwears))
+		// Stockings are torn where they sit and never removed; torn or untearable ones stay.
+		if(garment == victim.legwear_socks)
 			var/obj/item/clothing/legwears/stockings = garment
-			if(stockings.obj_broken)
+			if(!istype(stockings) || stockings.obj_broken)
 				continue
 			var/stockings_name = stockings.name
-			if(stockings.tear_open())
-				visible_message(span_danger("[src]'s vines rake [victim]'s [stockings_name] into ragged ladders!"))
-				strip_timer = addtimer(CALLBACK(src, PROC_REF(strip_next_garment)), strip_interval, TIMER_STOPPABLE | TIMER_DELETE_ME)
-				return garment
-		if(!victim.dropItemToGround(garment))
-			continue
-		visible_message(span_danger("[src]'s vines peel [victim]'s [garment.name] away and fling it aside!"))
-		var/list/landing_turfs = list()
-		for(var/turf/open/candidate in orange(2, src))
-			if(!candidate.is_blocked_turf(TRUE))
-				landing_turfs += candidate
-		if(length(landing_turfs))
-			garment.throw_at(pick(landing_turfs), 2, 1)
+			if(!stockings.tear_open())
+				continue
+			visible_message(span_danger("[src]'s vines rake [victim]'s [stockings_name] into ragged ladders!"))
+		else
+			var/garment_name = garment.name
+			var/is_gear = (garment in gear)
+			if(!victim.dropItemToGround(garment))
+				continue
+			if(is_gear)
+				visible_message(span_danger("[src]'s vines unhook [victim]'s [garment_name] and throw it aside!"))
+			else if(tear_stripped_garment(garment))
+				visible_message(span_danger("[src]'s vines tear [victim]'s [garment_name] at the seam, pull it off and throw it aside!"))
+			else
+				visible_message(span_danger("[src]'s vines pry [victim]'s [garment_name] loose, pull it off and throw it aside!"))
+			// Some items delete themselves when they come off; there is nothing to throw then.
+			if(!QDELETED(garment))
+				throw_stripped_garment(garment)
 		strip_timer = addtimer(CALLBACK(src, PROC_REF(strip_next_garment)), strip_interval, TIMER_STOPPABLE | TIMER_DELETE_ME)
 		return garment
+	if(swallow_due)
+		complete_horny_swallow()
 	return FALSE
+
+/// Worn items the vines go for, in order: gear, outer layers, stockings, then underwear.
+/obj/structure/flora/grass/maneater/real/proc/get_strip_order(mob/living/carbon/human/victim)
+	. = list(victim.beltl, victim.beltr, victim.belt, victim.backl, victim.backr, victim.cloak, victim.wear_armor)
+	if(is_strippable_armour(victim.wear_neck))
+		. += victim.wear_neck
+	. += victim.head
+	if(!istype(victim.wear_mask, /obj/item/clothing/face/spectacles))
+		. += victim.wear_mask
+	. += victim.gloves
+	if(is_strippable_armour(victim.wear_wrists))
+		. += victim.wear_wrists
+	. += list(victim.armsleeves, victim.shoes, victim.wear_shirt, victim.wear_pants, victim.legwear_socks, victim.undershirt, victim.bra, victim.underwear)
+
+/// Neck and wrist pieces come off only when they have an armour class; jewellery and collars stay.
+/obj/structure/flora/grass/maneater/real/proc/is_strippable_armour(obj/item/clothing/piece)
+	return istype(piece) && piece.armor_class > ARMOR_CLASS_NONE
+
+/// Tears a removed sewn garment by strip_tear_ratio, never down to breaking; smithed and storage items are spared.
+/obj/structure/flora/grass/maneater/real/proc/tear_stripped_garment(obj/item/garment)
+	if(QDELETED(garment) || garment.obj_broken || istype(garment, /obj/item/storage))
+		return FALSE
+	if(garment.anvilrepair && !garment.sewrepair)
+		return FALSE
+	var/break_point = garment.integrity_failure * garment.max_integrity
+	var/damage = min(garment.max_integrity * strip_tear_ratio, garment.get_integrity() - break_point - 1)
+	if(damage < DAMAGE_PRECISION)
+		return FALSE
+	return garment.take_damage(damage, BRUTE, "", FALSE) > 0
+
+/// Throws a stripped item to a free turf near the plant.
+/obj/structure/flora/grass/maneater/real/proc/throw_stripped_garment(obj/item/garment)
+	var/list/landing_turfs = list()
+	for(var/turf/open/candidate in orange(2, src))
+		if(!candidate.is_blocked_turf(TRUE))
+			landing_turfs += candidate
+	if(length(landing_turfs))
+		garment.throw_at(pick(landing_turfs), 2, 1)
 
 /obj/structure/flora/grass/maneater/real/proc/stop_stripping()
 	if(strip_timer)
@@ -400,6 +457,7 @@
 	if(swallow_timer)
 		deltimer(swallow_timer)
 		swallow_timer = null
+	swallow_due = FALSE
 	stop_stripping()
 	horny_victim_ref = null
 	stop_horny_actions()
@@ -407,7 +465,10 @@
 		QDEL_NULL(sex_proxy)
 
 /obj/structure/flora/grass/maneater/real/proc/complete_horny_swallow()
-	swallow_timer = null
+	if(swallow_timer)
+		deltimer(swallow_timer)
+		swallow_timer = null
+	swallow_due = FALSE
 	stop_stripping()
 	var/mob/living/victim = horny_victim_ref?.resolve()
 	horny_victim_ref = null
@@ -581,9 +642,9 @@
 
 /obj/structure/flora/grass/maneater/real/juvenile
 	name = "juvenile maneater"
-	desc = "Green and vivid. This one seems smaller than usual."
-	icon = 'icons/roguetown/mob/monster/maneater.dmi'
-	icon_state = "maneater-hidden"
+	desc = "A bud the size of a fist on a mat of dry roots. Its lips part now and then."
+	icon = 'modular_rmh/icons/mob/monster/maneater_juvenile.dmi'
+	icon_state = "juvenile_1"
 	max_integrity = 50
 	seednutrition = 0
 	max_seednutrition = 50
@@ -594,7 +655,7 @@
 
 /obj/structure/flora/grass/maneater/real/juvenile/Initialize()
 	. = ..()
-	transform = transform.Scale(0.5, 0.5)  // Start at half size
+	update_icon()
 	addtimer(CALLBACK(src, .proc/try_grow), growth_time)
 
 // Juveniles still eat loose food in the parent Crossed(), but never seize a living victim.
@@ -604,8 +665,7 @@
 /obj/structure/flora/grass/maneater/real/juvenile/proc/try_grow()
 	if(growth_stage < max_growth_stage)
 		growth_stage++
-		// We end up at 1.0 size by final stage
-		transform = transform.Scale(1.26, 1.26)
+		update_icon()
 		visible_message(span_warning("[src] grows bigger!"))
 		playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
 		addtimer(CALLBACK(src, .proc/try_grow), growth_time)
@@ -618,9 +678,21 @@
 	myboy.planter = planter
 	qdel(src)
 
+// Overrides the adult's grass and maw states; only a broken bud falls back to the adult's dead sprite.
 /obj/structure/flora/grass/maneater/real/juvenile/update_icon()
 	. = ..()
-	name = "juvenile " + name
+	name = "juvenile maneater"
+	if(obj_broken)
+		icon = 'icons/roguetown/mob/monster/maneater.dmi'
+		return
+	icon_state = "juvenile_[growth_stage]"
+	switch(growth_stage)
+		if(1)
+			desc = "A bud the size of a fist on a mat of dry roots. Its lips part now and then."
+		if(2)
+			desc = "A plump green bud with a seam of small teeth. It turns slowly toward movement."
+		else
+			desc = "A heavy bud, almost grown. A red tongue tests the air between its teeth."
 
 
 //MANEATER SEEDS

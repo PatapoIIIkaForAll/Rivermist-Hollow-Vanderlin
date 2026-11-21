@@ -137,7 +137,7 @@
 
 	user.update_inv_hands()
 	user.update_a_intents()
-	perform_sex_action(user, target, 0.5, pain_amt, 0.5)
+	perform_sex_action(target, user, 0.5, pain_amt, 0.5)
 	handle_passive_ejaculation()
 
 /datum/sex_action/hole_storage/anus_remove
@@ -230,7 +230,7 @@
 			user.visible_message(spanify_force("I fish out the [removed_item] from [target]'s ass[feel]..."))
 		removed_item.doMove(get_turf(user))
 		user.put_in_active_hand(removed_item)
-	perform_sex_action(user, target, 0.5, pain_amt, 0.5)
+	perform_sex_action(target, user, 0.5, pain_amt, 0.5)
 	handle_passive_ejaculation()
 	pending_toy = choose_toy_to_reach(hole, STORAGE_LAYER_INNER)
 
@@ -314,6 +314,6 @@
 	user.visible_message("<span class='love_mid'>[user] tenses up and pushes [removed_item] out of their ass.</span>", "<span class='love_mid'>With some effort, I push out [removed_item][feel].</span>")
 	removed_item.doMove(get_turf(user))
 
-	perform_sex_action(user, target, 0.5, pain_amt, 0.5)
+	perform_sex_action(target, user, 0.5, pain_amt, 0.5)
 	handle_passive_ejaculation()
 	pending_toy = choose_toy_to_reach(hole, STORAGE_LAYER_DEEP)

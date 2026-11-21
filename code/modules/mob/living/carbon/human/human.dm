@@ -2,6 +2,10 @@
 	. = ..()
 	if(!user)
 		return
+	// An aggressive hold turns a chest or groin middle-click into tearing the top or the hem.
+	if((user.zone_selected == BODY_ZONE_CHEST || user.zone_selected == BODY_ZONE_PRECISE_GROIN) && is_tear_grabbed_by(user))
+		try_tear_clothes(user, user.zone_selected)
+		return
 	var/obj/item/held_item = user.get_active_held_item()
 	if(!user.cmode && held_item && held_item.get_sharpness() && held_item.wlength == WLENGTH_SHORT)
 		if(user.zone_selected == BODY_ZONE_CHEST)
@@ -186,6 +190,8 @@
 	GLOB.human_list += src
 	if(ai_controller && flee_in_pain)
 		AddElement(/datum/element/ai_flee_while_in_pain)
+	if(npc_break_damage || npc_death_damage)
+		AddElement(/datum/element/npc_breaking_point)
 
 	if(!GetComponent(/datum/component/arousal))
 		AddComponent(/datum/component/arousal)
@@ -260,6 +266,9 @@
 	if(clan)
 		. += "VITAE: [round(bloodpool)]/[maxbloodpool]"
 		. += "DETECTIONS: [detections]"
+	var/datum/rage/werewolf/werewolf_rage = rage_datum
+	if(istype(werewolf_rage))
+		. += werewolf_rage.get_status_tab_line()
 
 /mob/living/carbon/human/show_inv(mob/user, extra_only = FALSE)
 	user.set_machine(src)
@@ -940,9 +949,20 @@
 	return (istype(target) && target.stat == CONSCIOUS)
 
 /mob/living/carbon/human/proc/can_be_firemanned(mob/living/target)
-	return !QDELETED(target) && ((ishuman(target) && target.body_position == LYING_DOWN) || (isanimal(target) && (target.living_flags & CAN_BE_FIREMANNED)))
+	if(QDELETED(target))
+		return FALSE
+	if(ishuman(target))
+		return target.body_position == LYING_DOWN
+	if(!isanimal(target))
+		return FALSE
+	// Any spent creature can be hauled off, not only the small ones flagged for it.
+	return (target.living_flags & CAN_BE_FIREMANNED) || target.has_status_effect(/datum/status_effect/mob_horny_knockout)
 
 /mob/living/carbon/human/proc/fireman_carry(mob/living/target)
+	if(!can_be_firemanned(target) || incapacitated(IGNORE_GRAB) || pulling != target || !Adjacent(target))
+		return FALSE
+	if(!target.confirm_mob_horny_ko_lift(src))
+		return FALSE
 	if(!can_be_firemanned(target) || incapacitated(IGNORE_GRAB) || pulling != target || !Adjacent(target))
 		return FALSE
 	var/fitness_level = GET_MOB_SKILL_VALUE_OLD(src, /datum/attribute/skill/misc/athletics) - 1
@@ -954,7 +974,9 @@
 		return FALSE
 	if(incapacitated(IGNORE_GRAB) || pulling != target || !Adjacent(target))
 		return FALSE
-	return buckle_mob(target, force = TRUE, check_loc = FALSE, buckle_mob_flags = CARRIER_NEEDS_ARM)
+	. = buckle_mob(target, force = TRUE, check_loc = FALSE, buckle_mob_flags = CARRIER_NEEDS_ARM)
+	if(.)
+		target.roll_mob_horny_ko_lash_out(src)
 
 /mob/living/carbon/human/proc/piggyback(mob/living/carbon/target)
 	if(!can_piggyback(target) || pulling != target || cmode || !Adjacent(target))

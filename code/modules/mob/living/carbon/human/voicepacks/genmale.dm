@@ -7,6 +7,8 @@
 			used = getmsilenced(soundin)
 	if(!used)
 		switch(soundin)
+			if("attack")
+				used = list('sound/vo/male/gen/attack (1).ogg','sound/vo/male/gen/attack (2).ogg','sound/vo/male/gen/attack (3).ogg')
 			if("deathgurgle")
 				used = pick('sound/vo/male/gen/deathgurgle (1).ogg','sound/vo/male/gen/deathgurgle (2).ogg','sound/vo/male/gen/deathgurgle (3).ogg')
 			if("agony")
@@ -46,6 +48,8 @@
 				used = list('sound/vo/male/gen/groan (1).ogg','sound/vo/male/gen/groan (2).ogg','sound/vo/male/gen/groan (3).ogg','sound/vo/male/gen/groan (4).ogg','sound/vo/male/gen/groan (5).ogg','sound/vo/male/gen/groan (6).ogg')
 			if("grumble")
 				used = 'sound/vo/male/gen/grumble.ogg'
+			if("gogogo")
+				used = list('sound/vo/male/gen/gogogo (1).ogg','sound/vo/male/gen/gogogo (2).ogg','sound/vo/male/gen/gogogo (3).ogg','sound/vo/male/gen/gogogo (4).ogg')
 			if("haltyell")
 				used = list('sound/vo/male/gen/haltyell (1).ogg','sound/vo/male/gen/haltyell (2).ogg')
 				if(prob(3))
@@ -58,6 +62,8 @@
 				used = list('sound/vo/male/gen/huh (1).ogg','sound/vo/male/gen/huh (2).ogg','sound/vo/male/gen/huh (3).ogg')
 			if("hum")
 				used = list('sound/vo/male/gen/hum (1).ogg','sound/vo/male/gen/hum (2).ogg','sound/vo/male/gen/hum (3).ogg')
+			if("holdposition")
+				used = list('sound/vo/male/gen/holdposition (1).ogg','sound/vo/male/gen/holdposition (2).ogg','sound/vo/male/gen/holdposition (3).ogg')
 			if("jump")
 				used = 'sound/vo/male/gen/jump.ogg'
 			if("laugh")
@@ -100,5 +106,25 @@
 				used = list('sound/vo/clap (1).ogg', 'sound/vo/clap (2).ogg', 'sound/vo/clap (3).ogg', 'sound/vo/clap (4).ogg')
 			if("rawr")
 				used = list('sound/vo/rawrm1.ogg', 'sound/vo/rawrm2.ogg', 'sound/vo/rawrm3.ogg')
+			if("giggle")
+				used = list('sound/vo/male/gen/giggle (1).ogg', 'sound/vo/male/gen/giggle (2).ogg')
+			if("blink")
+				used = 'sound/vo/blink.ogg'
+			if("salute")
+				used = 'sound/vo/salute.ogg'
+			if("shiver")
+				used = 'sound/vo/shiver.ogg'
+			if("sniff")
+				used = 'sound/vo/sniff.ogg'
+			if("sneeze")
+				used = 'sound/vo/male/male_sneeze.ogg'
+			if("flutter")
+				used = 'sound/vo/moth/moth_flutter.ogg'
+			if("warcry")
+				used = list('sound/vo/male/gen/warcry_male1.ogg', 'sound/vo/male/gen/warcry_male2.ogg', 'sound/vo/male/gen/warcry_male3.ogg')
+			if("hmph")
+				used = list('sound/vo/male/gen/hmph (1).ogg', 'sound/vo/male/gen/hmph (2).ogg')
+			if("strain")
+				used = 'sound/vo/male/gen/strain.ogg'
 
 	return used

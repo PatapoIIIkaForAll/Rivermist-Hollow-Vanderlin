@@ -41,8 +41,8 @@
 		return FALSE
 	return user.get_skill_level(/datum/skill/magic/arcane) >= min_rank
 
-/datum/quirk/peculiarity/extra_genitals_base
-	abstract_type = /datum/quirk/peculiarity/extra_genitals_base
+/datum/quirk/neutral/extra_genitals_base
+	abstract_type = /datum/quirk/neutral/extra_genitals_base
 	point_value = 0
 	random_exempt = TRUE
 	preview_render = FALSE
@@ -55,13 +55,13 @@
 	var/datum/organ_dna/extra_testicles_dna
 	var/extra_genitals_committed = FALSE
 
-/datum/quirk/peculiarity/extra_genitals_base/Destroy()
+/datum/quirk/neutral/extra_genitals_base/Destroy()
 	clear_extra_genitals(FALSE)
 	QDEL_NULL(extra_penis_entry)
 	QDEL_NULL(extra_testicles_entry)
 	return ..()
 
-/datum/quirk/peculiarity/extra_genitals_base/is_available(datum/preferences/prefs)
+/datum/quirk/neutral/extra_genitals_base/is_available(datum/preferences/prefs)
 	. = ..()
 	if(!.)
 		return FALSE
@@ -80,10 +80,10 @@
 		return FALSE
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/on_remove()
+/datum/quirk/neutral/extra_genitals_base/on_remove()
 	clear_extra_genitals(TRUE)
 
-/datum/quirk/peculiarity/extra_genitals_base/on_examined(mob/user, list/P, list/examine_contents)
+/datum/quirk/neutral/extra_genitals_base/on_examined(mob/user, list/P, list/examine_contents)
 	if(!ishuman(owner))
 		return
 	if(!has_active_extra_genitals())
@@ -93,7 +93,7 @@
 		return
 	LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_BODY, span_notice("[human_owner.p_they(TRUE)] [human_owner.p_have()] something extra dangling between [human_owner.p_their()] legs."))
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/setup_extra_genital_entries()
+/datum/quirk/neutral/extra_genitals_base/proc/setup_extra_genital_entries()
 	if(extra_penis_entry && extra_testicles_entry)
 		return TRUE
 	if(!ishuman(owner))
@@ -122,7 +122,7 @@
 	validate_extra_genital_entries()
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/copy_accessory_entry(datum/customizer_entry/source, datum/customizer_entry/target)
+/datum/quirk/neutral/extra_genitals_base/proc/copy_accessory_entry(datum/customizer_entry/source, datum/customizer_entry/target)
 	if(!source || !target)
 		return
 	target.customizer_type = source.customizer_type
@@ -132,18 +132,18 @@
 	target.disabled = FALSE
 	target.show_dropdown = FALSE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/copy_penis_entry(datum/customizer_entry/organ/genitals/penis/source, datum/customizer_entry/organ/genitals/penis/target)
+/datum/quirk/neutral/extra_genitals_base/proc/copy_penis_entry(datum/customizer_entry/organ/genitals/penis/source, datum/customizer_entry/organ/genitals/penis/target)
 	copy_accessory_entry(source, target)
 	target.penis_size = source.penis_size
 	target.penis_length_cm = source.penis_length_cm
 	target.functional = source.functional
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/copy_testicles_entry(datum/customizer_entry/organ/genitals/testicles/source, datum/customizer_entry/organ/genitals/testicles/target)
+/datum/quirk/neutral/extra_genitals_base/proc/copy_testicles_entry(datum/customizer_entry/organ/genitals/testicles/source, datum/customizer_entry/organ/genitals/testicles/target)
 	copy_accessory_entry(source, target)
 	target.ball_size = source.ball_size
 	target.virility = source.virility
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/validate_extra_genital_entries()
+/datum/quirk/neutral/extra_genitals_base/proc/validate_extra_genital_entries()
 	var/datum/preferences/prefs = owner?.client?.prefs
 	if(!prefs)
 		return FALSE
@@ -155,13 +155,13 @@
 		testicles_choice.validate_entry(prefs, extra_testicles_entry)
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/has_active_extra_genitals()
+/datum/quirk/neutral/extra_genitals_base/proc/has_active_extra_genitals()
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/human_owner = owner
 	return extra_penis && !QDELETED(extra_penis) && human_owner.getorganslot(ORGAN_SLOT_PENIS) == extra_penis && extra_testicles && !QDELETED(extra_testicles) && human_owner.getorganslot(ORGAN_SLOT_TESTICLES) == extra_testicles
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/can_receive_extra_genitals(show_feedback = FALSE)
+/datum/quirk/neutral/extra_genitals_base/proc/can_receive_extra_genitals(show_feedback = FALSE)
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/human_owner = owner
@@ -184,7 +184,7 @@
 
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/create_extra_organ_from_entry(datum/customizer_entry/entry, datum/preferences/prefs)
+/datum/quirk/neutral/extra_genitals_base/proc/create_extra_organ_from_entry(datum/customizer_entry/entry, datum/preferences/prefs)
 	if(!ishuman(owner) || !entry || !prefs)
 		return null
 	var/mob/living/carbon/human/human_owner = owner
@@ -206,7 +206,7 @@
 		"dna" = organ_dna,
 	)
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/apply_extra_genitals(mob/user)
+/datum/quirk/neutral/extra_genitals_base/proc/apply_extra_genitals(mob/user)
 	if(extra_genitals_committed && is_extra_genitals_one_time_choice())
 		to_chat(user || owner, span_warning("This extra genital set is already chosen for the round."))
 		return FALSE
@@ -242,7 +242,7 @@
 	to_chat(user || owner, span_notice("The extra genital set is now present."))
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/clear_extra_genitals(show_feedback = FALSE)
+/datum/quirk/neutral/extra_genitals_base/proc/clear_extra_genitals(show_feedback = FALSE)
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/human_owner = owner
@@ -277,7 +277,7 @@
 			to_chat(human_owner, span_notice("The extra genital set is gone."))
 	return removed_any
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/get_entry_for_part(part)
+/datum/quirk/neutral/extra_genitals_base/proc/get_entry_for_part(part)
 	switch(part)
 		if("penis")
 			return extra_penis_entry
@@ -285,14 +285,14 @@
 			return extra_testicles_entry
 	return null
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/set_entry_for_part(part, datum/customizer_entry/new_entry)
+/datum/quirk/neutral/extra_genitals_base/proc/set_entry_for_part(part, datum/customizer_entry/new_entry)
 	switch(part)
 		if("penis")
 			extra_penis_entry = new_entry
 		if("testicles")
 			extra_testicles_entry = new_entry
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/change_extra_genital_choice(mob/user, part)
+/datum/quirk/neutral/extra_genitals_base/proc/change_extra_genital_choice(mob/user, part)
 	var/datum/customizer_entry/current_entry = get_entry_for_part(part)
 	if(!current_entry)
 		return FALSE
@@ -337,7 +337,7 @@
 	validate_extra_genital_entries()
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/Topic(href, href_list)
+/datum/quirk/neutral/extra_genitals_base/Topic(href, href_list)
 	. = ..()
 	if(!owner || usr != owner)
 		return TRUE
@@ -382,7 +382,7 @@
 	open_extra_genital_menu(user)
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/open_extra_genital_menu(mob/user)
+/datum/quirk/neutral/extra_genitals_base/proc/open_extra_genital_menu(mob/user)
 	if(!user)
 		user = owner
 	if(!user || !user.client)
@@ -396,13 +396,13 @@
 	popup.open(FALSE)
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/close_extra_genital_menu(mob/user)
+/datum/quirk/neutral/extra_genitals_base/proc/close_extra_genital_menu(mob/user)
 	if(!user)
 		user = owner
 	if(user)
 		user << browse(null, "window=extra_genital_customizer")
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/build_extra_genital_menu()
+/datum/quirk/neutral/extra_genitals_base/proc/build_extra_genital_menu()
 	var/list/dat = list()
 	var/active = has_active_extra_genitals()
 	var/apply_label = get_apply_action_label()
@@ -605,25 +605,25 @@
 
 	return dat.Join()
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/get_apply_action_label()
+/datum/quirk/neutral/extra_genitals_base/proc/get_apply_action_label()
 	return "Receive Set"
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/get_remove_action_label()
+/datum/quirk/neutral/extra_genitals_base/proc/get_remove_action_label()
 	return "Remove Set"
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/get_extra_genital_menu_note()
+/datum/quirk/neutral/extra_genitals_base/proc/get_extra_genital_menu_note()
 	return "Customize the extra penis and testicles, then apply the set when ready."
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/is_extra_genitals_one_time_choice()
+/datum/quirk/neutral/extra_genitals_base/proc/is_extra_genitals_one_time_choice()
 	return FALSE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/should_close_extra_genital_menu_after_apply()
+/datum/quirk/neutral/extra_genitals_base/proc/should_close_extra_genital_menu_after_apply()
 	return FALSE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/can_manually_remove_extra_genitals()
+/datum/quirk/neutral/extra_genitals_base/proc/can_manually_remove_extra_genitals()
 	return TRUE
 
-/datum/quirk/peculiarity/extra_genitals_base/proc/render_extra_genital_entry(part, title, datum/customizer_entry/entry)
+/datum/quirk/neutral/extra_genitals_base/proc/render_extra_genital_entry(part, title, datum/customizer_entry/entry)
 	if(!entry)
 		return "<div class='extra-card'><h2>[title]</h2><div>Unavailable</div></div>"
 
@@ -648,12 +648,12 @@
 
 	return dat.Join()
 
-/datum/quirk/peculiarity/extra_genitals
+/datum/quirk/neutral/extra_genitals
 	name = "Extra Genitals"
 	desc = "I can use the full genital customizer list, mixing masculine and feminine features freely."
-	incompatible_quirks = list(/datum/quirk/boon/summonable_extra_genitals)
+	incompatible_quirks = list(/datum/quirk/positive/summonable_extra_genitals)
 
-/datum/quirk/peculiarity/extra_genitals/is_available(datum/preferences/prefs)
+/datum/quirk/neutral/extra_genitals/is_available(datum/preferences/prefs)
 	. = ..()
 	if(!.)
 		return FALSE
@@ -661,7 +661,7 @@
 		return TRUE
 	return prefs.has_both_gendered_genital_sets()
 
-/datum/quirk/peculiarity/extra_genitals/on_examined(mob/user, list/P, list/examine_contents)
+/datum/quirk/neutral/extra_genitals/on_examined(mob/user, list/P, list/examine_contents)
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/human_owner = owner
@@ -678,31 +678,31 @@
 			LAZYADDASSOCLIST(examine_contents, EXAMINE_SECT_BODY, span_notice("[human_owner.p_they(TRUE)] [human_owner.p_have()] a second, womanly set of intimate features."))
 
 
-/datum/quirk/boon/summonable_extra_genitals
-	parent_type = /datum/quirk/peculiarity/extra_genitals_base
+/datum/quirk/positive/summonable_extra_genitals
+	parent_type = /datum/quirk/neutral/extra_genitals_base
 	name = "Summonable Extra Genitals"
 	desc = "I can summon, customize, and dismiss an extra penis and testicles. Requires a vagina and no existing penis or testicles."
-	incompatible_quirks = list(/datum/quirk/peculiarity/extra_genitals)
+	incompatible_quirks = list(/datum/quirk/neutral/extra_genitals)
 	point_value = -4
 
-/datum/quirk/boon/summonable_extra_genitals/on_spawn()
+/datum/quirk/positive/summonable_extra_genitals/on_spawn()
 	. = ..()
 	if(!ishuman(owner))
 		return
 	owner.add_spell(/datum/action/cooldown/spell/undirected/summon_extra_genitals, source = src)
 
-/datum/quirk/boon/summonable_extra_genitals/on_remove()
+/datum/quirk/positive/summonable_extra_genitals/on_remove()
 	if(owner)
 		owner.remove_spells(source = src)
 	return ..()
 
-/datum/quirk/boon/summonable_extra_genitals/get_apply_action_label()
+/datum/quirk/positive/summonable_extra_genitals/get_apply_action_label()
 	return "Summon Set"
 
-/datum/quirk/boon/summonable_extra_genitals/get_remove_action_label()
+/datum/quirk/positive/summonable_extra_genitals/get_remove_action_label()
 	return "Dismiss Set"
 
-/datum/quirk/boon/summonable_extra_genitals/on_examined(mob/user, list/P, list/examine_contents)
+/datum/quirk/positive/summonable_extra_genitals/on_examined(mob/user, list/P, list/examine_contents)
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/human_owner = owner
@@ -731,7 +731,7 @@
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/human_owner = owner
-	var/datum/quirk/peculiarity/extra_genitals_base/extra_quirk = human_owner.get_quirk(/datum/quirk/boon/summonable_extra_genitals)
+	var/datum/quirk/neutral/extra_genitals_base/extra_quirk = human_owner.get_quirk(/datum/quirk/positive/summonable_extra_genitals)
 	if(!extra_quirk)
 		to_chat(human_owner, span_warning("The extra genital quirk is missing."))
 		return FALSE

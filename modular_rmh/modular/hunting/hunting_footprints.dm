@@ -264,7 +264,7 @@
 
 /obj/effect/skill_tracker/footprint/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("Tracks are found by looking around - right-click the eye on your HUD. What you find scales with Perception and the Tracking skill.")
+	. += span_info("Tracks are found by looking around - right-click the eye on your HUD. What you find scales with Wisdom and the Tracking skill.")
 	. += span_info("Once found, examine a track to read it. With enough skill, right-clicking it lets you Mark whoever left it.")
 	. += span_info("Clicking a track lets you scuff it out, so nobody else can follow it.")
 

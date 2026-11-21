@@ -82,7 +82,7 @@
 	switch(force)
 		if(SEX_FORCE_HIGH)
 			pain = 1
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			pain = 2.5
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user, target)))

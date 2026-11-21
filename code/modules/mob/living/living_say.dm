@@ -112,9 +112,12 @@
 	var/datum/language/speaker_language = GLOB.language_datum_instances[language]
 	var/signed = speaker_language?.flags & SIGNLANG
 
-	if(!signed && !can_speak_vocal(message))
-		to_chat(src, span_warning("I can't talk."))
-		return
+	var/muffled = FALSE
+	if(!signed)
+		muffled = is_speech_muffled()
+		if(!can_voice_words() || (!muffled && !can_speak_vocal(message)))
+			to_chat(src, span_warning("I can't speak."))
+			return
 
 	var/message_range = 7
 
@@ -137,7 +140,13 @@
 	else
 		src.log_talk("said: [message]", LOG_SAY, forced_by=forced)
 
-	message = treat_message(message) // unfortunately we still need this
+	var/typed_message = message
+	if(muffled)
+		// Every listener, channel and speech hook below gets the mumble, never the typed words.
+		message = muffle_speech(message)
+		original_message = message
+	else
+		message = treat_message(message) // unfortunately we still need this
 	var/sigreturn = SEND_SIGNAL(src, COMSIG_MOB_SAY, args)
 	if (sigreturn & COMPONENT_UPPERCASE_SPEECH)
 		message = uppertext(message)
@@ -145,6 +154,8 @@
 		return
 	if(!message)
 		return
+	if(muffled)
+		to_chat(src, span_notice("I try to say: \"[typed_message]\""))
 
 	if(client)
 		last_words = message
@@ -325,6 +336,9 @@
 		eavesrendered = compose_message(src, message_language, eavesdropping, null, spans, message_mods)
 
 	var/rendered = compose_message(src, message_language, message, null, spans, message_mods, TRUE)
+	var/static/regex/yield_words = regex(@"\b(yield|give\s+up|surrender|stop\s+resisting)\b", "i")
+	var/list/yield_viewers = list()
+	var/show_yield = yield_words.Find(message)
 
 	for(var/atom/movable/hearing_movable as anything in listening)
 		if(!hearing_movable)
@@ -356,6 +370,13 @@
 			hearing_movable.Hear(eavesrendered, src, message_language, eavesdropping, null, spans, message_mods, original_message)
 		else
 			hearing_movable.Hear(rendered, src, message_language, message, null, spans, message_mods, original_message)
+			if(show_yield && ismob(hearing_movable))
+				var/mob/listener = hearing_movable
+				if(listener.client && listener.can_hear())
+					yield_viewers |= listener.client
+
+	if(length(yield_viewers))
+		play_gesture(yield_viewers, "yield", gesture_icon = 'modular_rmh/icons/mob/yield.dmi')
 
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_LIVING_SAY_SPECIAL, src, message)
 
@@ -456,6 +477,45 @@
 		return FALSE
 
 	return TRUE
+
+/// Whether this mob can make speech sounds at all, before a gag or a filled mouth is counted.
+/mob/living/proc/can_voice_words()
+	if(HAS_TRAIT(src, TRAIT_MUTE) || HAS_TRAIT(src, TRAIT_BAGGED))
+		return FALSE
+	return IsVocal()
+
+/// Whether a gag, a mouth item or a hand over the mouth turns speech into mumbling.
+/mob/living/proc/is_speech_muffled()
+	return FALSE
+
+/// Longest mumble word; longer typed words still mumble, just capped.
+#define MUFFLED_WORD_MAX_LENGTH 12
+
+/// Mumble with the typed word lengths and trailing punctuation, so questions and shouts still read as such.
+/proc/muffle_speech(message)
+	var/static/regex/trailing_punctuation = regex(@"[.,!?;:~-]+$")
+	var/list/mumbled_words = list()
+	// Decoded so entities count as one letter; the output holds no markup characters.
+	for(var/word in splittext(html_decode(message), " "))
+		if(!length(word))
+			continue
+		var/tail = ""
+		if(trailing_punctuation.Find(word))
+			tail = copytext(word, trailing_punctuation.index)
+			word = copytext(word, 1, trailing_punctuation.index)
+		var/letters = min(length_char(word), MUFFLED_WORD_MAX_LENGTH)
+		switch(letters)
+			if(0)
+				mumbled_words += tail
+			if(1, 2)
+				mumbled_words += "[repeat_string(letters, "m")][tail]"
+			else
+				mumbled_words += "[repeat_string(letters - 2, "m")]ph[tail]"
+	if(!length(mumbled_words))
+		return "Mmph..."
+	return capitalize(jointext(mumbled_words, " "))
+
+#undef MUFFLED_WORD_MAX_LENGTH
 
 /mob/living/proc/treat_message(message)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH))

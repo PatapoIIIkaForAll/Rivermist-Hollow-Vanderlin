@@ -1,4 +1,5 @@
 /obj/item/clothing/shoes/boots
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "dark boots"
 	//dropshrink = 0.75
 	color = "#d5c2aa"
@@ -17,6 +18,7 @@
 	AddComponent(/datum/component/storage/concrete/boots)
 
 /obj/item/clothing/shoes/boots/armor
+	sewrepair = null
 	name = "plated boots"
 	desc = "Armored boots made from steel offering heavy protection against both melee and ranged attacks."
 	body_parts_covered = FEET
@@ -128,6 +130,7 @@
 	desc = "These boots are reinforced with iron padding, designed not just for protection but for presence, announcing the approach of the city watch long before they're seen."
 	icon_state = "nobleboots"
 	item_state = "nobleboots"
+	social_cues = list("faction:town_watch" = 5)
 
 /obj/item/clothing/shoes/boots/leather/advanced/watch/Initialize()
 	. = ..()

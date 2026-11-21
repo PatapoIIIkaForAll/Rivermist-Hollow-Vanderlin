@@ -7,8 +7,11 @@
 		return FALSE
 
 	var/movement_dir = NONE
-	for(var/_key in user.keys_held)
-		movement_dir |= user.movement_keys[_key]
+	if(src == user.mob && user.mob.is_pixel_shifting())
+		movement_dir = user.process_pixel_shift_input()
+	else
+		for(var/_key in user.keys_held)
+			movement_dir |= user.movement_keys[_key]
 	if(user.next_move_dir_add)
 		movement_dir |= user.next_move_dir_add
 	if(!movement_dir) //Cardinal move

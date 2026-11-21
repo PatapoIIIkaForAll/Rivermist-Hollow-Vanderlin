@@ -47,6 +47,14 @@
 	name = "Long-shanked"
 	prefix = "a"
 
+/datum/mob_descriptor/height/middling
+	name = "Middling"
+	prefix = "a"
+
+/datum/mob_descriptor/height/giant
+	name = "Giant"
+	prefix = "a"
+
 /datum/mob_descriptor/height/custom
 	name = "Custom Height"
 	custom_index = 5

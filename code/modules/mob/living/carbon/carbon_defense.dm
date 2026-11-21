@@ -414,6 +414,9 @@
 		to_chat(M, span_warning("I stop tending to [src]."))
 		return
 
+	if(try_mob_horny_ko_help_up(M))
+		return
+
 //	if(!(mobility_flags & MOBILITY_STAND))
 //		if(buckled)
 //			to_chat(M, "<span class='warning'>I need to unbuckle [src] first to do that!</span>")

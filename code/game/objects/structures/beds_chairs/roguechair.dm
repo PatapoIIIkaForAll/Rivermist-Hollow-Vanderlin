@@ -17,6 +17,7 @@
 		if(user.m_intent == MOVE_INTENT_SNEAK)
 			hideinside(user)
 			return
+	return ..()
 
 /obj/structure/chair/bench/church
 	icon_state = "church_benchleft"

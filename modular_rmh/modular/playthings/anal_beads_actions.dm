@@ -78,7 +78,7 @@
 		return
 	var/obj/item/organ/organ = target.getorganslot(hole_id)
 	var/use_force = force >= SEX_FORCE_HIGH
-	var/pushes = (use_force && prob(force == SEX_FORCE_EXTREME ? 50 : 25)) ? 2 : 1
+	var/pushes = (use_force && prob(force >= SEX_FORCE_EXTREME ? 50 : 25)) ? 2 : 1
 	var/static/list/pushed_results = list(INSERT_FEEDBACK_OK, INSERT_FEEDBACK_OK_FORCE, INSERT_FEEDBACK_ALMOST_FULL, INSERT_FEEDBACK_OK_OVERRIDE)
 	var/pushed = 0
 	var/pleasure = 0
@@ -153,7 +153,7 @@
 		stop_runtime()
 		return
 	var/pulls = 1
-	if(force >= SEX_FORCE_HIGH && prob(force == SEX_FORCE_EXTREME ? 40 : 20))
+	if(force >= SEX_FORCE_HIGH && prob(force >= SEX_FORCE_EXTREME ? 40 : 20))
 		pulls = rand(2, 3)
 	var/popped = 0
 	var/pleasure = 0

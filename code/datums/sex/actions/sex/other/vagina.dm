@@ -54,13 +54,14 @@
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
 
+	// The rider's hole takes the strain; the cock under them feels no pain, as in "Fuck pussy".
 	if(considered_limp(target))
-		perform_sex_action(target, user, 1.2, 3, 3)
+		perform_sex_action(user, target, 1.2, 3, 3)
 	else
-		perform_sex_action(target, user, 2.4, 7, 2)
+		perform_sex_action(user, target, 2.4, 7, 2)
 	handle_passive_ejaculation(target)
 
-	perform_sex_action(user, target, 2, 4, 3)
+	perform_sex_action(target, user, 2, 0, 3)
 
 /datum/sex_action/sex/other/vagina/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)

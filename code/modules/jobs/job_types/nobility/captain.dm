@@ -90,9 +90,9 @@
 		return
 	switch(choice)
 		if("Law and Order")
-			spawned.attributes?.add_sheet(/datum/attribute_holder/sheet/job/captain/law)
+			spawned.attributes?.add_sheet(/datum/attribute_holder/sheet/job/captain/law, spawned.uses_creator_stats())
 		if("Deliverer of Justice")
-			spawned.attributes?.add_sheet(/datum/attribute_holder/sheet/job/captain/justice)
+			spawned.attributes?.add_sheet(/datum/attribute_holder/sheet/job/captain/justice, spawned.uses_creator_stats())
 
 /datum/outfit/captain
 	name = "Captain"

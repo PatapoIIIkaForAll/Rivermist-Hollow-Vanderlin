@@ -1,4 +1,5 @@
 /obj/item/clothing/shoes/toga_sandals
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "fancy sandals"
 	desc = "Fancy sandals."
 	gender = PLURAL

@@ -30,6 +30,8 @@
  */
 /datum/ai_behavior/target_from_retaliate_list
 	action_cooldown = 2 SECONDS
+	// Waiting out the cooldown in the queue must not stop the mob from planning.
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 	/// How far can we see stuff?
 	var/vision_range = 8
 	/// How long (from the last time the mob hit us) we remember them as enemies

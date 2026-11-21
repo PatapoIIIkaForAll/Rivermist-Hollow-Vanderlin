@@ -78,6 +78,8 @@
 		if("push_deeper")
 			var/obj/item/toy = find_owned_toy(params["item_ref"])
 			return toy ? owner.try_push_toy_deeper(toy) : FALSE
+		if("push_out")
+			return owner.try_push_out_random_toy(owner.get_toy_hole(params["hole"]))
 
 	return FALSE
 
@@ -124,6 +126,7 @@
 	data["stomach"] = build_stomach()
 	data["ovipositor"] = build_ovipositor()
 	data["labour"] = build_labour()
+	data["births"] = owner.get_oviposition_birth_status()
 	return data
 
 /datum/hole_status_menu/proc/build_labour()
@@ -147,6 +150,7 @@
 	d["fill"] = build_fill(hole)
 	d["can_hold_in"] = hole.can_hold_in
 	d["items"] = build_items(hole)
+	d["can_push_out"] = can_push_out_blind(hole)
 	d["insert"] = build_insert(hole)
 	d["eggs"] = list()
 	d["hatchling_count"] = 0
@@ -202,6 +206,8 @@
 		return items
 	var/static/list/layer_ids = list(STORAGE_LAYER_OUTER = "outer", STORAGE_LAYER_INNER = "inner", STORAGE_LAYER_DEEP = "deep")
 	var/free = isnull(owner.get_hole_toy_block_reason(hole))
+	// Picking one item by feel needs Sensitiveness; everyone else pushes blind.
+	var/by_feel = owner.can_feel_stored_items()
 	for(var/layer in layer_ids)
 		for(var/obj/item/stored as anything in layers[layer])
 			if(istype(stored, /obj/item/oviposition_egg) || istype(stored, /obj/item/mob_holder/internal_womb) || istype(stored, /obj/item/penis_fake))
@@ -212,12 +218,18 @@
 				"name" = stored.name,
 				"layer" = layer_ids[layer],
 				"can_remove" = can_remove,
-				"can_take" = free && can_remove,
+				"can_take" = free && by_feel && can_remove,
 				"take_seconds" = round(hole.get_toy_remove_time(stored, layer) / 10, 1),
 				"take_fail_pct" = round(hole.get_toy_remove_fail_chance(stored, layer)),
-				"can_push_deeper" = free && isnull(owner.get_toy_push_deeper_block_reason(hole, stored)),
+				"can_push_deeper" = free && by_feel && isnull(owner.get_toy_push_deeper_block_reason(hole, stored)),
 			))
 	return items
+
+/// Whether the blind push-out button shows: something removable in there, and no feel for which.
+/datum/hole_status_menu/proc/can_push_out_blind(obj/item/organ/genitals/filling_organ/hole)
+	if(owner.can_feel_stored_items() || !isnull(owner.get_hole_toy_block_reason(hole)))
+		return FALSE
+	return length(owner.get_pushable_toys(hole)) > 0
 
 /// What the held item would take to work in: time, fail chance, or the reason it cannot.
 /datum/hole_status_menu/proc/build_insert(obj/item/organ/genitals/filling_organ/hole)
@@ -650,12 +662,27 @@
 	INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living/carbon/human, push_out_all_eggs), organ)
 	return TRUE
 
+/// One egg onto the floor per press, the same beat the panel's floor act loops.
 /datum/hole_status_menu/proc/lay_ovipositor_eggs()
-	var/obj/item/organ/genitals/penis/ovipositor/ovipositor = owner.getorganslot(ORGAN_SLOT_PENIS)
-	var/datum/component/ovipositor/ovipositor_component = ovipositor?.GetComponent(/datum/component/ovipositor)
+	var/datum/component/ovipositor/ovipositor_component = get_working_ovipositor(owner)
 	if(!ovipositor_component)
 		return FALSE
-	return ovipositor_component.lay_egg(get_turf(owner))
+	if(owner.stat != CONSCIOUS || owner.incapacitated())
+		return FALSE
+	// The panel's rules: only armor above light is in the way, and a worn device seals the slot.
+	if(owner.get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, owner) || owner.is_organ_slot_blocked(ORGAN_SLOT_PENIS))
+		to_chat(owner, span_warning("I cannot get my ovipositor free for that."))
+		return FALSE
+	var/obj/item/oviposition_egg/egg = ovipositor_component.lay_one_egg_on_floor()
+	if(!egg)
+		if(ovipositor_component.last_lay_reason)
+			to_chat(owner, span_warning(ovipositor_component.last_lay_reason))
+		return FALSE
+	var/word = ovipositor_component.get_egg_kind_is_seed() ? "seed" : "egg"
+	owner.visible_message(span_love("[owner] squats and lays a [word] with a shiver."), span_love("I squat and a [word] slides out of me onto the ground."))
+	playsound(owner, 'sound/effects/wounds/splatter.ogg', 30, TRUE)
+	SEND_SIGNAL(owner, COMSIG_SEX_GENERIC_ACTION, owner, 2.5, 0, 3, owner)
+	return TRUE
 
 /// How the egg will hatch: its kind's mode and chance, and the outcome once it is ripe.
 /datum/hole_status_menu/proc/build_egg_hatch(obj/item/oviposition_egg/egg)

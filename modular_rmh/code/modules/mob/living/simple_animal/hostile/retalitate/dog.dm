@@ -9,6 +9,7 @@
 	icon_dead = "volf_white_dead"
 	gender = PLURAL
 	faction = list("dogs")
+	penis_organ = /obj/item/organ/genitals/penis/knotted
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	emote_hear = null
 	emote_see = null

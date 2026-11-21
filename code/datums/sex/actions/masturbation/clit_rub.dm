@@ -41,7 +41,7 @@
 			arousal_amt = 2.5
 			pain_amt = 1.5
 			orgasm_amt = 2.1
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "roughly pinches"
 			arousal_amt = 2.1
 			pain_amt = 2.6
@@ -107,7 +107,7 @@
 			arousal_amt = 2.5
 			pain_amt = 1.5
 			orgasm_amt = 2.1
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "roughly pinches"
 			arousal_amt = 2.1
 			pain_amt = 2.6

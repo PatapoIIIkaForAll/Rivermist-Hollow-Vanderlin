@@ -515,15 +515,15 @@
 	// Master: sadist gets aroused and sated from dominating.
 	if(ishuman(leash_master))
 		var/mob/living/carbon/human/master_human = leash_master
-		if(master_human.has_quirk(/datum/quirk/vice/addiction/sadist))
+		if(master_human.has_quirk(/datum/quirk/negative/addiction/sadist))
 			SEND_SIGNAL(leash_master, COMSIG_SEX_ADJUST_AROUSAL, master_amount)
-			master_human.sate_addiction(/datum/quirk/vice/addiction/sadist)
+			master_human.sate_addiction(/datum/quirk/negative/addiction/sadist)
 	// Pet: masochist gets aroused and sated from being dominated.
 	if(ishuman(leash_pet))
 		var/mob/living/carbon/human/pet_human = leash_pet
-		if(pet_human.has_quirk(/datum/quirk/vice/addiction/masochist))
+		if(pet_human.has_quirk(/datum/quirk/negative/addiction/masochist))
 			SEND_SIGNAL(leash_pet, COMSIG_SEX_ADJUST_AROUSAL, pet_amount)
-			pet_human.sate_addiction(/datum/quirk/vice/addiction/masochist)
+			pet_human.sate_addiction(/datum/quirk/negative/addiction/masochist)
 
 // ---- Feature 4: Slave collar command radial menu via middle-click ----
 

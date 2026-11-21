@@ -6,6 +6,8 @@
 	var/brute_mod_per_stability = 0.01 // 1% increased brute damage per point below max
 	var/limb_explosion_threshold = 20
 	var/limb_explosion_chance = 5
+	/// Brute multiplier this component last applied, so it can be taken back out of physiology.
+	var/applied_brute_mod = 1
 
 /datum/component/augmentable/Initialize()
 	. = ..()
@@ -18,12 +20,14 @@
 	RegisterSignal(parent, COMSIG_AUGMENT_GET_STABILITY, PROC_REF(get_stability))
 	RegisterSignal(parent, COMSIG_AUGMENT_GET_INSTALLED, PROC_REF(get_installed_augments))
 
-	START_PROCESSING(SSobj, src)
 	ADD_TRAIT(parent, TRAIT_NO_EXPERIENCE, "[type]")
 
 /datum/component/augmentable/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	REMOVE_TRAIT(parent, TRAIT_NO_EXPERIENCE, "[type]")
+	var/mob/living/carbon/human/H = parent
+	if(istype(H) && H.physiology && applied_brute_mod)
+		H.physiology.brute_mod /= applied_brute_mod
 	return ..()
 
 /datum/component/augmentable/proc/get_brute_modifier()
@@ -33,12 +37,15 @@
 /datum/component/augmentable/proc/modify_stability(amount, mob/user)
 	current_stability = clamp(current_stability + amount, min_stability, max_stability)
 
+	// Only a low core needs the failure checks each tick.
+	if(current_stability <= limb_explosion_threshold)
+		START_PROCESSING(SSobj, src)
+	else
+		STOP_PROCESSING(SSobj, src)
+
 	var/mob/parent_mob = parent
-	if(user)
-		if(amount > 0)
-			parent_mob.say("CORE STABILITY INCREASED: [current_stability]%.", forced = TRUE)
-		else
-			parent_mob.say("CORE STABILITY DECREASED: [current_stability]%.", forced = TRUE)
+	if(user && amount)
+		to_chat(parent_mob, span_notice("My core stability [amount > 0 ? "rises" : "falls"] to [current_stability]%."))
 
 	update_stability_effects()
 
@@ -47,9 +54,11 @@
 	if(!istype(H))
 		return
 
-	if(H.dna?.species)
+	if(H.dna?.species && H.physiology)
+		// Swap our old factor for the new one, leaving every other brute modifier alone.
 		var/modifier = get_brute_modifier()
-		H.physiology.brute_mod = modifier
+		H.physiology.brute_mod = H.physiology.brute_mod / applied_brute_mod * modifier
+		applied_brute_mod = modifier
 
 /datum/component/augmentable/process()
 	if(current_stability <= limb_explosion_threshold)

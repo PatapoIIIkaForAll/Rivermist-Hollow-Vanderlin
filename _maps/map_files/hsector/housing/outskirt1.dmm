@@ -184,7 +184,7 @@
 /turf/open/floor/dirt/road,
 /area/outdoors/rmh_field/west)
 "U" = (
-/obj/structure/flora/grass/herb,
+/obj/structure/flora/grass/herb/random,
 /turf/open/floor/grass/mixyel,
 /area/outdoors/rmh_field/west)
 "W" = (

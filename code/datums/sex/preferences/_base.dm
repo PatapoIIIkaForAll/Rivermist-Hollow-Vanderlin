@@ -46,7 +46,7 @@
 
 /// Why this preference cannot change right now, or null when it can.
 /datum/erp_preference/proc/get_edit_lock_reason(mob/user, datum/preferences/prefs)
-	if(locked_after_spawn && prefs?.has_spawned)
+	if(locked_after_spawn && prefs?.is_erp_spawn_locked(user))
 		return "[name] is set in character creation and cannot change after spawning."
 	return prefs?.get_erp_preference_edit_lock_reason(user)
 

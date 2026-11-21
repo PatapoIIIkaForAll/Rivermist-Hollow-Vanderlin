@@ -261,8 +261,12 @@
 		return "I can't reach like this."
 	if(has_status_effect(/datum/status_effect/labour))
 		return "Not now. My body has other work."
+	return get_hole_access_block_reason(hole, src)
+
+/// Why [hole] is out of [actor]'s reach whatever the body's state: armor, a worn device, or something inside it.
+/mob/living/carbon/human/proc/get_hole_access_block_reason(obj/item/organ/genitals/filling_organ/hole, mob/living/actor)
 	// The panel's rules: only armor above light keeps hands off, and a worn device seals its slot.
-	if(get_sex_covering_garment(hole.slot == ORGAN_SLOT_BREASTS ? BODY_ZONE_CHEST : BODY_ZONE_PRECISE_GROIN))
+	if(get_sex_covering_garment(hole.slot == ORGAN_SLOT_BREASTS ? BODY_ZONE_CHEST : BODY_ZONE_PRECISE_GROIN, actor))
 		return "My clothes are in the way."
 	if(is_organ_slot_blocked(hole.slot))
 		return "Something worn keeps me out of there."
@@ -387,6 +391,32 @@
 	visible_message(span_notice("[src] draws [toy] out of [p_their()] [hole_word]."), span_love("I draw [toy] out of my [hole_word][feel]."))
 	SEND_SIGNAL(src, COMSIG_SEX_GENERIC_ACTION, src, toy.get_body_storage_stir_pleasure(layer), 0, 0, src)
 	return TRUE
+
+// ---- Push out, blind ----
+
+/// Whether this body can tell its stored items apart by feel.
+/mob/living/carbon/human/proc/can_feel_stored_items()
+	return has_quirk(/datum/quirk/neutral/selfawaregeni)
+
+/// The items in [hole] a hand could work out; eggs, hatchlings and stand-ins have their own ways.
+/mob/living/carbon/human/proc/get_pushable_toys(obj/item/organ/genitals/filling_organ/hole)
+	var/list/toys = list()
+	if(!istype(hole))
+		return toys
+	for(var/layer in list(STORAGE_LAYER_OUTER, STORAGE_LAYER_INNER, STORAGE_LAYER_DEEP))
+		for(var/obj/item/stored as anything in hole.get_body_storage_items_for_interaction(layer, BODYSTORAGE_REMOVE_MANUAL))
+			if(istype(stored, /obj/item/oviposition_egg) || istype(stored, /obj/item/mob_holder/internal_womb) || istype(stored, /obj/item/penis_fake))
+				continue
+			toys += stored
+	return toys
+
+/// Works whatever comes to hand out of [hole]: the same take-out, with the item picked blind.
+/mob/living/carbon/human/proc/try_push_out_random_toy(obj/item/organ/genitals/filling_organ/hole)
+	var/list/toys = get_pushable_toys(hole)
+	if(!length(toys))
+		to_chat(src, span_warning("There is nothing in there I could push out."))
+		return FALSE
+	return try_remove_toy(pick(toys))
 
 // ---- Push deeper ----
 

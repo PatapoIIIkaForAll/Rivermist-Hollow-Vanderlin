@@ -85,8 +85,10 @@
 /obj/item/needle/proc/sew_item(obj/item/I, mob/living/user)
 	if(!(I.obj_flags & CAN_BE_HIT) && !istype(I, /obj/item/storage))
 		return NONE
-	if(!I.ontable() || !I.sewrepair)
+	if(!I.sewrepair)
 		return NONE
+	if(!I.ontable())
+		return needs_table(I, user)
 	if(!I.uses_integrity)
 		to_chat(user, span_warning("[I] can't be repaired!"))
 		return NONE
@@ -96,6 +98,10 @@
 	if(!can_repair)
 		to_chat(user, span_warning("[src] cannot be used to repair [I]!"))
 		return ITEM_INTERACT_BLOCKING
+
+	var/obj/item/clothing/torn_garment = I
+	if(istype(torn_garment) && torn_garment.has_clothing_tears())
+		return mend_clothing_tears(torn_garment, user)
 
 	var/armor_value = 0
 	var/skill_level = GET_MOB_SKILL_VALUE(user, I.sewrepair)
@@ -190,6 +196,19 @@
 		amt2raise *= 0.25
 	user.mind.add_sleep_experience(I.sewrepair, amt2raise)
 	return ITEM_INTERACT_SUCCESS
+/// Stops the click on damaged gear that is off a table, unless the gear can store the needle.
+/obj/item/needle/proc/needs_table(obj/item/I, mob/living/user)
+	if(!I.uses_integrity || !can_repair)
+		return NONE
+	var/obj/item/clothing/garment = I
+	var/is_torn = istype(garment) && garment.has_clothing_tears()
+	if(!I.obj_broken && I.get_integrity() >= I.max_integrity && !is_torn)
+		return NONE
+	if(SEND_SIGNAL(I, COMSIG_TRY_STORAGE_CAN_INSERT, src, user, TRUE))
+		return NONE
+	to_chat(user, span_warning("I need to lay [I] on a table to sew it."))
+	return ITEM_INTERACT_BLOCKING
+
 /obj/item/needle/proc/sew_wounds(mob/living/carbon/target, mob/living/user)
 	if(!istype(user) || !istype(target))
 		return FALSE

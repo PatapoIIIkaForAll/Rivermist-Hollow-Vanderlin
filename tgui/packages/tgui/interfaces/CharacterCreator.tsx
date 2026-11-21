@@ -18,6 +18,17 @@ import {
   characterCreatorStrings,
 } from './CharacterCreator.i18n';
 import { LoadoutPanel } from './CharacterCreatorLoadout';
+import {
+  type ProstheticData,
+  ProstheticsPanel,
+} from './CharacterCreatorProsthetics';
+import {
+  StatEditor,
+  StatParts,
+  type StatPoints,
+  type StatRow,
+  type StatRules,
+} from './CharacterCreatorStats';
 import { PreferencesBadges } from './PreferencesBadges';
 
 // ---------------------------------------------------------------------------
@@ -155,6 +166,7 @@ type JobEntry = {
   title_choices: JobChoice[];
   honorary_choices: JobChoice[];
   details?: JobDetails;
+  required_jobs?: string[];
 };
 type JobCategory = { name: string; color: string; jobs: JobEntry[] };
 type JobState = {
@@ -206,17 +218,6 @@ type SubclassEntry = {
   title: string;
   tutorial: string;
   has_info: Booleanish;
-};
-type StatRow = {
-  name: string;
-  desc?: string;
-  icon?: string | null;
-  icon_state?: string | null;
-  label: string;
-  base: number;
-  species: number;
-  age: number;
-  total: number;
 };
 type DescriptorEntry = {
   choice: string;
@@ -302,6 +303,9 @@ type CreatorData = {
   voice_type: string;
   voice_color: string;
   voice_pack: string;
+  speech_bark: string;
+  speech_moans: Booleanish;
+  strength_voice_pitch: Booleanish;
   moan_selection: string;
   selected_accent: string;
   loadout_catalog: LoadoutCatalogEntry[];
@@ -317,8 +321,6 @@ type CreatorData = {
   round_action_color: string | null;
   round_action_disabled: Booleanish;
   round_action_tooltip: string;
-  round_start_state?: string;
-  round_start_seconds?: number;
   round_ready_players?: number;
   round_total_players?: number;
   cc_unsaved?: Booleanish;
@@ -339,6 +341,8 @@ type CreatorData = {
   cc_cultures_available?: string[];
   cc_subclass_prefs?: Record<string, string>;
   cc_stats?: StatRow[];
+  cc_stat_points?: StatPoints;
+  cc_stat_rules?: StatRules;
   cc_quirks?: {
     names: string[];
     entries?: { name: string; desc: string }[];
@@ -369,6 +373,7 @@ type CreatorData = {
   cc_rivals?: number;
   cc_tattoo_count?: number;
   cc_tattoos?: TattooData;
+  cc_prosthetics?: ProstheticData;
 };
 
 // ---------------------------------------------------------------------------
@@ -398,6 +403,7 @@ type MirrorCat =
   | 'head'
   | 'markings'
   | 'body'
+  | 'prosthetics'
   | 'taur'
   | 'genitals'
   | 'attire'
@@ -428,6 +434,7 @@ const MIRROR_ORDER: MirrorCat[] = [
   'genitals',
   'attire',
   'piercing',
+  'prosthetics',
 ];
 
 const HEAD_PATTERNS = [
@@ -508,7 +515,8 @@ type ParsedSpecies = {
 };
 
 /**
- * Species descriptions end with "(+1 PER, Darkvision, ...)" and "Proficiencies: X(4), ...".
+ * Species descriptions end with bonus lines: "(Darkvision, Elvish Language).",
+ * "(+2 Stat Points In Character Creation)." and "Proficiencies: X(4), ...".
  * They are pulled out of the text and shown as bonus rows instead.
  */
 const parseSpeciesDesc = (raw: string): ParsedSpecies => {
@@ -530,18 +538,27 @@ const parseSpeciesDesc = (raw: string): ParsedSpecies => {
     }
     body = body.replace(profMatch[0], '');
   }
-  let stats: string[] = [];
-  let traits: string[] = [];
-  const groups = [...body.matchAll(/\(([^()]*[+-]\d[^()]*)\)\.?/g)];
-  const last = groups[groups.length - 1];
+  const stats: string[] = [];
+  const traits: string[] = [];
+  const takeGroup = (group: string, inner: string) => {
+    for (const token of inner.split(',')) {
+      const entry = token.trim();
+      if (entry) {
+        (/^[+-]\d/.test(entry) ? stats : traits).push(entry);
+      }
+    }
+    body = body.replace(group, '');
+  };
+  // A group with a signed number can sit anywhere; the last one counts.
+  const numbered = [...body.matchAll(/\(([^()]*[+-]\d[^()]*)\)\.?/g)];
+  const last = numbered[numbered.length - 1];
   if (last) {
-    const tokens = last[1]
-      .split(',')
-      .map((token) => token.trim())
-      .filter(Boolean);
-    stats = tokens.filter((token) => /^[+-]\d/.test(token));
-    traits = tokens.filter((token) => !/^[+-]\d/.test(token));
-    body = body.replace(last[0], '');
+    takeGroup(last[0], last[1]);
+  }
+  // A group of traits alone is a parenthesised line at the very end.
+  const trailing = body.match(/(?:^|\n)[ \t]*(\(([^()]*)\)\.?)\s*$/);
+  if (trailing) {
+    takeGroup(trailing[1], trailing[2]);
   }
   body = body.replace(/\n{3,}/g, '\n\n').trim();
   return { body, stats, traits, proficiencies, warning };
@@ -1307,7 +1324,7 @@ const TextEditor = (props: {
 };
 
 // ---------------------------------------------------------------------------
-// Tattoos: written lettering or designs, edited under the markings list
+// Skin marks: tattoos, brands and body writing, edited under the markings list
 // ---------------------------------------------------------------------------
 
 type TattooEntry = {
@@ -1323,20 +1340,59 @@ type TattooZone = {
   name: string;
   intimate: Booleanish;
   present: Booleanish;
-  full: Booleanish;
+  ink: number;
+  brands: number;
+  writing: number;
   entries: TattooEntry[];
 };
+type MarkColor = { name: string; color: string };
 type TattooData = {
   limbs: { id: string; name: string; zones: TattooZone[] }[];
   styles: string[];
-  pigments: { name: string; color: string }[];
+  pigments: MarkColor[];
+  glows: MarkColor[];
+  writing: { id: string; colors: MarkColor[] }[];
+  brand_color: string;
   max_per_zone: number;
+  max_brands: number;
   max_length: number;
+  brand_max_length: number;
 };
 
 const TATTOO_LETTERING = 'lettering';
+type MarkKind = 'ink' | 'brand' | 'arcane' | 'writing';
+const MARK_KINDS: MarkKind[] = ['ink', 'brand', 'arcane', 'writing'];
+const KIND_ICONS: Record<MarkKind, string> = {
+  ink: 'pen-nib',
+  brand: 'fire',
+  arcane: 'wand-magic-sparkles',
+  writing: 'paintbrush',
+};
+const WRITING_MEDIA = ['charcoal', 'paint', 'lipstick', 'quill'];
 
-/** Tattoo zones grouped by limb; the ink row picks style and pigment for new tattoos. */
+const markKind = (medium: string): MarkKind =>
+  medium === 'brand' || medium === 'arcane' || medium === 'ink'
+    ? medium
+    : 'writing';
+
+const markIcon = (medium: string) =>
+  medium === 'quill' ? 'feather' : KIND_ICONS[markKind(medium)];
+
+/** Text colour and glow of a mark, as close to its look in chat as the editor allows. */
+const markTextStyle = (entry: TattooEntry): CSSProperties | undefined => {
+  if (entry.medium === 'arcane') {
+    return {
+      color: entry.color,
+      textShadow: `0 0 3px ${entry.color}, 0 0 7px ${entry.color}`,
+    };
+  }
+  if (entry.medium === 'brand') {
+    return { color: entry.color };
+  }
+  return undefined;
+};
+
+/** Skin mark zones grouped by limb; the tool row picks what Add makes. */
 const TattooEditor = (props: {
   tattoos: TattooData;
   count: number;
@@ -1345,8 +1401,23 @@ const TattooEditor = (props: {
 }) => {
   const { tattoos, count, onAct } = props;
   const L = props.labels;
+  const [kind, setKind] = useState<MarkKind>('ink');
   const [inkStyle, setInkStyle] = useState(TATTOO_LETTERING);
   const [inkColor, setInkColor] = useState(tattoos.pigments[0]?.color ?? '');
+  const [glowColor, setGlowColor] = useState(tattoos.glows[0]?.color ?? '');
+  const [writingMedium, setWritingMedium] = useState('charcoal');
+  const [writingColor, setWritingColor] = useState('');
+
+  const writing = tattoos.writing.find((media) => media.id === writingMedium);
+  const writingColors = writing?.colors ?? [];
+  const shownWritingColor = writingColors.some(
+    (option) => option.color === writingColor,
+  )
+    ? writingColor
+    : (writingColors[0]?.color ?? '');
+
+  const toOptions = (colors: MarkColor[]): SelectOption[] =>
+    colors.map((option) => ({ value: option.color, label: option.name }));
   const styleOptions: SelectOption[] = tattoos.styles.map((style) => ({
     value: style,
     label:
@@ -1354,16 +1425,99 @@ const TattooEditor = (props: {
         ? L.tattooStyleLettering
         : L.tattooStyleDesign,
   }));
-  const pigmentOptions: SelectOption[] = tattoos.pigments.map((pigment) => ({
-    value: pigment.color,
-    label: pigment.name,
+  const pigmentOptions = toOptions(tattoos.pigments);
+  const glowOptions = toOptions(tattoos.glows);
+  const lipstickOptions = toOptions(
+    tattoos.writing.find((media) => media.id === 'lipstick')?.colors ?? [],
+  );
+  const writingOptions: SelectOption[] = WRITING_MEDIA.map((id) => ({
+    value: id,
+    label: L.markWritingMedia[id] ?? id,
   }));
+
+  const newMedium = kind === 'writing' ? writingMedium : kind;
+  const newColor =
+    kind === 'ink'
+      ? inkColor
+      : kind === 'arcane'
+        ? glowColor
+        : kind === 'writing'
+          ? shownWritingColor
+          : tattoos.brand_color;
+  // Paint asks for its colour on Add; every other tool needs one chosen here.
+  const newColorReady =
+    kind !== 'writing' || writingMedium === 'paint' || !!shownWritingColor;
+
+  const hasRoom = (zone: TattooZone) =>
+    kind === 'ink'
+      ? zone.ink < tattoos.max_per_zone
+      : kind === 'writing'
+        ? zone.writing < 1
+        : zone.brands < tattoos.max_brands;
+
+  /** Colour control for an existing entry; fixed colours show only a swatch. */
+  const entryColor = (zone: TattooZone, entry: TattooEntry, present: boolean) => {
+    const recolor = (color: string) =>
+      onAct('set_color', { zone: zone.id, index: entry.index, color });
+    const options =
+      entry.medium === 'ink'
+        ? pigmentOptions
+        : entry.medium === 'arcane'
+          ? glowOptions
+          : entry.medium === 'lipstick'
+            ? lipstickOptions
+            : null;
+    if (options) {
+      return (
+        <>
+          <Swatch color={entry.color} />
+          <Select
+            value={entry.color}
+            options={options}
+            placeholder={entry.pigment}
+            title={L.tattooPigment}
+            disabled={!present}
+            onChange={recolor}
+          />
+        </>
+      );
+    }
+    if (entry.medium === 'paint') {
+      return (
+        <div
+          title={L.markRepaint}
+          style={{ cursor: present ? 'pointer' : undefined }}
+          onClick={present ? () => recolor('') : undefined}
+        >
+          <Swatch color={entry.color} />
+        </div>
+      );
+    }
+    return (
+      <span title={entry.pigment}>
+        <Swatch color={entry.color} />
+      </span>
+    );
+  };
+
   return (
     <>
       <Ornament>
-        {L.tattoos} ({count})
+        {L.skinMarks} ({count})
       </Ornament>
-      <div className="cc-hint">{L.tattooHint}</div>
+      <div className="cc-hint">{L.markKindHints[kind]}</div>
+      <div className="cc-row cc-tat-kinds">
+        {MARK_KINDS.map((option) => (
+          <Btn
+            key={option}
+            icon={KIND_ICONS[option]}
+            className={kind === option ? 'gold' : ''}
+            onClick={() => setKind(option)}
+          >
+            {L.markKinds[option]}
+          </Btn>
+        ))}
+      </div>
       <div className="cc-row cc-tat-ink">
         <span className="cc-muted">{L.tattooNewInk}</span>
         <Select
@@ -1372,13 +1526,54 @@ const TattooEditor = (props: {
           title={L.tattooStyle}
           onChange={setInkStyle}
         />
-        <Swatch color={inkColor} />
-        <Select
-          value={inkColor}
-          options={pigmentOptions}
-          title={L.tattooPigment}
-          onChange={setInkColor}
-        />
+        {kind === 'writing' ? (
+          <Select
+            value={writingMedium}
+            options={writingOptions}
+            title={L.markWritingWith}
+            onChange={setWritingMedium}
+          />
+        ) : null}
+        {kind === 'ink' ? (
+          <>
+            <Swatch color={inkColor} />
+            <Select
+              value={inkColor}
+              options={pigmentOptions}
+              title={L.tattooPigment}
+              onChange={setInkColor}
+            />
+          </>
+        ) : null}
+        {kind === 'arcane' ? (
+          <>
+            <Swatch color={glowColor} />
+            <Select
+              value={glowColor}
+              options={glowOptions}
+              title={L.markGlow}
+              onChange={setGlowColor}
+            />
+          </>
+        ) : null}
+        {kind === 'brand' ? <Swatch color={tattoos.brand_color} /> : null}
+        {kind === 'writing' && writingMedium === 'paint' ? (
+          <span className="cc-muted">{L.markPaintOnAdd}</span>
+        ) : null}
+        {kind === 'writing' && writingColors.length > 1 ? (
+          <>
+            <Swatch color={shownWritingColor} />
+            <Select
+              value={shownWritingColor}
+              options={toOptions(writingColors)}
+              title={L.tattooPigment}
+              onChange={setWritingColor}
+            />
+          </>
+        ) : null}
+        {kind === 'writing' && writingColors.length === 1 ? (
+          <Swatch color={writingColors[0].color} />
+        ) : null}
       </div>
       <div className="cc-marking-zones">
         {tattoos.limbs.map((limb) => (
@@ -1386,7 +1581,7 @@ const TattooEditor = (props: {
             <div className="cc-marking-zone-head">{limb.name}</div>
             {limb.zones.map((zone) => {
               const present = asBool(zone.present);
-              const full = asBool(zone.full);
+              const room = hasRoom(zone);
               return (
                 <div className="cc-tat-zone" key={zone.id}>
                   <div className="cc-tat-zone-head">
@@ -1400,21 +1595,30 @@ const TattooEditor = (props: {
                       </span>
                     ) : null}
                     <span
-                      className={`cc-tat-count ${full ? 'full' : ''}`}
-                      title={full ? L.tattooFull : undefined}
+                      className={`cc-tat-count ${zone.ink >= tattoos.max_per_zone ? 'full' : ''}`}
+                      title={L.markKinds.ink}
                     >
-                      {zone.entries.length} / {tattoos.max_per_zone}
+                      <Icon name={KIND_ICONS.ink} /> {zone.ink}/
+                      {tattoos.max_per_zone}
+                    </span>
+                    <span
+                      className={`cc-tat-count ${zone.brands >= tattoos.max_brands ? 'full' : ''}`}
+                      title={L.markBrandCount}
+                    >
+                      <Icon name={KIND_ICONS.brand} /> {zone.brands}/
+                      {tattoos.max_brands}
                     </span>
                     <Btn
                       className="cc-toggle"
                       icon="plus"
-                      title={L.tattooAdd}
-                      disabled={!present || full}
+                      title={room ? L.markAdd[kind] : L.tattooFull}
+                      disabled={!present || !room || !newColorReady}
                       onClick={() =>
                         onAct('add', {
                           zone: zone.id,
+                          medium: newMedium,
                           style: inkStyle,
-                          color: inkColor,
+                          color: newColor,
                         })
                       }
                     >
@@ -1425,10 +1629,20 @@ const TattooEditor = (props: {
                     <div className="cc-tat-missing">{L.tattooMissing}</div>
                   )}
                   {zone.entries.map((entry) => (
-                    <div className="cc-tat-entry" key={entry.index}>
+                    <div
+                      className={`cc-tat-entry cc-tat-${markKind(entry.medium)}`}
+                      key={entry.index}
+                    >
                       <div className="cc-marking-row">
+                        <span
+                          className="cc-tat-medium"
+                          title={L.markKinds[markKind(entry.medium)]}
+                        >
+                          <Icon name={markIcon(entry.medium)} />
+                        </span>
                         <div
                           className={`cc-marking-name ${present ? 'cc-tat-text' : ''}`}
+                          style={markTextStyle(entry)}
                           title={
                             present
                               ? `${entry.text}\n${L.tattooEditHint}`
@@ -1474,21 +1688,12 @@ const TattooEditor = (props: {
                             })
                           }
                         />
-                        <Swatch color={entry.color} />
-                        <Select
-                          value={entry.color}
-                          options={pigmentOptions}
-                          placeholder={entry.pigment}
-                          title={L.tattooPigment}
-                          disabled={!present}
-                          onChange={(color) =>
-                            onAct('set_color', {
-                              zone: zone.id,
-                              index: entry.index,
-                              color,
-                            })
-                          }
-                        />
+                        {entryColor(zone, entry, present)}
+                        {markKind(entry.medium) === 'writing' ? (
+                          <span className="cc-muted cc-tat-note">
+                            {L.markWashes}
+                          </span>
+                        ) : null}
                       </div>
                     </div>
                   ))}
@@ -1505,13 +1710,6 @@ const TattooEditor = (props: {
 // ---------------------------------------------------------------------------
 // Main window
 // ---------------------------------------------------------------------------
-
-const formatSeconds = (total: number) => {
-  const safe = Math.max(0, Math.floor(total));
-  const minutes = Math.floor(safe / 60);
-  const seconds = safe % 60;
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-};
 
 export const CharacterCreator = () => {
   const { act, data } = useBackend<CreatorData>();
@@ -1557,19 +1755,6 @@ export const CharacterCreator = () => {
 
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dollBoxRef = useRef<HTMLDivElement>(null);
-
-  // The lobby countdown ticks locally between data pushes.
-  const [roundSeconds, setRoundSeconds] = useState<number>(-1);
-  useEffect(() => {
-    setRoundSeconds(Number(data.round_start_seconds ?? -1));
-  }, [data.round_start_seconds]);
-  useEffect(() => {
-    if (roundSeconds <= 0) {
-      return;
-    }
-    const timer = setTimeout(() => setRoundSeconds(roundSeconds - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [roundSeconds]);
 
   // ---- Effects ----
 
@@ -1766,7 +1951,9 @@ export const CharacterCreator = () => {
     return true;
   });
   const mirrorVisible: MirrorCat[] = MIRROR_ORDER.filter(
-    (cat) => cat !== 'taur' || asBool(data.is_taur),
+    (cat) =>
+      (cat !== 'taur' || asBool(data.is_taur)) &&
+      (cat !== 'prosthetics' || !!data.cc_prosthetics),
   );
   // A category that disappeared (no sub-origin, no taur body) falls back to the one above it.
   const fallback = <T,>(order: T[], visible: T[], current: T) => {
@@ -2029,28 +2216,23 @@ export const CharacterCreator = () => {
       <>
         <div className="cc-name">{entry.name}</div>
         <div className="cc-desc">{text(parsed.body, L.noDescription)}</div>
-        <Bonus title={L.statModifiers}>
-          <div className="cc-chips">
-            {entry.stats?.length ? (
-              entry.stats.map((stat) => (
+        {entry.stats?.length ? (
+          <Bonus title={L.statModifiers}>
+            <div className="cc-chips">
+              {entry.stats.map((stat) => (
                 <Tip
                   key={stat.label}
                   className={`cc-chip ${stat.value > 0 ? 'good' : 'bad'}`}
                   title={`${stat.name} ${stat.value > 0 ? '+' : ''}${stat.value}`}
-                  body={
-                    data.cc_stats?.find((row) => row.label === stat.label)
-                      ?.desc || stat.name
-                  }
+                  body={L.statFromRaceHint}
                 >
                   {stat.label} {stat.value > 0 ? '+' : ''}
                   {stat.value}
                 </Tip>
-              ))
-            ) : (
-              <span className="cc-chip">{L.noStatModifiers}</span>
-            )}
-          </div>
-        </Bonus>
+              ))}
+            </div>
+          </Bonus>
+        ) : null}
         {parsed.traits.length ? (
           <Bonus title={L.raceTraits}>
             <div className="cc-chips">
@@ -2382,13 +2564,17 @@ export const CharacterCreator = () => {
           {(category?.jobs || []).map((job) => {
             const state = jobStates[job.title];
             const available = state?.status === 'available';
+            const tileName = available
+              ? state.current_title
+              : state?.display_name || job.title;
             return (
               <Tile
                 key={job.title}
-                name={
-                  available
-                    ? state.current_title
-                    : state?.display_name || job.title
+                name={tileName}
+                title={
+                  job.required_jobs?.length
+                    ? `${tileName}\n${L.requiredJobs}: ${job.required_jobs.join(', ')}`
+                    : undefined
                 }
                 icon={CATEGORY_ICONS[category?.name || ''] || 'user'}
                 inspected={job.title === inspectedTitle}
@@ -2449,6 +2635,18 @@ export const CharacterCreator = () => {
                 ? ` · ${L.priority}: ${L.priorityNames[inspectedState.pref_level]}`
                 : ''}
             </div>
+            {inspected.required_jobs?.length ? (
+              <div className="cc-hint">
+                <Tip
+                  className="cc-link"
+                  title={L.requiredJobs}
+                  body={L.requiredJobsHint}
+                >
+                  <Icon name="link" mr={0.5} />
+                  {L.requiredJobs}: {inspected.required_jobs.join(', ')}
+                </Tip>
+              </div>
+            ) : null}
             {inspectedState.status !== 'available' ? (
               <div className="cc-hint" style={{ color: 'var(--cc-bad)' }}>
                 {inspectedState.status === 'banned'
@@ -2936,29 +3134,19 @@ export const CharacterCreator = () => {
       L.abilityTitle,
       <>
         <Ornament>{L.abilityScores}</Ornament>
-        <div
-          className="cc-kv"
-          style={{ gridTemplateColumns: 'minmax(90px, 1fr) auto auto' }}
-        >
-          {(data.cc_stats || []).map((stat) => (
-            <Fragment key={stat.label}>
-              <div>{stat.name}</div>
-              <div className="cc-muted" style={{ fontSize: 10 }}>
-                10
-                {stat.species
-                  ? ` ${stat.species > 0 ? '+' : ''}${stat.species} ${L.raceShort}`
-                  : ''}
-                {stat.age
-                  ? ` ${stat.age > 0 ? '+' : ''}${stat.age} ${L.ageShort}`
-                  : ''}
-              </div>
-              <div className="cc-stat-value" style={{ textAlign: 'right' }}>
-                {stat.total}
-              </div>
-            </Fragment>
-          ))}
-        </div>
-        <Placeholder>{L.pointBuySoon}</Placeholder>
+        {data.cc_stat_points && data.cc_stat_rules ? (
+          <StatEditor
+            stats={data.cc_stats || []}
+            points={data.cc_stat_points}
+            rules={data.cc_stat_rules}
+            labels={L}
+            onSet={(stat, value) => act('cc_stat_set', { stat, value })}
+            onBonus={(slot, stat) => act('cc_stat_bonus', { slot, stat })}
+            onReset={() => act('cc_stat_reset')}
+            onAuto={() => act('cc_stat_auto')}
+            onText={(band, value) => act('cc_stat_text', { band, value })}
+          />
+        ) : null}
         <Ornament>{L.quirks}</Ornament>
         <div className="cc-chips">
           {(data.cc_quirks?.names || []).length ? (
@@ -3898,6 +4086,18 @@ export const CharacterCreator = () => {
         return renderMarkings();
       case 'body':
         return renderBody();
+      case 'prosthetics':
+        return windowShell(
+          L.mirror.prosthetics,
+          data.cc_prosthetics ? (
+            <ProstheticsPanel
+              data={data.cc_prosthetics}
+              labels={L}
+              onPick={(slot, option) => act('cc_prosthetic', { slot, option })}
+              onImplant={(slot, implant) => act('cc_implant', { slot, implant })}
+            />
+          ) : null,
+        );
       case 'taur':
         return renderTaur();
       case 'genitals':
@@ -4128,6 +4328,9 @@ export const CharacterCreator = () => {
                   </>,
                   () => doPref('voice', 'input'),
                 )}
+                {kvButton(L.speechBark, text(data.speech_bark), () =>
+                  doPref('speech_bark', 'input'),
+                )}
                 <div className="cc-kv-label">{L.voicePack}</div>
                 <div className="cc-row">
                   <Btn
@@ -4154,6 +4357,17 @@ export const CharacterCreator = () => {
                     doPref('moanpreview', 'input'),
                   )}
                 </div>
+                {kvButton(
+                  L.speechMoans,
+                  data.speech_moans ? L.on : L.off,
+                  () => doPref('speech_moans', 'input'),
+                )}
+                {kvButton(
+                  L.strengthVoicePitch,
+                  data.strength_voice_pitch ? L.on : L.off,
+                  () => doPref('strength_voice_pitch', 'input'),
+                  L.strengthVoicePitchHint,
+                )}
               </div>
               <div className="cc-grow" />
               <Btn
@@ -4572,6 +4786,11 @@ export const CharacterCreator = () => {
     },
     { key: 'lobby_music', action: 'lobby_music', label: 'lobby_music' },
     { key: 'hear_midis', action: 'hear_midis', label: 'hear_midis' },
+    {
+      key: 'hear_speech_barks',
+      action: 'hear_speech_barks',
+      label: 'hear_speech_barks',
+    },
     { key: 'ambience', action: 'ambience', label: 'ambience' },
     {
       key: 'background_music',
@@ -4613,7 +4832,13 @@ export const CharacterCreator = () => {
     },
     {
       title: 'audio',
-      keys: ['lobby_music', 'hear_midis', 'ambience', 'background_music'],
+      keys: [
+        'lobby_music',
+        'hear_midis',
+        'hear_speech_barks',
+        'ambience',
+        'background_music',
+      ],
     },
     { title: 'round', keys: ['allow_midround_antag', 'be_voice'] },
   ];
@@ -4879,27 +5104,6 @@ export const CharacterCreator = () => {
       .flatMap((faith) => faith.patrons)
       .find((entry) => asBool(entry.selected));
     const quirkEntries = data.cc_quirks?.entries || [];
-    const statBreakdown = (stat: StatRow) => (
-      <>
-        {stat.desc ? <div style={{ marginBottom: 6 }}>{stat.desc}</div> : null}
-        <div className="cc-tip-label">{L.statParts}:</div>
-        <div>
-          {stat.base} {L.statBase}
-        </div>
-        {stat.species ? (
-          <div>
-            {stat.species > 0 ? '+' : ''}
-            {stat.species} {L.statRace}
-          </div>
-        ) : null}
-        {stat.age ? (
-          <div>
-            {stat.age > 0 ? '+' : ''}
-            {stat.age} {L.statAge}
-          </div>
-        ) : null}
-      </>
-    );
     return (
       <Frame className="cc-card">
         <div className="cc-card-scroll cc-scroll">
@@ -4940,7 +5144,7 @@ export const CharacterCreator = () => {
                 className="cc-stat"
                 title={`${stat.name} (${stat.total})`}
                 subtitle={L.ability}
-                body={statBreakdown(stat)}
+                body={<StatParts stat={stat} labels={L} />}
               >
                 {stat.icon && stat.icon_state ? (
                   <DmIcon
@@ -5026,19 +5230,16 @@ export const CharacterCreator = () => {
               {text(speciesEntry?.language)}
             </Tip>
           </div>
-          {parsed.stats.length || speciesEntry?.stats?.length ? (
+          {speciesEntry?.stats?.length ? (
             <div className="cc-card-line">
               <span className="cc-card-key">{L.statModifiers} - </span>
-              {(speciesEntry?.stats || []).map((stat, index) => (
+              {speciesEntry.stats.map((stat, index) => (
                 <Fragment key={stat.label}>
                   {index ? ', ' : ''}
                   <Tip
                     className="cc-link"
                     title={stat.name}
-                    body={
-                      data.cc_stats?.find((row) => row.label === stat.label)
-                        ?.desc || stat.name
-                    }
+                    body={L.statFromRaceHint}
                   >
                     {stat.label} {stat.value > 0 ? '+' : ''}
                     {stat.value}
@@ -5140,7 +5341,7 @@ export const CharacterCreator = () => {
       L.anySubclass,
     deity: text(data.patron_name, L.none),
     background: L.soon,
-    ability: `${L.quirkBalance}: ${data.cc_quirks?.balance ?? 0}`,
+    ability: `${L.statPointsLeft}: ${data.cc_stat_points?.left ?? 0}`,
   };
   const FATE_ICONS: Record<FateCat, string> = {
     identity: 'id-card',
@@ -5158,6 +5359,7 @@ export const CharacterCreator = () => {
     head: 'smile',
     markings: 'paint-brush',
     body: 'child',
+    prosthetics: 'cogs',
     taur: 'horse',
     genitals: 'venus-mars',
     attire: 'tshirt',
@@ -5230,13 +5432,6 @@ export const CharacterCreator = () => {
       doPref('finished');
     }
   };
-  const roundState = (data.round_start_state ||
-    '') as keyof CharacterCreatorStrings['roundStates'];
-  const roundLabel = roundState ? L.roundStates[roundState] || '' : '';
-  const roundText =
-    roundState === 'countdown'
-      ? `${roundLabel} ${formatSeconds(roundSeconds)}`
-      : roundLabel;
   const readyText = data.round_total_players
     ? `${data.round_ready_players ?? 0}/${data.round_total_players} ${L.roundReady}`
     : '';
@@ -5295,14 +5490,9 @@ export const CharacterCreator = () => {
       >
         {text(data.round_action_label)}
       </Btn>
-      {roundText || readyText ? (
+      {readyText ? (
         <div className="cc-round-line cc-topbar-extra">
-          {roundText ? (
-            <span className="cc-round-time">{roundText}</span>
-          ) : null}
-          {readyText ? (
-            <span className="cc-round-ready">{readyText}</span>
-          ) : null}
+          <span className="cc-round-ready">{readyText}</span>
         </div>
       ) : null}
       <div className="cc-grow" />
@@ -5820,8 +6010,12 @@ export const CharacterCreator = () => {
       }
     }
     for (const cat of mirrorVisible) {
-      // Attire belongs to the real character; the ooze keeps its own body plan.
-      if (cat === 'attire' || (oozeMode && cat === 'taur')) {
+      // Attire and prosthetics belong to the real character; the ooze keeps its own body plan.
+      if (
+        cat === 'attire' ||
+        cat === 'prosthetics' ||
+        (oozeMode && cat === 'taur')
+      ) {
         continue;
       }
       items.push({

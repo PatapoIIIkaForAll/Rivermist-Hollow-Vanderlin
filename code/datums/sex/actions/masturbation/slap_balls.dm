@@ -42,7 +42,7 @@
 			arousal_amt = 1.1
 			pain_amt = 4.5
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "brutally smacks"
 			arousal_amt = 0.8
 			pain_amt = 7
@@ -108,7 +108,7 @@
 			arousal_amt = 1.1
 			pain_amt = 4.5
 			orgasm_amt = 0.5
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			action_text = "brutally smacks"
 			arousal_amt = 0.8
 			pain_amt = 7

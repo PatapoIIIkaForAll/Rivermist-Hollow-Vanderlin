@@ -275,3 +275,24 @@
 	UNLINT(msurgery.success(chest, surgeon, cautery, list()))
 
 	TEST_ASSERT(!LIMB_HAS_ANY_SURGERY_STATE(chest, ALL), "Closing surgery did not remove all surgical states applied during surgery")
+
+/// Any surgeon may detach a prosthetic of any material; engineering only improves the odds.
+/datum/unit_test/detach_prosthetic_needs_no_skill/Run()
+	var/mob/living/carbon/human/patient = allocate(/mob/living/carbon/human)
+	var/mob/living/carbon/human/surgeon = allocate(/mob/living/carbon/human)
+	var/obj/item/weapon/surgery/saw/saw = allocate(/obj/item/weapon/surgery/saw)
+	var/obj/item/bodypart/old_arm = patient.get_bodypart(BODY_ZONE_R_ARM)
+	old_arm.drop_limb()
+	qdel(old_arm)
+	var/obj/item/bodypart/r_arm/prosthetic/iron/arm = new(null)
+	arm.attach_limb(patient)
+	patient.set_body_position(LYING_DOWN)
+	surgeon.put_in_active_hand(saw)
+
+	var/datum/surgery_operation/limb/amputate/pegleg/surgery = GLOB.operations.operations_by_typepath[__IMPLIED_TYPE__]
+	TEST_ASSERT(surgery.check_availability(patient, arm, surgeon, saw, BODY_ZONE_R_ARM), "Detaching should be offered for an iron prosthetic")
+	var/engineering = GET_MOB_SKILL_VALUE(surgeon, surgery.skill_used) || 0
+	TEST_ASSERT(engineering >= surgery.skill_min, "A surgeon without engineering must not auto-fail for lack of skill")
+
+	UNLINT(surgery.success(arm, surgeon, saw, list(), FALSE))
+	TEST_ASSERT_NULL(patient.get_bodypart(BODY_ZONE_R_ARM), "The prosthetic should come off")

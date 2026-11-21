@@ -479,13 +479,8 @@
 		to_chat(answerer,
 			span_danger("WRONG ANSWER."))
 		if(alert.bad_answers >= round(length(riddle_options)/2))
-			if(iscarbon(answerer))
-				var/mob/living/carbon/C = answerer
-				var/obj/item/organ/tongue/tongue = locate(/obj/item/organ/tongue) in C.internal_organs
-				if(tongue)
-					tongue.Remove(C)
-			to_chat(answerer,
-				span_danger("THE RIDDLE REMOVES YOUR LYING TONGUE AS IT FLEES."))
+			var/penalty_text = answerer.riddle_tongue_penalty()
+			to_chat(answerer, span_danger(penalty_text))
 			answerer.remove_movespeed_modifier("riddle")
 			alert.bad_answers = 0
 			alert.riddle = null

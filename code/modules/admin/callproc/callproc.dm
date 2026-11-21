@@ -127,6 +127,7 @@ GLOBAL_PROTECT(LastAdminCalledProc)
 /client/proc/callproc_datum(datum/A as null|area|mob|obj|turf)
 	set category = "Debug.Core"
 	set name = "Atom ProcCall"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set waitfor = 0
 
 	if(!check_rights(R_DEBUG))

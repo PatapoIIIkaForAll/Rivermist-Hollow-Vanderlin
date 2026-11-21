@@ -135,23 +135,8 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	if(spawned.dna?.species?.id == SPEC_ID_HUMEN && spawned.gender == MALE)
 		spawned.dna.species.soundpack_m = new /datum/voicepack/male/evil()
 
-	if(player_client?.prefs)
-		var/datum/preferences/prefs = player_client.prefs
-
-		var/list/laws = prefs.read_preference(/datum/preference/list_type/role_setting/monarch_law)
-		if(length(laws))
-			GLOB.laws_of_the_land = list()
-		for(var/law in laws)
-			law = trim(law)
-			GLOB.laws_of_the_land += trim(law)
-
-
-		var/list/decrees = prefs.read_preference(/datum/preference/list_type/role_setting/monarch_decree)
-		if(length(decrees))
-			GLOB.lord_decrees = list()
-		for(var/decree in decrees)
-			decree = trim(decree)
-			GLOB.lord_decrees += trim(decree)
+	// RMH: seed starting laws once; late rulers preserve publications.
+	rmh_get_law_documents().seed_role_preferences(spawned, player_client?.prefs)
 
 /datum/outfit/lord
 	name = "Monarch"

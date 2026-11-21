@@ -64,6 +64,9 @@
 
 	if(result != CLENCH_RESULT_FAIL)
 		perform_sex_action(action_user, clencher, CLENCH_AROUSAL_BONUS, 0, 0)
+	// A clench that throws a hunting mob off feeds its temper and its lust.
+	if(result == CLENCH_RESULT_STOP)
+		action_user.ai_controller?.horny_react(HORNY_REACT_CLENCH, clencher, 1)
 
 	return result
 

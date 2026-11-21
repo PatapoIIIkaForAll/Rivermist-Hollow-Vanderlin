@@ -34,11 +34,16 @@
 	classic_keys = list("F6")
 	name = "player_panel_new"
 	full_name = "Player Panel New"
-	description = "Opens up the new player panel"
+	description = "Opens the Players page of the Admin Menu (the classic player panel when the new menu is off)"
 
 /datum/keybinding/admin/player_panel_new/down(client/user, turf/target, mousepos_x, mousepos_y)
 	. = ..()
-	user.holder.player_panel_new()
+	if(!user.holder)
+		return TRUE
+	if(user.uses_admin_menu())
+		user.open_admin_menu_page("players")
+	else
+		user.holder.player_panel_new()
 	return TRUE
 
 /datum/keybinding/admin/toggle_buildmode_self

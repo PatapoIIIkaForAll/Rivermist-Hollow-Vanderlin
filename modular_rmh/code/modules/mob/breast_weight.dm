@@ -272,15 +272,15 @@ GLOBAL_LIST_INIT(breast_spray_amount, list("0.95" = 4, "0.75" = 3))
 	if(size >= 4 && ishuman(user) && get_breast_exposure(human_owner))
 		var/mob/living/carbon/human/viewer = user
 		if(viewer == owner)
-			if(viewer.get_quirk(/datum/quirk/vice/breast_enthusiast))
+			if(viewer.get_quirk(/datum/quirk/negative/breast_enthusiast))
 				lines += span_love("You take a moment to admire your own curves.")
 		else
-			if(viewer.get_quirk(/datum/quirk/vice/breast_enthusiast))
+			if(viewer.get_quirk(/datum/quirk/negative/breast_enthusiast))
 				if(size >= 7)
 					lines += span_love("[capitalize(their)] bust dominates your entire view. You've stopped pretending not to stare.")
 				else
 					lines += span_love(pick("You can't tear your eyes away from [their] cleavage.", "Your gaze keeps drifting back to [their] chest."))
-			var/datum/quirk/vice/breast_enthusiast/owner_vice = human_owner.get_quirk(/datum/quirk/vice/breast_enthusiast)
+			var/datum/quirk/negative/breast_enthusiast/owner_vice = human_owner.get_quirk(/datum/quirk/negative/breast_enthusiast)
 			owner_vice?.admired_by(human_owner, viewer)
 	return length(lines) ? lines.Join("\n") : null
 

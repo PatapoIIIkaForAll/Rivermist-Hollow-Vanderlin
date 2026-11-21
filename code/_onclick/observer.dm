@@ -51,11 +51,27 @@
 		AltRightClickOn(clicked_atom, modifiers)
 		return
 	if(LAZYACCESS(modifiers, CTRL_CLICKED))
+		if(admin_hands_ctrl_click(clicked_atom))
+			return
 		CtrlClickOn(clicked_atom, modifiers)
 		return
 
 	if(world.time <= next_move)
 		return
+
+	// Admin ghost hands. Clicking the held item (its hand slot): Alt uses it in hand, otherwise drops it here.
+	if(admin_inventory)
+		var/obj/held = get_active_held_item()
+		if(held && clicked_atom == held)
+			if(LAZYACCESS(modifiers, ALT_CLICKED) && isitem(held))
+				admin_use_item_in_hand(held, modifiers)
+			else
+				admin_hands_drop_active()
+			return
+		// With an item in hand, a click on the map uses it on what was clicked.
+		if(isitem(held) && !istype(clicked_atom, /atom/movable/screen) && (LAZYACCESS(modifiers, LEFT_CLICK) || LAZYACCESS(modifiers, RIGHT_CLICK)))
+			admin_use_item(held, clicked_atom, modifiers)
+			return
 
 	// You are responsible for checking config.ghost_interaction when you override this function
 	// Not all of them require checking, see below

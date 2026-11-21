@@ -23,6 +23,7 @@
 
 	butcher_results = list()
 	animal_type = /datum/blood_type/lycan
+	penis_organ = /obj/item/organ/genitals/penis/knotted
 
 	health = 240
 	maxHealth = 240

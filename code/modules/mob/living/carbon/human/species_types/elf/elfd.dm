@@ -27,14 +27,12 @@
 	\n\n\
 	Though often feared on the surface, not all drow follow Lolth—some reject her tyranny and seek redemption or freedom in the world above. \
 	n\n\
-	(+1 PER, +2 SPD, +1 LCK, Allure, Darkvision, Sunlight Sensitivity, Elvish Language).\
-	\n\n\
-	Proficiencies: Knives(4), Swords(3), Crossbows(3), Whipflails(3), Sneaking(4), Lockpicking(3), Arcane(3), Blood(2), Alchemy(3), Weaponsmithing(2), Traps(1).\
+	(Darkvision, Sunlight Sensitivity, Elvish Language).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,OLDGREY)
-	inherent_traits = list(TRAIT_NOMOBSWAP, TRAIT_ALLURE)
+	inherent_traits = list(TRAIT_NOMOBSWAP)
 	inherent_sheet = /datum/attribute_holder/sheet/job/species/dark/inherent
 	use_skintones = 1
 	disliked_food = NONE
@@ -227,19 +225,16 @@
 		qdel(D)
 
 /datum/attribute_holder/sheet/job/species/dark/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/combat/knives = 40,
-		/datum/attribute/skill/combat/swords = 30,
-		/datum/attribute/skill/combat/crossbows = 40,
-		/datum/attribute/skill/combat/whipsflails = 30,
-
-		/datum/attribute/skill/misc/sneaking = 40,
-		/datum/attribute/skill/misc/lockpicking = 30,
-
-		/datum/attribute/skill/magic/arcane = 30,
-		/datum/attribute/skill/magic/blood = 20,
-
-		/datum/attribute/skill/craft/alchemy = 30,
-		/datum/attribute/skill/craft/weaponsmithing = 20,
-		/datum/attribute/skill/craft/traps = 20,
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/knives = list(30, 30),
+		/datum/attribute/skill/combat/swords = list(10, 20),
+		/datum/attribute/skill/combat/crossbows = list(20, 20),
+		/datum/attribute/skill/combat/whipsflails = list(10, 20),
+		/datum/attribute/skill/misc/sneaking = list(10, 30),
+		/datum/attribute/skill/misc/lockpicking = list(10, 30),
+		/datum/attribute/skill/magic/arcane = list(10, 10),
+		/datum/attribute/skill/magic/blood = list(10, 10),
+		/datum/attribute/skill/craft/alchemy = list(10, 20),
+		/datum/attribute/skill/craft/weaponsmithing = list(10, 20),
+		/datum/attribute/skill/craft/traps = list(20, 20),
 	)

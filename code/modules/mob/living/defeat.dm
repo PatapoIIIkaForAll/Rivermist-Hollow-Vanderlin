@@ -124,7 +124,8 @@
 		return FALSE
 	if(defeat_system_ai_opt_in)
 		return TRUE
-	if(client || mind)
+	// NPCs like orc warlords carry a keyless mind; only a player's keyed mind earns the regular KO.
+	if(client || mind?.key)
 		return TRUE
 	return FALSE
 
@@ -180,6 +181,88 @@
 	if(has_status_effect(/datum/status_effect/mob_horny_knockout))
 		return FALSE
 	apply_status_effect(/datum/status_effect/mob_horny_knockout)
+	return TRUE
+
+/// Lets go of everything this mob holds, so a spent mob never keeps its prey pinned.
+/mob/living/proc/drop_all_grabs()
+	stop_pulling()
+	for(var/obj/item/grabbing/grab in held_items)
+		dropItemToGround(grab, silent = TRUE)
+
+/// Arms tied counts as bound: legs alone still leave it free to strike.
+/mob/living/proc/mob_horny_ko_arms_bound()
+	return HAS_TRAIT(src, TRAIT_RESTRAINED)
+
+/// Weakrefs to the bonds this mob woke up in. Only those exact items go unfought.
+/mob/living/var/list/docile_restraints
+
+/mob/living/proc/remember_docile_restraints()
+	return
+
+/mob/living/carbon/remember_docile_restraints()
+	LAZYNULL(docile_restraints)
+	if(handcuffed)
+		LAZYADD(docile_restraints, WEAKREF(handcuffed))
+	if(legcuffed)
+		LAZYADD(docile_restraints, WEAKREF(legcuffed))
+
+/mob/living/proc/is_docile_restraint(obj/item/restraint)
+	if(!restraint || client || !LAZYLEN(docile_restraints))
+		return FALSE
+	for(var/datum/weakref/ref as anything in docile_restraints)
+		if(ref.resolve() == restraint)
+			return TRUE
+	return FALSE
+
+/// TRUE when every bond on this clientless mob is one it accepted while spent.
+/mob/living/carbon/proc/restraints_all_docile()
+	if(!handcuffed && !legcuffed)
+		return FALSE
+	if(handcuffed && !is_docile_restraint(handcuffed))
+		return FALSE
+	if(legcuffed && !is_docile_restraint(legcuffed))
+		return FALSE
+	return TRUE
+
+/// Help-intent rescue for a spent mob. Returns TRUE when the click was used for it.
+/mob/living/proc/try_mob_horny_ko_help_up(mob/living/helper)
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout))
+		return FALSE
+	if(!istype(helper) || helper == src || helper.stat != CONSCIOUS)
+		return FALSE
+	helper.visible_message(span_notice("[helper] kneels and starts bringing [src] back to [p_their()] senses..."), span_notice("I start bringing [src] back to [p_their()] senses..."))
+	if(!do_after(helper, DEFEAT_MOB_HORNY_HELP_UP_TIME, src))
+		to_chat(helper, span_warning("I stop tending to [src]."))
+		return TRUE
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout))
+		return TRUE
+	remove_status_effect(/datum/status_effect/mob_horny_knockout)
+	helper.visible_message(span_notice("[helper] helps [src] back up."), span_notice("I help [src] back up."))
+	return TRUE
+
+/// Warns before lifting an unbound spent mob. Returns TRUE when the lift may go ahead.
+/mob/living/proc/confirm_mob_horny_ko_lift(mob/living/lifter)
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout) || mob_horny_ko_arms_bound())
+		return TRUE
+	if(!lifter?.client)
+		return TRUE
+	var/choice = tgui_alert(lifter, "[src] is not bound. [capitalize(p_they())] might come to while lifted and attack you. Lift [p_them()] anyway?", "Lift [src]?", list("Lift", "Leave"))
+	return choice == "Lift"
+
+/// After a lift, an unbound spent mob may wake, throw off its carrier and turn on them.
+/mob/living/proc/roll_mob_horny_ko_lash_out(mob/living/carrier)
+	if(!has_status_effect(/datum/status_effect/mob_horny_knockout) || mob_horny_ko_arms_bound())
+		return FALSE
+	if(!prob(DEFEAT_MOB_HORNY_LIFT_LASH_CHANCE))
+		return FALSE
+	remove_status_effect(/datum/status_effect/mob_horny_knockout)
+	if(buckled)
+		buckled.unbuckle_mob(src, force = TRUE)
+	carrier.visible_message(span_danger("[src] comes to on [carrier]'s shoulder and lashes out!"), span_userdanger("[src] comes to and lashes out at me!"))
+	carrier.Knockdown(DEFEAT_MOB_HORNY_LASH_KNOCKDOWN)
+	if(ai_controller)
+		ai_controller.add_blackboard_key_assoc_lazylist(BB_BASIC_MOB_RETALIATE_LIST, carrier, world.time)
+		ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, carrier)
 	return TRUE
 
 /// Arms the KO Only self-rescue (§8 anti-softlock) when nothing else can save the victim - i.e. a
@@ -489,6 +572,17 @@
 /// Damage measured against the defeat threshold: brute, weighted burn, toxin and clone, without oxygen.
 /mob/living/proc/get_defeat_damage_pool()
 	return getBruteLoss() + (getFireLoss() * DEFEAT_BURN_DAMAGE_WEIGHT) + getToxLoss() + getCloneLoss()
+
+/// Prosthetic limbs are left out: beating a wooden arm wears the device, not the wearer.
+/mob/living/carbon/get_defeat_damage_pool()
+	var/brute = 0
+	var/burn = 0
+	for(var/obj/item/bodypart/bodypart as anything in bodyparts)
+		if(bodypart.is_prosthetic())
+			continue
+		brute += bodypart.brute_dam
+		burn += bodypart.burn_dam
+	return brute + (burn * DEFEAT_BURN_DAMAGE_WEIGHT) + getToxLoss() + getCloneLoss()
 
 /// Draws a blood tax from this mob to power the resurrection rune.
 /// Stub: currently just removes the blood. TODO: deposit the drawn blood into the
@@ -1472,7 +1566,7 @@ GLOBAL_LIST_INIT(npc_distress_thanks, list(
 		unlink_mind_from_other_resurrection_runes(mind, null)
 		mind.defeat_character_abandoned = TRUE
 	GLOB.rune_roundstart_mobs -= src
-	GLOB.chosen_names -= real_name
+	release_reserved_name()
 
 /mob/living/carbon/human/proc/become_npc_in_distress(decays = TRUE, list/captor_faction = null)
 	npc_in_distress_drop_carried()

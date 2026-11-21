@@ -201,6 +201,7 @@
 		/datum/supply_pack/luxury/chess,
 		/datum/supply_pack/luxury/spectacles_golden,
 		/datum/supply_pack/luxury/spectacles_monocle,
+		/datum/supply_pack/luxury/heel_elixir,
 		/datum/supply_pack/narcotics/perfume/random,
 		/datum/supply_pack/narcotics/perfume/lavender,
 		/datum/supply_pack/narcotics/perfume/cherry,

@@ -158,6 +158,8 @@
 	var/list/uses_user_organs
 	/// Target organ slots this action works on; see uses_user_organs.
 	var/list/uses_target_organs
+	/// Panel refusal text set when worn armor failed a reach check, or null.
+	var/tmp/armor_refusal
 
 /datum/sex_action/Destroy()
 	if(action_user)
@@ -315,9 +317,7 @@
 		stop_runtime()
 		return
 
-	var/suppress_visible_messages = begin_remote_visible_message_suppression()
-	var/start_result = on_start(action_user, action_target)
-	end_remote_visible_message_suppression(suppress_visible_messages)
+	var/start_result = run_act_hook(PROC_REF(on_start), action_user, action_target)
 	if(start_result == FALSE || !is_runtime_active())
 		stop_runtime()
 		return
@@ -369,9 +369,8 @@
 			send_clench_prompt()
 			continue
 
-		suppress_visible_messages = begin_remote_visible_message_suppression()
-		on_perform(action_user, action_target)
-		end_remote_visible_message_suppression(suppress_visible_messages)
+		send_action_tick(action_user, action_target)
+		run_act_hook(PROC_REF(on_perform), action_user, action_target)
 		leave_perform_lipstick_marks()
 		on_orifice_cycle()
 		play_perform_breast_anim()
@@ -435,21 +434,61 @@
 		return FALSE
 	return TRUE
 
+/// Mutes the pair under a secret remote context; returns the muted mobs for the end call.
 /datum/sex_action/proc/begin_remote_visible_message_suppression()
 	var/datum/sex_remote_context/suppressing_context = get_valid_remote_context()
 	if(!suppressing_context || suppressing_context.allows_visible_messages)
-		return FALSE
-	action_user?.push_visible_message_suppression()
+		return null
+	var/list/muted = list()
+	if(action_user)
+		muted += action_user
 	if(action_target && action_target != action_user)
-		action_target.push_visible_message_suppression()
-	return TRUE
+		muted += action_target
+	for(var/mob/living/muted_mob as anything in muted)
+		muted_mob.push_visible_message_suppression()
+	return muted
 
-/datum/sex_action/proc/end_remote_visible_message_suppression(was_suppressed)
-	if(!was_suppressed)
+/// Unmutes the mobs the begin call muted, even if the act lost its pair meanwhile.
+/datum/sex_action/proc/end_remote_visible_message_suppression(list/muted)
+	for(var/mob/living/muted_mob as anything in muted)
+		muted_mob.pop_visible_message_suppression()
+
+/// Runs an act hook inside its message scopes; a runtime in the hook still closes them.
+/datum/sex_action/proc/run_act_hook(hook, mob/living/user, mob/living/target)
+	var/list/muted = begin_remote_visible_message_suppression()
+	begin_felt_lines(user, target)
+	try
+		. = call(src, hook)(user, target)
+	catch(var/exception/hook_error)
+		end_felt_lines(user, target)
+		end_remote_visible_message_suppression(muted)
+		throw hook_error
+	end_felt_lines(user, target)
+	end_remote_visible_message_suppression(muted)
+
+/// Both bodies in the act get its lines while blind or asleep; pair with end_felt_lines().
+/datum/sex_action/proc/begin_felt_lines(mob/living/user, mob/living/target)
+	user?.push_feels_own_body()
+	if(target && target != user)
+		target.push_feels_own_body()
+
+/datum/sex_action/proc/end_felt_lines(mob/living/user, mob/living/target)
+	user?.pop_feels_own_body()
+	if(target && target != user)
+		target.pop_feels_own_body()
+
+/// on_perform() inside its message scopes, for callers outside the act runtime.
+/datum/sex_action/proc/felt_perform(mob/living/user, mob/living/target)
+	send_action_tick(user, target)
+	run_act_hook(PROC_REF(on_perform), user, target)
+
+/// Tells both bodies a beat is about to be performed; handlers must not sleep.
+/datum/sex_action/proc/send_action_tick(mob/living/user, mob/living/target)
+	if(!user || !target)
 		return
-	action_user?.pop_visible_message_suppression()
-	if(action_target && action_target != action_user)
-		action_target.pop_visible_message_suppression()
+	SEND_SIGNAL(user, COMSIG_SEX_ACTION_TICK, src, user, target)
+	if(target != user)
+		SEND_SIGNAL(target, COMSIG_SEX_ACTION_TICK, src, user, target)
 
 /// Never returns null - the result divides do_time, so an unlisted speed would be a division by zero.
 /datum/sex_action/proc/get_speed_multiplier()
@@ -462,6 +501,8 @@
 			return 2.25
 		if(SEX_SPEED_EXTREME)
 			return 3
+		if(SEX_SPEED_UNRELENTING)
+			return 3.75
 	return 1.5
 
 /datum/sex_action/proc/get_stamina_cost_multiplier()
@@ -474,6 +515,8 @@
 			return 2.0
 		if(SEX_FORCE_EXTREME)
 			return 2.5
+		if(SEX_FORCE_UNRELENTING)
+			return 3.0
 	return 1.5
 
 /**
@@ -574,10 +617,21 @@
 
 /// Brutal handling can snag the receiver's bare stockings.
 /datum/sex_action/proc/strain_legwear(mob/living/receiver)
-	if(force < SEX_FORCE_EXTREME || !ishuman(receiver) || !prob(SEX_LEGWEAR_SNAG_CHANCE))
+	if(!ishuman(receiver) || !prob(get_legwear_snag_chance()))
 		return
 	var/mob/living/carbon/human/human_receiver = receiver
-	human_receiver.get_exposed_legwear()?.snag(SEX_LEGWEAR_SNAG_DAMAGE, SLASH)
+	human_receiver.get_exposed_legwear()?.snag(get_legwear_snag_damage(), SLASH)
+
+/// Per-cycle percent chance that this force snags bare stockings.
+/datum/sex_action/proc/get_legwear_snag_chance()
+	if(force >= SEX_FORCE_UNRELENTING)
+		return SEX_LEGWEAR_SNAG_CHANCE_UNRELENTING
+	if(force >= SEX_FORCE_EXTREME)
+		return SEX_LEGWEAR_SNAG_CHANCE
+	return 0
+
+/datum/sex_action/proc/get_legwear_snag_damage()
+	return force >= SEX_FORCE_UNRELENTING ? SEX_LEGWEAR_SNAG_DAMAGE_UNRELENTING : SEX_LEGWEAR_SNAG_DAMAGE
 
 /datum/sex_action/proc/stop_runtime()
 	scene?.stop_action(src)
@@ -635,6 +689,8 @@
 			oxyloss_multiplier = 0.5
 		if(SEX_FORCE_EXTREME)
 			oxyloss_multiplier = 1.0
+		if(SEX_FORCE_UNRELENTING)
+			oxyloss_multiplier = 1.5
 	oxyloss_amt *= oxyloss_multiplier
 	if(oxyloss_amt <= 0 || affected_target.getOxyLoss() > 30)
 		return
@@ -648,6 +704,10 @@
 /datum/sex_action/proc/considered_limp(mob/living/limper)
 	if(QDELETED(limper))
 		return TRUE
+	// A strapon toy is always hard.
+	var/obj/item/organ/genitals/penis/penis = limper.getorganslot(ORGAN_SLOT_PENIS)
+	if(penis?.is_false_organ())
+		return FALSE
 	var/list/arousal_data = list()
 	SEND_SIGNAL(limper, COMSIG_SEX_GET_AROUSAL, arousal_data)
 	return arousal_data["arousal"] < VISIBLE_AROUSAL_THRESHOLD
@@ -662,6 +722,8 @@
 			return pick(list("roughly", "carelessly", "forcefully", "fervently", "fiercely"))
 		if(SEX_FORCE_EXTREME)
 			return pick(list("brutally", "violently", "relentlessly", "savagely", "mercilessly"))
+		if(SEX_FORCE_UNRELENTING)
+			return pick(list("unrelentingly", "ferociously", "furiously", "without pause", "without mercy"))
 
 /datum/sex_action/proc/spanify_force(string)
 	string = add_through_clothes_suffix(string)
@@ -672,14 +734,14 @@
 			return "<span class='love_mid'>[string]</span>"
 		if(SEX_FORCE_HIGH)
 			return "<span class='love_high'>[string]</span>"
-		if(SEX_FORCE_EXTREME)
+		if(SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			return "<span class='love_extreme'>[string]</span>"
 
 /datum/sex_action/proc/get_force_sound()
 	switch(force)
 		if(SEX_FORCE_LOW, SEX_FORCE_MID)
 			return pick(SEX_SOUNDS_SLOW)
-		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME)
+		if(SEX_FORCE_HIGH, SEX_FORCE_EXTREME, SEX_FORCE_UNRELENTING)
 			return pick(SEX_SOUNDS_HARD)
 
 /// TRUE when this action may be used on yourself even though it normally needs a partner.
@@ -762,6 +824,10 @@
 		return FALSE
 	return SEND_SIGNAL(user, COMSIG_SEX_TRY_KNOT, target, force, src)
 
+/// Keeps the panel refusal line for armor on [target] that stopped [actor].
+/datum/sex_action/proc/note_armor_refusal(mob/living/target, mob/living/actor)
+	armor_refusal = target == actor ? "My armor is in the way." : "[target]'s armor is in the way."
+
 /datum/sex_action/proc/check_location_accessible(mob/living/user, mob/living/target, location = BODY_ZONE_CHEST, grabs = TRUE, skipundies = TRUE)
 	var/obj/item/bodypart/bodypart = target.get_bodypart(location)
 	var/self_target = FALSE
@@ -781,11 +847,17 @@
 			return FALSE
 
 	// The holes window asks the same question, so the garment rule lives on the mob.
-	if(target.get_sex_covering_garment(location))
+	var/mob/living/actor = action_user || user
+	if(target.get_sex_covering_garment(location, actor))
+		note_armor_refusal(target, actor)
 		return FALSE
 
 	if(location == BODY_ZONE_PRECISE_MOUTH)
-		return target.has_mouth() && target.mouth_is_free()
+		if(target.mouth_is_free(actor))
+			return TRUE
+		if(target.mouth_is_free(actor, ignore_armor = TRUE))
+			note_armor_refusal(target, actor)
+		return FALSE
 
 	if(!bodypart)
 		if(iscarbon(target))

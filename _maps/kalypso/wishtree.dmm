@@ -8,7 +8,7 @@
 /turf/open/floor/dirt,
 /area/template_noop)
 "g" = (
-/obj/structure/flora/grass/herb,
+/obj/structure/flora/grass/herb/random,
 /turf/open/floor/dirt,
 /area/template_noop)
 "l" = (
@@ -20,7 +20,7 @@
 /turf/open/floor/grass,
 /area/template_noop)
 "o" = (
-/obj/structure/flora/grass/herb,
+/obj/structure/flora/grass/herb/random,
 /turf/open/floor/grass,
 /area/template_noop)
 "q" = (
@@ -33,7 +33,7 @@
 /area/template_noop)
 "v" = (
 /obj/structure/flora/grass,
-/obj/structure/flora/grass/herb,
+/obj/structure/flora/grass/herb/random,
 /turf/open/floor/dirt,
 /area/template_noop)
 "y" = (
@@ -47,7 +47,7 @@
 "C" = (
 /obj/structure/flora/ausbushes/lavendergrass,
 /obj/structure/flora/grass,
-/obj/structure/flora/grass/herb,
+/obj/structure/flora/grass/herb/random,
 /turf/open/floor/dirt,
 /area/template_noop)
 "E" = (

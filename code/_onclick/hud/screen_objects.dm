@@ -121,7 +121,7 @@
 		to_chat(L, "*----*")
 		if(ishuman(usr))
 			var/mob/living/carbon/human/M = usr
-			for(var/datum/quirk/vice/vices in M.quirks)
+			for(var/datum/quirk/negative/vices in M.quirks)
 				to_chat(M, "<span class='info'>[vices.get_desc()]</span>")
 			to_chat(M, "*----*")
 			if(M.mind)
@@ -1246,7 +1246,7 @@
 
 /atom/movable/screen/party_member_health/Destroy()
 	if(member)
-		UnregisterSignal(member, COMSIG_MOB_HEALTHHUD_UPDATE)
+		UnregisterSignal(member, list(COMSIG_MOB_HEALTHHUD_UPDATE, COMSIG_PARENT_QDELETING))
 	member = null
 	party = null
 	return ..()
@@ -1254,10 +1254,20 @@
 /atom/movable/screen/party_member_health/proc/set_party_member(mob/mob, datum/party/incoming_party)
 	member = mob
 	party = incoming_party
+	var/current_state = member.hud_used?.bloods?.icon_state
+	if(current_state)
+		icon_state = current_state
 	RegisterSignal(member, COMSIG_MOB_HEALTHHUD_UPDATE, PROC_REF(update_info))
+	RegisterSignal(member, COMSIG_PARENT_QDELETING, PROC_REF(on_member_deleted))
 
-/atom/movable/screen/party_member_health/proc/update_info(incoming_state)
+/atom/movable/screen/party_member_health/proc/update_info(datum/source, incoming_state)
+	SIGNAL_HANDLER
 	icon_state = incoming_state
+
+/atom/movable/screen/party_member_health/proc/on_member_deleted(datum/source)
+	SIGNAL_HANDLER
+	UnregisterSignal(member, list(COMSIG_MOB_HEALTHHUD_UPDATE, COMSIG_PARENT_QDELETING))
+	member = null
 
 
 /atom/movable/screen/party_member_name
@@ -1274,7 +1284,6 @@
 	var/datum/party/party
 
 /atom/movable/screen/party_member_name/proc/set_party_member(mob/mob, datum/party/incoming_party, rank = "Recruit")
-	member = mob
 	party = incoming_party
 	member_key = mob.ckey
 	var/display_name = mob.real_name || mob.name

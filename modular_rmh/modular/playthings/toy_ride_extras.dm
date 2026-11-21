@@ -156,23 +156,34 @@
 
 /datum/status_effect/toy_stuck/on_apply()
 	. = ..()
-	if(!. || QDELETED(toy) || !toy.get_toy_mount() || get_turf(toy) != get_turf(owner))
+	if(!. || QDELETED(toy) || !hold_owner())
 		return FALSE
-	toy.get_toy_mount().set_rider(owner)
-	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(on_pre_move))
-	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 	RegisterSignal(owner, COMSIG_LIVING_RESIST, PROC_REF(on_resist))
 	RegisterSignals(toy, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING), PROC_REF(on_toy_lost))
 	return TRUE
+
+/// Ties the owner to the toy; a standing toy pins them to its tile. FALSE when the toy is out of place.
+/datum/status_effect/toy_stuck/proc/hold_owner()
+	var/datum/component/toy_mount/mount = toy.get_toy_mount()
+	if(!mount || get_turf(toy) != get_turf(owner))
+		return FALSE
+	mount.set_rider(owner)
+	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(on_pre_move))
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
+	return TRUE
+
+/// Undoes hold_owner() once the owner is free.
+/datum/status_effect/toy_stuck/proc/release_owner()
+	toy.last_ridden = world.time
+	var/datum/component/toy_mount/mount = toy.get_toy_mount()
+	if(mount?.rider == owner)
+		mount.set_rider(null)
 
 /datum/status_effect/toy_stuck/on_remove()
 	UnregisterSignal(owner, list(COMSIG_MOVABLE_PRE_MOVE, COMSIG_MOVABLE_MOVED, COMSIG_LIVING_RESIST))
 	if(toy)
 		UnregisterSignal(toy, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
-		toy.last_ridden = world.time
-		var/datum/component/toy_mount/mount = toy.get_toy_mount()
-		if(mount?.rider == owner)
-			mount.set_rider(null)
+		release_owner()
 	toy = null
 	return ..()
 
@@ -225,10 +236,7 @@
 	if(struggling || QDELETED(src) || !helper)
 		return FALSE
 	struggling = TRUE
-	if(helper == owner)
-		owner.visible_message(span_notice("[owner] braces and tries to work [owner.p_them()]self off \the [toy]..."), span_notice("I brace myself and try to work free of \the [toy]..."))
-	else
-		helper.visible_message(span_notice("[helper] takes hold of [owner] and tries to lift [owner.p_them()] off \the [toy]..."), span_notice("I take hold of [owner] and try to lift [owner.p_them()] off \the [toy]..."))
+	show_free_start(helper)
 	var/done = do_after(helper, TOY_FREE_TIME, owner, IGNORE_USER_DOING | IGNORE_HELD_ITEM)
 	if(QDELETED(src))
 		return FALSE
@@ -236,6 +244,12 @@
 	if(!done)
 		return FALSE
 	return roll_free(helper)
+
+/datum/status_effect/toy_stuck/proc/show_free_start(mob/living/helper)
+	if(helper == owner)
+		owner.visible_message(span_notice("[owner] braces and tries to work [owner.p_them()]self off \the [toy]..."), span_notice("I brace myself and try to work free of \the [toy]..."))
+	else
+		helper.visible_message(span_notice("[helper] takes hold of [owner] and tries to lift [owner.p_them()] off \the [toy]..."), span_notice("I take hold of [owner] and try to lift [owner.p_them()] off \the [toy]..."))
 
 /datum/status_effect/toy_stuck/proc/get_free_chance(mob/living/helper)
 	. = 40 + (helper.get_stat_level(STATKEY_STR) - 10) * 6
@@ -470,7 +484,7 @@
 	if(!. || forced == (user == target))
 		return FALSE
 	var/mob/living/sucker = get_sucker(user, target)
-	return sucker.mouth_is_free() && !!get_toy(user, target)
+	return sucker.mouth_is_free(action_user || user) && !!get_toy(user, target)
 
 /datum/sex_action/toy_suck/can_continue(mob/living/user, mob/living/target)
 	. = ..()

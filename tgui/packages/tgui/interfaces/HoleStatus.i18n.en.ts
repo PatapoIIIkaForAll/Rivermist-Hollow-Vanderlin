@@ -12,6 +12,20 @@ const formatTime = (seconds: number): string => {
 
 export default {
   windowTitle: 'View holes',
+  births: {
+    title: 'Births',
+    ofLimit: 'of',
+    window: 'in the last 30 minutes',
+    growing: 'still growing',
+    room: 'Room for more:',
+    full: 'No room left: new creature eggs stay dormant.',
+    freeOnHatch: 'Slots free as the growing eggs hatch.',
+    nextSlot: 'Next slot frees in',
+    clears: 'all clear in',
+    dormant: 'egg(s) wait dormant.',
+    min: 'min',
+    sec: 's',
+  },
   emptyState: 'Nothing to feel down there.',
   tabs: {
     status: 'Status',
@@ -83,6 +97,8 @@ export default {
     stuck: 'stuck',
     takeOut: 'Take out',
     pushDeeper: 'Push deeper',
+    pushOut: 'Push out',
+    pushOutHint: 'Work out whatever comes to hand. Telling them apart takes Sensitiveness.',
     insert: 'Work in',
     tuckIn: 'Tuck in',
     cleavage: 'Cleavage',

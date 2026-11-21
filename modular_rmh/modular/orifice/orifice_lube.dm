@@ -175,7 +175,12 @@
 
 /// Pain multiplier from numbing balms inside the opening.
 /datum/orifice/proc/get_numbing_multiplier()
-	return has_lube_effect(/datum/reagent/lubricant/numbing) ? LUBE_NUMBING_PAIN_MULT : 1
+	// A numbing balm inside, or a spider's silk-venom in the blood, dulls the opening the same way.
+	if(has_lube_effect(/datum/reagent/lubricant/numbing))
+		return LUBE_NUMBING_PAIN_MULT
+	if(get_owner()?.reagents?.has_reagent(/datum/reagent/toxin/spidervenom_paralytic/weak))
+		return LUBE_NUMBING_PAIN_MULT
+	return 1
 
 /// Comfort elasticity added by limbering balms inside the opening.
 /datum/orifice/proc/get_lube_elasticity_bonus()
@@ -189,6 +194,10 @@
 		if(istype(toy))
 			take_lube_from(toy.get_lube_reagents(FALSE))
 		return
+	// A toy in a worn harness keeps its own lube as well as the wearer's groin coat.
+	var/obj/item/dildo/strapon_toy = penetrator?.get_strapon_toy()
+	if(strapon_toy)
+		take_lube_from(strapon_toy.get_lube_reagents(FALSE))
 	var/datum/component/fluid_coated/coated = penetrator?.GetComponent(/datum/component/fluid_coated)
 	if(!coated)
 		return
@@ -267,7 +276,7 @@
 			return FALSE
 		visible_message(span_notice("[src] slicks \the [toy] with something from \the [container]."), span_notice("I slick \the [toy] with something from \the [container]."))
 		return TRUE
-	if(!mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		to_chat(src, span_warning("My mouth is not free to spit."))
 		return FALSE
 	if(coat.total_volume + SPIT_LUBE_UNITS > coat.maximum_volume)
@@ -308,7 +317,7 @@
 	var/mob/living/owner = hole?.get_owner()
 	if(!owner)
 		return FALSE
-	if(!mouth_is_free())
+	if(!mouth_is_free(src, cloth_blocks = TRUE))
 		to_chat(src, span_warning("My mouth is not free to spit."))
 		return FALSE
 	if(hole.add_lube(/datum/reagent/consumable/saliva, SPIT_LUBE_UNITS, src) <= 0)

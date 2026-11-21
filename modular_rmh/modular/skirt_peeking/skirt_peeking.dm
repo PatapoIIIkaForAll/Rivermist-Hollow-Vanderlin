@@ -63,7 +63,8 @@
 	if(!garment)
 		return
 
-	LAZYADDASSOCLIST(examine_list, EXAMINE_SECT_BODY, span_purple("[capitalize(P[THEY])] [P[ARE]] wearing [garment.name]! You could probably <b>peek</b> underneath..."))
+	var/peek_word = span_tooltip("Target the groin, stand right next to [P[THEM]] and examine [P[THEM]] again.", "<b>peek</b>")
+	LAZYADDASSOCLIST(examine_list, EXAMINE_SECT_BODY, span_purple("[capitalize(P[THEY])] [P[ARE]] wearing [garment.name]! You could probably [peek_word] underneath..."))
 
 /datum/element/skirt_peeking/proc/color_by_arousal(text, mob/living/carbon/human/peeked, arousal)
 	if(!text)
@@ -106,7 +107,10 @@
 		return
 
 	var/obj/item/clothing/garment = get_peekable_garment(peeked, peeker)
-	if(!garment || !peeker.Adjacent(peeked))
+	if(!garment)
+		return
+	if(!peeker.Adjacent(peeked))
+		examine_list += span_notice("I would need to be right next to [peeked] to peek under [garment.name].")
 		return
 
 	var/obj/item/clothing/undies/undies = peeked.underwear
@@ -203,3 +207,13 @@ GLOBAL_DATUM_INIT(skirt_peeking_glue, /datum/skirt_peeking_glue, new)
 
 	if(ishuman(new_mob))
 		new_mob.AddElement(/datum/element/skirt_peeking)
+
+/// Returns the first worn layer over the groin that stops a hand reaching the underwear; skirts and aprons let it through.
+/mob/living/carbon/human/proc/get_underwear_blocker()
+	for(var/obj/item/worn in list(wear_pants, wear_armor, wear_shirt, cloak))
+		if(!CHECK_BITFIELD(worn.body_parts_covered, GROIN))
+			continue
+		if(istype(worn, /obj/item/clothing/cloak/apron) || is_type_in_typecache(worn.type, GLOB.skirt_peekable_garments))
+			continue
+		return worn
+	return null

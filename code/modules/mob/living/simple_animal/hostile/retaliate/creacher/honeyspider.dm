@@ -56,6 +56,10 @@
 	living_flags = MOVES_ON_ITS_OWN|CAN_BE_FIREMANNED
 
 	var/production = 0
+	/// Percent chance a landed bite injects numbing silk-venom.
+	var/bite_venom_chance = 25
+	/// Whether lapped fluid feeds the nest and its silk gag drips honey.
+	var/makes_honey = TRUE
 
 	var/static/list/pet_commands = list(
 		/datum/pet_command/idle,
@@ -101,20 +105,21 @@
 
 	AddElement(/datum/element/ai_flee_while_injured, 0.75, retreat_health)
 
-	ADD_TRAIT(src, TRAIT_WEBWALK, TRAIT_GENERIC)
+	AddElement(/datum/element/spider_habits, bite_venom_chance)
 
 /mob/living/simple_animal/hostile/retaliate/spider/UnarmedAttack(atom/A, proximity_flag, list/modifiers, atom/source)
 	if(!..())
 		return
 	production += 50
 
-/mob/living/simple_animal/hostile/retaliate/spider/AttackingTarget()
+/mob/living/simple_animal/hostile/retaliate/spider/AttackingTarget(mob/living/passed_target)
 	. = ..()
-	if(. && isliving(target))
-		var/mob/living/L = target
+	var/mob/living/L = passed_target || target
+	if(. && isliving(L))
 		production += 10
 		if(L.reagents)
 			L.reagents.add_reagent(/datum/reagent/toxin/venom, 1)
+		spider_bite_landed(L)
 
 /mob/living/simple_animal/hostile/retaliate/spider/attempt_feed(mob/living/user, obj/item/feed)
 	. = ..()
@@ -151,6 +156,12 @@
 			return pick('sound/vo/mobs/spider/death.ogg')
 		if("idle")
 			return pick('sound/vo/mobs/spider/idle (1).ogg','sound/vo/mobs/spider/idle (2).ogg','sound/vo/mobs/spider/idle (3).ogg','sound/vo/mobs/spider/idle (4).ogg')
+
+/// Beside a cocoon it cannot leave, the spider makes no idle noise.
+/mob/living/simple_animal/hostile/retaliate/spider/emote(act, m_type = null, message = null, intentional = FALSE, forced = FALSE, targetted = FALSE, custom_me = FALSE)
+	if(spider_mutes_emote(src, act, intentional))
+		return
+	return ..()
 
 /mob/living/simple_animal/hostile/retaliate/spider/taunted(mob/user)
 	emote("aggro")

@@ -106,7 +106,7 @@
 #define LAVA_BE_BURNING 2
 
 /turf/open/lava/can_traverse_safely(atom/movable/traveler)
-	return ..() && !can_burn_stuff(traveler) // can traverse safely if you won't burn in it
+	return ..() && !would_burn(traveler) // can traverse safely if you won't burn in it
 
 ///Proc that sets on fire something or everything on the turf that's not immune to lava. Returns TRUE to make the turf start processing.
 /turf/open/lava/proc/burn_stuff(atom/movable/to_burn)
@@ -166,6 +166,10 @@
 			return LAVA_BE_PROCESSING
 
 	return LAVA_BE_BURNING
+
+/// TRUE if this turf would burn the target right now (not flying, jumping, immune or on a stone tile).
+/turf/open/lava/proc/would_burn(atom/movable/burn_target)
+	return !is_safe() && can_burn_stuff(burn_target) == LAVA_BE_BURNING
 
 #undef LAVA_BE_IGNORING
 #undef LAVA_BE_PROCESSING

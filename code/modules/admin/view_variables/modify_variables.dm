@@ -107,6 +107,9 @@ GLOBAL_PROTECT(VVpixelmovement)
 	message_admins("[key_name_admin(src)] modified [original_name]'s [objectvar]: ADDED=[var_value]")
 
 /client/proc/mod_list(list/L, atom/O, original_name, objectvar, index, autodetect_class = FALSE)
+	if(istype(L, /alist)) // alists are edited entry by entry from their own VV window
+		debug_variables(L)
+		return
 	if(!check_rights(R_VAREDIT))
 		return
 	if(!istype(L, /list))

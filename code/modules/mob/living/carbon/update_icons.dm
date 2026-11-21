@@ -3,9 +3,15 @@
 //IMPORTANT: Multiple animate() calls do not stack well, so try to do them all at once if you can.
 /mob/living/carbon/update_transform()
 	var/matrix/ntransform = matrix(transform) //aka transform.Copy()
+	// Apply posture and scaling without the cosmetic rotation, then put it back on top.
+	ntransform.Turn(-pixel_rotation)
 	var/final_pixel_y = pixel_y
 	var/final_dir = dir
 	var/changed = 0
+	if(pixel_rotation && lying_prev && !lying_angle)
+		// Free spinning while lying down does not survive standing up.
+		pixel_rotation = 0
+		changed++
 	if(lying_angle != lying_prev && rotate_on_lying)
 		changed++
 		ntransform.TurnTo(lying_prev , lying_angle)
@@ -23,6 +29,7 @@
 		resize = RESIZE_DEFAULT_SIZE
 
 	if(changed)
+		ntransform.Turn(pixel_rotation)
 		ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, UPDATE_TRANSFORM_TRAIT)
 		addtimer(TRAIT_CALLBACK_REMOVE(src, TRAIT_NO_FLOATING_ANIM, UPDATE_TRANSFORM_TRAIT), 0.3 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
 		pixel_x = get_standard_pixel_x_offset()

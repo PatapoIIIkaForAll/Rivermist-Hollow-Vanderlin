@@ -371,7 +371,7 @@
 	hotkey_keys = list("B")
 	name = "pixel_shift"
 	full_name = "Pixel-Shift"
-	description = "Use this to pixel shift"
+	description = "Hold: movement keys shift and Q/E rotate. Use your empty hand with a grab in the other hand to pose the grabbed person."
 
 /datum/keybinding/living/pixelshift/down(client/user, turf/target, mousepos_x, mousepos_y)
 	. = ..()

@@ -118,7 +118,7 @@
 	if(species_egg_type)
 		return species_egg_type
 
-	var/datum/quirk/peculiarity/egg_layer/egg_layer_quirk = owner?.get_quirk(/datum/quirk/peculiarity/egg_layer)
+	var/datum/quirk/neutral/egg_layer/egg_layer_quirk = owner?.get_quirk(/datum/quirk/neutral/egg_layer)
 	if(!egg_layer_quirk)
 		return null
 	if(egg_layer_quirk.customization_value in egg_layer_quirk.customization_options)

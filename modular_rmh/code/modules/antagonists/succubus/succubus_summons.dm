@@ -123,6 +123,7 @@
 /datum/pet_command/pet_breed_other/set_command_active(mob/living/parent, mob/living/commander, radial_command = FALSE)
 	. = ..()
 	parent.ai_controller?.clear_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET)
+	parent.ai_controller?.clear_blackboard_key(BB_HORNY_DIRECTED_TARGET)
 
 // Friends point all the time; only a point made while this order is active picks a target.
 /datum/pet_command/pet_breed_other/on_target_set(mob/living/friend, atom/potential_target)
@@ -138,7 +139,19 @@
 
 	var/datum/ai_controller/controller = parent.ai_controller
 	var/datum/targetting_datum/targetting_datum = controller?.blackboard[BB_TARGETTING_DATUM]
-	if(!targetting_datum?.can_horny(parent, target))
+	if(!targetting_datum)
+		parent.visible_message(span_notice("[parent] sniffs at [target], then refuses the order."))
+		return FALSE
+	// Mark the order before checking, so an ally passes can_horny; their prefs still decide.
+	var/atom/previous_target = controller.blackboard[BB_BASIC_MOB_CURRENT_HORNY_TARGET]
+	controller.set_blackboard_key(BB_HORNY_DIRECTED_TARGET, target)
+	controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET, target)
+	if(!targetting_datum.can_horny(parent, target))
+		controller.clear_blackboard_key(BB_HORNY_DIRECTED_TARGET)
+		if(QDELETED(previous_target))
+			controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET)
+		else
+			controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET, previous_target)
 		parent.visible_message(span_notice("[parent] sniffs at [target], then refuses the order."))
 		return FALSE
 
@@ -146,7 +159,6 @@
 	controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
 	controller.clear_blackboard_key(BB_HORNY_PORTAL_LIGHT)
 	controller.clear_blackboard_key(BB_HORNY_SEEK_COOLDOWN)
-	controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_HORNY_TARGET, target)
 	controller.recalculate_idle()
 	return TRUE
 

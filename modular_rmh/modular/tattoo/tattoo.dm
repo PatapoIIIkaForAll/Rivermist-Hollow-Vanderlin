@@ -9,64 +9,9 @@
  * Deliberately separate from GLOB.body_markings ("Markings" in the character
  * creator), which is premade sprite patterns rather than player-written text.
  *
- * Everything lives in one file so the defines below can never desync from the
- * code that uses them through include ordering. They are #undef'd at the end.
+ * Brands (iron, flame or magic) and lipstick or quill writing are media of
+ * the same entry list. Defines live in _tattoo_defines.dm.
  */
-
-/// Freshly applied tattoo - crisp, full detail
-#define TATTOO_STATE_FRESH 1
-/// Tattoo has been partly washed away - patchy, faded, harder to read
-#define TATTOO_STATE_FADED 2
-
-/// How many tattoos can be stacked on a single zone before it's "full"
-#define MAXIMUM_TATTOOS_PER_ZONE 3
-
-/// Tattoo is rendered as a quoted piece of lettering, e.g. "ACAB"
-#define TATTOO_STYLE_LETTERING "lettering"
-/// Tattoo is rendered as an unquoted description of a design, e.g. a wolf's head
-#define TATTOO_STYLE_DESIGN "design"
-
-/// Max characters allowed per tattoo entry
-#define TATTOO_TEXT_MAX_LENGTH 150
-
-/// Inked under the skin with a needle. Water and soap do nothing; only surgery removes it.
-#define TATTOO_MEDIUM_INK "ink"
-/// Drawn on the skin with a lump of charcoal. Water smudges it, soap takes it off.
-#define TATTOO_MEDIUM_CHARCOAL "charcoal"
-/// Painted onto the skin with a loaded brush. Shares charcoal's washing rules.
-#define TATTOO_MEDIUM_PAINT "paint"
-
-/// Water or soap used by a rag to wipe one inscription.
-#define BODY_WRITING_WIPE_REAGENT_AMOUNT 1
-
-/// The only colour a charcoal drawing can be
-#define TATTOO_CHARCOAL_COLOR "#2B2B2B"
-
-/// Movespeed modifier id for the pain of getting hand-poked
-#define MOVESPEED_ID_TATTOO_PAIN "tattoo_pain"
-
-/// Tattoo-only zones. These are not bodyparts - they are finer-grained spots
-/// that live on a bodypart, see GLOB.tattoo_zone_data.
-#define TATTOO_ZONE_FOREHEAD "tattoo_forehead"
-#define TATTOO_ZONE_CHEEKS "tattoo_cheeks"
-#define TATTOO_ZONE_CHIN "tattoo_chin"
-#define TATTOO_ZONE_LIPS "tattoo_lips"
-#define TATTOO_ZONE_EARS "tattoo_ears"
-#define TATTOO_ZONE_HORNS "tattoo_horns"
-#define TATTOO_ZONE_NECK "tattoo_neck"
-#define TATTOO_ZONE_BACK "tattoo_back"
-#define TATTOO_ZONE_BELLY "tattoo_belly"
-#define TATTOO_ZONE_WINGS "tattoo_wings"
-#define TATTOO_ZONE_TAIL "tattoo_tail"
-#define TATTOO_ZONE_L_THIGH "tattoo_l_thigh"
-#define TATTOO_ZONE_R_THIGH "tattoo_r_thigh"
-#define TATTOO_ZONE_BREASTS "tattoo_breasts"
-#define TATTOO_ZONE_GROIN "tattoo_groin"
-#define TATTOO_ZONE_BUTTOCKS "tattoo_buttocks"
-#define TATTOO_ZONE_PENIS "tattoo_penis"
-#define TATTOO_ZONE_VAGINA "tattoo_vagina"
-#define TATTOO_ZONE_L_FOOT "tattoo_l_foot"
-#define TATTOO_ZONE_R_FOOT "tattoo_r_foot"
 
 /*
  * ZONE TABLE
@@ -139,6 +84,17 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 	"Ochre Brown" = "#7A4A2B",
 	"Madder Red" = "#7C1F1F",
 	"Woad Blue" = "#2B3F6E",
+))
+
+/// Glow colours an arcane brand can take (name = hex colour). Amber comes first as the default.
+GLOBAL_LIST_INIT(arcane_brand_glows, list(
+	"Amber" = ARCANE_BRAND_DEFAULT_GLOW,
+	"Ember Orange" = "#ff6a1f",
+	"Witchfire Green" = "#5dff7a",
+	"Arcane Violet" = "#b46bff",
+	"Frost Blue" = "#6fd3ff",
+	"Blood Red" = "#ff3b3b",
+	"Holy Gold" = "#ffe36b",
 ))
 
 /// Display name for a tattoo zone.
@@ -214,7 +170,69 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 
 /// Is this a washable mark on top of the skin?
 /proc/is_surface_body_mark(medium)
-	return medium == TATTOO_MEDIUM_CHARCOAL || medium == TATTOO_MEDIUM_PAINT
+	return medium == TATTOO_MEDIUM_CHARCOAL || medium == TATTOO_MEDIUM_PAINT || medium == TATTOO_MEDIUM_LIPSTICK || medium == TATTOO_MEDIUM_QUILL
+
+/// Is this a burned brand, plain or arcane?
+/proc/is_brand_mark(medium)
+	return medium == TATTOO_MEDIUM_BRAND || medium == TATTOO_MEDIUM_ARCANE
+
+/proc/is_known_skin_medium(medium)
+	return medium == TATTOO_MEDIUM_INK || is_brand_mark(medium) || is_surface_body_mark(medium)
+
+/// What a surface mark is written in, for examine text.
+/proc/surface_mark_material(medium)
+	switch(medium)
+		if(TATTOO_MEDIUM_PAINT)
+			return "paint"
+		if(TATTOO_MEDIUM_LIPSTICK)
+			return "lipstick"
+		if(TATTOO_MEDIUM_QUILL)
+			return "ink"
+	return "charcoal"
+
+/// Offered hex from a name = hex list, matched case-insensitively, or null.
+/proc/skin_mark_offered_color(list/offered, color)
+	if(!istext(color))
+		return null
+	for(var/offered_name in offered)
+		if(cmptext(offered[offered_name], color))
+			return offered[offered_name]
+	return null
+
+/// Display name of an arcane glow colour.
+/proc/arcane_glow_name(color)
+	for(var/glow_name in GLOB.arcane_brand_glows)
+		if(cmptext(GLOB.arcane_brand_glows[glow_name], color))
+			return glow_name
+	return "Amber"
+
+/// Lipstick shades as name = hex, the same shades the lipstick items use.
+/proc/lipstick_skin_shades()
+	var/static/list/shades
+	if(!shades)
+		shades = list()
+		for(var/hex in GLOB.lipstick_shades)
+			var/shade_name = capitalize(GLOB.lipstick_shades[hex])
+			if(shades[shade_name])
+				shade_name = "Deep [shade_name]"
+			shades[shade_name] = hex
+	return shades
+
+/// The only colours a medium may carry; anything else falls back to that medium's default.
+/proc/sanitize_skin_mark_color(medium, color)
+	switch(medium)
+		if(TATTOO_MEDIUM_CHARCOAL)
+			return TATTOO_CHARCOAL_COLOR
+		if(TATTOO_MEDIUM_QUILL)
+			return TATTOO_QUILL_COLOR
+		if(TATTOO_MEDIUM_BRAND)
+			return TATTOO_BRAND_COLOR
+		if(TATTOO_MEDIUM_ARCANE)
+			return skin_mark_offered_color(GLOB.arcane_brand_glows, color) || ARCANE_BRAND_DEFAULT_GLOW
+		if(TATTOO_MEDIUM_LIPSTICK)
+			var/list/shades = lipstick_skin_shades()
+			return skin_mark_offered_color(shades, color) || shades[shades[1]]
+	return sanitize_hexcolor(color, 6, TRUE, TATTOO_CHARCOAL_COLOR)
 
 /// How many permanent tattoos this bodypart holds for one specific zone.
 /obj/item/bodypart/proc/count_tattoos_on_zone(zone)
@@ -223,10 +241,19 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 		if(entry["zone"] == zone && entry["medium"] == TATTOO_MEDIUM_INK)
 			.++
 
-/// Adds a tattoo, or replaces the temporary inscription at this spot.
+/// How many brands, plain or arcane, this bodypart holds for one zone.
+/obj/item/bodypart/proc/count_brands_on_zone(zone)
+	. = 0
+	for(var/list/entry in tattoos)
+		if(entry["zone"] == zone && is_brand_mark(entry["medium"]))
+			.++
+
+/// Adds a tattoo or brand, or replaces the temporary inscription at this spot.
 /obj/item/bodypart/proc/add_tattoo(zone, text, style, color, medium = TATTOO_MEDIUM_INK)
 	LAZYINITLIST(tattoos)
 	if(medium == TATTOO_MEDIUM_INK && count_tattoos_on_zone(zone) >= MAXIMUM_TATTOOS_PER_ZONE)
+		return FALSE
+	if(is_brand_mark(medium) && count_brands_on_zone(zone) >= MAXIMUM_BRANDS_PER_ZONE)
 		return FALSE
 	if(is_surface_body_mark(medium))
 		for(var/list/entry in tattoos.Copy())
@@ -288,30 +315,65 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 			return pigment_name
 	return "unknown pigment"
 
+/// Hover text naming what a mark is made of.
+/proc/tattoo_mark_tooltip(list/entry)
+	switch(entry["medium"])
+		if(TATTOO_MEDIUM_PAINT)
+			return "Paint ([entry["color"]])"
+		if(TATTOO_MEDIUM_LIPSTICK)
+			var/shade = LAZYACCESS(GLOB.lipstick_shades, LOWER_TEXT(entry["color"]))
+			return shade ? "[capitalize(shade)] lipstick" : "Lipstick"
+		if(TATTOO_MEDIUM_QUILL)
+			return "Quill ink"
+		if(TATTOO_MEDIUM_CHARCOAL)
+			return "Charcoal"
+		if(TATTOO_MEDIUM_BRAND)
+			return "Burned scar"
+		if(TATTOO_MEDIUM_ARCANE)
+			return "[arcane_glow_name(entry["color"])] glow"
+	return tattoo_pigment_name(entry["color"])
+
 /**
- * The tattoo itself, as it appears in chat.
+ * The mark itself, as it appears in chat.
  *
  * Dotted underline marks it as the inked part of the sentence, and hovering it
- * names the pigment - the rendered colour is brightened for legibility on dark
- * chat backgrounds, so the tooltip is where the true pigment is stated.
- * Quotes for lettering sit outside the span: they are punctuation, not ink.
+ * names the material. Arcane brands glow instead. Quotes for lettering sit
+ * outside the span: they are punctuation, not ink.
  */
 /proc/format_tattoo_entry_text(list/entry)
 	var/is_design = entry["style"] == TATTOO_STYLE_DESIGN
-	var/pigment_name = entry["medium"] == TATTOO_MEDIUM_PAINT ? "Paint ([entry["color"]])" : tattoo_pigment_name(entry["color"])
-	var/inner = "<span style='color: [tattoo_chat_color(entry["color"])]; text-decoration: underline dotted;' title='[pigment_name]'>[entry["text"]]</span>"
+	var/text_style
+	if(entry["medium"] == TATTOO_MEDIUM_ARCANE)
+		var/glow = entry["color"]
+		text_style = "color: [glow]; text-shadow: 0 0 3px [glow], 0 0 7px [glow];"
+	else
+		text_style = "color: [tattoo_chat_color(entry["color"])]; text-decoration: underline dotted;"
+	var/inner = "<span style='[text_style]' title='[tattoo_mark_tooltip(entry)]'>[entry["text"]]</span>"
 	return is_design ? inner : "\"[inner]\""
 
+/// One Look at Features line for a mark on a zone.
+/proc/tattoo_description_line(list/entry, zone)
+	var/zone_name = tattoo_zone_name(zone)
+	var/mark_text = format_tattoo_entry_text(entry)
+	var/medium = entry["medium"]
+	var/faded = entry["state"] == TATTOO_STATE_FADED
+	switch(medium)
+		if(TATTOO_MEDIUM_BRAND)
+			return "On the [zone_name], burned into the skin: [mark_text]"
+		if(TATTOO_MEDIUM_ARCANE)
+			return "On the [zone_name], a sigil glows [LOWER_TEXT(arcane_glow_name(entry["color"]))]: [mark_text]"
+	if(is_surface_body_mark(medium))
+		return "On the [zone_name], written in [surface_mark_material(medium)]: [mark_text][faded ? " (smudged)" : ""]"
+	var/faded_note = faded ? " (faded)" : ""
+	if(entry["style"] == TATTOO_STYLE_DESIGN)
+		return "On the [zone_name] [mark_text][faded_note]"
+	return "On the [zone_name] is written: [mark_text][faded_note]"
+
 /**
- * Builds the tattoo lines shown at the end of the Look at Features text.
+ * Builds the mark lines shown at the end of the Look at Features text.
  *
  * Walks GLOB.tattoo_zone_data in declaration order, which runs head -> feet,
- * so the listing always reads top-down. Zones hidden by clothing are skipped,
- * so a cloaked character shows nothing while a bare-chested one shows their
- * torso work.
- *
- * Lettering reads   : On the right arm is written: "TEXT"
- * A design reads    : On the left leg: a coiled serpent
+ * so the listing always reads top-down. Zones hidden by clothing are skipped.
  */
 /mob/living/carbon/human/proc/get_tattoo_description_lines()
 	var/list/lines = list()
@@ -322,18 +384,8 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 		if(!is_tattoo_zone_visible(zone))
 			continue
 		for(var/list/entry as anything in BP.tattoos)
-			if(entry["zone"] != zone)
-				continue
-			var/is_surface = is_surface_body_mark(entry["medium"])
-			var/faded_note = (entry["state"] == TATTOO_STATE_FADED) ? (is_surface ? " (smudged)" : " (faded)") : ""
-			if(is_surface)
-				var/material = entry["medium"] == TATTOO_MEDIUM_PAINT ? "paint" : "charcoal"
-				lines += "On the [tattoo_zone_name(zone)], written in [material]: [format_tattoo_entry_text(entry)][faded_note]"
-				continue
-			if(entry["style"] == TATTOO_STYLE_DESIGN)
-				lines += "On the [tattoo_zone_name(zone)] [format_tattoo_entry_text(entry)][faded_note]"
-			else
-				lines += "On the [tattoo_zone_name(zone)] is written: [format_tattoo_entry_text(entry)][faded_note]"
+			if(entry["zone"] == zone)
+				lines += tattoo_description_line(entry, zone)
 	return lines
 
 /*
@@ -354,7 +406,7 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 		tattoos = list()
 		return
 	var/static/list/valid_styles = list(TATTOO_STYLE_LETTERING, TATTOO_STYLE_DESIGN)
-	for(var/zone in tattoos)
+	for(var/zone in tattoos.Copy())
 		if(!(zone in GLOB.tattoo_zone_data))
 			tattoos -= zone
 			continue
@@ -362,29 +414,77 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 		if(!islist(entries))
 			tattoos -= zone
 			continue
+		var/ink_count = 0
+		var/brand_count = 0
+		var/surface_count = 0
 		for(var/list/entry in entries.Copy())
 			if(!islist(entry) || !istext(entry["text"]) || !length(entry["text"]))
 				// list(entry), not entry: subtracting a bare list removes its
 				// *contents* from the target rather than the nested entry itself
 				entries -= list(entry)
 				continue
-			// Surface writing belongs to the current body, never the next round.
-			if(is_surface_body_mark(entry["medium"]))
+			// Anything saved before media existed is needle work.
+			var/medium = is_known_skin_medium(entry["medium"]) ? entry["medium"] : TATTOO_MEDIUM_INK
+			var/max_length = TATTOO_TEXT_MAX_LENGTH
+			var/over_cap
+			if(is_brand_mark(medium))
+				max_length = BRAND_TEXT_MAX_LENGTH
+				over_cap = ++brand_count > MAXIMUM_BRANDS_PER_ZONE
+			else if(is_surface_body_mark(medium))
+				over_cap = ++surface_count > 1
+			else
+				over_cap = ++ink_count > MAXIMUM_TATTOOS_PER_ZONE
+			if(over_cap)
 				entries -= list(entry)
 				continue
 			entry["zone"] = zone
-			entry["text"] = copytext(entry["text"], 1, TATTOO_TEXT_MAX_LENGTH * 2) // *2: html entities from encoding inflate length
-			entry["color"] = sanitize_hexcolor(entry["color"], 6, TRUE, "#2B2B2B")
+			entry["medium"] = medium
+			entry["text"] = copytext(entry["text"], 1, max_length * 2) // *2: html entities from encoding inflate length
+			entry["color"] = sanitize_skin_mark_color(medium, entry["color"])
 			if(!(entry["style"] in valid_styles))
 				entry["style"] = TATTOO_STYLE_DESIGN
-			if(entry["state"] != TATTOO_STATE_FRESH && entry["state"] != TATTOO_STATE_FADED)
+			// Writing from the editor goes on fresh every round.
+			if(is_surface_body_mark(medium) || (entry["state"] != TATTOO_STATE_FRESH && entry["state"] != TATTOO_STATE_FADED))
 				entry["state"] = TATTOO_STATE_FRESH
-			// Anything saved before media existed is needle work.
-			entry["medium"] = TATTOO_MEDIUM_INK
-		if(length(entries) > MAXIMUM_TATTOOS_PER_ZONE)
-			entries.Cut(MAXIMUM_TATTOOS_PER_ZONE + 1)
 		if(!length(entries))
 			tattoos -= zone
+
+/// Turns a saved Branded quirk (zone + text) into a saved brand entry.
+/datum/preferences/proc/migrate_branded_quirk_save(savefile/S, quirk_zone, list/extra)
+	var/static/list/quirk_zone_to_mark_zone = list(
+		BODY_ZONE_PRECISE_SKULL = TATTOO_ZONE_FOREHEAD,
+		BODY_ZONE_PRECISE_NECK = TATTOO_ZONE_NECK,
+		BODY_ZONE_PRECISE_STOMACH = TATTOO_ZONE_BELLY,
+		BODY_ZONE_PRECISE_GROIN = TATTOO_ZONE_GROIN,
+	)
+	var/zone = quirk_zone_to_mark_zone[quirk_zone] || quirk_zone
+	if(!(zone in GLOB.tattoo_zone_data))
+		zone = BODY_ZONE_CHEST
+	var/brand_text = islist(extra) ? extra["brand_text"] : null
+	if(!istext(brand_text) || !length(trimtext(brand_text)))
+		brand_text = "X"
+	brand_text = uppertext(sanitize(copytext_char(trimtext(html_decode(brand_text)), 1, 11)))
+
+	var/list/saved
+	S["tattoos"] >> saved
+	if(!islist(saved))
+		saved = list()
+	var/list/entries = saved[zone]
+	if(!islist(entries))
+		entries = list()
+		saved[zone] = entries
+	for(var/list/entry in entries)
+		if(islist(entry) && is_brand_mark(entry["medium"]))
+			return
+	entries += list(list(
+		"zone" = zone,
+		"text" = brand_text,
+		"style" = TATTOO_STYLE_LETTERING,
+		"color" = TATTOO_BRAND_COLOR,
+		"medium" = TATTOO_MEDIUM_BRAND,
+		"state" = TATTOO_STATE_FRESH,
+	))
+	WRITE_FILE(S["tattoos"], saved)
 
 /// Copies the saved tattoos onto a freshly spawned human. Call from apply_prefs_to()
 /// AFTER set_species()/bodypart setup, or the new bodyparts will wipe them.
@@ -415,20 +515,18 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 	var/tattoo_savefile_slot = 0
 
 /**
- * Persists the tattoos currently on this body back to the savefile.
+ * Persists the ink tattoos currently on this body back to the savefile.
  *
- * Deliberately does NOT call save_character(): that writes the whole of
- * prefs into /character[default_slot], so a player who spawned as one
- * character and then opened another in the editor would have the spawned
- * body's tattoos overwrite the selected slot. We write just our own key,
- * into the slot this body actually came from.
+ * Only ink is written. Saved brands and writing come from the editor and stay
+ * as saved; marks made in the round last the round. Writes just our own key,
+ * into the slot this body came from, never via save_character().
  */
 /mob/living/carbon/human/proc/save_tattoos_now()
 	var/datum/preferences/prefs = client?.prefs
 	if(!prefs?.path || !tattoo_savefile_slot)
 		return FALSE
 
-	var/list/new_tattoos = list()
+	var/list/body_ink = list()
 	for(var/obj/item/bodypart/BP as anything in bodyparts)
 		for(var/list/entry in BP.tattoos)
 			if(entry["medium"] != TATTOO_MEDIUM_INK)
@@ -436,21 +534,39 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 			var/zone = entry["zone"]
 			if(!(zone in GLOB.tattoo_zone_data))
 				continue
-			if(!new_tattoos[zone])
-				new_tattoos[zone] = list()
-			new_tattoos[zone] += list(copy_tattoo_entry(entry))
-
-	// Only touch the in-memory copy when the editor is sitting on this same
-	// character, or we would show one character's tattoos while editing another.
-	if(prefs.default_slot == tattoo_savefile_slot)
-		prefs.tattoos = new_tattoos
+			if(!body_ink[zone])
+				body_ink[zone] = list()
+			body_ink[zone] += list(copy_tattoo_entry(entry))
 
 	var/savefile/save_file = new /savefile(prefs.path)
 	if(!save_file)
 		return FALSE
 	save_file.cd = "/character[tattoo_savefile_slot]"
-	WRITE_FILE(save_file["tattoos"], new_tattoos)
+	var/list/saved
+	save_file["tattoos"] >> saved
+	WRITE_FILE(save_file["tattoos"], merge_saved_ink(saved, body_ink))
+
+	// Only touch the in-memory copy when the editor is sitting on this same
+	// character, or we would show one character's tattoos while editing another.
+	if(prefs.default_slot == tattoo_savefile_slot)
+		prefs.tattoos = merge_saved_ink(prefs.tattoos, body_ink)
 	return TRUE
+
+/// Saved marks with every ink entry replaced by the body's ink. Brands and writing stay as saved.
+/proc/merge_saved_ink(list/saved, list/body_ink)
+	var/list/merged = list()
+	for(var/zone in GLOB.tattoo_zone_data)
+		var/list/zone_entries = list()
+		var/list/saved_entries = islist(saved) ? saved[zone] : null
+		if(islist(saved_entries))
+			for(var/list/entry in saved_entries)
+				if(islist(entry) && is_known_skin_medium(entry["medium"]) && entry["medium"] != TATTOO_MEDIUM_INK)
+					zone_entries += list(copy_tattoo_entry(entry))
+		for(var/list/entry in body_ink[zone])
+			zone_entries += list(entry)
+		if(length(zone_entries))
+			merged[zone] = zone_entries
+	return merged
 
 /*
  * WASHING
@@ -844,6 +960,27 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 	try_tattoo(target, user, TATTOO_MEDIUM_PAINT, current_color)
 	return TRUE
 
+/obj/item/lipstick/examine(mob/user)
+	. = ..()
+	. += span_notice("Target the mouth to do lips. Any other zone writes on the skin; a damp rag or soap wipes it off.")
+
+/// Lipstick writing on any zone but the mouth.
+/obj/item/lipstick/proc/write_on_skin(mob/living/carbon/human/target, mob/living/user)
+	if(!ishuman(user))
+		return ITEM_INTERACT_BLOCKING
+	try_tattoo(target, user, TATTOO_MEDIUM_LIPSTICK, colour)
+	return ITEM_INTERACT_SUCCESS
+
+/obj/item/natural/feather/examine(mob/user)
+	. = ..()
+	. += span_notice("Target a body zone and click yourself or a held person to write on the skin in ink. A damp rag or soap wipes it off.")
+
+/obj/item/natural/feather/attack(mob/living/target, mob/living/user, list/modifiers)
+	if(!ishuman(target) || !ishuman(user))
+		return ..()
+	try_tattoo(target, user, TATTOO_MEDIUM_QUILL, TATTOO_QUILL_COLOR)
+	return TRUE
+
 /// Wipe one existing inscription. NONE lets the item's normal interaction run.
 /obj/item/proc/try_wipe_body_writing(atom/target, mob/living/user)
 	if(QDELETED(src) || QDELETED(target) || QDELETED(user) || !ishuman(target) || !ishuman(user) || user.used_intent?.type == INTENT_HARM)
@@ -1206,48 +1343,3 @@ GLOBAL_LIST_INIT(tattoo_ink_colors, list(
 /datum/preferences/proc/ShowTattoos(mob/user)
 	var/datum/tattoo_prefs/window = new(user)
 	window.ui_interact(user)
-
-/// Tattoo caps and ids for other files, which cannot see the defines above.
-/proc/tattoo_rules()
-	var/static/list/rules = list(
-		"max_per_zone" = MAXIMUM_TATTOOS_PER_ZONE,
-		"max_length" = TATTOO_TEXT_MAX_LENGTH,
-		"lettering" = TATTOO_STYLE_LETTERING,
-		"design" = TATTOO_STYLE_DESIGN,
-		"ink" = TATTOO_MEDIUM_INK,
-		"fresh" = TATTOO_STATE_FRESH,
-	)
-	return rules
-
-#undef TATTOO_STATE_FRESH
-#undef TATTOO_STATE_FADED
-#undef MAXIMUM_TATTOOS_PER_ZONE
-#undef TATTOO_STYLE_LETTERING
-#undef TATTOO_STYLE_DESIGN
-#undef TATTOO_TEXT_MAX_LENGTH
-#undef TATTOO_MEDIUM_INK
-#undef TATTOO_MEDIUM_CHARCOAL
-#undef TATTOO_MEDIUM_PAINT
-#undef BODY_WRITING_WIPE_REAGENT_AMOUNT
-#undef TATTOO_CHARCOAL_COLOR
-#undef MOVESPEED_ID_TATTOO_PAIN
-#undef TATTOO_ZONE_FOREHEAD
-#undef TATTOO_ZONE_CHEEKS
-#undef TATTOO_ZONE_CHIN
-#undef TATTOO_ZONE_LIPS
-#undef TATTOO_ZONE_EARS
-#undef TATTOO_ZONE_HORNS
-#undef TATTOO_ZONE_NECK
-#undef TATTOO_ZONE_BACK
-#undef TATTOO_ZONE_BELLY
-#undef TATTOO_ZONE_WINGS
-#undef TATTOO_ZONE_TAIL
-#undef TATTOO_ZONE_L_THIGH
-#undef TATTOO_ZONE_R_THIGH
-#undef TATTOO_ZONE_BREASTS
-#undef TATTOO_ZONE_GROIN
-#undef TATTOO_ZONE_BUTTOCKS
-#undef TATTOO_ZONE_PENIS
-#undef TATTOO_ZONE_VAGINA
-#undef TATTOO_ZONE_L_FOOT
-#undef TATTOO_ZONE_R_FOOT

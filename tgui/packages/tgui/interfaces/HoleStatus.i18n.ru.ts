@@ -12,6 +12,20 @@ const formatTime = (seconds: number): string => {
 
 export default {
   windowTitle: 'Отверстия',
+  births: {
+    title: 'Роды',
+    ofLimit: 'из',
+    window: 'за последние 30 минут',
+    growing: 'ещё растут',
+    room: 'Можно ещё:',
+    full: 'Места нет: новые яйца существ лежат в покое.',
+    freeOnHatch: 'Места освободятся, когда растущие яйца вылупятся.',
+    nextSlot: 'Следующее место через',
+    clears: 'все через',
+    dormant: 'яйц(а) ждут в покое.',
+    min: 'мин',
+    sec: 'с',
+  },
   emptyState: 'Там нечего ощутить.',
   tabs: {
     status: 'Состояние',
@@ -83,6 +97,8 @@ export default {
     stuck: 'застряло',
     takeOut: 'Достать',
     pushDeeper: 'Протолкнуть глубже',
+    pushOut: 'Вытолкнуть',
+    pushOutHint: 'Вытолкнуть то, что попадётся. Различать их на ощупь даёт Чувствительность.',
     insert: 'Ввести',
     tuckIn: 'Вложить',
     cleavage: 'В ложбинке',

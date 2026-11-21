@@ -23,6 +23,10 @@
 /obj/structure/fake_machine/contractledger/antag/werewolf,
 /turf/open/floor/cobble/alt,
 /area/pocket_dimension/werewolf_lair)
+"k" = (
+/obj/structure/bondage/chains/lair,
+/turf/open/floor/naturalstone,
+/area/pocket_dimension/werewolf_lair)
 "p" = (
 /obj/structure/flora/mushroomcluster,
 /turf/open/floor/naturalstone,
@@ -32,11 +36,15 @@
 /turf/open/floor/naturalstone,
 /area/pocket_dimension/werewolf_lair)
 "x" = (
-/obj/structure/bed/bear,
+/obj/structure/bed/werewolf_nest,
 /turf/open/floor/dirt/road,
 /area/pocket_dimension/werewolf_lair)
 "z" = (
 /turf/open/floor/cobble/alt,
+/area/pocket_dimension/werewolf_lair)
+"B" = (
+/obj/structure/werewolf_bone_pile,
+/turf/open/floor/naturalstone,
 /area/pocket_dimension/werewolf_lair)
 "C" = (
 /obj/structure/flora/tinymushrooms,
@@ -104,8 +112,8 @@ e
 d
 e
 X
-c
-c
+k
+k
 g
 d
 e
@@ -182,7 +190,7 @@ e
 d
 Q
 c
-c
+B
 Z
 c
 p

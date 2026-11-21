@@ -422,37 +422,43 @@
 	menu_tip = "Thrash to throw off whoever holds and uses you."
 
 /datum/sex_action/hole_storage/anus_remove
-	menu_tip = "Take items out of your ass by hand."
+	menu_tip = "Take items out of the ass by hand."
 
 /datum/sex_action/hole_storage/anus_remove_deep
 	menu_tip = "Push out items lodged deep in your ass."
 
 /datum/sex_action/hole_storage/anus_store
-	menu_tip = "Push the held item into your ass."
+	menu_tip = "Push the held item into the ass."
 
 /datum/sex_action/hole_storage/boobs_remove
-	menu_tip = "Take items tucked between your breasts."
+	menu_tip = "Take out items tucked between the breasts."
 
 /datum/sex_action/hole_storage/boobs_store
-	menu_tip = "Tuck the held item between your breasts."
+	menu_tip = "Tuck the held item between the breasts."
 
 /datum/sex_action/hole_storage/expel_foreign_fluids/anal
-	menu_tip = "Push fluids from your ass; a held container catches them."
+	menu_tip = "Push fluids from the ass; a held container catches them."
 
 /datum/sex_action/hole_storage/expel_foreign_fluids/vaginal
-	menu_tip = "Push fluids from your pussy; a held container catches them."
+	menu_tip = "Push fluids from the pussy; a held container catches them."
 
 /datum/sex_action/hole_storage/vagina_remove
-	menu_tip = "Take items out of your pussy by hand."
+	menu_tip = "Take items out of the pussy by hand."
 
 /datum/sex_action/hole_storage/vagina_remove_deep
 	menu_tip = "Push out items lodged deep in your pussy."
 
 /datum/sex_action/hole_storage/vagina_store
-	menu_tip = "Push the held item into your pussy."
+	menu_tip = "Push the held item into the pussy."
 
 /datum/sex_action/impact_play
 	menu_tip = "Strike the doll-selected spot with a held crop or paddle."
+
+/datum/sex_action/lay_eggs_floor
+	menu_tip = "Squat and lay your clutch on the ground."
+
+/datum/sex_action/lay_womb_eggs
+	menu_tip = "Bear down and push a ripe egg from your womb."
 
 /datum/sex_action/lick_coat
 	menu_tip = "Lick the fluid off their bare skin."
@@ -574,9 +580,6 @@
 /datum/sex_action/portal_base/portal_vagina_vaginal
 	menu_tip = "Grind your pussy on the linked wearer's pussy."
 
-/datum/sex_action/portal_base/portal_object_fuck
-	menu_tip = "Fuck the linked wearer with the held toy."
-
 /datum/sex_action/rub_body
 	menu_tip = "Run your hands over their body."
 
@@ -585,6 +588,15 @@
 
 /datum/sex_action/sex/boobjob
 	menu_tip = "Fuck the cleavage between their breasts."
+
+/datum/sex_action/sex/lay_eggs/anal
+	menu_tip = "Lay your eggs in their ass, one at a time."
+
+/datum/sex_action/sex/lay_eggs/throat
+	menu_tip = "Lay your eggs down their throat, one at a time."
+
+/datum/sex_action/sex/lay_eggs/vaginal
+	menu_tip = "Lay your eggs in their pussy, one at a time."
 
 /datum/sex_action/sex/other/anal
 	menu_tip = "Ride their cock with your ass."

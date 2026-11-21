@@ -1,7 +1,7 @@
 /obj/item/piercings
 	name = "piercings"
 	desc = "piercings."
-	icon = 'modular_rmh/icons/mob/sprite_accessory/piercings/rings.dmi'
+	icon = 'modular_rmh/icons/mob/sprite_accessory/piercings/objects.dmi'
 	icon_state = "rings"
 	obj_flags = CAN_BE_HIT
 	blade_dulling = DULLING_CUT
@@ -9,6 +9,7 @@
 	integrity_failure = 0.1
 	var/datum/bodypart_feature/piercing/piercings_feature
 	var/sprite_acc = /datum/sprite_accessory/piercing/rings
+	dropshrink = 0.4
 
 /obj/item/piercings/Destroy()
 	var/mob/living/carbon/human/wearer = loc
@@ -62,20 +63,20 @@
 	icon_state = "beads-e"
 	sprite_acc = /datum/sprite_accessory/piercing/beads/emerald
 
-/obj/item/piercings/rings/tag
+/obj/item/piercings/beads/tag
 	name = "nipple tag"
 	desc = "Usually used by slavers and enthusiasts to brand someone without damaging the goods too much."
-	icon_state = "n_tag"
+	icon_state = "beads-tag"
 	sprite_acc = /datum/sprite_accessory/piercing/rings/tag
 
-/obj/item/piercings/rings/tag/Initialize()
+/obj/item/piercings/beads/tag/Initialize()
 	. = ..()
 	var/list/datum/inscription/initial_inscriptions = list(
 		new /datum/inscription("Change me!", /datum/language/common)
 	)
 	AddComponent(/datum/component/inscription_holder, initial_inscriptions)
 
-/obj/item/piercings/rings/tag/attack_self(mob/user, list/modifiers)
+/obj/item/piercings/beads/tag/attack_self(mob/user, list/modifiers)
 	var/datum/component/inscription_holder/holder = GetComponent(/datum/component/inscription_holder)
 	if(!holder)
 		return

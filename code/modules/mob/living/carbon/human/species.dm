@@ -268,6 +268,7 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 
 	/// List of descriptor choices this species gets in preferences customization
 	var/list/descriptor_choices = list(
+		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/height,
 		/datum/descriptor_choice/body,
 		/datum/descriptor_choice/stature,
@@ -292,6 +293,10 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 
 	var/datum/attribute_holder/sheet/statsheet_male
 	var/datum/attribute_holder/sheet/statsheet_female
+	/// TRUE for forms a character changes into: the sheets above apply to creator-made characters too.
+	var/forced_attribute_sheets = FALSE
+	/// Extra stat points this species gives in the character creator.
+	var/creator_stat_points = 0
 
 	/// Can we be a youngling?
 	var/can_be_youngling = TRUE
@@ -975,7 +980,7 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 			ADD_TRAIT(C, trait, SPECIES_TRAIT)
 
 	var/datum/attribute_holder/sheet/species_inherent_sheet = get_inherent_attribute_sheet()
-	if(species_inherent_sheet)
+	if(species_inherent_sheet && applies_attribute_sheets(C))
 		C.attributes?.add_sheet(species_inherent_sheet)
 
 	for(var/component in components_to_add)
@@ -1030,7 +1035,27 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 
 	return statsheet_male
 
+/// FALSE for creator-made characters: their stats and starting skills do not come from the species.
+/datum/species/proc/applies_attribute_sheets(mob/living/carbon/human/C)
+	return forced_attribute_sheets || !C.uses_creator_stats()
+
+/// Takes this species' skill sheet and gender stat sheet off C.
+/datum/species/proc/remove_attribute_sheets(mob/living/carbon/human/C)
+	var/datum/attribute_holder/sheet/species_inherent_sheet = get_inherent_attribute_sheet()
+	if(species_inherent_sheet)
+		C.attributes?.subtract_sheet(species_inherent_sheet)
+
+	var/datum/attribute_holder/sheet/male_sheet = get_gender_attribute_sheet(MALE)
+	var/datum/attribute_holder/sheet/female_sheet = get_gender_attribute_sheet(FEMALE)
+	if(male_sheet || female_sheet)
+		if(C.gender == MALE || !female_sheet)
+			C.attributes?.subtract_sheet(male_sheet)
+		else if(C.gender == FEMALE)
+			C.attributes?.subtract_sheet(female_sheet)
+
 /datum/species/proc/on_gender_update(mob/living/carbon/human/C, old_gender)
+	if(!applies_attribute_sheets(C))
+		return
 	var/datum/attribute_holder/sheet/male_sheet = get_gender_attribute_sheet(MALE)
 	var/datum/attribute_holder/sheet/female_sheet = get_gender_attribute_sheet(FEMALE)
 	if(old_gender)
@@ -1052,17 +1077,12 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	for(var/X in inherent_traits)
 		REMOVE_TRAIT(C, X, SPECIES_TRAIT)
 
-	var/datum/attribute_holder/sheet/species_inherent_sheet = get_inherent_attribute_sheet()
-	if(species_inherent_sheet)
-		C.attributes?.subtract_sheet(species_inherent_sheet)
+	if(applies_attribute_sheets(C))
+		remove_attribute_sheets(C)
 
-	var/datum/attribute_holder/sheet/male_sheet = get_gender_attribute_sheet(MALE)
-	var/datum/attribute_holder/sheet/female_sheet = get_gender_attribute_sheet(FEMALE)
-	if(male_sheet || female_sheet)
-		if(C.gender == MALE || !female_sheet)
-			C.attributes?.subtract_sheet(male_sheet)
-		else if(C.gender == FEMALE)
-			C.attributes?.subtract_sheet(female_sheet)
+	if(!HAS_TRAIT(C, TRAIT_IDENTITY_SHIFTING))
+		for(var/stat_key in list(STATKEY_STR, STATKEY_PER, STATKEY_INT, STATKEY_CON, STATKEY_END, STATKEY_SPD, STATKEY_LCK))
+			C.remove_stat_modifier("species_permanent_[stat_key]")
 
 	if(inherent_factions)
 		for(var/i in inherent_factions)
@@ -1455,7 +1475,9 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	if(!I.equip_delay_self || bypass_equip_delay_self)
 		return TRUE
 	if(HAS_TRAIT(H, TRAIT_CHUNKYFINGERS))
-		return do_after(H, 5 MINUTES)
+		return do_after(H, 0.5 SECONDS)
+	if(HAS_TRAIT(H, TRAIT_ROTFINGERS))
+		return do_after(H, 10 MINUTES)
 	var/doafter_flags = I.edelay_type ? (IGNORE_USER_LOC_CHANGE) : (NONE)
 	return do_after(H, min((I.equip_delay_self - GET_MOB_ATTRIBUTE_VALUE(H, STAT_SPEED)), 1), timed_action_flags = doafter_flags)
 
@@ -1589,6 +1611,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 /datum/species/proc/harm(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/martial_art/attacker_style)
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>I don't want to harm [target]!</span>")
+		return FALSE
+	if(user.spares_ally(target, TRUE))
 		return FALSE
 	if(target.check_block())
 		target.visible_message("<span class='warning'>[target] blocks [user]'s attack!</span>", \
@@ -1735,6 +1759,13 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 //		var/obj/machinery/disposal/bin/target_disposal_bin
 		var/shove_blocked = FALSE //Used to check if a shove is blocked so that if it is knockdown logic can be applied
 
+		//RMH EDITED START - a shove out of combat mode presses the target against a wall
+		var/turf/closed/press_wall = target_shove_turf
+		if(istype(press_wall) && press_wall.try_shove_press(user, target))
+			qdel(user.check_arm_grabbed(user.active_hand_index))
+			return TRUE
+		//RMH EDITED END
+
 		if(prob(clamp(30 + (user.stat_compare(target, STAT_STRENGTH, STAT_CONSTITUTION)*10),0,100)))//check if we actually shove them
 			//Thank you based whoneedsspace
 			target_collateral_mob = locate(/mob/living) in target_shove_turf.contents
@@ -1825,6 +1856,8 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 		return
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>I don't want to harm [target]!</span>")
+		return FALSE
+	if(user.spares_ally(target, TRUE))
 		return FALSE
 	if(HAS_TRAIT(user, TRAIT_FLOORED))
 		return FALSE
@@ -2667,11 +2700,13 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 	if(!H) //Somewhere in the core code we're getting those procs with H being null
 		return FALSE
 	var/obj/item/organ/tail/T = H.getorganslot(ORGAN_SLOT_TAIL)
-	if(!T)
+	if(!T || !T.can_wag)
 		return FALSE
-	if(T.can_wag)
-		return TRUE
-	return FALSE
+	// The tail's sprite must have wagging states, or the emote would show no change.
+	var/datum/sprite_accessory/tail/tail_sprite = T.accessory_type ? SPRITE_ACCESSORY(T.accessory_type) : null
+	if(istype(tail_sprite) && !tail_sprite.can_wag)
+		return FALSE
+	return TRUE
 
 /datum/species/proc/is_wagging_tail(mob/living/carbon/human/H)
 	if(!H) //Somewhere in the core code we're getting those procs with H being null

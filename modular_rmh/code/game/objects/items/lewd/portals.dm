@@ -402,11 +402,11 @@
 	abstract_type = /datum/sex_action/portal_base/portal_hand_base
 	name = "Portal Hand"
 	var/start_message_user = "You start touching your target through the portal."
-	var/start_message_target = "You feel a distant touch through the portal!"
+	var/start_message_target = "A distant touch reaches me through the portal!"
 	var/perform_message_user = "You %FORCE% finger your target through the portal."
-	var/perform_message_target = "Someone %FORCE% fingers you through the portal."
+	var/perform_message_target = "Someone %FORCE% fingers me through the portal."
 	var/finish_message_user = "You withdraw your hand from the portal."
-	var/finish_message_target = "The distant touch fades away."
+	var/finish_message_target = "The distant touch on me fades away."
 	var/target_arousal_amt = 2
 	var/target_pain_amt = 4
 	var/target_orgasm_amt = 2
@@ -447,7 +447,7 @@
 
 /datum/sex_action/portal_base/portal_hand_base/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("You climax from the portal touch! Your body trembles with pleasure."))
+		to_chat(user, span_love("I climax from the portal touch, my body trembling with pleasure!"))
 		to_chat(target, span_love("Your target shudders and reacts to your touch through the portal."))
 		return ORGASM_LOCATION_SELF
 
@@ -472,10 +472,10 @@
 	hole_id = ORGAN_SLOT_ANUS
 	target_orgasm_amt = 2
 	start_message_user = "You start fingering your target's backside through the portal."
-	start_message_target = "You feel a distant touch tease your backside through the portal!"
+	start_message_target = "A distant touch teases my backside through the portal!"
 	target_pain_amt = 6
 	perform_message_user = "You %FORCE% finger your target's ass through the portal."
-	perform_message_target = "Someone %FORCE% fingers your ass through the portal."
+	perform_message_target = "Someone %FORCE% fingers my ass through the portal."
 
 /**
  * SEX ACTION: PORTAL ORAL
@@ -490,11 +490,11 @@
 	scene_user_slot = BODY_ZONE_PRECISE_MOUTH
 	scene_target_role = SEX_SCENE_ROLE_RECEIVER
 	var/start_message_user = "You press your mouth to the portal, reaching your target."
-	var/start_message_target = "Warm sensations bloom through the portal!"
+	var/start_message_target = "Warm sensations bloom over me through the portal!"
 	var/perform_message_user = "You %FORCE% lick your target through the portal."
-	var/perform_message_target = "Someone %FORCE% licks you through the portal."
+	var/perform_message_target = "Someone %FORCE% licks me through the portal."
 	var/finish_message_user = "You pull back from the portal."
-	var/finish_message_target = "The sensations from the portal fade away."
+	var/finish_message_target = "The sensations on me from the portal fade away."
 	var/target_arousal_amt = 2
 	var/target_pain_amt = 3
 	var/target_orgasm_amt = 2
@@ -509,7 +509,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(!user.mouth_is_free())
+	if(!user.mouth_is_free(user))
 		return FALSE
 	if(check_sex_lock(user, BODY_ZONE_PRECISE_MOUTH))
 		return FALSE
@@ -539,7 +539,7 @@
 
 /datum/sex_action/portal_base/portal_oral_base/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("You climax from the portal oral! Your body shudders in ecstasy."))
+		to_chat(user, span_love("I climax from the mouth on me through the portal, my body shuddering in ecstasy!"))
 		to_chat(target, span_love("You bring your target to climax through the portal!"))
 		return ORGASM_LOCATION_ORAL
 
@@ -557,18 +557,18 @@
 	parent_type = /datum/sex_action/portal_base/portal_oral_base
 	name = "Portal Oral"
 	hole_id = ORGAN_SLOT_VAGINA
-	start_message_target = "Warm sensations bloom between your legs!"
+	start_message_target = "Warm sensations bloom between my legs!"
 	perform_message_user = "You %FORCE% lick your target's pussy through the portal."
-	perform_message_target = "Someone %FORCE% licks you through the portal."
+	perform_message_target = "Someone %FORCE% licks my pussy through the portal."
 	user_arousal_amt = 0.5
 
 /datum/sex_action/portal_base/portal_oral_anal
 	parent_type = /datum/sex_action/portal_base/portal_oral_base
 	name = "Portal Rim"
 	hole_id = ORGAN_SLOT_ANUS
-	start_message_target = "A warm tongue teases your backside through the portal!"
+	start_message_target = "A warm tongue teases my backside through the portal!"
 	perform_message_user = "You %FORCE% rim your target through the portal."
-	perform_message_target = "Someone %FORCE% rims your ass through the portal."
+	perform_message_target = "Someone %FORCE% rims my ass through the portal."
 	target_pain_amt = 0
 	target_orgasm_amt = 1.5
 
@@ -584,13 +584,13 @@
 	scene_user_slot = ORGAN_SLOT_PENIS
 	scene_target_role = SEX_SCENE_ROLE_RECEIVER
 	var/start_message_user = "You slide your cock into the portal, reaching your target."
-	var/start_message_target = "You feel something penetrating you through the portal!"
+	var/start_message_target = "Something pushes into me through the portal!"
 	var/perform_message_user = "You %FORCE% fuck your target through the portal."
-	var/perform_message_target = "Someone %FORCE% fucks you through the portal."
+	var/perform_message_target = "Someone %FORCE% fucks me through the portal."
 	var/climax_message_self = "You feel your target shuddering around your member in orgasm."
-	var/climax_message_target = "You feel the invading member shudder and spill deep inside you!"
+	var/climax_message_target = "The invading member shudders and spills deep inside me!"
 	var/finish_message_user = "You pull your cock back from the portal."
-	var/finish_message_target = "The penetration through the portal ends."
+	var/finish_message_target = "The member pulls out of me through the portal."
 
 /datum/sex_action/portal_base/portal_penis_base/get_scene_target_slot()
 	return hole_id
@@ -629,7 +629,7 @@
 
 /datum/sex_action/portal_base/portal_penis_base/handle_climax_message(mob/living/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("You cum from the portal fuck! Your body trembles in ecstasy."))
+		to_chat(user, span_love("I cum from the fucking through the portal, my body trembling in ecstasy!"))
 		to_chat(target, span_love(climax_message_self))
 		user.lose_virginity()
 		target.lose_virginity()
@@ -656,21 +656,22 @@
 	name = "Portal Vaginal"
 	hole_id = ORGAN_SLOT_VAGINA
 	start_message_user = "You slide your cock into the portal, reaching your target's pussy."
-	start_message_target = "You feel something penetrating your pussy through the portal!"
+	start_message_target = "Something pushes into my pussy through the portal!"
 	perform_message_user = "You %FORCE% fuck your target's pussy through the portal."
+	perform_message_target = "Someone %FORCE% fucks my pussy through the portal."
 	climax_message_self = "You feel your target's pussy spasming around your member, shuddering in orgasm."
-	climax_message_target = "You feel the invading member shudder and let out ropes of seed deep inside your pussy!"
+	climax_message_target = "The invading member shudders and lets out ropes of seed deep inside my pussy!"
 
 /datum/sex_action/portal_base/portal_penis_anal
 	parent_type = /datum/sex_action/portal_base/portal_penis_base
 	name = "Portal Anal"
 	hole_id = ORGAN_SLOT_ANUS
 	start_message_user = "You slide your cock into the portal, reaching your target's ass."
-	start_message_target = "You feel something penetrating your ass through the portal!"
+	start_message_target = "Something pushes into my ass through the portal!"
 	perform_message_user = "You %FORCE% fuck your target's ass through the portal."
-	perform_message_target = "Someone %FORCE% fucks your ass through the portal."
+	perform_message_target = "Someone %FORCE% fucks my ass through the portal."
 	climax_message_self = "You feel your target's ass spasming around your member, shuddering in orgasm."
-	climax_message_target = "You feel the invading member shudder and let out ropes of seed deep inside your ass!"
+	climax_message_target = "The invading member shudders and lets out ropes of seed deep inside my ass!"
 
 /**
  * SEX ACTION: PORTAL VAGINA
@@ -681,11 +682,11 @@
 	stamina_cost = 0.4
 	var/required_user_organ = ORGAN_SLOT_VAGINA
 	var/start_message_user = "You press yourself against the portal, reaching your target."
-	var/start_message_target = "You feel a slick warmth rubbing against you through the portal!"
+	var/start_message_target = "A slick warmth rubs against me through the portal!"
 	var/perform_message_user = "You %FORCE% grind yourself against your target through the portal."
-	var/perform_message_target = "Someone %FORCE% grinds against you through the portal."
+	var/perform_message_target = "Someone %FORCE% grinds against me through the portal."
 	var/finish_message_user = "You pull back from the portal, still tingling."
-	var/finish_message_target = "The slick grinding through the portal fades away."
+	var/finish_message_target = "The slick grinding against me through the portal fades away."
 	var/user_arousal_amt = 2
 	var/user_pain_amt = 2
 	var/user_orgasm_amt = 3
@@ -725,12 +726,12 @@
 
 /datum/sex_action/portal_base/portal_vagina_base/handle_climax_message(mob/living/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("You feel your target shudder and climax against you through the portal!"))
-		to_chat(target, span_love("Pleasure crests through the portal and makes you shudder in orgasm!"))
+		to_chat(user, span_love("Pleasure crests through the portal and makes me shudder in orgasm!"))
+		to_chat(target, span_love("You feel your target shudder and climax against you through the portal!"))
 		return ORGASM_LOCATION_SELF
 
 	to_chat(user, span_love("Pleasure crashes through you as you grind yourself to orgasm against the portal!"))
-	to_chat(target, span_love("You feel the slick pressure on the other side shudder with climax."))
+	to_chat(target, span_love("The slick pressure against me through the portal shudders with climax."))
 	return ORGASM_LOCATION_SELF
 
 /datum/sex_action/portal_base/portal_vagina_base/on_finish(mob/living/user, mob/living/carbon/human/target)
@@ -749,9 +750,9 @@
 	required_user_organ = ORGAN_SLOT_VAGINA
 	hole_id = ORGAN_SLOT_VAGINA
 	start_message_user = "You grind your cunt against the portal, reaching your target's pussy."
-	start_message_target = "You feel a slick warmth grinding against your pussy through the portal!"
+	start_message_target = "A slick warmth grinds against my pussy through the portal!"
 	perform_message_user = "You %FORCE% grind your cunt against your target's pussy through the portal."
-	perform_message_target = "Someone %FORCE% grinds against your pussy through the portal."
+	perform_message_target = "Someone %FORCE% grinds against my pussy through the portal."
 
 /datum/sex_action/portal_base/portal_vagina_anal
 	parent_type = /datum/sex_action/portal_base/portal_vagina_base
@@ -759,9 +760,9 @@
 	required_user_organ = ORGAN_SLOT_ANUS
 	hole_id = ORGAN_SLOT_ANUS
 	start_message_user = "You press your backside to the portal, teasing your target's ass."
-	start_message_target = "You feel a warm, slick pressure teasing your ass through the portal!"
+	start_message_target = "A warm, slick pressure teases my ass through the portal!"
 	perform_message_user = "You %FORCE% grind your ass against your target's ass through the portal."
-	perform_message_target = "Someone %FORCE% grinds against your ass through the portal."
+	perform_message_target = "Someone %FORCE% grinds against my ass through the portal."
 	user_pain_amt = 3
 	target_pain_amt = 3
 
@@ -811,7 +812,7 @@
 
 	to_chat(user, spanify_force("I start inserting \the [stored_item] into the portal..."))
 	if(user != target)
-		to_chat(target, spanify_force("You feel something being inserted in you through the portal..."))
+		to_chat(target, spanify_force("Something is being inserted into me through the portal..."))
 
 	var/used_sex_volume = sex_volume
 	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
@@ -838,14 +839,14 @@
 	if(istype(hole) && hole.roll_toy_insert_slip(stored_item, use_force))
 		to_chat(user, spanify_force("\The [stored_item] slips from my grip at the portal and will not go in."))
 		if(user != target)
-			to_chat(target, spanify_force("You feel something fumble at the portal's far side..."))
+			to_chat(target, spanify_force("Something fumbles at the far side of my portal..."))
 		return
 	var/success = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_TRY_INSERT, stored_item, STORAGE_LAYER_INNER, use_force)
 	switch(success)
 		if(INSERT_FEEDBACK_OK)
 			to_chat(user, spanify_force("I stuff \the [stored_item] into the portal..."))
 			if(user != target)
-				to_chat(target, spanify_force("You feel something being inserted in you through the portal!"))
+				to_chat(target, spanify_force("Something is being inserted into me through the portal!"))
 		if(INSERT_FEEDBACK_OK_FORCE)
 			if(prob(15))
 				var/stuffed_result = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_SWAP_LAYERS_RAND, STORAGE_LAYER_INNER, STORAGE_LAYER_DEEP, use_force)
@@ -853,17 +854,17 @@
 					pain_amt += 4
 					to_chat(user, spanify_force("\The [stored_item] slips deeper through the portal!"))
 					if(user != target)
-						to_chat(target, spanify_force("You feel something slipping deep inside you!"))
+						to_chat(target, spanify_force("Something slips deep inside me!"))
 			else
 				pain_amt += 4
 				to_chat(user, spanify_force("I force \the [stored_item] through the portal, fighting the pressure!"))
 				if(user != target)
-					to_chat(target, spanify_force("Something was forcefully inserted inside you!"))
+					to_chat(target, spanify_force("Something is forced inside me!"))
 		if(INSERT_FEEDBACK_ALMOST_FULL)
 			pain_amt += 2
 			to_chat(user, spanify_force("I stuff \the [stored_item] into the portal, but it will not fit much more..."))
 			if(user != target)
-				to_chat(target, spanify_force("You feel another item inserted in you, stretching you to the limit."))
+				to_chat(target, spanify_force("Another item is pushed into me, stretching me to the limit."))
 		if(INSERT_FEEDBACK_STUFFED)
 			if(use_force && prob(50))
 				var/stuffed_result = SEND_SIGNAL(target_organ, COMSIG_BODYSTORAGE_SWAP_LAYERS_RAND, STORAGE_LAYER_INNER, STORAGE_LAYER_DEEP, use_force)
@@ -871,22 +872,22 @@
 					pain_amt += 2
 					to_chat(user, spanify_force("\The [stored_item] slips deeper through the portal!"))
 					if(user != target)
-						to_chat(target, spanify_force("You feel something slipping deep inside you!"))
+						to_chat(target, spanify_force("Something slips deep inside me!"))
 			else
 				to_chat(user, spanify_force("The portal is too full to stuff even \the [stored_item] into."))
 				if(user != target)
-					to_chat(target, spanify_force("You feel something probing the portal entrance, but you are too full!"))
+					to_chat(target, spanify_force("Something probes my portal, but I am too full!"))
 				stop_runtime()
 				return
 		if(INSERT_FEEDBACK_TRY_FORCE)
 			pain_amt += 3
 			to_chat(user, spanify_force("I feel like \the [stored_item] might fit if I use more force."))
 			if(user != target)
-				to_chat(target, spanify_force("You feel something probing the portal entrance..."))
+				to_chat(target, spanify_force("Something probes my portal..."))
 		if(FALSE)
 			to_chat(user, spanify_force("I fail to stuff \the [stored_item] into the portal."))
 			if(user != target)
-				to_chat(target, spanify_force("You feel something probing the portal entrance..."))
+				to_chat(target, spanify_force("Something probes my portal..."))
 			stop_runtime()
 			return
 
@@ -986,7 +987,7 @@
 		if(TOY_REMOVE_SLIPPED_DEEPER)
 			to_chat(user, spanify_force("\The [removed_item] slips from my fingers and deeper through the portal, past where I can reach."))
 			if(user != target)
-				to_chat(target, spanify_force("You feel something slipping deep inside you!"))
+				to_chat(target, spanify_force("Something slips deep inside me!"))
 			pending_toy = choose_toy_to_reach(hole, STORAGE_LAYER_INNER)
 			return
 		if(TOY_REMOVE_NO_GRIP)

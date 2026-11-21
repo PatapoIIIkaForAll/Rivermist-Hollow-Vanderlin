@@ -99,39 +99,40 @@
 
 	ADD_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
 
-/mob/living/simple_animal/hostile/retaliate/saiga/update_overlays()
-	. = ..()
-
-	if(istype(genetics))
-		var/datum/animal_gene/undercoat/UC = genetics.get_gene_by_exclusion_group(GENE_GROUP_UNDERCOAT)
-		var/datum/animal_gene/coat_color/CC = genetics.get_gene_by_exclusion_group(GENE_GROUP_COAT_COLOR)
-		var/datum/animal_gene/emissive = genetics.get_gene_by_exclusion_group(GENE_GROUP_EMISSIVE)
-
-		var/mutable_appearance/body = mutable_appearance(icon, "[icon_state]_reg1")
-		var/mutable_appearance/underbody = mutable_appearance(icon, "[icon_state]_reg2")
-		if(emissive)
-			var/mutable_appearance/glowing = emissive_appearance(icon, "[icon_state]_reg2")
-			. += glowing
-		if(CC)
-			body.color = CC.get_color()
-			if(!UC)
-				underbody.color = CC.get_color()
-			else
-				underbody.color = UC.get_color()
-		. += body
-		. += underbody
-
-	if(stat == DEAD)
-		return
-	if(ssaddle)
-		var/mutable_appearance/saddlet = mutable_appearance(icon, "[saddle_overlay_state]-above", 4.3)
-		. += saddlet
-		saddlet = mutable_appearance(icon, saddle_overlay_state)
-		. += saddlet
-	if(has_buckled_mobs())
-		var/mutable_appearance/mounted = mutable_appearance(icon, "[icon_state]_mounted", 4.3)
-		. += mounted
-
+// Старое определение отключено: актуальный прок расположен ниже в этом файле.
+// /mob/living/simple_animal/hostile/retaliate/saiga/update_overlays()
+// 	. = ..()
+//
+// 	if(istype(genetics))
+// 		var/datum/animal_gene/undercoat/UC = genetics.get_gene_by_exclusion_group(GENE_GROUP_UNDERCOAT)
+// 		var/datum/animal_gene/coat_color/CC = genetics.get_gene_by_exclusion_group(GENE_GROUP_COAT_COLOR)
+// 		var/datum/animal_gene/emissive = genetics.get_gene_by_exclusion_group(GENE_GROUP_EMISSIVE)
+//
+// 		var/mutable_appearance/body = mutable_appearance(icon, "[icon_state]_reg1")
+// 		var/mutable_appearance/underbody = mutable_appearance(icon, "[icon_state]_reg2")
+// 		if(emissive)
+// 			var/mutable_appearance/glowing = emissive_appearance(icon, "[icon_state]_reg2")
+// 			. += glowing
+// 		if(CC)
+// 			body.color = CC.get_color()
+// 			if(!UC)
+// 				underbody.color = CC.get_color()
+// 			else
+// 				underbody.color = UC.get_color()
+// 		. += body
+// 		. += underbody
+//
+// 	if(stat == DEAD)
+// 		return
+// 	if(ssaddle)
+// 		var/mutable_appearance/saddlet = mutable_appearance(icon, "[saddle_overlay_state]-above", 4.3)
+// 		. += saddlet
+// 		saddlet = mutable_appearance(icon, saddle_overlay_state)
+// 		. += saddlet
+// 	if(has_buckled_mobs())
+// 		var/mutable_appearance/mounted = mutable_appearance(icon, "[icon_state]_mounted", 4.3)
+// 		. += mounted
+//
 /mob/living/simple_animal/hostile/retaliate/saiga/tamed(mob/user)
 	. = ..()
 	if(.)
@@ -265,38 +266,40 @@
 		breed_timer = 2 MINUTES\
 	)
 
-/mob/living/simple_animal/hostile/retaliate/saigabuck/update_overlays()
-	. = ..()
-
-	if(istype(genetics))
-		var/datum/animal_gene/undercoat/UC = genetics.get_gene_by_exclusion_group(GENE_GROUP_UNDERCOAT)
-		var/datum/animal_gene/coat_color/CC = genetics.get_gene_by_exclusion_group(GENE_GROUP_COAT_COLOR)
-		var/datum/animal_gene/emissive = genetics.get_gene_by_exclusion_group(GENE_GROUP_EMISSIVE)
-
-		var/mutable_appearance/body = mutable_appearance(icon, "[icon_state]_reg1")
-		var/mutable_appearance/underbody = mutable_appearance(icon, "[icon_state]_reg2")
-		if(emissive)
-			var/mutable_appearance/glowing = emissive_appearance(icon, "[icon_state]_reg2")
-			. += glowing
-		if(CC)
-			body.color = CC.get_color()
-			if(!UC)
-				underbody.color = CC.get_color()
-			else
-				underbody.color = UC.get_color()
-		. += body
-		. += underbody
-
-	if(stat == DEAD)
-		return
-	if(ssaddle)
-		var/mutable_appearance/saddlet = mutable_appearance(icon, "[saddle_overlay_state]-above", 4.3)
-		. += saddlet
-		saddlet = mutable_appearance(icon, saddle_overlay_state)
-		. += saddlet
-	if(has_buckled_mobs())
-		var/mutable_appearance/mounted = mutable_appearance(icon, "[icon_state]_mounted", 4.3)
-		. += mounted
+// RIVERMIST REMOVAL START - прок переопределен ниже
+// /mob/living/simple_animal/hostile/retaliate/saigabuck/update_overlays()
+// 	. = ..()
+//
+// 	if(istype(genetics))
+// 		var/datum/animal_gene/undercoat/UC = genetics.get_gene_by_exclusion_group(GENE_GROUP_UNDERCOAT)
+// 		var/datum/animal_gene/coat_color/CC = genetics.get_gene_by_exclusion_group(GENE_GROUP_COAT_COLOR)
+// 		var/datum/animal_gene/emissive = genetics.get_gene_by_exclusion_group(GENE_GROUP_EMISSIVE)
+//
+// 		var/mutable_appearance/body = mutable_appearance(icon, "[icon_state]_reg1")
+// 		var/mutable_appearance/underbody = mutable_appearance(icon, "[icon_state]_reg2")
+// 		if(emissive)
+// 			var/mutable_appearance/glowing = emissive_appearance(icon, "[icon_state]_reg2")
+// 			. += glowing
+// 		if(CC)
+// 			body.color = CC.get_color()
+// 			if(!UC)
+// 				underbody.color = CC.get_color()
+// 			else
+// 				underbody.color = UC.get_color()
+// 		. += body
+// 		. += underbody
+//
+// 	if(stat == DEAD)
+// 		return
+// 	if(ssaddle)
+// 		var/mutable_appearance/saddlet = mutable_appearance(icon, "[saddle_overlay_state]-above", 4.3)
+// 		. += saddlet
+// 		saddlet = mutable_appearance(icon, saddle_overlay_state)
+// 		. += saddlet
+// 	if(has_buckled_mobs())
+// 		var/mutable_appearance/mounted = mutable_appearance(icon, "[icon_state]_mounted", 4.3)
+// 		. += mounted
+// RIVERMIST REMOVAL END
 
 /mob/living/simple_animal/hostile/retaliate/saigabuck/get_sound(input)
 	switch(input)
@@ -398,3 +401,75 @@
 	var/obj/item/natural/saddle/S = new(src)
 	ssaddle = S
 	update_appearance(UPDATE_OVERLAYS)
+
+
+
+
+
+
+// RIVERMIST CHANGE START - fix not updating sprite after death
+/mob/living/simple_animal/hostile/retaliate/saiga/death(gibbed)
+	unbuckle_all_mobs(force = TRUE)
+	. = ..()
+	update_appearance(UPDATE_ICON)
+
+/mob/living/simple_animal/hostile/retaliate/saigabuck/death(gibbed)
+	unbuckle_all_mobs(force = TRUE)
+	. = ..()
+	update_appearance(UPDATE_ICON)
+
+// Fix overlays
+/mob/living/simple_animal/hostile/retaliate/saiga/update_overlays()
+	. = ..()
+	. += build_saiga_overlays(saddle_overlay_state)
+
+/mob/living/simple_animal/hostile/retaliate/saigabuck/update_overlays()
+	. = ..()
+	. += build_saiga_overlays(saddle_overlay_state)
+
+/mob/living/simple_animal/proc/build_saiga_overlays(saddle_state)
+	var/list/appearances = list()
+
+	// Подстрахуемся на случай, если кто-то будет это использовать для horse, terror bird или других потомков
+	if(istype(genetics))
+		var/datum/animal_gene/coat_color/coat_gene = genetics.get_gene_by_exclusion_group(GENE_GROUP_COAT_COLOR)
+		var/datum/animal_gene/undercoat/undercoat_gene = genetics.get_gene_by_exclusion_group(GENE_GROUP_UNDERCOAT)
+		var/datum/animal_gene/glow_gene = genetics.get_gene_by_exclusion_group(GENE_GROUP_EMISSIVE)
+		var/mutable_appearance/body = mutable_appearance(icon, "[icon_state]_reg1")
+		var/mutable_appearance/undercoat = mutable_appearance(icon, "[icon_state]_reg2")
+
+		if(coat_gene)
+			body.color = coat_gene.get_color()
+			undercoat.color = undercoat_gene ? undercoat_gene.get_color() : coat_gene.get_color()
+		if(glow_gene)
+			appearances += emissive_appearance(icon, "[icon_state]_reg2")
+		appearances += body
+		appearances += undercoat
+
+	if(stat != DEAD && ssaddle)
+		appearances += mutable_appearance(icon, "[saddle_state]-above", 4.3)
+		appearances += mutable_appearance(icon, saddle_state)
+	return appearances
+
+// --- Слои и смещения наездника ---
+/datum/component/riding/creature/saiga/get_rider_offsets_and_layers(pass_index, mob/offsetter)
+	return list(
+		TEXT_NORTH = list(0, 8, 6.1),
+		TEXT_SOUTH = list(0, 8, MOB_LAYER),
+		TEXT_EAST = list(-2, 8, 6.1),
+		TEXT_WEST = list(2, 8, 6.1),
+	)
+
+/datum/component/riding/creature/saiga/get_parent_offsets_and_layers()
+	return list(
+		TEXT_NORTH = list(0, 0, OBJ_LAYER),
+		TEXT_SOUTH = list(0, 0, ABOVE_MOB_LAYER),
+		TEXT_EAST = list(0, 0, OBJ_LAYER),
+		TEXT_WEST = list(0, 0, OBJ_LAYER),
+	)
+
+/datum/component/riding/creature/saiga/vehicle_mob_buckle(mob/living/ridden, mob/living/rider, force = FALSE)
+	. = ..()
+	ridden.update_appearance(UPDATE_ICON)
+
+// RIVERMIST CHANGE END

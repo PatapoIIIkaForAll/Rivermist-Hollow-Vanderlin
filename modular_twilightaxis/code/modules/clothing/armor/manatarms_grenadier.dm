@@ -1,0 +1,19 @@
+/obj/item/clothing/armor/gambeson/heavy/grenadier
+	name = "padded garb"
+	desc = "A thickly padded shirt, designed to protect the wearer from the recoil of firearms. It is made of heavy cloth and reinforced with leather patches on the shoulders and elbows."
+	icon = 'modular_twilightaxis/icons/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilightaxis/icons/clothing/onmob/armor.dmi'
+	sleeved = 'modular_twilightaxis/icons/clothing/onmob/helpers/sleeves_armor.dmi'
+	icon_state = "grenadiershirt"
+	body_parts_covered = (( CHEST | GROIN | VITALS | ARMS))
+	boobed = FALSE
+	detail_tag = "_detail"
+	detail_color = CLOTHING_WHITE
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
+	r_sleeve_status = SLEEVE_NORMAL
+	l_sleeve_status = SLEEVE_NORMAL
+	color = CLOTHING_AZURE
+	dyeable = TRUE
+	uses_lord_coloring = LORD_SECONDARY|LORD_DETAIL_AND_COLOR
+	ported_clothing = TRUE
+	misc_flags = CRAFTING_TEST_EXCLUDE

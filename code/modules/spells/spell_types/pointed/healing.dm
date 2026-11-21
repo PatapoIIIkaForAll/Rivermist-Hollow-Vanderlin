@@ -27,6 +27,12 @@
 	/// Some prayers reject targets outside their aligned faith.
 	var/patron_restrictive = FALSE
 
+/datum/action/cooldown/spell/healing/get_examine_effects()
+	. = ..()
+	. += "<b>HEALING:</b> [base_healing], more under your patron's favoured conditions"
+	if(!is_profane)
+		. += "<b>DAMAGE TO UNDEAD:</b> [base_healing] burn"
+
 /datum/action/cooldown/spell/healing/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

@@ -19,6 +19,7 @@
 	screen_max_rows = 3
 	screen_max_columns = 3
 	max_w_class = WEIGHT_CLASS_HUGE
+	insert_in_combat_mode = TRUE
 
 /datum/component/storage/concrete/grid/surgery_bag
 	screen_max_rows = 5

@@ -3,7 +3,6 @@
 #define BAN_MISC_RESPAWN "Respawn"
 #define BAN_MISC_PUNISHMENT_CURSE "PunishmentCurse"
 #define BAN_MISC_LUNATIC "Lunatic"
-#define BAN_MISC_LEPROSY "Leprosy"
 #define BAN_MISC_OOC "OOC"
 #define BAN_MISC_OOCPRONOUNS "OOC Pronouns"
 #define BAN_MISC_DEADCHAT "Deadchat"
@@ -12,7 +11,6 @@
 #define ALL_MISC_BANS list(,\
 	BAN_MISC_RESPAWN,\
 	BAN_MISC_PUNISHMENT_CURSE,\
-	BAN_MISC_LEPROSY,\
 	BAN_MISC_LUNATIC,\
 	BAN_MISC_OOC,\
 	BAN_MISC_OOCPRONOUNS,\

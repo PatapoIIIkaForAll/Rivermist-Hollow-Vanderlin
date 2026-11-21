@@ -220,7 +220,7 @@ GLOBAL_LIST_EMPTY(active_succubus_consecrations)
 
 /datum/action/cooldown/spell/succubus_deliverance
 	name = "Rite of Deliverance"
-	desc = "Cleanse a revealed infernal brand and all soul depletion. If the subject is enthralled, tear away the bond without taking their memories."
+	desc = "Cleanse a revealed infernal brand, arcane sigils and all soul depletion. If the subject is enthralled, tear away the bond without taking their memories."
 	button_icon_state = "lesserheal"
 	sound = 'sound/magic/heal.ogg'
 	charge_sound = 'sound/magic/holycharging.ogg'
@@ -243,10 +243,11 @@ GLOBAL_LIST_EMPTY(active_succubus_consecrations)
 	if(get_dist(owner, cast_on) > cast_range)
 		return FALSE
 	var/mob/living/carbon/human/target = cast_on
-	return target.can_receive_succubus_deliverance()
+	return target.can_receive_succubus_deliverance() || target.has_arcane_brand()
 
 /datum/action/cooldown/spell/succubus_deliverance/cast(mob/living/carbon/human/cast_on)
 	. = ..()
 	if(!istype(cast_on) || !is_valid_target(cast_on))
 		return
+	cast_on.remove_arcane_brands()
 	cast_on.receive_succubus_deliverance(owner)

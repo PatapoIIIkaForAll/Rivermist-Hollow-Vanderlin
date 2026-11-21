@@ -12,6 +12,10 @@
 	if(istype(click_intercept, /datum/buildmode) && (_key == "Shift"))
 		var/datum/buildmode/build_mode = click_intercept
 		build_mode.set_pixel_positioning(TRUE)
+	if(istype(click_intercept, /datum/buildmode) && _key == "Z" && keys_held["Ctrl"])
+		var/datum/buildmode/undoing_mode = click_intercept
+		undoing_mode.undo_last()
+		return
 
 	// If not handled by console, continue with normal key handling
 	client_keysend_amount += 1
@@ -55,6 +59,13 @@
 		keys_held.Cut(1,2)
 
 	keys_held[_key] = TRUE
+	// Consume rotation keys while posing; keyLoop repeats them while held.
+	if(mob.is_pixel_shifting())
+		var/rotation_angle = pixel_rotation_key_angle(_key)
+		if(rotation_angle)
+			step_pixel_rotation(rotation_angle)
+			return
+
 	var/movement = movement_keys[_key]
 	if(!(next_move_dir_sub & movement) && !keys_held["Ctrl"])
 		next_move_dir_add |= movement
@@ -102,7 +113,7 @@
 
 	keys_held -= _key
 	var/movement = movement_keys[_key]
-	if(!(next_move_dir_add & movement))
+	if(!(next_move_dir_add & movement) && !(mob?.is_pixel_shifting() && pixel_rotation_key_angle(_key)))
 		next_move_dir_sub |= movement
 
 	var/list/click_data

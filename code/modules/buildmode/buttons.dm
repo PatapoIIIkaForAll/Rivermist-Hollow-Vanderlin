@@ -73,7 +73,7 @@
 	bd.quit()
 
 /atom/movable/screen/buildmode/items
-	name = "Item Browser"
+	name = "Spawn Catalogue"
 	icon_state = "builditems"
 	screen_loc = "NORTH,WEST+4"
 
