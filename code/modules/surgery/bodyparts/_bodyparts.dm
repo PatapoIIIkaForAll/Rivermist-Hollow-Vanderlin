@@ -866,6 +866,8 @@
 		return
 	if(HAS_TRAIT(src, TRAIT_NOPAIN))
 		return
+	if(is_prosthetic())
+		return
 	return owner?.can_feel_pain()
 
 /// Add pain_dam to a bodypart
