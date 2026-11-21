@@ -1371,7 +1371,7 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)
 		if(ITEM_SLOT_RING)
-			if(H.wear_ring)
+			if(!H.get_free_ring_index())
 				return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_RING) )
 				return FALSE

@@ -353,7 +353,12 @@
 		if(obscured[SLOT_CHECK_REGULAR] & ITEM_SLOT_RING)
 			dat += "<tr><td><font color=grey>Obscured</font></td></tr>"
 		else
-			dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_RING]'>[(wear_ring && !(wear_ring.item_flags & ABSTRACT)) ? wear_ring : "<font color=grey>Ring</font>"]</A></td></tr>"
+			for(var/ring_index in 1 to RING_SLOTS)
+				var/obj/item/ring = wear_rings[ring_index]
+				if(ring && !(ring.item_flags & ABSTRACT))
+					dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_RING];ring_index=[ring_index]'>[ring]</A></td></tr>"
+			if(get_free_ring_index())
+				dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_RING]'><font color=grey>Ring</font></A></td></tr>"
 
 		if(obscured[SLOT_CHECK_REGULAR] & ITEM_SLOT_WRISTS)
 			dat += "<tr><td><font color=grey>Obscured</font></td></tr>"
@@ -995,7 +1000,7 @@
 	return ..()
 
 /mob/living/carbon/human/proc/is_shove_knockdown_blocked() //If you want to add more things that block shove knockdown, extend this
-	var/list/body_parts = list(head, wear_mask, wear_armor, wear_pants, backl, backr, gloves, shoes, belt, wear_ring)
+	var/list/body_parts = list(head, wear_mask, wear_armor, wear_pants, backl, backr, gloves, shoes, belt) + wear_rings
 	for(var/bp in body_parts)
 		if(istype(bp, /obj/item/clothing))
 			var/obj/item/clothing/C = bp

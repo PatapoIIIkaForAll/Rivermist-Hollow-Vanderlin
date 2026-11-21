@@ -292,7 +292,7 @@ GLOBAL_LIST_INIT(reverse_slave_phrases_translations, list(
 	if(!bound_ring || !ishuman(controller))
 		return FALSE
 	var/mob/living/carbon/human/human_controller = controller
-	return (human_controller.get_item_by_slot(ITEM_SLOT_RING) == bound_ring) || human_controller.is_holding(bound_ring)
+	return (human_controller.get_slot_by_item(bound_ring) == ITEM_SLOT_RING) || human_controller.is_holding(bound_ring)
 
 /obj/item/clothing/neck/slave_collar/proc/fail_command(mob/living/controller, message)
 	if(controller && message)

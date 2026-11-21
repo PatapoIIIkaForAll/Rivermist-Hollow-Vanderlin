@@ -275,7 +275,7 @@
 		adjust_germ_level_directed(10, body_zone = bodyzones)
 
 	//add belt slots to this for rusting
-	var/list/body_parts = list(head, wear_mask, wear_wrists, wear_shirt, wear_neck, cloak, wear_armor, wear_pants, backr, backl, gloves, shoes, belt, wear_ring)
+	var/list/body_parts = list(head, wear_mask, wear_wrists, wear_shirt, wear_neck, cloak, wear_armor, wear_pants, backr, backl, gloves, shoes, belt) + wear_rings
 	for(var/bp in body_parts)
 		if(!bp)
 			continue

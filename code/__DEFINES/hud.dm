@@ -157,6 +157,11 @@
 #define rogueui_lefthand "WEST-3:-16,SOUTH+7:8"
 
 #define rogueui_ringr "WEST-4,SOUTH+3"
+#define rogueui_ring1 "WEST-4:-8,SOUTH+3:8"
+#define rogueui_ring2 "WEST-4:8,SOUTH+3:8"
+#define rogueui_ring3 "WEST-4:-8,SOUTH+3:-8"
+#define rogueui_ring4 "WEST-4:8,SOUTH+3:-8"
+#define RING_SLOT_HUD_SCALE 0.5
 #define rogueui_wrists "WEST-2,SOUTH+4"
 #define rogueui_mask "WEST-4,SOUTH+6"
 #define rogueui_neck "WEST-4,SOUTH+4"

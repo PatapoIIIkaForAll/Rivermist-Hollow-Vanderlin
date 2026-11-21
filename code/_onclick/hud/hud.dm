@@ -51,6 +51,7 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 	var/list/infodisplay = list() //the screen objects that display mob info (health, alien plasma, etc...)
 	var/list/screenoverlays = list() //the screen objects used as whole screen overlays (flash, damageoverlay, etc...)
 	var/list/inv_slots[SLOTS_AMT] // /atom/movable/screen/inventory objects, ordered by their slot ID.
+	var/list/ring_slots = list()
 	var/list/hand_slots // /atom/movable/screen/inventory/hand objects, assoc list of "[held_index]" = object
 	var/list/atom/movable/screen/plane_master/plane_masters = list() // see "appearance_flags" in the ref, assoc list of "[plane]" = object
 	///Assoc list of controller groups, associated with key string group name with value of the plane master controller ref
@@ -193,6 +194,7 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 	QDEL_LIST(team_finder_arrows)
 
 	inv_slots.Cut()
+	ring_slots.Cut()
 	action_intent = null
 	zone_select = null
 	pull_icon = null

@@ -862,10 +862,13 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(href_list["item"] && usr.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		var/slot = text2num(href_list["item"])
 		var/hand_index = text2num(href_list["hand_index"])
+		var/ring_index = text2num(href_list["ring_index"])
 		var/obj/item/what
 		if(hand_index)
 			what = get_item_for_held_index(hand_index)
 			slot = list(slot,hand_index)
+		else if(ring_index && slot == ITEM_SLOT_RING)
+			what = get_ring(ring_index)
 		else
 			what = get_item_by_slot(slot)
 		if(what)

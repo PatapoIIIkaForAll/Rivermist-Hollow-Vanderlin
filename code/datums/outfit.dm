@@ -313,8 +313,8 @@
 /datum/outfit/proc/apply_fingerprints(mob/living/carbon/human/H)
 	if(!istype(H))
 		return
-	if(H.wear_ring)
-		H.wear_ring.add_fingerprint(H,1)
+	for(var/obj/item/ring as anything in H.get_worn_rings())
+		ring.add_fingerprint(H,1)
 	if(H.wear_pants)
 		H.wear_pants.add_fingerprint(H,1)
 	if(H.wear_armor)

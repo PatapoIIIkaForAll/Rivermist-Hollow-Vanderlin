@@ -25,7 +25,7 @@
 			def_zone = BODY_ZONE_HEAD
 	var/protection = 0
 	var/obj/item/clothing/used
-	var/list/body_parts = list(skin_armor, head, wear_mask, wear_wrists, gloves, wear_neck, cloak, wear_armor, wear_shirt, shoes, wear_pants, backr, backl, belt, wear_ring)
+	var/list/body_parts = list(skin_armor, head, wear_mask, wear_wrists, gloves, wear_neck, cloak, wear_armor, wear_shirt, shoes, wear_pants, backr, backl, belt) + wear_rings
 	for(var/bp in body_parts)
 		if(!bp)
 			continue
@@ -108,7 +108,7 @@
 			def_zone = BODY_ZONE_HEAD
 
 	var/protection_tier = ARMOR_TIER_NONE
-	var/list/worn_layers = list(skin_armor, head, wear_mask, wear_wrists, gloves, wear_neck, cloak, wear_armor, wear_shirt, shoes, wear_pants, backr, backl, belt, wear_ring)
+	var/list/worn_layers = list(skin_armor, head, wear_mask, wear_wrists, gloves, wear_neck, cloak, wear_armor, wear_shirt, shoes, wear_pants, backr, backl, belt) + wear_rings
 	for(var/layer in worn_layers)
 		if(!istype(layer, /obj/item/clothing))
 			continue
@@ -228,7 +228,7 @@
 	if(isbodypart(def_zone))
 		var/obj/item/bodypart/CBP = def_zone
 		def_zone = CBP.body_zone
-	var/list/clothing_slots = list(head, wear_mask, wear_wrists, wear_shirt, wear_neck, cloak, wear_armor, wear_pants, backr, backl, gloves, shoes, belt, wear_ring)
+	var/list/clothing_slots = list(head, wear_mask, wear_wrists, wear_shirt, wear_neck, cloak, wear_armor, wear_pants, backr, backl, gloves, shoes, belt) + wear_rings
 	for(var/clothing in clothing_slots)
 		if(!clothing)
 			continue
@@ -647,8 +647,7 @@
 			. = get_bodypart(BODY_ZONE_CHEST)
 			if(.)
 				damaged += .
-			if(wear_ring)
-				inventory_items_to_kill += wear_ring
+			inventory_items_to_kill += get_worn_rings()
 
 	//ARMS & HANDS//
 	if(!bodyzone_hit || bodyzone_hit == BODY_ZONE_L_ARM || bodyzone_hit == BODY_ZONE_R_ARM)
@@ -1030,7 +1029,7 @@
 ///Get all the clothing on a specific body part
 /mob/living/carbon/human/proc/clothingonpart(obj/item/bodypart/def_zone)
 	var/list/covering_part = list()
-	var/list/clothing_slots = list(head, wear_mask, wear_wrists, wear_shirt, wear_neck, cloak, wear_armor, wear_pants, backr, backl, gloves, shoes, belt, wear_ring)
+	var/list/clothing_slots = list(head, wear_mask, wear_wrists, wear_shirt, wear_neck, cloak, wear_armor, wear_pants, backr, backl, gloves, shoes, belt) + wear_rings
 	for(var/bp in clothing_slots)
 		if(!bp)
 			continue

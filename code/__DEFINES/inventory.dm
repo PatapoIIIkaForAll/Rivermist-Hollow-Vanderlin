@@ -23,6 +23,7 @@
 #define ITEM_SLOT_SHOES			(1<<3)
 #define ITEM_SLOT_GLOVES		(1<<4)
 #define ITEM_SLOT_RING			(1<<5)
+#define RING_SLOTS 4
 #define ITEM_SLOT_MASK			(1<<6)
 #define ITEM_SLOT_MOUTH			(1<<7)
 #define ITEM_SLOT_HEAD			(1<<8)

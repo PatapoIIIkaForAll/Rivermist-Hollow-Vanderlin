@@ -202,7 +202,10 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 	"armor"    = list("flag" = ITEM_SLOT_ARMOR,  "label" = "Armor"),
 	"neck"     = list("flag" = ITEM_SLOT_NECK,   "label" = "Neck"),
 	"cloak"    = list("flag" = ITEM_SLOT_CLOAK,  "label" = "Cape"),
-	"ring"     = list("flag" = ITEM_SLOT_RING,   "label" = "Finger"),
+	"ring1"    = list("flag" = ITEM_SLOT_RING,   "label" = "Finger", "ring_index" = 1),
+	"ring2"    = list("flag" = ITEM_SLOT_RING,   "label" = "Finger", "ring_index" = 2),
+	"ring3"    = list("flag" = ITEM_SLOT_RING,   "label" = "Finger", "ring_index" = 3),
+	"ring4"    = list("flag" = ITEM_SLOT_RING,   "label" = "Finger", "ring_index" = 4),
 	"wrists"   = list("flag" = ITEM_SLOT_WRISTS, "label" = "Wrists"),
 	// bottom corners
 	"backr"    = list("flag" = ITEM_SLOT_BACK_R, "label" = "Right shoulder"),
@@ -364,7 +367,8 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 	for(var/slot_id in GLOB.examine_panel_slot_layout)
 		var/list/layout = GLOB.examine_panel_slot_layout[slot_id]
 		var/slot_flag = layout["flag"]
-		var/obj/item/equipped = human_holder.get_item_by_slot(slot_flag)
+		var/ring_index = layout["ring_index"]
+		var/obj/item/equipped = ring_index ? human_holder.get_ring(ring_index) : human_holder.get_item_by_slot(slot_flag)
 		var/list/entry = list("label" = layout["label"])
 		if(!equipped || (equipped.item_flags & ABSTRACT))
 			entry["status"] = "empty"

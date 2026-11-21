@@ -1922,7 +1922,7 @@
 				if(what == who.get_item_for_held_index(L[2]))
 					if(what.doStrip(src, who))
 						log_combat(src, who, "stripped [what] off")
-			if(what == who.get_item_by_slot(where))
+			if(what in who.get_items_by_slot(where))
 				if(what.doStrip(src, who))
 					log_combat(src, who, "stripped [what] off")
 

@@ -109,13 +109,7 @@
 
 	build_hand_slots()
 
-	inv_box = new /atom/movable/screen/inventory(null, src)
-	inv_box.name = "ring"
-	inv_box.icon = ui_style
-	inv_box.icon_state = "ring"
-	inv_box.screen_loc = rogueui_ringr
-	inv_box.slot_id = ITEM_SLOT_RING
-	static_inventory += inv_box
+	build_ring_slots(ui_style)
 
 	inv_box = new /atom/movable/screen/inventory(null, src)
 	inv_box.name = "wrists"
@@ -375,9 +369,6 @@
 		if(H.wear_shirt)
 			H.wear_shirt.screen_loc = rogueui_shirt
 			screenmob.client.screen += H.wear_shirt
-		if(H.wear_ring)
-			H.wear_ring.screen_loc = rogueui_ringr
-			screenmob.client.screen += H.wear_ring
 		if(H.wear_wrists)
 			H.wear_wrists.screen_loc = rogueui_wrists
 			screenmob.client.screen += H.wear_wrists
@@ -416,16 +407,12 @@
 		H.apply_dnd_spell_hud_visibility()
 
 	if(screenmob.hud_used)
+		H.show_rings_on_screen(screenmob, screenmob.hud_used.hud_shown)
 		if(screenmob.hud_used.hud_shown)
-			if(H.wear_ring)
-				H.wear_ring.screen_loc = ui_id
-				screenmob.client.screen += H.wear_ring
 			if(H.belt)
 				H.belt.screen_loc = ui_belt
 				screenmob.client.screen += H.belt
 		else
-			if(H.wear_ring)
-				screenmob.client.screen -= H.wear_ring
 			if(H.belt)
 				screenmob.client.screen -= H.belt
 

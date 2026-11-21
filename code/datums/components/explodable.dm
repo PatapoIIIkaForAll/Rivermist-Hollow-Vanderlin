@@ -77,7 +77,7 @@
 		equipment_items += list(C.head, C.wear_mask, C.gloves, C.shoes)
 		if(ishuman(C))
 			var/mob/living/carbon/human/H = C
-			equipment_items += list(H.wear_armor, H.wear_pants, H.belt, H.wear_ring)
+			equipment_items += list(H.wear_armor, H.wear_pants, H.belt) + H.wear_rings
 
 	for(var/bp in equipment_items)
 		if(!bp)

@@ -89,7 +89,7 @@
 		return TRUE
 	if(ishuman(user))
 		var/mob/living/carbon/human/human_user = user
-		if(human_user.get_item_by_slot(ITEM_SLOT_RING) == src)
+		if(human_user.get_slot_by_item(src) == ITEM_SLOT_RING)
 			return TRUE
 	if(show_feedback)
 		to_chat(user, span_warning("You need to hold or wear the ring to use it."))
@@ -99,7 +99,7 @@
 	if(!ishuman(user))
 		return FALSE
 	var/mob/living/carbon/human/human_user = user
-	return human_user.get_item_by_slot(ITEM_SLOT_RING) == src
+	return human_user.get_slot_by_item(src) == ITEM_SLOT_RING
 
 /obj/item/clothing/ring/slave_control/proc/get_bound_collar_bearer()
 	if(!bound_collar || QDELETED(bound_collar) || bound_collar.bound_ring != src)
@@ -321,8 +321,8 @@
 	if(!ishuman(user))
 		return null
 	var/mob/living/carbon/human/human_user = user
-	var/obj/item/clothing/ring/slave_control/master/worn_ring = human_user.get_item_by_slot(ITEM_SLOT_RING)
-	if(istype(worn_ring))
+	var/obj/item/clothing/ring/slave_control/master/worn_ring = locate() in human_user.get_worn_rings()
+	if(worn_ring)
 		return worn_ring
 	for(var/obj/item/held_item as anything in human_user.held_items)
 		if(istype(held_item, /obj/item/clothing/ring/slave_control/master))

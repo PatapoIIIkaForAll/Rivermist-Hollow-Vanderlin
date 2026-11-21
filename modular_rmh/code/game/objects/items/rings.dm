@@ -1,37 +1,37 @@
 /obj/item/clothing/ring/gold/protection/antileechy
 	name = "ring of swamp protection"
 	desc = "Old ring, inscribed with arcyne words. Protects against swamp."
-	protection_trait = TRAIT_LEECHIMMUNE
+	clothing_traits = list(TRAIT_LEECHIMMUNE)
 	sellprice = 100
 
 /obj/item/clothing/ring/gold/protection/antishocky
 	name = "ring of lightning protection"
 	desc = "Old ring, inscribed with arcyne words. Enhances protection against lightning strikes."
-	protection_trait = TRAIT_SHOCKIMMUNE
+	clothing_traits = list(TRAIT_SHOCKIMMUNE)
 	sellprice = 1000
 
 /obj/item/clothing/ring/gold/protection/antimagika
 	name = "ring of magic protection"
 	desc = "Old ring, inscribed with arcyne words. Enhances protection against magic."
-	protection_trait = TRAIT_ANTIMAGIC
+	clothing_traits = list(TRAIT_ANTIMAGIC)
 	sellprice = 2000
 
 /obj/item/clothing/ring/gold/protection/health
 	name = "ring of health protection"
 	desc = "Old ring, inscribed with arcyne words. Enhances protection against wounds."
-	protection_trait = TRAIT_TRUE_GRIT
+	clothing_traits = list(TRAIT_TRUE_GRIT)
 	sellprice = 1000
 
 /obj/item/clothing/ring/gold/protection/fall
 	name = "ring of falling protection"
 	desc = "Old ring, inscribed with arcyne words. Enhances protection against falling."
-	protection_trait = TRAIT_NOFALLDAMAGE1
+	clothing_traits = list(TRAIT_NOFALLDAMAGE1)
 	sellprice = 500
 
 /obj/item/clothing/ring/gold/protection/army
 	name = "ring of army"
 	desc = "Old ring, inscribed with arcyne words. Enhanced protection against many enemies."
-	protection_trait = TRAIT_TEMPO
+	clothing_traits = list(TRAIT_TEMPO)
 	sellprice = 2000
 
 /datum/supply_pack/rings

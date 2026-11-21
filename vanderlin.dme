@@ -4785,6 +4785,7 @@
 #include "modular_rmh\code\modules\clothing\nun_robes.dm"
 #include "modular_rmh\code\modules\clothing\nyctea_clothes.dm"
 #include "modular_rmh\code\modules\clothing\physician.dm"
+#include "modular_rmh\code\modules\clothing\ring_slots.dm"
 #include "modular_rmh\code\modules\clothing\shirts.dm"
 #include "modular_rmh\code\modules\clothing\silly.dm"
 #include "modular_rmh\code\modules\clothing\storage.dm"

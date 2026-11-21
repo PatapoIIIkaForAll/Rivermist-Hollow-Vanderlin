@@ -22,7 +22,9 @@ type SlotPos = {
   right?: number;
   top?: number;
   bottom?: number;
+  size?: number;
 };
+const RING_SLOT = 21;
 const SLOT_POS: Record<string, SlotPos> = {
   // Symmetric layout about the box's vertical center (axis = 180px of 360px).
   // Left and right columns each have 6 rows at identical Y positions; the right
@@ -40,7 +42,10 @@ const SLOT_POS: Record<string, SlotPos> = {
   armor: { right: 6, top: 57 },
   neck: { right: 6, top: 108 },
   cloak: { right: 6, top: 158 },
-  ring: { right: 6, top: 209 },
+  ring1: { right: 29, top: 209, size: RING_SLOT },
+  ring2: { right: 6, top: 209, size: RING_SLOT },
+  ring3: { right: 29, top: 232, size: RING_SLOT },
+  ring4: { right: 6, top: 232, size: RING_SLOT },
   wrists: { right: 6, top: 260 },
   // bottom corners on the SAME verticals as the columns, mirrored about center
   // bottom-left: right shoulder (outer), right hip (inner)
@@ -66,7 +71,10 @@ const TOOLTIP_SIDE: Record<string, "left" | "right"> = {
   armor: "left",
   neck: "left",
   cloak: "left",
-  ring: "left",
+  ring1: "left",
+  ring2: "left",
+  ring3: "left",
+  ring4: "left",
   wrists: "left",
   beltl: "left",
   backl: "left",
@@ -249,8 +257,18 @@ const ItemTooltip = (props: {
   frameColor: string;
   onEnter: () => void;
   onLeave: () => void;
+  anchorSize?: number;
 }) => {
-  const { item, label, side, vAlign, frameColor, onEnter, onLeave } = props;
+  const {
+    item,
+    label,
+    side,
+    vAlign,
+    frameColor,
+    onEnter,
+    onLeave,
+    anchorSize = SLOT,
+  } = props;
   const [expanded, setExpanded] = useState(false);
   const [specialHintOpen, setSpecialHintOpen] = useState(false);
   const expandTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -335,7 +353,7 @@ const ItemTooltip = (props: {
         // open toward panel center; bottom-row slots anchor their tooltip to
         // their own bottom edge so it grows upward and never clips past the box
         ...(vAlign === "top" ? { top: "0" } : { bottom: "0" }),
-        [side === "right" ? "left" : "right"]: `${SLOT + 6}px`,
+        [side === "right" ? "left" : "right"]: `${anchorSize + 6}px`,
         zIndex: 1,
         transform: clampOffsetX ? `translateX(${clampOffsetX}px)` : undefined,
         // pointer events ON so the user can scroll long descriptions, and so
@@ -545,14 +563,15 @@ const SimpleTooltip = (props: {
   subtitle: string;
   side: "left" | "right";
   vAlign: "top" | "bottom";
+  anchorSize?: number;
 }) => {
-  const { title, subtitle, side, vAlign } = props;
+  const { title, subtitle, side, vAlign, anchorSize = SLOT } = props;
   return (
     <div
       style={{
         position: "absolute",
         ...(vAlign === "top" ? { top: "0" } : { bottom: "0" }),
-        [side === "right" ? "left" : "right"]: `${SLOT + 6}px`,
+        [side === "right" ? "left" : "right"]: `${anchorSize + 6}px`,
         zIndex: 1,
         width: "140px",
         padding: "6px 9px",
@@ -581,6 +600,8 @@ const GearSlot = (props: { slotId: string; slot: WornSlot }) => {
   const [closing, setClosing] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pos = SLOT_POS[slotId];
+  const size = pos.size ?? SLOT;
+  const iconSize = size < SLOT ? "16px" : "32px";
   const side = TOOLTIP_SIDE[slotId] ?? "right";
   const filled = slot.status === "item" && slot.item;
   const frameColor = filled ? qualityColor(slot.item!.quality) : "#5a4632";
@@ -643,8 +664,8 @@ const GearSlot = (props: { slotId: string; slot: WornSlot }) => {
         // tooltip's own z-index could never lift it above sibling slots painted
         // later in DOM order. Raise the whole slot while it is hovered instead.
         zIndex: hovered ? (closing ? TOOLTIP_LAYER_CLOSING : TOOLTIP_LAYER) : 2,
-        width: `${SLOT}px`,
-        height: `${SLOT}px`,
+        width: `${size}px`,
+        height: `${size}px`,
         border: `2px solid ${frameColor}`,
         borderRadius: "3px",
         background: filled ? "rgba(0,0,0,0.45)" : HATCH,
@@ -663,7 +684,11 @@ const GearSlot = (props: { slotId: string; slot: WornSlot }) => {
       {filled && slot.item!.icon ? (
         <img
           src={slot.item!.icon}
-          style={{ width: "32px", height: "32px", imageRendering: "pixelated" }}
+          style={{
+            width: iconSize,
+            height: iconSize,
+            imageRendering: "pixelated",
+          }}
         />
       ) : null}
       {hovered && filled && (
@@ -675,6 +700,7 @@ const GearSlot = (props: { slotId: string; slot: WornSlot }) => {
           frameColor={frameColor}
           onEnter={open}
           onLeave={scheduleClose}
+          anchorSize={size}
         />
       )}
       {hovered && !filled && (
@@ -683,6 +709,7 @@ const GearSlot = (props: { slotId: string; slot: WornSlot }) => {
           subtitle={slot.status === "hidden" ? "Hidden" : "Empty"}
           side={side}
           vAlign={vAlign}
+          anchorSize={size}
         />
       )}
     </div>

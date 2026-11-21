@@ -79,10 +79,9 @@
 		return
 
 	for(var/slot in list(ITEM_SLOT_HEAD,ITEM_SLOT_SHIRT,ITEM_SLOT_PANTS,ITEM_SLOT_GLOVES,ITEM_SLOT_SHOES,ITEM_SLOT_MASK,ITEM_SLOT_WRISTS,ITEM_SLOT_CLOAK,ITEM_SLOT_ARMOR,ITEM_SLOT_BACK_L,ITEM_SLOT_BACK_R,ITEM_SLOT_BELT,ITEM_SLOT_BELT_L,ITEM_SLOT_BELT_R,ITEM_SLOT_MOUTH,ITEM_SLOT_NECK,ITEM_SLOT_RING,ITEM_SLOT_HANDS,ITEM_SLOT_UNDER_BOTTOM,ITEM_SLOT_UNDER_TOP,ITEM_SLOT_UNDERSHIRT,ITEM_SLOT_ARMSLEEVES,ITEM_SLOT_SOCKS,ITEM_SLOT_CHOKER,ITEM_SLOT_GARTER,ITEM_SLOT_EARRING_L,ITEM_SLOT_EARRING_R,))
-		var/obj/item/item = target.get_item_by_slot(slot)
-		if(!item || istype(item, /obj/item/clothing/head/helmet))
-			continue
-		. += item
+		for(var/obj/item/item as anything in target.get_items_by_slot(slot))
+			if(!istype(item, /obj/item/clothing/head/helmet))
+				. += item
 
 /datum/action/cooldown/spell/seelie_drain
 	name = "Drain"

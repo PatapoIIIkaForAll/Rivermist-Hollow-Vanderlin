@@ -82,7 +82,7 @@
 
 /datum/wound/fracture/on_mob_gain(mob/living/affected)
 	. = ..()
-	if(gain_emote && !HAS_TRAIT(affected, TRAIT_NOPAIN))
+	if(gain_emote && !HAS_TRAIT(affected, TRAIT_NOPAIN) && !bodypart_owner?.is_prosthetic())
 		affected.emote(gain_emote, TRUE)
 	affected.Slowdown(20)
 	shake_camera(affected, 2, 2)

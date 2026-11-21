@@ -489,8 +489,7 @@
 								stealpos.Add(victim.get_item_by_slot(ITEM_SLOT_BELT_L))
 					//RMH EDITED END
 					if(BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_PRECISE_L_HAND)
-						if (victim.get_item_by_slot(ITEM_SLOT_RING))
-							stealpos.Add(victim.get_item_by_slot(ITEM_SLOT_RING))
+						stealpos += victim.get_items_by_slot(ITEM_SLOT_RING)
 				if(length(stealpos) > 0)
 					var/obj/item/picked = pick(stealpos)
 					if(HAS_TRAIT(picked, TRAIT_HARD_TO_STEAL))
