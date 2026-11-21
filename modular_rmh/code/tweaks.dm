@@ -11,7 +11,7 @@
 	Criminal behavior, cruelty, and senseless violence go against your character. \
 	Others may seek your help, rely on your judgment, or hold you to higher moral standards. \
 	Play responsibly and stay true to your principles."
-	point_value = 1
+	point_value = -1
 	incompatible_quirks = list(/datum/quirk/negative/wanted)
 
 /obj/item
