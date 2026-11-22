@@ -75,10 +75,18 @@
 	var/turf/source_turf = get_turf(owner)
 	if(!source_turf)
 		return
-	var/static/list/scent_ranges = MUSK_SCENT_RANGE_BY_LEVEL
-	for(var/mob/living/carbon/human/smeller in hearers(scent_ranges[level], source_turf))
-		if(smeller != owner)
-			smeller.smell_musk(level, owner)
+	var/static/list/scent_types = list(
+		/datum/pollutant/musk_scent/level_1,
+		/datum/pollutant/musk_scent/level_2,
+		/datum/pollutant/musk_scent/level_3,
+		/datum/pollutant/musk_scent/level_4,
+	)
+	var/scent_type = scent_types[level]
+	for(var/turf/open/scent_turf in RANGE_TURFS(MUSK_SCENT_RANGE, source_turf))
+		var/datum/pollution/present = scent_turf.pollution
+		if(!QDELETED(present) && present.pollutants[scent_type] >= MUSK_SCENT_CAP)
+			continue
+		scent_turf.pollute_turf(scent_type, MUSK_SCENT_AMOUNT)
 
 /datum/status_effect/musk/proc/update_alert()
 	if(!linked_alert)
@@ -200,6 +208,57 @@
 /atom/movable/screen/fullscreen/weedsm/musk
 	alpha = 0
 	color = MUSK_SCREEN_COLOR
+
+/datum/pollutant/musk_scent
+	pollutant_flags = POLLUTANT_SMELL | POLLUTANT_BREATHE_ACT | POLLUTION_DO_NOT_SPREAD
+	descriptor = SCENT_DESC_ODOR
+	color = MUSK_SCREEN_COLOR
+	var/level = 1
+
+/datum/pollutant/musk_scent/breathe_act(mob/living/carbon/victim, amount, total_amount)
+	. = ..()
+	if(!ishuman(victim))
+		return
+	var/mob/living/carbon/human/smeller = victim
+	var/datum/status_effect/musk/own_musk = smeller.has_status_effect(/datum/status_effect/musk)
+	if(own_musk && own_musk.level >= level)
+		return
+	if(!smeller.is_musk_susceptible())
+		return
+	smeller.smell_musk(level, find_source(smeller))
+
+/datum/pollutant/musk_scent/proc/find_source(mob/living/carbon/human/smeller)
+	for(var/mob/living/carbon/human/candidate in range(MUSK_SCENT_RANGE, smeller))
+		if(candidate == smeller)
+			continue
+		var/datum/status_effect/musk/musk = candidate.has_status_effect(/datum/status_effect/musk)
+		if(musk?.level == level)
+			return candidate
+	return null
+
+/datum/pollutant/musk_scent/level_1
+	name = "Fresh Sweat"
+	scent = "fresh sweat"
+	smell_intensity = 0.75
+	level = 1
+
+/datum/pollutant/musk_scent/level_2
+	name = "Warm Musk"
+	scent = "warm sweat and musk"
+	smell_intensity = 1
+	level = 2
+
+/datum/pollutant/musk_scent/level_3
+	name = "Heavy Musk"
+	scent = "heavy musk"
+	smell_intensity = 1.5
+	level = 3
+
+/datum/pollutant/musk_scent/level_4
+	name = "Heady Musk"
+	scent = "rank, heady musk"
+	smell_intensity = 2
+	level = 4
 
 #undef MUSK_SCREEN_CATEGORY
 #undef MUSK_SCREEN_FILTER

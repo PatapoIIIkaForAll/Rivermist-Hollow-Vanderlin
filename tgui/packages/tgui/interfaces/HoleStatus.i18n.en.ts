@@ -43,6 +43,14 @@ export default {
     stomach: 'Stomach',
     ovipositor: 'Ovipositor',
     womb: 'Womb',
+    bladder: 'Bladder',
+  },
+  bladder: {
+    fill: 'Holding',
+    urge: 'Urge',
+    urgeWords: ['Calm', 'Needs to go', 'Desperate', 'Bursting'],
+    relieve: 'Relieve myself',
+    relieveHint: 'Into a held cup or a privy beside me, else onto the floor.',
   },
   wear: {
     title: 'Wear and tear',

@@ -173,6 +173,14 @@ type WombData = {
   organ: OrganData;
 } | null;
 
+type BladderData = {
+  volume: number;
+  capacity: number;
+  max: number;
+  urge: number;
+  can_relieve: boolean;
+} | null;
+
 type LabourData = {
   pushing: boolean;
   contractions: number;
@@ -197,6 +205,7 @@ type StatusData = {
   holding_in: boolean;
   holes: HoleData[];
   womb: WombData;
+  bladder: BladderData;
   stomach: OrganData | null;
   ovipositor: OrganData | null;
   labour: LabourData;
@@ -233,6 +242,14 @@ export type HoleStatusLocale = {
     stomach: string;
     ovipositor: string;
     womb: string;
+    bladder: string;
+  };
+  bladder: {
+    fill: string;
+    urge: string;
+    urgeWords: string[];
+    relieve: string;
+    relieveHint: string;
   };
   wear: {
     title: string;
@@ -511,6 +528,7 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
   const {
     holes = [],
     womb = null,
+    bladder = null,
     stomach = null,
     ovipositor = null,
     nutriment = 0,
@@ -523,7 +541,8 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
   const vagina = holes.find((hole) => hole.id === 'vagina') || null;
   const anus = holes.find((hole) => hole.id === 'anus') || null;
   const breasts = holes.find((hole) => hole.id === 'breasts') || null;
-  const nothing = !vagina && !anus && !breasts && !stomach && !ovipositor;
+  const nothing =
+    !vagina && !anus && !breasts && !stomach && !ovipositor && !bladder;
 
   return (
     <Window
@@ -625,6 +644,14 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
                     locale={locale}
                   />
                 )}
+                {bladder && (
+                  <BladderBlock
+                    act={act}
+                    bladder={bladder}
+                    showArt={show_art}
+                    locale={locale}
+                  />
+                )}
                 <EggList
                   act={act}
                   eggs={vagina.eggs.filter((egg) => !egg.is_hatchling)}
@@ -632,6 +659,14 @@ export const HoleStatusView = (props: { locale: HoleStatusLocale }) => {
                   locale={locale}
                 />
               </Section>
+            )}
+            {!vagina && bladder && (
+              <BladderBlock
+                act={act}
+                bladder={bladder}
+                showArt={show_art}
+                locale={locale}
+              />
             )}
             {anus && (
               <Section
@@ -1039,6 +1074,139 @@ const WombBlock = (props: {
         count={organ.hatchling_count}
         locale={locale}
       />
+    </Section>
+  );
+};
+
+const BLADDER_TOP = 24;
+const BLADDER_BOTTOM = 90;
+const BLADDER_SHAPE =
+  'M 50 90 C 38 86 22 74 21 57 C 20 38 35 24 56 24 C 77 24 92 38 91 57 C 90 74 74 86 62 90 Z';
+const bladderUrgeColors = ['good', 'average', 'orange', 'bad'];
+
+const BladderPicture = (props: { bladder: NonNullable<BladderData> }) => {
+  const { bladder } = props;
+  const share = bladder.capacity > 0 ? bladder.volume / bladder.capacity : 0;
+  const level = Math.min(1, share);
+  const grow = Math.min(share, 1.5);
+  const scale = 0.8 + 0.2 * Math.min(grow, 1) + 0.12 * Math.max(0, grow - 1);
+  const liquidTop = BLADDER_BOTTOM - (BLADDER_BOTTOM - BLADDER_TOP) * level;
+  const wall = bladder.urge >= 3 ? '#e36464' : '#d8a7a0';
+  return (
+    <Box style={{ width: '112px' }}>
+      <Box
+        style={{
+          position: 'relative',
+          width: '112px',
+          height: '112px',
+          borderRadius: '3px',
+          overflow: 'hidden',
+          background: 'rgba(0, 0, 0, 0.35)',
+        }}
+      >
+        <svg width="112" height="112" viewBox="0 0 112 112">
+          <defs>
+            <clipPath id="hole-bladder-shape">
+              <path d={BLADDER_SHAPE} />
+            </clipPath>
+            <linearGradient
+              id="hole-bladder-liquid"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop offset="0%" stopColor="#f6dc72" />
+              <stop offset="100%" stopColor="#c99a1e" />
+            </linearGradient>
+          </defs>
+          <g transform={`translate(56 57) scale(${scale}) translate(-56 -57)`}>
+            <path
+              d="M 32 34 C 24 24 20 14 14 6"
+              fill="none"
+              stroke={wall}
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 80 34 C 88 24 92 14 98 6"
+              fill="none"
+              stroke={wall}
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 51 89 L 53 104 L 59 104 L 61 89"
+              fill="rgba(216, 167, 160, 0.35)"
+              stroke={wall}
+              strokeWidth="2"
+            />
+            <path d={BLADDER_SHAPE} fill="rgba(150, 70, 70, 0.35)" />
+            <rect
+              x="0"
+              y={liquidTop}
+              width="112"
+              height={112 - liquidTop}
+              fill="url(#hole-bladder-liquid)"
+              clipPath="url(#hole-bladder-shape)"
+            />
+            {level > 0 && level < 1 && (
+              <path
+                d={`M 14 ${liquidTop} Q 35 ${liquidTop - 3} 56 ${liquidTop} T 98 ${liquidTop}`}
+                fill="none"
+                stroke="rgba(255, 245, 200, 0.6)"
+                strokeWidth="1.5"
+                clipPath="url(#hole-bladder-shape)"
+              />
+            )}
+            <path d={BLADDER_SHAPE} fill="none" stroke={wall} strokeWidth="3" />
+          </g>
+        </svg>
+      </Box>
+      <ProgressBar
+        mt={0.25}
+        value={level}
+        color={bladderUrgeColors[Math.min(3, Math.max(0, bladder.urge))]}
+      />
+    </Box>
+  );
+};
+
+const BladderBlock = (props: {
+  act: any;
+  bladder: NonNullable<BladderData>;
+  showArt: boolean;
+  locale: HoleStatusLocale;
+}) => {
+  const { act, bladder, showArt, locale } = props;
+  const urge = Math.min(
+    locale.bladder.urgeWords.length - 1,
+    Math.max(0, bladder.urge),
+  );
+  return (
+    <Section title={locale.cards.bladder} mt={1}>
+      <WithPicture picture={showArt && <BladderPicture bladder={bladder} />}>
+        <LabeledList>
+          <LabeledList.Item label={locale.bladder.fill}>
+            {locale.formatFill(bladder.volume, bladder.capacity)}
+          </LabeledList.Item>
+          <LabeledList.Item
+            label={locale.bladder.urge}
+            color={bladderUrgeColors[urge]}
+          >
+            {locale.bladder.urgeWords[urge]}
+          </LabeledList.Item>
+        </LabeledList>
+        <Button
+          mt={1}
+          icon="droplet"
+          disabled={!bladder.can_relieve}
+          tooltip={locale.bladder.relieveHint}
+          onClick={() => act('relieve_bladder')}
+        >
+          {locale.bladder.relieve}
+        </Button>
+      </WithPicture>
     </Section>
   );
 };

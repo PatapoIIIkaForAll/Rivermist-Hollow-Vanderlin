@@ -80,6 +80,9 @@
 			return toy ? owner.try_push_toy_deeper(toy) : FALSE
 		if("push_out")
 			return owner.try_push_out_random_toy(owner.get_toy_hole(params["hole"]))
+		if("relieve_bladder")
+			INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living/carbon/human, try_relieve_bladder))
+			return TRUE
 
 	return FALSE
 
@@ -123,6 +126,7 @@
 	if(istype(breasts))
 		UNTYPED_LIST_ADD(data["holes"], build_hole(breasts, "breasts"))
 	data["womb"] = build_womb()
+	data["bladder"] = build_bladder()
 	data["stomach"] = build_stomach()
 	data["ovipositor"] = build_ovipositor()
 	data["labour"] = build_labour()
