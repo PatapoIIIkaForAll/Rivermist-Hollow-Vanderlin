@@ -205,6 +205,9 @@ GLOBAL_LIST_INIT(sex_motion_pumps, list(1, 1, 2, 3))
 /datum/sex_action/frotting
 	motion_kind = SEX_MOTION_THRUST
 
+/datum/sex_action/docking
+	motion_kind = SEX_MOTION_THRUST
+
 /datum/sex_action/footjob_intimate
 	motion_kind = SEX_MOTION_THRUST
 
