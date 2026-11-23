@@ -12,7 +12,10 @@
 	return max(limits.Find(get_erp_pref(/datum/erp_preference/list_choice/scent_submission)) - 1, 0)
 
 /mob/living/proc/get_scent_bond_level(mob/living/source)
-	return mind?.get_scent_bond(source?.mind)?.get_level() || 0
+	if(!mind || !source?.mind)
+		return 0
+	var/datum/musk_bond/bond = mind.get_scent_bond(source.mind)
+	return bond ? bond.get_level() : 0
 
 /mob/living/carbon/human/proc/deepen_scent_bond(mob/living/carbon/human/source, gain_kind)
 	if(!mind || !source.mind || source == src || !source.get_musk() || !get_scent_bond_limit())
