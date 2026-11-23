@@ -1013,12 +1013,26 @@
 
 	var/list/timestamped_message = list("\[[time_stamp(format = "YYYY-MM-DD hh:mm:ss")]\] [key_name(src)] [loc_name(src)] (Event #[LAZYLEN(logging[smessage_type])])" = colored_message)
 
-	logging[smessage_type] += timestamped_message
+	append_individual_log(logging[smessage_type], timestamped_message)
 
 	if(client)
-		client.player_details.logging[smessage_type] += timestamped_message
+		append_individual_log(client.player_details.logging[smessage_type], timestamped_message)
 
 	..()
+
+/// Lines kept per log type in a mob's or player's in-memory log. The log files keep every line.
+#define INDIVIDUAL_LOG_MAX_LINES 1000
+/// How many of the oldest lines are dropped at once when a log type is full.
+#define INDIVIDUAL_LOG_TRIM_LINES 200
+
+/// Adds one line to an individual log; player logs live all round, so unbounded they grew with every line.
+/proc/append_individual_log(list/type_log, list/timestamped_message)
+	type_log += timestamped_message
+	if(length(type_log) > INDIVIDUAL_LOG_MAX_LINES)
+		type_log.Cut(1, INDIVIDUAL_LOG_TRIM_LINES + 1)
+
+#undef INDIVIDUAL_LOG_MAX_LINES
+#undef INDIVIDUAL_LOG_TRIM_LINES
 
 ///Can the mob hear
 /mob/proc/can_hear()

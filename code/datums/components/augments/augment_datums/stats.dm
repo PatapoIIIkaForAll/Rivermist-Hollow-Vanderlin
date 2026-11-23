@@ -31,7 +31,7 @@
 	name = "hawk's-eye loupe"
 	socket_kinds = list(PROSTHETIC_KIND_EYE)
 	point_value = -2
-	desc = "More perception."
+	desc = "More wisdom."
 	stability_cost = -10
 	stat_changes = list(STAT_PERCEPTION = 2)
 	engineering_difficulty = SKILL_RANK_APPRENTICE
@@ -71,7 +71,7 @@
 	name = "spring-heel actuator"
 	socket_kinds = list(PROSTHETIC_KIND_LEG)
 	point_value = -2
-	desc = "More speed."
+	desc = "More dexterity."
 	stability_cost = -12
 	stat_changes = list(STAT_SPEED = 2)
 	engineering_difficulty = SKILL_RANK_JOURNEYMAN

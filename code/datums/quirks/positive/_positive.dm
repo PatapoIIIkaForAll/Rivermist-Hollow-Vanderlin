@@ -27,7 +27,7 @@
 
 /datum/quirk/positive/heel_walker
 	name = "Heel Walker"
-	desc = "You are used to heeled shoes. They do not lower your Speed and you never trip in them."
+	desc = "You are used to heeled shoes. They do not lower your Dexterity and you never trip in them."
 	point_value = -1
 
 /datum/quirk/positive/heel_walker/on_spawn()
@@ -323,6 +323,7 @@
 	name = "Strikingly Beautiful"
 	desc = "You are remarkably attractive, improving social interactions."
 	point_value = -4
+	admin_only = TRUE
 
 /datum/quirk/positive/beautiful/on_spawn()
 	if(!owner)

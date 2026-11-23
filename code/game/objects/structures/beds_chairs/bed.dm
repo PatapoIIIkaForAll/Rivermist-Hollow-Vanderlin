@@ -78,3 +78,4 @@
 	if(user.m_intent == MOVE_INTENT_SNEAK)
 		hideinside(user)
 		return
+	return ..()

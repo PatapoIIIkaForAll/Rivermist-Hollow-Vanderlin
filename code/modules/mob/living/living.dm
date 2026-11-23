@@ -90,7 +90,8 @@
 	has_reflection = FALSE
 
 /mob/living/onZImpact(turf/impacted_turf, levels, impact_flags = NONE)
-	if(isgroundlessturf(impacted_turf) && defeat_rescue_from_hazard())
+	// Only rescue from groundless landings that are actually unsafe (lava), not water or a pipe over open space.
+	if(isgroundlessturf(impacted_turf) && !impacted_turf.can_traverse_safely(src) && defeat_rescue_from_hazard())
 		return
 	if(!isgroundlessturf(impacted_turf))
 		impact_flags |= ZImpactDamage(impacted_turf, levels)
@@ -1456,11 +1457,7 @@
 			changeNext_move(CLICK_CD_EXHAUSTED)
 			if(cmode)
 				toggle_cmode()
-			var/image/flaggy = image('icons/effects/effects.dmi',src,"surrender",ABOVE_MOB_LAYER)
-			flaggy.appearance_flags = RESET_TRANSFORM|KEEP_APART
-			flaggy.transform = null
-			flaggy.pixel_y = 12
-			flick_overlay_view(flaggy, 150)
+			show_surrender_flag()
 			drop_all_held_items()
 			Stun(20)
 			Knockdown(200)
@@ -1479,6 +1476,13 @@
 				REMOVE_TRAIT(src, TRAIT_PACIFISM, TRAIT_GENERIC)
 			had_pacifist = FALSE
 			src.visible_message("<span class='notice'>[src] no longer yields!</span>")
+
+/mob/living/proc/show_surrender_flag()
+	var/image/flaggy = image('icons/effects/effects.dmi', src, "surrender", ABOVE_MOB_LAYER)
+	flaggy.appearance_flags = RESET_TRANSFORM|KEEP_APART
+	flaggy.transform = null
+	flaggy.pixel_y = 12
+	flick_overlay_view(flaggy, 150)
 
 /mob/living/verb/swap_lying_direction_verb()
 	set name = "Swap Lying Direction"

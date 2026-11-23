@@ -1471,6 +1471,9 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 				return FALSE
 			user.client.toggle_speech_moans()
 			return TRUE
+		if("strength_voice_pitch")
+			toggle_preference(/datum/preference/toggle/strength_voice_pitch)
+			return TRUE
 		if("voicepack")
 			var/current_voice_pack = read_preference(/datum/preference/choiced/voice_pack)
 			var/voicepack_input = tgui_input_list(user, "CHOOSE YOUR HERO'S EMOTE VOICE PACK", "VOICE PACK", GLOB.voice_packs_list, current_voice_pack)
@@ -2346,6 +2349,8 @@ GLOBAL_LIST_INIT(name_adjustments, list())
 	// RMH EDITED START - self-written tattoos, applied after species/bodyparts are set up
 	apply_prosthetics_to_human(character, character_setup)
 	apply_tattoos_to_human(character)
+	if(!character_setup)
+		apply_stat_allocation_to_human(character)
 	// RMH EDITED END
 
 	if(icon_updates)

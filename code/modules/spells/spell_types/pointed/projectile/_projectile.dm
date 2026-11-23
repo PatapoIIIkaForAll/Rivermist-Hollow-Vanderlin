@@ -86,6 +86,14 @@
 		var/obj/projectile/magic/magic_to_fire = to_fire
 		magic_to_fire.antimagic_flags = antimagic_flags
 
+/datum/action/cooldown/spell/projectile/get_examine_effects()
+	. = ..()
+	var/projectile_damage = initial(projectile_type.damage)
+	if(initial(projectile_type.nodamage) || projectile_damage <= 0)
+		return
+	var/shots = projectile_amount * projectiles_per_fire
+	. += "<b>DAMAGE:</b> [projectile_damage] [get_damage_type_name(initial(projectile_type.damage_type))][shots > 1 ? " x[shots]" : ""]"
+
 /// Signal proc for whenever the projectile we fire hits someone.
 /// Pretty much relays to the spell when the projectile actually hits something.
 /datum/action/cooldown/spell/projectile/proc/on_cast_hit(atom/source, mob/firer, atom/hit, angle)

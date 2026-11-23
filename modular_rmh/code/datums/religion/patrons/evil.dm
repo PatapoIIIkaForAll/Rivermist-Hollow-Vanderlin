@@ -8,6 +8,7 @@
 
 /datum/patron/faerun/evil_gods/Mask
 	name = "Mask"
+	added_traits = list(TRAIT_MATTHIOS_EYES)
 	domain = "Shadows, Thieves, Intrigue"
 	desc = "Lord of Shadows, patron of secrecy and cunning theft."
 	flaws = "Paranoid, untrustworthy even to his own faithful."
@@ -140,6 +141,7 @@
 
 /datum/patron/faerun/evil_gods/Blissara
 	name = "Blissara"
+	added_traits = list(TRAIT_CRACKHEAD)
 	domain = "Desire, Psychic Influence, Transformation, Hivemind Unity, Breeding, Desire"
 	desc = "Blissara is a veiled and forbidden deity born from an aberrant evolution of the mind flayers - a splinter of the Elder Brain concept that learned to feed not on thoughts, but on emotional resonance. She appears in visions as a many-petaled, tentacled blossom radiating warmth and longing. Blissara offers euphoric connection and unity, drawing mortals into a vast empathic network where individuality softens into shared purpose. Bliss and breeding."
 	flaws = "Erodes personal boundaries and free will."

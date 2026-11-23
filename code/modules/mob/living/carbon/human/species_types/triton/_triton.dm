@@ -2,9 +2,9 @@
 	race = /datum/species/triton
 
 /datum/attribute_holder/sheet/job/species/triton/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/labor/fishing = 30,
-		/datum/attribute/skill/misc/swimming = 40,
+	clamped_adjustment = list(
+		/datum/attribute/skill/labor/fishing = list(20, 40),
+		/datum/attribute/skill/misc/swimming = list(20, 40),
 	)
 
 /datum/attribute_holder/sheet/job/species/triton/stats/female

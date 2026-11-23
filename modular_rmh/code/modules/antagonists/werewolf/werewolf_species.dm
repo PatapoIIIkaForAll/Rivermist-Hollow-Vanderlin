@@ -68,6 +68,7 @@
 	soundpack_f = /datum/voicepack/werewolf
 
 	statsheet_male = /datum/attribute_holder/sheet/job/species/werewolf
+	forced_attribute_sheets = TRUE
 
 	enflamed_icon = "widefire"
 

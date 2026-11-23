@@ -25,6 +25,7 @@
 
 /datum/patron/faerun/neutral_gods/Mystra
 	name = "Mystra"
+	added_traits = list(TRAIT_TUTELAGE)
 	domain = "Magic, Knowledge, Balance"
 	desc = "Mother of All Magic, governing the Weave with careful precision."
 	flaws = "Overly cautious; hides truths to protect magic’s balance."
@@ -51,6 +52,7 @@
 
 /datum/patron/faerun/neutral_gods/Tempus
 	name = "Tempus"
+	added_traits = list(TRAIT_SHARPER_BLADES)
 	domain = "War, Courage, Battle"
 	desc = "Neutral god of honorable warfare and bravery tempered by respect."
 	flaws = "Indifferent to victory or loss; battle itself is the goal."
@@ -64,6 +66,7 @@
 
 /datum/patron/faerun/neutral_gods/Tymora
 	name = "Tymora"
+	added_traits = list(TRAIT_BLACKLEG)
 	domain = "Luck, Adventure, Fortune"
 	desc = "Lady Luck, smiling upon the bold and daring."
 	flaws = "Fickle; blessings change with the winds of chance."
@@ -77,6 +80,7 @@
 
 /datum/patron/faerun/neutral_gods/Silvanus
 	name = "Silvanus"
+	added_traits = list(TRAIT_KNEESTINGER_IMMUNITY)
 	domain = "Nature, Renewal, Wild Balance"
 	desc = "The Oak Father, ancient and impartial guardian of the wilds, who ensures that nature’s cycle of growth, decay, and rebirth continues unbroken."
 	flaws = "Indifferent to civilization; allows disasters and predation as natural balance; difficult for mortals to understand."
@@ -90,6 +94,7 @@
 
 /datum/patron/faerun/neutral_gods/Jergal
 	name = "Jergal"
+	added_traits = list(TRAIT_SOUL_EXAMINE)
 	domain = "Fatalism, Records of the Dead, Passive Undeath, Oblivion"
 	desc = "The Scribe of the Doomed, ancient and emotionless seneschal of the dead who records every mortal’s doom with perfect neutrality. Once a mighty god of death, now a cold administrator overseeing the cosmic order of endings."
 	flaws = "Utterly apathetic; refuses to intervene even when imbalance is evident; obsessed with inevitability over justice or mercy."

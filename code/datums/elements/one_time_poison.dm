@@ -12,10 +12,20 @@
 	target.reagents.add_reagent_list(reagent_list)
 	RegisterSignal(target, COMSIG_ITEM_ATTACK_EFFECT_SELF, PROC_REF(try_inject))
 	RegisterSignal(target, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
+	RegisterSignal(target, COMSIG_COMPONENT_CLEAN_ACT, PROC_REF(on_clean))
 
 /datum/element/one_time_poison/Detach(datum/source, force)
 	. = ..()
-	UnregisterSignal(source, list(COMSIG_ITEM_ATTACK_EFFECT_SELF, COMSIG_PARENT_EXAMINE))
+	UnregisterSignal(source, list(COMSIG_ITEM_ATTACK_EFFECT_SELF, COMSIG_PARENT_EXAMINE, COMSIG_COMPONENT_CLEAN_ACT))
+
+/// Washing or scrubbing removes the poison. Returns NONE so other cleaning still runs.
+/datum/element/one_time_poison/proc/on_clean(atom/movable/source, clean_types)
+	SIGNAL_HANDLER
+	if((clean_types & CLEAN_WASH) != CLEAN_WASH)
+		return NONE
+	source.reagents?.clear_reagents()
+	Detach(source)
+	return NONE
 
 /datum/element/one_time_poison/proc/try_inject(obj/item/source, mob/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
 	var/reagentlog2 = source.reagents
@@ -23,9 +33,8 @@
 		return
 
 	log_combat(user, victim, "poisoned", addition="with [reagentlog2]")
-	source.reagents.trans_to(victim, source.reagents.get_reagent_amount(), transfered_by = user)
-	Detach(src, TRUE)
-	qdel(src, TRUE)
+	source.reagents.trans_to(victim, source.reagents.total_volume, transfered_by = user)
+	Detach(source)
 
 /datum/element/one_time_poison/proc/on_examine(atom/movable/source, mob/user, list/examine_list)
 	if(source.reagents.total_volume)

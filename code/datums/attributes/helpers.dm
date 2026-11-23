@@ -45,6 +45,8 @@
 			return STAT_SPEED
 		if(STATKEY_LCK)
 			return STAT_FORTUNE
+		if(STATKEY_CHA)
+			return STAT_CHARISMA
 	if(ispath(stat_key, STAT))
 		return stat_key
 	return null

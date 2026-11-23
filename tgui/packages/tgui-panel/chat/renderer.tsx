@@ -386,6 +386,12 @@ class ChatRenderer {
     const countByType = {};
     let node;
     for (const payload of batch) {
+      // RMH EDITED START - a translation update patches an earlier line instead of adding one
+      if (payload.type === 'internal/translation') {
+        this.events.emit('translation', payload);
+        continue;
+      }
+      // RMH EDITED END
       const message = createMessage(payload);
       // Combine messages
       if (!this.disableCombine) {

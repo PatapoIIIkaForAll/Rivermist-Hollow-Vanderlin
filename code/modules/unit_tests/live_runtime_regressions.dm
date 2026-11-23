@@ -217,6 +217,23 @@
 	TEST_ASSERT_EQUAL(length(SSgarbage.failed_hard_deletes), FAILED_HARD_DELETES_KEPT, "Skipped hard deletes are kept without a bound.")
 	SSgarbage.failed_hard_deletes = old_failures
 
+/datum/unit_test/live_runtime_skipped_hard_deletes_counted
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_skipped_hard_deletes_counted/Run()
+	if(SSgarbage.enable_hard_deletes)
+		return
+	var/datum/qdel_item/before_info = SSgarbage.items[/datum]
+	var/before = before_info?.hard_deletes_skipped || 0
+	var/list/old_failures = SSgarbage.failed_hard_deletes.Copy()
+	SSgarbage.HardDelete(new /datum)
+	SSgarbage.failed_hard_deletes = old_failures
+	var/datum/qdel_item/after_info = SSgarbage.items[/datum]
+	TEST_ASSERT_NOTNULL(after_info, "A skipped hard delete of a type that never went through qdel got no stats entry.")
+	TEST_ASSERT_EQUAL(after_info.hard_deletes_skipped, before + 1, "A skipped hard delete was not counted for its type.")
+
 /datum/unit_test/live_runtime_hud_releases_screens
 #ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
 	focus = TRUE
@@ -263,6 +280,51 @@
 	var/datum/http_response/response = request.wait_for_response(10 SECONDS)
 	TEST_ASSERT_NOTNULL(response, "A refused request ran into the wait deadline.")
 	TEST_ASSERT(response.errored, "A refused request did not report an error.")
+
+/datum/unit_test/live_runtime_accessory_icon_cache_bounded
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_accessory_icon_cache_bounded/Run()
+	var/datum/sprite_accessory/accessory = allocate(/datum/sprite_accessory)
+	var/icon/bundle = icon('icons/effects/effects.dmi', "nothing")
+	for(var/i in 1 to 8100)
+		accessory.store_accessory_icon("live_runtime_test_[i]", bundle)
+	var/newest = accessory.accessory_icon_cache["live_runtime_test_8100"]
+	var/cache_size = length(accessory.accessory_icon_cache)
+	// The cache is shared by every accessory; the next draw rebuilds what this drops.
+	accessory.accessory_icon_cache.Cut()
+	TEST_ASSERT(cache_size <= 8000, "accessory_icon_cache grew to [cache_size] keys.")
+	TEST_ASSERT_NOTNULL(newest, "The newest bundle was not cached.")
+	TEST_ASSERT(!istype(newest, /icon), "The cache kept a decoded /icon instead of a resource.")
+
+/datum/unit_test/live_runtime_individual_log_bounded
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_individual_log_bounded/Run()
+	var/list/type_log = list()
+	for(var/i in 1 to 1100)
+		append_individual_log(type_log, list("line [i]" = "message [i]"))
+	TEST_ASSERT(length(type_log) <= 1000, "An individual log grew to [length(type_log)] lines.")
+	TEST_ASSERT_EQUAL(type_log["line 1100"], "message 1100", "The newest line was dropped.")
+	TEST_ASSERT_NULL(type_log["line 1"], "The oldest line was kept.")
+
+/datum/unit_test/live_runtime_browser_not_pinned_to_user
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_browser_not_pinned_to_user/Run()
+	var/mob/living/carbon/human/reader = allocate(/mob/living/carbon/human)
+	var/obj/item/paper/source = allocate(/obj/item/paper)
+	var/datum/browser/popup = new(reader, "live_runtime_test", "Test", 300, 300, source)
+	var/list/reader_listeners = reader.comp_lookup?[COMSIG_PARENT_QDELETING]
+	var/list/source_listeners = source.comp_lookup?[COMSIG_PARENT_QDELETING]
+	TEST_ASSERT(reader_listeners != popup && !(islist(reader_listeners) && (popup in reader_listeners)), "A one-shot browser is held by its user's signals.")
+	TEST_ASSERT(source_listeners != popup && !(islist(source_listeners) && (popup in source_listeners)), "A one-shot browser is held by its owner's signals.")
 
 #undef TEST_TRIUMPH_SEASON
 #undef TEST_TRIUMPH_AMOUNT

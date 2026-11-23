@@ -10,7 +10,7 @@
 /obj/item/heel_elixir/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Use it on shoes to give them heels. One use, and it cannot be undone.")
-	. += span_info("Heeled shoes lower Speed by 1 and can trip you when you run. The Heel Walker quirk removes both.")
+	. += span_info("Heeled shoes lower Dexterity by 1 and can trip you when you run. The Heel Walker quirk removes both.")
 
 /obj/item/heel_elixir/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(!istype(interacting_with, /obj/item/clothing/shoes))

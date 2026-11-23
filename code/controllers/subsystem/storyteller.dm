@@ -1679,11 +1679,11 @@ SUBSYSTEM_DEF(gamemode)
 
 			if(GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED) > highest_speed)
 				highest_speed = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)
-				set_chronicle_stat(CHRONICLE_STATS_FASTEST_PERSON, human_mob, "SPEEDSTER", "#54d6c2", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)] speed")
+				set_chronicle_stat(CHRONICLE_STATS_FASTEST_PERSON, human_mob, "SPEEDSTER", "#54d6c2", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)] dexterity")
 
 			if(GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION) > highest_perception)
 				highest_perception = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)
-				set_chronicle_stat(CHRONICLE_STATS_MOST_PERCEPTIVE_PERSON, human_mob, "EAGLE-EYED", "#a8d654", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)] perception")
+				set_chronicle_stat(CHRONICLE_STATS_MOST_PERCEPTIVE_PERSON, human_mob, "EAGLE-EYED", "#a8d654", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)] wisdom")
 
 			if(GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_CONSTITUTION) > highest_constitution)
 				highest_constitution = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_CONSTITUTION)
@@ -1722,10 +1722,10 @@ SUBSYSTEM_DEF(gamemode)
 
 			if(isnull(lowest_speed))
 				lowest_speed = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)
-				set_chronicle_stat(CHRONICLE_STATS_SLOWEST_PERSON, human_mob, "TURTLE", "#a569bd", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)] speed")
+				set_chronicle_stat(CHRONICLE_STATS_SLOWEST_PERSON, human_mob, "TURTLE", "#a569bd", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)] dexterity")
 			else if(GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED) < lowest_speed)
 				lowest_speed = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)
-				set_chronicle_stat(CHRONICLE_STATS_SLOWEST_PERSON, human_mob, "TURTLE", "#a569bd", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)] speed")
+				set_chronicle_stat(CHRONICLE_STATS_SLOWEST_PERSON, human_mob, "TURTLE", "#a569bd", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_SPEED)] dexterity")
 
 			if(isnull(lowest_luck))
 				lowest_luck = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_FORTUNE)
@@ -1743,10 +1743,10 @@ SUBSYSTEM_DEF(gamemode)
 
 			if(isnull(lowest_perception))
 				lowest_perception = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)
-				set_chronicle_stat(CHRONICLE_STATS_LEAST_PERCEPTIVE_PERSON, human_mob, "CLUELESS", "#9fb9b9", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)] perception")
+				set_chronicle_stat(CHRONICLE_STATS_LEAST_PERCEPTIVE_PERSON, human_mob, "CLUELESS", "#9fb9b9", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)] wisdom")
 			else if(GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION) < lowest_perception)
 				lowest_perception = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)
-				set_chronicle_stat(CHRONICLE_STATS_LEAST_PERCEPTIVE_PERSON, human_mob, "CLUELESS", "#9fb9b9", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)] perception")
+				set_chronicle_stat(CHRONICLE_STATS_LEAST_PERCEPTIVE_PERSON, human_mob, "CLUELESS", "#9fb9b9", "[GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_PERCEPTION)] wisdom")
 
 			if(isnull(lowest_constitution))
 				lowest_constitution = GET_MOB_ATTRIBUTE_VALUE(human_mob, STAT_CONSTITUTION)
@@ -1774,9 +1774,10 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/ugly_candidates = list()
 
 	for(var/mob/living/carbon/human/human_mob in current_valid_humans)
-		if(HAS_TRAIT(human_mob, TRAIT_BEAUTIFUL))
+		var/impression = human_mob.get_impression()
+		if(HAS_TRAIT(human_mob, TRAIT_BEAUTIFUL) || impression == IMPRESSION_STRONG)
 			beautiful_candidates += human_mob
-		if(HAS_TRAIT(human_mob, TRAIT_UGLY))
+		if(HAS_TRAIT(human_mob, TRAIT_UGLY) || impression == IMPRESSION_POOR)
 			ugly_candidates += human_mob
 
 	if(length(beautiful_candidates) > 0)

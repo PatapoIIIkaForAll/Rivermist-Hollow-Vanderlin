@@ -40,8 +40,12 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	var/heat = 300
 	///When the recipe starts
 	var/start_time
-	///our brew progress time
-	var/heated_progress_time
+	///Time spent above the recipe's heat_required during the current cycle
+	var/heated_progress_time = 0
+	///Length of the current brew cycle, after skill speed
+	var/current_brew_duration = 0
+	///Share of a heated cycle that must be spent hot for it to succeed
+	var/min_heated_fraction = 0.75
 	///when our heat can decay
 	var/heat_decay = 0
 	///How many times have we done this recipe
@@ -145,7 +149,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 		return ..()
 
 	if(try_n_brew(user))
-		start_brew()
+		start_brew(user)
 		to_chat(user, span_info("[src] begins [selected_recipe.start_verb] [selected_recipe.name]."))
 	..()
 
@@ -324,7 +328,9 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 				if((selected_recipe.brew_time * multiplier) >= 1 MINUTES)
 					message += "Once set, will take [(selected_recipe.brew_time / 600) * multiplier] Minutes.\n"
 				else
-					message += "Once set, will take [(selected_recipe.brew_time / 10) & multiplier] Seconds.\n"
+					message += "Once set, will take [(selected_recipe.brew_time / 10) * multiplier] Seconds.\n"
+		if(selected_recipe.heat_required)
+			message += "Must stay above [selected_recipe.heat_required - 271.3]C for most of each cycle.\n"
 
 		//How many are brewed
 		if(selected_recipe.brewed_amount)
@@ -484,6 +490,8 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	if(closed_icon_state)
 		icon_state = closed_icon_state
 	start_time = world.time
+	current_brew_duration = real_brew_time
+	heated_progress_time = 0
 	update_appearance(UPDATE_OVERLAYS)
 
 /obj/structure/fermentation_keg/proc/end_brew(success = TRUE)
@@ -491,6 +499,9 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	if(!brewing)
 		return
 	brewing = FALSE
+	if(success && !check_cycle_heat())
+		success = FALSE
+		visible_message(span_warning("[src] went cold, ruining the [LOWER_TEXT(selected_recipe.name)]."))
 	if(success)
 		sellprice += selected_recipe.sell_value
 
@@ -517,6 +528,18 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	else
 		icon_state = initial(icon_state)
 	update_appearance(UPDATE_OVERLAYS)
+
+/// Adds heated time since the last tick. FALSE if a heated recipe was not kept hot for enough of this cycle.
+/obj/structure/fermentation_keg/proc/check_cycle_heat()
+	if(!selected_recipe?.heat_required)
+		return TRUE
+	track_heat()
+	return heated_progress_time >= current_brew_duration * min_heated_fraction
+
+/obj/structure/fermentation_keg/proc/track_heat()
+	if(heat > selected_recipe.heat_required)
+		heated_progress_time += world.time - start_time
+	start_time = world.time
 
 /obj/structure/fermentation_keg/proc/try_n_brew(mob/user)
 	if(!selected_recipe)
@@ -702,12 +725,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 			reagents.add_reagent(incoming_reagent, transfer_amount)
 
 	if(brewing && selected_recipe.heat_required)
-		var/end_time = world.time + (selected_recipe.brew_time - heated_progress_time)
-		if(world.time > end_time)
-			end_brew(FALSE)
-		if((heat > selected_recipe.heat_required))
-			heated_progress_time += world.time - start_time
-		start_time = world.time
+		track_heat()
 
 	if(heat_decay < world.time)
 		heat = max(300, heat-5)

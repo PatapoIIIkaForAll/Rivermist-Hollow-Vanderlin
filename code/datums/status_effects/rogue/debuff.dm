@@ -325,18 +325,52 @@
 	id = "sleepytime"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/sleepytime
 	effectedstats = list(STAT_SPEED = -2, STAT_ENDURANCE = -2)
+	/// TRUE while caffeine hides the penalties. Only sleep removes the debuff.
+	var/masked = FALSE
 
 /datum/status_effect/debuff/sleepytime/on_apply()
 	. = ..()
-	if(iscarbon(owner))
-		var/mob/living/carbon/C = owner
-		C.add_stress(/datum/stress_event/sleepytime)
+	RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_CAFFEINATED), PROC_REF(on_caffeine_gained))
+	RegisterSignal(owner, SIGNAL_REMOVETRAIT(TRAIT_CAFFEINATED), PROC_REF(on_caffeine_lost))
+	if(HAS_TRAIT(owner, TRAIT_CAFFEINATED))
+		masked = TRUE
+		owner.remove_stat_modifier("[id]")
+		return
+	owner.add_stress(/datum/stress_event/sleepytime)
+
+/datum/status_effect/debuff/sleepytime/on_creation(mob/living/new_owner, duration_override, ...)
+	. = ..()
+	// The parent throws the alert after on_apply, so hide it here.
+	if(. && masked)
+		owner.clear_alert(id)
+		linked_alert = null
 
 /datum/status_effect/debuff/sleepytime/on_remove()
 	. = ..()
-	if(iscarbon(owner))
-		var/mob/living/carbon/C = owner
-		C.remove_stress(/datum/stress_event/sleepytime)
+	UnregisterSignal(owner, list(SIGNAL_ADDTRAIT(TRAIT_CAFFEINATED), SIGNAL_REMOVETRAIT(TRAIT_CAFFEINATED)))
+	owner.remove_stress(/datum/stress_event/sleepytime)
+
+/datum/status_effect/debuff/sleepytime/proc/on_caffeine_gained(datum/source)
+	SIGNAL_HANDLER
+	if(masked)
+		return
+	masked = TRUE
+	owner.remove_stat_modifier("[id]")
+	owner.remove_stress(/datum/stress_event/sleepytime)
+	owner.clear_alert(id)
+	linked_alert = null
+	to_chat(owner, span_notice("The drink chases off my tiredness... for now."))
+
+/datum/status_effect/debuff/sleepytime/proc/on_caffeine_lost(datum/source)
+	SIGNAL_HANDLER
+	if(!masked)
+		return
+	masked = FALSE
+	owner.set_stat_modifier("[id]", effectedstats)
+	owner.add_stress(/datum/stress_event/sleepytime)
+	linked_alert = owner.throw_alert(id, alert_type)
+	linked_alert?.attached_effect = src
+	to_chat(owner, span_warning("The drink wears off, and my tiredness comes back."))
 
 /datum/status_effect/debuff/sleepytime/get_examine_text(mob/user, list/P)
 	if(HAS_TRAIT(user, TRAIT_EXTEROCEPTION))

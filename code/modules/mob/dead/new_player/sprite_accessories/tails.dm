@@ -327,6 +327,7 @@
 /datum/sprite_accessory/tail/lizard/kobold
 	name = "Kobold"
 	icon_state = "kobold"
+	can_wag = FALSE // no wagging sprites
 
 /datum/sprite_accessory/tail/tiefling
 	name = "Tiefling"
@@ -400,7 +401,7 @@
 	icon_state = "orca"
 	specuse = list(SPEC_ID_TRITON)
 	color_key_defaults = list(KEY_SKIN_COLOR)
-	can_wag = TRUE
+	can_wag = FALSE // no wagging sprites
 
 /datum/sprite_accessory/tail/kobold
 	name = "Kobold Curly"

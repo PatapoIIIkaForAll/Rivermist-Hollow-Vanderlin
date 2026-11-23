@@ -1,4 +1,5 @@
 /obj/item/clothing/shoes/hammerhold_shoes
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "Mithral Hall shoes"
 	desc = ""
 	icon = 'modular_twilightaxis/icons/clothing/boots.dmi'

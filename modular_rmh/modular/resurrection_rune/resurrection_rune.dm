@@ -701,10 +701,8 @@
 	if(is_active_noncarbon_shapeshift_source_body(target))
 		return RUNE_STAGE_NONE
 
-	var/turf/target_turf = get_turf(target)
-	if(istype(target_turf, /turf/open/lava))
-		return RUNE_STAGE_IMMEDIATE
-	if(istype(target_turf, /turf/open/lava/acid))
+	var/turf/open/lava/lava_turf = get_turf(target)
+	if(istype(lava_turf) && lava_turf.would_burn(target))
 		return RUNE_STAGE_IMMEDIATE
 	if(target.is_dead())
 		return RUNE_STAGE_IMMEDIATE

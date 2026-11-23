@@ -190,6 +190,8 @@
 	GLOB.human_list += src
 	if(ai_controller && flee_in_pain)
 		AddElement(/datum/element/ai_flee_while_in_pain)
+	if(npc_break_damage || npc_death_damage)
+		AddElement(/datum/element/npc_breaking_point)
 
 	if(!GetComponent(/datum/component/arousal))
 		AddComponent(/datum/component/arousal)

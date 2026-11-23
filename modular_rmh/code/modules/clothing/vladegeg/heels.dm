@@ -2,6 +2,7 @@
 #define HEEL_TRIP_CHANCE 1
 
 /obj/item/clothing/shoes/heels
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "black heels"
 	desc = "A real fashion statement in these parts. Don't trip."
 	icon = 'modular_rmh/icons/clothing/vladegeg/heels.dmi'

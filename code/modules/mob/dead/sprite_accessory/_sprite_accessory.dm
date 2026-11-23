@@ -120,7 +120,8 @@
 	color_string = sanitize_color_string(color_string)
 	// get_icon() can pick a per-body file, so the file is part of the key.
 	var/key = "[type]-[icon_file]-[overlay_icon_state]-[color_string]-[glows]"
-	if(!accessory_icon_cache[key])
+	var/cached_icon = accessory_icon_cache[key]
+	if(!cached_icon)
 		var/list/icon_states = generate_icon_states(overlay_icon_state, color_string, icon_file)
 		var/icon/icon_bundle = icon('icons/testing/greyscale_error.dmi')
 		for(var/icon_state in icon_states)
@@ -131,9 +132,8 @@
 				if(length(icon_states(moving_icon)))
 					icon_bundle.Insert(moving_icon, icon_state, moving = 1)
 
-		accessory_icon_cache[key] = icon_bundle
+		cached_icon = store_accessory_icon(key, icon_bundle)
 
-	var/icon/cached_icon = icon(accessory_icon_cache[key])
 	/// Generate mutable appearances from the icon
 	var/appearance_list = list()
 	if(relevant_layers)
@@ -171,6 +171,22 @@
 			appearance_list += emissive
 
 	return appearance_list
+
+/// Coloured bundles kept in accessory_icon_cache before the oldest are dropped.
+#define ACCESSORY_ICON_CACHE_MAX_KEYS 8000
+/// How many of the oldest bundles are dropped at once when the cache is full.
+#define ACCESSORY_ICON_CACHE_EVICT_KEYS 1000
+
+/// Caches a generated bundle as a resource and returns it. A cached /icon keeps its decoded pixels in memory.
+/datum/sprite_accessory/proc/store_accessory_icon(key, icon/generated)
+	if(!accessory_icon_cache[key] && length(accessory_icon_cache) >= ACCESSORY_ICON_CACHE_MAX_KEYS)
+		// Associative lists keep insertion order, so the front holds the oldest keys.
+		accessory_icon_cache.Cut(1, ACCESSORY_ICON_CACHE_EVICT_KEYS + 1)
+	. = fcopy_rsc(generated)
+	accessory_icon_cache[key] = .
+
+#undef ACCESSORY_ICON_CACHE_MAX_KEYS
+#undef ACCESSORY_ICON_CACHE_EVICT_KEYS
 
 /datum/sprite_accessory/proc/sanitize_color_string(color_string)
 	var/list/color_list = color_string_to_list(color_string)

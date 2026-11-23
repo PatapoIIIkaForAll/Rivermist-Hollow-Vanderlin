@@ -21,7 +21,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 			"type" = quirk_type,
 			"desc" = initial(quirk_type.desc),
 			"desc_hint" = initial(quirk_type.desc_hint),
-			"value" = initial(quirk_type.point_value)
+			"value" = initial(quirk_type.point_value),
+			"admin_only" = initial(quirk_type.admin_only),
 		))
 		LAZYADDASSOC(GLOB.quirk_singletons, quirk_type, new quirk_type)
 
@@ -71,6 +72,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 	var/mob/living/owner
 	/// Can this be randomly selected?
 	var/random_exempt = FALSE
+	/// Players cannot pick this quirk; admins and game code can still add it.
+	var/admin_only = FALSE
 	/// Does this render in the preview?
 	var/preview_render = TRUE
 
@@ -200,6 +203,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 /datum/quirk/proc/is_available(datum/preferences/prefs)
 	if(!prefs)
 		return TRUE
+	if(admin_only)
+		return FALSE
 
 	// Check age restrictions
 	if(length(allowed_ages) && !(prefs.read_preference(/datum/preference/choiced/age) in allowed_ages))

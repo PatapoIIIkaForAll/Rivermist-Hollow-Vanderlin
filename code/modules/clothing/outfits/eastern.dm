@@ -121,7 +121,7 @@
 	armor_type = /datum/armor/leather/good
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 25 // Head Honcho gets a buff
 	sellprice = 25
-
+	social_cues = list("faction:town_watch" = 5, "rank:town_watch:captain" = 5, "elite:town_watch" = 3)
 
 // this robe spawns on a role that offers no leg protection nor further upgrades to the loadout, in exchange for better roundstart gear
 
@@ -143,6 +143,7 @@
 	armor_type = /datum/armor/boots/anklet
 
 /obj/item/clothing/shoes/rumaclan
+	sewrepair = /datum/attribute/skill/misc/sewing/mending
 	name = "raised sandals"
 	desc = "A pair of strange sandals that push you off the ground."
 	icon_state = "eastsandals"

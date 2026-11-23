@@ -7,7 +7,7 @@
 	desc = "Fluvians are moth-folk wanderers known for moonlit pilgrimages, omen-reading, and a calm fascination with the uncanny. \
 	They are rare in settled lands, but their knack for charm, luck, and quiet mysticism makes them memorable wherever they travel. \
 	\n\n\
-	(+1 SPD, Blackleg Trait).\
+	(Blackleg Trait).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
@@ -32,6 +32,7 @@
 
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_SPLEEN = /obj/item/organ/spleen,
 		ORGAN_SLOT_HEART = /obj/item/organ/heart,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
 		ORGAN_SLOT_EYES = /obj/item/organ/eyes,

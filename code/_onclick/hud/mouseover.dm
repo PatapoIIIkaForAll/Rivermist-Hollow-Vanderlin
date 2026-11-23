@@ -12,6 +12,8 @@
 	var/mob/user = client?.mob
 	if(!user)
 		return
+	if(client.holder)
+		client.track_admin_hover(src)
 
 	SEND_SIGNAL(client, COMSIG_CLIENT_HOVER_NEW, src)
 	SEND_SIGNAL(src, COMSIG_ATOM_MOUSE_ENTERED, user)

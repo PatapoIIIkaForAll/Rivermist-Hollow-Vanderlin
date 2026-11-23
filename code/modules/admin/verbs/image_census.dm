@@ -3,7 +3,7 @@
 /client/proc/cmd_image_census()
 	set category = "Debug.Debug"
 	set name = "Image Census"
-	set desc = "Count image and mutable appearance references by holder. Slow on a long round."
+	set desc = "Count image, mutable appearance and icon references by holder. Slow on a long round."
 
 	if(!check_rights(R_DEBUG))
 		return
@@ -30,7 +30,7 @@
 	for(var/key in counts)
 		total += counts[key]
 	var/list/sorted = sortTim(counts, GLOBAL_PROC_REF(cmp_numeric_dsc), associative = TRUE)
-	var/list/lines = list("Image census at [ROUND_TIME()]: [total] image/mutable appearance references in [length(sorted)] holders.")
+	var/list/lines = list("Image census at [ROUND_TIME()]: [total] image/mutable appearance/icon references in [length(sorted)] holders.")
 	var/shown = 0
 	for(var/key in sorted)
 		lines += "[sorted[key]] [key]"
@@ -57,6 +57,10 @@
 		return
 	if(istype(value, /image))
 		counts["[holder_key] (image)"] += 1
+		return
+	// A held /icon keeps its decoded pixels in memory; a cached fcopy_rsc() resource does not.
+	if(istype(value, /icon))
+		counts["[holder_key] (icon)"] += 1
 		return
 	if(!islist(value) || depth >= 4)
 		return

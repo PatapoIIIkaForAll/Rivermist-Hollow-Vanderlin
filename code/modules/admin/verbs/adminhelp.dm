@@ -286,7 +286,10 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 /datum/admin_help/proc/MessageNoRecipient(msg)
 	var/ref_src = "[REF(src)]"
 	//Message to be sent to all admins
-	var/admin_msg = "<span class='adminnotice'><span class='adminhelp'>[TicketHref("Ticket #[id]", ref_src)]<b>: [LinkedReplyName(ref_src)] [limited_monty(ref_src)] </b> <span class='linkify'>[keywords_lookup(msg)]</span></span></span>"
+	//RMH EDITED START
+	var/admin_msg_start = "<span class='adminnotice'><span class='adminhelp'>[TicketHref("Ticket #[id]", ref_src)]<b>: [LinkedReplyName(ref_src)] [limited_monty(ref_src)] </b> <span class='linkify'>"
+	var/admin_msg_text = keywords_lookup(msg)
+	//RMH EDITED END
 
 	AddInteraction("<font color='red'>[LinkedReplyName(ref_src)]: [msg]</font>", player_message = "<font color='red'>[LinkedReplyName(ref_src)]: [msg]</font>")
 	log_admin_private("Ticket #[id]: [key_name(initiator)]: [msg]")
@@ -297,7 +300,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			continue
 		SEND_SOUND(X, sound('sound/misc/adminhelp.ogg'))
 		window_flash(X, ignorepref = TRUE)
-		to_chat(X, admin_msg)
+		to_chat(X, "[admin_msg_start][autotranslate_admin_text(X, admin_msg_text, msg, initiator)]</span></span></span>") // RMH EDITED
 
 	//show it to the person adminhelping too
 	to_chat(initiator, "<span class='adminnotice'>PM to-<b>Admins</b>: <span class='linkify'>[msg]</span></span>")

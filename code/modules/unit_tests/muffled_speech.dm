@@ -52,6 +52,15 @@
 	speaker.say("Hello there friend", forced = "unit test")
 	TEST_ASSERT_EQUAL(last_spoken, "Hello there friend", "Clear speech was changed")
 
+	// Ball gags and muzzles also go in the mouth slot and gag the same way there.
+	TEST_ASSERT(speaker.equip_to_slot_if_possible(gag, ITEM_SLOT_MOUTH), "The gag did not go into the mouth")
+	TEST_ASSERT(speaker.is_speech_muffled(), "A gag in the mouth does not muffle speech")
+	TEST_ASSERT(speaker.can_speak_vocal(), "A gag in the mouth blocks muffled noises")
+	last_spoken = null
+	speaker.say("Hello there friend", forced = "unit test")
+	TEST_ASSERT_EQUAL(last_spoken, "Mmmph mmmph mmmmph", "Speech through a mouth gag carried other words")
+	speaker.dropItemToGround(gag, force = TRUE)
+
 	ADD_TRAIT(speaker, TRAIT_MUTE, TRAIT_SOURCE_UNIT_TESTS)
 	TEST_ASSERT(!speaker.can_voice_words(), "A mute speaker can voice words")
 	last_spoken = null

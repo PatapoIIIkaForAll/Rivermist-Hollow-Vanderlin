@@ -25,6 +25,14 @@
 	var/totalstatshift = 0
 	var/totalstatchange = 0
 	var/outline_colour = "#FFD700"
+	/// Most points moved from each of the target's stats to the caster.
+	var/max_stat_shift = 2
+	/// How long the moved stat points stay moved.
+	var/link_duration = 1 MINUTES
+
+/datum/action/cooldown/spell/beam/equalize/get_examine_effects()
+	. = ..()
+	. += "<b>EFFECT:</b> takes up to [max_stat_shift] points from each stat of a stronger target and gives them to you for [DisplayTimeText(link_duration)]"
 
 /datum/action/cooldown/spell/beam/equalize/is_valid_target(atom/cast_on)
 	. = ..()
@@ -52,6 +60,7 @@
 		qdel(active)
 		return
 	var/mob/living/carbon/human/C = owner
+	totalstatchange = 0
 	totalstatchange += (GET_MOB_ATTRIBUTE_VALUE(victim, STAT_SPEED) - GET_MOB_ATTRIBUTE_VALUE(C, STAT_SPEED))
 	totalstatchange += ((GET_MOB_ATTRIBUTE_VALUE(victim, STAT_STRENGTH) - GET_MOB_ATTRIBUTE_VALUE(C, STAT_STRENGTH))*2) // We're gonna weigh strength as double, being the strongest stat.
 	totalstatchange += (GET_MOB_ATTRIBUTE_VALUE(victim, STAT_ENDURANCE) - GET_MOB_ATTRIBUTE_VALUE(C, STAT_ENDURANCE))
@@ -60,7 +69,7 @@
 	totalstatchange += (GET_MOB_ATTRIBUTE_VALUE(victim, STAT_CONSTITUTION) - GET_MOB_ATTRIBUTE_VALUE(C, STAT_CONSTITUTION))
 	totalstatchange += (GET_MOB_ATTRIBUTE_VALUE(victim, STAT_PERCEPTION) - GET_MOB_ATTRIBUTE_VALUE(C, STAT_PERCEPTION))
 	totalstatchange -= 3 // We need At least a 4 point disadvantage before we start siphoning
-	totalstatshift = CLAMP((totalstatchange), 0, 2) // We DO NOT WANT Matthian Clerics stealing 30 stats from Ascendants, Cap the statshift by 2
+	totalstatshift = CLAMP((totalstatchange), 0, max_stat_shift) // We DO NOT WANT Matthian Clerics stealing 30 stats from Ascendants, Cap the statshift by 2
 	if(totalstatshift <1)
 		to_chat(owner, "<font color='yellow'>[victim] fire burns dimly, there is nothing worth equalizing.</font>")
 		return
@@ -75,8 +84,8 @@
 		for(var/stat_key in statsmod)
 			victim.set_stat_modifier(STATMOD_EQUALIZE, stat_key, -totalstatshift)
 			C.set_stat_modifier(STATMOD_EQUALIZE, stat_key, totalstatshift)
-		addtimer(CALLBACK(src, PROC_REF(returnstatstarget), victim), 1 MINUTES) // 2 timers incase only one guy gets deleted or smthing
-		addtimer(CALLBACK(src, PROC_REF(returnstatsuser), C), 1 MINUTES)
+		addtimer(CALLBACK(src, PROC_REF(returnstatstarget), victim), link_duration) // 2 timers incase only one guy gets deleted or smthing
+		addtimer(CALLBACK(src, PROC_REF(returnstatsuser), C), link_duration)
 
 
 /datum/action/cooldown/spell/beam/equalize/proc/returnstatstarget(mob/living/target)

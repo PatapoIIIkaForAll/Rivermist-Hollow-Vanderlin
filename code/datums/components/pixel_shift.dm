@@ -7,10 +7,6 @@
 	var/shifting = FALSE
 	//the maximum amount we/an item can move
 	var/maximum_pixel_shift = 16
-	//If we are shifted
-	var/is_shifted = FALSE
-	//Amount of shifting necessary to make the parent passthroughable
-	var/passthrough_threshold = 8
 
 /datum/component/pixel_shift/Initialize(...)
 	. = ..()
@@ -62,7 +58,7 @@
 	SIGNAL_HANDLER
 	shifting = FALSE
 
-/// In-turf pixel movement which can allow things to pass through if the threshold is met.
+/// In-turf pixel movement. A mob shifted far enough to one edge can be walked past; see pixelshift_lets_pass().
 /datum/component/pixel_shift/proc/pixel_shift(mob/source, direct)
 	var/mob/living/owner = parent
 	switch(shifting)

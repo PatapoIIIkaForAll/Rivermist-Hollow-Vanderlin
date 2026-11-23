@@ -165,7 +165,7 @@
 
 /datum/dungeon_boon/fleetfoot
 	name = "Fleetfoot"
-	desc = "The dungeon's paths seem shorter. (+speed)"
+	desc = "The dungeon's paths seem shorter. (+dexterity)"
 	domains = list("nature", "shadow")
 
 /datum/dungeon_boon/fleetfoot/apply(datum/dungeon_run/run, mob/living/target)
@@ -248,7 +248,7 @@
 
 /datum/dungeon_boon/dark/umbral_edge
 	name = "Umbral Edge"
-	desc = "Night itself sharpens your arm and your stride. (+strength, +speed)"
+	desc = "Night itself sharpens your arm and your stride. (+strength, +dexterity)"
 	domains = list("shadow", "war")
 
 /datum/dungeon_boon/dark/umbral_edge/apply(datum/dungeon_run/run, mob/living/target)

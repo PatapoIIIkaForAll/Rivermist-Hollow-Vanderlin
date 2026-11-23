@@ -48,6 +48,8 @@
 	var/allow_big_nesting = FALSE					//allow storage objects of the same or greater size.
 
 	var/attack_hand_interact = TRUE					//interact on attack hand.
+	/// If FALSE, a non-item parent is hit instead of filled while the user is in combat mode.
+	var/insert_in_combat_mode = FALSE
 	/// alt click takes an item out instead of opening up storage
 	var/quickdraw = FALSE
 
@@ -640,6 +642,8 @@
 
 //This proc is called when you want to place an item into the storage item
 /datum/component/storage/proc/attackby(datum/source, obj/item/attacking_item, mob/user, modifiers, storage_click = FALSE)
+	if(user?.cmode && !insert_in_combat_mode && !isitem(parent))
+		return FALSE
 	. = TRUE //no afterattack
 	if(!can_be_inserted(attacking_item, FALSE, user, modifiers = modifiers, storage_click = storage_click))
 		var/atom/real_location = real_location()

@@ -189,30 +189,22 @@
 	message = "wags their tail."
 
 /datum/emote/living/carbon/human/wag/run_emote(mob/user, params, type_override, intentional)
-	. = ..()
-	if(!.)
-		return
 	var/mob/living/carbon/human/H = user
-	if(!istype(H) || !H.dna || !H.dna.species || !H.dna.species.can_wag_tail(H))
-		return
-	if(!H.dna.species.is_wagging_tail())
-		H.dna.species.start_wagging_tail(H)
-	else
+	if(!istype(H) || !H.dna?.species)
+		return FALSE
+	// Stopping is silent and skips the emote checks, so a tail can always be stilled.
+	if(H.dna.species.is_wagging_tail(H))
 		H.dna.species.stop_wagging_tail(H)
+		return TRUE
+	. = ..()
+	if(.)
+		H.dna.species.start_wagging_tail(H)
 
 /datum/emote/living/carbon/human/wag/can_run_emote(mob/user, status_check = TRUE , intentional)
 	if(!..())
 		return FALSE
 	var/mob/living/carbon/human/H = user
 	return H.dna && H.dna.species && H.dna.species.can_wag_tail(user)
-
-/datum/emote/living/carbon/human/wag/select_message_type(mob/user, intentional)
-	. = ..()
-	var/mob/living/carbon/human/H = user
-	if(!H.dna || !H.dna.species)
-		return
-	if(H.dna.species.is_wagging_tail())
-		. = null
 
 /datum/emote/living/carbon/human/rakshari
 

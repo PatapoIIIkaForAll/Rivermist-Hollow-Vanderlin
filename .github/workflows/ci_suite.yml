@@ -182,10 +182,37 @@ jobs:
           dmb-location: vanderlin.dmb
           max-required-client-version: ${{needs.collect_data.outputs.max_required_byond_client}}
 
+  law_ui_checks:
+    name: Law UI and SCOM checks
+    needs: start_gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.5
+      - name: Install TGUI dependencies
+        working-directory: tgui
+        run: bun install --frozen-lockfile
+      - name: TGUI types and production build
+        working-directory: tgui
+        run: |
+          bun run tgui:tsc
+          bun run tgui:build
+      - name: Editor and transport tests
+        working-directory: tgui
+        run: bun test packages/tgui/interfaces/RmhScribeStand/types.test.ts packages/tgui/events/act.test.ts
+      - name: SCOM browser regressions
+        run: python modular_rmh/modular/law_documents/tests/run_browser_checks.py
+      - name: Verify reproducible SCOM artwork
+        run: |
+          python modular_rmh/modular/law_documents/assets/generate_scom_frame.py
+          git diff --exit-code -- modular_rmh/modular/law_documents/assets
+
   completion_gate: # Serves as a non-moving target for branch rulesets
     if: always() && !cancelled()
     name: Completion Gate
-    needs: [compile_all_maps, run_all_tests, run_linters]
+    needs: [compile_all_maps, run_all_tests, run_linters, law_ui_checks]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed

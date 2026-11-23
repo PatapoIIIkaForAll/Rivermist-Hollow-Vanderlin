@@ -1,4 +1,5 @@
 /obj/item/clothing/shoes/nobleboot
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "noble boots"
 	//dropshrink = 0.75
 	color = "#d5c2aa"
@@ -23,6 +24,7 @@
 	sleeved = 'icons/roguetown/clothing/special/onmob/hand.dmi'
 
 /obj/item/clothing/shoes/shortboots
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "shortboots"
 	color = "#d5c2aa"
 	desc = "A shorter format of boots worn by about anyone."
@@ -39,6 +41,7 @@
 
 
 /obj/item/clothing/shoes/ridingboots
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "riding boots"
 	color = "#d5c2aa"
 	desc = "Boots designed for riding a mount."
@@ -57,6 +60,7 @@
 
 
 /obj/item/clothing/shoes/apothboots
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "apothecary boots"
 	desc = "Boots designed for the toil of tincture gathering and mixing."
 	gender = PLURAL
@@ -71,6 +75,7 @@
 	AddComponent(/datum/component/storage/concrete/boots)
 
 /obj/item/clothing/shoes/simpleshoes
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "shoes"
 	desc = "Simple shoes worn by about anyone."
 	gender = PLURAL
@@ -97,6 +102,7 @@
 	sellprice = 20
 
 /obj/item/clothing/shoes/gladiator
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "caligae"
 	desc = "Open design sandals made from sturdy leather. Can be typically seen worn by gladiators."
 	gender = PLURAL
@@ -106,6 +112,7 @@
 	salvage_amount = 1
 
 /obj/item/clothing/shoes/sandals
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "sandals"
 	desc = "Standard sandals."
 	gender = PLURAL
@@ -115,6 +122,7 @@
 	salvage_amount = 1
 
 /obj/item/clothing/shoes/rare
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	abstract_type = /obj/item/clothing/shoes/rare
 
 /obj/item/clothing/shoes/rare/hoplite
@@ -125,6 +133,7 @@
 	sellprice = 20
 
 /obj/item/clothing/shoes/shalal
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "babouche"
 	desc = "Leather slippers of Zakharani origin."
 	gender = PLURAL
@@ -134,6 +143,7 @@
 	wetable = FALSE
 
 /obj/item/clothing/shoes/tribal
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "primative shoes"
 	desc = "Haphazardly-made slippers of creecher leather worn by those with nothing better, or those who don't care about fashion and just want to protect their feet."
 	icon_state = "tribalshoes"
@@ -141,6 +151,7 @@
 	sellprice = 3
 
 /obj/item/clothing/shoes/jester
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "funny shoes"
 	desc = "Shoes typically worn by a Jester."
 	icon_state = "jestershoes"
@@ -160,6 +171,7 @@
 	wetable = FALSE
 
 /obj/item/clothing/shoes/otavan
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "darkholdian leather boots"
 	desc = "Boots of outstanding craft, your fragile feet have never felt so protected and comfortable before."
 	body_parts_covered = FEET
@@ -177,6 +189,7 @@
 	desc = "The steel-lined heels click."
 	icon_state = "inqboots"
 	item_state = "inqboots"
+	social_cues = list("faction:town_watch" = 5, "rank:town_watch:sergeant" = 5, "elite:town_watch" = 3)
 
 //Luskanian Duelist Merc - On par with grenzelhoftian's stats.
 /obj/item/clothing/shoes/nobleboot/duelboots
@@ -184,6 +197,7 @@
 	armor_type = /datum/armor/boots/leather/noble/good
 
 /obj/item/clothing/shoes/psydonboots
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "enduring boots"
 	examine_name = "boots"
 	desc = "A reliable pair of dark leather boots. Seems like they could endure the world!"
@@ -197,6 +211,7 @@
 
 
 /obj/item/clothing/shoes/courtphysician
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "sanguine shoes"
 	desc = "Leather shoes, the solemn tap of these bears grim news, or salvation."
 	icon_state = "docshoes"

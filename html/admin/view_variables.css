@@ -52,3 +52,64 @@ table.matrixbrak td.rbrak {
 	border-right: solid 0.5ex black;
 	border-left: none;
 }
+
+/* VV navigation, quick links and search helpers */
+.vvnav {
+	margin-bottom: 4px;
+}
+
+.vvbtn {
+	display: inline-block;
+	padding: 1px 6px;
+	border: 1px solid #888;
+	border-radius: 3px;
+	background: #f2f2f2;
+	color: #000;
+	text-decoration: none;
+	font-size: 8pt;
+}
+
+a.vvbtn:hover {
+	background: #ddeeff;
+}
+
+.vvbtn-off {
+	color: #999;
+	border-color: #ccc;
+	background: #f8f8f8;
+}
+
+.vvrecent {
+	max-width: 190px;
+	font-size: 8pt;
+}
+
+.vvquick {
+	margin: 4px 0;
+	font-size: 8pt;
+}
+
+.vt {
+	color: #777;
+	font-size: 7pt;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 0 3px;
+}
+
+.vv-changed .vn {
+	font-weight: bold;
+	background-color: #fff1b8;
+}
+
+/* nested list items inside a changed row are not themselves "changed" */
+.vv-changed ul .vn {
+	font-weight: normal;
+	background-color: transparent;
+}
+
+.vvempty {
+	display: none;
+	color: #a33;
+	padding: 6px;
+}

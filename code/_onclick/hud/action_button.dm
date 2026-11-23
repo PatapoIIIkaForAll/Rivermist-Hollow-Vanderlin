@@ -50,6 +50,11 @@
 
 	var/list/modifiers = params2list(params)
 	if(LAZYACCESS(modifiers, SHIFT_CLICKED))
+		if(!LAZYACCESS(modifiers, CTRL_CLICKED))
+			var/list/examine_lines = linked_action?.get_examine_lines(usr)
+			if(length(examine_lines))
+				to_chat(usr, examine_block(examine_lines.Join("<br>")))
+				return TRUE
 		var/datum/hud/our_hud = usr.hud_used
 		our_hud.position_action(src, SCRN_OBJ_DEFAULT)
 		return TRUE
@@ -251,7 +256,7 @@
 	action.HideFrom(src)
 
 /atom/movable/screen/button_palette
-	desc = "<b>Drag</b> buttons to move them<br><b>Shift-click</b> any button to reset it<br><b>Alt-click</b> this to reset all buttons"
+	desc = "<b>Drag</b> buttons to move them<br><b>Shift-click</b> a spell to examine it<br><b>Ctrl-Shift-click</b> any button to reset it<br><b>Alt-click</b> this to reset all buttons"
 	icon = 'icons/hud/64x16_actions.dmi'
 	icon_state = "roguehud_palette"
 	screen_loc = ui_action_palette

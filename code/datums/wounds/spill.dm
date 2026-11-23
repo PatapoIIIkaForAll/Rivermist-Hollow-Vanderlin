@@ -8,6 +8,12 @@
 		var/obj/item/bodypart/vitals = get_bodypart(BODY_ZONE_CHEST)
 		vitals?.add_pain(25)
 
+/// Gutting is fatal to NPCs; one left alive with its organs on the floor reads wrong.
+/mob/living/carbon/proc/die_from_gutting()
+	if(stat == DEAD || is_player_character())
+		return
+	death()
+
 /datum/wound/spill
 	name = "Spill"
 	severity = WOUND_SEVERITY_CRITICAL
@@ -78,4 +84,5 @@
 			owner.AddComponent(/datum/component/rope, gut, 'icons/effects/beam.dmi', "gut_beam2", 3, TRUE, /obj/effect/ebeam/gut, CALLBACK(owner, /mob/living/carbon/proc/gut_cut))
 		else
 			qdel(gut)
+	new_limb.owner?.die_from_gutting()
 	qdel(src)

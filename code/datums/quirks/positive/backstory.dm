@@ -49,7 +49,7 @@
 			if(STAT_STRENGTH)
 				stat_name = "Strength"
 			if(STAT_PERCEPTION)
-				stat_name = "Perception"
+				stat_name = "Wisdom"
 			if(STAT_INTELLIGENCE)
 				stat_name = "Intelligence"
 			if(STAT_CONSTITUTION)
@@ -57,7 +57,7 @@
 			if(STAT_ENDURANCE)
 				stat_name = "Endurance"
 			if(STAT_SPEED)
-				stat_name = "Speed"
+				stat_name = "Dexterity"
 
 		if(stat_name)
 			base_desc += "<br><b>Penalty:</b> -[stat_reduction] [stat_name]"

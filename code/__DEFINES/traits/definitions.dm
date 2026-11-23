@@ -77,6 +77,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PARTIAL_DEAF "partial_deaf"
 #define TRAIT_HUSK "husk"
 #define TRAIT_CHUNKYFINGERS	"chunkyfingers" //means that you can't use weapons with normal trigger guards.
+#define TRAIT_ROTFINGERS "rotfingers" //means that you can't use weapons, equip armor and parry
 #define TRAIT_DUMB "dumb"
 #define TRAIT_MONKEYLIKE "monkeylike" //sets IsAdvancedToolUser to FALSE
 /// Cannot directly bring harm to other mobs
@@ -221,6 +222,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_THERMAL_VISION "thermal_vision"
 /// Immediately upgrade grabs when in combat mode
 #define TRAIT_STRONG_GRABBER "strong_grabber"
+/// Caffeine hides the Tired debuff without curing it
+#define TRAIT_CAFFEINATED "caffeinated"
 /// Used for the choking status effect
 #define TRAIT_MAGIC_CHOKE "magic_choke"
 /// Immune to nervous cough
@@ -657,7 +660,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 //RMH EDITED END
 #define TRAIT_GOODLOVER			"Fabled Lover"
 #define TRAIT_NYMPHO_CURSE 		"Nymphs Curse"
-#define TRAIT_ALLURE 			"Allure"
 #define TRAIT_DARKLING 			"Darkling"
 #define TRAIT_WILDMAGIC 		"Wildmagic"
 #define TRAIT_DRUNKMASTER 		"Drunkmaster"
@@ -688,3 +690,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_TADPOLECAVE		"Tadpole Cave"
 #define TRAIT_TENTACLECAVE		"Tentacle Cave"
 #define TRAIT_GHOSTHUB			"Ghost Hub"
+//Social traits for examining
+#define TRAIT_KNOW_WATCH "know_faction_members"
+#define TRAIT_KNOW_WATCH_RANK "know_social_rank"
+#define TRAIT_KNOW_WATCH_SPECIALIZATION "know_social_specialization"
+//Commanding system
+#define TRAIT_TOWNWATCH_COMMAND "townwatch_command"
+#define TOWNWATCH_COMMAND_TRAIT_SOURCE "townwatch_command_trait"

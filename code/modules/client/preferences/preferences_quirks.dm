@@ -430,6 +430,8 @@
 	var/dat = "<div class='quirk-list'>"
 
 	for(var/quirk_data in GLOB.quirk_points_by_type[category])
+		if(quirk_data["admin_only"])
+			continue
 		var/quirk_type = quirk_data["type"]
 		var/is_selected = FALSE
 		if(quirk_type in quirks)

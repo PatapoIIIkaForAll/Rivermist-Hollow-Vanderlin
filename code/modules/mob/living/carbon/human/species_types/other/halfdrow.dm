@@ -26,16 +26,15 @@
 	\n\n\
 	Some Half-Drow struggle against prejudice and suspicion, while others leverage their mixed heritage to navigate both worlds. \
 	\n\n\
-	(+2 LCK, +1 To One Stat Of Choice, Allure, Darkvision, Sunlight Sensitivity, Elvish Language).\
-	\n\n\
-	Proficiencies: Knives(3), Swords(2), Bows(2), Sneaking(3), Lockpicking(2), Reading(2), Arcane(2).\
+	(+2 Stat Points In Character Creation, Darkvision, Sunlight Sensitivity, Elvish Language).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 	default_color = "FFFFFF"
 
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY)
-	inherent_traits = list(TRAIT_NOMOBSWAP, TRAIT_ALLURE)
+	inherent_traits = list(TRAIT_NOMOBSWAP)
 	inherent_sheet = /datum/attribute_holder/sheet/job/species/halfdrow/inherent
+	creator_stat_points = 2
 
 	use_skintones = TRUE
 	possible_ages = NORMAL_AGES_LIST
@@ -229,14 +228,12 @@
 		qdel(D)
 
 /datum/attribute_holder/sheet/job/species/halfdrow/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/combat/knives = 30,
-		/datum/attribute/skill/combat/swords = 20,
-		/datum/attribute/skill/combat/bows = 20,
-
-		/datum/attribute/skill/misc/sneaking = 30,
-		/datum/attribute/skill/misc/lockpicking = 20,
-		/datum/attribute/skill/misc/reading = 20,
-
-		/datum/attribute/skill/magic/arcane = 20,
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/knives = list(20, 30),
+		/datum/attribute/skill/combat/swords = list(20, 30),
+		/datum/attribute/skill/combat/bows = list(20, 30),
+		/datum/attribute/skill/misc/sneaking = list(20, 30),
+		/datum/attribute/skill/misc/lockpicking = list(20, 30),
+		/datum/attribute/skill/misc/reading = list(20, 40),
+		/datum/attribute/skill/magic/arcane = list(10, 10),
 	)

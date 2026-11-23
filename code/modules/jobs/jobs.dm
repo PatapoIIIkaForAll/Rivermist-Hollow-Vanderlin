@@ -28,7 +28,7 @@ GLOBAL_LIST_INIT(townwatch_positions, list(
 	/datum/job/watch_veteran::title,
 	/datum/job/watch_warden::title,
 	/datum/job/watch_guard::title,
-
+	/datum/job/watch_guard/militia::title,
 ))
 
 GLOBAL_PROTECT(townwatch_positions)

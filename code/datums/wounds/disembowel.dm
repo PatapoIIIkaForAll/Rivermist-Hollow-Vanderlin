@@ -90,3 +90,4 @@
 		for(var/atom/movable/item as anything in cavity.cavity_items)
 			item.forceMove(drop_location)
 			cavity.cavity_items -= item
+	gutted.die_from_gutting()

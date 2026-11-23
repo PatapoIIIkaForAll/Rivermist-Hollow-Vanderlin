@@ -6,8 +6,7 @@
 	id = SPEC_ID_YUANTI
 	desc = "<b>Yuan-ti</b><br>\
 	Yuan-ti are a communal race of serpentfolk, also known as the snake people of Malatra.\
-	They are often viewed with distrust by other races, seen as corrupt and degenerate monsters. \
-	(+1 CON, +1 WIL)"
+	They are often viewed with distrust by other races, seen as corrupt and degenerate monsters."
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP)
 	default_features = MANDATORY_FEATURE_LIST

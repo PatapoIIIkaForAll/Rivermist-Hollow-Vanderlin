@@ -60,7 +60,7 @@
 //ANNOUNCEMENT SYSTEM
 
 /mob/living/carbon/human/proc/town_mouth_announcement()
-	set name = "Announcement"
+	set name = "Town Announcement"
 	set category = "Town Mouth"
 	if(stat)
 		return

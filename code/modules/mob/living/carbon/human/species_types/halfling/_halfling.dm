@@ -2,14 +2,14 @@
 	race = /datum/species/halfling
 
 /datum/attribute_holder/sheet/job/species/halfling
-	raw_attribute_list = list(
-		/datum/attribute/skill/misc/sneaking = 40,
-		/datum/attribute/skill/misc/stealing = 30,
-		/datum/attribute/skill/misc/lockpicking = 30,
-		/datum/attribute/skill/combat/knives = 20,
-		/datum/attribute/skill/labor/farming = 30,
-		/datum/attribute/skill/craft/cooking = 30,
-		/datum/attribute/skill/labor/fishing = 20,
+	clamped_adjustment = list(
+		/datum/attribute/skill/misc/sneaking = list(30, 30),
+		/datum/attribute/skill/misc/stealing = list(30, 30),
+		/datum/attribute/skill/misc/lockpicking = list(30, 30),
+		/datum/attribute/skill/combat/knives = list(20, 30),
+		/datum/attribute/skill/labor/farming = list(30, 30),
+		/datum/attribute/skill/craft/cooking = list(20, 20),
+		/datum/attribute/skill/labor/fishing = list(20, 40),
 	)
 
 /datum/attribute_holder/sheet/job/species/halfling/stats
@@ -29,11 +29,7 @@
 	n\n\
 	In Faerûn, halflings are known for their good fortune and ability to endure hardship with a smile. \
 	n\n\
-	Their loyalty to friends and family runs deep, and they believe that perseverance and kindness are strengths greater than physical might. \
-	n\n\
-	(-1 STR, 1+ END, +1 SPD, +2 LCK).\
-	\n\n\
-	Proficiencies: Sneaking(4), Stealing(3), Lockpicking(3), Knives(2), Farming(3), Cooking(3), Fishing(2)."
+	Their loyalty to friends and family runs deep, and they believe that perseverance and kindness are strengths greater than physical might."
 
 	default_color = "FFFFFF"
 	native_language = "Halfling"

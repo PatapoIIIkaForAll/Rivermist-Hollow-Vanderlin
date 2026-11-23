@@ -1352,10 +1352,32 @@ Byond.subscribeTo("update_split_admin_tabs", function (status) {
   split_admin_tabs = status;
 });
 
-Byond.subscribeTo("add_admin_tabs", function (ht) {
-  href_token = ht;
-  addPermanentTab("MC");
+// payload is { token, classic }: with the new Admin Menu (classic == false) only the
+// Tickets tab is shown here, MC and SDQL2 are reached through the Admin Menu window.
+Byond.subscribeTo("add_admin_tabs", function (payload) {
+  var classic = true;
+  if (payload && typeof payload === "object") {
+    href_token = payload.token;
+    classic = payload.classic == true;
+  } else {
+    href_token = payload;
+  }
+  if (classic) {
+    addPermanentTab("MC");
+  } else {
+    remove_mc();
+    remove_sdql2();
+  }
   addPermanentTab("Tickets");
+});
+
+Byond.subscribeTo("admin_tab_mode", function (payload) {
+  if (payload && payload.classic == true) {
+    if (href_token) addPermanentTab("MC");
+    return;
+  }
+  remove_mc();
+  remove_sdql2();
 });
 
 Byond.subscribeTo("update_sdql2", function (S) {

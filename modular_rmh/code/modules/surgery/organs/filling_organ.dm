@@ -1237,7 +1237,7 @@
 	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_CHANGED)
 	return TRUE
 
-/obj/item/organ/genitals/filling_organ/proc/clear_conventional_pregnancy()
+/obj/item/organ/genitals/filling_organ/proc/clear_conventional_pregnancy(silent = FALSE)
 	if(!pregnant)
 		return
 
@@ -1246,13 +1246,15 @@
 		conventional_pregnancy_timer = null
 
 	stop_pregnancy_signs()
+	qdel(GetComponent(/datum/component/chapel_birth))
 	pregnant = FALSE
 	conventional_pregnancy_stage = 0
 	// Milk only lingers if the pregnancy had got far enough to start it.
 	if(owner?.has_fluid_modifier(/datum/fluid_modifier/pregnancy_lactation, FLUID_SOURCE_PREGNANCY))
 		end_pregnancy_lactation()
 	update_reagent_capacity()
-	to_chat(owner, span_love("I feel my [src] shrink to how it was before. Pregnancy is no more."))
+	if(!silent)
+		to_chat(owner, span_love("I feel my [src] shrink to how it was before. Pregnancy is no more."))
 	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_CHANGED)
 
 /obj/item/organ/genitals/filling_organ/proc/start_pregnancy_lactation()

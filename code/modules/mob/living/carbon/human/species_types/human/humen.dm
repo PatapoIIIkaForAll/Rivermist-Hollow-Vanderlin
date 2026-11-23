@@ -31,14 +31,13 @@
 	\n\n\
 	While they lack the innate magic or longevity of other races, humans compensate with adaptability and determination, shaping much of Faerûn’s history through sheer will and population. \
 	\n\n\
-	(+1 To All Stats, +1 To One Stat Of Choice).\
-	\n\n\
-	Proficiencies: Swords(2), Polearms(2), Shields(2), Crafting(2), Carepntry(2), Cooking(2), Farming(2), Athletics(2), Reading(2), Riding(1)."
+	(+3 Stat Points In Character Creation)."
 
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR, HAIR, FACEHAIR, LIPS, STUBBLE, OLDGREY)
 	inherent_traits = list(TRAIT_NOMOBSWAP)
 	inherent_sheet = /datum/attribute_holder/sheet/job/species/northern/inherent
+	creator_stat_points = 3
 
 	order_num = 2
 
@@ -198,6 +197,12 @@
 )
 	if(!C || !C.client)
 		return
+	if(C.dna?.species?.type != type)
+		return
+
+	// Creator-made characters spend this bonus as extra stat points instead.
+	if(C.uses_creator_stats())
+		return
 
 	// Disguise shifts re-fire on_species_gain but aren't true growth — no stat prompt, so
 	// cycling forms can't farm picks. Creation-time modifiers are untouched (same-id replace).
@@ -206,11 +211,11 @@
 
 	var/list/choices = list(
 		"Strength"      = STATKEY_STR,
-		"Perception"   = STATKEY_PER,
+		"Wisdom"       = STATKEY_PER,
 		"Intelligence" = STATKEY_INT,
 		"Constitution" = STATKEY_CON,
 		"Endurance"    = STATKEY_END,
-		"Speed"        = STATKEY_SPD,
+		"Dexterity"    = STATKEY_SPD,
 		"Fortune"      = STATKEY_LCK
 	)
 
@@ -235,18 +240,15 @@
 		picks--
 
 /datum/attribute_holder/sheet/job/species/northern/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/combat/swords = 20,
-		/datum/attribute/skill/combat/polearms = 20,
-		/datum/attribute/skill/combat/shields = 20,
-
-		/datum/attribute/skill/craft/crafting = 20,
-		/datum/attribute/skill/craft/carpentry = 20,
-		/datum/attribute/skill/craft/cooking = 20,
-
-		/datum/attribute/skill/labor/farming = 20,
-
-		/datum/attribute/skill/misc/athletics = 20,
-		/datum/attribute/skill/misc/reading = 20,
-		/datum/attribute/skill/misc/riding = 10,
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/swords = list(20, 30),
+		/datum/attribute/skill/combat/polearms = list(20, 30),
+		/datum/attribute/skill/combat/shields = list(20, 30),
+		/datum/attribute/skill/craft/crafting = list(20, 40),
+		/datum/attribute/skill/craft/carpentry = list(20, 20),
+		/datum/attribute/skill/craft/cooking = list(20, 20),
+		/datum/attribute/skill/labor/farming = list(20, 30),
+		/datum/attribute/skill/misc/athletics = list(20, 30),
+		/datum/attribute/skill/misc/reading = list(20, 40),
+		/datum/attribute/skill/misc/riding = list(10, 30),
 	)

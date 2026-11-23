@@ -1,0 +1,240 @@
+// Attribute Editor. Keeps the dark red look of the character sheets.
+
+$ae-bg: #0d0a08;
+$ae-panel: #15100c;
+$ae-border: #500d0d;
+$ae-text: #c8b89a;
+$ae-title: #ddd0b8;
+$ae-muted: #7a6a5a;
+$ae-good: #6fae5c;
+$ae-bad: #c05a4a;
+
+.AttrEdit {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: $ae-text;
+
+  .Button {
+    margin: 0;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 6px 8px;
+    background: #000;
+    border: 1px solid $ae-border;
+  }
+
+  &__who {
+    flex: 0 1 auto;
+    max-width: 240px;
+    color: $ae-title;
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__search {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+
+  &__limits {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 4px 16px;
+    flex-shrink: 0;
+    margin-top: 4px;
+    padding: 6px 8px;
+    background: $ae-panel;
+    border: 1px solid $ae-border;
+  }
+
+  &__limit {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    > span:first-child {
+      flex: 1 1 auto;
+    }
+  }
+
+  &__legend {
+    flex-shrink: 0;
+    padding: 4px 8px;
+    color: $ae-muted;
+    font-size: 12px;
+  }
+
+  &__main {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 6px;
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 55%;
+    min-width: 0;
+    min-height: 0;
+    background: $ae-panel;
+    border: 1px solid $ae-border;
+
+    &--attributes {
+      flex: 1 1 45%;
+    }
+  }
+
+  &__head {
+    flex-shrink: 0;
+    padding: 4px 8px;
+    background: #000;
+    border-bottom: 2px solid $ae-border;
+    color: $ae-title;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+  }
+
+  &__count {
+    margin-left: 4px;
+    color: $ae-muted;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  &__group {
+    padding: 3px 8px;
+    background: #1f0b0b;
+    border-top: 1px solid $ae-border;
+    border-bottom: 1px solid $ae-border;
+    color: $ae-title;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: scroll;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    &--head {
+      flex-shrink: 0;
+      // Lines the header up with the rows above the always-visible scrollbar.
+      width: calc(100% - 12px);
+      color: $ae-muted;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px dotted rgba(90, 76, 76, 0.7);
+
+      td {
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid rgba(90, 76, 76, 0.2);
+
+    &:nth-child(even) {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    &:hover {
+      background: rgba(120, 30, 30, 0.2);
+    }
+  }
+
+  &__name {
+    padding: 4px 8px;
+    color: $ae-title;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__cell {
+    width: 150px;
+    padding: 3px 4px;
+    white-space: nowrap;
+
+    > * {
+      vertical-align: middle;
+      margin-right: 2px;
+    }
+  }
+
+  &__panel--attributes &__cell {
+    width: 96px;
+  }
+
+  // The admin bonus column is narrower than the base column.
+  &__cell + &__cell {
+    width: 84px;
+  }
+
+  &__other {
+    width: 44px;
+    padding: 3px 4px;
+    text-align: right;
+    font-size: 12px;
+  }
+
+  &__total {
+    width: 110px;
+    padding: 3px 8px 3px 4px;
+    text-align: right;
+    color: $ae-title;
+    font-size: 15px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  &__panel--attributes &__total {
+    width: 56px;
+  }
+
+  &__level {
+    display: inline-block;
+    min-width: 66px;
+    margin-left: 6px;
+    color: $ae-muted;
+    font-size: 11px;
+    font-weight: normal;
+    text-align: left;
+  }
+
+  &__good {
+    color: $ae-good;
+  }
+
+  &__bad {
+    color: $ae-bad;
+  }
+
+  &__empty {
+    padding: 14px 8px;
+    color: $ae-muted;
+    font-style: italic;
+  }
+}

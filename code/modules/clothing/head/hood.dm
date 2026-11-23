@@ -86,25 +86,37 @@
 	uses_lord_coloring = LORD_SECONDARY
 
 /obj/item/clothing/head/roguehood/AdjustClothes(mob/living/carbon/user)
+	if(ported_adjust)
+		return ..()
 	if(loc == user)
 		if(adjustable == CAN_CADJUST)
 			adjustable = CADJUSTED
 			if(toggle_icon_state)
 				icon_state = "[initial(icon_state)]_t"
-			flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
-			body_parts_covered = NECK|HAIR|EARS|HEAD
+			if(starts_raised())
+				// Ported hoods start up; their "_t" sprite is the lowered hood.
+				flags_inv = NONE
+				body_parts_covered = NECK
+				block2add = null
+			else
+				flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
+				body_parts_covered = NECK|HAIR|EARS|HEAD
+				block2add = FOV_BEHIND
 			if(ishuman(user))
 				var/mob/living/carbon/H = user
 				H.update_inv_head()
-			block2add = FOV_BEHIND
 		else if(adjustable == CADJUSTED)
 			ResetAdjust(user)
 		user.update_fov_angles()
 		user.regenerate_clothes()
 
+/// TRUE if the hood spawns up (hiding hair) and has no fixed always-hidden flags.
+/obj/item/clothing/head/roguehood/proc/starts_raised()
+	return isnull(default_hidden) && (initial(flags_inv) & HIDEHAIR)
+
 /obj/item/clothing/head/roguehood/ResetAdjust(mob/user)
 	. = ..()
-	flags_inv = default_hidden
+	flags_inv = isnull(default_hidden) ? initial(flags_inv) : default_hidden
 	if(iscarbon(user))
 		var/mob/living/carbon/H = user
 		H.update_inv_head()

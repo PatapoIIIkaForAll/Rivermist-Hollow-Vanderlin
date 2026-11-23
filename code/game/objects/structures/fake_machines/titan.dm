@@ -35,11 +35,8 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 		"Summon Crown",
 		"Summon Key",
 		"Make Announcement",
-		"Make Law",
-		"Remove Law",
 		"Make Decree",
 		"Remove Decree",
-		"Purge Laws",
 		"Declare Outlaw",
 		"Pardon Outlaw",
 		"Set Taxes",
@@ -162,6 +159,9 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 //RMH EDITED END
 
 /obj/structure/fake_machine/titan/proc/switch_mode(mode_to_switch_to)
+	if(mode_to_switch_to == MODE_MAKE_LAW)
+		reset_mode()
+		return FALSE
 	mode = mode_to_switch_to
 	var/obj/structure/throne/throne = get_throne() //RMH EDITED: was throne_weakref.resolve(), crashed when weakref was null
 	if(!throne)
@@ -171,6 +171,9 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 	throne.throat_mode = mode
 
 /obj/structure/fake_machine/titan/proc/recognize_command(mob/living/carbon/human/user, message)
+	if(findtext(message, "make law") || findtext(message, "remove law") || findtext(message, "purge laws"))
+		make_law(user, message)
+		return FALSE
 	// message is already sanitized
 	if(findtext(message, "make announcement") && perform_check(user, FALSE))
 		say("All will hear your word.")
@@ -181,11 +184,6 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 		say("Speak and they will obey.")
 		playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
 		switch_mode(MODE_MAKE_DECREE)
-		return
-	if(findtext(message, "make law") && perform_check(user))
-		say("Speak and they will obey.")
-		playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
-		switch_mode(MODE_MAKE_LAW)
 		return
 	if(findtext(message, "declare outlaw") && perform_check(user))
 		say("Who should be outlawed?")
@@ -206,14 +204,8 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 	if(findtext(message, "summon key") && perform_check(user, FALSE))
 		summon_key(user)
 		return
-	if(findtext(message, "remove law") && perform_check(user))
-		remove_law(message)
-		return
 	if(findtext(message, "remove decree") && perform_check(user))
 		remove_decree(message)
-		return
-	if(findtext(message, "purge laws") && perform_check(user))
-		purge_laws()
 		return
 	if(findtext(message, "set taxes") && perform_check(user))
 		set_taxes(user)
@@ -304,6 +296,8 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 				user.mind.adjust_triumphs(1)
 			SSmapping.retainer.head_rebel_decree = TRUE
 	GLOB.lord_decrees += message
+	rmh_get_law_documents().has_publication = TRUE
+	rmh_get_law_documents().sync_legacy_decrees()
 	record_round_statistic(STATS_LAWS_AND_DECREES_MADE)
 	SScommunications.make_announcement(user, TRUE, message)
 	reset_mode()
@@ -320,40 +314,28 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 	playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
 	var/decree_text = GLOB.lord_decrees[decree_index]
 	GLOB.lord_decrees -= decree_text
+	rmh_get_law_documents().has_publication = TRUE
+	rmh_get_law_documents().sync_legacy_decrees()
 	priority_announce("[decree_index]. [decree_text]", "A DECREE IS ABOLISHED", 'sound/misc/lawdeclaration.ogg', "Captain")
 	reset_mode()
 	return TRUE
 
 /obj/structure/fake_machine/titan/proc/make_law(mob/living/carbon/human/user, message)
-	if(!SScommunications.can_announce(user))
-		return
-	GLOB.laws_of_the_land += message
-	record_round_statistic(STATS_LAWS_AND_DECREES_MADE)
-	priority_announce("[length(GLOB.laws_of_the_land)]. [message]", "A LAW IS DECLARED", 'sound/misc/lawdeclaration.ogg', "Captain")
+	say(rmh_ui_text(user, "Законы изменяются на стенде писаря.", "Laws are changed at the scribe's stand."))
 	reset_mode()
+	return FALSE
 
 /// Removes a law
 /obj/structure/fake_machine/titan/proc/remove_law(message)
-	var/clean_message = replacetext(message, "remove law", "")
-	var/law_index = text2num(clean_message) || 0
-	if(!law_index || !GLOB.laws_of_the_land[law_index])
-		say("That law doesn't exist!")
-		reset_mode()
-		return FALSE
-	say("That law shall be gone!")
-	playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
-	var/law_text = GLOB.laws_of_the_land[law_index]
-	GLOB.laws_of_the_land -= law_text
-	priority_announce("[law_index]. [law_text]", "A LAW IS ABOLISHED", 'sound/misc/lawdeclaration.ogg', "Captain")
+	say("Laws are changed at the scribe's stand. / Законы изменяются на стенде писаря.")
 	reset_mode()
-	return TRUE
+	return FALSE
 
 /// Removes all laws
 /obj/structure/fake_machine/titan/proc/purge_laws()
-	say("All laws shall be purged!")
-	playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
-	GLOB.laws_of_the_land = list()
-	priority_announce("All laws of the land have been purged!", "LAWS PURGED", 'sound/misc/lawspurged.ogg', "Captain")
+	say("Laws are changed at the scribe's stand. / Законы изменяются на стенде писаря.")
+	reset_mode()
+	return FALSE
 
 /// Declares someone an outlaw
 /obj/structure/fake_machine/titan/proc/declare_outlaw(mob/living/carbon/human/user, message)
@@ -516,18 +498,43 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 	data["lord_secondary"] = GLOB.lordsecondary ? GLOB.lordsecondary : null
 	data["flag_icon"] = /obj/structure/fluff/walldeco::icon
 	data["flag_state"] = /obj/structure/fluff/walldeco/customflag::icon_state
-	data["laws"] = GLOB.laws_of_the_land ? GLOB.laws_of_the_land.Copy() : list()
-	data["decrees"] = GLOB.lord_decrees ? GLOB.lord_decrees.Copy() : list()
+	data["decree_records"] = rmh_get_law_documents().decrees
+	data["voice_commands"] = command_list.Copy()
+	data["language"] = get_preferred_ui_language(user)
+	data["throat_mode"] = mode
+	data["crown_present"] = !QDELETED(SSroguemachine.crown)
+	data["key_present"] = !QDELETED(SSroguemachine.key)
 	data["outlaws"] = GLOB.outlawed_players ? GLOB.outlawed_players.Copy() : list()
 	return data
 
-/obj/structure/fake_machine/titan/ui_act(action, list/params)
+/obj/structure/fake_machine/titan/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return
-	if(!ishuman(usr))
-		return
-	var/mob/living/carbon/human/user = usr
+	var/mob/living/carbon/human/user = ui?.user
+	// Reject malformed or stale requests before the legacy action switch.
+	if(!user || usr != user || !ishuman(user) || !islist(params) || ui.status != UI_INTERACTIVE || ui_status(user, GLOB.physical_state) != UI_INTERACTIVE)
+		return FALSE
+	if(action in list("make_announcement", "make_decree"))
+		if(!rmh_law_text(params["text"], 500, FALSE))
+			return FALSE
+	if(action in list("declare_outlaw", "pardon_outlaw"))
+		if(!rmh_law_text(params["name"], RMH_LAW_MAX_TITLE, FALSE))
+			return FALSE
+	if(action == "refresh")
+		return TRUE
+	if(action == "remove_decree")
+		var/index = istext(params["index"]) ? text2num(params["index"]) : 0
+		var/list/current = rmh_get_law_documents().decrees
+		if(index < 1 || index > length(current) || index != round(index))
+			return FALSE
+		var/list/entry = current[index]
+		if(entry["id"] != params["id"] || entry["revision"] != params["revision"])
+			to_chat(usr, span_warning(rmh_ui_text(usr, "Указ изменился. Обновите перечень.", "The decree changed. Refresh the list.")))
+			return TRUE
+	if(action in list("make_law", "remove_law", "purge_laws"))
+		make_law(user, null)
+		return FALSE
 	switch(action)
 		if("help")
 			help()
@@ -543,55 +550,34 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 		if("make_announcement")
 			var/message = trim(params["text"])
 			if(!message)
-				return TRUE
+				return FALSE
 			if(!perform_check(user, FALSE))
-				return TRUE
+				return FALSE
 			user.say(message)			// character speaks it, as in the voice flow
 			make_announcement(user, message)
 			return TRUE
 		if("make_decree")
 			var/message = trim(params["text"])
 			if(!message)
-				return TRUE
+				return FALSE
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			user.say(message)
 			make_decree(user, message)
 			return TRUE
-		if("make_law")
-			var/message = trim(params["text"])
-			if(!message)
-				return TRUE
-			if(!perform_check(user))
-				return TRUE
-			user.say(message)
-			make_law(user, message)
-			return TRUE
-		if("remove_law")
-			if(!perform_check(user))
-				return TRUE
-			var/idx = text2num(params["index"])
-			if(idx)
-				remove_law("remove law [idx]")
-			return TRUE
 		if("remove_decree")
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			var/idx = text2num(params["index"])
 			if(idx)
 				remove_decree("remove decree [idx]")
-			return TRUE
-		if("purge_laws")
-			if(!perform_check(user))
-				return TRUE
-			purge_laws()
 			return TRUE
 		if("declare_outlaw")
 			var/name = trim(params["name"])
 			if(!name)
 				return TRUE
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			declare_outlaw(user, name)
 			return TRUE
 		if("pardon_outlaw")
@@ -599,34 +585,34 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 			if(!name)
 				return TRUE
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			pardon_outlaw(user, name)
 			return TRUE
 		if("set_taxes")
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			set_taxes(user)				// opens its own numeric prompt
 			return TRUE
 		if("change_position")
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			change_position(user)		// opens its own target/role prompts
 			return TRUE
 		if("appoint_regent")
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			appoint_regent(user)
 			return TRUE
 		if("silence")
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			silence_plebs(user)
 			return TRUE
 		if("change_colors")
 			// Reuses the exact Burgomaster heraldry flow (opens its own colour
 			// pickers and fires COMSIG_LORD_COLORS_SET). Ruler/Regent + crown only.
 			if(!perform_check(user))
-				return TRUE
+				return FALSE
 			user.lord_color_choice()
 			return TRUE
 //RMH EDITED END
@@ -651,8 +637,6 @@ GLOBAL_LIST_EMPTY(roundstart_court_agents)
 			recognize_command(speaker, sanitized_message)
 		if(MODE_MAKE_ANNOUNCEMENT)
 			make_announcement(speaker, raw_message)
-		if(MODE_MAKE_LAW)
-			make_law(speaker, raw_message)
 		if(MODE_DECLARE_OUTLAW)
 			declare_outlaw(speaker, raw_message)
 		if(MODE_PARDON_OUTLAW)

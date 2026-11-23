@@ -88,6 +88,9 @@
 		log_admin("[key_name(usr)] has added [result] [datumname] to [key_name(target)].")
 		message_admins(span_notice("[key_name_admin(usr)] has added [result] [datumname] to [key_name_admin(target)]."))
 
+	if(href_list[VV_HK_CALLPROC])
+		usr.client.callproc_datum(target)
+
 	if(href_list[VV_HK_REMOVECOMPONENT] || href_list[VV_HK_MASS_REMOVECOMPONENT])
 		if(!check_rights(NONE))
 			return

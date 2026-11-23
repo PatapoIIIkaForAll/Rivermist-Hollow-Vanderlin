@@ -28,6 +28,12 @@
 	/// Screen-wide catcher that tracks the cursor pixel while Shift is held.
 	var/atom/movable/screen/buildmode/pixel_catcher/pixel_catcher
 
+	/// How many copies one placement creates. Turfs always place one.
+	var/spawn_amount = 1
+	/// Manual pixel offset applied to placed movables, set in the catalogue.
+	var/spawn_pixel_x = 0
+	var/spawn_pixel_y = 0
+
 /datum/buildmode/New(client/user_client)
 	holder = user_client
 	holder_details = holder.player_details
@@ -38,6 +44,7 @@
 	login_callback = CALLBACK(src, PROC_REF(post_login))
 	holder_details.post_login_callbacks += login_callback
 	register_mob(holder.mob)
+	setup_tools()
 	item_browser = new(src)
 	mode.enter_mode(src)
 	item_browser.open()
@@ -46,6 +53,7 @@
 	close_switchstates()
 	clear_pixel_catcher()
 	clear_preview()
+	cleanup_tools()
 	mode?.exit_mode(src)
 	QDEL_NULL(mode)
 	QDEL_NULL(item_browser)
@@ -87,15 +95,26 @@
 	if(registered_mob == new_mob)
 		return
 	if(registered_mob)
-		UnregisterSignal(registered_mob, list(COMSIG_USER_MOUSE_ENTERED, COMSIG_PARENT_QDELETING))
+		UnregisterSignal(registered_mob, list(COMSIG_USER_MOUSE_ENTERED, COMSIG_PARENT_QDELETING, COMSIG_MOB_LOGOUT))
 	registered_mob = new_mob
 	if(registered_mob)
 		RegisterSignal(registered_mob, COMSIG_USER_MOUSE_ENTERED, PROC_REF(on_mouse_entered))
 		RegisterSignal(registered_mob, COMSIG_PARENT_QDELETING, PROC_REF(on_mob_deleted))
+		RegisterSignal(registered_mob, COMSIG_MOB_LOGOUT, PROC_REF(on_mob_logout))
 
 /datum/buildmode/proc/on_mob_deleted(datum/source)
 	SIGNAL_HANDLER
 	register_mob(null)
+
+/datum/buildmode/proc/on_mob_logout(datum/source)
+	SIGNAL_HANDLER
+	// A disconnect or only a change of mob: tell them apart once the logout is over.
+	addtimer(CALLBACK(src, PROC_REF(quit_if_disconnected)), 10 SECONDS, TIMER_UNIQUE)
+
+/// A build mode without its client is never used again (a reconnect quits it), so free its undo trash now.
+/datum/buildmode/proc/quit_if_disconnected()
+	if(!holder)
+		quit()
 
 /datum/buildmode/proc/create_buttons()
 	modebutton = new(null, null, src)
@@ -165,6 +184,7 @@
 	update_preview()
 	modebutton.update_appearance(UPDATE_ICON_STATE | UPDATE_NAME)
 	to_chat(holder, span_notice("Build mode: [mode.name]. Use the ? button for controls."))
+	item_browser?.send_selection()
 
 /datum/buildmode/proc/change_dir(newdir)
 	build_dir = newdir
@@ -172,11 +192,16 @@
 	dirbutton.update_appearance(UPDATE_ICON_STATE)
 	if(preview_image)
 		preview_image.dir = build_dir
+	item_browser?.send_selection()
 
 /datum/buildmode/proc/InterceptClickOn(mob/user, list/modifiers, atom/object)
 	// HUD elements keep working; everything on the map belongs to the current mode.
 	if(istype(object, /atom/movable/screen))
 		return FALSE
+	// Rights can be taken away while build mode is open.
+	if(!check_rights_for(holder, R_BUILD))
+		quit()
+		return TRUE
 	mode.handle_click(user.client, modifiers, object)
 	return TRUE
 
@@ -184,7 +209,9 @@
 	if(!ispath(item_path, /atom) || ispath(item_path, /area))
 		return FALSE
 	selected_item = item_path
+	copy_ref = null
 	update_preview()
+	item_browser?.remember(item_path)
 	item_browser?.send_selection()
 	var/atom/item_atom = item_path
 	to_chat(holder, span_notice("Selected [initial(item_atom.name)] ([item_path])."))
@@ -194,28 +221,105 @@
 	if(!selected_item)
 		return
 	selected_item = null
+	copy_ref = null
 	clear_preview()
 	clear_pixel_catcher()
 	item_browser?.send_selection()
 	to_chat(holder, span_notice("Selection cleared."))
 
-/// Builds the selected type on target; offsets shift movables from their base pixel position.
-/datum/buildmode/proc/place_selected(turf/target, mob/user, offset_x = 0, offset_y = 0)
+/**
+ * Builds the selected type on target and returns the last atom built.
+ *
+ * Movables are built spawn_amount times. Explicit offsets (Shift pixel placement) win over the
+ * manual offset set in the catalogue. With in_hands, items go to the user's hands when they fit.
+ */
+/datum/buildmode/proc/place_selected(turf/target, mob/user, offset_x, offset_y, in_hands = FALSE)
 	if(!selected_item || !target)
 		return null
 	if(ispath(selected_item, /turf))
-		target.ChangeTurf(selected_item)
+		var/turf/turf_type = selected_item
+		var/datum/buildmode_undo/turf_step = begin_undo("place [initial(turf_type.name)]")
+		turf_step.note_turf(target)
+		var/turf/replacement = target.ChangeTurf(selected_item)
+		end_undo(turf_step)
+		if(replacement)
+			replacement.flags_1 |= ADMIN_SPAWNED_1
+			item_browser?.set_status("Placed [replacement.name].")
 		log_admin("Build Mode: [key_name(user)] changed [AREACOORD(target)] to [selected_item].")
-		return target
-	var/atom/movable/placed = new selected_item(target)
-	if(QDELETED(placed))
-		return null
-	placed.setDir(build_dir)
-	if(offset_x || offset_y)
-		placed.pixel_x = placed.base_pixel_x + offset_x
-		placed.pixel_y = placed.base_pixel_y + offset_y
-	log_admin("Build Mode: [key_name(user)] placed [selected_item] at [AREACOORD(target)].")
+		return replacement
+	if(isnull(offset_x))
+		offset_x = spawn_pixel_x
+	if(isnull(offset_y))
+		offset_y = spawn_pixel_y
+	var/atom/movable/placing_type = selected_item
+	var/atom/movable/template = copy_template()
+	var/amount = clamp(round(spawn_amount), 1, ADMIN_SPAWN_CAP)
+	var/created = 0
+	var/held = 0
+	var/atom/movable/placed
+	var/datum/buildmode_undo/step = begin_undo("place [amount] x [initial(placing_type.name)]")
+	for(var/i in 1 to amount)
+		// A constructor may sleep: stop if the admin left build mode or the turf is gone.
+		if(QDELETED(src) || QDELETED(target))
+			break
+		var/atom/movable/built = spawn_one(target, template, placing_type)
+		if(!built)
+			continue
+		placed = built
+		created++
+		step.note_created(built)
+		if(offset_x || offset_y)
+			built.pixel_x = built.base_pixel_x + offset_x
+			built.pixel_y = built.base_pixel_y + offset_y
+		if(in_hands && isitem(built) && !QDELETED(user) && user.put_in_hands(built, merge_stacks = FALSE))
+			held++
+	end_undo(step) // drops the step when the admin left build mode meanwhile
+	log_admin("Build Mode: [key_name(user)] placed [created] of [placing_type][template ? " (copy of [REF(template)])" : ""] at [AREACOORD(target)][in_hands ? ", [held] in hands" : ""].")
+	if(!QDELETED(src))
+		if(in_hands)
+			item_browser?.set_status("Created [created] x [initial(placing_type.name)]: [held] in hands, [created - held] on the ground.")
+		else
+			item_browser?.set_status("Created [created] x [initial(placing_type.name)].")
 	return placed
+
+/// Deletes an object, or scrapes away the top layer of a turf. Mobs are never deleted this way.
+/datum/buildmode/proc/delete_object(mob/user, atom/object)
+	if(QDELETED(object) || istype(object, /atom/movable/screen))
+		return FALSE
+	if(!isturf(object) && (!isobj(object) || !isturf(object.loc)))
+		return FALSE
+	log_admin("Build Mode: [key_name(user)] deleted [object] ([object.type]) at [AREACOORD(object)].")
+	item_browser?.set_status("Deleted [object.name].")
+	var/datum/buildmode_undo/step = begin_undo("delete [object.name]")
+	if(isturf(object))
+		var/turf/target = object
+		step.note_turf(target)
+		target.ScrapeAway()
+	else
+		undoable_delete(object, step)
+	end_undo(step)
+	return TRUE
+
+/// Sets the copy count or the manual pixel offset used by placement.
+/datum/buildmode/proc/set_placement_option(option, value)
+	switch(option)
+		if("amount")
+			spawn_amount = clamp(round(value), 1, ADMIN_SPAWN_CAP)
+		if("pixel_x")
+			spawn_pixel_x = clamp(round(value), -BM_MAX_OFFSET, BM_MAX_OFFSET)
+		if("pixel_y")
+			spawn_pixel_y = clamp(round(value), -BM_MAX_OFFSET, BM_MAX_OFFSET)
+		else
+			return
+	apply_preview_offset()
+
+/// Shows the manual offset on the preview. Turfs ignore it.
+/datum/buildmode/proc/apply_preview_offset()
+	if(!preview_image)
+		return
+	var/is_turf = ispath(selected_item, /turf)
+	preview_image.pixel_x = is_turf ? 0 : spawn_pixel_x
+	preview_image.pixel_y = is_turf ? 0 : spawn_pixel_y
 
 /// Returns list(turf, pixel_x, pixel_y) under the cursor from click or mouse params.
 /datum/buildmode/proc/resolve_cursor(list/modifiers)
@@ -244,6 +348,7 @@
 	preview_image.color = LIGHT_COLOR_LIGHT_CYAN
 	preview_image.alpha = 150
 	preview_image.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	apply_preview_offset()
 	holder.images += preview_image
 
 /datum/buildmode/proc/clear_preview()
@@ -279,9 +384,7 @@
 	if(holder)
 		holder.screen -= pixel_catcher
 	QDEL_NULL(pixel_catcher)
-	if(preview_image)
-		preview_image.pixel_x = 0
-		preview_image.pixel_y = 0
+	apply_preview_offset()
 
 /datum/buildmode/proc/track_cursor(list/modifiers)
 	if(!preview_image)
@@ -311,8 +414,22 @@
 			B.quit()
 			log_admin("[key_name(usr)] has left build mode.")
 		else
+			// Building the catalogue in one go would freeze the server: wait for the background build.
+			if(!buildmode_catalog_ready())
+				to_chat(M, span_notice("Build mode: the spawn catalogue is still loading. Build mode opens when it is ready."))
+				INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(enter_buildmode_when_ready), M.client)
+				return
 			new /datum/buildmode(M.client)
 			log_admin("[key_name(usr)] has entered build mode.")
+
+/// Opens build mode for user once the background catalogue build is done (or after a minute, if it failed).
+/proc/enter_buildmode_when_ready(client/user)
+	var/give_up_at = world.time + 1 MINUTES
+	UNTIL(!user || buildmode_catalog_ready() || world.time > give_up_at)
+	if(!user || istype(user.click_intercept, /datum/buildmode))
+		return
+	new /datum/buildmode(user)
+	log_admin("[key_name(user)] has entered build mode.")
 
 /// Used by the blueprint system to read pixel offsets from mouse params.
 /proc/get_pixel_offsets_from_screenloc(params)

@@ -12,6 +12,10 @@
 	if(istype(click_intercept, /datum/buildmode) && (_key == "Shift"))
 		var/datum/buildmode/build_mode = click_intercept
 		build_mode.set_pixel_positioning(TRUE)
+	if(istype(click_intercept, /datum/buildmode) && _key == "Z" && keys_held["Ctrl"])
+		var/datum/buildmode/undoing_mode = click_intercept
+		undoing_mode.undo_last()
+		return
 
 	// If not handled by console, continue with normal key handling
 	client_keysend_amount += 1

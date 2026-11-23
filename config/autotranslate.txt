@@ -1,0 +1,26 @@
+## Chat translation between players who read different real languages (Russian and English).
+## Players turn it on for themselves with the "Chat Translation" verb in the OOC tab.
+## Admins get "Translation Control" in the Admin tab: load numbers, a test box and an emergency stop.
+## Leave TRANSLATE_PROVIDER or TRANSLATE_HTTP_URL unset to keep the feature off.
+
+## Backend type: mtranserver or libretranslate.
+## tools/autotranslate/Install-MTranServer.ps1 installs MTranServer on a Windows host and prints these lines.
+#TRANSLATE_PROVIDER mtranserver
+
+## Base URL of the backend. Keep it on the loopback address.
+#TRANSLATE_HTTP_URL http://127.0.0.1:8989
+
+## API token of the backend, if it has one.
+#TRANSLATE_HTTP_TOKEN changeme
+
+## Seconds before one request to the backend is dropped.
+TRANSLATE_HTTP_TIMEOUT_SECONDS 5
+
+## Lines longer than this many characters stay untranslated.
+TRANSLATE_MAX_CHARS 2000
+
+## Requests that can wait for the backend at the same time. More are refused, and those lines stay untranslated.
+TRANSLATE_MAX_REQUESTS 16
+
+## Translations kept in memory for the round. 0 turns the cache off.
+TRANSLATE_CACHE_ENTRIES 5000

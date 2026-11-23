@@ -376,3 +376,7 @@
 /// Checks if our action is actively selected. Used for selecting icons primarily.
 /datum/action/proc/is_action_active(atom/movable/screen/movable/action_button/current_button)
 	return FALSE
+
+/// Lines shown when the button is shift-clicked. Null keeps shift-click as a position reset.
+/datum/action/proc/get_examine_lines(mob/user)
+	return null

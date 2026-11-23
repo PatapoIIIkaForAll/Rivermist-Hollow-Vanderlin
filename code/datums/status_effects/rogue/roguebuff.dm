@@ -767,7 +767,7 @@
 
 // TIER 4 - EXPERT
 /datum/status_effect/bardicbuff/speed
-	name = "Inspiring (+1 SPD)"
+	name = "Inspiring (+1 DEX)"
 	id = "bardbuff_spd"
 	effectedstats = list(STAT_SPEED = 1)
 	alert_type = /atom/movable/screen/alert/status_effect/bardbuff/speed
@@ -777,7 +777,7 @@
 
 // TIER 5 - MASTER
 /datum/status_effect/bardicbuff/ravox
-	name = "Empowering (+1 STR, +1 PER)"
+	name = "Empowering (+1 STR, +1 WIS)"
 	id = "bardbuff_str"
 	effectedstats = list(STAT_STRENGTH = 1, STAT_PERCEPTION = 1)
 	alert_type = /atom/movable/screen/alert/status_effect/bardbuff/ravox

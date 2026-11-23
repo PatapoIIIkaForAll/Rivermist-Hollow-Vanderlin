@@ -2,6 +2,7 @@
 	abstract_type = /datum/quirk/positive/restored
 	/// Restored boons should guarantee their bonuses after job loadout and skill setup.
 	var/list/minimum_skill_ranks = list()
+	var/skill_sheet_type
 	var/list/stashed_items = list()
 	var/list/granted_traits = list()
 	var/list/granted_languages = list()
@@ -56,6 +57,8 @@
 		return
 
 	var/mob/living/carbon/human/human_owner = owner
+	if(skill_sheet_type)
+		human_owner.attributes?.add_sheet(skill_sheet_type)
 	apply_minimum_skill_ranks(human_owner, minimum_skill_ranks)
 	grant_stashed_items(human_owner, stashed_items)
 
@@ -69,7 +72,9 @@
 		return
 
 	for(var/skill_type in skill_rank_minima)
-		human_owner.adjust_skillrank_up_to(skill_type, skill_rank_minima[skill_type], TRUE)
+		var/translated_skill = canonical_skill_type(skill_type)
+		var/minimum_level = skill_rank_minima[skill_type]
+		human_owner.clamped_adjust_skill_level(translated_skill, minimum_level, minimum_level, TRUE)
 
 /datum/quirk/positive/proc/grant_stashed_items(mob/living/carbon/human/human_owner, list/item_map)
 	if(!ishuman(human_owner))
@@ -113,7 +118,7 @@
 	name = "Sword Training"
 	desc = "I have sword training and a short sword stashed nearby."
 	point_value = -2
-	minimum_skill_ranks = list(/datum/skill/combat/swords = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/swords = 30)
 	stashed_items = list(
 		"Short Sword" = /obj/item/weapon/sword/short,
 	)
@@ -123,7 +128,7 @@
 	name = "Fencer"
 	desc = "I have trained in agile sword fighting. I dodge more easily without heavy protection and have a rapier stashed nearby."
 	point_value = -4
-	minimum_skill_ranks = list(/datum/skill/combat/swords = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/swords = 30)
 	stashed_items = list(
 		"Rapier" = /obj/item/weapon/sword/rapier,
 	)
@@ -134,7 +139,7 @@
 	name = "Mace Training"
 	desc = "I have mace training and a mace stashed nearby."
 	point_value = -3
-	minimum_skill_ranks = list(/datum/skill/combat/axesmaces = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/axesmaces = 30)
 	stashed_items = list(
 		"Mace" = /obj/item/weapon/mace/spiked,
 	)
@@ -144,7 +149,7 @@
 	name = "Polearms Training"
 	desc = "I have polearm training and a spear stashed nearby."
 	point_value = -3
-	minimum_skill_ranks = list(/datum/skill/combat/polearms = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/polearms = 30)
 	stashed_items = list(
 		"Spear" = /obj/item/weapon/polearm/spear,
 	)
@@ -154,9 +159,15 @@
 	name = "Knife Training"
 	desc = "I have knife training and a parrying dagger stashed nearby."
 	point_value = -3
-	minimum_skill_ranks = list(/datum/skill/combat/knives = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/knives = 30)
 	stashed_items = list(
 		"Dagger" = /obj/item/weapon/knife/dagger/steel,
+	)
+
+/datum/attribute_holder/sheet/job/training6
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/axesmaces = list(30, 30),
+		/datum/attribute/skill/labor/lumberjacking = list(30, 30),
 	)
 
 /datum/quirk/positive/training6
@@ -164,10 +175,7 @@
 	name = "Axe Training"
 	desc = "I have trained with axes, and I'm a capable lumberjack. I've also stashed a copper axe."
 	point_value = -3
-	minimum_skill_ranks = list(
-		/datum/skill/combat/axesmaces = 3,
-		/datum/skill/labor/lumberjacking = 3,
-	)
+	skill_sheet_type = /datum/attribute_holder/sheet/job/training6
 	stashed_items = list(
 		"Axe" = /obj/item/weapon/axe/copper,
 	)
@@ -177,9 +185,15 @@
 	name = "Shield Training"
 	desc = "I have shield training and a shield stashed nearby. As long as I have a shield in one hand, I can catch arrows with ease."
 	point_value = -3
-	minimum_skill_ranks = list(/datum/skill/combat/shields = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/shields = 30)
 	stashed_items = list(
 		"Shield" = /obj/item/weapon/shield/wood,
+	)
+
+/datum/attribute_holder/sheet/job/training9
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/unarmed = list(30, 30),
+		/datum/attribute/skill/combat/wrestling = list(30, 30),
 	)
 
 /datum/quirk/positive/training9
@@ -187,17 +201,14 @@
 	name = "Unarmed Training"
 	desc = "I have journeyman unarmed training and know how to wrestle barehanded."
 	point_value = -3
-	minimum_skill_ranks = list(
-		/datum/skill/combat/unarmed = 3,
-		/datum/skill/combat/wrestling = 3,
-	)
+	skill_sheet_type = /datum/attribute_holder/sheet/job/training9
 
 /datum/quirk/positive/mtraining1
 	parent_type = /datum/quirk/positive/restored
 	name = "Medical Training"
 	desc = "I have basic medical training and some medical supplies stashed nearby."
 	point_value = -2
-	minimum_skill_ranks = list(/datum/skill/misc/medicine = 4)
+	minimum_skill_ranks = list(/datum/skill/misc/medicine = 40)
 	stashed_items = list(
 		"Patch Kit" = /obj/item/storage/fancy/ifak,
 		"Surgery Kit" = /obj/item/storage/backpack/satchel/surgbag,
@@ -209,7 +220,7 @@
 	name = "Green Thumb"
 	desc = "I've always been rather good at tending plants, and I have some powerful fertilizer stashed away, plus a hoe of ill repute."
 	point_value = -2
-	minimum_skill_ranks = list(/datum/skill/labor/farming = 4)
+	minimum_skill_ranks = list(/datum/skill/labor/farming = 40)
 	stashed_items = list(
 		"Fertilizer 1" = /obj/item/fertilizer,
 		"Fertilizer 2" = /obj/item/fertilizer,
@@ -231,7 +242,7 @@
 	name = "Bow Training"
 	desc = "I have journeyman bow training and a bow stashed nearby."
 	point_value = -3
-	minimum_skill_ranks = list(/datum/skill/combat/bows = 3)
+	minimum_skill_ranks = list(/datum/skill/combat/bows = 30)
 	stashed_items = list(
 		"Bow" = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/long,
 		"Quiver" = /obj/item/ammo_holder/quiver/arrows,
@@ -242,9 +253,15 @@
 	name = "Bookworm"
 	desc = "I love books and became quite skilled at reading and writing. What's more, my mind is sharper for the experience."
 	point_value = -2
-	minimum_skill_ranks = list(/datum/skill/misc/reading = 4)
+	minimum_skill_ranks = list(/datum/skill/misc/reading = 40)
 	stat_changes = list(
 		(STAT_INTELLIGENCE) = 2,
+	)
+
+/datum/attribute_holder/sheet/job/thief
+	clamped_adjustment = list(
+		/datum/attribute/skill/misc/stealing = list(40, 40),
+		/datum/attribute/skill/misc/lockpicking = list(40, 40),
 	)
 
 /datum/quirk/positive/thief
@@ -252,10 +269,7 @@
 	name = "Thief"
 	desc = "Life's not easy around here, but I've made mine a little easier by taking from others. I'm great at picking pockets and locks, and I have some picks stashed nearby."
 	point_value = -4
-	minimum_skill_ranks = list(
-		/datum/skill/misc/stealing = 4,
-		/datum/skill/misc/lockpicking = 4,
-	)
+	skill_sheet_type = /datum/attribute_holder/sheet/job/thief
 	stashed_items = list(
 		"Lockpicks" = /obj/item/lockpickring/mundane,
 	)
@@ -276,21 +290,32 @@
 		/datum/language/thievescant,
 	)
 
+/datum/attribute_holder/sheet/job/mastercraftsmen
+	clamped_adjustment = list(
+		/datum/attribute/skill/craft/crafting = list(30, 30),
+		/datum/attribute/skill/craft/blacksmithing = list(30, 30),
+		/datum/attribute/skill/craft/carpentry = list(30, 30),
+		/datum/attribute/skill/craft/masonry = list(30, 30),
+		/datum/attribute/skill/craft/cooking = list(30, 30),
+		/datum/attribute/skill/craft/engineering = list(30, 30),
+		/datum/attribute/skill/misc/sewing = list(30, 30),
+		/datum/attribute/skill/craft/tanning = list(30, 30),
+		/datum/attribute/skill/craft/smelting = list(30, 30),
+	)
+
 /datum/quirk/positive/mastercraftsmen
 	parent_type = /datum/quirk/positive/restored
 	name = "Jack of All Trades"
 	desc = "I've always had steady hands. I'm experienced enough in most fine craftsmanship to make a career out of it, if I can procure my own tools."
 	point_value = -4
-	minimum_skill_ranks = list(
-		/datum/skill/craft/crafting = 3,
-		/datum/skill/craft/blacksmithing = 3,
-		/datum/skill/craft/carpentry = 3,
-		/datum/skill/craft/masonry = 3,
-		/datum/skill/craft/cooking = 3,
-		/datum/skill/craft/engineering = 3,
-		/datum/skill/misc/sewing = 3,
-		/datum/skill/craft/tanning = 3,
-		/datum/skill/craft/smelting = 3,
+	skill_sheet_type = /datum/attribute_holder/sheet/job/mastercraftsmen
+
+/datum/attribute_holder/sheet/job/masterbuilder
+	clamped_adjustment = list(
+		/datum/attribute/skill/craft/carpentry = list(40, 40),
+		/datum/attribute/skill/craft/masonry = list(40, 40),
+		/datum/attribute/skill/craft/engineering = list(40, 40),
+		/datum/attribute/skill/craft/crafting = list(30, 30),
 	)
 
 /datum/quirk/positive/masterbuilder
@@ -299,12 +324,7 @@
 	desc = "I have experience in putting up large structures and foundations for buildings. I can even use a sawmill if I can find one, and I have a handcart and two sacks hidden away for transporting my construction materials."
 	point_value = -2
 	preview_render = FALSE
-	minimum_skill_ranks = list(
-		/datum/skill/craft/carpentry = 4,
-		/datum/skill/craft/masonry = 4,
-		/datum/skill/craft/engineering = 4,
-		/datum/skill/craft/crafting = 3,
-	)
+	skill_sheet_type = /datum/attribute_holder/sheet/job/masterbuilder
 	stashed_items = list(
 		"Sack 1" = /obj/item/storage/sack,
 		"Sack 2" = /obj/item/storage/sack,
@@ -321,21 +341,31 @@
 
 	new /obj/structure/handcart(owner_turf)
 
+/datum/attribute_holder/sheet/job/mastersmith
+	clamped_adjustment = list(
+		/datum/attribute/skill/craft/blacksmithing = list(40, 40),
+		/datum/attribute/skill/craft/engineering = list(40, 40),
+		/datum/attribute/skill/craft/smelting = list(40, 40),
+		/datum/attribute/skill/craft/crafting = list(30, 30),
+	)
+
 /datum/quirk/positive/mastersmith
 	parent_type = /datum/quirk/positive/restored
 	name = "Practiced Smith"
 	desc = "I am a metalworker by trade, and I have the tools for my practice stashed away."
 	point_value = -4
-	minimum_skill_ranks = list(
-		/datum/skill/craft/blacksmithing = 4,
-		/datum/skill/craft/engineering = 4,
-		/datum/skill/craft/smelting = 4,
-		/datum/skill/craft/crafting = 3,
-	)
+	skill_sheet_type = /datum/attribute_holder/sheet/job/mastersmith
 	stashed_items = list(
 		"Hammer" = /obj/item/weapon/hammer,
 		"Tongs" = /obj/item/weapon/tongs,
 		"Coal" = /obj/item/ore/coal,
+	)
+
+/datum/attribute_holder/sheet/job/mastertailor
+	clamped_adjustment = list(
+		/datum/attribute/skill/misc/sewing = list(40, 40),
+		/datum/attribute/skill/craft/crafting = list(40, 40),
+		/datum/attribute/skill/misc/medicine = list(30, 30),
 	)
 
 /datum/quirk/positive/mastertailor
@@ -343,11 +373,7 @@
 	name = "Practiced Tailor"
 	desc = "I'm particularly skilled with needle, thread, and loom. I also have a needle, thread, and scissors hidden away."
 	point_value = -4
-	minimum_skill_ranks = list(
-		/datum/skill/misc/sewing = 4,
-		/datum/skill/craft/crafting = 4,
-		/datum/skill/misc/medicine = 3,
-	)
+	skill_sheet_type = /datum/attribute_holder/sheet/job/mastertailor
 	stashed_items = list(
 		"Scissors" = /obj/item/weapon/knife/scissors/steel,
 		"Needle" = /obj/item/needle,
@@ -360,7 +386,7 @@
 	desc = "I am of noble blood."
 	point_value = -3
 	granted_traits = list(TRAIT_NOBLE)
-	minimum_skill_ranks = list(/datum/skill/misc/reading = 2)
+	minimum_skill_ranks = list(/datum/skill/misc/reading = 20)
 
 /datum/quirk/positive/richpouch
 	parent_type = /datum/quirk/positive/restored

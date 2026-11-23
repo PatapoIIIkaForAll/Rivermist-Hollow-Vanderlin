@@ -892,6 +892,57 @@
 
 	return ""
 
+/datum/action/cooldown/spell/get_examine_lines(mob/user)
+	. = list(span_notice("<b>[name]</b>"))
+	if(desc)
+		. += span_info(desc)
+
+	var/caster_known = isliving(owner)
+	var/cost = caster_known ? get_adjusted_cost() : spell_cost
+	var/cost_name = get_cost_name()
+	if(cost > 0 && cost_name)
+		. += "<b>COST:</b> [round(cost, 0.1)] [cost_name]"
+	if(cooldown_time > 0)
+		. += "<b>COOLDOWN:</b> [DisplayTimeText(cooldown_time)]"
+	if(charge_required)
+		. += "<b>CHARGE TIME:</b> [DisplayTimeText(caster_known ? get_adjusted_charge_time() : charge_time)]"
+	if(click_to_activate)
+		. += "<b>RANGE:</b> [cast_range]"
+
+	. += get_examine_effects()
+
+/// Damage, healing and similar effect lines for the examine block. Extend this in subtypes.
+/datum/action/cooldown/spell/proc/get_examine_effects()
+	return list()
+
+/// The resource name for [spell_type], as the player sees it.
+/datum/action/cooldown/spell/proc/get_cost_name()
+	switch(spell_type)
+		if(SPELL_MANA)
+			return "mana"
+		if(SPELL_STAMINA)
+			return "stamina"
+		if(SPELL_MIRACLE)
+			return "devotion"
+		if(SPELL_ESSENCE)
+			return "essence"
+		if(SPELL_BLOOD)
+			return "vitae"
+		if(SPELL_PSYDONIC_MIRACLE)
+			return "grace"
+		if(SPELL_RAGE)
+			return "rage"
+	return ""
+
+/// Readable name of a damage type define.
+/datum/action/cooldown/spell/proc/get_damage_type_name(damage_type)
+	switch(damage_type)
+		if(BURN)
+			return "burn"
+		if(OXY)
+			return "suffocation"
+	return damage_type
+
 /// Check if the spell is castable by cost
 /datum/action/cooldown/spell/proc/check_cost(cost_override, feedback = TRUE)
 	var/mob/living/caster = owner

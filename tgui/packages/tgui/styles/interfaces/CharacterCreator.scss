@@ -909,7 +909,7 @@
 }
 .cc-stats {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   gap: 2px;
   text-align: center;
 }
@@ -2695,3 +2695,103 @@
   box-shadow: 0 0 5px #ffd27a;
 }
 /* End of prosthetics window */
+
+/* Stat editor (Ability window) */
+.cc-se-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+.cc-se-head .cc-btn {
+  align-self: center;
+}
+.cc-se-left {
+  font-family: var(--cc-serif);
+  font-size: 20px;
+  color: var(--cc-text);
+}
+.cc-se-left.unspent {
+  color: var(--cc-gold);
+}
+.cc-se-grid {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) auto auto 26px;
+  gap: 4px 8px;
+  align-items: center;
+}
+.cc-se-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.cc-se-name-tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: help;
+}
+.cc-se-step {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cc-se-value {
+  width: 22px;
+  text-align: center;
+  font-family: var(--cc-serif);
+  font-size: 15px;
+  color: var(--cc-text);
+}
+.cc-se-value.low {
+  color: #e9a497;
+}
+.cc-se-bonus {
+  display: flex;
+  gap: 3px;
+}
+.cc-btn.cc-se-pip {
+  min-width: 30px;
+  padding: 0 4px;
+  color: var(--cc-muted);
+}
+.cc-btn.cc-se-pip.on {
+  border-color: var(--cc-gold);
+  color: #f3e3bf;
+  background: linear-gradient(180deg, #4a3b22, #2b2214);
+}
+.cc-se-total {
+  text-align: right;
+}
+.cc-se-impression {
+  text-align: center;
+  font-size: 12px;
+}
+.cc-field-label.cc-se-now {
+  color: var(--cc-gold);
+}
+.cc-se-band {
+  font-family: var(--cc-serif);
+  color: var(--cc-text);
+}
+.cc-se-band.poor {
+  color: #e9a497;
+}
+.cc-se-band.strong {
+  color: #a9d68a;
+}
+.cc-se-line {
+  width: 100%;
+  background: #0f0c09;
+  color: var(--cc-text);
+  border: 1px solid #3a3024;
+  font-family: var(--cc-serif);
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.cc-se-line:focus {
+  outline: none;
+  border-color: var(--cc-gold-dim);
+}
+/* End of stat editor */

@@ -202,7 +202,7 @@
 /mob/living/carbon/human/get_emote_pitch()
 	var/final_pitch = ..()
 	var/pitch_modifier = 0
-	if(HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
+	if(!strength_voice_pitch || HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		return final_pitch
 	if(GET_MOB_ATTRIBUTE_VALUE(src, STAT_STRENGTH) > 10)
 		pitch_modifier -= (GET_MOB_ATTRIBUTE_VALUE(src, STAT_STRENGTH) - 10) * 0.03

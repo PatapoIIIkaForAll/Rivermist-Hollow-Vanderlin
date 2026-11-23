@@ -22,10 +22,20 @@
 	max_distance = 5
 
 	var/list/hit_targets
+	/// Burn damage per creature hit, before attunement.
+	var/base_damage = 20
+	/// Damage and frostbite multiplier for the creature the beam is cast on.
+	var/main_target_modifier = 1.3
 
 /datum/action/cooldown/spell/beam/beam_of_frost/Destroy()
 	hit_targets = null
 	return ..()
+
+/datum/action/cooldown/spell/beam/beam_of_frost/get_examine_effects()
+	. = ..()
+	. += "<b>DAMAGE:</b> [base_damage] burn to each creature in the beam, [round(base_damage * main_target_modifier)] to the target"
+	var/datum/status_effect/debuff/frostbite/frostbite_type = /datum/status_effect/debuff/frostbite
+	. += "<b>FROSTBITE:</b> [DisplayTimeText(initial(frostbite_type.duration))] of slowness"
 
 /datum/action/cooldown/spell/beam/beam_of_frost/cast(atom/cast_on)
 	. = ..()
@@ -35,7 +45,7 @@
 	if(!isliving(victim))
 		return
 	var/mob/living/frozen_guy = victim
-	do_freeze(frozen_guy, 1.3)
+	do_freeze(frozen_guy, main_target_modifier)
 
 /datum/action/cooldown/spell/beam/beam_of_frost/beam_entered(datum/beam/source, obj/effect/ebeam/hit, atom/movable/entered)
 	if(!isliving(entered))
@@ -64,7 +74,7 @@
 
 	var/strength = clamp(attuned_strength * extra_modifer, 0.5, 2)
 
-	victim.adjustFireLoss(round(20 * strength))
+	victim.adjustFireLoss(round(base_damage * strength))
 	victim.apply_status_effect(/datum/status_effect/debuff/frostbite, null, strength)
 
 	new /obj/effect/temp_visual/snap_freeze(get_turf(victim))

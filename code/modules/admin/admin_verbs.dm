@@ -238,6 +238,12 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/select_job_pack_debug,
 	/client/proc/dungeon_run_debug,
 	/client/proc/dungeon_meta_debug,
+	/client/proc/debugdailysalarypayroll,
+	/client/proc/DebugSocialRecognition,
+	/client/proc/timeskip_to,
+	/client/proc/debug_technician_workshop_equipment,
+	/client/proc/anti_magic_add_global_whitelist,
+	/client/proc/anti_magic_remove_global_whitelist,
 )
 GLOBAL_LIST_INIT(admin_verbs_possess, list(/proc/possess, GLOBAL_PROC_REF(release)))
 GLOBAL_PROTECT(admin_verbs_possess)
@@ -336,6 +342,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 				add_verb(src, /client/proc/play_web_sound)
 		if(rights & R_SPAWN)
 			add_verb(src, GLOB.admin_verbs_spawn)
+		add_admin_menu_verbs()
 
 /client/proc/remove_admin_verbs()
 	var/list/verbs = list(
@@ -358,6 +365,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		/client/proc/readmin
 	)
 	remove_verb(src, verbs)
+	remove_admin_menu_verbs()
 
 /client/proc/hide_most_verbs()//Allows you to keep some functionality while hiding some verbs
 	set name = "Adminverbs - Hide Most"
@@ -690,48 +698,15 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 /client/proc/give_spell(mob/spell_recipient in GLOB.mob_list)
 	set category = "GameMaster.Fun"
 	set name = "Give Spell"
-	set desc = "Gives a spell to a mob."
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
+	set desc = "Open the Spell Library on a mob: browse, grant and revoke spells."
 
-	var/which = browser_alert(usr, "Chose by name or by type path?", "Chose option", list("Name", "Typepath"))
-	if(!which)
-		return
-	if(QDELETED(spell_recipient))
-		to_chat(usr, span_warning("The intended spell recipient no longer exists."))
-		return
-
-	var/list/spell_list = list()
-	for(var/datum/action/cooldown/spell/to_add as anything in subtypesof(/datum/action/cooldown/spell))
-		var/spell_name = initial(to_add.name)
-		if(spell_name == "Spell") // abstract or un-named spells should be skipped.
-			continue
-
-		if(which == "Name")
-			spell_list[spell_name] = to_add
-		else
-			spell_list += to_add
-
-	var/chosen_spell = browser_input_list(usr, "Choose the spell to give to [spell_recipient]", "ABRAKADABRA", sortList(spell_list))
-	if(isnull(chosen_spell))
-		return
-	var/datum/action/cooldown/spell/spell_path = which == "Typepath" ? chosen_spell : spell_list[chosen_spell]
-	if(!ispath(spell_path))
-		return
-
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-	log_admin("[key_name(usr)] gave [key_name(spell_recipient)] the spell [chosen_spell].")
-	message_admins("[key_name_admin(usr)] gave [key_name_admin(spell_recipient)] the spell [chosen_spell].")
-
-	var/datum/action/cooldown/spell/new_spell = new spell_path(spell_recipient.mind || spell_recipient)
-
-	new_spell.Grant(spell_recipient)
-
-	if(!spell_recipient.mind)
-		to_chat(usr, span_userdanger("Spells given to mindless mobs will belong to the mob and not their mind, \
-			and as such will not be transferred if their mind changes body (Such as from Mindswap)."))
+	open_spell_library(spell_recipient)
 
 /client/proc/remove_spell(mob/removal_target in GLOB.mob_list)
 	set category = "GameMaster.Fun"
 	set name = "Remove Spell"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set desc = "Remove a spell from the selected mob."
 
 	var/list/target_spell_list = list()
@@ -777,7 +752,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 /client/proc/deadmin()
 	set name = "Deadmin"
-	set category = "Admin.Admin Preferences"
+	set category = "Admin"
 	set desc = ""
 
 	if(!holder)
@@ -808,7 +783,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 /client/proc/readmin()
 	set name = "Readmin"
-	set category = "Admin.Admin Preferences"
+	set category = "Admin"
 	set desc = ""
 
 	var/datum/admins/A = GLOB.deadmins[ckey]

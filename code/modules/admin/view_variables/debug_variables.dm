@@ -1,11 +1,15 @@
 #define VV_HTML_ENCODE(thing) ( sanitize ? html_encode(thing) : thing )
 /// Get displayed variable in VV variable list
-/proc/debug_variable(name, value, level, datum/owner, sanitize = TRUE, display_flags = NONE) //if D is a list, name will be index, and value will be assoc value.
+/proc/debug_variable(name, value, level, datum/owner, sanitize = TRUE, display_flags = NONE, alist_index) //if D is a list, name will be index, and value will be assoc value.
 	if(owner)
 		if(islist(owner))
 			var/list/list_owner = owner
 			var/index = name
-			if (isnull(value))
+			if(!isnull(alist_index))
+				// alist row (ported from Azure Peak): name is the real key and value the real value,
+				// the edit links carry the position of the entry instead of a list index
+				index = alist_index
+			else if (isnull(value))
 				value = list_owner[name]
 			else
 				name = list_owner[name] //name is really the index until this line
@@ -23,11 +27,42 @@
 			var/list/list_value = name
 			name_part = "<a href='byond://?_src_=vars;[HrefToken()];Vars=[REF(name)]'> /list ([length(list_value)]) [REF(name)]</a>"
 
-	. = "[.][name_part] = "
+	// vn = variable name (the VV search can look at names only), vt = short type tag of the value
+	. = "[.]<span class='vn'>[name_part]</span>[level ? "" : " <span class='vt'>[vv_type_tag(value)]</span>"] = "
 
 	var/item = _debug_variable_value(name, value, level, owner, sanitize, display_flags)
 
 	return "[.][item]</li>"
+
+/// Short, human readable type of a value, shown next to the variable name in VV.
+/proc/vv_type_tag(value)
+	if(isnull(value))
+		return "null"
+	if(isnum(value))
+		return "num"
+	if(istext(value))
+		return "text"
+	if(ispath(value))
+		return "path"
+	if(islist(value))
+		return "list"
+	if(isicon(value))
+		return "icon"
+	if(isfile(value))
+		return "file"
+	if(ismob(value))
+		return "mob"
+	if(isobj(value))
+		return "obj"
+	if(isturf(value))
+		return "turf"
+	if(isarea(value))
+		return "area"
+	if(istype(value, /client))
+		return "client"
+	if(isdatum(value))
+		return "datum"
+	return "other"
 
 // This is split into a separate proc mostly to make errors that happen not break things too much
 /proc/_debug_variable_value(name, value, level, datum/owner, sanitize, display_flags)
@@ -63,6 +98,17 @@
 	if(isdatum(value))
 		var/datum/datum_value = value
 		return datum_value.debug_variable_value(name, level, owner, sanitize, display_flags)
+
+	if(istype(value, /alist)) // key/value only, cannot be walked by index
+		var/alist/alist_value = value
+		var/alist_length = length(alist_value)
+		var/alist_link = "<a href='byond://?_src_=vars;[HrefToken()];Vars=[REF(value)]'>/alist ([alist_length])</a>"
+		if((display_flags & VV_ALWAYS_CONTRACT_LIST) || !alist_length || alist_length > VV_NORMAL_LIST_NO_EXPAND_THRESHOLD)
+			return alist_link
+		var/list/alist_items = list()
+		for(var/alist_key in alist_value)
+			alist_items += debug_variable(alist_key, alist_value[alist_key], level + 1, sanitize = sanitize)
+		return "[alist_link]<ul>[alist_items.Join()]</ul>"
 
 	if(islist(value) || (name in GLOB.vv_special_lists)) // Some special lists aren't detectable as a list through istype
 		var/list/list_value = value

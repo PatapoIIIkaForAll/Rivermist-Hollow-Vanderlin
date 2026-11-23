@@ -13,23 +13,20 @@
 #define STAT_ROLL_DIE 20
 #define STAT_ROLL_MAX_DC 40
 
-#define ROLL_STAT_CHARISMA "charisma"
-
 GLOBAL_LIST_INIT(rollable_stats, list(
 	"Strength" = STATKEY_STR,
-	"Perception" = STATKEY_PER,
+	"Wisdom" = STATKEY_PER,
 	"Intelligence" = STATKEY_INT,
 	"Constitution" = STATKEY_CON,
 	"Endurance" = STATKEY_END,
-	"Speed" = STATKEY_SPD,
+	"Dexterity" = STATKEY_SPD,
 	"Fortune" = STATKEY_LCK,
-	"Charisma" = ROLL_STAT_CHARISMA,
+	"Charisma" = STATKEY_CHA,
 ))
 
-/mob/living/proc/resolve_stat_key(stat_key)
-	if(stat_key == ROLL_STAT_CHARISMA)
-		return (get_stat(STATKEY_INT) > get_stat(STATKEY_LCK)) ? STATKEY_INT : STATKEY_LCK
-	return stat_key
+/proc/stat_key_name(stat_key)
+	var/datum/attribute/stat/stat = GET_ATTRIBUTE_DATUM(legacy_attribute_stat_path(stat_key))
+	return stat?.name || stat_key
 
 /proc/stat_roll_modifier(stat_value)
 	return floor((stat_value - 10) / 2)
@@ -64,7 +61,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 		STATKEY_END = "ilmater",
 		STATKEY_SPD = "mask",
 		STATKEY_LCK = "tymora",
-		ROLL_STAT_CHARISMA = "sune",
+		STATKEY_CHA = "sune",
 	)
 	return god_by_stat[stat_key] || "neutral"
 
@@ -136,10 +133,8 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 		ghost.show_message(message)
 	visible_message(message, runechat_message = runechat)
 
-/proc/stat_header(stat_key, read_stat, stat_value, list/trait_sources)
-	var/stat_name = uppertext(stat_key)
-	if(read_stat && read_stat != stat_key)
-		stat_name += " ([uppertext(copytext(read_stat, 1, 4))])"
+/proc/stat_header(stat_key, stat_value, list/trait_sources)
+	var/stat_name = uppertext(stat_key_name(stat_key))
 	var/header = "[stat_span(stat_key, "<b>[stat_name]</b>", TRUE)] [stat_value] <b>([signed_number(stat_roll_modifier(stat_value))])</b>"
 	if(length(trait_sources) == 1)
 		var/trait_key = trait_sources[1]
@@ -331,8 +326,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	else
 		dc = clamp(round(dc), 1, STAT_ROLL_MAX_DC)
 
-	var/read_stat = living.resolve_stat_key(key)
-	var/stat_value = living.get_stat(read_stat)
+	var/stat_value = living.get_stat(key)
 	var/modifier = stat_roll_modifier(stat_value)
 	var/list/trait_sources = get_trait_sources(living)
 	var/trait_effect = get_trait_effect(living)
@@ -345,7 +339,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	if(!isnull(dc) && !critical)
 		outcome = (total >= dc)
 
-	var/header = stat_header(key, read_stat, stat_value, trait_sources)
+	var/header = stat_header(key, stat_value, trait_sources)
 	var/footer = roll_sum(outcome, list(die, modifier, trait_effect))
 	if(!isnull(dc))
 		footer += "<br>Needs [dc] or more"
@@ -353,8 +347,9 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 		footer += "<br>[roll_outcome_span(natural, "<b>Natural [die]!</b>", in_tooltip = TRUE)]"
 	var/tooltip = stat_trait_breakdown(trait_sources) || ""
 
-	var/label = "[uppertext(key)] [total]"
-	var/runechat = "rolls [key] for [total]"
+	var/stat_name = stat_key_name(key)
+	var/label = "[uppertext(stat_name)] [total]"
+	var/runechat = "rolls [LOWER_TEXT(stat_name)] for [total]"
 	if(!isnull(dc))
 		label += " — [outcome ? "SUCCEEDS" : "FAILS"]"
 		runechat += outcome ? " and succeeds" : " and fails"
@@ -438,7 +433,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /datum/emote/living/stat_roll/perception
 	key = STATKEY_PER
-	key_third_person = "per"
+	key_third_person = "wis"
 	modifiers_list = list(
 		TRAIT_KEENEARS = 1,
 		TRAIT_COMBAT_AWARE = 1,
@@ -467,7 +462,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	)
 
 /mob/living/carbon/human/verb/emote_perception_roll()
-	set name = "Roll Perception"
+	set name = "Roll Wisdom"
 	set category = "Emotes.Rolling"
 
 	emote(STATKEY_PER, intentional = TRUE)
@@ -575,7 +570,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 
 /datum/emote/living/stat_roll/speed
 	key = STATKEY_SPD
-	key_third_person = "spd"
+	key_third_person = "dex"
 	modifiers_list = list(
 		TRAIT_FREERUNNING = 1,
 		TRAIT_LIGHT_STEP = 1,
@@ -605,7 +600,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	)
 
 /mob/living/carbon/human/verb/emote_speed_roll()
-	set name = "Roll Speed"
+	set name = "Roll Dexterity"
 	set category = "Emotes.Rolling"
 
 	emote(STATKEY_SPD, intentional = TRUE)
@@ -643,7 +638,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	emote(STATKEY_LCK, intentional = TRUE)
 
 /datum/emote/living/stat_roll/charisma
-	key = ROLL_STAT_CHARISMA
+	key = STATKEY_CHA
 	key_third_person = "cha"
 	modifiers_list = list(
 		TRAIT_BEAUTIFUL = 1,
@@ -680,7 +675,7 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	set name = "Roll Charisma"
 	set category = "Emotes.Rolling"
 
-	emote(ROLL_STAT_CHARISMA, intentional = TRUE)
+	emote(STATKEY_CHA, intentional = TRUE)
 
 /datum/contest_response_prompt
 	var/title
@@ -789,11 +784,12 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 		return
 
 	var/challenger_stat = GLOB.rollable_stats[challenger_choice]
+	var/challenger_stat_name = stat_key_name(challenger_stat)
 	next_emote = world.time + DICE_ROLL_COOLDOWN
 
-	to_chat(src, span_notice("Setting my [challenger_stat] against [defender]. Awaiting their answer..."))
-	announce_roll("challenges [defender] to a contest of [stat_span(challenger_stat, challenger_stat)]!", "challenges [defender] to a contest of [challenger_stat]")
-	to_chat(defender, span_notice("[src] sets their [challenger_stat] against you. Answer with one of your own stats, or let it pass."))
+	to_chat(src, span_notice("Setting my [challenger_stat_name] against [defender]. Awaiting their answer..."))
+	announce_roll("challenges [defender] to a contest of [stat_span(challenger_stat, challenger_stat_name)]!", "challenges [defender] to a contest of [challenger_stat_name]")
+	to_chat(defender, span_notice("[src] sets their [challenger_stat_name] against you. Answer with one of your own stats, or let it pass."))
 
 	contest_response_async(
 		defender,
@@ -830,20 +826,19 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	var/defender_stat = GLOB.rollable_stats[response]
 	if(!defender_stat)
 		return
-	defender.announce_roll("answers with [stat_span(defender_stat, defender_stat)]!", "answers with [defender_stat]")
+	var/defender_stat_name = stat_key_name(defender_stat)
+	defender.announce_roll("answers with [stat_span(defender_stat, defender_stat_name)]!", "answers with [defender_stat_name]")
 
 	resolve_contested_roll(defender, challenger_stat, defender_stat)
 	next_emote = world.time + DICE_ROLL_COOLDOWN
 	defender.next_emote = world.time + DICE_ROLL_COOLDOWN
 
-/proc/contest_side_header(mob/living/who, stat_key, read_stat, stat_value, list/trait_sources)
-	return "<b>[html_encode("[who]")]</b><br>" + stat_header(stat_key, read_stat, stat_value, trait_sources)
+/proc/contest_side_header(mob/living/who, stat_key, stat_value, list/trait_sources)
+	return "<b>[html_encode("[who]")]</b><br>" + stat_header(stat_key, stat_value, trait_sources)
 
 /mob/living/proc/resolve_contested_roll(mob/living/defender, challenger_stat, defender_stat)
-	var/challenger_read = resolve_stat_key(challenger_stat)
-	var/defender_read = defender.resolve_stat_key(defender_stat)
-	var/challenger_stat_value = get_stat(challenger_read)
-	var/defender_stat_value = defender.get_stat(defender_read)
+	var/challenger_stat_value = get_stat(challenger_stat)
+	var/defender_stat_value = defender.get_stat(defender_stat)
 	var/challenger_modifier = stat_roll_modifier(challenger_stat_value)
 	var/defender_modifier = stat_roll_modifier(defender_stat_value)
 	var/list/challenger_trait_sources = get_roll_trait_sources(challenger_stat)
@@ -872,8 +867,8 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 	var/tooltip = roll_tooltip(result, null, trait_rows)
 
 	var/list/throw_labels = list(
-		contest_side_header(src, challenger_stat, challenger_read, challenger_stat_value, challenger_trait_sources),
-		contest_side_header(defender, defender_stat, defender_read, defender_stat_value, defender_trait_sources),
+		contest_side_header(src, challenger_stat, challenger_stat_value, challenger_trait_sources),
+		contest_side_header(defender, defender_stat, defender_stat_value, defender_trait_sources),
 	)
 	var/challenger_outcome = result
 	var/defender_outcome = isnull(result) ? null : !result
@@ -892,4 +887,3 @@ GLOBAL_LIST_INIT(rollable_stats, list(
 #undef DICE_ROLL_COOLDOWN
 #undef STAT_ROLL_DIE
 #undef STAT_ROLL_MAX_DC
-#undef ROLL_STAT_CHARISMA

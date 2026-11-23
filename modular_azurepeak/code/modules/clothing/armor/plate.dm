@@ -204,7 +204,7 @@
 
 /obj/item/clothing/armor/plate/full/bronze/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("Even with the necessary training, this suit of armor is difficult to maneuver in. Wearing the armor will slightly fortify your Constitution, at the cost of further reducing your Speed.")
+	. += span_info("Even with the necessary training, this suit of armor is difficult to maneuver in. Wearing the armor will slightly fortify your Constitution, at the cost of further reducing your Dexterity.")
 
 /obj/item/clothing/armor/plate/full/fluted
 	name = "fluted plate armor"

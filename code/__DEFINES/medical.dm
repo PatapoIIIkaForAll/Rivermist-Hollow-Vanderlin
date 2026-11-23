@@ -266,8 +266,9 @@ DEFINE_BITFIELD(organ_flags, list(
 #define LIVER_FAILURE_STAGE_SECONDS 60
 
 // ~organ requirements
-/// Normally 50% of the default blood volume (230cl)
-#define DEFAULT_TOTAL_BLOOD_REQ	BLOOD_VOLUME_NORMAL * 0.5
+/// Sum of organ blood_req for a standard human (33%), so a healthy body reads its real blood volume.
+/// Guarded by /datum/unit_test/blood_req_baseline; update both when organ blood_req changes.
+#define DEFAULT_TOTAL_BLOOD_REQ	(BLOOD_VOLUME_NORMAL * 0.33)
 #define DEFAULT_TOTAL_OXYGEN_REQ 50
 #define DEFAULT_TOTAL_NUTRIMENT_REQ	HUNGER_FACTOR
 #define DEFAULT_TOTAL_HYDRATION_REQ THIRST_FACTOR

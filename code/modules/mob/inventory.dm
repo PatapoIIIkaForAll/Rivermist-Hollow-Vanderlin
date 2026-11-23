@@ -407,6 +407,20 @@
 		items += earring_r
 	return items
 
+/// Worn items that count as clothes when bathing.
+/mob/living/proc/get_bathing_clothes()
+	return get_equipped_items()
+
+// Rings, chokers, earrings, garters, belts, bags and unarmored neck or wrist pieces do not count.
+/mob/living/carbon/human/get_bathing_clothes()
+	var/list/clothes = list()
+	for(var/obj/item/worn in list(head, wear_mask, shoes, gloves, wear_armor, wear_pants, cloak, wear_shirt, underwear, bra, undershirt))
+		clothes += worn
+	for(var/obj/item/worn in list(wear_neck, wear_wrists))
+		if(worn.get_armor().type != /datum/armor/none)
+			clothes += worn
+	return clothes
+
 /mob/living/proc/unequip_everything(silent = TRUE)
 	var/list/items = list()
 	items |= get_equipped_items(TRUE)

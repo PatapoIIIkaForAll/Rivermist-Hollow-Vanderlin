@@ -23,6 +23,10 @@
 		QDEL_NULL(active)
 	return ..()
 
+/datum/action/cooldown/spell/beam/get_examine_effects()
+	. = ..()
+	. += "<b>BEAM:</b> lasts [DisplayTimeText(time)], breaks at [max_distance] tiles"
+
 /datum/action/cooldown/spell/beam/is_valid_target(atom/cast_on)
 	. = ..()
 	if(!.)

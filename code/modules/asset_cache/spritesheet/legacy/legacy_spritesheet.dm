@@ -436,7 +436,7 @@
 
 /datum/asset/spritesheet/attribute_seals/create_spritesheets()
 	var/seal_icon = 'icons/ui_icons/attributes.dmi'
-	for(var/seal_state in list("strength", "dexterity", "endurance", "intelligence", "willpower", "perception"))
+	for(var/seal_state in list("strength", "dexterity", "endurance", "intelligence", "willpower", "perception", "charisma"))
 		var/icon/seal = icon(seal_icon, icon_state = seal_state)
 		seal.Scale(104, 104)
 		Insert(seal_state, seal)

@@ -51,7 +51,8 @@ SUBSYSTEM_DEF(crediticons)
 		var/icon/female_s = icon("icon"='icons/mob/clothing/under/masking_helpers.dmi', "icon_state"="credits")
 		rendered_icon.Blend(female_s, ICON_MULTIPLY)
 		rendered_icon.Scale(96,96)
-		GLOB.credits_icons[thename]["icon"] = rendered_icon
+		// Kept all round: a resource, not an /icon that holds its decoded pixels.
+		GLOB.credits_icons[thename]["icon"] = fcopy_rsc(rendered_icon)
 		GLOB.credits_icons[thename]["vc"] = actor.voice_color
 
 /datum/controller/subsystem/crediticons/proc/get_credit_icon(mob/living/carbon/human/target, crop_to_upper_half = FALSE)

@@ -807,7 +807,9 @@ GLOBAL_PROTECT(no_child_icons)
 		update_hud_wear_mask(wear_mask)
 		var/list/obscured = check_obscured_slots()
 		if(!(ITEM_SLOT_MASK & obscured[SLOT_CHECK_REGULAR]))
-			var/mutable_appearance/mask_overlay = wear_mask.build_worn_icon(default_layer = MASK_LAYER, default_icon_file = 'icons/roguetown/clothing/onmob/masks.dmi')
+			// Head items (hoods etc.) worn as masks keep their worn states in head.dmi.
+			var/mask_icon_file = istype(wear_mask, /obj/item/clothing/head) ? 'icons/roguetown/clothing/onmob/head.dmi' : 'icons/roguetown/clothing/onmob/masks.dmi'
+			var/mutable_appearance/mask_overlay = wear_mask.build_worn_icon(default_layer = MASK_LAYER, default_icon_file = mask_icon_file)
 			var/list/offsets = get_offset_features()
 			var/obj/item/bodypart/taur/T = get_bodypart(BODY_ZONE_TAUR)
 			if(mask_overlay)

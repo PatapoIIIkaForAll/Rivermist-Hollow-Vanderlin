@@ -23,9 +23,7 @@
 	n\n\
 	Though often aloof, High Elves see themselves as caretakers of ancient knowledge, burdened by memories of fallen empires such as Myth Drannor. \
 	n\n\
-	(+1 PER, 2+ INT, +1 SPD, Elvish Language).\
-	\n\n\
-	Proficiencies: Swords(3), Bows(3), Arcane(4), Reading(4), Music(3), Mathematics(2), Crafting(2)."
+	(Elvish Language)."
 
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,OLDGREY)
@@ -211,15 +209,12 @@
 	C.dna.species.accent_language = C.dna.species.get_accent(C.dna.species.native_language, 1)
 
 /datum/attribute_holder/sheet/job/species/snow/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/combat/swords = 30,
-		/datum/attribute/skill/combat/bows = 30,
-
-		/datum/attribute/skill/magic/arcane = 40,
-
-		/datum/attribute/skill/misc/reading = 40,
-		/datum/attribute/skill/misc/music = 30,
-		/datum/attribute/skill/labor/mathematics = 20,
-
-		/datum/attribute/skill/craft/crafting = 20,
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/swords = list(30, 30),
+		/datum/attribute/skill/combat/bows = list(30, 30),
+		/datum/attribute/skill/magic/arcane = list(10, 10),
+		/datum/attribute/skill/misc/reading = list(20, 40),
+		/datum/attribute/skill/misc/music = list(20, 40),
+		/datum/attribute/skill/labor/mathematics = list(20, 40),
+		/datum/attribute/skill/craft/crafting = list(20, 40),
 	)

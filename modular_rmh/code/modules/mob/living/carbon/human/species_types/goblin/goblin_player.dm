@@ -8,7 +8,7 @@
 	desc = "Goblins are clever, wiry opportunists who survive through speed, nerve, and an instinct for finding advantage where others miss it. \
 	They are common in badlands, caves, and frontier warrens, though some leave their tribes to make a place in larger realms. \
 	\n\n\
-	(+1 SPD, Darkvision).\
+	(Darkvision).\
 	\n\n\
 	THIS IS A DISCRIMINATED SPECIES. PLAY AT YOUR OWN RISK."
 
@@ -94,6 +94,7 @@
 
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_SPLEEN = /obj/item/organ/spleen,
 		ORGAN_SLOT_HEART = /obj/item/organ/heart,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
 		ORGAN_SLOT_EYES = /obj/item/organ/eyes/night_vision,

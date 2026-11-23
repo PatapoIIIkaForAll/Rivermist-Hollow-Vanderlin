@@ -78,8 +78,13 @@
 #define STAT_CONSTITUTION /datum/attribute/stat/constitution
 #define STAT_FORTUNE /datum/attribute/stat/fortune
 #define STAT_SPEED /datum/attribute/stat/speed
+#define STAT_CHARISMA /datum/attribute/stat/charisma
+/// Players see Speed as Dexterity and Perception as Wisdom. These name the same stats.
+#define STAT_DEXTERITY STAT_SPEED
+#define STAT_WISDOM STAT_PERCEPTION
 
-#define MOBSTATS list(STAT_STRENGTH, STAT_ENDURANCE, STAT_INTELLIGENCE, STAT_PERCEPTION, STAT_CONSTITUTION, STAT_SPEED, STAT_FORTUNE)
+/// Every stat, in the order menus show them.
+#define MOBSTATS list(STAT_STRENGTH, STAT_SPEED, STAT_CONSTITUTION, STAT_INTELLIGENCE, STAT_PERCEPTION, STAT_CHARISMA, STAT_ENDURANCE, STAT_FORTUNE)
 
 #define SKILL_GOVERNING_MULTIPLIER_POSITIVE 0.5
 #define SKILL_GOVERNING_MULTIPLIER_NEGATIVE 3

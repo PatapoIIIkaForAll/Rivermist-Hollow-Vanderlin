@@ -110,7 +110,7 @@
 /datum/special_trait/beautiful
 	name = "Beautiful"
 	greet_text = span_notice("My face is a work of art")
-	weight = 100
+	weight = 0 // never rolled; looks come from Charisma
 
 /datum/special_trait/beautiful/on_apply(mob/living/carbon/human/character, silent)
 	REMOVE_TRAIT(character, TRAIT_UGLY, BE_SPECIAL_TRAIT)
@@ -118,6 +118,12 @@
 	ADD_TRAIT(character, TRAIT_BEAUTIFUL, "[type]")
 
 //positive
+
+/datum/attribute_holder/sheet/job/eagle_eyed
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/crossbows = list(50, 50),
+		/datum/attribute/skill/combat/bows = list(40, 40),
+	)
 
 /datum/special_trait/eagle_eyed
 	name = "Eagle Eyed"
@@ -127,10 +133,14 @@
 
 /datum/special_trait/eagle_eyed/on_apply(mob/living/carbon/human/character, silent)
 	character.change_stat(STATKEY_PER, 2)
-	character.adjust_skillrank(/datum/skill/combat/crossbows, 5, TRUE)
-	character.adjust_skillrank(/datum/skill/combat/bows, 4, TRUE)
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/eagle_eyed)
 	character.mind.special_items["Crossbow"] = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 	character.mind.special_items["Bolts"] = /obj/item/ammo_holder/quiver/bolts
+
+/datum/attribute_holder/sheet/job/mule
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/knives = list(20, 30),
+	)
 
 /datum/special_trait/mule
 	name = "Mule"
@@ -141,7 +151,7 @@
 	character.mind.special_items["Stash One"] = /obj/item/storage/backpack/satchel/mule
 	character.mind.special_items["Stash Two"] = /obj/item/storage/backpack/satchel/mule
 	character.mind.special_items["Dagger"] = /obj/item/weapon/knife/dagger
-	character.adjust_skillrank(/datum/skill/combat/knives, 2, TRUE)
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/mule)
 
 /datum/special_trait/corn_fed
 	name = "Corn Fed"
@@ -180,6 +190,11 @@
 	character.mind.special_items["Firebomb Two"] = /obj/item/explosive/bottle
 	character.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
 
+/datum/attribute_holder/sheet/job/tombraider
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/whipsflails = list(60, 60),
+	)
+
 /datum/special_trait/tombraider
 	name = "Tomb Raider"
 	greet_text = span_notice("It belongs in a museum. I have a whip hidden and I know how to use it.")
@@ -187,7 +202,7 @@
 
 /datum/special_trait/tombraider/on_apply(mob/living/carbon/human/character, silent)
 	character.mind.special_items["Whip"] = /obj/item/weapon/whip/antique
-	character.adjust_skillrank(/datum/skill/combat/whipsflails, 6, TRUE)
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/tombraider)
 
 /datum/special_trait/drunk_rider
 	name = "Rivermist's Drunkest Rider"
@@ -281,14 +296,19 @@
 	character.grant_language(/datum/language/deepspeak)
 	character.grant_language(/datum/language/thievescant)
 
+/datum/attribute_holder/sheet/job/tavernbrawler
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/wrestling = list(20, 30),
+		/datum/attribute/skill/combat/unarmed = list(20, 30),
+	)
+
 /datum/special_trait/tavernbrawler
 	name = "Tavern Brawler"
 	greet_text = span_notice("I love a good pub fight!")
 	weight = 50
 
 /datum/special_trait/tavernbrawler/on_apply(mob/living/carbon/human/character)
-	character.clamped_adjust_skillrank(/datum/skill/combat/wrestling, 2, 3, TRUE)
-	character.clamped_adjust_skillrank(/datum/skill/combat/unarmed, 2, 3, TRUE)
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/tavernbrawler)
 	character.change_stat(STATKEY_STR, 1)
 	character.change_stat(STATKEY_END, 1)
 	character.change_stat(STATKEY_CON, 1)
@@ -435,6 +455,12 @@
 	character.transform = character.transform.Scale(0.90, 0.90)
 	character.update_transform()
 
+/datum/attribute_holder/sheet/job/war_veteran
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/swords = list(40, 40),
+		/datum/attribute/skill/combat/polearms = list(40, 40),
+	)
+
 /datum/special_trait/war_veteran
 	name = "War Veteran"
 	greet_text = span_boldwarning("I have fought in the goblin wars.. albeit at a cost.")
@@ -445,8 +471,7 @@
 /datum/special_trait/war_veteran/on_apply(mob/living/carbon/human/character, silent)
 	fit_veteran_wounds(character) // RMH EDIT - Prosthetics window parts replaced the limb quirks
 	character.add_quirk(/datum/quirk/negative/old_war_wound)
-	character.clamped_adjust_skillrank(/datum/skill/combat/swords, 4, 4, TRUE)
-	character.clamped_adjust_skillrank(/datum/skill/combat/polearms, 4, 4, TRUE)
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/war_veteran)
 	character.adjust_skillrank(/datum/skill/misc/sneaking, 2, TRUE)
 
 /datum/special_trait/sadistic
@@ -471,7 +496,7 @@
 /datum/special_trait/ugly
 	name = "Ugly"
 	greet_text = span_notice("People find me repulsive.")
-	weight = 100
+	weight = 0 // never rolled; looks come from Charisma
 
 /datum/special_trait/ugly/on_apply(mob/living/carbon/human/character, silent)
 	ADD_TRAIT(character, TRAIT_UGLY, "[type]")
@@ -647,6 +672,11 @@
 	var/obj/item/ring = new /obj/item/clothing/ring/dragon_ring(get_turf(character))
 	character.put_in_hands(ring, forced = TRUE)
 
+/datum/attribute_holder/sheet/job/thinker
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/swords = list(20, 20),
+	)
+
 /datum/special_trait/thinker
 	name = "The Thinker"
 	greet_text = span_notice("Physique, Endurance, Constitution. \
@@ -662,7 +692,7 @@
 	character.change_stat(STATKEY_CON, -1)
 	character.change_stat(STATKEY_END, -1)
 	character.adjust_skillrank(/datum/skill/magic/arcane, 5, TRUE)
-	character.set_skillrank(/datum/skill/combat/swords, 2, TRUE) //Average only.
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/thinker)
 	character.adjust_spell_points(14) //Less points than Court Mage, why do Court mage get 17 points? what even?
 	character.add_spell(/datum/action/cooldown/spell/undirected/touch/prestidigitation, silent = TRUE)
 	character.generate_random_attunements(rand(4,6))
@@ -739,6 +769,11 @@
 /datum/special_trait/keenears/on_apply(mob/living/carbon/human/character, silent)
 	ADD_TRAIT(character, TRAIT_KEENEARS, "[type]")
 
+/datum/attribute_holder/sheet/job/glutton
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/wrestling = list(30, 30),
+	)
+
 /datum/special_trait/glutton
 	name = "The Glutton"
 	greet_text = span_notice("Gods have cursed my entire bloodline, demanding that we indulge in luxuries and dine in decadence.")
@@ -752,7 +787,7 @@
 	character.set_stat_modifier("[type]", STATKEY_END, -6)
 	character.set_stat_modifier("[type]", STATKEY_SPD, -10)
 
-	character.adjust_skillrank(/datum/skill/combat/wrestling, 3, TRUE) // this guy will sit on you
+	character.attributes?.add_sheet(/datum/attribute_holder/sheet/job/glutton) // this guy will sit on you
 	character.adjust_skillrank(/datum/skill/misc/athletics, -3, TRUE)
 
 	ADD_TRAIT(character, TRAIT_FAT, "[type]")

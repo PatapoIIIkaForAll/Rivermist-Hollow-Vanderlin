@@ -28,6 +28,17 @@
 	if(!selection)
 		return
 
-	preferred_ui_language = sanitize_preferred_ui_language(language_choices[selection])
+	set_preferred_ui_language(language_choices[selection])
 	prefs?.save_preferences()
 	to_chat(src, span_notice("Preferred UI language set to [selection]. Reopen interfaces to apply it."))
+
+/// Game UI language is independent of Character Creator; refresh active readers.
+/client/proc/set_preferred_ui_language(language, refresh = TRUE)
+	preferred_ui_language = sanitize_preferred_ui_language(language)
+	if(refresh)
+		SStgui.update_user_uis(mob)
+		rmh_scom_reader?.send_publication()
+	if(preferred_ui_language == "ru")
+		to_chat(src, span_notice("Команда Chat Translation во вкладке OOC включает машинный перевод сообщений с других языков."))
+	else
+		to_chat(src, span_notice("The Chat Translation verb in the OOC tab machine-translates chat written in other languages."))

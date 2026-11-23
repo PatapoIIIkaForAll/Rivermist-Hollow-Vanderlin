@@ -28,7 +28,7 @@ GLOBAL_LIST_INIT(job_pack_singletons, init_jobpacks())
 
 /datum/job_pack/proc/pick_pack(mob/living/carbon/human/picker)
 	for(var/datum/attribute_holder/sheet/job/pack_sheet as anything in pack_sheets)
-		picker.attributes?.add_sheet(pack_sheet)
+		picker.attributes?.add_sheet(pack_sheet, picker.uses_creator_stats())
 
 	for(var/trait in pack_traits)
 		ADD_TRAIT(picker, trait, JOB_TRAIT)

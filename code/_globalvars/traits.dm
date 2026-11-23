@@ -92,6 +92,7 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"TRAIT_XRAY_VISION" = TRAIT_XRAY_VISION,
 		"TRAIT_THERMAL_VISION" = TRAIT_THERMAL_VISION,
 		"TRAIT_STRONG_GRABBER" = TRAIT_STRONG_GRABBER,
+		"TRAIT_CAFFEINATED" = TRAIT_CAFFEINATED,
 		"TRAIT_MAGIC_CHOKE" = TRAIT_MAGIC_CHOKE,
 		"TRAIT_SOOTHED_THROAT" = TRAIT_SOOTHED_THROAT,
 		"TRAIT_ALWAYS_CLEAN" = TRAIT_ALWAYS_CLEAN,
@@ -209,7 +210,6 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"Recognized" = TRAIT_RECOGNIZED,
 		"Member of the Oratorium Throni Vacui" = TRAIT_INQUISITION,
 		"Unyielding" = TRAIT_UNDODGING,
-		"Allure" = TRAIT_ALLURE,
 		"Darkling" = TRAIT_DARKLING,
 		"Wildmagic" = TRAIT_WILDMAGIC,
 		"Drunkmaster" = TRAIT_DRUNKMASTER,
@@ -217,6 +217,8 @@ GLOBAL_LIST_INIT(traits_by_type, list(
 		"Inflexible" = TRAIT_UNDODGING,
 		"Freeze Hunger" = TRAIT_FREEZEHUNGER,
 		"Virgin" = TRAIT_VIRGIN,
+		"Townwatch Command" = TRAIT_TOWNWATCH_COMMAND,
+		"Townwatch Command Source" = TOWNWATCH_COMMAND_TRAIT_SOURCE
 	),
 	/obj/item/bodypart = list(
 		"TRAIT_PARALYSIS" = TRAIT_PARALYSIS
@@ -353,11 +355,12 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_COIN_ILLITERATE = span_info("I care little for the concept of coins and prefer to barter via other means."),
 	TRAIT_LUCKY_COOK = span_info("Tymora smiles upon my cooking, I often end up with impossible amounts of extra goods..."),
 	TRAIT_ABOMINATION = span_info("I am an abomination, others will recognise me for what I am"),
-	TRAIT_ALLURE = span_love("People notice me the moment I enter a room!"),
 	TRAIT_DARKLING = span_info("I am a creature of the dark and am sensitive to the light. The hateful sun is especially harsh on my eyes."),
 	TRAIT_WILDMAGIC = span_info("Unruly magic sparks and fizzes through my veins. Each time I cast a spell, my magic might surge and trigger a random magical effect.."),
 	TRAIT_DRUNKMASTER = span_info("While perfectly drunk, I become stronger and cannot stumble. Too much drink breaks my balance."),
 	TRAIT_PONYGIRL_RIDEABLE = span_notice("Willing or not, I've been trained to carry other people's burdens."),
+	TRAIT_TOWNWATCH_COMMAND =  span_notice("I am a member of the townwatch, and can command other members of the townwatch to follow my orders."),
+	TOWNWATCH_COMMAND_TRAIT_SOURCE = span_notice("I am a member of the townwatch, and can command other members of the townwatch to follow my orders.")
 ))
 
 /// value -> trait name, generated on use from trait_by_type global

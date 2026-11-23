@@ -1,7 +1,11 @@
 //DO NOT ADD MORE TO THIS FILE.
 //Use vv_do_topic() for datums!
 /client/proc/view_var_Topic(href, href_list, hsrc)
-	if(!check_rights_for(src, R_VAREDIT) || !holder.CheckAdminHref(href, href_list))
+	if(!check_rights_for(src, R_VAREDIT))
+		if(holder) // an admin without +VAREDIT can open VV with the verb, but links and edits stay off limits
+			to_chat(src, span_warning("View Variables: following links and editing variables needs the +VAREDIT right."))
+		return
+	if(!holder.CheckAdminHref(href, href_list))
 		return
 	var/target = GET_VV_TARGET
 	vv_do_basic(target, href_list, href)
@@ -12,9 +16,20 @@
 		vv_do_list(target, href_list)
 	if(href_list["Vars"])
 		var/datum/vars_target = locate(href_list["Vars"])
-		if(href_list["special_varname"]) // Some special vars can't be located even if you have their ref, you have to use this instead
-			vars_target = vars_target.vars[href_list["special_varname"]]
-		debug_variables(vars_target)
+		var/from_history = !!text2num(href_list["vv_nav"])
+		var/history_index = from_history ? holder.vv_history_find(href_list["Vars"]) : null
+		if(from_history && !history_index)
+			// A Back / Forward / Recent link whose object is gone, or whose reference BYOND gave to something else.
+			holder.vv_history_drop(href_list["Vars"])
+			to_chat(src, span_warning("View Variables: that object no longer exists, it was removed from your VV history."))
+		else if(isnull(vars_target))
+			to_chat(src, span_warning("View Variables: that object no longer exists (deleted or garbage collected)."))
+		else
+			if(href_list["special_varname"]) // Some special vars can't be located even if you have their ref, you have to use this instead
+				vars_target = vars_target.vars[href_list["special_varname"]]
+			holder.vv_history_nav = history_index
+			debug_variables(vars_target)
+			holder?.vv_history_nav = null
 
 	//~CARN: for renaming mobs (updates their name, real_name, mind.name, their ID/PDA and datacore records).
 	if(href_list["rename"])
@@ -100,3 +115,5 @@
 		var/datum/DAT = locate(href_list["datumrefresh"])
 		if(isdatum(DAT) || istype(DAT, /client) || islist(DAT))
 			debug_variables(DAT)
+		else
+			to_chat(src, span_warning("View Variables: cannot refresh, that object no longer exists (deleted or garbage collected)."))

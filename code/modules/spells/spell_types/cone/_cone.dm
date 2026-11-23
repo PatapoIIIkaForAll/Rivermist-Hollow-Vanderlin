@@ -11,6 +11,10 @@
 	/// This value determines if the cone penetrates walls.
 	var/respect_density = FALSE
 
+/datum/action/cooldown/spell/cone/get_examine_effects()
+	. = ..()
+	. += "<b>AREA:</b> cone, [cone_levels] tiles long"
+
 /datum/action/cooldown/spell/cone/cast(atom/cast_on)
 	. = ..()
 	var/list/cone_turfs = get_cone_turfs(get_turf(cast_on), cast_on.dir, cone_levels)

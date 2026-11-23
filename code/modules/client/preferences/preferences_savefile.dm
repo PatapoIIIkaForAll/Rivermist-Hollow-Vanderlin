@@ -260,7 +260,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["triumphs"], triumphs)
 	WRITE_FILE(S["admin_ghost_icon"], admin_ghost_icon)
 	WRITE_FILE(S["lastclass"], lastclass)
-	WRITE_FILE(S["preferred_ui_language"], parent ? sanitize_preferred_ui_language(parent.preferred_ui_language) : "en")
+	WRITE_FILE(S["preferred_ui_language"], (parent ? sanitize_preferred_ui_language(parent.preferred_ui_language) : "en"))
 	WRITE_FILE(S["lastchangelog"], lastchangelog)
 	WRITE_FILE(S["be_special"], be_special)
 	WRITE_FILE(S["default_slot"], default_slot)

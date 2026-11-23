@@ -93,9 +93,10 @@ GLOBAL_LIST_INIT(oocpronouns_required, list(
 		var/pre_keyfield = C.holder ? "[keyname]([key])" : keyname
 		var/keyfield = conditional_tooltip_alt(pre_keyfield, prefs.read_preference(/datum/preference/color/ooccolor), length(prefs.read_preference(/datum/preference/text/oocpronouns)) && !is_misc_banned(ckey, BAN_MISC_OOCPRONOUNS))
 		if(C.prefs.read_preference(/datum/preference/bitwise/chat_toggles) & CHAT_OOC)
-			msg_to_send = "<font color='[color2use]'><EM>[keyfield]:</EM></font> <span class='message linkify'>[msg]</span>"
+			var/shown_msg = autotranslate_ooc_text(C, msg, raw_msg, src) // RMH EDITED
+			msg_to_send = "<font color='[color2use]'><EM>[keyfield]:</EM></font> <span class='message linkify'>[shown_msg]</span>" // RMH EDITED
 			if(holder)
-				msg_to_send = "<font color='[color2use]'><EM>[keyfield]:</EM></font> <font color='[admin_message_color ? admin_message_color : GLOB.OOC_COLOR]'><span class='message linkify'>[msg]</span></font>"
+				msg_to_send = "<font color='[color2use]'><EM>[keyfield]:</EM></font> <font color='[admin_message_color ? admin_message_color : GLOB.OOC_COLOR]'><span class='message linkify'>[shown_msg]</span></font>" // RMH EDITED
 			to_chat(C, msg_to_send)
 
 /client/verb/toggle_afk()
@@ -178,9 +179,10 @@ GLOBAL_LIST_INIT(oocpronouns_required, list(
 				if(SSticker.current_state != GAME_STATE_FINISHED && !istype(C.mob, /mob/dead/new_player))
 					continue
 
-			msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <span class='message linkify'>[msg]</span>"
+			var/shown_msg = autotranslate_ooc_text(C, msg, raw_msg, src) // RMH EDITED
+			msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <span class='message linkify'>[shown_msg]</span>" // RMH EDITED
 			if(holder)
-				msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='[admin_message_color ? admin_message_color : GLOB.OOC_COLOR]'><span class='message linkify'>[msg]</span></font>"
+				msg_to_send = "<font color='[color2use]'><EM>[keyname][real_key]:</EM></font> <font color='[admin_message_color ? admin_message_color : GLOB.OOC_COLOR]'><span class='message linkify'>[shown_msg]</span></font>" // RMH EDITED
 
 			to_chat(C, msg_to_send)
 

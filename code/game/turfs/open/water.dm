@@ -679,8 +679,7 @@
 
 			L.ExtinguishMob()
 			//handle hygiene and clean off alcohol
-			var/list/equipped_items = L.get_equipped_items()
-			if(length(equipped_items) > 0)
+			if(length(L.get_bathing_clothes()))
 				to_chat(user, span_notice("I could probably clean myself faster if I weren't wearing clothes..."))
 				L.adjust_hygiene(HYGIENE_GAIN_CLOTHED * cleanliness_factor)
 				L.adjust_fire_stacks(-4)

@@ -1,0 +1,127 @@
+@use 'admin_palette' as pal;
+
+// Admin mob picker. Same Vanderlin house palette as the Admin Menu.
+
+$mp-panel: pal.$panel;
+$mp-panel-dark: pal.$panel-dark;
+$mp-border: pal.$border;
+$mp-text: pal.$text;
+$mp-head: pal.$head;
+$mp-dim: pal.$dim;
+$mp-gold: pal.$gold;
+
+.MobPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  min-height: 0;
+  color: $mp-text;
+
+  .Button {
+    margin: 0;
+  }
+
+  &__message {
+    flex-shrink: 0;
+    color: $mp-head;
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+
+    .Button {
+      flex: 1 1 0;
+      text-align: center;
+    }
+  }
+
+  &__count {
+    margin-left: 4px;
+    opacity: 0.7;
+    font-size: 11px;
+  }
+
+  &__list {
+    @include pal.thin-scroll;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    background: $mp-panel;
+    border: 1px solid $mp-border;
+  }
+
+  &__row {
+    @include pal.clickable;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(91, 75, 64, 0.4);
+    cursor: pointer;
+
+    &:hover {
+      background: #3d3526;
+    }
+
+    &--offline {
+      opacity: 0.6;
+    }
+  }
+
+  &__icon {
+    width: 16px;
+    text-align: center;
+    color: $mp-gold;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__name {
+    color: $mp-head;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__dim,
+  &__meta {
+    color: $mp-dim;
+  }
+
+  &__meta {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__key {
+    color: $mp-gold;
+    font-size: 11px;
+  }
+
+  &__distance {
+    flex-shrink: 0;
+    color: $mp-dim;
+    font-size: 11px;
+  }
+
+  &__empty {
+    padding: 16px;
+    text-align: center;
+    color: $mp-dim;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+}

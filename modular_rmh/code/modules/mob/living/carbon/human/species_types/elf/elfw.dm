@@ -18,9 +18,7 @@
 	n\n\
 	More reclusive than High Elves, Wood Elves rely on speed, stealth, and instinct rather than arcane mastery. \
 	n\n\
-	(+2 PER, 1+ END, +2 SPD, Elvish Language).\
-	\n\n\
-	Proficiencies: Bows(4), Knives(3), Sneaking(4), Climbing(3), Swimming(2), Butchering(2), Fishing(2), Druidic(3)."
+	(Elvish Language)."
 
 	default_color = "FFFFFF"
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,OLDGREY)
@@ -63,6 +61,7 @@
 
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_SPLEEN = /obj/item/organ/spleen,
 		ORGAN_SLOT_HEART = /obj/item/organ/heart,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
 		ORGAN_SLOT_EYES = /obj/item/organ/eyes/elf,
@@ -202,18 +201,15 @@
 	C.dna.species.accent_language = C.dna.species.get_accent(C.dna.species.native_language, 1)
 
 /datum/attribute_holder/sheet/job/species/wood/inherent
-	raw_attribute_list = list(
-		/datum/attribute/skill/combat/bows = 40,
-		/datum/attribute/skill/combat/knives = 30,
-
-		/datum/attribute/skill/misc/sneaking = 40,
-		/datum/attribute/skill/misc/climbing = 30,
-		/datum/attribute/skill/misc/swimming = 20,
-
-		/datum/attribute/skill/labor/butchering = 20,
-		/datum/attribute/skill/labor/fishing = 20,
-
-		/datum/attribute/skill/magic/druidic = 30,
+	clamped_adjustment = list(
+		/datum/attribute/skill/combat/bows = list(30, 30),
+		/datum/attribute/skill/combat/knives = list(30, 30),
+		/datum/attribute/skill/misc/sneaking = list(30, 30),
+		/datum/attribute/skill/misc/climbing = list(20, 40),
+		/datum/attribute/skill/misc/swimming = list(20, 40),
+		/datum/attribute/skill/labor/butchering = list(20, 40),
+		/datum/attribute/skill/labor/fishing = list(20, 40),
+		/datum/attribute/skill/magic/druidic = list(10, 10),
 	)
 
 

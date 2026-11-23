@@ -46,13 +46,7 @@
 	if(!holder)
 		return
 
-	var/list/mobs = getpois(mobs_only = TRUE)
-	var/target = browser_input_list(usr, "Mob to jump to", "Jump to Mob", mobs)
-
-	if(!target)
-		return
-
-	var/mob/M = mobs[target]
+	var/mob/M = admin_pick_mob(usr, "Jump to Mob")
 	if(!M)
 		return
 
@@ -114,13 +108,7 @@
 	if(!holder)
 		return
 
-	var/list/mobs = getpois(mobs_only = TRUE)
-	var/target = browser_input_list(usr, "Mob to get", "Get Mob", mobs)
-
-	if(!target)
-		return
-
-	var/mob/M = mobs[target]
+	var/mob/M = admin_pick_mob(usr, "Get Mob")
 	if(!M)
 		return
 	var/atom/loc = get_turf(src.mob)
@@ -182,13 +170,7 @@
 	if(!holder)
 		return
 
-	var/list/mobs = getpois(mobs_only = TRUE)
-	var/target = browser_input_list(usr, "Mob to send", "Send Mob", mobs)
-
-	if(!target)
-		return
-
-	var/mob/M = mobs[target]
+	var/mob/M = admin_pick_mob(usr, "Send Mob")
 	if(!M)
 		return
 

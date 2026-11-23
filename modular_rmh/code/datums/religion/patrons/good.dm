@@ -64,6 +64,7 @@
 
 /datum/patron/faerun/good_gods/Lathander
 	name = "Lathander"
+	added_traits = list(TRAIT_APRICITY)
 	display_name = "Lathander"
 	domain = "Dawn, Renewal, Vitality"
 	desc = "The Morninglord, ever shining with youthful zeal and new beginnings."
@@ -92,6 +93,7 @@
 
 /datum/patron/faerun/good_gods/Moradin
 	name = "Moradin"
+	added_traits = list(TRAIT_BETTER_SLEEP)
 	display_name = "Moradin"
 	domain = "Creation, Dwarves, Forge"
 	desc = "The All-Father, master smith who carved the dwarves from stone."
@@ -148,6 +150,7 @@
 
 /datum/patron/faerun/good_gods/Sune
 	name = "Sune"
+	added_traits = list(TRAIT_EXTEROCEPTION)
 	display_name = "Sune"
 	domain = "Beauty, Love, Passion"
 	desc = "Goddess of romance and artistic expression, radiant and capricious."

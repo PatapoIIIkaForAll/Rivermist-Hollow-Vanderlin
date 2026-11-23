@@ -30,6 +30,7 @@
 	AddComponent(/datum/component/storage/concrete/boots)
 
 /obj/item/clothing/shoes/rosa
+	sewrepair = /datum/attribute/skill/craft/tanning/patching
 	name = "ivory shoes"
 	desc = "Finely crafted shoes of silk and leather."
 	icon = 'modular_azurepeak/icons/clothing/special/rosewood.dmi'
@@ -116,6 +117,7 @@
 	misc_flags = CRAFTING_TEST_EXCLUDE
 
 /obj/item/clothing/shoes/sandals/toga
+	sewrepair = /datum/attribute/skill/misc/sewing/mending
 	name = "classical sandals"
 	desc = "A fancy pair of sandals delicately woven in a style that hark back to bygone yils of antiquity."
 	icon = 'modular_azurepeak/icons/clothing/feet.dmi'

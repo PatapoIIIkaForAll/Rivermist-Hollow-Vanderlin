@@ -14,3 +14,7 @@
 
 /obj/structure/waterwheel/smol
 	icon_state = "waterwheel_smol"
+
+// This icon file spins on its own and lacks the base rotation frames "1"-"4".
+/obj/structure/waterwheel/update_animation_effect()
+	return

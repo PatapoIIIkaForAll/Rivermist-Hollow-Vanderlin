@@ -171,6 +171,8 @@ export async function storeWindowGeometry(): Promise<void> {
 type RecallOptions = Partial<{
   pos: Point;
   size: Point;
+  /** Reopen at the size the user last gave the window instead of the default size. */
+  rememberSize: boolean;
   locked: BooleanLike;
   scale: BooleanLike;
 }>;
@@ -185,9 +187,11 @@ export async function recallWindowGeometry(
   }
   // options.pos is assumed to already be in display-pixels
   let pos = geometry?.pos || options.pos;
-  let size = options.size;
-  // Convert size from css-pixels to display-pixels
-  if (options.scale && size) {
+  const storedSize: Point | undefined =
+    (options.rememberSize && geometry?.size) || undefined;
+  let size = storedSize || options.size;
+  // Stored sizes are already in display-pixels; only the default size is converted
+  if (options.scale && size && !storedSize) {
     size = [size[0] * pixelRatio, size[1] * pixelRatio];
   }
 

@@ -43,6 +43,9 @@
 		if(breasts && !breasts.is_producing())
 			to_chat(owner, span_love("My nipples feel damp and warm. I'm leaking milk..."))
 		start_pregnancy_lactation()
+	if(conventional_pregnancy_stage >= PREGNANCY_MAX_STAGE)
+		to_chat(owner, span_love("The child sits low and heavy now. I should go to the chapel and give birth before the Divines."))
+		AddComponent(/datum/component/chapel_birth)
 	update_reagent_capacity()
 	SEND_SIGNAL(src, COMSIG_BODYSTORAGE_CHANGED)
 

@@ -19,7 +19,6 @@
 				owner.set_eye_blur_if_lower(1 SECONDS * determined_mod)
 				if(prob(50))
 					to_chat(owner, span_danger("I feel [word]. It's getting a bit hard to breathe."))
-					owner.losebreath += 0.5 * determined_mod * delta_time
 				else if(owner.stamina < owner.maximum_stamina * 0.25 * determined_mod)
 					to_chat(owner, span_danger("I feel [word]. It's getting a bit hard to focus."))
 					owner.adjust_stamina(5 * determined_mod * delta_time)
@@ -32,7 +31,6 @@
 				owner.set_dizzy_if_lower(2 SECONDS * determined_mod)
 				if(prob(50))
 					to_chat(owner, span_userdanger("I feel very [word]. It's getting hard to breathe!"))
-					owner.losebreath += determined_mod
 				else if(owner.stamina < owner.maximum_stamina * 0.4 * determined_mod)
 					to_chat(owner, span_userdanger("I feel very [word]. It's getting hard to stay awake!"))
 					owner.adjust_stamina(7.5 * determined_mod * delta_time)
@@ -45,7 +43,6 @@
 				owner.set_dizzy_if_lower(4 SECONDS * determined_mod)
 				if(prob(50))
 					to_chat(owner, span_userdanger("I feel extremely [word]! It's getting very hard to breathe!"))
-					owner.losebreath += 1.5 * determined_mod
 				else if(owner.stamina < owner.maximum_stamina * 0.8 * determined_mod)
 					to_chat(owner, span_userdanger("I feel extremely [word]! It's getting very hard to stay awake!"))
 					owner.adjust_stamina(10 * determined_mod * delta_time)
@@ -57,9 +54,7 @@
 				if(owner.stat < UNCONSCIOUS)
 					owner.Unconscious(rand(0.5 SECONDS, 1 SECONDS))
 					to_chat(owner, span_userdanger("I black out for a moment!"))
-				if(prob(50))
-					owner.losebreath += 1.5
-				else if(owner.stamina < owner.maximum_stamina * 0.8)
+				if(prob(50) && owner.stamina < owner.maximum_stamina * 0.8)
 					owner.adjust_stamina(10 * delta_time)
 			if(brain.current_blood <= 0 && DT_PROB(is_stable ? 25 : 75, delta_time))
 				brain.applyOrganDamage(BRAIN_DAMAGE_LOWER_OXYGENATION)

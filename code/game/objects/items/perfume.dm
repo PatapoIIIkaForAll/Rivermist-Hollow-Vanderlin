@@ -12,6 +12,8 @@
 	var/uses_remaining = 10
 	/// Duration multiplier for the mood buff, set from Alchemy skill when brewed
 	var/mood_duration_mult = 1.0
+	/// Liquid drawn under the see-through glass, so the bottle's highlights stay on top
+	var/mutable_appearance/liquid_underlay
 
 /obj/item/perfume/Initialize()
 	. = ..()
@@ -25,11 +27,22 @@
 
 /obj/item/perfume/update_overlays()
 	. = ..()
+	var/fragrance_color = fragrance_type ? initial(fragrance_type.color) : null
+	// The puffer bulb stays on the bottle after the liquid runs out.
+	var/mutable_appearance/puffer = mutable_appearance(icon, "perfume-bottle-puffer")
+	puffer.color = fragrance_color
+	. += puffer
+	update_liquid_underlay(fragrance_color)
+
+/obj/item/perfume/proc/update_liquid_underlay(fragrance_color)
+	if(liquid_underlay)
+		underlays -= liquid_underlay
+		liquid_underlay = null
 	if(!uses_remaining)
 		return
-	var/mutable_appearance/perfume_overlay = mutable_appearance(icon, "perfume-bottle-overlay")
-	perfume_overlay.color = fragrance_type.color
-	. += perfume_overlay
+	liquid_underlay = mutable_appearance(icon, "perfume-bottle-liquid")
+	liquid_underlay.color = fragrance_color
+	underlays += liquid_underlay
 
 /obj/item/perfume/examine(mob/user)
 	. = ..()

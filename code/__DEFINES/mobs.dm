@@ -6,6 +6,10 @@
 #define STATKEY_END "endurance"
 #define STATKEY_SPD "speed"
 #define STATKEY_LCK "fortune"
+#define STATKEY_CHA "charisma"
+/// Players see Speed as Dexterity and Perception as Wisdom. These name the same keys.
+#define STATKEY_DEX STATKEY_SPD
+#define STATKEY_WIS STATKEY_PER
 
 //Misc mob defines
 #define DAMAGE_ATTACK_CONTEXT_WINDOW (2 SECONDS)

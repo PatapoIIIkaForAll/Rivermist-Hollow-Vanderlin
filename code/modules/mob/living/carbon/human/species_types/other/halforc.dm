@@ -38,6 +38,8 @@
 	A Half-Orc may display Orcish features, sporting tusks and natural strength. \
 	Many are nigh-indistinguishable visually from full orcs, save for their remaining grasp on self-control.\
 	\n\n\
+	(+2 Stat Points In Character Creation).\
+	\n\n\
 	THIS IS AN <I>EXTREMELY</I> DISCRIMINATED SPECIES. EXPECT A MORE DIFFICULT EXPERIENCE. <B>NOBLES EVEN MORE SO.</B> PLAY AT YOUR OWN RISK."
 
 
@@ -90,6 +92,7 @@
 
 	offset_features_f = list()
 
+	creator_stat_points = 2
 	statsheet_male = /datum/attribute_holder/sheet/job/species/halforc
 	statsheet_female = /datum/attribute_holder/sheet/job/species/halforc/female
 

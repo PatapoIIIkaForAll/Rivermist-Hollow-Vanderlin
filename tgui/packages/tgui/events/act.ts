@@ -102,3 +102,15 @@ export const __testables__ = {
   estimateMessageUrlSize,
   splitPayloadIntoChunks,
 };
+
+/** Exact preflight for callers that retain large unsent edits. */
+export function payloadChunkCount(
+  action: string,
+  payload: Record<string, unknown>,
+): number {
+  return estimateMessageUrlSize('act/' + action, payload) <=
+    MAX_BYOND_MESSAGE_URL_SIZE
+    ? 0
+    : splitPayloadIntoChunks(JSON.stringify(payload), String(Date.now()))
+        .length;
+}

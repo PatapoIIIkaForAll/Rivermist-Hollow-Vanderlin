@@ -16,7 +16,7 @@
 	var/budget = 0
 	var/wgain = 0
 	/// Max amount of items we can sell
-	var/max_merchandise = 15
+	var/max_merchandise = 50
 	/// Overlay used when theres items inside and we are locked
 	var/filled_overlay = "vendor-gen"
 	/// Light color used when theres items inside and we are locked

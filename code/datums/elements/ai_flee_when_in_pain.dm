@@ -22,6 +22,9 @@
 
 	if (!source.ai_controller)
 		return
+	// A routed mob keeps running whatever its pain does.
+	if(source.has_status_effect(/datum/status_effect/npc_routed))
+		return
 
 	var/paine = source.getShockStage()
 	if (source.ai_controller.blackboard[BB_BASIC_MOB_FLEEING])
@@ -45,4 +48,6 @@
 	addtimer(CALLBACK(src, PROC_REF(cancel_flee), source), 10 SECONDS, flags = TIMER_UNIQUE)
 
 /datum/element/ai_flee_while_in_pain/proc/cancel_flee(mob/living/source)
+	if(source?.has_status_effect(/datum/status_effect/npc_routed))
+		return
 	source?.ai_controller?.set_blackboard_key(BB_BASIC_MOB_FLEEING, FALSE)

@@ -21,6 +21,8 @@
 	VAR_PRIVATE/final/head = ""
 	/// Text containing the contents of the \<body\> element.
 	VAR_PRIVATE/final/body = ""
+	/// Clears user and owner when they are deleted. Only for browsers something keeps: the signal makes the user and owner hold the browser and its page.
+	var/tmp/watch_holders = FALSE
 
 /datum/browser/New(mob/user, window_id, title = "", width = 0, height = 0, atom/owner = null)
 	if(!user)
@@ -28,9 +30,10 @@
 	if(!window_id)
 		CRASH("created a browser with no window id")
 	src.user = user
-	RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(user_deleted))
 	src.owner = owner
-	RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(owner_deleted))
+	if(watch_holders)
+		RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(user_deleted))
+		RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(owner_deleted))
 	src.window_id = window_id
 	src.title = format_text(title)
 	src.width = width

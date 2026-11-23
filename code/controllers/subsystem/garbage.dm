@@ -116,6 +116,8 @@ SUBSYSTEM_DEF(garbage)
 			dellog += "\tHighest Time Spent Hard Deleting: [I.hard_delete_max]ms"
 			if (I.hard_deletes_over_threshold)
 				dellog += "\tHard Deletes Over Threshold: [I.hard_deletes_over_threshold]"
+		if (I.hard_deletes_skipped)
+			dellog += "\tHard Deletes Skipped (left in memory): [I.hard_deletes_skipped]"
 		if (I.slept_destroy)
 			dellog += "\tSleeps: [I.slept_destroy]"
 		if (I.no_respect_force)
@@ -290,6 +292,11 @@ SUBSYSTEM_DEF(garbage)
 
 	queue[++queue.len] = list(queue_time, D, D.gc_destroyed) // not += for byond reasons
 
+/// Skipped hard deletes logged for each type before the log thins out.
+#define HARD_DELETE_SKIPS_LOGGED 5
+/// After the first few, one skipped hard delete in this many is logged for each type.
+#define HARD_DELETE_SKIP_LOG_EVERY 100
+
 //this is mainly to separate things profile wise.
 /datum/controller/subsystem/garbage/proc/HardDelete(datum/D, override = FALSE)
 	if(!D)
@@ -297,6 +304,11 @@ SUBSYSTEM_DEF(garbage)
 	if(!enable_hard_deletes && !override)
 		// Keeping every failure pinned it, and all it referenced, for the round; the image table filled on long rounds.
 		failed_hard_delete_count++
+		var/datum/qdel_item/skipped_info = items[D.type] || (items[D.type] = new /datum/qdel_item(D.type))
+		skipped_info.hard_deletes_skipped++
+		// The object stays in memory until its last reference goes. Mobs skip the queue that logs GC failures, so this is their only trace.
+		if(skipped_info.hard_deletes_skipped <= HARD_DELETE_SKIPS_LOGGED || !(skipped_info.hard_deletes_skipped % HARD_DELETE_SKIP_LOG_EVERY))
+			log_world("## GC: [D.type] skipped a hard delete and is left in memory (ref count of [refcount(D)]; [skipped_info.hard_deletes_skipped] of this type, [failed_hard_delete_count] in total)")
 		failed_hard_deletes += D
 		if(length(failed_hard_deletes) > FAILED_HARD_DELETES_KEPT)
 			failed_hard_deletes.Cut(1, 2)
@@ -337,6 +349,9 @@ SUBSYSTEM_DEF(garbage)
 		if(overrun_limit && type_info.hard_deletes_over_threshold >= overrun_limit)
 			type_info.qdel_flags |= QDEL_ITEM_SUSPENDED_FOR_LAG
 
+#undef HARD_DELETE_SKIPS_LOGGED
+#undef HARD_DELETE_SKIP_LOG_EVERY
+
 /datum/controller/subsystem/garbage/Recover()
 	InitQueues()
 	if (istype(SSgarbage.queues))
@@ -353,6 +368,7 @@ SUBSYSTEM_DEF(garbage)
 	var/hard_delete_time = 0 //!Total amount of milliseconds spent hard deleting this type.
 	var/hard_delete_max = 0 //!Highest time spent hard_deleting this in ms.
 	var/hard_deletes_over_threshold = 0 //!Number of times hard deletes took longer than the configured threshold
+	var/hard_deletes_skipped = 0 //!Hard deletes skipped because they are disabled; each of these objects stayed in memory.
 	var/no_respect_force = 0 //!Number of times it's not respected force=TRUE
 	var/no_hint = 0 //!Number of times it's not even bother to give a qdel hint
 	var/slept_destroy = 0 //!Number of times it's slept in its destroy

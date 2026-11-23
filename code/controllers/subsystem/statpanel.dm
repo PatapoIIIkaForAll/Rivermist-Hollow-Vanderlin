@@ -72,19 +72,21 @@ SUBSYSTEM_DEF(statpanels)
 		if(!target.holder)
 			target.stat_panel.send_message("remove_admin_tabs")
 		else
-			if(!("MC" in target.panel_tabs) || !("Tickets" in target.panel_tabs))
-				target.stat_panel.send_message("add_admin_tabs", target.holder.href_token)
+			// With the new Admin Menu only the Tickets tab stays on the panel: MC and SDQL2 live in the menu.
+			var/classic_admin_tabs = !target.uses_admin_menu()
+			if(!("Tickets" in target.panel_tabs) || (classic_admin_tabs && !("MC" in target.panel_tabs)))
+				target.stat_panel.send_message("add_admin_tabs", list("token" = target.holder.href_token, "classic" = classic_admin_tabs))
 
-			if(target.stat_tab == "MC" && ((num_fires % mc_wait == 0)))
+			if(classic_admin_tabs && target.stat_tab == "MC" && ((num_fires % mc_wait == 0)))
 				set_MC_tab(target)
 
 			if(target.stat_tab == "Tickets" && num_fires % default_wait == 0)
 				set_tickets_tab(target)
 
-			if(!length(GLOB.sdql2_queries) && ("SDQL2" in target.panel_tabs))
+			if((!classic_admin_tabs || !length(GLOB.sdql2_queries)) && ("SDQL2" in target.panel_tabs))
 				target.stat_panel.send_message("remove_sdql2")
 
-			else if(length(GLOB.sdql2_queries) && (target.stat_tab == "SDQL2" || !("SDQL2" in target.panel_tabs)) && num_fires % default_wait == 0)
+			else if(classic_admin_tabs && length(GLOB.sdql2_queries) && (target.stat_tab == "SDQL2" || !("SDQL2" in target.panel_tabs)) && num_fires % default_wait == 0)
 				set_SDQL2_tab(target)
 
 		if(target.mob)
@@ -206,7 +208,8 @@ SUBSYSTEM_DEF(statpanels)
 	if(!target.holder)
 		return FALSE
 
-	if(target.stat_tab == "MC")
+	var/classic_admin_tabs = !target.uses_admin_menu()
+	if(target.stat_tab == "MC" && classic_admin_tabs)
 		set_MC_tab(target)
 		return TRUE
 
@@ -217,7 +220,7 @@ SUBSYSTEM_DEF(statpanels)
 	if(!length(GLOB.sdql2_queries) && ("SDQL2" in target.panel_tabs))
 		target.stat_panel.send_message("remove_sdql2")
 
-	else if(length(GLOB.sdql2_queries) && target.stat_tab == "SDQL2")
+	else if(classic_admin_tabs && length(GLOB.sdql2_queries) && target.stat_tab == "SDQL2")
 		set_SDQL2_tab(target)
 
 /// Stat panel window declaration

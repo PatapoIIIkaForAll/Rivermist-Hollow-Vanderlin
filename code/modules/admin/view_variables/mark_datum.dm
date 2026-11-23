@@ -11,6 +11,7 @@
 /client/proc/mark_datum_mapview(datum/D as mob|obj|turf|area in view(view))
 	set category = "Debug"
 	set name = "Mark Object"
+	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	mark_datum(D)
 
 /datum/admins/proc/handle_marked_del(datum/source)

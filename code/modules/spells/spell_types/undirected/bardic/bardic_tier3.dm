@@ -3,7 +3,7 @@
  */
 /datum/action/cooldown/spell/undirected/song/accelakathist
 	name = "Accelerating Akathist"
-	desc = "Accelerate your audience with your bardic song. (+2 SPD, lower action cooldowns)"
+	desc = "Accelerate your audience with your bardic song. (+2 DEX, lower action cooldowns)"
 	button_icon_state = "bardsong_t3_base"
 	background_icon_state = "bardsong_t3_base"
 	invocation = "%Let's move tonight! Share in the speed of life!"

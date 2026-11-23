@@ -7,7 +7,7 @@
 	desc = "<b>Critterkin</b><br>\
 	A race akin to wild-kin, except afflicted with significantly smaller stature. \
 	Sometimes referred to with the derogatory term 'verminfolk' by those that disrespect the small.<br>\
-	(+1 Speed, Keen Ears Trait)"
+	(Keen Ears Trait)"
 
 	default_color = "444"
 
@@ -113,6 +113,7 @@
 	enflamed_icon = "widefire"
 	organs = list(
 		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_SPLEEN = /obj/item/organ/spleen,
 		ORGAN_SLOT_HEART = /obj/item/organ/heart,
 		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
 		ORGAN_SLOT_EYES = /obj/item/organ/eyes,
@@ -120,6 +121,7 @@
 		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,///wild_tongue,
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 		ORGAN_SLOT_ANUS = /obj/item/organ/genitals/filling_organ/anus,
 		)
 	bodypart_features = list(

@@ -40,11 +40,22 @@
 		target.verbs += verbs_list
 
 	var/list/output_list = list()
+	var/admin_menu_changed = FALSE
+	// Built on first use: reading GLOB.admin_menu_verbs directly would miss the first admin login of the round.
+	var/list/admin_registry = target.holder ? get_admin_menu_verbs() : null
 	for(var/thing in verbs_list)
 		var/procpath/verb_to_add = thing
+		// Admin-granted verbs are reached through the Admin Menu, not the stat panel.
+		if(admin_registry && !isnull(admin_registry[verb_to_add]))
+			admin_menu_changed = TRUE
+		if(target.admin_menu_hides_verb(verb_to_add))
+			continue
 		output_list[++output_list.len] = list(verb_to_add.category, verb_to_add.name)
 
-	target.stat_panel.send_message("add_verb_list", output_list)
+	if(length(output_list))
+		target.stat_panel.send_message("add_verb_list", output_list)
+	if(admin_menu_changed)
+		target.holder?.admin_menu?.queue_verb_refresh()
 
 	SEND_SIGNAL(target, COMSIG_CLIENT_VERB_ADDED, verbs_list)
 
@@ -89,10 +100,20 @@
 		target.verbs -= verbs_list
 
 	var/list/output_list = list()
+	var/admin_menu_changed = FALSE
+	var/list/admin_registry = target.holder ? get_admin_menu_verbs() : null
 	for(var/thing in verbs_list)
 		var/procpath/verb_to_remove = thing
+		if(admin_registry && !isnull(admin_registry[verb_to_remove]))
+			admin_menu_changed = TRUE
+		// Never listed on the panel, and the panel removes by name: do not let it drop a same-named verb.
+		if(!istext(verb_to_remove.category) || target.admin_menu_hides_verb(verb_to_remove))
+			continue
 		output_list[++output_list.len] = list(verb_to_remove.category, verb_to_remove.name)
 
-	target.stat_panel.send_message("remove_verb_list", output_list)
+	if(length(output_list))
+		target.stat_panel.send_message("remove_verb_list", output_list)
+	if(admin_menu_changed)
+		target.holder?.admin_menu?.queue_verb_refresh()
 
 	SEND_SIGNAL(target, COMSIG_CLIENT_VERB_REMOVED, verbs_list)
