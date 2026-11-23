@@ -6,6 +6,8 @@
 #define MUSK_SCREEN_ALPHA_BASE 30
 #define MUSK_SCREEN_ALPHA_PER_LEVEL 15
 #define MUSK_SCREEN_COLOR "#d9a05b"
+#define MUSK_SCREEN_COLOR_PLEASANT "#e79ab0"
+#define MUSK_SCREEN_COLOR_FOUL "#7d8a45"
 #define MUSK_SWAY_SIZE_PER_LEVEL 0.25
 #define MUSK_SWAY_PERIOD (6 SECONDS)
 #define MUSK_DIZZY_TIME_PER_LEVEL (1 SECONDS)
@@ -18,12 +20,14 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/musk
 	var/level = 1
 	var/fade_at = 0
+	var/hidden = FALSE
 
 /datum/status_effect/musk/on_creation(mob/living/new_owner, new_level = 1)
 	level = clamp(new_level, 1, MUSK_LEVEL_MAX)
 	. = ..(new_owner)
 	if(QDELETED(src))
 		return
+	update_hiding()
 	update_alert()
 	to_chat(owner, span_love(musk_level_text(owner, level)))
 
@@ -39,9 +43,15 @@
 /datum/status_effect/musk/tick()
 	if(world.time >= fade_at && !weaken())
 		return
-	spread_scent()
+	update_hiding()
+	if(hidden)
+		return
+	spread_musk_scent(get_turf(owner), level, owner)
+	reach_for_thralls()
 
 /datum/status_effect/musk/get_examine_text(mob/user, list/P)
+	if(hidden)
+		return null
 	switch(level)
 		if(1)
 			return span_notice("SUBJECTPRONOUN is glistening with fresh sweat.")
@@ -71,28 +81,24 @@
 	to_chat(owner, span_notice(musk_weaker_text(owner)))
 	return TRUE
 
-/datum/status_effect/musk/proc/spread_scent()
-	var/turf/source_turf = get_turf(owner)
-	if(!source_turf)
+/datum/status_effect/musk/proc/update_hiding()
+	var/now_hidden = !!owner.get_musk()?.is_hidden()
+	if(hidden == now_hidden)
 		return
-	var/static/list/scent_types = list(
-		/datum/pollutant/musk_scent/level_1,
-		/datum/pollutant/musk_scent/level_2,
-		/datum/pollutant/musk_scent/level_3,
-		/datum/pollutant/musk_scent/level_4,
-	)
-	var/scent_type = scent_types[level]
-	for(var/turf/open/scent_turf in RANGE_TURFS(MUSK_SCENT_RANGE, source_turf))
-		if(get_musk_amount(scent_turf) >= MUSK_SCENT_CAP)
-			continue
-		scent_turf.pollute_turf(scent_type, MUSK_SCENT_AMOUNT)
+	hidden = now_hidden
+	update_alert()
+
+/datum/status_effect/musk/proc/reach_for_thralls()
+	var/datum/component/musk/musk = owner.get_musk()
+	for(var/datum/musk_bond/bond as anything in owner.mind?.scent_followers)
+		bond.reach(musk)
 
 /datum/status_effect/musk/proc/update_alert()
 	if(!linked_alert)
 		return
 	var/static/list/numerals = list("I", "II", "III", "IV")
 	linked_alert.name = musk_localized(owner, "Smelling [numerals[level]]", "Запах [numerals[level]]")
-	linked_alert.desc = musk_alert_text(owner, level)
+	linked_alert.desc = hidden ? "[musk_alert_text(owner, level)] [musk_hidden_alert_text(owner)]" : musk_alert_text(owner, level)
 
 /datum/status_effect/musk/proc/on_death(datum/source)
 	SIGNAL_HANDLER
@@ -143,17 +149,42 @@
 	return TRUE
 
 /datum/status_effect/debuff/musk_haze/proc/strike(silent, mob/living/source)
-	show_haze_screen()
+	var/mob/living/carbon/human/smeller = owner
+	var/datum/component/musk/musk = source?.get_musk()
+	var/quality = musk?.get_scent_for(smeller)
+	cloud_head(quality)
+	show_haze_screen(quality)
 	if(silent)
 		return
-	var/message = musk_haze_text(owner, level)
-	if(source && (source in view(owner)))
-		message += " [musk_source_text(owner, source)]"
-	to_chat(owner, span_love(message))
+	var/list/lines = list(musk_haze_text(smeller, level))
+	var/quality_text = musk_quality_text(smeller, musk)
+	if(quality_text)
+		lines += quality_text
+	if(source && (source in view(smeller)))
+		lines += musk_source_text(smeller, source)
+	smeller.tell_once_per_contact(MUSK_LINE_HAZE, lines.Join(" "))
 
-/datum/status_effect/debuff/musk_haze/proc/show_haze_screen()
-	owner.set_dizzy_if_lower(MUSK_DIZZY_TIME_PER_LEVEL * level)
+/datum/status_effect/debuff/musk_haze/proc/cloud_head(quality)
+	var/dizzy_time = MUSK_DIZZY_TIME_PER_LEVEL * level
+	switch(quality)
+		if(MUSK_SCENT_PLEASANT)
+			dizzy_time *= MUSK_PLEASANT_DIZZY_MULTIPLIER
+		if(MUSK_SCENT_FOUL)
+			dizzy_time *= MUSK_FOUL_DIZZY_MULTIPLIER
+			owner.set_eye_blur_if_lower(MUSK_FOUL_BLUR_PER_LEVEL * level)
+	owner.set_dizzy_if_lower(dizzy_time)
+
+/datum/status_effect/debuff/musk_haze/proc/get_screen_color(quality)
+	switch(quality)
+		if(MUSK_SCENT_PLEASANT)
+			return MUSK_SCREEN_COLOR_PLEASANT
+		if(MUSK_SCENT_FOUL)
+			return MUSK_SCREEN_COLOR_FOUL
+	return MUSK_SCREEN_COLOR
+
+/datum/status_effect/debuff/musk_haze/proc/show_haze_screen(quality)
 	var/atom/movable/screen/fullscreen/haze_screen = owner.overlay_fullscreen(MUSK_SCREEN_CATEGORY, /atom/movable/screen/fullscreen/weedsm/musk)
+	haze_screen.color = get_screen_color(quality)
 	animate(haze_screen, alpha = MUSK_SCREEN_ALPHA_BASE + MUSK_SCREEN_ALPHA_PER_LEVEL * level, time = MUSK_SCREEN_FADE)
 	var/atom/movable/plane_master_controller/game_planes = get_game_planes()
 	if(game_planes)
@@ -208,7 +239,26 @@
 	alpha = 0
 	color = MUSK_SCREEN_COLOR
 
-/datum/status_effect/musk/proc/get_musk_amount(turf/open/scent_turf)
+/datum/pollution
+	var/datum/weakref/musk_source_ref
+
+/proc/spread_musk_scent(turf/center, level, mob/living/carbon/human/source)
+	if(!center)
+		return
+	var/static/list/scent_types = list(
+		/datum/pollutant/musk_scent/level_1,
+		/datum/pollutant/musk_scent/level_2,
+		/datum/pollutant/musk_scent/level_3,
+		/datum/pollutant/musk_scent/level_4,
+	)
+	var/scent_type = scent_types[clamp(level, 1, MUSK_LEVEL_MAX)]
+	for(var/turf/open/scent_turf in RANGE_TURFS(MUSK_SCENT_RANGE, center))
+		if(get_musk_amount(scent_turf) >= MUSK_SCENT_CAP)
+			continue
+		scent_turf.pollute_turf(scent_type, MUSK_SCENT_AMOUNT)
+		scent_turf.pollution?.musk_source_ref = WEAKREF(source)
+
+/proc/get_musk_amount(turf/open/scent_turf)
 	. = 0
 	var/datum/pollution/present = scent_turf.pollution
 	if(QDELETED(present))
@@ -225,12 +275,30 @@
 
 /datum/pollutant/musk_scent/breathe_act(mob/living/carbon/victim, amount, total_amount)
 	. = ..()
-	if(!can_be_smelled_by(victim))
+	if(amount <= 0 || !reaches(victim))
 		return
 	var/mob/living/carbon/human/smeller = victim
 	smeller.smell_musk(level, find_source(smeller))
 
 /datum/pollutant/musk_scent/can_be_smelled_by(mob/living/sniffer)
+	if(!reaches(sniffer))
+		return FALSE
+	var/mob/living/carbon/human/smeller = sniffer
+	if(!smeller.can_smell_musk())
+		return FALSE
+	var/datum/status_effect/musk_contact/contact = smeller.has_status_effect(/datum/status_effect/musk_contact)
+	return !contact || contact.allows_line(MUSK_LINE_SMELL)
+
+/datum/pollutant/musk_scent/on_smell(mob/living/carbon/victim, amount)
+	. = ..()
+	var/mob/living/carbon/human/smeller = victim
+	smeller.get_musk_contact()?.claim_line(MUSK_LINE_SMELL)
+	var/datum/component/musk/musk = find_source(smeller)?.get_musk()
+	var/notes = musk_notes_text(smeller, musk?.scent_notes)
+	if(notes)
+		to_chat(smeller, span_love(notes))
+
+/datum/pollutant/musk_scent/proc/reaches(mob/living/sniffer)
 	if(!ishuman(sniffer))
 		return FALSE
 	var/mob/living/carbon/human/smeller = sniffer
@@ -239,13 +307,22 @@
 	return !smeller.get_musk_sweat() || !!find_source(smeller)
 
 /datum/pollutant/musk_scent/proc/find_source(mob/living/carbon/human/smeller)
+	RETURN_TYPE(/mob/living/carbon/human)
 	for(var/mob/living/carbon/human/candidate in range(MUSK_SCENT_RANGE, smeller))
 		if(candidate == smeller)
 			continue
 		var/datum/status_effect/musk/musk = candidate.has_status_effect(/datum/status_effect/musk)
-		if(musk?.level == level)
+		if(musk?.level == level && !musk.hidden)
 			return candidate
-	return null
+	return get_lingering_source(smeller)
+
+/datum/pollutant/musk_scent/proc/get_lingering_source(mob/living/carbon/human/smeller)
+	RETURN_TYPE(/mob/living/carbon/human)
+	var/turf/open/scented_turf = get_turf(smeller)
+	if(!isopenturf(scented_turf))
+		return null
+	var/mob/living/carbon/human/source = scented_turf.pollution?.musk_source_ref?.resolve()
+	return source == smeller ? null : source
 
 /datum/pollutant/musk_scent/level_1
 	name = "Fresh Sweat"
@@ -279,6 +356,8 @@
 #undef MUSK_SCREEN_ALPHA_BASE
 #undef MUSK_SCREEN_ALPHA_PER_LEVEL
 #undef MUSK_SCREEN_COLOR
+#undef MUSK_SCREEN_COLOR_PLEASANT
+#undef MUSK_SCREEN_COLOR_FOUL
 #undef MUSK_SWAY_SIZE_PER_LEVEL
 #undef MUSK_SWAY_PERIOD
 #undef MUSK_DIZZY_TIME_PER_LEVEL

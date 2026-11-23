@@ -12,6 +12,12 @@
 /datum/sex_action/musk_press/proc/get_place(mob/living/user)
 	return ""
 
+/datum/sex_action/musk_press/proc/get_start_line(mob/living/user, mob/living/target)
+	return "[user] grabs [target]'s head and presses [target.p_their()] face [get_place(user)]!"
+
+/datum/sex_action/musk_press/proc/can_bare_zone(mob/living/user)
+	return check_location_accessible(user, user, body_zone, TRUE)
+
 /datum/sex_action/musk_press/get_speed_multiplier()
 	return 1
 
@@ -28,7 +34,7 @@
 		return FALSE
 	if(!(user.get_musk_sweat()?.get_stacks(sweat_zone) > 0))
 		return FALSE
-	if(!check_location_accessible(user, user, body_zone, TRUE))
+	if(!can_bare_zone(user))
 		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_MOUTH))
 		return FALSE
@@ -45,7 +51,7 @@
 
 /datum/sex_action/musk_press/on_start(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] grabs [target]'s head and presses [target.p_their()] face [get_place(user)]!"))
+	user.visible_message(span_warning(get_start_line(user, target)))
 
 /datum/sex_action/musk_press/on_perform(mob/living/user, mob/living/target)
 	. = ..()
@@ -71,6 +77,7 @@
 	var/mob/living/carbon/human/human_target = target
 	if(!human_target.is_musk_susceptible())
 		return FALSE
+	human_target.touch_musk(user, MUSK_GAIN_PRESS)
 	to_chat(human_target, span_love(musk_press_text(human_target, sweat_zone, sweat.get_tier(sweat_zone))))
 	human_target.take_musk_hit(min(stacks, MUSK_LEVEL_MAX), user, TRUE)
 	if(MOBTIMER_EXISTS(human_target, MUSK_PRESS_BURST_TIMER) && !MOBTIMER_FINISHED(human_target, MUSK_PRESS_BURST_TIMER, MUSK_PRESS_BURST_COOLDOWN))
@@ -121,6 +128,9 @@
 	var/place_name = "skin"
 	var/target_lock_slot
 
+/datum/sex_action/musk_lick/proc/can_reach_zone(mob/living/user, mob/living/target)
+	return check_location_accessible(user, target, body_zone, TRUE)
+
 /datum/sex_action/musk_lick/shows_on_menu(mob/living/user, mob/living/target)
 	if(user == target)
 		return FALSE
@@ -134,7 +144,7 @@
 		return FALSE
 	if(!(target.get_musk_sweat()?.get_stacks(sweat_zone) > 0))
 		return FALSE
-	if(!check_location_accessible(user, target, body_zone, TRUE))
+	if(!can_reach_zone(user, target))
 		return FALSE
 	if(!check_location_accessible(target, user, BODY_ZONE_PRECISE_MOUTH))
 		return FALSE
@@ -179,7 +189,9 @@
 	if(!licker.is_musk_susceptible())
 		to_chat(licker, span_notice(musk_plain_lick_text(licker)))
 		return
+	licker.touch_musk(target, MUSK_GAIN_LICK)
 	to_chat(licker, span_love(musk_lick_text(licker, sweat_zone, tier, quality)))
+	licker.tell_once_per_contact(MUSK_LINE_NOTES, musk_notes_text(licker, target.get_musk()?.scent_notes))
 	SEND_SIGNAL(licker, COMSIG_SEX_ADJUST_AROUSAL, stacks * MUSK_LICK_AROUSAL_PER_STACK)
 	licker.take_musk_hit(min(stacks, MUSK_LEVEL_MAX), target, TRUE)
 

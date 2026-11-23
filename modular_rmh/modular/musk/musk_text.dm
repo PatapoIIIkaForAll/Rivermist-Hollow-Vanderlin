@@ -75,6 +75,11 @@
 			"The sweat here is hot and the musk is dense; it sinks into my tongue with every slow lick. My face burns, my pulse pounds in my ears, and I cannot make myself pull away.",
 			"This is the deepest, most forbidden musk of all, and it takes me like a fever-dream of the abyss. Salt and heat and a dark, heavy sweetness seep across my tongue; the world beyond goes grey and silent, and I lap at it like a heretic tasting the one sin worth burning for.",
 		),
+		MUSK_ZONE_FEET = list(
+			"I drag my tongue along the damp sole. Salt, warm road-worn skin, a faint thread of musk between the toes.",
+			"The sweat is thick here, pressed into the skin by a whole day's walking. It stings my tongue with salt and fills my nose with a deep, sour musk, and I push my tongue between the toes for more.",
+			"The feet have kept everything: every hour, every step, every drop. The musk rises off them like incense off a grave, rank and ripe and holy, and I press my mouth to the sole like a penitent to a relic. My thoughts go out one by one, and what is left of me lies down beneath that heel.",
+		),
 	)
 	var/static/list/russian = list(
 		MUSK_ZONE_ARMPITS = list(
@@ -91,6 +96,11 @@
 			"Я слизываю пот между ягодиц. Соль, тепло, лёгкий мускус — куда интимнее, чем казалось.",
 			"Пот здесь горячий, а мускус плотный — с каждым медленным движением он въедается в язык. Лицо горит, пульс стучит в ушах, и заставить себя отстраниться не выходит.",
 			"Это самый глубокий, самый запретный мускус, и он забирает меня, как горячечный сон о бездне. Соль, жар и тёмная, тяжёлая сладость растекаются по языку; мир вокруг сереет и смолкает, а я вылизываю, как еретик, вкусивший единственный грех, ради которого стоит взойти на костёр.",
+		),
+		MUSK_ZONE_FEET = list(
+			"Я провожу языком по влажной ступне. Соль, тёплая натруженная кожа, тонкая нотка мускуса между пальцами.",
+			"Пот здесь густой, втоптанный в кожу целым днём ходьбы. Он щиплет язык солью и заполняет нос глубоким кисловатым мускусом, и я проталкиваю язык между пальцами, чтобы добыть ещё.",
+			"Ступни сохранили всё: каждый час, каждый шаг, каждую каплю. Мускус поднимается от них, как ладан над могилой, — терпкий, перезрелый, священный, — и я припадаю к ним губами, как кающийся к мощам. Мысли гаснут одна за другой, и то, что от меня осталось, ложится под эту пяту.",
 		),
 	)
 	var/list/english_tiers = english[zone]
@@ -121,11 +131,13 @@
 		MUSK_ZONE_ARMPITS = "My face is crushed into a hot, slick armpit. There is nothing to breathe but musk: it fills my nose, slides over my lips and salts my tongue.",
 		MUSK_ZONE_GROIN = "My face is pressed hard into the sweaty heat of the crotch. Every breath I fight for is thick, dark musk, and it coats my tongue when I gasp.",
 		MUSK_ZONE_BUTT = "My face is smothered between sweaty cheeks. The heat closes over me, and the musk, dense and heavy, is all the air I am allowed.",
+		MUSK_ZONE_FEET = "A sweaty sole comes down on my face. The toes curl over my nose, and there is nothing to breathe but hot, salted musk.",
 	)
 	var/static/list/russian_places = list(
 		MUSK_ZONE_ARMPITS = "Моё лицо вжимают в горячую влажную подмышку. Дышать нечем, кроме мускуса: он забивает нос, скользит по губам и солит язык.",
 		MUSK_ZONE_GROIN = "Моё лицо крепко вжимают в потный жар паха. Каждый вдох, который удаётся урвать, — густой тёмный мускус, и он ложится на язык, когда я хватаю ртом воздух.",
 		MUSK_ZONE_BUTT = "Моё лицо утопает между потных ягодиц. Жар смыкается надо мной, и мускус — плотный, тяжёлый — единственный воздух, который мне позволен.",
+		MUSK_ZONE_FEET = "На лицо опускается потная ступня. Пальцы смыкаются на носу, и дышать нечем, кроме горячего солёного мускуса.",
 	)
 	var/static/list/english_tiers = list(
 		"My head spins.",

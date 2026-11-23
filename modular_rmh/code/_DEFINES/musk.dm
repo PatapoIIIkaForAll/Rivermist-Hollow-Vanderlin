@@ -14,10 +14,13 @@
 #define MUSK_ZONE_ARMPITS "armpits"
 #define MUSK_ZONE_GROIN "groin"
 #define MUSK_ZONE_BUTT "butt"
+#define MUSK_ZONE_FEET "feet"
 
 #define MUSK_SWEAT_MAX_STACKS 4
+#define MUSK_SWEAT_FEET_MAX_STACKS 6
 #define MUSK_SWEAT_BARE_GAIN 1
 #define MUSK_SWEAT_HAIRY_GAIN 2
+#define MUSK_SWEAT_SHOD_GAIN 2
 
 #define MUSK_QUALITY_BARE 1
 #define MUSK_QUALITY_HAIRY 2
@@ -33,3 +36,32 @@
 #define MUSK_PRESS_MAX_CLIMAXES 2
 #define MUSK_PRESS_BURST_TIMER "musk_press_burst"
 #define MUSK_CLIMAX_CHAIN_DELAY (2.5 SECONDS)
+
+#define MUSK_SCENT_PLEASANT "Pleasant"
+#define MUSK_SCENT_NEUTRAL "Neutral"
+#define MUSK_SCENT_FOUL "Foul"
+#define MUSK_SCENT_QUALITIES list(MUSK_SCENT_PLEASANT, MUSK_SCENT_NEUTRAL, MUSK_SCENT_FOUL)
+#define MUSK_PLEASANT_DIZZY_MULTIPLIER 0.5
+#define MUSK_FOUL_DIZZY_MULTIPLIER 2
+#define MUSK_FOUL_BLUR_PER_LEVEL (2 SECONDS)
+
+#define MUSK_NOTE_NONE "None"
+#define MUSK_NOTES list(MUSK_NOTE_NONE, "Honey", "Milk", "Fresh Bread", "Apples", "Berries", "Wine", "Ale", "Cinnamon", "Cloves", "Mint", "Roses", "Lavender", "Meadow Grass", "Pine Resin", "Moss", "Rain", "Sea Salt", "Iron", "Leather", "Woodsmoke", "Incense", "Old Books", "Tar", "Wet Fur", "Stables", "Ripe Cheese", "Vinegar", "Onions", "Bog Mud")
+
+#define MUSK_CONTACT_DURATION (1 MINUTES)
+#define MUSK_CONTACT_LINE_CHANCE 60
+#define MUSK_LINE_SMELL "smell"
+#define MUSK_LINE_NOTES "notes"
+#define MUSK_LINE_HAZE "haze"
+#define MUSK_LINE_TASTE "taste"
+#define MUSK_LINE_BOND "bond"
+
+#define MUSK_WIPE_HYGIENE 25
+#define MUSK_SMEAR_MAX_STACKS 6
+#define MUSK_SMEAR_FADE_TIME (5 MINUTES)
+
+#define MUSK_FLUID_SWEAT "sweat"
+#define MUSK_SLIP_AMOUNT 5
+#define MUSK_SLIP_MIN_AMOUNT 1
+#define MUSK_SLIP_TIME (4 SECONDS)
+#define MUSK_SLIP_SIGHT_RANGE 1

@@ -217,6 +217,9 @@ GLOBAL_LIST_INIT(sex_motion_pumps, list(1, 1, 2, 3))
 /datum/sex_action/foot_grind_vagina
 	motion_kind = SEX_MOTION_THRUST
 
+/datum/sex_action/toes_in_mouth
+	motion_kind = SEX_MOTION_THRUST
+
 /datum/sex_action/sex/other/footjob
 	motion_kind = SEX_MOTION_THRUST
 
@@ -241,6 +244,9 @@ GLOBAL_LIST_INIT(sex_motion_pumps, list(1, 1, 2, 3))
 	motion_kind = SEX_MOTION_LEAN
 
 /datum/sex_action/foot_lick
+	motion_kind = SEX_MOTION_LEAN
+
+/datum/sex_action/foot_wipe
 	motion_kind = SEX_MOTION_LEAN
 
 /datum/sex_action/tonguebath
