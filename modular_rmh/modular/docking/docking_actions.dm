@@ -32,6 +32,12 @@
 /datum/sex_action/docking/proc/get_force_value(list/values)
 	return values[clamp(force, 1, length(values))]
 
+/datum/sex_action/docking/proc/is_stretched(obj/item/organ/genitals/penis/inner, obj/item/organ/genitals/penis/sleeve)
+	return inner.get_insert_girth() > sleeve.get_insert_girth() * DOCKING_STRETCH_RATIO
+
+/datum/sex_action/docking/proc/get_sleeve_pain(stretched)
+	return DOCKING_SLEEVE_PAIN + (stretched ? DOCKING_STRETCH_PAIN : 0)
+
 /datum/sex_action/docking/shows_on_menu(mob/living/user, mob/living/target)
 	return fits(user, target)
 
@@ -71,7 +77,7 @@
 	var/obj/item/organ/genitals/penis/inner = get_real_penis(inner_holder)
 	if(!sleeve || !inner)
 		return
-	var/stretched = inner.get_insert_girth() > sleeve.get_insert_girth() * DOCKING_STRETCH_RATIO
+	var/stretched = is_stretched(inner, sleeve)
 	var/hidden = sleeve.erect_state != ERECT_STATE_HARD
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(docking_perform_text(user, target, dock_kind, sleeve_is_user, get_generic_force_adjective(), stretched, hidden)))
@@ -84,13 +90,9 @@
 	var/static/list/inner_orgasm = list(1, 1.2, 1.4, 1.4, 1.4)
 	var/static/list/sleeve_arousal = list(1, 1.2, 1.4, 1.5, 1.5)
 	var/static/list/sleeve_orgasm = list(0.8, 1, 1.2, 1.2, 1.2)
-	var/sleeve_pain = DOCKING_SLEEVE_PAIN
-	if(stretched)
-		sleeve_pain += DOCKING_STRETCH_PAIN
-
 	perform_sex_action(inner_holder, sleeve_holder, get_force_value(inner_arousal), 0, get_force_value(inner_orgasm))
 	handle_passive_ejaculation(inner_holder)
-	perform_sex_action(sleeve_holder, inner_holder, get_force_value(sleeve_arousal), sleeve_pain, get_force_value(sleeve_orgasm))
+	perform_sex_action(sleeve_holder, inner_holder, get_force_value(sleeve_arousal), get_sleeve_pain(stretched), get_force_value(sleeve_orgasm))
 	handle_passive_ejaculation(sleeve_holder)
 
 /datum/sex_action/docking/on_finish(mob/living/user, mob/living/target)

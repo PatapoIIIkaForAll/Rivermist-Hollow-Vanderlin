@@ -5192,6 +5192,7 @@
 #include "modular_rmh\modular\docking\docking_actions.dm"
 #include "modular_rmh\modular\docking\docking_text.dm"
 #include "modular_rmh\modular\docking\foreskin.dm"
+#include "modular_rmh\modular\docking\urethra.dm"
 #include "modular_rmh\modular\emote_panel\emote_panel.dm"
 #include "modular_rmh\modular\falling_star\falling_star.dm"
 #include "modular_rmh\modular\fluids\chapel_birth.dm"

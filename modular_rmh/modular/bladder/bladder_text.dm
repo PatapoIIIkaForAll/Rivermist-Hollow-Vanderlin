@@ -63,6 +63,19 @@
 	)
 	return bladder_localized(reader, pick(english[level]), pick(russian[level]))
 
+/proc/bladder_stress_text(mob/reader, level)
+	var/static/list/english = list(
+		"I need to relieve myself.",
+		"I really have to go. Where is a privy?",
+		"My bladder is bursting. It hurts to hold it in!",
+	)
+	var/static/list/russian = list(
+		"Мне нужно справить нужду.",
+		"Мне очень надо. Где тут уборная?",
+		"Пузырь вот-вот лопнет. Терпеть больно!",
+	)
+	return bladder_localized(reader, english[level], russian[level])
+
 /proc/bladder_relief_text(mob/reader, was_urgent)
 	if(was_urgent)
 		return bladder_localized(reader, "Ahh... The ache melts away, and I sag with relief.", "Ах... Боль тает, и меня накрывает облегчение.")
@@ -109,7 +122,12 @@
 			return bladder_localized(reader, "Hot liquid floods deep into my pussy, filling me with heat.", "Горячая жидкость заливает моё лоно, наполняя меня жаром.")
 		if(ORGAN_SLOT_ANUS)
 			return bladder_localized(reader, "Hot liquid pumps deep into my ass, swelling me with heat.", "Горячая жидкость вливается глубоко мне в зад, распирая жаром.")
+		if(DOCKING_KIND_URETHRA)
+			return bladder_localized(reader, "Hot piss forces its way down my cock and floods my bladder.", "Горячая моча пробивается по моему члену внутрь и заливает мой пузырь.")
 	return bladder_localized(reader, "Hot piss pours straight down my throat.", "Горячая моча льётся мне прямо в горло.")
+
+/proc/bladder_urethra_backflow_text(mob/reader)
+	return bladder_localized(reader, "Hot piss forces into my cock and spurts right back out.", "Горячая моча врывается в мой член и тут же брызжет обратно.")
 
 /proc/bladder_stream_source(mob/living/user)
 	if(user.getorganslot(ORGAN_SLOT_PENIS))
@@ -124,4 +142,6 @@
 			return "pussy"
 		if(ORGAN_SLOT_ANUS)
 			return "ass"
+		if(DOCKING_KIND_URETHRA)
+			return "urethra"
 	return "throat"

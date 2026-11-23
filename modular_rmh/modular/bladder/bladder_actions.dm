@@ -10,6 +10,9 @@
 /datum/sex_action/bladder/proc/consented(mob/living/user, mob/living/target)
 	return user.watersports_allowed() && target.watersports_allowed()
 
+/datum/sex_action/bladder/proc/can_swallow(mob/living/drinker)
+	return !!drinker.getorganslot(ORGAN_SLOT_STOMACH)
+
 /datum/sex_action/bladder/proc/play_stream_sound(mob/living/target)
 	playsound(target, pick(BLADDER_STREAM_SOUNDS), sex_volume * 0.5, TRUE, -2, ignore_walls = FALSE)
 
@@ -104,6 +107,8 @@
 	. = ..()
 	if(!.)
 		return FALSE
+	if(!can_swallow(target))
+		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_MOUTH))
 		return FALSE
 	if(check_sex_lock(target, BODY_ZONE_PRECISE_MOUTH))
@@ -162,8 +167,16 @@
 /datum/sex_action/bladder/stream/inside/proc/find_penetration(mob/living/user, mob/living/target)
 	if(!user.getorganslot(ORGAN_SLOT_PENIS))
 		return null
+	var/static/list/open_holes = list(ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS, BODY_ZONE_PRECISE_MOUTH)
 	for(var/datum/sex_action/action as anything in target.sex_scene?.active_actions)
-		if(action == src || !action.hole_id)
+		if(action == src)
+			continue
+		if(istype(action, /datum/sex_action/docking/urethra))
+			var/datum/sex_action/docking/urethra/dock = action
+			if(dock.get_inner_holder(dock.action_user, dock.action_target) == user && dock.get_sleeve_holder(dock.action_user, dock.action_target) == target)
+				return dock
+			continue
+		if(!(action.hole_id in open_holes))
 			continue
 		if(action.get_inserted_penis_owner(action.action_user, action.action_target) != user)
 			continue
@@ -175,7 +188,20 @@
 /datum/sex_action/bladder/stream/inside/on_start(mob/living/user, mob/living/target)
 	. = ..()
 	var/datum/sex_action/penetration = find_penetration(user, target)
-	user.visible_message(span_warning("[user] holds still deep in [target]'s [bladder_hole_name(penetration?.hole_id)] and lets go!"))
+	user.visible_message(span_warning("[user] holds still deep in [target]'s [bladder_hole_name(get_place_slot(penetration))] and lets go!"))
+
+/datum/sex_action/bladder/stream/inside/proc/get_place_slot(datum/sex_action/penetration)
+	if(istype(penetration, /datum/sex_action/docking/urethra))
+		return DOCKING_KIND_URETHRA
+	return penetration?.hole_id
+
+/datum/sex_action/bladder/stream/inside/proc/get_spill_zone(hole_slot)
+	switch(hole_slot)
+		if(BODY_ZONE_PRECISE_MOUTH)
+			return FLUID_COAT_FACE
+		if(DOCKING_KIND_URETHRA)
+			return FLUID_COAT_GROIN
+	return FLUID_COAT_THIGHS
 
 /datum/sex_action/bladder/stream/inside/on_perform(mob/living/user, mob/living/target)
 	. = ..()
@@ -183,20 +209,30 @@
 	var/datum/sex_action/penetration = find_penetration(user, target)
 	if(!bladder || !penetration)
 		return
-	var/hole_slot = penetration.hole_id
+	var/hole_slot = get_place_slot(penetration)
 	var/stream = min(BLADDER_STREAM_UNITS, bladder.get_volume())
 	var/moved = 0
-	if(hole_slot == BODY_ZONE_PRECISE_MOUTH)
-		moved = bladder.release_into(target, stream, INGEST, user)
-	else
-		var/obj/item/organ/genitals/filling_organ/hole = target.getorganslot(hole_slot)
-		if(istype(hole) && hole.reagents)
-			moved = bladder.release_into(hole, stream, null, user)
+	switch(hole_slot)
+		if(BODY_ZONE_PRECISE_MOUTH)
+			if(can_swallow(target))
+				moved = bladder.release_into(target, stream, INGEST, user)
+		if(DOCKING_KIND_URETHRA)
+			var/datum/component/bladder/receiver = target.get_bladder()
+			if(receiver)
+				moved = receiver.receive_from(bladder.contents, stream, user)
+				bladder.update_urge()
+		else
+			var/obj/item/organ/genitals/filling_organ/hole = target.getorganslot(hole_slot)
+			if(istype(hole) && hole.reagents)
+				moved = bladder.release_into(hole, stream, null, user)
 	if(moved < stream)
-		bladder.release_onto_body(target, hole_slot == BODY_ZONE_PRECISE_MOUTH ? FLUID_COAT_FACE : FLUID_COAT_THIGHS, stream - moved)
+		bladder.release_onto_body(target, get_spill_zone(hole_slot), stream - moved)
 	if(can_show_action_message(user, target))
 		user.visible_message(span_love("[user] pumps hot piss deep into [target]'s [bladder_hole_name(hole_slot)]..."))
-		to_chat(target, span_love(bladder_inside_text(target, hole_slot)))
+		if(hole_slot == DOCKING_KIND_URETHRA && moved <= 0)
+			to_chat(target, span_love(bladder_urethra_backflow_text(target)))
+		else
+			to_chat(target, span_love(bladder_inside_text(target, hole_slot)))
 	perform_sex_action(user, target, 0.5, 0, 0.2)
 	perform_sex_action(target, user, 0.8, 0, 0.3)
 

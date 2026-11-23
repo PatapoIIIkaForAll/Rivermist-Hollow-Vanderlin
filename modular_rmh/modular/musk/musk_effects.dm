@@ -83,8 +83,7 @@
 	)
 	var/scent_type = scent_types[level]
 	for(var/turf/open/scent_turf in RANGE_TURFS(MUSK_SCENT_RANGE, source_turf))
-		var/datum/pollution/present = scent_turf.pollution
-		if(!QDELETED(present) && present.pollutants[scent_type] >= MUSK_SCENT_CAP)
+		if(get_musk_amount(scent_turf) >= MUSK_SCENT_CAP)
 			continue
 		scent_turf.pollute_turf(scent_type, MUSK_SCENT_AMOUNT)
 
@@ -209,6 +208,15 @@
 	alpha = 0
 	color = MUSK_SCREEN_COLOR
 
+/datum/status_effect/musk/proc/get_musk_amount(turf/open/scent_turf)
+	. = 0
+	var/datum/pollution/present = scent_turf.pollution
+	if(QDELETED(present))
+		return
+	for(var/pollutant_type in present.pollutants)
+		if(ispath(pollutant_type, /datum/pollutant/musk_scent))
+			. += present.pollutants[pollutant_type]
+
 /datum/pollutant/musk_scent
 	pollutant_flags = POLLUTANT_SMELL | POLLUTANT_BREATHE_ACT | POLLUTION_DO_NOT_SPREAD
 	descriptor = SCENT_DESC_ODOR
@@ -217,15 +225,18 @@
 
 /datum/pollutant/musk_scent/breathe_act(mob/living/carbon/victim, amount, total_amount)
 	. = ..()
-	if(!ishuman(victim))
+	if(!can_be_smelled_by(victim))
 		return
 	var/mob/living/carbon/human/smeller = victim
-	var/datum/status_effect/musk/own_musk = smeller.has_status_effect(/datum/status_effect/musk)
-	if(own_musk && own_musk.level >= level)
-		return
-	if(!smeller.is_musk_susceptible())
-		return
 	smeller.smell_musk(level, find_source(smeller))
+
+/datum/pollutant/musk_scent/can_be_smelled_by(mob/living/sniffer)
+	if(!ishuman(sniffer))
+		return FALSE
+	var/mob/living/carbon/human/smeller = sniffer
+	if(!smeller.is_musk_susceptible())
+		return FALSE
+	return !smeller.get_musk_sweat() || !!find_source(smeller)
 
 /datum/pollutant/musk_scent/proc/find_source(mob/living/carbon/human/smeller)
 	for(var/mob/living/carbon/human/candidate in range(MUSK_SCENT_RANGE, smeller))

@@ -39,7 +39,7 @@
 /datum/component/bladder/Initialize()
 	if(!ishuman(parent))
 		return COMPONENT_INCOMPATIBLE
-	contents = new /datum/reagents(BLADDER_MAX_FILL, NO_REACT)
+	contents = new /datum/reagents(BLADDER_OVERFILL_LIMIT, NO_REACT)
 
 /datum/component/bladder/Destroy(force)
 	var/mob/living/carbon/human/owner = parent
@@ -61,9 +61,17 @@
 	fill(amount * BLADDER_UNITS_PER_HYDRATION)
 
 /datum/component/bladder/proc/fill(amount)
+	amount = min(amount, BLADDER_MAX_FILL - contents.total_volume)
 	if(amount <= 0)
 		return
 	contents.add_reagent(/datum/reagent/consumable/urine, amount)
+	update_urge()
+
+/datum/component/bladder/proc/receive_from(datum/reagents/source, amount, mob/living/transfered_by)
+	amount = min(amount, BLADDER_OVERFILL_LIMIT - contents.total_volume)
+	if(amount <= 0 || !source)
+		return 0
+	. = source.trans_to(contents, amount, transfered_by = transfered_by, show_message = FALSE) || 0
 	update_urge()
 
 /datum/component/bladder/proc/get_volume()
@@ -159,9 +167,9 @@
 /datum/status_effect/bladder_urge/get_examine_text(mob/user, list/P)
 	switch(level)
 		if(BLADDER_URGE_URGENT)
-			return span_notice("SUBJECTPRONOUN keeps shifting from foot to foot.")
+			return span_notice("SUBJECTPRONOUN is shifting from foot to foot.")
 		if(BLADDER_URGE_BURSTING)
-			return span_warning("SUBJECTPRONOUN squirms with thighs pressed tight, a hand straying to the belly.")
+			return span_warning("SUBJECTPRONOUN is squirming with thighs pressed tight, a hand straying to the belly.")
 	return null
 
 /datum/status_effect/bladder_urge/proc/set_level(new_level, rising)
@@ -210,6 +218,18 @@
 	desc = "A familiar weight sits low in my belly."
 	icon_state = "debuff"
 
+/datum/stress_event/bladder_need/get_desc(mob/living/user)
+	return span_red(bladder_stress_text(user, BLADDER_URGE_NEED))
+
+/datum/stress_event/bladder_urgent/get_desc(mob/living/user)
+	return span_red(bladder_stress_text(user, BLADDER_URGE_URGENT))
+
+/datum/stress_event/bladder_bursting/get_desc(mob/living/user)
+	return span_red(bladder_stress_text(user, BLADDER_URGE_BURSTING))
+
+/datum/stress_event/bladder_relief/get_desc(mob/living/user)
+	return span_green(bladder_localized(user, "Sweet relief at last.", "Наконец-то облегчение."))
+
 /datum/stress_event/bladder_need
 	stress_change = 1
 	desc = span_red("I need to relieve myself.")
@@ -255,6 +275,9 @@
 	var/obj/item/clothing/garment = get_sex_covering_garment(BODY_ZONE_PRECISE_GROIN, src)
 	if(garment)
 		to_chat(src, span_warning(bladder_localized(src, "[garment] is in the way.", "Мешает [garment].")))
+		return FALSE
+	if(doing())
+		to_chat(src, span_warning(bladder_localized(src, "I'm busy with something else.", "Сейчас мне не до этого.")))
 		return FALSE
 	var/obj/item/reagent_containers/container = get_relief_container()
 	var/obj/structure/toilet/toilet

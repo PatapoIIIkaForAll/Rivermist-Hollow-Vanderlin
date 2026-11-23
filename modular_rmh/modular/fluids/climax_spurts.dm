@@ -505,7 +505,7 @@
 		return 0
 	var/mob/living/climaxer = get_climaxer()
 	var/turf/climaxer_turf = get_turf(climaxer)
-	if(QDELETED(container) || !container.reagents || get_dist(get_turf(container), climaxer_turf) > 1)
+	if(QDELETED(container) || !container.reagents || get_dist(get_turf(get_container_holder()), climaxer_turf) > 1)
 		arousal.route_climax_reagents(load, amount, climaxer, partner, get_live_action(), ORGASM_LOCATION_SELF, climaxer_turf, null, action_initiator, action_target, action_performer, TRUE, is_follow_up)
 		return 0
 	amount = min(amount, container.reagents.maximum_volume - container.reagents.total_volume)
