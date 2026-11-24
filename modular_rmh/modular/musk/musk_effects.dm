@@ -275,10 +275,13 @@
 
 /datum/pollutant/musk_scent/breathe_act(mob/living/carbon/victim, amount, total_amount)
 	. = ..()
-	if(amount <= 0 || !reaches(victim))
+	if(amount <= 0 || !ishuman(victim))
 		return
 	var/mob/living/carbon/human/smeller = victim
-	smeller.smell_musk(level, find_source(smeller))
+	if(reaches(smeller))
+		smeller.smell_musk(level, find_source(smeller))
+	else if(smeller.has_quirk(/datum/quirk/neutral/scent_sensitivity))
+		smeller.notice_sweat(level, find_source(smeller))
 
 /datum/pollutant/musk_scent/can_be_smelled_by(mob/living/sniffer)
 	if(!reaches(sniffer))

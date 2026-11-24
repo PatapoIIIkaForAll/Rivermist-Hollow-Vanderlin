@@ -68,6 +68,8 @@
 
 	give_bank_account = 40
 
+	traits = list(TRAIT_HOLY_URINE)
+
 	job_subclasses = list(
 		/datum/job/advclass/acolyte/base,
 		/datum/job/advclass/acolyte/selune,

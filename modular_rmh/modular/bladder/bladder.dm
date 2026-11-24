@@ -15,7 +15,7 @@
 
 /datum/erp_preference/boolean/watersports
 	name = "Watersports"
-	description = "Piss play: being pissed on or into, drinking it, or pressing on a full bladder until it gives. Both partners need it on, and only those with the Bladder quirk have anything to give."
+	description = "Piss play: being pissed on or into, drinking it, pressing on a full bladder until it gives, and squirting at the peak. Both partners need it on. Piss takes the Bladder quirk; squirting takes only a pussy, though a full bladder makes it likelier and wetter."
 	default_value = FALSE
 	category = "General"
 
@@ -71,8 +71,11 @@
 	amount = min(amount, BLADDER_MAX_FILL - contents.total_volume)
 	if(amount <= 0)
 		return
-	contents.add_reagent(/datum/reagent/consumable/urine, amount)
+	contents.add_reagent(get_urine_type(), amount)
 	update_urge()
+
+/datum/component/bladder/proc/get_urine_type()
+	return HAS_TRAIT(parent, TRAIT_HOLY_URINE) ? /datum/reagent/consumable/urine/holy : /datum/reagent/consumable/urine
 
 /datum/component/bladder/proc/receive_from(datum/reagents/source, amount, mob/living/transfered_by)
 	amount = min(amount, BLADDER_OVERFILL_LIMIT - contents.total_volume)
@@ -121,7 +124,7 @@
 	amount = min(amount, contents.total_volume)
 	if(amount <= 0 || !target_turf)
 		return 0
-	spill(target_turf, amount, as_drops)
+	spill_relief(target_turf, contents, amount, as_drops)
 	update_urge()
 	return amount
 
@@ -131,20 +134,26 @@
 		return 0
 	var/left = target.coat_with_fluid(coat_zone, contents, amount)
 	if(left > 0)
-		spill(get_turf(target), left, TRUE)
+		spill_relief(get_turf(target), contents, left, TRUE)
 	update_urge()
 	return amount
-
-/datum/component/bladder/proc/spill(turf/target_turf, amount, as_drops)
-	if(locate(/obj/structure/toilet) in target_turf)
-		contents.remove_all(amount)
-	else
-		spill_fluid_to_turf(target_turf, contents, amount, as_drops)
 
 /datum/component/bladder/proc/empty_out()
 	. = contents.total_volume
 	contents.clear_reagents()
 	update_urge()
+
+/turf/proc/drains_relief()
+	return !!(locate(/obj/structure/toilet) in src)
+
+/turf/open/water/drains_relief()
+	return water_volume >= 10 || ..()
+
+/proc/spill_relief(turf/target_turf, datum/reagents/source, amount, as_drops)
+	if(target_turf?.drains_relief())
+		source.remove_all(amount)
+	else
+		spill_fluid_to_turf(target_turf, source, amount, as_drops)
 
 /datum/status_effect/bladder_urge
 	id = "bladder_urge"
@@ -316,7 +325,7 @@
 	target = get_relief_target()
 	if(istype(target, /obj/item/reagent_containers))
 		bladder.release_into(target, bladder.get_volume(), null, src)
-	else if(istype(target, /obj/structure/toilet) || istype(loc, /turf/open/water))
+	else if(istype(target, /obj/structure/toilet))
 		bladder.empty_out()
 	bladder.release_onto_turf(get_turf(src), bladder.get_volume())
 	playsound(src, pick(BLADDER_STREAM_SOUNDS), 25, TRUE, -2, ignore_walls = FALSE)

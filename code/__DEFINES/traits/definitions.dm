@@ -672,6 +672,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_HEAT_CYCLE "heat_cycle"
 /// Jiggling costs no stamina inside the bathhouse.
 #define TRAIT_BATHHOUSE_DANCER "Bathhouse Dancer"
+/// What this mob passes or squirts is holy: it looks and tastes so, and mends whoever drinks it.
+#define TRAIT_HOLY_URINE "Holy Urine"
 /// This mob cannot cast spells
 #define TRAIT_NO_SELF_MAGIC 	"noselfmagic"
 

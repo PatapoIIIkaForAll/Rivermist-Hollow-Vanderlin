@@ -31,4 +31,31 @@
 #define BLADDER_PRESS_LEAK_CHANCE_BURSTING 60
 #define BLADDER_PRESS_FLOOD_CHANCE 10
 
+#define SQUIRT_BASE_CHANCE 25
+#define SQUIRT_AROUSAL_CHANCE 15
+#define SQUIRT_EDGING_CHANCE 20
+#define SQUIRT_URGE_CHANCES list(0, 10, 25, 45)
+#define SQUIRT_PRESS_CHANCE 20
+#define SQUIRT_MAX_CHANCE 90
+#define SQUIRT_COOLDOWN (2 MINUTES)
+
+#define SQUIRT_NECTAR_UNITS 6
+#define SQUIRT_BLADDER_SHARE 0.25
+#define SQUIRT_BLADDER_MAX_UNITS 12
+#define SQUIRT_MIN_UNITS 1
+#define SQUIRT_MAX_UNITS 60
+#define SQUIRT_SWALLOW_SHARE 0.5
+#define SQUIRT_PARTNER_AROUSAL 6
+#define SQUIRT_ZONE_HAND "hand"
+
+/// Holy Urine heals at this share of the Health Potion, whose effects per tick follow.
+#define HOLY_URINE_POTENCY 0.25
+#define HOLY_URINE_MIN_VOLUME 0.99
+#define HOLY_URINE_BLOOD 5
+#define HOLY_URINE_WOUNDS 3
+#define HOLY_URINE_FLESH 1.75
+#define HOLY_URINE_POISON 4
+#define HOLY_URINE_BREATH 1.25
+#define HOLY_URINE_ORGANS 1
+
 #define BLADDER_STREAM_SOUNDS list('sound/foley/waterwash (1).ogg', 'sound/foley/waterwash (2).ogg')

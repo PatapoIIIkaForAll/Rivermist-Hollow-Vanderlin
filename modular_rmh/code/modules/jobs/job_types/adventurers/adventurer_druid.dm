@@ -35,6 +35,8 @@
 	attunements_max = 10
 	attunements_min = 5
 
+	traits = list(TRAIT_HOLY_URINE)
+
 	job_subclasses = list(
 		/datum/job/advclass/combat/adventurer_druid/circle_land,
 		/datum/job/advclass/combat/adventurer_druid/circle_moon,

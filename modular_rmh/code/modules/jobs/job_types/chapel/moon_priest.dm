@@ -53,6 +53,7 @@
 
 	traits = list(
 		TRAIT_HOLY,
+		TRAIT_HOLY_URINE,
 		TRAIT_NIGHT_OWL,
 		TRAIT_ANTISCRYING
 	)

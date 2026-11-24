@@ -10,6 +10,7 @@
 #define MUSK_AROUSAL_FLOOR_BY_LEVEL list(5, 10, 15, 25)
 #define MUSK_HAZE_DURATION (2 MINUTES)
 #define MUSK_HAZE_CLIMAX_GRACE (15 MINUTES)
+#define MUSK_HEAVY_LEVEL 3
 
 #define MUSK_ZONE_ARMPITS "armpits"
 #define MUSK_ZONE_GROIN "groin"
@@ -46,7 +47,22 @@
 #define MUSK_FOUL_BLUR_PER_LEVEL (2 SECONDS)
 
 #define MUSK_NOTE_NONE "None"
-#define MUSK_NOTES list(MUSK_NOTE_NONE, "Honey", "Milk", "Fresh Bread", "Apples", "Berries", "Wine", "Ale", "Cinnamon", "Cloves", "Mint", "Roses", "Lavender", "Meadow Grass", "Pine Resin", "Moss", "Rain", "Sea Salt", "Iron", "Leather", "Woodsmoke", "Incense", "Old Books", "Tar", "Wet Fur", "Stables", "Ripe Cheese", "Vinegar", "Onions", "Bog Mud")
+#define MUSK_NOTES list( \
+	MUSK_NOTE_NONE, "Honey", "Milk", "Fresh Bread", "Apples", "Berries", "Wine", "Ale", "Cinnamon", "Cloves", "Mint", \
+	"Roses", "Lavender", "Meadow Grass", "Pine Resin", "Moss", "Rain", "Sea Salt", "Iron", "Leather", "Woodsmoke", \
+	"Incense", "Old Books", "Tar", "Wet Fur", "Stables", "Ripe Cheese", "Vinegar", "Onions", "Bog Mud", "Wildflowers", \
+	"Dried Flowers", "Violets", "Lilac", "Jasmine", "Lilies", "Lily of the Valley", "Peonies", "Tulips", "Irises", \
+	"Hyacinths", "Cornflowers", "Poppies", "Daisies", "Dandelions", "Sunflowers", "Marigolds", "Chamomile", "Clover", \
+	"Heather", "Honeysuckle", "Water Lilies", "Elderflower", "Linden Blossom", "Apple Blossom", "Cherry Blossom", \
+	"Paper", "Parchment", "Ink", "Sealing Wax", "Candle Wax", "Beeswax", "Chalk", "Dust", "Feathers", "Linen", "Cotton", \
+	"Wool", "Silk", "Fresh Laundry", "Soap", "Rope", "Lamp Oil", "Linseed Oil", "Paint", "Varnish", "Clay", "Brick", \
+	"Wet Stone", "Sand", "Coal", "Ash", "Copper", "Silver", "Amber", "Sawdust", "Cedar", "Oak", "Birch", "Juniper", \
+	"Sandalwood", "Willow Bark", "Pine Needles", "Dry Leaves", "Ferns", "Mushrooms", "Damp Earth", "Hay", "Straw", \
+	"Grain", "Flour", "Hops", "Snow", "Frost", "Thunderstorm", "Morning Dew", "Mist", "River Water", "Seaweed", "Thyme", \
+	"Sage", "Rosemary", "Basil", "Dill", "Bay Leaf", "Wormwood", "Tea", "Pipe Tobacco", "Pepper", "Nutmeg", "Ginger", \
+	"Anise", "Caraway", "Saffron", "Vanilla", "Almonds", "Walnuts", "Chestnuts", "Butter", "Pears", "Plums", "Cherries", \
+	"Grapes", "Lemon", "Oranges", "Cucumber", "Myrrh" \
+)
 
 #define MUSK_CONTACT_DURATION (1 MINUTES)
 #define MUSK_CONTACT_LINE_CHANCE 60
