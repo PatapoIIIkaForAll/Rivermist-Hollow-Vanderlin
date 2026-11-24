@@ -1,7 +1,7 @@
 /datum/quirk/neutral/bladder
 	name = "Bladder"
 	desc = "Whatever I drink does not stay with me for long. It gathers low in my belly, and sooner or later my bladder makes its wishes known."
-	desc_hint = "Drink fills my bladder. Half full, I start to think of the privy; nearly full, I squirm; past full, it aches until I relieve myself, from the IC tab or my holes window. Those who enjoy it, with Watersports in their ERP preferences, can share it with me."
+	desc_hint = "Drink fills my bladder. Half full, I start to think of the privy; nearly full, I squirm; past full, it aches until I relieve myself, from the IC tab or my holes window. A toilet takes it all without a drop astray, and while I sleep or drift away my bladder leaves me be. Those who enjoy it, with Watersports in their ERP preferences, can share it with me."
 	preview_render = FALSE
 
 /datum/quirk/neutral/bladder/on_spawn()
@@ -31,6 +31,11 @@
 	RETURN_TYPE(/datum/component/bladder)
 	return GetComponent(/datum/component/bladder)
 
+/mob/living/proc/is_bladder_at_rest()
+	if(stat != CONSCIOUS || has_status_effect(/datum/status_effect/reverie))
+		return TRUE
+	return !client || client.manual_afk || client.is_afk()
+
 /datum/component/bladder
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 	var/datum/reagents/contents
@@ -58,7 +63,9 @@
 
 /datum/component/bladder/proc/on_hydration_gained(datum/source, amount)
 	SIGNAL_HANDLER
-	fill(amount * BLADDER_UNITS_PER_HYDRATION)
+	var/mob/living/carbon/human/owner = parent
+	if(!owner.is_bladder_at_rest())
+		fill(amount * BLADDER_UNITS_PER_HYDRATION)
 
 /datum/component/bladder/proc/fill(amount)
 	amount = min(amount, BLADDER_MAX_FILL - contents.total_volume)
@@ -114,7 +121,7 @@
 	amount = min(amount, contents.total_volume)
 	if(amount <= 0 || !target_turf)
 		return 0
-	spill_fluid_to_turf(target_turf, contents, amount, as_drops)
+	spill(target_turf, amount, as_drops)
 	update_urge()
 	return amount
 
@@ -124,9 +131,15 @@
 		return 0
 	var/left = target.coat_with_fluid(coat_zone, contents, amount)
 	if(left > 0)
-		spill_fluid_to_turf(get_turf(target), contents, left, TRUE)
+		spill(get_turf(target), left, TRUE)
 	update_urge()
 	return amount
+
+/datum/component/bladder/proc/spill(turf/target_turf, amount, as_drops)
+	if(locate(/obj/structure/toilet) in target_turf)
+		contents.remove_all(amount)
+	else
+		spill_fluid_to_turf(target_turf, contents, amount, as_drops)
 
 /datum/component/bladder/proc/empty_out()
 	. = contents.total_volume
@@ -154,17 +167,17 @@
 	refresh_stress()
 
 /datum/status_effect/bladder_urge/on_remove()
-	owner.remove_stress(list(/datum/stress_event/bladder_need, /datum/stress_event/bladder_urgent, /datum/stress_event/bladder_bursting))
+	clear_stress()
 	return ..()
 
 /datum/status_effect/bladder_urge/tick()
-	if(owner.stat == DEAD)
-		return
 	refresh_stress()
 	if(COOLDOWN_FINISHED(src, next_reminder))
 		remind()
 
 /datum/status_effect/bladder_urge/get_examine_text(mob/user, list/P)
+	if(owner.is_bladder_at_rest())
+		return null
 	switch(level)
 		if(BLADDER_URGE_URGENT)
 			return span_notice("SUBJECTPRONOUN is shifting from foot to foot.")
@@ -181,13 +194,15 @@
 
 /datum/status_effect/bladder_urge/proc/announce()
 	update_alert()
+	if(owner.is_bladder_at_rest())
+		return
 	COOLDOWN_START(src, next_reminder, rand(BLADDER_REMINDER_MIN, BLADDER_REMINDER_MAX))
 	to_chat(owner, span_warning(bladder_urge_text(owner, level)))
 
 /datum/status_effect/bladder_urge/proc/remind()
-	COOLDOWN_START(src, next_reminder, rand(BLADDER_REMINDER_MIN, BLADDER_REMINDER_MAX))
-	if(owner.stat != CONSCIOUS)
+	if(owner.is_bladder_at_rest())
 		return
+	COOLDOWN_START(src, next_reminder, rand(BLADDER_REMINDER_MIN, BLADDER_REMINDER_MAX))
 	to_chat(owner, span_warning(bladder_reminder_text(owner, level)))
 	if(level < BLADDER_URGE_URGENT)
 		return
@@ -199,8 +214,18 @@
 	var/fidget = replacetext(replacetext(pick(fidgets), "%NAME", "[owner]"), "%THEIR", owner.p_their())
 	owner.visible_message(span_notice(fidget), vision_distance = 3, ignored_mobs = list(owner))
 
-/datum/status_effect/bladder_urge/proc/refresh_stress()
+/datum/status_effect/bladder_urge/proc/get_stresses()
 	var/static/list/stresses = list(/datum/stress_event/bladder_need, /datum/stress_event/bladder_urgent, /datum/stress_event/bladder_bursting)
+	return stresses
+
+/datum/status_effect/bladder_urge/proc/clear_stress()
+	owner.remove_stress(get_stresses())
+
+/datum/status_effect/bladder_urge/proc/refresh_stress()
+	if(owner.is_bladder_at_rest())
+		clear_stress()
+		return
+	var/list/stresses = get_stresses()
 	for(var/index in 1 to length(stresses))
 		if(index == level)
 			owner.add_stress(stresses[index])
@@ -279,11 +304,8 @@
 	if(doing())
 		to_chat(src, span_warning(bladder_localized(src, "I'm busy with something else.", "Сейчас мне не до этого.")))
 		return FALSE
-	var/obj/item/reagent_containers/container = get_relief_container()
-	var/obj/structure/toilet/toilet
-	if(!container)
-		toilet = locate(/obj/structure/toilet) in range(1, src)
-	visible_message(span_notice("[src] starts to relieve [p_them()]self[get_relief_place(container, toilet)]."), span_notice(bladder_localized(src, "I start to relieve myself.", "Я начинаю справлять нужду.")), vision_distance = 3)
+	var/obj/target = get_relief_target()
+	visible_message(span_notice("[src] starts to relieve [p_them()]self[target ? " into [target]" : ""]."), span_notice(bladder_localized(src, "I start to relieve myself.", "Я начинаю справлять нужду.")), vision_distance = 3)
 	var/amount = bladder.get_volume()
 	if(!do_after(src, BLADDER_RELIEVE_BASE_TIME + amount * BLADDER_RELIEVE_TIME_PER_UNIT, src))
 		return FALSE
@@ -291,11 +313,10 @@
 	if(!bladder || stat != CONSCIOUS)
 		return FALSE
 	var/was_urgent = bladder.urge >= BLADDER_URGE_URGENT
-	if(container && container == get_relief_container())
-		bladder.release_into(container, bladder.get_volume(), null, src)
-	else if(!QDELETED(toilet) && Adjacent(toilet))
-		bladder.empty_out()
-	else if(istype(loc, /turf/open/water))
+	target = get_relief_target()
+	if(istype(target, /obj/item/reagent_containers))
+		bladder.release_into(target, bladder.get_volume(), null, src)
+	else if(istype(target, /obj/structure/toilet) || istype(loc, /turf/open/water))
 		bladder.empty_out()
 	bladder.release_onto_turf(get_turf(src), bladder.get_volume())
 	playsound(src, pick(BLADDER_STREAM_SOUNDS), 25, TRUE, -2, ignore_walls = FALSE)
@@ -317,15 +338,19 @@
 		"can_relieve" = volume >= BLADDER_RELIEVE_MIN_UNITS,
 	)
 
+/mob/living/carbon/human/proc/get_relief_target()
+	RETURN_TYPE(/obj)
+	var/obj/structure/toilet/toilet = locate() in get_turf(src)
+	return toilet || get_relief_container() || get_toilet_in_reach()
+
+/mob/living/carbon/human/proc/get_toilet_in_reach()
+	for(var/obj/structure/toilet/toilet in range(1, src))
+		if(Adjacent(toilet))
+			return toilet
+	return null
+
 /mob/living/carbon/human/proc/get_relief_container()
 	var/obj/item/reagent_containers/container = get_active_held_item()
 	if(!istype(container) || !container.reagents || !container.is_refillable() || container.reagents.holder_full())
 		return null
 	return container
-
-/mob/living/carbon/human/proc/get_relief_place(obj/item/reagent_containers/container, obj/structure/toilet/toilet)
-	if(container)
-		return " into [container]"
-	if(toilet)
-		return " into [toilet]"
-	return ""
