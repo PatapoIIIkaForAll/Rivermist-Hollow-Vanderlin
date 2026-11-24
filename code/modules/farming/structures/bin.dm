@@ -13,6 +13,8 @@
 	max_integrity = 80
 	w_class = WEIGHT_CLASS_GIGANTIC
 	var/kover = FALSE
+	var/fouled_per_wash = 30
+	var/foulness = 0
 	drag_slowdown = 2
 	throw_speed = 1
 	throw_range = 1
@@ -106,25 +108,23 @@
 		user.visible_message("<span class='info'>[user] starts to wash in [src].</span>")
 	else
 		user.visible_message("<span class='info'>[user] starts to wash [to_wash] in [src].</span>")
-		if(istype(to_wash, /obj/item/clothing))
-			var/obj/item/clothing/clothing_item = to_wash
-			if(clothing_item.wetable)
-				if(!reagents.has_reagent(/datum/reagent/water/gross))
-					clothing_item.wet.add_water(20, dirty = FALSE, washed_properly = TRUE)
-				else
-					clothing_item.wet.add_water(20, dirty = TRUE, washed_properly = TRUE)
 		user.nobles_seen_servant_work()
 	reagents.remove_reagent(removereg, 5)
 
 	playsound(user, pick_n_take(wash), 100, FALSE)
 	if(do_after(user, 3 SECONDS, src))
 		to_wash.wash(CLEAN_WASH)
+		var/obj/item/clothing/clothing_item = to_wash
+		if(istype(clothing_item))
+			clothing_item.get_washed_wet(removereg != /datum/reagent/water, user)
 		playsound(user, pick(wash), 100, FALSE)
 
 	var/datum/reagent/water_to_dirty = reagents.has_reagent(/datum/reagent/water, 5)
 	if(water_to_dirty)
 		var/amount_to_dirty = water_to_dirty.volume
-		if(amount_to_dirty)
+		foulness += fouled_per_wash
+		if(foulness >= amount_to_dirty)
+			foulness = 0
 			reagents.remove_reagent(/datum/reagent/water, amount_to_dirty)
 			reagents.add_reagent(/datum/reagent/water/gross, amount_to_dirty)
 

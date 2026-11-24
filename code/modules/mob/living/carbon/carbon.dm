@@ -1566,7 +1566,8 @@
 
 
 	// Check and wash stuff that can be covered
-	var/obscured = check_obscured_slots()
+	var/list/obscured_slots = check_obscured_slots()
+	var/obscured = obscured_slots[SLOT_CHECK_REGULAR]
 
 	if(!(obscured & ITEM_SLOT_HEAD) && head?.wash(clean_types))
 		update_inv_head()

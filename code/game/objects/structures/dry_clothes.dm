@@ -30,7 +30,7 @@
 	return ..()
 
 /obj/structure/dryclothes/proc/on_item_stored(datum/source, obj/item/I)
-	if(!drying_timer && !has_wet_items)
+	if(!drying_timer)
 		// Start loop
 		drying_timer = addtimer(CALLBACK(src, PROC_REF(process_drying)), 10 SECONDS, TIMER_STOPPABLE)
 	usr?.nobles_seen_servant_work()
@@ -41,8 +41,9 @@
 	if(!STR)
 		return
 	if(!length(STR.contents()))
-		if(drying_timer)
-			drying_timer = null
+		deltimer(drying_timer)
+		drying_timer = null
+		has_wet_items = FALSE
 	usr?.nobles_seen_servant_work()
 
 /obj/structure/dryclothes/proc/process_drying()
@@ -60,6 +61,8 @@
 			continue
 		var/old_wet = C.wet.water_stacks
 		C.wet.use_water(5)
+		if(old_wet < 0 && C.wet.water_stacks == 0)
+			visible_message(span_notice("\The [C] on \the [src] has dried."), vision_distance = 3)
 		if(old_wet < 0 && C.wet.water_stacks == 0 && !C.wet.dirty_water && C.wet.washed)
 			C.proper_drying = TRUE
 			C.AddComponent(/datum/component/particle_spewer/sparkle)

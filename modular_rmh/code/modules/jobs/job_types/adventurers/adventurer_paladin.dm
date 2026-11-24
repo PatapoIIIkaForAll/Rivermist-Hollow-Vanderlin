@@ -44,6 +44,8 @@ GLOBAL_LIST_EMPTY(paladin_evil_subclasses)
 	attunements_max = 10
 	attunements_min = 5
 
+	traits = list(TRAIT_HOLY_URINE)
+
 	job_subclasses = list(
 		/datum/job/advclass/combat/adventurer_paladin/immortal,
 		/datum/job/advclass/combat/adventurer_paladin/conquest,

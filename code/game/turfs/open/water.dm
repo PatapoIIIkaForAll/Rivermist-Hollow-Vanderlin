@@ -637,11 +637,7 @@
 
 	if(istype(tool, /obj/item/clothing))
 		var/obj/item/clothing/item2wash_cloth = tool
-		if(item2wash_cloth && item2wash_cloth.wetable)
-			if(cleanliness_factor > 0)
-				item2wash_cloth.wet.add_water(20, dirty = FALSE, washed_properly = TRUE)
-			else
-				item2wash_cloth.wet.add_water(20, dirty = TRUE, washed_properly = TRUE)
+		item2wash_cloth.get_washed_wet(cleanliness_factor <= 0, user)
 
 	user.nobles_seen_servant_work()
 

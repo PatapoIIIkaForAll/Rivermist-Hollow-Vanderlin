@@ -4,12 +4,14 @@
 	var/max_water_stacks = -20 // fully wet
 	var/dirty_water = FALSE
 	var/washed = FALSE
+	var/air_drying = 1 / 30
 
 /datum/wet/New(atom/P)
 	. = ..()
 	parent = P
 
 /datum/wet/Destroy()
+	STOP_PROCESSING(SSobj, src)
 	parent = null
 	return ..()
 
@@ -40,10 +42,19 @@
 	// If it it washed in a water/bin.
 	if(washed_properly)
 		washed = TRUE
+		dirty_water = dirty
 
+	START_PROCESSING(SSobj, src)
 	if(water_stacks <= max_water_stacks)
 		return FALSE // Already fully soaked
 
 	// Stacks is how much wetness to add (positive)
 	water_stacks = max(max_water_stacks, water_stacks - amount)
 	return TRUE
+
+/datum/wet/process(seconds_per_tick)
+	if(istype(parent.loc, /obj/structure/dryclothes) || istype(parent.loc, /turf/open/water))
+		return
+	use_water(air_drying * seconds_per_tick)
+	if(water_stacks == 0)
+		return PROCESS_KILL

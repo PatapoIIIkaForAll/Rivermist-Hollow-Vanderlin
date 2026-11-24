@@ -291,7 +291,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_FLUID_ENGORGEMENT = span_love("My breasts and balls swell visibly as they fill."),
 	TRAIT_HEAT_CYCLE = span_love("Now and then my body goes into heat and craves a mate."),
 	TRAIT_BATHHOUSE_DANCER = span_info("I am trained in the bathhouse arts. Within its walls I can dance and shake for a patron all night without tiring."),
-	TRAIT_HOLY_URINE = span_info("My god's favor runs through me to the last drop. What my body lets go is golden, tastes of holiness and gently mends whoever drinks it."),
+	TRAIT_HOLY_URINE = span_info("My god's favour runs through me to the last drop. What my body lets go is golden, tastes of holiness and gently mends whoever drinks it."),
 	TRAIT_MISSING_NOSE = span_warning("I struggle to breathe."),
 	TRAIT_DISFIGURED = span_warning("No one can recognize me..."),
 	TRAIT_BEAUTIFUL = span_love("My face was shaped by the gods!"),

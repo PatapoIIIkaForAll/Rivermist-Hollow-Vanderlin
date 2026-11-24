@@ -1,19 +1,20 @@
 /proc/squirt_room_text(mob/living/carbon/human/squirter, mob/living/partner, zone, atom/catcher)
+	var/bursts = HAS_TRAIT(squirter, TRAIT_HOLY_URINE) ? "hot, golden bursts" : "hard, hot bursts"
 	if(catcher)
-		return "[squirter] squirts in hard, hot bursts into \the [catcher]!"
+		return "[squirter] squirts in [bursts] into \the [catcher]!"
 	switch(zone)
 		if(SQUIRT_ZONE_HAND)
-			return "[squirter] squirts in hard, hot bursts, drenching [partner]'s hand!"
+			return "[squirter] squirts in [bursts], drenching [partner]'s hand!"
 		if(FLUID_COAT_FACE)
-			return "[squirter] gushes hard over [partner]'s face, hot spurts running down [partner.p_their()] chin!"
+			return "[squirter] gushes over [partner]'s face in [bursts] that run down [partner.p_their()] chin!"
 		if(FLUID_COAT_GROIN)
-			return "[squirter] squirts in hard, hot bursts, drenching [partner]'s crotch!"
+			return "[squirter] squirts in [bursts], drenching [partner]'s crotch!"
 	if(zone)
-		return "[squirter] squirts in hard, hot bursts all over [partner]'s [zone]!"
+		return "[squirter] squirts in [bursts] all over [partner]'s [zone]!"
 	var/obj/item/clothing/cover = squirter.get_coat_zone_cover(FLUID_COAT_GROIN)
 	if(cover)
 		return "[squirter] squirts, and a hot gush soaks right through [squirter.p_their()] [cover.name]!"
-	return "[squirter] squirts, hot bursts splattering down [squirter.p_their()] thighs!"
+	return "[squirter] squirts in [bursts] that splatter down [squirter.p_their()] thighs!"
 
 /proc/squirt_own_text(mob/reader)
 	var/static/list/english = list(
