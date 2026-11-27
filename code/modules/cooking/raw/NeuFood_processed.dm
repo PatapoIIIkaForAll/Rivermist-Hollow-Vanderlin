@@ -130,6 +130,7 @@
 
 // -------------- CHOCOLATE -----------------
 /obj/item/reagent_containers/food/snacks/chocolate
+	dish_type = DISH_SWEET
 	item_weight = 225 GRAMS
 	name = "chocolate bar"
 	desc = "Unbelievably fancy chocolate, imported all the way from distant Darkhold"
@@ -211,6 +212,7 @@
 
 // -------------- SALTFISH -----------------
 /obj/item/reagent_containers/food/snacks/saltfish
+	dish_type = DISH_SEAFOOD
 	item_weight = 175 GRAMS
 	name = "saltfish"
 	desc = "Dried fish."
@@ -233,6 +235,7 @@
 
 // -------------- SALO (salted fat) -----------------
 /obj/item/reagent_containers/food/snacks/fat/salo
+	dish_type = DISH_MEAT
 	name = "salo"
 	desc = "A slab of cured pork fat, salted and firm. Cut off a piece as you need it."
 	icon_state = "salo4"
@@ -280,6 +283,7 @@
 
 // -------------- RAISINS -----------------
 /obj/item/reagent_containers/food/snacks/raisins
+	dish_type = DISH_FRUIT
 	item_weight = 5 GRAMS
 	name = "raisins"
 	desc = "A handful of sun-dried grapes, wrinkled and sweet."
@@ -309,6 +313,7 @@
 // -------------- STRAWBERRY -----------------
 
 /obj/item/reagent_containers/food/snacks/strawberry_dried
+	dish_type = DISH_FRUIT
 	item_weight = 6 GRAMS
 	name = "dried strawberry"
 	desc = "A dried strawberry, shrunken and chewy but still sweet."
@@ -324,6 +329,7 @@
 // -------------- TANGERINE -----------------
 
 /obj/item/reagent_containers/food/snacks/tangerine_dried
+	dish_type = DISH_FRUIT
 	item_weight = 44 GRAMS
 	name = "dried tangerine"
 	desc = "A dried tangerine, its peel leathery and its flesh chewy."
@@ -339,6 +345,7 @@
 // -------------- PLUM -----------------
 
 /obj/item/reagent_containers/food/snacks/plum_dried
+	dish_type = DISH_FRUIT
 	item_weight = 33 GRAMS
 	name = "dried plum"
 	desc = "A dried plum, wrinkled and sticky-sweet."
@@ -354,6 +361,7 @@
 // -------------- APPLE -----------------
 
 /obj/item/reagent_containers/food/snacks/apple_dried
+	dish_type = DISH_FRUIT
 	item_weight = 91 GRAMS
 	name = "dried apple"
 	desc = "A ring of dried apple, leathery and concentrated in sweetness."
@@ -369,6 +377,7 @@
 // -------------- PEAR -----------------
 
 /obj/item/reagent_containers/food/snacks/pear_dried
+	dish_type = DISH_FRUIT
 	item_weight = 86 GRAMS
 	name = "dried pear"
 	desc = "A dried pear, leathery and concentrated in sweetness."
@@ -384,6 +393,7 @@
 /***************** Mushrooms *****************/
 
 /obj/item/reagent_containers/food/snacks/waddle_dried
+	dish_type = DISH_VEGETABLE
 	item_weight = 7 GRAMS
 	name = "dried waddle"
 	desc = "A waddle mushroom that has been dried for use in tea. Not pleasant to eat in this state."
@@ -466,6 +476,7 @@
 
 // -------------- BUTTER -----------------
 /obj/item/reagent_containers/food/snacks/butter
+	dish_type = DISH_DAIRY
 	item_weight = 150 GRAMS
 	name = "stick of butter"
 	desc = "A stick of pale yellow butter, softening in the hand."
@@ -504,6 +515,7 @@
 				changefood(slice_path, eater)
 
 /obj/item/reagent_containers/food/snacks/butterslice
+	dish_type = DISH_DAIRY
 	item_weight = 25 GRAMS
 	icon_state = "butter_slice"
 	name = "butter"
@@ -518,6 +530,7 @@
 /*	............   Pestran Stick   ................ */
 
 /obj/item/reagent_containers/food/snacks/pestranstick
+	dish_type = DISH_DAIRY
 	item_weight = 240 GRAMS
 	name = "pestran stick"
 	desc = "An unappetizing snack adored by devout Pestrans, somehow doesn't taste half bad."
@@ -531,6 +544,7 @@
 
 // -------------- CHEESE -----------------
 /obj/item/reagent_containers/food/snacks/cheese
+	dish_type = DISH_DAIRY
 	item_weight = 224 GRAMS
 	name = "fresh cheese"
 	desc = "A soft lump of fresh cheese, strained from curdled milk."
@@ -640,6 +654,7 @@
 	desc = "A soft lump of fresh cheese, strained from goat's milk."
 
 /obj/item/reagent_containers/food/snacks/cheddar
+	dish_type = DISH_DAIRY
 	item_weight = 3 KILOGRAMS
 	name = "wheel of cheese"
 	desc = "A whole wheel of pressed cheese, waxed and firm."
@@ -672,6 +687,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/cheese_wedge
+	dish_type = DISH_DAIRY
 	item_weight = 500 GRAMS
 	name = "wedge of cheese"
 	desc = "A wedge cut from a whole wheel of cheese."
@@ -704,6 +720,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/cheddarslice
+	dish_type = DISH_DAIRY
 	item_weight = 155 GRAMS
 	name = "slice of cheese"
 	desc = "A thin slice cut from a wedge of cheese."
@@ -741,6 +758,7 @@
 // -------------- Gelatine Base -----------------
 
 /obj/item/reagent_containers/food/snacks/jellycake_base
+	dish_type = DISH_SWEET
 	item_weight = 950 GRAMS
 	name = "plain gelatie cake"
 	desc = "A mildly unappetising desert, fittingly considered a delicacy by orcs. Though it is traditionally made plain, chefs often mercifully flavor it with fruit."
@@ -760,6 +778,7 @@
 	faretype = FARE_POOR
 
 /obj/item/reagent_containers/food/snacks/jellyslice_base
+	dish_type = DISH_SWEET
 	item_weight = 950 GRAMS
 	name = "plain gelatine slice"
 	desc = "A wobbling slice of unflavoured gelatine."
@@ -779,6 +798,7 @@
 // -------------- Apple Gelatine -----------------
 
 /obj/item/reagent_containers/food/snacks/jellycake_apple
+	dish_type = DISH_SWEET
 	item_weight = 1 KILOGRAMS
 	name = "apple gelatine cake"
 	desc = "A mildly unappetising desert, fittingly considered a delicacy by orcs. This one is colored blood(apple)-red."
@@ -798,6 +818,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/jellyslice_apple
+	dish_type = DISH_SWEET
 	item_weight = 250 GRAMS
 	name = "apple gelatine slice"
 	desc = "A wobbling slice of gelatine, sweetened with apple."
@@ -815,6 +836,7 @@
 // -------------- Tangeringe Gelatine -----------------
 
 /obj/item/reagent_containers/food/snacks/jellycake_tangerine
+	dish_type = DISH_SWEET
 	item_weight = 1 KILOGRAMS
 	name = "tangerine gelatine cake"
 	desc = "A mildly unappetising desert, fittingly considered a delicacy by orcs. This one is bittersweet, like the triumph of battle."
@@ -834,6 +856,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/jellyslice_tangerine
+	dish_type = DISH_SWEET
 	item_weight = 250 GRAMS
 	name = "tangerine gelatine slice"
 	desc = "A wobbling slice of gelatine, sweetened with tangerine."
@@ -852,6 +875,7 @@
 // -------------- Plum Gelatine -----------------
 
 /obj/item/reagent_containers/food/snacks/jellycake_plum
+	dish_type = DISH_SWEET
 	item_weight = 1 KILOGRAMS
 	name = "plum gelatine cake"
 	desc = "A mildly unappetising desert, fittingly considered a delicacy by orcs. Like the plum this treat is made from, orcs persevere against all."
@@ -871,6 +895,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/jellyslice_plum
+	dish_type = DISH_SWEET
 	item_weight = 250 GRAMS
 	name = "plum gelatine slice"
 	desc = "A wobbling slice of gelatine, sweetened with plum."
@@ -888,6 +913,7 @@
 // -------------- Lime Gelatine -----------------
 
 /obj/item/reagent_containers/food/snacks/jellycake_lime
+	dish_type = DISH_SWEET
 	item_weight = 1 KILOGRAMS
 	name = "lime gelatine cake"
 	desc = "A mildly unappetising desert, fittingly considered a delicacy by orcs. This one is green, naturally."
@@ -907,6 +933,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/jellyslice_lime
+	dish_type = DISH_SWEET
 	item_weight = 250 GRAMS
 	name = "lime gelatine slice"
 	desc = "A wobbling slice of gelatine, tart with lime."
@@ -924,6 +951,7 @@
 // -------------- Pear Gelatine -----------------
 
 /obj/item/reagent_containers/food/snacks/jellycake_pear
+	dish_type = DISH_SWEET
 	item_weight = 1 KILOGRAMS
 	name = "pear gelatine cake"
 	desc = "A mildly unappetising dessert, fittingly considered a delicacy by orcs. This flavor is a strange fusion of Zakhara and Orcish cuisines."
@@ -943,6 +971,7 @@
 	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/jellyslice_pear
+	dish_type = DISH_SWEET
 	item_weight = 250 GRAMS
 	name = "pear gelatine slice"
 	desc = "A wobbling slice of gelatine, sweetened with pear."

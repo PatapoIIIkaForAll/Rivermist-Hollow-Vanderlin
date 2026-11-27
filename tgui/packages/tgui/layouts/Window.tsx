@@ -46,12 +46,23 @@ type Props = Partial<{
 }> &
   PropsWithChildren;
 
+/** No theme or the house theme follows the player's window style, sent in config. */
+export function resolveWindowTheme(
+  requested: string | undefined,
+  playerStyle: string | undefined,
+): string | undefined {
+  if (requested && requested !== 'vanderlin') {
+    return requested;
+  }
+  return playerStyle || requested;
+}
+
 export function Window(props: Props) {
   const { config, suspended, debug } = useBackend();
 
   const {
     canClose = true,
-    theme = config.window?.theme,
+    theme: requestedTheme,
     title,
     children,
     buttons,
@@ -59,6 +70,8 @@ export function Window(props: Props) {
     height,
     rememberSize = false,
   } = props;
+
+  const theme = resolveWindowTheme(requestedTheme, config.window?.theme);
 
   const [isReadyToRender, setIsReadyToRender] = useState(false);
 

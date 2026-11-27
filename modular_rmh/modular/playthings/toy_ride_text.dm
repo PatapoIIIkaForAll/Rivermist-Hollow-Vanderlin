@@ -244,17 +244,17 @@
 /// The climax line for whoever came; the rider's or the one holding them down.
 /datum/sex_action/object_fuck/ride/proc/announce_ride_climax(mob/living/climaxer, mob/living/rider, obj/item/dildo/toy)
 	if(climaxer != rider)
-		climaxer.visible_message(span_love("[climaxer] shudders and climaxes, watching [rider] bounce on \the [toy]."))
+		climaxer.visible_message(span_love_climax("[climaxer] shudders and climaxes, watching [rider] bounce on \the [toy]."))
 		return
 	if(forced)
-		rider.visible_message(span_love("[rider] comes helplessly on \the [toy], held down by [action_user]."), span_love("I come helplessly on \the [toy], held down by [action_user]."))
+		rider.visible_message(span_love_climax("[rider] comes helplessly on \the [toy], held down by [action_user]."), span_love_climax("I come helplessly on \the [toy], held down by [action_user]."))
 		return
 	if(hole_id == ORGAN_SLOT_VAGINA)
-		rider.visible_message(span_love("[rider] cries out and comes, grinding down hard on \the [toy] as [rider.p_their()] juices run down the shaft to pool at its base."), span_love("I cry out and come, grinding down hard on \the [toy] as my juices run down the shaft."))
+		rider.visible_message(span_love_climax("[rider] cries out and comes, grinding down hard on \the [toy] as [rider.p_their()] juices run down the shaft to pool at its base."), span_love_climax("I cry out and come, grinding down hard on \the [toy] as my juices run down the shaft."))
 	else if(rider.getorganslot(ORGAN_SLOT_PENIS))
-		rider.visible_message(span_love("[rider] shudders and spurts across [rider.p_their()] own belly, clenching tight around \the [toy]."), span_love("I shudder and spurt across my own belly, clenching tight around \the [toy]."))
+		rider.visible_message(span_love_climax("[rider] shudders and spurts across [rider.p_their()] own belly, clenching tight around \the [toy]."), span_love_climax("I shudder and spurt across my own belly, clenching tight around \the [toy]."))
 	else
-		rider.visible_message(span_love("[rider] trembles and comes with \the [toy] buried deep in [rider.p_their()] ass."), span_love("I tremble and come with \the [toy] buried deep in my ass."))
+		rider.visible_message(span_love_climax("[rider] trembles and comes with \the [toy] buried deep in [rider.p_their()] ass."), span_love_climax("I tremble and come with \the [toy] buried deep in my ass."))
 
 #undef RIDE_FEELS_GOOD
 #undef RIDE_FEELS_MIXED

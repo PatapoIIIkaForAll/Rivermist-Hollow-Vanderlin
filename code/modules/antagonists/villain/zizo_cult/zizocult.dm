@@ -247,6 +247,7 @@
 	icon_state = "center"
 	icon = 'icons/obj/sigils.dmi'
 	clean_type = CLEAN_TYPE_LIGHT_DECAL //the sigils are made out of blood, they should be cleanable with a rag, they are also very easily spammed
+	rain_washable = FALSE
 	var/sigil_type
 
 /obj/effect/decal/cleanable/sigil/examine(mob/user)

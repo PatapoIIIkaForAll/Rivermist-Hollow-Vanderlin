@@ -16,14 +16,11 @@
 	try_climb(user)
 	return TRUE
 
-/obj/structure/climbable_ledge/proc/try_climb(mob/living/user)
-	if(!isliving(user) || user.incapacitated())
-		return
+/// Solid turf beside the hole above this foothold, where a climb ends; null when there is none.
+/obj/structure/climbable_ledge/proc/climb_destination()
 	var/turf/above = GET_TURF_ABOVE(get_turf(src))
 	if(!istype(above, /turf/open/openspace))
-		to_chat(user, span_warning("The way up is sealed."))
-		return
-	var/turf/dest
+		return null
 	for(var/D in GLOB.cardinals)
 		var/turf/open/candidate = get_step(above, D)
 		if(!istype(candidate))
@@ -32,8 +29,17 @@
 			continue
 		if(candidate.density)
 			continue
-		dest = candidate
-		break
+		return candidate
+	return null
+
+/obj/structure/climbable_ledge/proc/try_climb(mob/living/user)
+	if(!isliving(user) || user.incapacitated())
+		return
+	var/turf/above = GET_TURF_ABOVE(get_turf(src))
+	if(!istype(above, /turf/open/openspace))
+		to_chat(user, span_warning("The way up is sealed."))
+		return
+	var/turf/dest = climb_destination()
 	if(!dest)
 		to_chat(user, span_warning("There's no solid edge above to haul myself onto."))
 		return
@@ -44,6 +50,16 @@
 	if(!do_after(user, climb_time, src))
 		return
 	movable_travel_z_level(user, dest)
+
+/// Walking onto the foothold with auto-climb on starts the climb; forced moves, falls and climbs do not.
+/obj/structure/climbable_ledge/Crossed(atom/movable/crosser, oldloc)
+	. = ..()
+	if(oldloc || !isliving(crosser) || crosser.currently_z_moving)
+		return
+	var/mob/living/climber = crosser
+	if(!climb_destination() || !climber.should_auto_climb(climber.dir))
+		return
+	INVOKE_ASYNC(src, PROC_REF(try_climb), climber)
 
 /obj/structure/climbable_ledge/attackby(obj/item/I, mob/living/user, list/modifiers)
 	if(istype(I, /obj/item/weapon/pick) && user.used_intent?.type == PICK_INTENT)

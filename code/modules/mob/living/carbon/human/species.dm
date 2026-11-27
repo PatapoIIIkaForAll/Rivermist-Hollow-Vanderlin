@@ -1054,6 +1054,7 @@ GLOBAL_LIST_EMPTY(roundstart_species)
 			C.attributes?.subtract_sheet(female_sheet)
 
 /datum/species/proc/on_gender_update(mob/living/carbon/human/C, old_gender)
+	SEND_SIGNAL(C, COMSIG_HUMAN_GENDER_UPDATED, old_gender)
 	if(!applies_attribute_sheets(C))
 		return
 	var/datum/attribute_holder/sheet/male_sheet = get_gender_attribute_sheet(MALE)

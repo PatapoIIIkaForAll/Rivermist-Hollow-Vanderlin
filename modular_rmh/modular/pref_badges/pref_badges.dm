@@ -96,6 +96,9 @@ GLOBAL_LIST_INIT(preference_badge_categories, list(
 /datum/preference/toggle/show_preference_badges
 	savefile_key = "show_preference_badges"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Show preference badges"
+	toggles_menu_desc = "Show players' badges above their characters and when examining them."
 	category = "chat"
 	can_randomize = FALSE
 	should_update_preview = FALSE

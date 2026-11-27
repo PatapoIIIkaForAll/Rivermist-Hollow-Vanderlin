@@ -98,7 +98,7 @@
 	requirements = list(/obj/item/natural/hide/cured = 2, /obj/item/natural/fibers = 2)
 
 /datum/repeatable_crafting_recipe/leather/bdsm_gear/leathergloves
-	name = "leather gloves"
+	name = "shiny leather gloves" //shiny cuz clashes with normal glove recipe
 	output = /obj/item/clothing/gloves/bdsm_leather
 	requirements = list(/obj/item/natural/hide/cured = 1, /obj/item/natural/fibers = 1)
 

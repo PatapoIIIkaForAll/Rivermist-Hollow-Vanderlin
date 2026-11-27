@@ -50,6 +50,7 @@
 @include meta.load-css('./themes/grimoire.scss'); //RMH EDITED
 @include meta.load-css('./themes/parchment.scss'); //RMH EDITED
 @include meta.load-css('./themes/vanderlin.scss'); //RMH EDITED
+@include meta.load-css('./themes/vanderlin-classic.scss'); //RMH EDITED
 
 @include meta.load-css('~highlight.js/scss/a11y-dark.scss');
 

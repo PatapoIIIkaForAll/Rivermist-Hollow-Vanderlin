@@ -1,4 +1,4 @@
-/// Sock button in the bottom inventory row; opens and closes the smallclothes drawer.
+/// Underwear button in the bottom inventory row; opens and closes the smallclothes drawer.
 /atom/movable/screen/smallclothes_toggle
 	name = "smallclothes"
 	desc = "Show or hide the slots for smallclothes and jewelry."
@@ -6,6 +6,33 @@
 	icon_state = "smallclothes"
 	base_icon_state = "smallclothes"
 	screen_loc = rogueui_smallclothes
+	/// HUD owner whose organ changes redraw the button.
+	var/mob/living/body
+	/// Breasts organ watched for removal; null when the body has none.
+	var/obj/item/organ/watched_breasts
+	/// Bodies with breasts get the bra over the panties.
+	var/bra_shown = FALSE
+
+/atom/movable/screen/smallclothes_toggle/Initialize(mapload, datum/hud/hud_owner)
+	. = ..()
+	var/mob/living/owner = hud?.mymob
+	if(istype(owner))
+		watch_body(owner)
+
+/// Follows one body's breast organ and gender changes to pick the button art.
+/atom/movable/screen/smallclothes_toggle/proc/watch_body(mob/living/new_body)
+	body = new_body
+	RegisterSignal(body, COMSIG_LIVING_ORGAN_CHANGED, PROC_REF(on_organ_changed))
+	RegisterSignal(body, COMSIG_HUMAN_GENDER_UPDATED, PROC_REF(on_gender_updated))
+	watch_breasts(body.getorganslot(ORGAN_SLOT_BREASTS))
+	refresh_body()
+
+/atom/movable/screen/smallclothes_toggle/Destroy(force)
+	watch_breasts(null)
+	if(body)
+		UnregisterSignal(body, list(COMSIG_LIVING_ORGAN_CHANGED, COMSIG_HUMAN_GENDER_UPDATED))
+		body = null
+	return ..()
 
 /atom/movable/screen/smallclothes_toggle/Click(location, control, params)
 	var/mob/user = hud?.mymob
@@ -13,11 +40,43 @@
 		return
 	user.playsound_local(user, 'sound/misc/click.ogg', 100)
 	hud.toggle_smallclothes_inventory()
-	update_appearance(UPDATE_ICON_STATE)
+	refresh_body()
 
 /atom/movable/screen/smallclothes_toggle/update_icon_state()
-	icon_state = "[base_icon_state][hud?.smallclothes_shown ? "_active" : ""]"
+	icon_state = "[base_icon_state][bra_shown ? "_f" : ""][hud?.smallclothes_shown ? "_active" : ""]"
 	return ..()
+
+/// Bra art for a breasts organ or a female body; leaving is the organ being removed.
+/atom/movable/screen/smallclothes_toggle/proc/refresh_body(obj/item/organ/leaving)
+	var/obj/item/organ/breasts = body?.getorganslot(ORGAN_SLOT_BREASTS)
+	bra_shown = (breasts && breasts != leaving) || body?.gender == FEMALE
+	update_appearance(UPDATE_ICON_STATE)
+
+/// Moves the removal watch to a new breasts organ, or drops it.
+/atom/movable/screen/smallclothes_toggle/proc/watch_breasts(obj/item/organ/breasts)
+	if(breasts == watched_breasts)
+		return
+	if(watched_breasts)
+		UnregisterSignal(watched_breasts, list(COMSIG_ORGAN_REMOVED, COMSIG_PARENT_QDELETING))
+	watched_breasts = breasts
+	if(watched_breasts)
+		RegisterSignal(watched_breasts, list(COMSIG_ORGAN_REMOVED, COMSIG_PARENT_QDELETING), PROC_REF(on_breasts_lost))
+
+/atom/movable/screen/smallclothes_toggle/proc/on_organ_changed(datum/source, obj/item/organ/organ, organ_slot, inserted)
+	SIGNAL_HANDLER
+	if(organ_slot != ORGAN_SLOT_BREASTS || !istype(organ))
+		return
+	watch_breasts(organ)
+	refresh_body()
+
+/atom/movable/screen/smallclothes_toggle/proc/on_gender_updated(datum/source, old_gender)
+	SIGNAL_HANDLER
+	refresh_body()
+
+/atom/movable/screen/smallclothes_toggle/proc/on_breasts_lost(obj/item/organ/source)
+	SIGNAL_HANDLER
+	watch_breasts(null)
+	refresh_body(source)
 
 /// Drawer slot; heavy armor over it veils the worn item and keeps hands off it.
 /atom/movable/screen/inventory/smallclothes
@@ -49,7 +108,7 @@
 		. += worn_look
 	. += "covered"
 
-/// Creates the drawer slots; they stay off screen until the sock button opens the drawer.
+/// Creates the drawer slots; they stay off screen until the underwear button opens the drawer.
 /datum/hud/proc/build_smallclothes_inventory()
 	add_smallclothes_slot("left earring", "earring_l", ITEM_SLOT_EARRING_L, rogueui_earring_l)
 	add_smallclothes_slot("right earring", "earring_r", ITEM_SLOT_EARRING_R, rogueui_earring_r)

@@ -168,7 +168,7 @@
 	var/one = get_lay_egg_phrase(user)
 	if(!lay_egg_swelled)
 		lay_egg_swelled = TRUE
-		user.visible_message(span_warning("[user]'s [part] swells at the base."), span_love("[capitalize(one)] starts down my [part]."))
+		user.visible_message(span_warning("[user]'s [part] swells at the base."), span_ovi("[capitalize(one)] starts down my [part]."))
 		perform_sex_action(user, user, LAY_EGG_SWELL_AROUSAL, 0, LAY_EGG_SWELL_CLIMAX)
 		return TRUE
 	var/obj/item/oviposition_egg/egg = ovipositor.lay_one_egg_on_floor()
@@ -178,7 +178,7 @@
 		stop_runtime()
 		return FALSE
 	eggs_laid_this_act++
-	user.visible_message(span_love("[user] lays [one] on the ground."), span_love("[capitalize(one)] slides out of me onto the ground. [eggs_laid_this_act]."))
+	user.visible_message(span_ovi("[user] lays [one] on the ground."), span_ovi("[capitalize(one)] slides out of me onto the ground. [eggs_laid_this_act]."))
 	playsound(user, 'sound/effects/wounds/splatter.ogg', 30, TRUE)
 	perform_sex_action(user, user, LAY_EGG_LAYER_AROUSAL, 0, LAY_EGG_LAYER_CLIMAX)
 	if(ovipositor.eggs_stored <= 0)
@@ -195,27 +195,27 @@
 	var/hole = get_lay_hole_word(user, target)
 	switch(beat)
 		if("settle")
-			to_chat(target, span_love("The [word] settles deep in my [get_lay_rest_word(hole)]."))
+			to_chat(target, span_ovi("The [word] settles deep in my [get_lay_rest_word(hole)]."))
 		if("twitch")
-			to_chat(target, span_love("Something twitches inside me."))
+			to_chat(target, span_ovi("Something twitches inside me."))
 		if("capped")
-			user.visible_message(span_warning("[user]'s [part] stills in [target]'s [hole]."), span_love("My [part] is spent for now."))
-			to_chat(target, span_love("[user]'s [part] stills in my [hole]."))
+			user.visible_message(span_warning("[user]'s [part] stills in [target]'s [hole]."), span_ovi("My [part] is spent for now."))
+			to_chat(target, span_ovi("[user]'s [part] stills in my [hole]."))
 		if("seat")
-			user.visible_message(span_warning("[user] pushes [user.p_their()] [part] into [target]'s [hole]."), span_love("I push my [part] into [target]'s [hole]."))
-			to_chat(target, span_love("[user]'s [part] pushes into my [hole]."))
+			user.visible_message(span_warning("[user] pushes [user.p_their()] [part] into [target]'s [hole]."), span_ovi("I push my [part] into [target]'s [hole]."))
+			to_chat(target, span_ovi("[user]'s [part] pushes into my [hole]."))
 		if("swell")
-			user.visible_message(span_warning("[user]'s [part] swells inside [target]'s [hole]."), span_love("[capitalize(one)] starts down my [part]."))
-			to_chat(target, span_love("[user]'s [part] swells inside my [hole]."))
+			user.visible_message(span_warning("[user]'s [part] swells inside [target]'s [hole]."), span_ovi("[capitalize(one)] starts down my [part]."))
+			to_chat(target, span_ovi("[user]'s [part] swells inside my [hole]."))
 		if("egg")
-			user.visible_message(span_love("[user] pushes [one] into [target]'s [hole]."), span_love("I push [one] into [target]'s [hole]. [eggs_laid_this_act]."))
+			user.visible_message(span_ovi("[user] pushes [one] into [target]'s [hole]."), span_ovi("I push [one] into [target]'s [hole]. [eggs_laid_this_act]."))
 			if(LAY_FEELS_GOOD(share))
-				to_chat(target, span_love("[capitalize(one)] pushes into my [hole][get_lay_feel_tail(share)]."))
+				to_chat(target, span_ovi("[capitalize(one)] pushes into my [hole][get_lay_feel_tail(share)]."))
 			else
-				to_chat(target, span_love("[capitalize(one)] forces my [hole] open[get_lay_feel_tail(share)]."))
+				to_chat(target, span_ovi("[capitalize(one)] forces my [hole] open[get_lay_feel_tail(share)]."))
 		if("spent")
 			user.visible_message(span_warning("[user]'s [part] goes slack in [target]'s [hole]."), span_love_flash("That was the last [word]."))
-			to_chat(target, span_love("[user]'s [part] goes slack in my [hole]."))
+			to_chat(target, span_ovi("[user]'s [part] goes slack in my [hole]."))
 		if("withdraw")
 			user.visible_message(span_warning("[user] pulls [user.p_their()] [part] out of [target]'s [hole]."))
 
@@ -292,10 +292,10 @@
 
 /datum/sex_action/sex/lay_eggs/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		user.visible_message(span_love("[user]'s [get_lay_hole_word(target, user)] clenches around [target]'s [get_lay_part(target)]!"))
+		user.visible_message(span_love_climax("[user]'s [get_lay_hole_word(target, user)] clenches around [target]'s [get_lay_part(target)]!"))
 		return ORGASM_LOCATION_ONTO
 	// The clutch itself rushes on the climax signal, right after this.
-	user.visible_message(span_love("[user] goes rigid and pumps [user.p_their()] [get_lay_egg_word(user)]s into [target]'s [get_lay_hole_word(user, target)]!"))
+	user.visible_message(span_love_climax("[user] goes rigid and pumps [user.p_their()] [get_lay_egg_word(user)]s into [target]'s [get_lay_hole_word(user, target)]!"))
 	return ORGASM_LOCATION_INTO
 
 /datum/sex_action/sex/lay_eggs/on_finish(mob/living/user, mob/living/target)
@@ -371,7 +371,7 @@
 	eggs_laid_this_act = 0
 	lay_egg_swelled = FALSE
 	var/part = get_lay_part(user)
-	user.visible_message(span_warning("[user] squats low, [user.p_their()] [part] pressed to the ground."), span_love("I squat and let my [part] find the ground."))
+	user.visible_message(span_warning("[user] squats low, [user.p_their()] [part] pressed to the ground."), span_ovi("I squat and let my [part] find the ground."))
 
 /datum/sex_action/lay_eggs_floor/on_perform(mob/living/user, mob/living/target)
 	. = ..()
@@ -500,7 +500,7 @@
 	return null
 
 /datum/sex_action/npc/proc/show_npc_lay_lines(mob/living/user, mob/living/target, beat, share)
-	show_act_lines(get_npc_lay_lines(user, target, beat, share), user, target, "love")
+	show_act_lines(get_npc_lay_lines(user, target, beat, share), user, target, "ovi")
 
 /datum/sex_action/npc/npc_vaginal_sex/lay_eggs
 	name = "Lay eggs"

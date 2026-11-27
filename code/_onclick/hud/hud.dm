@@ -42,6 +42,7 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 	var/atom/movable/screen/stress/stressies
 	var/atom/movable/screen/cmode_button
 	var/atom/movable/screen/rmbintent/rmb_intent
+	var/atom/movable/screen/interact_heart/interact_heart
 
 	var/list/static_inventory = list() //the screen objects which are static
 	var/list/toggleable_inventory = list() //the screen objects which can be hidden

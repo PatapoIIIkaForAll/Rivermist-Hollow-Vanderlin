@@ -34,7 +34,7 @@
 /datum/technician_upgrade_recipe/proc/can_apply_to_target(obj/item/target)
 	if(!target)
 		return FALSE
-	for(var/target_type as anything in target_item_types)
+	for(var/target_type in target_item_types)
 		if(ispath(target_type, /obj/item) && istype(target, target_type))
 			return TRUE
 	return FALSE

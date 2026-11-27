@@ -36,9 +36,10 @@
 /datum/sex_action/spanking/on_perform(mob/living/user, mob/living/target)
 	. = ..()
 	var/sound = get_slap_sound("spank")
-	playsound(target, sound, 50, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, sound, get_sound_volume(user, 50), TRUE, -2, ignore_walls = FALSE)
 
-	var/msg = "[user] [get_generic_force_adjective()] spanks [target]'s butt."
+	var/obj/item/tool = get_spank_tool(user, target)
+	var/msg = "[user] [get_generic_force_adjective()] spanks [target]'s butt[tool ? " with [tool]" : ""]."
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(msg))
 
@@ -49,7 +50,7 @@
 	handle_passive_ejaculation(target)
 	if(ishuman(target))
 		var/mob/living/carbon/human/spanked = target
-		spanked.take_impact_mark(user, BODY_ZONE_PRECISE_GROIN, force)
+		spanked.take_impact_mark(user, BODY_ZONE_PRECISE_GROIN, force, tool)
 
 	// Soreness messaging depending on force
 	if(force >= SEX_FORCE_HIGH)
@@ -66,6 +67,31 @@
 	user.visible_message(span_warning("[user] stops spanking [target]."))
 
 /datum/sex_action/spanking/lock_sex_object(mob/living/user, mob/living/target)
-	var/locked = get_hand_lock_slot(user)
-	if(locked)
-		add_sex_lock(user, locked)
+	selected_hand = find_spank_hand(user)
+	if(selected_hand)
+		add_sex_lock(user, selected_hand)
+
+/// The impact tool held in hand_slot, if it is free to use.
+/datum/sex_action/spanking/proc/get_hand_impact_tool(mob/living/user, hand_slot)
+	var/obj/item/held = user.get_item_for_held_index(hand_slot == BODY_ZONE_PRECISE_L_HAND ? 1 : 2)
+	if(!is_impact_tool(held) || check_sex_lock(user, null, held))
+		return null
+	return held
+
+/// A free hand holding an impact tool, active hand first; else any free hand.
+/datum/sex_action/spanking/proc/find_spank_hand(mob/living/user)
+	if(!user || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
+		return null
+	for(var/hand_slot in list(user.get_active_precise_hand(), user.get_inactive_precise_hand()))
+		if(!user.get_bodypart(hand_slot) || check_sex_lock(user, hand_slot))
+			continue
+		if(get_hand_impact_tool(user, hand_slot))
+			return hand_slot
+	return find_available_hand(user)
+
+/// The impact tool in the spanking hand; a mage hand spank from afar strikes bare.
+/datum/sex_action/spanking/proc/get_spank_tool(mob/living/user, mob/living/target)
+	if(!user.Adjacent(target))
+		return null
+	var/hand_slot = selected_hand || find_spank_hand(user)
+	return hand_slot ? get_hand_impact_tool(user, hand_slot) : null

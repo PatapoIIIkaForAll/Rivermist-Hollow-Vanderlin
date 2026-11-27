@@ -57,7 +57,6 @@
 	var/obj/item/beltl = null
 	var/obj/item/beltr = null
 	var/list/wear_rings[RING_SLOTS]
-	var/ring_slot_target
 	var/obj/item/wear_wrists = null
 	var/obj/item/cloak = null
 	var/obj/item/clothing/wear_shirt = null

@@ -86,7 +86,7 @@
 			pain = 2.5
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user, target)))
-	playsound(target, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 20), TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(target, user, 1.2 * get_breast_touch_multiplier(target), pain, 0.1)
 	handle_passive_ejaculation(target)
 
@@ -127,7 +127,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user, target)))
-	playsound(target, 'sound/misc/mat/fingering.ogg', 15, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 15), TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(target, user, 0.6 * get_breast_touch_multiplier(target), 0, 0.05)
 	perform_sex_action(user, target, 0.6, 0, 0.05)
 	handle_passive_ejaculation(target)
@@ -172,7 +172,7 @@
 		user.visible_message(spanify_force(cycle_message(user, target)))
 		if(prob(20))
 			user.visible_message(span_love("[target]'s muffled sounds vibrate against [user]'s chest."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 15, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 15), TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(user, target, 0.6 * get_breast_touch_multiplier(user), 0, 0.05)
 	perform_sex_action(target, user, 0.6, 0, 0.05)
 	// Air loss only at high force, capped, with gagging and gasping.
@@ -216,7 +216,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user, target)))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 20), TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(user, target, 0.8 * get_breast_touch_multiplier(user), 0, 0.1)
 	perform_sex_action(target, user, 0.8 * get_breast_touch_multiplier(target), 0, 0.1)
 	handle_passive_ejaculation()
@@ -251,11 +251,11 @@
 // Skips the parent, which prints the hand-held line; same sound and stimulation.
 /datum/sex_action/sex/other/boobjob/hands_free/on_perform(mob/living/user, mob/living/target)
 	sex_volume = initial(sex_volume)
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
+	if(is_sneaking(user))
 		sex_volume *= 0.5
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user, target)))
-	playsound(target, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 20), TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(target, user, 2 * get_breast_paizuri_multiplier(user), 4, 2)
 
 /datum/sex_action/milk_breasts
@@ -298,7 +298,7 @@
 	breasts.reagents.trans_to(container, amount, transfered_by = user, show_message = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user, target, container)))
-	playsound(target, pick('sound/vo/mobs/cow/milking (1).ogg', 'sound/vo/mobs/cow/milking (2).ogg'), 25, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, pick('sound/vo/mobs/cow/milking (1).ogg', 'sound/vo/mobs/cow/milking (2).ogg'), get_sound_volume(user, 25), TRUE, -2, ignore_walls = FALSE)
 	perform_sex_action(target, user, 0.6 * get_breast_touch_multiplier(target), force >= SEX_FORCE_HIGH ? 1 : 0, 0.05)
 	handle_passive_ejaculation(target)
 
@@ -389,7 +389,7 @@
 		return
 	var/aim = user.zone_selected == BODY_ZONE_HEAD || user.zone_selected == BODY_ZONE_PRECISE_MOUTH ? "face" : "body"
 	user.visible_message(spanify_force(cycle_message(user, target, aim)))
-	playsound(user, 'sound/effects/splash.ogg', 20, TRUE, -4, ignore_walls = FALSE)
+	playsound(user, 'sound/effects/splash.ogg', get_sound_volume(user, 20), TRUE, -4, ignore_walls = FALSE)
 	breasts.reagents.trans_to(target, min(BREAST_SPRAY_ACTION_AMOUNT, breasts.reagents.total_volume), transfered_by = user, method = TOUCH, show_message = FALSE)
 	perform_sex_action(user, target, 0.5, 0, 0.1)
 
@@ -510,7 +510,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user)))
-	playsound(user, pick(SEX_SOUNDS_SLOW), 12, TRUE, -4, ignore_walls = FALSE)
+	playsound(user, pick(SEX_SOUNDS_SLOW), get_sound_volume(user, 12), TRUE, -4, ignore_walls = FALSE)
 	perform_sex_action(user, user, 0.2, 0, 0)
 	var/size = get_breast_visible_size(user)
 	arouse_breast_show_viewers(user, BREAST_SHOW_BOUNCE_AROUSAL * (size - 4), "bounce")
@@ -541,7 +541,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force(cycle_message(user)))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 20, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 20), TRUE, -2, ignore_walls = FALSE)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), user, pick(SEX_SOUNDS_SLOW), 12, TRUE, -4), 0.35 SECONDS)
 	perform_sex_action(user, user, 0.5 * get_breast_touch_multiplier(user), 0, 0.05)
 	arouse_breast_show_viewers(user, BREAST_SHOW_SQUEEZE_AROUSAL, "squeeze")

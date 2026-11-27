@@ -1,6 +1,9 @@
 /datum/preference/toggle/breast_animation
 	savefile_key = "breast_animation"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Breast animation"
+	toggles_menu_desc = "Animate your character's breasts when moving and on some emotes."
 	category = "gameplay"
 	can_randomize = FALSE
 	should_update_preview = FALSE

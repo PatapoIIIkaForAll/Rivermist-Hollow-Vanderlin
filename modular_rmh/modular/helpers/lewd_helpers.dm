@@ -49,6 +49,17 @@
 /obj/item/organ/genitals
 	var/visible_through_clothes = FALSE
 
+/// Visible organs the Expose/Hide genitals choice lists.
+/mob/living/carbon/proc/get_exposable_genitals()
+	var/list/genital_list = list()
+	for(var/obj/item/organ/G in internal_organs)
+		if(G.visible_organ \
+			&& !istype(G, /obj/item/organ/eyes) \
+			&& !istype(G, /obj/item/organ/ears) \
+			&& !istype(G, /obj/item/organ/genitals/filling_organ/anus))
+			genital_list += G
+	return genital_list
+
 /mob/living/carbon/verb/toggle_genitals()
 	set category = "IC"
 	set name = "Expose/Hide genitals"
@@ -58,13 +69,7 @@
 		to_chat(usr, span_warning("You can toggle genitals visibility right now..."))
 		return
 
-	var/list/genital_list = list()
-	for(var/obj/item/organ/G in internal_organs)
-		if(G.visible_organ \
-			&& !istype(G, /obj/item/organ/eyes) \
-			&& !istype(G, /obj/item/organ/ears) \
-			&& !istype(G, /obj/item/organ/genitals/filling_organ/anus))
-			genital_list += G
+	var/list/genital_list = get_exposable_genitals()
 
 	if(!genital_list.len)
 		return

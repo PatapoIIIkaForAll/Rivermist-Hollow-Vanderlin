@@ -294,6 +294,8 @@
 /atom/movable/screen/alert/status_effect/buff/in_heat
 	name = "In Heat"
 	desc = "My body is in heat. I make more fluids, and I keep getting aroused."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "in_heat"
 
 /datum/erp_preference/bitflag/pheromones
 	name = "Pheromones"

@@ -34,6 +34,7 @@ type Data = {
   target_valid: boolean;
   mindless: boolean;
   known_spells: Record<string, number>;
+  favorites?: string[] | null;
   status_message?: string | null;
   status_type: 'info' | 'good' | 'bad';
 };
@@ -65,6 +66,7 @@ export const AdminSpellLibrary = () => {
     sources = [],
     kinds = [],
     known_spells = {},
+    favorites,
     target_name,
     target_key,
     target_valid,
@@ -96,6 +98,7 @@ export const AdminSpellLibrary = () => {
       ),
     [spells],
   );
+  const favoritePaths = useMemo(() => new Set(favorites), [favorites]);
 
   // Everything except the source filter, so the rail can show how many each source would give.
   const matched = useMemo(() => {
@@ -117,15 +120,22 @@ export const AdminSpellLibrary = () => {
   }, [sorted, search, ownership, kind, known_spells]);
 
   const counts = useMemo(() => {
-    const result: Record<string, number> = { all: matched.length };
+    const result: Record<string, number> = { all: matched.length, favorites: 0 };
     for (const spell of matched) {
       result[spell.source] = (result[spell.source] || 0) + 1;
+      if (favoritePaths.has(spell.path)) {
+        result.favorites++;
+      }
     }
     return result;
-  }, [matched]);
+  }, [matched, favoritePaths]);
 
   const filtered =
-    source === 'all' ? matched : matched.filter((spell) => spell.source === source);
+    source === 'all'
+      ? matched
+      : matched.filter((spell) =>
+          source === 'favorites' ? favoritePaths.has(spell.path) : spell.source === source,
+        );
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pages);
   const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -212,6 +222,15 @@ export const AdminSpellLibrary = () => {
 
           <div className="SpellLibrary__main">
             <div className="SpellLibrary__side">
+              <Button
+                fluid
+                icon="star"
+                selected={source === 'favorites'}
+                aria-pressed={source === 'favorites'}
+                onClick={() => change(() => setSource('favorites'))}
+              >
+                Favorites ({counts.favorites})
+              </Button>
               <div className="SpellLibrary__sideHead">Power source</div>
               {[{ id: 'all', name: 'All spells' }, ...sources].map((entry) => {
                 const count = counts[entry.id] || 0;
@@ -290,12 +309,16 @@ export const AdminSpellLibrary = () => {
               >
                 {visible.length === 0 && (
                   <div className="SpellLibrary__empty">
-                    No spell matches. Change the search or the filters.
+                    {source === 'favorites' && !favoritePaths.size
+                      ? 'Star a spell to add it to Favorites.'
+                      : 'No spell matches. Change the search or the filters.'}
                   </div>
                 )}
                 <div className="SpellLibrary__grid">
                   {visible.map((spell) => {
                     const known = !!known_spells[spell.path];
+                    const favorite = favoritePaths.has(spell.path);
+                    const favoriteLabel = favorite ? 'Remove from favorites' : 'Add to favorites';
                     return (
                       <div
                         key={spell.path}
@@ -323,6 +346,17 @@ export const AdminSpellLibrary = () => {
                               <Icon name="check" className="SpellLibrary__owned" />
                             </Tooltip>
                           )}
+                          <Button
+                            className="SpellLibrary__favorite"
+                            icon="star"
+                            selected={favorite}
+                            aria-label={favoriteLabel + ': ' + spell.name}
+                            aria-pressed={favorite}
+                            tooltip={favoriteLabel}
+                            onClick={() =>
+                              act('set_favorite', { path: spell.path, enabled: !favorite })
+                            }
+                          />
                         </div>
                         <div className="SpellLibrary__desc">
                           {spell.desc || 'No description.'}

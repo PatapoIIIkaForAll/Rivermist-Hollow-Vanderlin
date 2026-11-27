@@ -133,6 +133,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/set_ui_theme,
 	/client/proc/toggleadminhelpsound,
 	/client/proc/respawn_character,
+	/client/proc/ccg_admin_management, //RMH EDITED - gwynt collections
 	/client/proc/discord_id_manipulation,
 	/client/proc/ShowAllFamilies,
 	/client/proc/send_bird_letter,

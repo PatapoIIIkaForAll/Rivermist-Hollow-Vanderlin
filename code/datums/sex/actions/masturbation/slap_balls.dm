@@ -48,7 +48,7 @@
 			pain_amt = 7
 			orgasm_amt = 0.3
 
-	playsound(user, get_slap_sound("balls"), 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, get_slap_sound("balls"), get_sound_volume(user, 45), TRUE, -2, ignore_walls = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [action_text] [user.p_their()] balls."))
 	perform_sex_action(user, user, arousal_amt, pain_amt, orgasm_amt)
@@ -114,7 +114,7 @@
 			pain_amt = 7
 			orgasm_amt = 0.3
 
-	playsound(target, get_slap_sound("balls"), 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, get_slap_sound("balls"), get_sound_volume(user, 45), TRUE, -2, ignore_walls = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [action_text] [target]'s balls."))
 	perform_sex_action(target, user, arousal_amt, pain_amt, orgasm_amt)

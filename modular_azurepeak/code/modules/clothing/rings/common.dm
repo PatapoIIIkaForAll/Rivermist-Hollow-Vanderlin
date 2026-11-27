@@ -95,6 +95,7 @@
 	sleeved = 'modular_azurepeak/icons/clothing/onmob/rings.dmi'
 	icon_state = "dragonring"
 	sellprice = 666
+	worn_stats = list((STATKEY_STR) = 2, (STATKEY_CON) = 2, (STATKEY_END) = 2)
 	var/active_item = null
 	ported_clothing = TRUE
 
@@ -105,7 +106,6 @@
 	else if((slot & ITEM_SLOT_RING))
 		active_item = TRUE
 		to_chat(user, span_suicide("Draconic fire courses through my veins! I feel powerful!"))
-		user.set_stat_modifier("ported_equip_[REF(src)]", list((STATKEY_STR) = 2, (STATKEY_CON) = 2, (STATKEY_END) = 2))
 		update_appearance()
 	return
 
@@ -113,7 +113,6 @@
 	..()
 	if(active_item)
 		to_chat(user, span_suicide("A chilling sensation courses through my body, and the ring's heat remains oh-so-alluring.. </br>..yet, one must wonder.. could such fiery strength withstand a forge's heat?"))
-		user.remove_stat_modifier("ported_equip_[REF(src)]")
 		active_item = FALSE
 		update_appearance()
 	return

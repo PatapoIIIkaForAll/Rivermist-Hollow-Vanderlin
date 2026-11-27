@@ -653,9 +653,11 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 		return new_player.character_setup_chargen_join_round()
 
 	if(SSticker.current_state <= GAME_STATE_PREGAME)
+		if(new_player.ready == PLAYER_READY_TO_PLAY && SSticker.job_change_locked)
+			return TRUE
+		if(!character_creator_cooldown_ready(new_player, "ready"))
+			return TRUE
 		if(new_player.ready == PLAYER_READY_TO_PLAY)
-			if(SSticker.job_change_locked)
-				return TRUE
 			return new_player.character_setup_chargen_set_ready(PLAYER_NOT_READY)
 		return new_player.character_setup_chargen_set_ready(PLAYER_READY_TO_PLAY)
 
@@ -947,7 +949,6 @@ GLOBAL_VAR_INIT(character_setup_debug, FALSE)
 	data["loadout_slots"] = character_setup_loadout_slots_data()
 	data["loadout_points"] = character_setup_loadout_points_data()
 	data["loadout_presets"] = character_setup_loadout_presets_data()
-	data["triumphs"] = user?.client ? user.get_triumphs() : 0
 
 	var/combat_music_name = combat_music?.shortname ? combat_music.shortname : combat_music?.name
 	data["combat_music"] = combat_music_name || "Default"

@@ -679,7 +679,7 @@
 			to_chat(owner, span_warning(ovipositor_component.last_lay_reason))
 		return FALSE
 	var/word = ovipositor_component.get_egg_kind_is_seed() ? "seed" : "egg"
-	owner.visible_message(span_love("[owner] squats and lays a [word] with a shiver."), span_love("I squat and a [word] slides out of me onto the ground."))
+	owner.visible_message(span_ovi("[owner] squats and lays a [word] with a shiver."), span_ovi("I squat and a [word] slides out of me onto the ground."))
 	playsound(owner, 'sound/effects/wounds/splatter.ogg', 30, TRUE)
 	SEND_SIGNAL(owner, COMSIG_SEX_GENERIC_ACTION, owner, 2.5, 0, 3, owner)
 	return TRUE
@@ -792,6 +792,9 @@
 /datum/preference/toggle/hole_view_pictures
 	savefile_key = "hole_view_pictures"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Organ pictures"
+	toggles_menu_desc = "Show organ pictures in the holes window."
 	category = "gameplay"
 	can_randomize = FALSE
 	should_update_preview = FALSE

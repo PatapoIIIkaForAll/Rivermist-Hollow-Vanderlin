@@ -103,7 +103,8 @@ export const MESSAGE_TYPES: MessageType[] = [
     type: MESSAGE_TYPE_LOVE,
     name: 'Combat Log',
     description: 'Urist McLover has kissed you passionately!',
-    selector: '.love, .love_extreme, .love_high, .love_mid, .love_low',
+    selector:
+      '.love, .love_extreme, .love_high, .love_mid, .love_low, .love_climax, .ovi',
   },
   {
     type: MESSAGE_TYPE_COMBAT,

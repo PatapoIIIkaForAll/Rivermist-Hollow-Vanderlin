@@ -350,7 +350,7 @@
 	var/datum/component/magcom = GetComponent(/datum/component/anti_magic)
 	qdel(magcom)
 
-// ................... Ring of Protection ....................... (rare treasure, not for purchase)
+// ................... Ring of Protection ....................... (rare treasure with a random effect)
 /obj/item/clothing/ring/gold/protection
 	name = "ring of protection"
 	desc = "Old ring, inscribed with arcyne words. Once held magical powers, perhaps it does still?"
@@ -374,22 +374,25 @@
 		clothing_traits = list(rolled_trait)
 
 /obj/item/clothing/ring/gold/ravox
-	name = "ring of ravox"
+	name = "ring of Tempus"
 	desc = "Old ring, inscribed with arcyne words. Just being near it imbues you with otherworldly strength."
 	icon_state = "ring_ravox"
 	worn_effect_type = /datum/status_effect/buff/ravox/ring
+	worn_stats = list(STAT_CONSTITUTION = 1, STAT_ENDURANCE = 1, STAT_STRENGTH = 1)
 
 /obj/item/clothing/ring/silver/calm
 	name = "soothing ring"
 	desc = "A lightweight ring that feels entirely weightless, and easing to your mind as you place it upon a finger."
 	icon_state = "ring_calm"
 	worn_effect_type = /datum/status_effect/buff/calm/ring
+	worn_stats = list(STAT_FORTUNE = 1)
 
 /obj/item/clothing/ring/silver/noc
-	name = "ring of noc"
+	name = "ring of Mystra"
 	desc = "Old ring, inscribed with arcyne words. Just being near it imbues you with otherworldly knowledge."
 	icon_state = "ring_sapphire"
 	worn_effect_type = /datum/status_effect/buff/noc/ring
+	worn_stats = list(STAT_INTELLIGENCE = 3)
 
 
 // ................... Ring of Burden ....................... (Gaffer's ring, there should only be one of these at one time)
@@ -521,49 +524,20 @@
 	icon_state = "ring_g" // supposed to have it's own sprite but I'm lazy asf
 	desc = "Carrying the likeness of a dragon, this glorious ring hums with a subtle energy."
 	sellprice = 666
+	worn_stats = list((STATKEY_STR) = 2, (STATKEY_CON) = 2, (STATKEY_END) = 2)
 	var/active_item
-	var/datum/weakref/dragon_ring_owner_ref
 
 /obj/item/clothing/ring/dragon_ring/equipped(mob/living/user, slot)
 	. = ..()
-	if(!(slot & ITEM_SLOT_RING))
-		remove_dragon_ring_bonus()
-		return
-
-	apply_dragon_ring_bonus(user)
+	if((slot & ITEM_SLOT_RING) && !active_item)
+		to_chat(user, span_notice("Here be dragons."))
+		active_item = TRUE
 
 /obj/item/clothing/ring/dragon_ring/dropped(mob/living/user)
 	..()
-	remove_dragon_ring_bonus()
-	return
-
-/obj/item/clothing/ring/dragon_ring/proc/item_removed(mob/living/carbon/wearer, obj/item/removed_item)
-	SIGNAL_HANDLER
-	if(removed_item != src)
-		return
-	remove_dragon_ring_bonus()
-
-/obj/item/clothing/ring/dragon_ring/proc/apply_dragon_ring_bonus(mob/living/user)
-	remove_dragon_ring_bonus(FALSE)
-	dragon_ring_owner_ref = WEAKREF(user)
-	RegisterSignal(user, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(item_removed))
-	user.set_stat_modifier("dragon_ring_[REF(src)]", STATKEY_STR, 2)
-	user.set_stat_modifier("dragon_ring_[REF(src)]", STATKEY_CON, 2)
-	user.set_stat_modifier("dragon_ring_[REF(src)]", STATKEY_END, 2)
-	if(!active_item)
-		to_chat(user, span_notice("Here be dragons."))
-	active_item = TRUE
-
-/obj/item/clothing/ring/dragon_ring/proc/remove_dragon_ring_bonus(show_message = TRUE)
-	var/mob/living/dragon_ring_owner = dragon_ring_owner_ref?.resolve()
-	if(dragon_ring_owner)
-		UnregisterSignal(dragon_ring_owner, COMSIG_MOB_UNEQUIPPED_ITEM)
-		dragon_ring_owner.remove_stat_modifier("dragon_ring_[REF(src)]")
-		if(show_message && active_item)
-			to_chat(dragon_ring_owner, span_notice("Gone is thy hoard."))
-
-	active_item = FALSE
-	dragon_ring_owner_ref = null
+	if(active_item)
+		to_chat(user, span_notice("Gone is thy hoard."))
+		active_item = FALSE
 
 /obj/item/clothing/ring/signet
 	name = "Signet Ring"

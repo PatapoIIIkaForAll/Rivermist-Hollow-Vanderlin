@@ -278,6 +278,16 @@ $sl-good: pal.$good;
     flex-shrink: 0;
   }
 
+  &__favorite {
+    flex-shrink: 0;
+    margin: 0;
+    color: $sl-dim;
+
+    &.Button--selected {
+      color: $sl-gold;
+    }
+  }
+
   &__desc {
     flex-grow: 1;
     font-size: 12px;

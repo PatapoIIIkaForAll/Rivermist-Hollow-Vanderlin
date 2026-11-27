@@ -30,7 +30,7 @@
 /datum/element/turf_z_transparency/Detach(datum/source)
 	. = ..()
 	var/turf/our_turf = source
-	our_turf.vis_contents.Cut()
+	hide_lower_turf(our_turf)
 	UnregisterSignal(our_turf, list(COMSIG_TURF_MULTIZ_NEW, COMSIG_TURF_MULTIZ_DEL))
 	REMOVE_TRAIT(our_turf, TRAIT_Z_TRANSPARENT, ELEMENT_TRAIT(type))
 
@@ -40,10 +40,15 @@
 	if(below_turf) // If we actually have somethign below us, display it.
 		our_turf.vis_contents += below_turf
 	else
-		our_turf.vis_contents.Cut() // Nuke the list
+		hide_lower_turf(our_turf)
 		add_baseturf_underlay(our_turf)
 
 	return TRUE
+
+/// Takes the turfs out of our_turf's vis_contents and leaves the other entries, such as its lighting look.
+/datum/element/turf_z_transparency/proc/hide_lower_turf(turf/our_turf)
+	for(var/turf/shown_turf in our_turf.vis_contents)
+		our_turf.vis_contents -= shown_turf
 
 /datum/element/turf_z_transparency/proc/on_multiz_turf_del(turf/our_turf, turf/below_turf, dir)
 	SIGNAL_HANDLER

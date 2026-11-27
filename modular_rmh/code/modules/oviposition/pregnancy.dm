@@ -291,14 +291,14 @@
 
 	if(message)
 		// Early stages read as pleasure and the ripe pressure as mixed; only a hard passage ahead reads as danger.
-		to_chat(carrier, stage >= 3 ? "<span class='love_mid'>[format_container_message(message)]</span>" : span_love(format_container_message(message)))
+		to_chat(carrier, stage >= 3 ? "<span class='love_mid'>[format_container_message(message)]</span>" : span_ovi(format_container_message(message)))
 
 	if(stage == max_stage)
 		var/ready_message = egg.get_ready_message()
 		if(!ready_message)
 			ready_message = "The egg in my %CONTAINER% is fully developed and wants out."
 		if(ripe_passage_feels_good())
-			to_chat(carrier, span_love("[format_container_message(ready_message)] The thought of it sends a warm throb through me."))
+			to_chat(carrier, span_ovi("[format_container_message(ready_message)] The thought of it sends a warm throb through me."))
 		else
 			to_chat(carrier, span_warning(format_container_message(ready_message)))
 
@@ -372,11 +372,11 @@
 		laying_hole.take_birth_residue(egg)
 
 	laying_carrier.visible_message(
-		span_notice("[laying_carrier] [laying_container.get_oviposition_lay_verb()] an egg!"),
-		span_love(laying_container.get_oviposition_lay_self_message())
+		span_love_climax("[laying_carrier] [laying_container.get_oviposition_lay_verb()] an egg!"),
+		span_love_climax(laying_container.get_oviposition_lay_self_message())
 	)
 	if(feel)
-		to_chat(laying_carrier, span_love("It comes [feel]."))
+		to_chat(laying_carrier, span_ovi("It comes [feel]."))
 	// Carbons sound the passage in feel_birth_passage; anything else keeps the old splatter.
 	if(!laying_carbon)
 		playsound(laying_carrier, 'sound/effects/wounds/splatter.ogg', 70, TRUE)
@@ -973,8 +973,8 @@
 		message = replacetext(message, "%CONTAINER%", location_name)
 		message = replacetext(message, "%CARRIER%", "[carrier]")
 		carrier.visible_message(
-			span_warning(message),
-			span_love("My [location_name] clenches and forces the hatchling out!")
+			span_love_climax(message),
+			span_love_climax("My [location_name] clenches and forces the hatchling out!")
 		)
 		// A carbon with an opening sounds the passage in feel_birth_passage; the rest keep the splatter.
 		var/obj/item/organ/genitals/filling_organ/sounding_canal = container?.get_birth_canal()

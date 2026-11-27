@@ -49,8 +49,7 @@
 /atom/movable/screen/alert/status_effect/deep_blessing
 	name = "Deep Blessing"
 	desc = "You've been blessed by the Duke of the Deep. Your power is increased."
-	icon = 'icons/effects/effects.dmi' // Replace with appropriate icon
-	icon_state = "blessing" // Replace with appropriate icon_state
+	icon_state = "abyssal"
 
 /datum/status_effect/deep_blessing/on_apply()
 	. = ..()

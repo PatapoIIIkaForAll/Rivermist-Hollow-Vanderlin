@@ -922,6 +922,7 @@ var EMOTE_TAB = "Emotes";
 var emote_page = "all";
 var emote_favourites = [];
 var emote_customs = []; // [{ id, name }]
+var emote_stars = true; // Player toggle: star buttons on emote cells
 // Emote groups drawn after the alphabetical ones, in this order
 var EMOTE_TRAILING_GROUPS = ["Rolling"];
 var STAR_SVG =
@@ -966,7 +967,7 @@ function create_emote_cell(label, on_run, side_button) {
     on_run();
   };
   item.appendChild(run);
-  item.appendChild(side_button);
+  if (side_button) item.appendChild(side_button);
   cell.appendChild(item);
   return cell;
 }
@@ -1084,14 +1085,16 @@ function draw_emote_panel(cat) {
       order.push(key);
     }
     (function (command, favourite) {
-      var star = create_emote_side_button(
-        "emote-star" + (favourite ? " active" : ""),
-        STAR_SVG,
-        "Favourite",
-        function (button) {
-          toggle_emote_favourite(command, button);
-        },
-      );
+      var star = emote_stars
+        ? create_emote_side_button(
+            "emote-star" + (favourite ? " active" : ""),
+            STAR_SVG,
+            "Favourite",
+            function (button) {
+              toggle_emote_favourite(command, button);
+            },
+          )
+        : null;
       groups[key].push(
         create_emote_cell(command, make_verb_onclick(command.replace(/\s/g, "-")), star),
       );
@@ -1113,7 +1116,9 @@ function draw_emote_panel(cat) {
   if (favourite_page && !emote_customs.length && !order.length) {
     var hint = document.createElement("div");
     hint.className = "emote-empty";
-    hint.textContent = "Star an emote on the All page to keep it here.";
+    hint.textContent = emote_stars
+      ? "Star an emote on the All page to keep it here."
+      : "Turn on Emote favourite stars in Toggles to star emotes.";
     statcontentdiv.appendChild(hint);
   }
 }
@@ -1428,10 +1433,13 @@ Byond.subscribeTo("emote_panel_data", function (payload) {
   // The server echoes every star click back; skip the redraw when it matches what we show
   var favourites = payload.favourites || [];
   var customs = payload.customs || [];
+  var stars = payload.stars !== 0 && payload.stars !== false;
   var changed =
+    stars !== emote_stars ||
     JSON.stringify(favourites) !== JSON.stringify(emote_favourites) ||
     JSON.stringify(customs) !== JSON.stringify(emote_customs);
   emote_favourites = favourites.slice();
   emote_customs = customs;
+  emote_stars = stars;
   if (changed && current_tab === EMOTE_TAB) schedule_draw_verbs();
 });

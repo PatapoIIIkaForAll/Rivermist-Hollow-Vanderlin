@@ -69,6 +69,9 @@
 
 /// Actually fire the damn thing
 /datum/component/ranged_attacks/proc/async_fire_ranged_attack(mob/living/simple_animal/firer, atom/target, list/modifiers)
+	//Burst shots fire on a timer; firer or target may be gone by then
+	if(QDELETED(firer) || QDELETED(target) || !get_turf(target))
+		return
 	firer.face_atom(target)
 	if(projectile_type)
 		firer.fire_projectile(projectile_type, target, projectile_sound)

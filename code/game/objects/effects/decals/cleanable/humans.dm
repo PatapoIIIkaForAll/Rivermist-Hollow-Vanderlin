@@ -57,7 +57,6 @@
 	pixel_x = base_pixel_x + rand(-5,5)
 	pixel_y = base_pixel_y + rand(5,5)
 	blood_timer = addtimer(CALLBACK(src, PROC_REF(become_dry)), rand(5 MINUTES,15 MINUTES), TIMER_STOPPABLE)
-	GLOB.weather_act_upon_list += src
 
 
 /obj/effect/decal/cleanable/blood/proc/become_dry()
@@ -89,6 +88,7 @@
 	if(C)
 		C.add_blood_DNA(GET_ATOM_BLOOD_DNA(src))
 		C.alpha = initial(alpha)
+		C.wash_precent = 0
 		C.bloodiness = initial(bloodiness)
 		C.name = initial(name)
 		C.color = initial(color)
@@ -96,7 +96,6 @@
 /obj/effect/decal/cleanable/blood/Destroy()
 	deltimer(blood_timer)
 	blood_timer = null
-	GLOB.weather_act_upon_list -= src
 	return ..()
 
 /obj/effect/decal/cleanable/blood/old

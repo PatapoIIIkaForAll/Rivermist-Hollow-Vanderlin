@@ -59,7 +59,7 @@
 	user.visible_message(span_warning("[user] stops rubbing [user.p_their()] clit."))
 
 /datum/sex_action/masturbate/clit_rub/handle_climax_message(mob/living/user, mob/living/target, must_flip)
-	user.visible_message(span_love("[user] creams themself!"))
+	user.visible_message(span_love_climax("[user] creams themself!"))
 	return ORGASM_LOCATION_SELF
 
 /datum/sex_action/masturbate/other/clit_rub

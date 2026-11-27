@@ -142,7 +142,7 @@ GLOBAL_VAR_INIT(payroll_day_number, 0)
 
 	var/next_delta = 864000
 
-	for(var/boundary_time as anything in tod_boundaries)
+	for(var/boundary_time in tod_boundaries)
 		var/delta = boundary_time - current_station_time
 
 		// Select the next occurrence, not the previous one.

@@ -85,8 +85,8 @@ GLOBAL_LIST_INIT(breast_strain_flavour_text, list(
 GLOBAL_LIST_INIT(breast_paizuri_bonus, list("8" = 1.2))
 /// Visible size to milking speed multiplier.
 GLOBAL_LIST_INIT(breast_milking_rate, list("7" = 1.25, "8" = 1.5))
-/// Own milk share to units leaked while sprinting; the highest share reached counts.
-GLOBAL_LIST_INIT(breast_sprint_leak, list("0.95" = 1.5, "0.75" = 1))
+/// Own milk share to units leaked while sprinting; only nearly full breasts leak.
+GLOBAL_LIST_INIT(breast_sprint_leak, list("0.95" = 1.5))
 /// Own milk share to units sprayed by a fall or chest hit.
 GLOBAL_LIST_INIT(breast_spray_amount, list("0.95" = 4, "0.75" = 3))
 

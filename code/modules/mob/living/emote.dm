@@ -702,8 +702,9 @@
 			to_chat(E, "<span class='warning'>I feel inexplicably repelled!</span>")
 			E.cursed_freak_out()
 
-		if(H.zone_selected == BODY_ZONE_PRECISE_EARS && E.dna.species?.id == "elf" && !E.cmode)
+		if(H.zone_selected == BODY_ZONE_PRECISE_EARS && E.has_sensitive_ears() && !E.cmode)
 			to_chat(target, span_love("It tickles..."))
+			E.try_ear_flick()
 		H.leave_lipstick_kiss(E, H.zone_selected)
 	playsound(target, pick('sound/vo/kiss (1).ogg','sound/vo/kiss (2).ogg'), 100, FALSE, -1)
 	if(user.mind)

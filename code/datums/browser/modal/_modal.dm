@@ -7,6 +7,7 @@
 
 /datum/browser/modal
 	window_options = "can_close=1;can_minimize=0;can_maximize=0;can_resize=0;titlebar=1;"
+	watch_holders = TRUE
 	/// If this modal has been closed.
 	var/final/closed = FALSE
 	/// This modal's selected choice.

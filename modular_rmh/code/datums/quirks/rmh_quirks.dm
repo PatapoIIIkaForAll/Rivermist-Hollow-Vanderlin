@@ -452,3 +452,24 @@
 	desc = "I know the extent of my wounds to a terrifying scale."
 	point_value = -2
 	granted_traits = list(TRAIT_SELF_AWARE)
+
+/datum/quirk/positive/silk_weaver
+	name = "Silk Weaver"
+	desc = "I can spin silk: webs, soft bedding, and cocoons that hold the wounded until help arrives."
+	desc_hint = "Grants Weave Web, Spin Silk Bed and Weave Cocoon, and lets me pass through webs freely. Taur-Kin and Beast-Kin races only."
+	point_value = -3
+	preview_render = FALSE
+	allowed_species = list(
+		/datum/species/taur_kin,
+		/datum/species/anthromorph,
+		/datum/species/anthromorphsmall,
+	)
+
+/datum/quirk/positive/silk_weaver/on_spawn()
+	. = ..()
+	owner?.add_silk_weaving("[type]")
+
+/datum/quirk/positive/silk_weaver/on_remove()
+	if(!QDELETED(owner))
+		owner.remove_silk_weaving("[type]")
+	return ..()

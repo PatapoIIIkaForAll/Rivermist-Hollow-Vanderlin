@@ -39,6 +39,7 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "special_ash"
 	mergeable_decal = FALSE
+	rain_washable = FALSE
 
 /obj/effect/decal/cleanable/undeadash/Initialize()
 	. = ..()
@@ -92,6 +93,7 @@
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "molten"
 	mergeable_decal = FALSE
+	rain_washable = FALSE
 	beauty = -150
 
 /obj/effect/decal/cleanable/molten_object/large

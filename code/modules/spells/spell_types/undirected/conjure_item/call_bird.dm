@@ -105,6 +105,7 @@
 	var/datum/weakref/source_spell
 
 /obj/item/reagent_containers/food/snacks/friedmessenger
+	dish_type = DISH_POULTRY
 	name = "fried messenger"
 	desc = "A fried messenger bird. Poor thing."
 	icon_state = "fcrow"

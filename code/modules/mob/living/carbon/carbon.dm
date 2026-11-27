@@ -1122,7 +1122,7 @@
 
 	return ..()
 
-/mob/living/carbon/can_be_revived()
+/mob/living/carbon/can_be_revived(full_heal_flags = NONE)
 	if(!getorgan(/obj/item/organ/brain) && (!mind))
 		return FALSE
 	return ..()
@@ -1565,28 +1565,11 @@
 			. = TRUE
 
 
-	// Check and wash stuff that can be covered
-	var/obscured = check_obscured_slots()
-
-	if(!(obscured & ITEM_SLOT_HEAD) && head?.wash(clean_types))
-		update_inv_head()
-		. = TRUE
-
-	if(!(obscured & ITEM_SLOT_MASK) && wear_mask?.wash(clean_types))
-		update_inv_wear_mask()
-		. = TRUE
-
-	if(!(obscured & ITEM_SLOT_NECK) && wear_neck?.wash(clean_types))
-		update_inv_neck()
-		. = TRUE
-
-	if(!(obscured & ITEM_SLOT_SHOES) && shoes?.wash(clean_types))
-		update_inv_shoes()
-		. = TRUE
-
-	if(!(obscured & ITEM_SLOT_GLOVES) && gloves?.wash(clean_types))
-		update_inv_gloves()
-		. = TRUE
+	// Only wash worn items that are not hidden by another item.
+	var/list/unobscured_items = get_unobscured_items()
+	for(var/obj/item/worn_item as anything in unobscured_items)
+		if(worn_item.wash(clean_types))
+			. = TRUE
 
 /// beheads the carbon mob, if it doesn't find a head - return false.
 /mob/living/carbon/proc/behead()

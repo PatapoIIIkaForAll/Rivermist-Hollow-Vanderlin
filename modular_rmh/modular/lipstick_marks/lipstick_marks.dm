@@ -12,6 +12,7 @@ GLOBAL_LIST_INIT(lipstick_mark_spots, list(
 	LIPSTICK_SPOT_NIPPLES = list("name" = "nipples", "limb" = BODY_ZONE_CHEST, "cover" = BODY_ZONE_CHEST, "art" = LIPSTICK_ART_LOW,
 		"art_organ" = ORGAN_SLOT_BREASTS, "organ_art" = "nipples", "hide" = HIDEBOOB|HIDEJUMPSUIT, "descriptors" = list(/datum/mob_descriptor/breasts)),
 	LIPSTICK_SPOT_ARMPIT = list("name" = "armpit", "limb" = BODY_ZONE_CHEST, "cover" = BODY_ZONE_CHEST, "art" = LIPSTICK_ART_LOW),
+	LIPSTICK_SPOT_BACK = list("name" = "back", "limb" = BODY_ZONE_CHEST, "cover" = BODY_ZONE_CHEST, "art" = LIPSTICK_ART_TOP),
 	LIPSTICK_SPOT_BELLY = list("name" = "belly", "limb" = BODY_ZONE_CHEST, "cover" = BODY_ZONE_PRECISE_STOMACH, "art" = LIPSTICK_ART_TOP),
 	LIPSTICK_SPOT_CROTCH = list("name" = "crotch", "limb" = BODY_ZONE_CHEST, "cover" = BODY_ZONE_PRECISE_GROIN, "art" = LIPSTICK_ART_LOW),
 	LIPSTICK_SPOT_COCK = list("name" = "cock", "limb" = BODY_ZONE_CHEST, "cover" = BODY_ZONE_PRECISE_GROIN, "organ" = ORGAN_SLOT_PENIS,

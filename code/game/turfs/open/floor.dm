@@ -23,9 +23,6 @@
 	var/list/broken_states
 	var/list/burnt_states
 
-	spread_chance = 1.35
-	burn_power = 50
-
 /turf/open/floor/Initialize(mapload)
 	if (!broken_states)
 		broken_states = typelist("broken_states", list("damaged1", "damaged2", "damaged3", "damaged4", "damaged5"))

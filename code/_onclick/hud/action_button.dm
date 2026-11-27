@@ -42,7 +42,7 @@
 			return TRUE
 		return FALSE
 
-	return TRUE
+	return FALSE
 
 /atom/movable/screen/movable/action_button/Click(location, control, params)
 	if (!can_use(usr))

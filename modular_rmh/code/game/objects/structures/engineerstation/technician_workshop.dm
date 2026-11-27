@@ -455,7 +455,7 @@
 	var/clean_text = trim(cost_text)
 	if(!length(clean_text))
 		return costs
-	for(var/entry as anything in splittext(clean_text, ","))
+	for(var/entry in splittext(clean_text, ","))
 		var/list/pair = splittext(trim(entry), "=")
 		if(length(pair) != 2)
 			return null
@@ -1385,7 +1385,7 @@
 	if(!islist(source_stock))
 		return FALSE
 	var/available_total = 0
-	for(var/source_key as anything in source_stock)
+	for(var/source_key in source_stock)
 		var/source_amount = source_stock[source_key]
 		if(!isnum(source_amount) || source_amount < 0)
 			return FALSE
@@ -1400,7 +1400,7 @@
 
 	var/remaining = amount
 	var/list/source_keys = source_stock.Copy()
-	for(var/source_key as anything in source_keys)
+	for(var/source_key in source_keys)
 		if(remaining <= 0)
 			break
 		var/available = source_stock[source_key]
@@ -1426,7 +1426,7 @@
 		var/list/source_stock = resource_source_stock[resource_id]
 		if(!islist(source_stock))
 			source_stock = list()
-		for(var/source_key as anything in refund_sources)
+		for(var/source_key in refund_sources)
 			var/source_amount = refund_sources[source_key]
 			if(!isnum(source_amount) || source_amount <= 0)
 				continue
@@ -1457,7 +1457,7 @@
 		return FALSE
 
 	// Validate all output representations before spawning any of them.
-	for(var/source_key as anything in source_stock)
+	for(var/source_key in source_stock)
 		var/source_type = text2path(source_key)
 		if(!R.can_withdraw_source_type(source_type, source_stock[source_key]))
 			log_game("Technician workshop [REF(src)] has invalid withdrawal source [source_key] for resource [resource_id].")
@@ -1471,7 +1471,7 @@
 
 	suppress_surface_registration = TRUE
 	var/withdrawal_succeeded = TRUE
-	for(var/source_key as anything in source_stock.Copy())
+	for(var/source_key in source_stock.Copy())
 		var/source_type = text2path(source_key)
 		if(!R.create_withdrawal(drop_turf, source_type, source_stock[source_key]))
 			// The source type was validated above; this is a defensive fallback.
@@ -1512,7 +1512,7 @@
 		/obj/item/coin/copper = 1,
 	)
 
-	for(var/coin_type as anything in coin_denominations)
+	for(var/coin_type in coin_denominations)
 		var/coin_value = coin_denominations[coin_type]
 		var/coin_count = floor(remaining / coin_value)
 		if(coin_count <= 0)
@@ -1743,7 +1743,7 @@
 		var/list/source_stock = resource_source_stock[resource_id]
 		if(!islist(source_stock))
 			source_stock = list()
-		for(var/source_key as anything in refund_sources)
+		for(var/source_key in refund_sources)
 			var/source_amount = refund_sources[source_key]
 			if(!isnum(source_amount) || source_amount <= 0)
 				continue

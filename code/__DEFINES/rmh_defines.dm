@@ -250,3 +250,70 @@
 
 /// Trait source for traits an origin gives.
 #define ORIGIN_TRAIT "origin"
+
+/// Holds the silk weaving actions. Each granting feature adds it under its own source.
+#define TRAIT_SILK_WEAVER "silk_weaver"
+/// Pressure from an intact rescue cocoon. Stops blood loss without touching wounds.
+#define TRAIT_SILK_COMPRESSION "silk_compression"
+
+/// Actions granted by TRAIT_SILK_WEAVER.
+#define SILK_WEAVING_ACTIONS list(\
+	/datum/action/cooldown/silk_weaving/web,\
+	/datum/action/cooldown/silk_weaving/bed,\
+	/datum/action/cooldown/silk_weaving/cocoon,\
+)
+
+/// Percent of an item's value charged as its rune insurance premium until the banker changes it.
+#define RUNE_INSURANCE_DEFAULT_RATE 10
+/// Bounds the banker can set the premium rate within.
+#define RUNE_INSURANCE_MIN_RATE 5
+#define RUNE_INSURANCE_MAX_RATE 50
+/// Lowest premium for one item.
+#define RUNE_INSURANCE_MIN_PREMIUM 10
+/// Lowest premium for one piece of armor or one weapon.
+#define RUNE_INSURANCE_MIN_PREMIUM_ARMS 20
+/// How far from the body, in tiles, the rune reaches for insured items.
+#define RUNE_INSURANCE_PULL_RADIUS 10
+
+/// Claim speeds, slowest first. A pending claim can only move to a higher one.
+#define RUNE_INSURANCE_TIER_STANDARD 1
+#define RUNE_INSURANCE_TIER_EXPRESS 2
+#define RUNE_INSURANCE_TIER_INSTANT 3
+
+/// How long the bank takes to hand a claim over.
+#define RUNE_INSURANCE_WAIT_STANDARD (10 MINUTES)
+#define RUNE_INSURANCE_WAIT_EXPRESS (3 MINUTES)
+
+/// Fee on every claim after the first of the round, as a percent of the vaulted items' insured value.
+#define RUNE_INSURANCE_REPEAT_PERCENT 10
+#define RUNE_INSURANCE_REPEAT_MIN_FEE 10
+/// Fee for a faster claim, as a percent of the vaulted items' insured value.
+#define RUNE_INSURANCE_EXPRESS_PERCENT 15
+#define RUNE_INSURANCE_EXPRESS_MIN_FEE 10
+#define RUNE_INSURANCE_INSTANT_PERCENT 40
+#define RUNE_INSURANCE_INSTANT_MIN_FEE 25
+
+///LAW DOCUMENTS
+
+/// Stage A limits apply at every publication/draft boundary.
+#define RMH_LAW_CODE "law_code"
+#define RMH_LAW_BOOK "lawbook"
+#define RMH_LAW_MAX_LAWS 64
+#define RMH_LAW_MAX_CHAPTERS 32
+#define RMH_LAW_MAX_ARTICLES 128
+#define RMH_LAW_MAX_TITLE 128
+#define RMH_LAW_MAX_TEXT 2048
+#define RMH_POSTER_MAX_FORGERY 360
+#define RMH_LAW_MAX_BODY 8192
+#define RMH_LAW_MAX_DOCUMENT 131072
+#define RMH_LAW_MAX_PAYLOAD 1048576
+#define RMH_LAW_MAX_DRAFT_RECORDS 32
+#define RMH_LAW_MAX_SAVED_TEXT 1048576
+#define RMH_LAW_MAX_NEW_SAVED_TEXT 131072
+#define COMSIG_RMH_LAW_PUBLISHED "rmh_law_published"
+#define COMSIG_RMH_DECREES_CHANGED "rmh_decrees_changed"
+
+/// Temporary stock sound cues, intentionally replaceable.
+#define RMH_LAW_SOUND_CODE 'sound/misc/lawdeclaration.ogg'
+#define RMH_LAW_SOUND_BOOK 'sound/misc/alert.ogg'
+#define RMH_LAW_SOUND_BOARD 'sound/misc/machinetalk.ogg'

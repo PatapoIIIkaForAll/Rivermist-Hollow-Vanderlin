@@ -51,6 +51,10 @@ SUBSYSTEM_DEF(outdoor_effects)
 
 	var/last_color = null
 	var/picked_color
+	/// world.time when the sunlight screens started to change to picked_color.
+	var/transition_started = 0
+	/// How long that change takes, in deciseconds.
+	var/transition_length = 0
 	//Ensure midnight is the liast step
 	var/list/datum/time_of_day/time_cycle_steps = list(
 		new /datum/time_of_day/dawn(),
@@ -64,6 +68,11 @@ SUBSYSTEM_DEF(outdoor_effects)
 	var/next_day = FALSE // Resets when station_time is less than the next start time.
 
 	var/static/mutable_appearance/global_weather_effect
+
+	/// Shared sky states: outdoor_states[state + 1][weatherproof ? 1 : 2].
+	var/list/outdoor_states = list(list(null, null), list(null, null), list(null, null))
+	/// Shared outdoor looks: outdoor_looks[z][sunlight appearance][weatherproof ? 1 : 2].
+	var/list/outdoor_looks = list()
 
 /datum/controller/subsystem/outdoor_effects/Initialize(timeofday)
 	#ifdef FORCE_RANDOM_WORLD_GEN
@@ -167,11 +176,9 @@ SUBSYSTEM_DEF(outdoor_effects)
 		if(T)
 			T.update_sky_and_weather_states()
 			if(T.outdoor_effect)
-				// this may be causing some trivial GC fails for outdoor_effect
-				// but that doesn't seem to cause much of a performance impact in my testing
-				// if that changes, use |= instead of +=, and if that's still too slow
-				// then add a flag on outdoor_effect to prevent duplicate queueing
-				GLOB.SUNLIGHT_QUEUE_UPDATE += T.outdoor_effect
+				// a turf may be queued more than once; updating it twice is harmless
+				// if that becomes slow, use |= instead of +=, or add a turf flag to prevent duplicate queueing
+				GLOB.SUNLIGHT_QUEUE_UPDATE += T
 
 		if(init_tick_checks)
 			CHECK_TICK
@@ -185,10 +192,10 @@ SUBSYSTEM_DEF(outdoor_effects)
 		MC_SPLIT_TICK
 
 	for (i in 1 to length(GLOB.SUNLIGHT_QUEUE_UPDATE))
-		var/atom/movable/outdoor_effect/U = GLOB.SUNLIGHT_QUEUE_UPDATE[i]
-		if(U)
-			U.process_state()
-			update_outdoor_effect_overlays(U)
+		var/turf/U = GLOB.SUNLIGHT_QUEUE_UPDATE[i]
+		if(U?.outdoor_effect)
+			U.sunlight_process_state()
+			update_outdoor_look(U)
 
 		if(init_tick_checks)
 			CHECK_TICK
@@ -206,23 +213,21 @@ SUBSYSTEM_DEF(outdoor_effects)
 	for (i in 1 to length(GLOB.SUNLIGHT_QUEUE_CORNER))
 		var/turf/T = GLOB.SUNLIGHT_QUEUE_CORNER[i]
 		T.turf_flags &= ~TURF_SUNLIGHT_QUEUED
-		var/atom/movable/outdoor_effect/U = T.outdoor_effect
 
 		/* if we haven't initialized but we are affected, create new and check state */
-		if(!U)
-			T.outdoor_effect = new /atom/movable/outdoor_effect(T)
+		if(!T.outdoor_effect)
+			T.outdoor_effect = get_outdoor_state(SKY_BLOCKED, TRUE)
 			T.update_sky_and_weather_states()
-			U = T.outdoor_effect
 
 			/* in case we aren't indoor somehow, wack us into the proc queue, we will be skipped on next indoor check */
-			if(U.state != SKY_BLOCKED)
-				GLOB.SUNLIGHT_QUEUE_UPDATE += U // no need for |= because we just made U
+			if(T.outdoor_effect.state != SKY_BLOCKED)
+				GLOB.SUNLIGHT_QUEUE_UPDATE += T
 
-		if(U.state != SKY_BLOCKED)
+		if(T.outdoor_effect.state != SKY_BLOCKED)
 			continue
 
 		//This might need to be run more liberally
-		update_outdoor_effect_overlays(U)
+		update_outdoor_look(T)
 
 		if(init_tick_checks)
 			CHECK_TICK
@@ -234,30 +239,94 @@ SUBSYSTEM_DEF(outdoor_effects)
 		i = 0
 
 	if(check_cycle())
+		transition_started = world.time
+		transition_length = get_transition_length()
 		for (var/atom/movable/screen/fullscreen/lighting_backdrop/sunlight/SP in sunlighting_planes)
 			transition_sunlight_color(SP)
 
 //Transition from our last color to our current color (i.e if it is going from daylight (white) to sunset (red), we transition to red in the first hour of sunset)
 /datum/controller/subsystem/outdoor_effects/proc/transition_sunlight_color(atom/movable/screen/fullscreen/lighting_backdrop/sunlight/SP)
-	/* transistion in an hour or time diff from now to our next step, whichever is smaller */
+	animate(SP, color = picked_color, time = transition_length)
+
+/// How long a change of the sky colour takes: an hour of game time, or the time to the next step if that is shorter.
+/datum/controller/subsystem/outdoor_effects/proc/get_transition_length()
 	if(!next_step_datum)
 		get_time_of_day()
-	var/timeDiff = min((1 HOURS / SSticker.station_time_rate_multiplier), daytimeDiff(station_time(), next_step_datum.start))
-	animate(SP, color = picked_color, time = timeDiff)
+	return min((1 HOURS / SSticker.station_time_rate_multiplier), daytimeDiff(station_time(), next_step_datum.start))
 
-// Updates overlays and vis_contents for outdoor effects
-/datum/controller/subsystem/outdoor_effects/proc/update_outdoor_effect_overlays(atom/movable/outdoor_effect/OE)
+/// Gives a new sunlight screen the colour that the other screens show at this moment.
+/datum/controller/subsystem/outdoor_effects/proc/sync_sunlight_color(atom/movable/screen/fullscreen/lighting_backdrop/sunlight/SP)
+	if(!next_step_datum)
+		get_time_of_day()
+	var/time_left = transition_started + transition_length - world.time
+	if(time_left <= 0 || transition_length <= 0 || !last_color)
+		SP.color = picked_color
+		return
+	SP.color = gradient(last_color, picked_color, 1 - time_left / transition_length)
+	animate(SP, color = picked_color, time = time_left)
+
+/// Returns the shared sky state for state and weatherproof, making it on first use.
+/datum/controller/subsystem/outdoor_effects/proc/get_outdoor_state(state, weatherproof)
+	var/list/states = outdoor_states[state + 1]
+	var/index = weatherproof ? 1 : 2
+	var/datum/outdoor_state/outdoor_state = states[index]
+	if(!outdoor_state)
+		outdoor_state = new
+		outdoor_state.state = state
+		outdoor_state.weatherproof = weatherproof ? TRUE : FALSE
+		states[index] = outdoor_state
+	return outdoor_state
+
+/// Returns a shared look for z-level z, the sunlight appearance and weatherproof, making one if needed.
+/// Does not change the look's user count.
+/datum/controller/subsystem/outdoor_effects/proc/get_outdoor_look(z, mutable_appearance/sunlight, weatherproof)
+	LISTASSERTLEN(outdoor_looks, z, null)
+	var/list/level = outdoor_looks[z]
+	if(!level)
+		level = list()
+		outdoor_looks[z] = level
+	var/list/pair = level[sunlight]
+	if(!pair)
+		pair = list(null, null)
+		level[sunlight] = pair
+
+	var/index = weatherproof ? 1 : 2
+	var/atom/movable/outdoor_look/look = pair[index]
+	if(look)
+		if(look.users < OUTDOOR_LOOK_MAX_USERS)
+			return look
+		look.retired = TRUE
+
+	look = new /atom/movable/outdoor_look(null)
+	look.look_z = z
+	look.look_sunlight = sunlight
+	look.look_weatherproof = weatherproof ? TRUE : FALSE
+	look.layer = OUTDOOR_LOOK_LAYER(z)
+	//Get weather overlay if not weatherproof
+	look.overlays = weatherproof ? list(sunlight) : list(sunlight, global_weather_effect)
+	look.luminosity = sunlight.luminosity
+	pair[index] = look
+	return look
+
+/// Drops one user from look. An unused retired look is deleted; an unused cached one stays cached.
+/datum/controller/subsystem/outdoor_effects/proc/release_outdoor_look(atom/movable/outdoor_look/look)
+	look.users--
+	if(look.users <= 0 && look.retired)
+		qdel(look, TRUE)
+
+/// Picks the sunlight picture for T from its sky state and corners, and shows the matching shared look.
+/datum/controller/subsystem/outdoor_effects/proc/update_outdoor_look(turf/T)
 	var/mutable_appearance/MA
-	if ((OE.state != SKY_BLOCKED) || istype(OE.source_turf, /turf/closed/sea_fog))
+	if ((T.outdoor_effect.state != SKY_BLOCKED) || istype(T, /turf/closed/sea_fog))
 		MA = get_sunlight_overlay(1, 1, 1, 1) /* fully lit */
 	else //Indoor - do proper corner checks
 		/* check if we are globally affected or not */
 		var/static/datum/lighting_corner/dummy/dummy_lighting_corner = new
 
-		var/list/corners = OE.source_turf.corners
+		var/list/corners = T.corners
 		if(!length(corners))
-			OE.source_turf.generate_missing_corners()
-			corners = OE.source_turf.corners
+			T.generate_missing_corners()
+			corners = T.corners
 		var/datum/lighting_corner/cr = corners[3] || dummy_lighting_corner
 		var/datum/lighting_corner/cg = corners[2] || dummy_lighting_corner
 		var/datum/lighting_corner/cb = corners[4] || dummy_lighting_corner
@@ -270,10 +339,7 @@ SUBSYSTEM_DEF(outdoor_effects)
 
 		MA = get_sunlight_overlay(fr, fg, fb, fa)
 
-	OE.sunlight_overlay = MA
-	//Get weather overlay if not weatherproof
-	OE.overlays = OE.weatherproof ? list(OE.sunlight_overlay) : list(OE.sunlight_overlay, global_weather_effect)
-	OE.luminosity = MA.luminosity
+	T.set_outdoor_look(get_outdoor_look(T.z, MA, T.outdoor_effect.weatherproof))
 
 //Retrieve an overlay from the list - create if necessary
 /datum/controller/subsystem/outdoor_effects/proc/get_sunlight_overlay(fr = 0, fg = 0, fb = 0, fa = 0)
@@ -301,7 +367,7 @@ SUBSYSTEM_DEF(outdoor_effects)
 	MA.blend_mode = BLEND_OVERLAY
 	MA.invisibility = INVISIBILITY_LIGHTING
 
-	//MA gets applied as an overlay, but we pull luminosity out to set our outdoor_effect object's lum
+	//MA gets applied as an overlay, but we pull luminosity out to set the outdoor look's lum
 #if LIGHTING_SOFT_THRESHOLD != 0
 	MA.luminosity = max(fr, fg, fb, fa) > LIGHTING_SOFT_THRESHOLD
 #else

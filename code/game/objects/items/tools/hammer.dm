@@ -57,7 +57,7 @@
 		var/obj/item/bodypart/attacked_prosthetic = interacting_with
 		if(!attacked_prosthetic.anvilrepair)
 			return NONE
-		if(!interacting_with.ontable() && !istype(interacting_with.loc, /obj/machinery/anvil))
+		if(!interacting_with.ontable() && !interacting_with.onanvil())
 			to_chat(user, span_warning("I should put [interacting_with] on a table or an anvil first."))
 			return ITEM_INTERACT_BLOCKING
 		if(attacked_prosthetic.get_integrity() >= attacked_prosthetic.max_integrity && attacked_prosthetic.brute_dam == 0 && attacked_prosthetic.burn_dam == 0 && attacked_prosthetic.wounds == null && attacked_prosthetic.bodypart_disabled == BODYPART_NOT_DISABLED) //A mouthful
@@ -99,7 +99,7 @@
 		if(!attacked_item.anvilrepair || !attacked_item.max_integrity)
 			return NONE
 
-		if(!attacked_item.ontable() && !istype(interacting_with.loc, /obj/machinery/anvil))
+		if(!attacked_item.ontable() && !attacked_item.onanvil())
 			to_chat(user, span_warning("I should put [attacked_item] on a table or an anvil first."))
 			return ITEM_INTERACT_BLOCKING
 

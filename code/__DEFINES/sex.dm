@@ -6,6 +6,9 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define ERP_PREFERENCE_EDIT_GRACE_PERIOD (ERP_PREFERENCE_EDIT_GRACE_MINUTES MINUTES)
 #define KINK_NOTES_MAX_LENGTH 256
 
+/// Sex action sounds are multiplied by this while the actor sneaks.
+#define SEX_SNEAK_VOLUME_MULTIPLIER 0.3
+
 #define MAGE_HAND_ACTION_MESSAGE_START "start"
 #define MAGE_HAND_ACTION_MESSAGE_PERFORM "perform"
 #define MAGE_HAND_ACTION_MESSAGE_FINISH "finish"
@@ -31,6 +34,7 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define COMSIG_SEX_HOLE_AFTER_REMOVE "sex_hole_after_remove"						// fires when we remove an object from a *hole*
 #define COMSIG_SEX_ADJUST_ORGASM_PROG "sex_adjust_orgasm_prog"                  // (amount) - Adjust orgasm prog level
 #define COMSIG_SEX_SET_ORGASM_PROG "sex_set_orgasm_prog"                        // (amount) - Set orgasm prog to specific value
+#define COMSIG_SEX_ORGASM_PROG_CHANGED "sex_orgasm_prog_changed"				// (new_progress) - fires to the parent when orgasm progress changes
 #define COMSIG_SEX_EDGED_BY_OTHER_STATE "sex_set_edged_state"                        // (amount) - Set orgasm prog to specific value
 #define COMSIG_SET_ERECT_STATE "sex_set_erectness"						// when we set manual arousal
 #define COMSIG_SEX_ORGASM "sex_orgasm"									// manual orgasm
@@ -227,6 +231,25 @@ GLOBAL_LIST_INIT(sex_actions, build_sex_actions())
 #define PASSIVE_EJAC_THRESHOLD 108
 #define ACTIVE_EJAC_THRESHOLD 100
 #define MAX_ORGASM_PROG 120
+/// Arousal shown as a full bar and a full heart; display only, gameplay still runs to MAX_AROUSAL.
+#define AROUSAL_DISPLAY_MAX 120
+/// Fill steps of the interact heart above empty.
+#define AROUSAL_HEART_STEPS 10
+/// Fraction of the climax threshold where the near-climax edge appears.
+#define NEAR_CLIMAX_EDGE_START 0.7
+/// Edge strength at the moment it appears; it grows to full at the climax threshold.
+#define NEAR_CLIMAX_EDGE_START_STRENGTH 0.4
+/// Strength steps of the near-climax edge; it only re-animates when the step changes.
+#define NEAR_CLIMAX_EDGE_LEVELS 20
+#define NEAR_CLIMAX_EDGE_STEP_TIME (1 SECONDS)
+#define NEAR_CLIMAX_EDGE_FADE_OUT (5 SECONDS)
+#define LEWD_HAZE_FADE_TIME (3 SECONDS)
+/// Shortest gap between two sex panel refreshes pushed by arousal or orgasm changes.
+#define SEX_PANEL_REFRESH_COOLDOWN (0.5 SECONDS)
+#define FULLSCREEN_NEAR_CLIMAX "near_climax"
+#define FULLSCREEN_HAZE_CUMBRAINED "lewd_haze_cumbrained"
+#define FULLSCREEN_HAZE_APHRODISIAC "lewd_haze_aphrodisiac"
+#define FULLSCREEN_DEFEAT_HORNY "defeat_horny"
 #define SEX_MAX_CHARGE 400
 #define CHARGE_FOR_CLIMAX 100
 #define VISIBLE_AROUSAL_THRESHOLD 20

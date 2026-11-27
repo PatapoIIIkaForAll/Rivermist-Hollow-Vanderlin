@@ -1,152 +1,56 @@
-// Vanderlin house style for the character setup menu.
-// Palette lifted from the old "Extra Preferences" browser window:
-// page #1a1a1a, panel #2a2723, border #5b4b40, text #d8cf9f, headers #eee69c,
-// buttons #705d4f with dark ink text.
+// Vanderlin with gradients and glows, the default window style; CSS only, no images.
+
+@use 'vanderlin_base' as vb;
 
 .theme-vanderlin:root {
-  // Base
-  --color-base: #1a1a1a;
-  --color-primary: #5b4b40;
-  --color-text: #d8cf9f;
+  @include vb.vanderlin-flat;
 
-  --titlebar-text: #eee69c;
+  // Warm light from the top of the window fading into the dark page.
+  .Window {
+    background-color: #1a1a1a;
+    background-image: radial-gradient(
+      ellipse at top,
+      #3a3029 0%,
+      #1a1614 70%
+    );
+  }
 
-  --font-size: 13px;
-  --font-family: Verdana, Geneva, sans-serif;
-  --line-height: 150%;
-
-  --color-good: #6a8a35;
-  --color-average: #bcae82;
-  --color-bad: #8b2020;
-
-  --color-border-primary: #5b4b40;
-
-  // Title
   .TitleBar {
+    background-color: #221c18;
+    background-image: linear-gradient(to bottom, #3b3129, #221c18);
+    border-bottom: 1px solid #8a7258;
+    box-shadow: 0 2px 6px #000;
+
     &__title {
-      color: #eee69c;
-      font-weight: bold;
-      text-transform: uppercase;
+      text-shadow: 0 0 4px #000;
     }
   }
 
-  // Components
-  --section-separator-color: #5b4b40;
-
+  // Panels fade from bronze to the window behind them, with a faint gold glow.
   .Section {
-    background-color: #2a2723;
+    background-color: transparent;
+    background-image: linear-gradient(
+      to bottom,
+      #2e2823 0%,
+      rgba(30, 26, 23, 0) 100%
+    );
     border: 1px solid #5b4b40;
-    box-shadow: inset 0 0 0 1px #141211;
-
-    &__title {
-      border-bottom: 1px solid #5b4b40;
-    }
+    box-shadow:
+      inset 0 0 0 1px #141211,
+      inset 0 0 10px rgba(238, 230, 156, 0.06),
+      0 0 8px rgba(238, 230, 156, 0.12);
 
     &__titleText {
-      color: #eee69c;
-      text-transform: uppercase;
+      text-shadow: 0 0 4px #000;
     }
   }
 
-  --button-color-transparent: rgba(216, 207, 159, 0.8);
-  // Kept for var-driven button implementations; the real work below overrides
-  // the statically compiled colors from components/Button.scss.
-  --button-background-default: #66492a;
-  --button-background-selected: #cfc08a;
-
-  .Button {
-    border: 1px solid #171515;
-  }
-
-  // Dark bronze replaces the stock blue for plain buttons.
-  .Button--color--default {
-    background-color: #66492a;
-    color: #f2e7c9;
-
-    &:hover {
-      background-color: #7d5c35;
-      color: #fff3d1;
-    }
-  }
-
-  // Silver-gold marks the picked entry of a group: tabs, slots, intensity steps.
-  .Button--selected {
-    background-color: #cfc08a;
-    color: #161418;
-
-    &:hover {
-      background-color: #ded1a0;
-      color: #161418;
-    }
-  }
-
-  // Moss green marks a switch that is on. Listed after --selected so it wins when both apply.
-  .Button--color--green,
-  .Button--color--good {
-    background-color: #9fb861;
-    color: #1d2110;
-
-    &:hover {
-      background-color: #b0c873;
-      color: #1d2110;
-    }
-  }
-
-  // Oxblood marks a switch that is off. Light ink, the stock mixin forces black.
-  .Button--color--red,
-  .Button--color--bad {
-    background-color: #5c2e25;
-    color: #e6c3b4;
-
-    &:hover {
-      background-color: #6d382d;
-      color: #f4d6c8;
-    }
-  }
-
-  .Button--color--transparent {
-    background-color: transparent;
-    color: #eee69c;
-    border: none;
-
-    &:hover {
-      background-color: #2f2924;
-      color: #eee69c;
-    }
-  }
-
-  // Flat sub-tabs still mark their picked entry in gold; the transparent rule above would hide it.
-  .Button--color--transparent.Button--selected {
-    background-color: #cfc08a;
-    color: #161418;
-
-    &:hover {
-      background-color: #ded1a0;
-      color: #161418;
-    }
-  }
-
-  .Button--color--transparent.Button--disabled {
-    color: #6b6353;
-  }
-
-  .Button--disabled {
-    background-color: #4a423a !important;
-    color: #8d8574;
-  }
-
-  .Tabs__Tab {
-    color: #bcae82;
-
-    &--selected {
-      color: #eee69c;
-    }
-  }
-
-  .Input,
-  .TextArea {
-    background-color: #171515;
-    border: 1px solid #5b4b40;
-    color: #d8cf9f;
+  // Raised look: a light top and a dark bottom over each button's own colour.
+  .Button:not(.Button--color--transparent) {
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.08),
+      rgba(0, 0, 0, 0.18)
+    );
   }
 }

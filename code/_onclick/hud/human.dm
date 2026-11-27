@@ -72,8 +72,8 @@
 	quad_intents = new /atom/movable/screen/quad_intents(null, src)
 	static_inventory += quad_intents
 
-	using = new /atom/movable/screen/interact_heart(null, src)
-	static_inventory += using
+	interact_heart = new /atom/movable/screen/interact_heart(null, src)
+	static_inventory += interact_heart
 
 	using = new /atom/movable/screen/hole_status_button(null, src)
 	static_inventory += using

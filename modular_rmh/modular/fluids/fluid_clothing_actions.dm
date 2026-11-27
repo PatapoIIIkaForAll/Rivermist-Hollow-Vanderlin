@@ -173,7 +173,7 @@
 	user.visible_message(span_warning("[user] stops."))
 
 /datum/sex_action/garment_pleasure/self/handle_climax_message(mob/living/user, mob/living/target, must_flip)
-	user.visible_message(span_love("[user] climaxes into \the [get_held_garment(user) || "garment"]!"))
+	user.visible_message(span_love_climax("[user] climaxes into \the [get_held_garment(user) || "garment"]!"))
 	return ORGASM_LOCATION_CONTAINER
 
 /datum/sex_action/garment_pleasure/self/lock_sex_object(mob/living/user, mob/living/target)
@@ -229,7 +229,7 @@
 
 /datum/sex_action/garment_pleasure/other/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	// `user` is the climaxing partner; `target` holds the garment.
-	user.visible_message(span_love("[user] climaxes into \the [get_held_garment(target) || "garment"]!"))
+	user.visible_message(span_love_climax("[user] climaxes into \the [get_held_garment(target) || "garment"]!"))
 	return ORGASM_LOCATION_CONTAINER
 
 /datum/sex_action/garment_pleasure/other/lock_sex_object(mob/living/user, mob/living/target)

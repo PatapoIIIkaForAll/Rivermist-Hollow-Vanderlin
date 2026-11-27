@@ -1384,6 +1384,7 @@
 /atom/movable/screen/alert/blackmirror
 	name = "BLACK EYE"
 	desc = "LOOK AT ME. I SEE YOU."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
 	icon_state = "blackeye"
 	var/obj/item/inqarticles/bmirror/source
 

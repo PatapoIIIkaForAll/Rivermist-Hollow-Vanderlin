@@ -18,6 +18,7 @@
 	slice_skill = /datum/attribute/skill/craft/cooking/preparation
 
 /obj/item/reagent_containers/food/snacks/pumpkin_mash
+	dish_type = DISH_VEGETABLE
 	item_weight = 500 GRAMS
 	name = "pumpkin mash"
 	desc = "Once bland, now a surprisingly rich and fibrous mash."
@@ -48,6 +49,7 @@
 	dropshrink = 0.9
 
 /obj/item/reagent_containers/food/snacks/pie/cooked/pumpkin
+	dish_type = DISH_PIE|DISH_VEGETABLE
 	name = "pumpkin pie"
 	desc = "An open pie of baked pumpkin custard, sweet and warmly spiced."
 	icon = PUMPKIN_FOOD_ICON
@@ -73,6 +75,7 @@
 	good_quality_descriptors()
 
 /obj/item/reagent_containers/food/snacks/pieslice/pumpkin
+	dish_type = DISH_PIE|DISH_VEGETABLE
 	name = "pumpkin pie slice"
 	desc = "A slice of pumpkin pie, still holding its shape."
 	icon = PUMPKIN_FOOD_ICON
@@ -144,6 +147,7 @@
 	tastes = list("dough" = 1, "pumpkin" = 1)
 
 /obj/item/reagent_containers/food/snacks/pumpkinball
+	dish_type = DISH_PASTRY
 	item_weight = 150 GRAMS
 	name = "pumpkin balls"
 	desc = "Crispy, soft balls of dough mixed with pumpkin. A surprisingly nice snack."
@@ -206,6 +210,7 @@
 	nutriment_factor = 9
 
 /datum/reagent/consumable/ethanol/pumpkin_ale
+	drink_type = DRINKTYPE_ALE
 	name = "Pumpkin Ale"
 	boozepwr = 25
 	taste_description = "sweet spiced pumpkin"

@@ -71,8 +71,8 @@
 
 /datum/sex_action/blowjob/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		target.visible_message(span_love("[user] cums into [target]'s mouth!"))
+		target.visible_message(span_love_climax("[user] cums into [target]'s mouth!"))
 		return ORGASM_LOCATION_ORAL
 	else
-		target.visible_message(span_love("[user] creams themselves from sucking [target]'s cock!"))
+		target.visible_message(span_love_climax("[user] creams themselves from sucking [target]'s cock!"))
 		return ORGASM_LOCATION_SELF

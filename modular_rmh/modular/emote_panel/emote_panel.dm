@@ -73,16 +73,36 @@
 		if("Emote-Custom-Run")
 			run_custom_emote(payload["id"])
 
+/// Shows the star buttons in the Emotes tab; the Favourite page and saved favourites stay either way.
+/datum/preference/toggle/emote_favourite_stars
+	savefile_key = "emote_favourite_stars"
+	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Interface"
+	toggles_menu_name = "Emote favourite stars"
+	toggles_menu_desc = "Show the star buttons in the Emotes tab. Your favourites stay saved either way."
+	category = "ui"
+	can_randomize = FALSE
+	should_update_preview = FALSE
+	default_value = TRUE
+
+/datum/preference/toggle/emote_favourite_stars/apply_to_client_updated(client/C, value)
+	C?.send_emote_panel_data()
+
 /client/proc/send_emote_panel_data()
 	if(!prefs || !stat_panel)
 		return
+	stat_panel.send_message("emote_panel_data", prefs.get_emote_panel_payload())
+
+/// What the Emotes tab of the stat panel needs: favourites, custom emote names and whether stars show.
+/datum/preferences/proc/get_emote_panel_payload()
 	var/list/customs = list()
-	for(var/list/entry as anything in prefs.read_preference(/datum/preference/list_type/custom_emotes))
+	for(var/list/entry as anything in read_preference(/datum/preference/list_type/custom_emotes))
 		customs += list(list("id" = entry["id"], "name" = entry["name"]))
-	stat_panel.send_message("emote_panel_data", list(
-		"favourites" = prefs.read_preference(/datum/preference/list_type/emote_favourites),
+	return list(
+		"favourites" = read_preference(/datum/preference/list_type/emote_favourites),
 		"customs" = customs,
-	))
+		"stars" = !!read_preference(/datum/preference/toggle/emote_favourite_stars),
+	)
 
 /// Writes the value and batches savefile writes, star clicks can come in quick bursts.
 /client/proc/write_emote_panel_pref(pref_type, list/value)

@@ -29,7 +29,7 @@
 			return 0
 		return B.amount
 
-	for(var/accepted_type as anything in accepted_item_types)
+	for(var/accepted_type in accepted_item_types)
 		if(istype(I, accepted_type))
 			return units_per_item
 
@@ -48,7 +48,7 @@
 	if(resource_amount % units_per_item)
 		return FALSE
 
-	for(var/accepted_type as anything in accepted_item_types)
+	for(var/accepted_type in accepted_item_types)
 		if(ispath(source_item_type, accepted_type))
 			return TRUE
 	return FALSE

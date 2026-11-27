@@ -44,6 +44,7 @@
 	dead = TRUE
 
 /obj/item/reagent_containers/food/snacks/friedrat
+	dish_type = DISH_MEAT
 	name = "fried rat"
 	icon_state = "cookedrat"
 	bitesize = 2

@@ -442,13 +442,13 @@
 
 	perform_sex_action(target, user, target_arousal_amt, target_pain_amt, target_orgasm_amt)
 	handle_passive_ejaculation(target)
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 	portal_touch_feedback(user, target)
 
 /datum/sex_action/portal_base/portal_hand_base/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("I climax from the portal touch, my body trembling with pleasure!"))
-		to_chat(target, span_love("Your target shudders and reacts to your touch through the portal."))
+		to_chat(user, span_love_climax("I climax from the portal touch, my body trembling with pleasure!"))
+		to_chat(target, span_love_climax("Your target shudders and reacts to your touch through the portal."))
 		return ORGASM_LOCATION_SELF
 
 /datum/sex_action/portal_base/portal_hand_base/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -539,8 +539,8 @@
 
 /datum/sex_action/portal_base/portal_oral_base/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("I climax from the mouth on me through the portal, my body shuddering in ecstasy!"))
-		to_chat(target, span_love("You bring your target to climax through the portal!"))
+		to_chat(user, span_love_climax("I climax from the mouth on me through the portal, my body shuddering in ecstasy!"))
+		to_chat(target, span_love_climax("You bring your target to climax through the portal!"))
 		return ORGASM_LOCATION_ORAL
 
 /datum/sex_action/portal_base/portal_oral_base/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
@@ -624,19 +624,19 @@
 	perform_sex_action(target, user, 2, 3, 2)
 	handle_passive_ejaculation(target)
 	handle_passive_ejaculation(user)
-	playsound(user, get_force_sound(), 50, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, get_force_sound(), get_sound_volume(user), TRUE, -2, ignore_walls = FALSE)
 	portal_touch_feedback(user, target)
 
 /datum/sex_action/portal_base/portal_penis_base/handle_climax_message(mob/living/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("I cum from the fucking through the portal, my body trembling in ecstasy!"))
-		to_chat(target, span_love(climax_message_self))
+		to_chat(user, span_love_climax("I cum from the fucking through the portal, my body trembling in ecstasy!"))
+		to_chat(target, span_love_climax(climax_message_self))
 		user.lose_virginity()
 		target.lose_virginity()
 		return ORGASM_LOCATION_SELF
 
-	to_chat(user, span_love("You cum inside your target! You shudder with pleasure."))
-	to_chat(target, span_love(climax_message_target))
+	to_chat(user, span_love_climax("You cum inside your target! You shudder with pleasure."))
+	to_chat(target, span_love_climax(climax_message_target))
 	user.lose_virginity()
 	target.lose_virginity()
 	return ORGASM_LOCATION_INTO
@@ -721,17 +721,17 @@
 
 	perform_sex_action(user, target, user_arousal_amt, user_pain_amt, user_orgasm_amt)
 	perform_sex_action(target, user, target_arousal_amt, target_pain_amt, target_orgasm_amt)
-	playsound(user, get_force_sound(), 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, get_force_sound(), get_sound_volume(user), TRUE, -2, ignore_walls = FALSE)
 	portal_touch_feedback(user, target)
 
 /datum/sex_action/portal_base/portal_vagina_base/handle_climax_message(mob/living/user, mob/living/carbon/human/target, must_flip)
 	if(must_flip)
-		to_chat(user, span_love("Pleasure crests through the portal and makes me shudder in orgasm!"))
-		to_chat(target, span_love("You feel your target shudder and climax against you through the portal!"))
+		to_chat(user, span_love_climax("Pleasure crests through the portal and makes me shudder in orgasm!"))
+		to_chat(target, span_love_climax("You feel your target shudder and climax against you through the portal!"))
 		return ORGASM_LOCATION_SELF
 
-	to_chat(user, span_love("Pleasure crashes through you as you grind yourself to orgasm against the portal!"))
-	to_chat(target, span_love("The slick pressure against me through the portal shudders with climax."))
+	to_chat(user, span_love_climax("Pleasure crashes through you as you grind yourself to orgasm against the portal!"))
+	to_chat(target, span_love_climax("The slick pressure against me through the portal shudders with climax."))
 	return ORGASM_LOCATION_SELF
 
 /datum/sex_action/portal_base/portal_vagina_base/on_finish(mob/living/user, mob/living/carbon/human/target)
@@ -814,10 +814,7 @@
 	if(user != target)
 		to_chat(target, spanify_force("Something is being inserted into me through the portal..."))
 
-	var/used_sex_volume = sex_volume
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
-		used_sex_volume *= 0.5
-	play_toy_reach_sound(target_organ, target, used_sex_volume)
+	play_toy_reach_sound(target_organ, target, get_sound_volume(user))
 
 /datum/sex_action/portal_base/portal_store_base/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/pain_amt = base_pain_amt
@@ -962,10 +959,7 @@
 	// Pick the first item now so the first cycle already takes the holes window's time for it.
 	pending_toy = choose_toy_to_reach(target_organ, STORAGE_LAYER_INNER)
 	to_chat(user, span_warning("I start removing items from the portal..."))
-	var/used_sex_volume = sex_volume
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
-		used_sex_volume *= 0.5
-	play_toy_reach_sound(target_organ, target, used_sex_volume)
+	play_toy_reach_sound(target_organ, target, get_sound_volume(user))
 
 /datum/sex_action/portal_base/portal_remove_base/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 
@@ -1075,10 +1069,7 @@
 			to_chat(user, span_smallred("I can pump it with <bold>speed</bold> for faster success."))
 
 	user.visible_message(span_warning("[user] stuffs \the [dildo] in their cunt..."))
-	var/used_sex_volume = sex_volume
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
-		used_sex_volume *= 0.5
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
+	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), get_sound_volume(user), TRUE, ignore_walls = FALSE)
 
 /datum/sex_action/portal_base/portal_object_fuck/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	var/pain_amt = 3 //base pain amt to use
@@ -1086,12 +1077,7 @@
 
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fucks their cunt with \the [dildo]."))
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
-		action_volume *= 0.5
-	var/used_sex_volume = sex_volume
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
-		used_sex_volume *= 0.5
-	playsound(target, get_force_sound(), used_sex_volume, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, get_force_sound(), get_sound_volume(user), TRUE, -2, ignore_walls = FALSE)
 
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
@@ -1119,7 +1105,7 @@
 
 
 /datum/sex_action/portal_base/portal_object_fuck/handle_climax_message(mob/living/carbon/human/user, mob/living/carbon/human/target, must_flip)
-	user.visible_message(span_love("your target cream themselves!"))
+	user.visible_message(span_love_climax("your target cream themselves!"))
 	user.lose_virginity()
 	return ORGASM_LOCATION_SELF
 

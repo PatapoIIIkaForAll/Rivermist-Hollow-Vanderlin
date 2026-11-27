@@ -130,8 +130,6 @@
 	var/gags_user = FALSE
 	/// Used for determining if the target should be gagged
 	var/gags_target = FALSE
-	/// Sound volume for actions
-	var/action_volume = 50
 	/// So that we don't spam messages with every thrust for example
 	var/next_message_time = 0
 	/// Whether this running action should stop on its next loop check
@@ -1093,13 +1091,13 @@
 	sync_penis_grip(user, target)
 	begin_orifice_penetration(user, target)
 	sex_volume = initial(sex_volume)
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
+	if(is_sneaking(user))
 		sex_volume *= 0.5
 	return TRUE
 
 /datum/sex_action/proc/on_perform(mob/living/user, mob/living/target)
 	sex_volume = initial(sex_volume)
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
+	if(is_sneaking(user))
 		sex_volume *= 0.5
 	return
 
@@ -1118,7 +1116,7 @@
 	unlink_penis_grip()
 	unlock_sex_object(user, target)
 	sex_volume = initial(sex_volume)
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
+	if(is_sneaking(user))
 		sex_volume *= 0.5
 	return
 
@@ -1188,7 +1186,21 @@
 	return resource_scene?.is_resource_claimed(src, locked_living, organ_slot, item, storage_item) || FALSE
 
 
+/// Whether [user] is sneaking or hidden, which muffles this action's sounds and hides its messages.
+/datum/sex_action/proc/is_sneaking(mob/living/user)
+	return user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100
+
+/// Volume for one of this action's sounds, muffled while [user] sneaks. [volume] defaults to sex_volume.
+/datum/sex_action/proc/get_sound_volume(mob/living/user, volume)
+	if(isnull(volume))
+		volume = sex_volume
+	if(is_sneaking(user))
+		return volume * SEX_SNEAK_VOLUME_MULTIPLIER
+	return volume
+
 /datum/sex_action/proc/do_onomatopoeia(mob/living/user)
+	if(is_sneaking(user))
+		return
 	user.balloon_alert_to_viewers("Plap!")
 
 /datum/sex_action/proc/show_sex_effects(mob/living/user)
@@ -1204,7 +1216,7 @@
 	var/datum/sex_remote_context/message_context = get_valid_remote_context()
 	if(message_context && !message_context.allows_visible_messages)
 		return FALSE
-	if(user && (user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)) //stealth sex les go
+	if(user && is_sneaking(user)) //stealth sex les go
 		return FALSE
 	if(world.time >= next_message_time)
 		var/speed_time = rand(10, 100 - speed * 10)

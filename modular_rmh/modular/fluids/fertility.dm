@@ -205,10 +205,14 @@
 /atom/movable/screen/alert/status_effect/buff/moon_tea
 	name = "Moon Tea"
 	desc = "Seed will hardly take root in me for a while."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "moon_tea"
 
 /atom/movable/screen/alert/status_effect/buff/cold_seed
 	name = "Cold Seed"
 	desc = "My seed is weak for a while."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "cold_seed"
 
 /obj/item/reagent_containers/glass/bottle/vial/moon_tea
 	desc = "A vial of cloudy green tea. The label shows a crescent moon."

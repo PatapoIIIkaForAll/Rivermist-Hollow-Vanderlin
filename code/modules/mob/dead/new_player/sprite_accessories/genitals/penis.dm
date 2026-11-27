@@ -85,7 +85,8 @@
 /datum/sprite_accessory/genitals/penis/proc/build_taur_penis_appearance(taur_icon_state, color_string, mob/living/carbon/owner)
 	color_string = sanitize_color_string(color_string)
 	var/cache_key = "[type]-taur-[taur_icon_state]-[color_string]"
-	if(!accessory_icon_cache[cache_key])
+	var/cached_icon = accessory_icon_cache[cache_key]
+	if(!cached_icon)
 		var/list/color_list = color_string_to_list(color_string)
 		var/icon/result_icon = icon(TAUR_PENIS_ICON, "[taur_icon_state]_primary")
 		result_icon.Blend(color_list[1], ICON_MULTIPLY)
@@ -97,9 +98,8 @@
 			result_icon.Blend(secondary_icon, ICON_OVERLAY)
 
 		result_icon.GetPixel(1, 1)
-		accessory_icon_cache[cache_key] = result_icon
+		cached_icon = store_accessory_icon(cache_key, result_icon)
 
-	var/icon/cached_icon = icon(accessory_icon_cache[cache_key])
 	var/mutable_appearance/appearance = mutable_appearance(cached_icon, layer = -BODY_BEHIND_LAYER)
 	appearance.pixel_x = pixel_x
 	appearance.pixel_y = pixel_y

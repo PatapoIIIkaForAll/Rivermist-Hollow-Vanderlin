@@ -168,6 +168,7 @@ GLOBAL_LIST_INIT(fluid_swap_blacklist, list(
 /// Adds a fluid modifier for the duration, sourced by its own id.
 /datum/status_effect/buff/fluid_potion
 	id = "fluid_potion"
+	alert_type = null
 	duration = 20 MINUTES
 	tick_interval = STATUS_EFFECT_NO_TICK
 	var/datum/fluid_modifier/modifier_type
@@ -198,14 +199,20 @@ GLOBAL_LIST_INIT(fluid_swap_blacklist, list(
 /atom/movable/screen/alert/status_effect/buff/fluid_surge
 	name = "Brimming"
 	desc = "My body makes its fluids twice as fast, and I release more of them."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "virility"
 
 /atom/movable/screen/alert/status_effect/debuff/fluid_ebb
 	name = "Ebbing"
 	desc = "My body makes its fluids slowly, and I release less of them."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "fluid_ebb"
 
 /atom/movable/screen/alert/status_effect/debuff/fluid_drought
 	name = "Dried Up"
 	desc = "My body makes no fluids at all."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "fluid_drought"
 
 /// Makes one organ produce the paired reagent; a new swap on the same organ replaces it.
 /datum/status_effect/buff/fluid_swap
@@ -256,6 +263,8 @@ GLOBAL_LIST_INIT(fluid_swap_blacklist, list(
 /atom/movable/screen/alert/status_effect/buff/fluid_swap
 	name = "Swapped Fluid"
 	desc = "One of my organs makes a different fluid for a while."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "fluid_swap"
 
 /obj/item/reagent_containers/glass/bottle/vial/fluid_surge
 	desc = "A vial of thick, rosy liquid. The label promises a bountiful yield."

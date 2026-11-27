@@ -25,6 +25,12 @@
 	if(handle_resurrection_rune_admin_topic(src, href_list))
 		return
 
+	//RMH EDITED START - gwynt collection management
+	if(href_list["ccg_manage"])
+		ccg_management_topic(href_list)
+		return
+	//RMH EDITED END
+
 	if(href_list["ahelp"])
 		if(!check_rights(R_ADMIN, TRUE))
 			return

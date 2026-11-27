@@ -869,7 +869,7 @@
 		release_awake()
 		return
 	released = TRUE
-	if(victim.defeat_mode == DEFEAT_MODE_KO_RUNE)
+	if(victim.get_effective_defeat_mode() == DEFEAT_MODE_KO_RUNE)
 		victim.kidnap_surface_rune_return()
 	grant_captivity_choices(victim)
 	// Nobody at the keyboard: wake the body rather than leave it knocked out in a lair for hours.

@@ -291,6 +291,7 @@
 	user.visible_message(span_info("[user] eats from [src]."), \
 			span_notice("I swallow a gulp of [src]."))
 	addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), user, min(amount_per_transfer_from_this, 5), TRUE, TRUE, FALSE, user, FALSE, INGEST), 5 DECISECONDS)
+	start_auto_spooning(user, tool)
 
 	return ITEM_INTERACT_SUCCESS
 
@@ -437,6 +438,7 @@
 
 /datum/reagent/consumable/soup // so you get hydrated without the flavor system messing it up. Works like water with less hydration
 	name = "soup"
+	dish_type = DISH_SOUP
 	var/hydration = 5
 
 /datum/reagent/consumable/soup/on_mob_metabolize(mob/living/L)
@@ -468,6 +470,7 @@
 /datum/reagent/consumable/soup/veggie
 	name = "vegetable soup"
 	description = ""
+	dish_type = DISH_SOUP | DISH_VEGETABLE
 	reagent_state = LIQUID
 	nutriment_factor = 7
 	taste_mult = 4
@@ -491,12 +494,14 @@
 
 /datum/reagent/consumable/soup/egg
 	name = "egg soup"
+	dish_type = DISH_SOUP | DISH_EGG
 	color = "#dedbaf"
 	taste_description = "egg soup"
 	nutriment_factor = 12
 
 /datum/reagent/consumable/soup/cheese // A thicker soup, almost on the level of old oatmeal. But less hydration than other soups
 	name = "cheese soup"
+	dish_type = DISH_SOUP | DISH_DAIRY
 	description = "A thick cheese soup. Creamy and comforting."
 	color = "#c4be70"
 	reagent_state = LIQUID
@@ -513,26 +518,32 @@
 	taste_mult = 4
 
 /datum/reagent/consumable/soup/stew/chicken
+	dish_type = DISH_SOUP | DISH_POULTRY
 	color = "#baa21c"
 	taste_description = "chicken"
 
 /datum/reagent/consumable/soup/stew/meat
+	dish_type = DISH_SOUP | DISH_MEAT
 	color = "#80432a"
 	taste_description = "meat stew"
 
 /datum/reagent/consumable/soup/stew/meat_meagre
+	dish_type = DISH_SOUP | DISH_MEAT
 	color = "#80432a"
 	taste_description = "meagre meat stew"
 
 /datum/reagent/consumable/soup/stew/fish
+	dish_type = DISH_SOUP | DISH_SEAFOOD
 	color = "#c7816e"
 	taste_description = "fish stew"
 
 /datum/reagent/consumable/soup/stew/truffle
+	dish_type = DISH_SOUP | DISH_VEGETABLE
 	color = "#5f4a0e"
 	taste_description = "rich truffles"
 
 /datum/reagent/consumable/soup/stew/borowiki
+	dish_type = DISH_SOUP | DISH_VEGETABLE
 	color = "#7c6b75"
 	taste_description = "hearty borowiki"
 
@@ -542,6 +553,7 @@
 
 /datum/reagent/consumable/soup/stew/gross // barely edible, but beggars eat it without issue, even getting a little relief
 	name = "beggars stew"
+	dish_fare = FARE_POOR
 	color = "#3b4537"
 	nutriment_factor = 8
 	taste_description = "something gross"

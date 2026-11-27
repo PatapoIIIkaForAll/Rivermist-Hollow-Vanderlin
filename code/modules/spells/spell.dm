@@ -537,6 +537,10 @@
 /datum/action/cooldown/spell/Activate(atom/target)
 	SHOULD_NOT_OVERRIDE(TRUE)
 
+	// AI controllers call Activate directly, past can_cast_spell.
+	if(owner && !can_invoke(feedback = FALSE))
+		return FALSE
+
 	// Pre-casting of the spell
 	// Pre-cast is the very last chance for a spell to cancel
 	// Stuff like target input can go here.
@@ -818,12 +822,28 @@
 			owner.balloon_alert(owner, "can't position your hands correctly to invoke!")
 		return FALSE
 
-	if((invocation_type == INVOCATION_WHISPER || invocation_type == INVOCATION_SHOUT) && !ignore_can_speak && !living_owner.can_speak_vocal())
+	var/refusal = spoken_invocation_refusal()
+	if(refusal)
 		if(feedback)
-			owner.balloon_alert(owner, "can't get the words out to invoke!")
+			to_chat(owner, span_warning(refusal))
 		return FALSE
 
 	return TRUE
+
+/// Why the owner cannot say this spell's spoken words, or null when they can or none are needed.
+/datum/action/cooldown/spell/proc/spoken_invocation_refusal()
+	if(ignore_can_speak || (spell_requirements & SPELL_CASTABLE_WITHOUT_INVOCATION))
+		return null
+	if(invocation_type != INVOCATION_WHISPER && invocation_type != INVOCATION_SHOUT)
+		return null
+	var/mob/living/living_owner = owner
+	// Wordless spoken spells, like bard songs, only need a voice.
+	var/has_words = length(invocation)
+	if(has_words && living_owner.is_speech_muffled())
+		return "I cannot speak the words with my mouth stopped."
+	if(!living_owner.can_speak_vocal() || (has_words && !living_owner.can_voice_words()))
+		return "I cannot get the words out."
+	return null
 
 /// Resets the cooldown of the spell, sending COMSIG_SPELL_CAST_RESET
 /// and allowing it to be used immediately (+ updating button icon accordingly)

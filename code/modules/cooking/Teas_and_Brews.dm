@@ -1,5 +1,6 @@
 // basic tea, utilises adjusted soup code
 /datum/reagent/consumable/tea
+	drink_type = DRINKTYPE_TEA
 	name = "Generic tea"
 	description = "If you see this, stop using moondust"
 	reagent_state = LIQUID

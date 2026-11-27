@@ -4,6 +4,7 @@
 
 /datum/status_effect/buff/alch
 	duration = 10 MINUTES
+	alert_type = null
 
 /datum/status_effect/buff/alch/strengthpot/weak
 	effectedstats = list(STAT_STRENGTH = 1)

@@ -109,11 +109,14 @@ GLOBAL_LIST_INIT(speech_barks, init_speech_barks())
 	/// Whether high arousal turns this character's speech into moans.
 	var/speech_moans = FALSE
 
-/// Whether this speech should bark: a bark is set, the words are not whispered and the mouth is not muffled.
+/// Whether this speech should bark: a bark is set, the words are spoken plainly and the mouth is not muffled.
 /mob/living/carbon/human/proc/can_speech_bark(list/message_mods)
 	if(!speech_bark || !GLOB.speech_barks[speech_bark])
 		return FALSE
-	if(message_mods && message_mods[WHISPER_MODE])
+	// Whispers, songs and moans keep their own sound for every listener.
+	if(message_mods && (message_mods[WHISPER_MODE] || message_mods[MODE_SING]))
+		return FALSE
+	if(should_speech_moan())
 		return FALSE
 	// A gagged mumble keeps the voice hidden, so no bark.
 	if(is_speech_muffled())
@@ -135,17 +138,23 @@ GLOBAL_LIST_INIT(speech_barks, init_speech_barks())
 /proc/speech_bark_count(message_length, speed)
 	return min(round(message_length / max(speed, 1)) + 1, SPEECH_BARK_MAX_BARKS)
 
-/// Queues the barks for one message to every listener in range who opted in.
-/mob/living/carbon/human/proc/queue_speech_barks(message, message_range, list/message_mods)
+/// Mobs in range who hear this message's barks. They hear the barks in place of the usual speech sound.
+/mob/living/carbon/human/proc/get_speech_bark_listeners(message, message_range, list/message_mods)
+	. = list()
 	if(!length(message) || !can_speech_bark(message_mods))
 		return
-	var/datum/speech_bark/bark = GLOB.speech_barks[speech_bark]
-	var/list/listeners = list()
 	for(var/mob/hearer in get_hearers_in_view(message_range, src))
 		if(client_hears_speech_barks(hearer.client))
-			listeners += hearer.client
-	if(!length(listeners))
+			. += hearer
+
+/// Queues the barks for one message to the listeners from get_speech_bark_listeners().
+/mob/living/carbon/human/proc/queue_speech_barks(message, message_range, list/bark_listeners)
+	var/datum/speech_bark/bark = GLOB.speech_barks[speech_bark]
+	if(!bark || !length(bark_listeners))
 		return
+	var/list/listeners = list()
+	for(var/mob/hearer as anything in bark_listeners)
+		listeners += hearer.client
 	var/speed = clamp(speech_bark_speed, bark.minspeed, bark.maxspeed)
 	var/pitch = clamp(speech_bark_pitch, bark.minpitch, bark.maxpitch)
 	var/variance = clamp(speech_bark_variance, bark.minvariance, bark.maxvariance)
@@ -193,13 +202,13 @@ GLOBAL_LIST_INIT(speech_barks, init_speech_barks())
 	prefs.write_preference(/datum/preference/choiced/speech_bark, picked)
 	var/datum/speech_bark/bark = GLOB.speech_barks[picked]
 	if(bark)
-		var/speed = tgui_input_number(src, "Letters per bark, [bark.minspeed] to [bark.maxspeed]. Lower is faster.", "Bark Speed", prefs.read_preference(/datum/preference/numeric/speech_bark_speed), bark.maxspeed, bark.minspeed)
+		var/speed = tgui_input_number(src, "Letters per bark, [bark.minspeed] to [bark.maxspeed]. Lower is faster.", "Bark Speed", clamp(prefs.read_preference(/datum/preference/numeric/speech_bark_speed), bark.minspeed, bark.maxspeed), bark.maxspeed, bark.minspeed)
 		if(!isnull(speed))
 			prefs.write_preference(/datum/preference/numeric/speech_bark_speed, speed)
-		var/pitch = tgui_input_number(src, "Pitch, [bark.minpitch] to [bark.maxpitch].", "Bark Pitch", prefs.read_preference(/datum/preference/numeric/speech_bark_pitch), bark.maxpitch, bark.minpitch, round_value = FALSE)
+		var/pitch = tgui_input_number(src, "Pitch, [bark.minpitch] to [bark.maxpitch].", "Bark Pitch", clamp(prefs.read_preference(/datum/preference/numeric/speech_bark_pitch), bark.minpitch, bark.maxpitch), bark.maxpitch, bark.minpitch, round_value = FALSE)
 		if(!isnull(pitch))
 			prefs.write_preference(/datum/preference/numeric/speech_bark_pitch, pitch)
-		var/variance = tgui_input_number(src, "Pitch variance per bark, [bark.minvariance] to [bark.maxvariance].", "Bark Variance", prefs.read_preference(/datum/preference/numeric/speech_bark_variance), bark.maxvariance, bark.minvariance, round_value = FALSE)
+		var/variance = tgui_input_number(src, "Pitch variance per bark, [bark.minvariance] to [bark.maxvariance].", "Bark Variance", clamp(prefs.read_preference(/datum/preference/numeric/speech_bark_variance), bark.minvariance, bark.maxvariance), bark.maxvariance, bark.minvariance, round_value = FALSE)
 		if(!isnull(variance))
 			prefs.write_preference(/datum/preference/numeric/speech_bark_variance, variance)
 	prefs.save_character()

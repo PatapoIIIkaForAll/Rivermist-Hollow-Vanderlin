@@ -45,8 +45,11 @@
 	var/obj/item/held_item = bumping.get_active_held_item()
 	// !held_item exists to be nice to snow. the other bit is for pickaxes obviously
 	if(!held_item && !bumping.throwing)
+		// Players climb rock through the auto-climb toggle in /mob/living/Bump.
+		if(wallclimb && bumping.client)
+			return
 		INVOKE_ASYNC(bumping, TYPE_PROC_REF(/mob, ClickOn), src)
-	else if(held_item.tool_behaviour == TOOL_MINING)
+	else if(held_item?.tool_behaviour == TOOL_MINING)
 		attackby(held_item, bumping)
 
 /turf/closed/mineral/LateInitialize()

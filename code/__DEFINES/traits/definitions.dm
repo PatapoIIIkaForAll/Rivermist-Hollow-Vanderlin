@@ -471,6 +471,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_RECOGNIZE_ADDICTS	"Addict Recognition"
 #define TRAIT_NOENERGY "Boundless Energy" //Specifically, You don't lose fatigue, but you do continue losing stamina.
 #define TRAIT_KEENEARS "Keen Ears"
+#define TRAIT_SENSITIVE_EARS "Sensitive Ears"
 #define TRAIT_POISON_RESILIENCE "Poison Resilience"
 #define TRAIT_SEED_FINDER "Seed Finder"
 /// Cannot count coins
@@ -663,6 +664,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_DARKLING 			"Darkling"
 #define TRAIT_WILDMAGIC 		"Wildmagic"
 #define TRAIT_DRUNKMASTER 		"Drunkmaster"
+/// Severs the body's rune bond and makes defeat and revival use lethal rules.
 #define TRAIT_RUNE_SEVERED		"runesevered"
 #define TRAIT_FREEZEHUNGER 		"Freeze Hunger"
 #define TRAIT_EGG_LAYER "vaginal_egg_layer"

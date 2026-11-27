@@ -1192,6 +1192,7 @@ GLOBAL_LIST_INIT(fish_compatible_fluid_types, list(
 	fish_traits = list(/datum/fish_trait/vegan, /datum/fish_trait/yucky)
 
 /obj/item/reagent_containers/food/snacks/fryfish
+	dish_type = DISH_SEAFOOD
 	icon = 'icons/roguetown/misc/fish.dmi'
 	trash = null
 	nutrition = RAWMEAT_NUTRITION * DRIED_MOD
@@ -1265,6 +1266,7 @@ GLOBAL_LIST_INIT(fish_compatible_fluid_types, list(
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/reagent_containers/food/snacks/chocolate_carp
+	dish_type = DISH_SEAFOOD|DISH_SWEET
 	name = "le carp au chocolat"
 	desc = "Plundered Darkholdian chocolate drizzled over fish, this abomination is a delicacy to dark elves. In this case the eyeless cave fish has been substituted for a carp."
 	icon_state = "chocolatecarp"

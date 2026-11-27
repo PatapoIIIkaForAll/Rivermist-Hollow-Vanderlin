@@ -69,8 +69,21 @@
 		return
 	playsound(user, pick('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg'), 100, FALSE)
 	user.visible_message(span_info("[user] starts to drink from [src]."))
-	if(do_after(user, 2.5 SECONDS, src))
+	if(!do_after(user, 2.5 SECONDS, src))
+		return TRUE
+	drink_from(user)
+	while(auto_drink && user.auto_consume_continues(TRUE, FALSE, has_drink()))
+		if(!user.auto_consume_wait(2.5 SECONDS, src) || !has_drink())
+			break
 		drink_from(user)
+	return TRUE
+
+/obj/structure/well/fountain
+	/// Non-stop drinking repeats gulps here; FALSE keeps it to one gulp per drink.
+	var/auto_drink = TRUE
+
+/// Whether this fountain has water to drink now.
+/obj/structure/well/fountain/proc/has_drink()
 	return TRUE
 
 /obj/structure/well/fountain/proc/drink_from(mob/living/user)

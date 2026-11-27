@@ -31,21 +31,18 @@
 		. = ..()
 		return INITIALIZE_HINT_QDEL
 	if(T.muddy)
-		if(!(locate(/obj/item/natural/worms) in T))
-			if(prob(40))
-				if(prob(10))
-					new /obj/item/natural/worms/grub_silk(T)
-				else
-					new /obj/item/natural/worms/leech(T)
+		if(prob(40))
+			if(prob(10))
+				new /obj/item/natural/worms/grub_silk(T)
 			else
-				new /obj/item/natural/worms(T)
-		if(!(locate(/obj/item/natural/clay) in T))
-			if(prob(25))
-				new /obj/item/natural/clay(T)
+				new /obj/item/natural/worms/leech(T)
+		else
+			new /obj/item/natural/worms(T)
+		if(prob(25))
+			new /obj/item/natural/clay(T)
 	else
-		if(!(locate(/obj/item/natural/stone) in T))
-			if(prob(23))
-				new /obj/item/natural/stone(T)
+		if(prob(23))
+			new /obj/item/natural/stone(T)
 	return ..()
 
 /obj/structure/closet/dirthole/grave

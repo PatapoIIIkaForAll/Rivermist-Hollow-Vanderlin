@@ -5,6 +5,9 @@
 /datum/preference/toggle/hole_shake
 	savefile_key = "hole_shake"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Body shake"
+	toggles_menu_desc = "Let your character shake when toys, eggs, births or portals move inside them."
 	category = "gameplay"
 	can_randomize = FALSE
 	should_update_preview = FALSE

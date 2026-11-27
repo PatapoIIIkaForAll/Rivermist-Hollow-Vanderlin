@@ -7,8 +7,6 @@
 		if(ITEM_SLOT_BELT)
 			return belt
 		if(ITEM_SLOT_RING)
-			if(ring_slot_target)
-				return wear_rings[ring_slot_target]
 			for(var/obj/item/ring in wear_rings)
 				return ring
 			return null
@@ -184,6 +182,7 @@
 				return
 			wear_rings[ring_index] = equipping
 			update_inv_ring()
+			refresh_ring_bonuses()
 		if(ITEM_SLOT_WRISTS)
 			if(wear_wrists)
 				return
@@ -340,6 +339,7 @@
 	else if(I in wear_rings)
 		wear_rings[wear_rings.Find(I)] = null
 		I.update_transform()
+		on_ring_removed(I)
 		if(!QDELETED(src))
 			update_inv_ring()
 	else if(I == wear_wrists)

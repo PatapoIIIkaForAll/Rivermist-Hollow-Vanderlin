@@ -217,6 +217,23 @@
 	TEST_ASSERT_EQUAL(length(SSgarbage.failed_hard_deletes), FAILED_HARD_DELETES_KEPT, "Skipped hard deletes are kept without a bound.")
 	SSgarbage.failed_hard_deletes = old_failures
 
+/datum/unit_test/live_runtime_skipped_hard_deletes_counted
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_skipped_hard_deletes_counted/Run()
+	if(SSgarbage.enable_hard_deletes)
+		return
+	var/datum/qdel_item/before_info = SSgarbage.items[/datum]
+	var/before = before_info?.hard_deletes_skipped || 0
+	var/list/old_failures = SSgarbage.failed_hard_deletes.Copy()
+	SSgarbage.HardDelete(new /datum)
+	SSgarbage.failed_hard_deletes = old_failures
+	var/datum/qdel_item/after_info = SSgarbage.items[/datum]
+	TEST_ASSERT_NOTNULL(after_info, "A skipped hard delete of a type that never went through qdel got no stats entry.")
+	TEST_ASSERT_EQUAL(after_info.hard_deletes_skipped, before + 1, "A skipped hard delete was not counted for its type.")
+
 /datum/unit_test/live_runtime_hud_releases_screens
 #ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
 	focus = TRUE
@@ -263,6 +280,162 @@
 	var/datum/http_response/response = request.wait_for_response(10 SECONDS)
 	TEST_ASSERT_NOTNULL(response, "A refused request ran into the wait deadline.")
 	TEST_ASSERT(response.errored, "A refused request did not report an error.")
+
+/datum/unit_test/live_runtime_accessory_icon_cache_bounded
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_accessory_icon_cache_bounded/Run()
+	var/datum/sprite_accessory/accessory = allocate(/datum/sprite_accessory)
+	var/icon/bundle = icon('icons/effects/effects.dmi', "nothing")
+	for(var/i in 1 to 8100)
+		accessory.store_accessory_icon("live_runtime_test_[i]", bundle)
+	var/newest = accessory.accessory_icon_cache["live_runtime_test_8100"]
+	var/cache_size = length(accessory.accessory_icon_cache)
+	// The cache is shared by every accessory; the next draw rebuilds what this drops.
+	accessory.accessory_icon_cache.Cut()
+	TEST_ASSERT(cache_size <= 8000, "accessory_icon_cache grew to [cache_size] keys.")
+	TEST_ASSERT_NOTNULL(newest, "The newest bundle was not cached.")
+	TEST_ASSERT(!istype(newest, /icon), "The cache kept a decoded /icon instead of a resource.")
+
+/datum/unit_test/live_runtime_individual_log_bounded
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_individual_log_bounded/Run()
+	var/list/type_log = list()
+	for(var/i in 1 to 1100)
+		append_individual_log(type_log, list("line [i]" = "message [i]"))
+	TEST_ASSERT(length(type_log) <= 1000, "An individual log grew to [length(type_log)] lines.")
+	TEST_ASSERT_EQUAL(type_log["line 1100"], "message 1100", "The newest line was dropped.")
+	TEST_ASSERT_NULL(type_log["line 1"], "The oldest line was kept.")
+
+/datum/unit_test/live_runtime_browser_not_pinned_to_user
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_browser_not_pinned_to_user/Run()
+	var/mob/living/carbon/human/reader = allocate(/mob/living/carbon/human)
+	var/obj/item/paper/source = allocate(/obj/item/paper)
+	var/datum/browser/popup = new(reader, "live_runtime_test", "Test", 300, 300, source)
+	var/list/reader_listeners = reader.comp_lookup?[COMSIG_PARENT_QDELETING]
+	var/list/source_listeners = source.comp_lookup?[COMSIG_PARENT_QDELETING]
+	TEST_ASSERT(reader_listeners != popup && !(islist(reader_listeners) && (popup in reader_listeners)), "A one-shot browser is held by its user's signals.")
+	TEST_ASSERT(source_listeners != popup && !(islist(source_listeners) && (popup in source_listeners)), "A one-shot browser is held by its owner's signals.")
+
+/datum/unit_test/live_runtime_hard_delete_waits_for_full_check
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_hard_delete_waits_for_full_check/Run()
+	if(SSgarbage.enable_hard_deletes)
+		return
+	var/datum/recent = new
+	recent.gc_destroyed = world.time
+	var/skipped_before = SSgarbage.failed_hard_delete_count
+	SSgarbage.HardDelete(recent)
+	var/list/check_queue = SSgarbage.queues[GC_QUEUE_CHECK]
+	var/list/last_entry = length(check_queue) ? check_queue[length(check_queue)] : null
+	var/requeued = last_entry?[GC_QUEUE_ITEM_REF] == recent
+	if(requeued)
+		check_queue.len--
+	recent.gc_destroyed = null
+	TEST_ASSERT(requeued, "An object queued for a hard delete seconds ago was not given the full check first.")
+	TEST_ASSERT_EQUAL(SSgarbage.failed_hard_delete_count, skipped_before, "An object was counted as left in memory before its full check.")
+
+/datum/signal_dispatch_probe
+	var/datum/signal_dispatch_probe/drops
+	var/called = FALSE
+
+/datum/signal_dispatch_probe/proc/on_probe_signal(datum/source)
+	SIGNAL_HANDLER
+	called = TRUE
+	drops?.UnregisterSignal(source, "live_runtime_probe_signal")
+
+/datum/unit_test/live_runtime_signal_unregister_mid_send
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_signal_unregister_mid_send/Run()
+	var/datum/sender = allocate(/datum)
+	var/datum/signal_dispatch_probe/first = allocate(/datum/signal_dispatch_probe)
+	var/datum/signal_dispatch_probe/second = allocate(/datum/signal_dispatch_probe)
+	first.drops = second
+	first.RegisterSignal(sender, "live_runtime_probe_signal", TYPE_PROC_REF(/datum/signal_dispatch_probe, on_probe_signal))
+	second.RegisterSignal(sender, "live_runtime_probe_signal", TYPE_PROC_REF(/datum/signal_dispatch_probe, on_probe_signal))
+	// A runtime here fails the test through the error handler.
+	SEND_SIGNAL(sender, "live_runtime_probe_signal")
+	first.drops = null
+	TEST_ASSERT(first.called && second.called, "A listener dropped during the send did not get that send.")
+	TEST_ASSERT(!second.signal_procs?[sender], "The dropped listener is still registered.")
+
+/datum/unit_test/live_runtime_lockpicking_ui_cleans_up
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_lockpicking_ui_cleans_up/Run()
+	var/atom/movable/screen/movable/snap/lockpicking/picking_ui = new
+	var/list/parts = list(picking_ui.linked_lock, picking_ui.linked_pick, picking_ui.linked_wedge)
+	qdel(picking_ui)
+	for(var/obj/part as anything in parts)
+		TEST_ASSERT(QDELETED(part), "The lockpicking screen left one of its parts alive.")
+	TEST_ASSERT(!length(picking_ui.vis_contents), "The lockpicking screen kept its parts in vis_contents.")
+
+/datum/unit_test/live_runtime_ai_controller_zlevel_list
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_ai_controller_zlevel_list/Run()
+	var/mob/living/simple_animal/hostile/pawn = allocate(/mob/living/simple_animal/hostile)
+	var/datum/ai_controller/controller = pawn.ai_controller
+	if(!controller)
+		controller = allocate(/datum/ai_controller, pawn)
+	var/start_z = controller.registered_zlevel
+	TEST_ASSERT_EQUAL(start_z, pawn.z, "A new controller is not listed on its pawn's z-level.")
+	var/other_z = start_z > 1 ? start_z - 1 : start_z + 1
+	if(other_z > length(GLOB.ai_controllers_by_zlevel))
+		return
+	// Stands in for a z change the list missed while a player drove the pawn.
+	controller.set_registered_zlevel(other_z)
+	TEST_ASSERT(!(controller in GLOB.ai_controllers_by_zlevel[start_z]), "The controller stayed listed on its old z-level.")
+	qdel(pawn)
+	TEST_ASSERT(!(controller in GLOB.ai_controllers_by_zlevel[other_z]), "A deleted pawn's controller stayed listed on the z-level it was registered on.")
+
+/datum/unit_test/live_runtime_pocket_native_forgotten_on_delete
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_pocket_native_forgotten_on_delete/Run()
+	var/datum/pocket_dimension/pocket = allocate(/datum/pocket_dimension)
+	var/obj/item/paper/native = allocate(/obj/item/paper)
+	pocket.track_native_movable(native)
+	pocket.native_movable_keys[native] = "live_runtime_slot"
+	pocket.native_movables_by_key["live_runtime_slot"] = native
+	pocket.native_slot_offsets["live_runtime_slot"] = list(0, 0)
+	qdel(native)
+	TEST_ASSERT(!pocket.native_movables[native], "A deleted native movable is still in native_movables.")
+	TEST_ASSERT(!pocket.native_movable_keys[native], "A deleted native movable is still in native_movable_keys.")
+	TEST_ASSERT_NULL(pocket.native_movables_by_key["live_runtime_slot"], "A deleted native movable is still in native_movables_by_key.")
+	TEST_ASSERT(pocket.native_slot_offsets["live_runtime_slot"], "The deleted native's slot was dropped, so a snapshot cannot mark it removed.")
+
+/datum/unit_test/live_runtime_skeleton_outfit_keeps_underwear_slot
+#ifdef FOCUS_LIVE_RUNTIME_REGRESSIONS
+	focus = TRUE
+#endif
+
+/datum/unit_test/live_runtime_skeleton_outfit_keeps_underwear_slot/Run()
+	var/mob/living/carbon/human/skeleton = allocate(/mob/living/carbon/human)
+	var/datum/outfit/skeleton/outfit = new
+	outfit.pre_equip(skeleton)
+	TEST_ASSERT(!istext(skeleton.underwear), "The skeleton outfit wrote a text value into the underwear item slot.")
 
 #undef TEST_TRIUMPH_SEASON
 #undef TEST_TRIUMPH_AMOUNT

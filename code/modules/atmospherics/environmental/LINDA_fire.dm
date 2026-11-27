@@ -1,4 +1,7 @@
-
+/// Percent chance per weather tick that rain puts out an exposed fire, before severity is added.
+#define HOTSPOT_RAIN_DOUSE_CHANCE 10
+/// Spread chance multiplier for each rained-on turf involved: the burning one and the one it spreads to.
+#define HOTSPOT_RAIN_SPREAD_MODIFIER 0.5
 
 /atom/proc/temperature_expose(exposed_temperature, exposed_volume)
 	return null
@@ -14,6 +17,14 @@
 		liquids.liquid_group.ignite_turf(src)
 
 	return
+
+/// Puts out the flames on this turf, the burning objects in it and burning liquid on it. Light sources are left alone.
+/turf/proc/extinguish_turf()
+	for(var/obj/thing in src)
+		if(istype(thing, /obj/effect/hotspot) || (thing.resistance_flags & ON_FIRE))
+			thing.extinguish()
+	if(liquids?.fire_state)
+		liquids.liquid_group?.extinguish(src)
 
 //This is the icon for fire on turfs, also helps for nurturing small fires until they are full tile
 /obj/effect/hotspot
@@ -39,13 +50,15 @@
 		new /obj/effect/temp_visual/small_smoke(src.loc)
 	qdel(src)
 
-/obj/effect/hotspot/Initialize(mapload, starting_volume, starting_temperature)
+/obj/effect/hotspot/Initialize(mapload, starting_volume, starting_temperature, starting_life)
 	. = ..()
 	SShotspots.hotspots += src
 	if(!isnull(starting_volume))
 		volume = starting_volume
 	if(!isnull(starting_temperature))
 		temperature = starting_temperature
+	if(!isnull(starting_life))
+		life = starting_life
 	perform_exposure()
 	setDir(pick(GLOB.cardinals))
 	air_update_turf()
@@ -56,7 +69,8 @@
 	if(weather_trait != PARTICLEWEATHER_RAIN)
 		return
 	life -= 2 * (severity / 5)
-
+	if(prob(HOTSPOT_RAIN_DOUSE_CHANCE + severity))
+		extinguish()
 
 /obj/effect/hotspot/proc/perform_exposure()
 
@@ -182,66 +196,61 @@
 			continue
 		object.fire_act(temperature * firelevel * 0.1)
 
-	var/burn_power = 0
-	var/modifier = 1
-	if(SSParticleWeather.runningWeather?.target_trait == PARTICLEWEATHER_RAIN) //this does apply to indoor turfs but w/e
-		var/turf/floor= get_turf(src)
-		if(!floor?.outdoor_effect?.weatherproof)
-			modifier *= 0.5
-	if(isturf(get_turf(src)))
-		var/turf/floor= get_turf(src)
-		floor.burn_power = max(0, floor.burn_power - (1 * firelevel))
-		if(floor.burn_power == 0)
+	var/turf/floor = loc
+	if(!isturf(floor))
+		return
+	// Stone, earth and other ground that cannot burn: the flames die out with their own life and never spread or grow.
+	if(!initial(floor.burn_power))
+		if(istype(floor, /turf/open/water))
 			extinguish()
-		burn_power += floor.burn_power
-		if(prob(floor.spread_chance * modifier))
-			change_firelevel(min(3, firelevel+1))
+		return
+	floor.burn_power = max(0, floor.burn_power - firelevel)
+	if(!floor.burn_power)
+		extinguish()
+		return
+	var/modifier = floor.is_rained_on() ? HOTSPOT_RAIN_SPREAD_MODIFIER : 1
+	if(prob(floor.spread_chance * modifier))
+		change_firelevel(min(3, firelevel+1))
 
-		if(burn_power)
-			for(var/turf/ranged_floor as anything in RANGE_TURFS(1, src))
-				var/falling = FALSE
-				if(isopenspace(ranged_floor))
-					falling = TRUE
-					var/sanity = 0
-					while(isopenspace(ranged_floor) && sanity < 10)
-						sanity++
-						ranged_floor = GET_TURF_BELOW(ranged_floor)
+	for(var/turf/ranged_floor as anything in RANGE_TURFS(1, floor))
+		if(isopenspace(ranged_floor))
+			var/sanity = 0
+			while(isopenspace(ranged_floor) && sanity < 10)
+				sanity++
+				ranged_floor = GET_TURF_BELOW(ranged_floor)
 
-				if(ranged_floor == src || (!ranged_floor.burn_power && !falling))
-					continue
-				var/obj/effect/hotspot/located_fire = locate() in ranged_floor
-				if(prob(ranged_floor.spread_chance * modifier) && !located_fire)
-					if(ranged_floor.liquids)
-						ranged_floor.fire_act(temperature * firelevel)
-						continue
-					new /obj/effect/hotspot(ranged_floor, volume, temperature)
+		if(!ranged_floor?.burn_power)
+			continue
+		if(locate(/obj/effect/hotspot) in ranged_floor)
+			continue
+		var/target_modifier = ranged_floor.is_rained_on() ? modifier * HOTSPOT_RAIN_SPREAD_MODIFIER : modifier
+		if(!prob(ranged_floor.spread_chance * target_modifier))
+			continue
+		if(ranged_floor.liquids)
+			ranged_floor.fire_act(temperature * firelevel)
+			continue
+		new /obj/effect/hotspot(ranged_floor, volume, temperature)
 
-					for(var/obj/structure/stairs/stair in ranged_floor)
+		for(var/obj/structure/stairs/stair in ranged_floor)
+			spread_to(GET_TURF_ABOVE(get_step(ranged_floor, stair.dir)), /obj/structure/stairs)
+			spread_to(GET_TURF_BELOW(get_step(ranged_floor, REVERSE_DIR(stair.dir))), /obj/structure/stairs)
 
-						var/turf/spreader_level = GET_TURF_ABOVE(get_step(ranged_floor, stair.dir))
-						for(var/obj/structure/stairs/upper_stair in spreader_level)
-							new /obj/effect/hotspot(spreader_level, volume, temperature)
-							break
+		for(var/obj/structure/ladder/ladder in ranged_floor)
+			spread_to(GET_TURF_ABOVE(ranged_floor), /obj/structure/ladder)
+			spread_to(GET_TURF_BELOW(ranged_floor), /obj/structure/ladder)
 
-						spreader_level = GET_TURF_BELOW(get_step(ranged_floor, REVERSE_DIR(stair.dir)))
-						for(var/obj/structure/stairs/lower_stair in spreader_level)
-							new /obj/effect/hotspot(spreader_level, volume, temperature)
-							break
-
-					for(var/obj/structure/ladder/ladder in ranged_floor)
-						var/turf/spreader_level = GET_TURF_ABOVE(ranged_floor)
-						for(var/obj/structure/ladder/upper_stair in spreader_level)
-							new /obj/effect/hotspot(spreader_level, volume, temperature)
-							break
-
-						spreader_level = GET_TURF_BELOW(ranged_floor)
-						for(var/obj/structure/ladder/lower_stair in spreader_level)
-							new /obj/effect/hotspot(spreader_level, volume, temperature)
-							break
-
+/// Carries the fire along stairs or a ladder to a flammable turf on another level that is not burning yet.
+/obj/effect/hotspot/proc/spread_to(turf/target, connector_type)
+	if(!target?.burn_power)
+		return
+	if(!(locate(connector_type) in target) || (locate(/obj/effect/hotspot) in target))
+		return
+	new /obj/effect/hotspot(target, volume, temperature)
 
 /obj/effect/hotspot/proc/change_firelevel(level = 1)
 	firelevel = level
 	icon_state = "[firelevel]"
 
 #undef INSUFFICIENT
+#undef HOTSPOT_RAIN_DOUSE_CHANCE
+#undef HOTSPOT_RAIN_SPREAD_MODIFIER

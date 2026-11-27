@@ -403,6 +403,7 @@
 /datum/anvil_recipe/tools/gold/platter
 	name = "2x Platters (gold)"
 	created_item = /obj/item/plate/gold
+	createditem_extra = 1
 	craftdiff = 2
 
 /datum/anvil_recipe/tools/gold/goldchain

@@ -1,4 +1,4 @@
-// Because we can control each corner of every lighting object.
+// Because we can control each corner of every turf's lighting.
 // And corners get shared between multiple turfs (unless you're on the corners of the map, then 1 corner doesn't).
 // For the record: these should never ever ever be deleted, even if the turf doesn't have dynamic lighting.
 
@@ -24,6 +24,8 @@ GLOBAL_LIST_INIT(LIGHTING_CORNER_DIAGONAL, list(NORTHEAST, SOUTHEAST, SOUTHWEST,
 	var/cache_g = LIGHTING_SOFT_THRESHOLD
 	var/cache_b = LIGHTING_SOFT_THRESHOLD
 	var/cache_mx = 0
+	/// cache_r, cache_g and cache_b packed into one number, each as 0..64 in base 65.
+	var/cache_id = 0
 
 /datum/lighting_corner/New(turf/new_turf, diagonal)
 	. = ..()
@@ -78,7 +80,7 @@ GLOBAL_LIST_INIT(LIGHTING_CORNER_DIAGONAL, list(NORTHEAST, SOUTHEAST, SOUTHWEST,
 /datum/lighting_corner/proc/update_active()
 	active = FALSE
 	for(var/turf/T as anything in masters)
-		if(T.lighting_object)
+		if(T.lighting_look)
 			active = TRUE
 
 // God that was a mess, now to do the rest of the corner code! Hooray!
@@ -95,7 +97,7 @@ GLOBAL_LIST_INIT(LIGHTING_CORNER_DIAGONAL, list(NORTHEAST, SOUTHEAST, SOUTHWEST,
 		SSlighting.corners_queue += src
 
 /datum/lighting_corner/proc/update_objects()
-	// Cache these values a head of time so 4 individual lighting objects don't all calculate them individually.
+	// Cache these values a head of time so 4 individual turfs don't all calculate them individually.
 	var/lum_r = src.lum_r
 	var/lum_g = src.lum_g
 	var/lum_b = src.lum_b
@@ -118,11 +120,11 @@ GLOBAL_LIST_INIT(LIGHTING_CORNER_DIAGONAL, list(NORTHEAST, SOUTHEAST, SOUTHWEST,
 	#endif
 	cache_mx = round(mx, LIGHTING_ROUND_VALUE)
 
+	cache_id = clamp(round(cache_r * 64), 0, 64) + 65 * clamp(round(cache_g * 64), 0, 64) + 4225 * clamp(round(cache_b * 64), 0, 64)
+
 	for(var/turf/T as anything in masters)
-		if(T.lighting_object)
-			if(!T.lighting_object.needs_update)
-				T.lighting_object.needs_update = TRUE
-				SSlighting.objects_queue += T.lighting_object
+		if(T.lighting_look)
+			T.queue_lighting_update()
 
 /datum/lighting_corner/dummy/New()
 	return

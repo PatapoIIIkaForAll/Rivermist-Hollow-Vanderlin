@@ -52,6 +52,8 @@ block( \
 #define TURF_BEING_WEATHERED (1<<4)
 /// Turf is currently queued in GLOB.SUNLIGHT_QUEUE_CORNER and should not be re-queued to avoid duplicates
 #define TURF_SUNLIGHT_QUEUED (1<<5)
+/// Turf is currently in SSlighting.turf_queue and should not be re-queued
+#define TURF_LIGHTING_QUEUED (1<<6)
 
 //water_height defines
 #define WATER_HEIGHT_ANKLE 1

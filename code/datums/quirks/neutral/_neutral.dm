@@ -109,3 +109,11 @@
 	desc = "My fluids pool into proper puddles on the ground instead of scattering as stray drops."
 	desc_hint = "Genital fluids form liquid puddles directly, bypassing the drip decals."
 	point_value = 0
+
+/datum/quirk/neutral/sensitive_ears
+	name = "Sensitive Ears"
+	desc = "My ears are tender. A touch, a lick or a nibble there goes straight to my head."
+	desc_hint = "Ear rubbing, licking and nibbling arouse you as much as they would an elf. Pointed and animal ears already have this."
+	point_value = 0
+	random_exempt = TRUE
+	traits_to_add = list(TRAIT_SENSITIVE_EARS)

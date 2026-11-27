@@ -152,7 +152,7 @@
 	if(stings)
 		to_chat(owner, span_warning("It leaves a stinging wetness behind."))
 	else if((opening?.get_lube_level() || 0) > lube_before)
-		to_chat(owner, span_love("It leaves me slick and dripping."))
+		to_chat(owner, span_ovi("It leaves me slick and dripping."))
 
 /// The glow after an easy birth.
 /datum/stress_event/birth_afterglow
@@ -198,9 +198,9 @@
 	egg.forceMove(get_turf(src))
 	var/location = container.get_oviposition_location_name()
 	if(BIRTH_FEELS_GOOD(share))
-		visible_message(span_notice("[src] [container.get_oviposition_lay_verb()] [egg] with a last, shuddering push."), span_love("With a last push, the [egg.name] slides out of my [location] in a hot rush that is all pleasure[feel]."))
+		visible_message(span_love_climax("[src] [container.get_oviposition_lay_verb()] [egg] with a last, shuddering push."), span_love_climax("With a last push, the [egg.name] slides out of my [location] in a hot rush that is all pleasure[feel]."))
 	else
-		visible_message(span_notice("[src] [container.get_oviposition_lay_verb()] [egg] with a last hard push."), span_love("With a last push, the [egg.name] slides out of my [location][feel]."))
+		visible_message(span_love_climax("[src] [container.get_oviposition_lay_verb()] [egg] with a last hard push."), span_love_climax("With a last push, the [egg.name] slides out of my [location][feel]."))
 	feel_birth_passage(share, opening)
 	return TRUE
 
@@ -285,7 +285,7 @@
 	var/ease = get_birth_pleasure_share(opening, girth, FALSE)
 	var/pushes = clamp(1 + round(strain_over * 2), 1, EGG_PUSH_MAX_PUSHES)
 	if(BIRTH_FEELS_GOOD(share))
-		visible_message(span_notice("[src] squats down, breathing slow, and bears down."), span_love("I squat down and bear down on the [passenger.name] inside me, and the pressure of it feels good..."))
+		visible_message(span_notice("[src] squats down, breathing slow, and bears down."), span_ovi("I squat down and bear down on the [passenger.name] inside me, and the pressure of it feels good..."))
 	else
 		visible_message(span_warning("[src] squats down and strains, bearing down."), span_warning("I squat down and bear down on the [passenger.name] inside me..."))
 	var/done = 0
@@ -312,9 +312,9 @@
 			to_chat(src, span_warning(is_hatchling ? "It squirms back up and clings. I have to start that push over." : "It slips back deeper. I have to start that push over."))
 			continue
 		if(BIRTH_FEELS_GOOD(share))
-			to_chat(src, span_love(pick("It moves, and the slide of it makes me gasp.", "I feel it shift lower, pressing against the opening, and heat follows it.", "Almost... I bear down, and it feels so good.")))
+			to_chat(src, span_ovi(pick("It moves, and the slide of it makes me gasp.", "I feel it shift lower, pressing against the opening, and heat follows it.", "Almost... I bear down, and it feels so good.")))
 		else if(BIRTH_FEELS_MIXED(share))
-			to_chat(src, span_love(pick("It moves, barely. The stretch aches and tingles at once.", "I feel it shift lower, and the ache carries a strange warmth.")))
+			to_chat(src, span_ovi(pick("It moves, barely. The stretch aches and tingles at once.", "I feel it shift lower, and the ache carries a strange warmth.")))
 		else
 			to_chat(src, span_warning(pick("It moves, barely. I push again.", "I feel it shift lower, pressing against the opening.", "Almost... I bear down harder.")))
 	return expel_passenger_now(passenger, container)
@@ -434,7 +434,7 @@
 	next_event = world.time + (voluntary ? 2 SECONDS : LABOUR_CONTRACTION_GAP / 2)
 	var/location = container.get_oviposition_location_name()
 	if(BIRTH_FEELS_GOOD(get_feel(passenger, container)))
-		carrier.visible_message(span_notice("[carrier] goes still and presses a hand low on [carrier.p_their()] belly, lips parting."), span_love("My [location] clenches around the [passenger.name], and a hot shiver follows. It is coming."))
+		carrier.visible_message(span_notice("[carrier] goes still and presses a hand low on [carrier.p_their()] belly, lips parting."), span_ovi("My [location] clenches around the [passenger.name], and a hot shiver follows. It is coming."))
 	else
 		carrier.visible_message(span_warning("[carrier] goes still and presses a hand to [carrier.p_their()] belly."), span_userdanger("My [location] clenches hard around the [passenger.name]. It is coming."))
 	if(fatigue)
@@ -488,7 +488,7 @@
 				self_text = "Another wave, stronger, squeezing the [passenger.name] lower. Heat follows it."
 			else
 				self_text = pick("The waves come close now, each one a hot pulse that leaves me gasping.", "My whole body bears down on its own, and every clench sends pleasure through me.")
-		carrier.visible_message(span_notice("[carrier] shudders, a hand pressed low on [carrier.p_their()] belly, breath catching."), span_love(self_text))
+		carrier.visible_message(span_notice("[carrier] shudders, a hand pressed low on [carrier.p_their()] belly, breath catching."), span_ovi(self_text))
 	else if(BIRTH_FEELS_MIXED(share))
 		switch(contractions_done)
 			if(1)
@@ -497,7 +497,7 @@
 				self_text = "Another contraction, stronger, squeezing the [passenger.name] lower. Ache and want tangle together."
 			else
 				self_text = pick("The contractions come hard and close. Each one aches, and each one leaves a warm throb behind.", "My body bears down on its own, and I can't tell the ache from the want.")
-		carrier.visible_message(span_warning("[carrier] doubles over with a shaky groan, clutching [carrier.p_their()] belly."), span_love(self_text))
+		carrier.visible_message(span_warning("[carrier] doubles over with a shaky groan, clutching [carrier.p_their()] belly."), span_ovi(self_text))
 	else
 		switch(contractions_done)
 			if(1)
@@ -518,7 +518,7 @@
 		phase = LABOUR_PHASE_PUSHING
 		next_event = world.time + LABOUR_PUSH_DELAY
 		if(BIRTH_FEELS_GOOD(share))
-			carrier.visible_message(span_notice("[carrier] sinks down, thighs trembling, and bears down with a low moan."), span_love("I can't hold it back any longer. I have to push, and I want to."))
+			carrier.visible_message(span_notice("[carrier] sinks down, thighs trembling, and bears down with a low moan."), span_ovi("I can't hold it back any longer. I have to push, and I want to."))
 		else
 			carrier.visible_message(span_warning("[carrier] drops down, straining, bearing down hard!"), span_userdanger("I can't hold it back any longer. I have to push!"))
 		carrier.Knockdown(LABOUR_PUSH_DELAY + 2 SECONDS, TRUE, TRUE)
@@ -588,11 +588,11 @@
 	else
 		carrier.add_stress(/datum/stress_event/birth_afterglow)
 	if(BIRTH_FEELS_GOOD(share))
-		to_chat(carrier, span_love(pick("It is out, and the last of it rolls through me as a long, shivering wave with nothing of pain in it.", "The pressure leaves me in one hot rush. I lie back, wet, loose and glowing.")))
+		to_chat(carrier, span_ovi(pick("It is out, and the last of it rolls through me as a long, shivering wave with nothing of pain in it.", "The pressure leaves me in one hot rush. I lie back, wet, loose and glowing.")))
 	else if(BIRTH_FEELS_MIXED(share))
-		to_chat(carrier, span_love(pick("It is out. The ache fades fast, and what it leaves behind is warm.", "The pressure is gone all at once. I lie there trembling, sore and strangely satisfied.")))
+		to_chat(carrier, span_ovi(pick("It is out. The ache fades fast, and what it leaves behind is warm.", "The pressure is gone all at once. I lie there trembling, sore and strangely satisfied.")))
 	else
-		to_chat(carrier, span_love(pick("It is out. Warm wetness runs down my thighs and the ache ebbs, slowly.", "The pressure is gone all at once. I lie there, spent and trembling.")))
+		to_chat(carrier, span_ovi(pick("It is out. Warm wetness runs down my thighs and the ache ebbs, slowly.", "The pressure is gone all at once. I lie there, spent and trembling.")))
 
 /// Another ripe egg or a waiting hatchling in the same organ follows on with less work.
 /datum/status_effect/labour/proc/queue_next(obj/item/organ/container)
@@ -626,14 +626,14 @@
 
 /datum/status_effect/labour/proc/finish()
 	if(births)
-		owner.visible_message(span_notice("[owner] goes limp, breathing hard."), span_love("It is over. I am empty, and so tired."))
+		owner.visible_message(span_notice("[owner] goes limp, breathing hard."), span_ovi("It is over. I am empty, and so tired."))
 	qdel(src)
 
 /atom/movable/screen/alert/status_effect/labour
 	name = "In labour"
 	desc = "My body is pushing something out. How it feels depends on the fit."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "impregnation"
+	icon_state = "labour"
 
 /// Slow and sore after a hard birth; each birth inside the hour adds to it.
 /datum/status_effect/birth_worn
@@ -648,7 +648,7 @@
 	name = "Worn from birth"
 	desc = "My body is spent from giving birth. I move slowly, and another so soon would be hard."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "spent_loins"
+	icon_state = "spent_loins_old"
 
 #undef LABOUR_PHASE_CONTRACTING
 #undef LABOUR_PHASE_PUSHING

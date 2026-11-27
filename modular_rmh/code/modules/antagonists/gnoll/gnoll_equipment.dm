@@ -45,6 +45,7 @@
 	icon_state = "dendor_chalky"
 	color = "#b58b50"
 	layer = SIGIL_LAYER
+	rain_washable = FALSE
 
 /datum/intent/gnoll_claw
 	name = "claw strike"

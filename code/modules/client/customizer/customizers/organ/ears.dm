@@ -116,7 +116,7 @@
 
 /datum/customizer_choice/organ/ears/lizard
 	name = "Lizard Hood"
-	organ_type = /obj/item/organ/ears/anthro
+	organ_type = /obj/item/organ/ears/anthro/hood
 	generic_random_pick = TRUE
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/cobrahood,
@@ -129,7 +129,7 @@
 
 /datum/customizer_choice/organ/ears/demihuman
 	name = "Hollow-Kin Ears"
-	organ_type = /obj/item/organ/ears
+	organ_type = /obj/item/organ/ears/hollowkin
 	generic_random_pick = TRUE
 	allows_accessory_color_customization = TRUE
 	sprite_accessories = list(

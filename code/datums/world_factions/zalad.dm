@@ -173,6 +173,8 @@
 		/datum/supply_pack/seeds/strawberry,
 		// Luxury goods
 		/datum/supply_pack/luxury/chess,
+		/datum/supply_pack/luxury/card_boosters, //RMH EDITED - card games
+		/datum/supply_pack/luxury/playing_cards, //RMH EDITED - card games
 		/datum/supply_pack/narcotics/perfume/random,
 		/datum/supply_pack/narcotics/perfume/lavender,
 		/datum/supply_pack/narcotics/perfume/cherry,

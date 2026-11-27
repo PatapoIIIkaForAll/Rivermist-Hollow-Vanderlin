@@ -8,9 +8,15 @@
 #define CC_LANG_EN "en"
 #define CC_LANG_RU "ru"
 #define CC_EXPORT_FORMAT "rmh_character"
-#define CC_EXPORT_VERSION 1
+#define CC_EXPORT_VERSION 3
 #define CC_IMPORT_MAX_LENGTH 200000
 #define CC_TEXT_CAP 512
+/// How long the export file stays under data/ for the download.
+#define CC_EXPORT_FILE_LIFETIME (1 MINUTES)
+#define CC_SAVE_COOLDOWN (2 SECONDS)
+#define CC_READY_COOLDOWN (1 SECONDS)
+#define CC_LANG_COOLDOWN (1 SECONDS)
+#define CC_FILE_COOLDOWN (5 SECONDS)
 
 /// Interface language, stored once per account.
 /datum/preferences/var/character_creator_lang = CC_LANG_EN
@@ -20,6 +26,52 @@
 /datum/preferences/var/character_creator_unsaved = FALSE
 /// Counts saves, so a handler that saves on its own does not leave the flag raised.
 /datum/preferences/var/character_creator_save_count = 0
+/// TRUE while an import waits for the player's file or answer.
+/datum/preferences/var/character_creator_importing = FALSE
+
+/datum/preferences
+	COOLDOWN_DECLARE(character_creator_save_cooldown)
+	COOLDOWN_DECLARE(character_creator_ready_cooldown)
+	COOLDOWN_DECLARE(character_creator_lang_cooldown)
+	COOLDOWN_DECLARE(character_creator_export_cooldown)
+	COOLDOWN_DECLARE(character_creator_import_cooldown)
+
+/// TRUE and restarts the action's cooldown when it may run; FALSE with a chat note while it cools down.
+/datum/preferences/proc/character_creator_cooldown_ready(mob/user, action)
+	var/time_left = 0
+	var/what
+	switch(action)
+		if("save")
+			what = "save"
+			time_left = COOLDOWN_TIMELEFT(src, character_creator_save_cooldown)
+			if(!time_left)
+				COOLDOWN_START(src, character_creator_save_cooldown, CC_SAVE_COOLDOWN)
+		if("ready")
+			what = "change your ready state"
+			time_left = COOLDOWN_TIMELEFT(src, character_creator_ready_cooldown)
+			if(!time_left)
+				COOLDOWN_START(src, character_creator_ready_cooldown, CC_READY_COOLDOWN)
+		if("language")
+			what = "change the language"
+			time_left = COOLDOWN_TIMELEFT(src, character_creator_lang_cooldown)
+			if(!time_left)
+				COOLDOWN_START(src, character_creator_lang_cooldown, CC_LANG_COOLDOWN)
+		if("export")
+			what = "export"
+			time_left = COOLDOWN_TIMELEFT(src, character_creator_export_cooldown)
+			if(!time_left)
+				COOLDOWN_START(src, character_creator_export_cooldown, CC_FILE_COOLDOWN)
+		if("import")
+			what = "import"
+			time_left = COOLDOWN_TIMELEFT(src, character_creator_import_cooldown)
+			if(!time_left)
+				COOLDOWN_START(src, character_creator_import_cooldown, CC_FILE_COOLDOWN)
+		else
+			CRASH("Unknown character creator cooldown: [action]")
+	if(!time_left)
+		return TRUE
+	to_chat(user, span_warning("Wait [CEILING(time_left, 1 SECONDS) / (1 SECONDS)] second\s before you [what] again."))
+	return FALSE
 
 /datum/asset/simple/character_creator
 	assets = list(
@@ -40,7 +92,7 @@ GLOBAL_LIST_INIT(character_creator_view_links, list(
 ))
 /// Actions that read or open things without changing the character.
 GLOBAL_LIST_INIT(character_creator_view_actions, list(
-	"job_explain", "cc_subclass_explain", "cc_export", "cc_set_lang",
+	"job_explain", "cc_subclass_explain", "cc_export", "cc_set_lang", "cc_open_toggles",
 ))
 
 /datum/preferences/proc/character_creator_mark_unsaved(action, list/params)
@@ -490,6 +542,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	.["cc_loadout_roles"] = character_creator_loadout_roles()
 	.["cc_loadout_locked"] = character_creator_loadout_locked(user)
 	.["cc_stat_rules"] = character_creator_stat_rules()
+	.["cc_culinary_options"] = culinary_creator_options()
 
 /datum/preferences/ui_data(mob/user)
 	. = ..()
@@ -517,6 +570,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	.["cc_ooc_media"] = read_preference(/datum/preference/text/ooc_extra_link) || ""
 	.["cc_unsaved"] = character_creator_unsaved
 	.["cc_loadout"] = character_creator_loadout_data()
+	.["cc_culinary"] = culinary_creator_data()
 
 /datum/preferences/proc/character_creator_tattoo_count()
 	. = 0
@@ -548,9 +602,12 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 			return character_creator_prosthetic_act(user, params)
 		if("cc_implant")
 			return character_creator_implant_act(user, params)
-		if("cc_stat_set", "cc_stat_bonus", "cc_stat_reset", "cc_stat_text")
+		if("cc_stat_set", "cc_stat_bonus", "cc_stat_reset", "cc_stat_text", "cc_stat_auto")
 			return character_creator_stat_act(user, action, params)
 		if("cc_set_lang")
+			// TRUE without a change still pushes data, so the picker shows the kept language.
+			if(!character_creator_cooldown_ready(user, "language"))
+				return TRUE
 			character_creator_lang = (params["lang"] == CC_LANG_RU) ? CC_LANG_RU : CC_LANG_EN
 			save_preferences()
 			return TRUE
@@ -618,11 +675,36 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 			write_preference(/datum/preference/list_type/smallclothes_preferences, smallclothes_preferences)
 			update_menu_data(user)
 			return TRUE
+		if("cc_culinary")
+			var/static/list/culinary_keys = list(
+				"favourite_food" = CULINARY_FAVOURITE_FOOD,
+				"favourite_drink" = CULINARY_FAVOURITE_DRINK,
+				"hated_food" = CULINARY_HATED_FOOD,
+				"hated_drink" = CULINARY_HATED_DRINK,
+			)
+			var/culinary_key = params["key"]
+			if(!istext(culinary_key))
+				return FALSE
+			return set_culinary_group(culinary_keys[culinary_key], params["value"])
+		if("cc_culinary_random")
+			toggle_random_culinary()
+			return TRUE
+		if("cc_open_toggles")
+			user.client?.open_toggles_menu()
+			return FALSE
 		if("cc_export")
-			character_creator_export(user)
+			if(character_creator_cooldown_ready(user, "export"))
+				character_creator_export(user)
 			return FALSE
 		if("cc_import")
+			if(character_creator_importing)
+				to_chat(user, span_warning("An import is already waiting for your file."))
+				return FALSE
+			if(!character_creator_cooldown_ready(user, "import"))
+				return FALSE
+			character_creator_importing = TRUE
 			character_creator_import(user)
+			character_creator_importing = FALSE
 			return TRUE
 		if("cc_loadout")
 			character_creator_loadout_link(user, params)
@@ -712,27 +794,140 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 
 // ---- Export / import ----
 
-/// Character preference entries the importer never takes from text. Display fields are rebuilt,
+/// Character preference entries the importer never takes from the file. Display fields are rebuilt,
 /// family links point at other players, raw HTML fields and links are validated on their own.
 /datum/preferences/proc/character_creator_import_skip_keys()
 	var/static/list/skip = list(
 		"flavortext_display", "ooc_notes_display", "ooc_extra", "ooc_extra_link",
 		"setparent", "setspouse", "setchild", "was_divorced",
-		"headshot_link", "nsfw_headshot_link", "song_link",
+		"headshot_link", "nsfw_headshot_link", "song_link", "erp_preferences",
 	)
 	return skip
 
-/// List-type character entries that validate themselves on deserialize or right after import.
-/datum/preferences/proc/character_creator_import_list_keys()
-	var/static/list/allowed = list(
-		"smallclothes_preferences", "culinary_preferences", "img_gallery", "nsfw_img_gallery",
+/// Randomise switches an export may carry.
+/proc/character_creator_randomise_keys()
+	var/static/list/keys = list(
+		RANDOM_NAME, RANDOM_NAME_ANTAG, RANDOM_BODY, RANDOM_BODY_ANTAG, RANDOM_SPECIES,
+		RANDOM_GENDER, RANDOM_GENDER_ANTAG, RANDOM_PRONOUNS, RANDOM_PRONOUNS_ANTAG,
+		RANDOM_VOICETYPE, RANDOM_VOICETYPE_ANTAG, RANDOM_AGE, RANDOM_AGE_ANTAG,
+		RANDOM_UNDERWEAR, RANDOM_UNDERWEAR_COLOR, RANDOM_UNDERSHIRT, RANDOM_SKIN_TONE, RANDOM_EYE_COLOR,
 	)
-	return allowed
+	return keys
+
+/// A list preference from the file rebuilt from known keys and checked values; null when the type is not importable.
+/datum/preferences/proc/character_creator_clean_list_pref(datum/preference/list_type/entry, list/raw)
+	if(!islist(raw))
+		return null
+	if(istype(entry, /datum/preference/list_type/culinary_preferences))
+		var/list/culinary = entry.create_default_value(src)
+		for(var/key in culinary)
+			culinary[key] = (key == CULINARY_RANDOM_PREFERENCES) ? (isnum(raw[key]) && raw[key] ? TRUE : FALSE) : character_creator_unstring_path(raw[key])
+		return culinary
+	if(istype(entry, /datum/preference/list_type/smallclothes_preferences))
+		var/list/smallclothes = entry.create_default_value(src)
+		for(var/key in smallclothes)
+			smallclothes[key] = (key == SMALCLOTHES_RANDOM_PREFERENCES) ? (isnum(raw[key]) && raw[key] ? TRUE : FALSE) : character_creator_unstring_path(raw[key])
+		var/static/list/color_keys = list(
+			SMALCLOTHES_UNDIE_COLOR_PREFERENCES, SMALCLOTHES_LEGWEAR_COLOR_PREFERENCES, SMALCLOTHES_BRA_COLOR_PREFERENCES,
+			SMALCLOTHES_GARTER_COLOR_PREFERENCES, SMALCLOTHES_UNDERSHIRT_COLOR_PREFERENCES, SMALCLOTHES_ARMSLEEVE_COLOR_PREFERENCES,
+		)
+		for(var/key in color_keys)
+			if(istext(raw[key]))
+				smallclothes[key] = sanitize_hexcolor(raw[key], 6, TRUE)
+		return smallclothes
+	// Free-text line lists: text only, tags stripped, capped in length and count.
+	var/max_lines = 0
+	var/max_length = MAX_GOSSIP_LENGTH
+	if(istype(entry, /datum/preference/list_type/noble_gossip))
+		max_lines = MAX_NOBLE_GOSSIP
+	else if(istype(entry, /datum/preference/list_type/rumors))
+		max_lines = MAX_RUMORS
+	else if(istype(entry, /datum/preference/list_type/role_setting) && !istype(entry, /datum/preference/list_type/role_setting/picker))
+		var/datum/preference/list_type/role_setting/role_entry = entry
+		max_lines = role_entry.max_lines
+		max_length = MAX_MESSAGE_LEN
+	if(max_lines)
+		var/list/lines = list()
+		for(var/line in raw)
+			if(length(lines) >= max_lines)
+				break
+			if(!istext(line))
+				continue
+			line = trim(STRIP_HTML_SIMPLE(line, max_length))
+			if(length(line))
+				lines += line
+		return lines
+	// These rebuild the list from known options in their own deserialize().
+	if(istype(entry, /datum/preference/list_type/role_setting/picker) \
+		|| istype(entry, /datum/preference/list_type/preference_badges) \
+		|| istype(entry, /datum/preference/list_type/werewolf_customization) \
+		|| istype(entry, /datum/preference/list_type/profile_gallery))
+		return raw
+	return null
+
+/// ERP preferences with typepath keys written as text, so the file stays plain JSON.
+/datum/preferences/proc/character_creator_erp_export()
+	var/list/stored = ensure_erp_preferences()
+	var/list/exported = list()
+	for(var/key in stored)
+		if(key != "kinks")
+			exported["[key]"] = stored[key]
+	var/list/kinks = stored["kinks"]
+	exported["kinks"] = islist(kinks) ? kinks : list()
+	return exported
+
+/// One ERP preference value from the file, checked against that preference's kind; null drops it.
+/proc/character_creator_erp_value(pref_type, raw)
+	if(ispath(pref_type, /datum/erp_preference/list_choice))
+		var/datum/erp_preference/list_choice/choice_pref = new pref_type
+		return (!isnull(raw) && (raw in choice_pref.choices)) ? raw : null
+	if(!isnum(raw))
+		return null
+	if(ispath(pref_type, /datum/erp_preference/numeric))
+		var/datum/erp_preference/numeric/numeric_pref = new pref_type
+		return clamp(raw, numeric_pref.min_value, numeric_pref.max_value)
+	if(ispath(pref_type, /datum/erp_preference/bitflag))
+		var/datum/erp_preference/bitflag/bitflag_pref = new pref_type
+		var/mask = 0
+		for(var/flag_name in bitflag_pref.flags)
+			mask |= bitflag_pref.flags[flag_name]
+		return round(raw) & mask
+	return raw ? TRUE : FALSE
+
+/// ERP preferences and kinks from the file. Unknown preferences and kinks are dropped, defaults fill the rest.
+/datum/preferences/proc/character_creator_import_erp(list/imported)
+	var/list/cleaned = list()
+	for(var/datum/erp_preference/pref_type as anything in subtypesof(/datum/erp_preference))
+		if(IS_ABSTRACT(pref_type))
+			continue
+		var/value = character_creator_erp_value(pref_type, imported["[pref_type]"])
+		if(!isnull(value))
+			cleaned[pref_type] = value
+	var/list/kinks = imported["kinks"]
+	var/list/cleaned_kinks = list()
+	if(islist(kinks))
+		for(var/kink_name in kinks)
+			if(!istext(kink_name) || !GLOB.available_kinks[kink_name])
+				continue
+			var/list/kink_data = kinks[kink_name]
+			if(!islist(kink_data))
+				continue
+			var/intensity = kink_data["intensity"]
+			var/notes = kink_data["notes"]
+			cleaned_kinks[kink_name] = list(
+				"enabled" = (isnum(kink_data["enabled"]) && kink_data["enabled"]) ? TRUE : FALSE,
+				"intensity" = isnum(intensity) ? clamp(round(intensity), 1, 5) : 1,
+				"notes" = istext(notes) ? trim(STRIP_HTML_SIMPLE(notes, KINK_NOTES_MAX_LENGTH)) : "",
+			)
+	cleaned["kinks"] = cleaned_kinks
+	write_preference(/datum/preference/list_type/erp_preferences, cleaned)
+	setup_default_erp_preferences()
+	mark_erp_preferences_dirty()
 
 /datum/preferences/proc/character_creator_export_payload()
 	var/list/pref_values = list()
 	for(var/datum/preference/entry as anything in GLOB.preferences_in_priority_order)
-		if(entry.savefile_identifier != PREF_CHARACTER)
+		if(entry.savefile_identifier != PREF_CHARACTER || entry.type == /datum/preference/list_type/erp_preferences)
 			continue
 		var/value = entry.serialize(read_preference(entry.type))
 		pref_values[entry.savefile_key] = ispath(value) ? "[value]" : value
@@ -761,9 +956,16 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	var/list/quirk_list = list()
 	for(var/quirk_type in quirks)
 		var/custom_value = quirk_customizations[quirk_type]
+		if(islist(custom_value))
+			var/list/picks = list()
+			for(var/pick in custom_value)
+				picks += ispath(pick) ? "[pick]" : pick
+			custom_value = picks
+		else if(ispath(custom_value))
+			custom_value = "[custom_value]"
 		quirk_list += list(list(
 			"type" = "[quirk_type]",
-			"value" = ispath(custom_value) ? "[custom_value]" : custom_value,
+			"value" = custom_value,
 			"extra" = quirk_extra_customizations[quirk_type],
 		))
 
@@ -781,12 +983,16 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 		"format" = CC_EXPORT_FORMAT,
 		"version" = CC_EXPORT_VERSION,
 		"prefs" = pref_values,
+		"erp" = character_creator_erp_export(),
 		"links" = list(
 			"headshot_link" = read_preference(/datum/preference/text/headshot_link),
 			"nsfw_headshot_link" = read_preference(/datum/preference/text/nsfw_headshot_link),
 			"song_link" = read_preference(/datum/preference/text/song_link),
 		),
 		"mutant_colors" = list(features["mcolor"], features["mcolor2"], features["mcolor3"]),
+		"body_build" = features["body_build"],
+		"custom_names" = custom_names,
+		"randomise" = randomise,
 		"customizers" = customizers,
 		"markings" = body_markings,
 		"emissive_markings" = emissive_markings,
@@ -804,29 +1010,59 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 		"stat_allocation" = stat_alloc_state(),
 	)
 
-/datum/preferences/proc/character_creator_export(mob/user)
-	var/text = json_encode(character_creator_export_payload())
-	tgui_input_text(user, "Copy this text and keep it somewhere safe. Import pastes it back into a character slot.", "Export Character", text, max_length = CC_IMPORT_MAX_LENGTH, multiline = TRUE, encode = FALSE)
+/// Download name for an export: the character's name in letters and digits.
+/datum/preferences/proc/character_creator_export_filename()
+	var/static/regex/unsafe = regex(@"[^A-Za-z0-9]+", "g")
+	var/safe_name = trim(unsafe.Replace("[read_preference(/datum/preference/text/real_name)]", "_"), 40)
+	return "[safe_name || "character"].json"
 
-/datum/preferences/proc/character_creator_import(mob/user)
-	// A readied character must not change roles under the round start.
+/proc/character_creator_delete_export(export_path)
+	fdel(export_path)
+
+/datum/preferences/proc/character_creator_export(mob/user)
+	if(!user?.client)
+		return
+	var/export_path = "data/character_exports/[user.ckey].json"
+	fdel(export_path)
+	if(!text2file(json_encode(character_creator_export_payload()), export_path))
+		to_chat(user, span_warning("The export file could not be written. Try again."))
+		return
+	user << ftp(file(export_path), character_creator_export_filename())
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(character_creator_delete_export), export_path), CC_EXPORT_FILE_LIFETIME, TIMER_UNIQUE|TIMER_OVERRIDE)
+	to_chat(user, span_notice("Character exported. Keep the file; Import loads it into a slot."))
+
+/// A readied character must not change roles under the round start.
+/datum/preferences/proc/character_creator_import_blocked(mob/user)
+	if(QDELETED(user) || !user.client)
+		return TRUE
 	if(isnewplayer(user))
 		var/mob/dead/new_player/lobby_player = user
 		if(lobby_player.ready == PLAYER_READY_TO_PLAY)
 			to_chat(user, span_warning("Unready before importing a character."))
-			return
-	var/text = tgui_input_text(user, "Paste an exported character. It replaces the character in this slot and is saved right away.", "Import Character", null, max_length = CC_IMPORT_MAX_LENGTH, multiline = TRUE, encode = FALSE)
-	if(!text)
+			return TRUE
+	return FALSE
+
+/datum/preferences/proc/character_creator_import(mob/user)
+	if(character_creator_import_blocked(user))
 		return
-	var/list/payload
-	try
-		payload = json_decode(text)
-	catch
-		payload = null
+	var/import_file = input(user, "Choose an exported character file (.json). It replaces the character in this slot and is saved right away.", "Import Character") as file|null
+	if(!import_file || character_creator_import_blocked(user))
+		return
+	if(length(import_file) > CC_IMPORT_MAX_LENGTH)
+		to_chat(user, span_warning("That file is too large to be an exported character."))
+		return
+	var/list/payload = safe_json_decode(file2text(import_file))
 	if(!islist(payload) || payload["format"] != CC_EXPORT_FORMAT || !isnum(payload["version"]))
-		to_chat(user, span_warning("That text is not an exported character."))
+		to_chat(user, span_warning("That file is not an exported character."))
+		return
+	var/list/pref_values = payload["prefs"]
+	var/imported_name = islist(pref_values) ? pref_values["real_name"] : null
+	if(istext(imported_name) && findtext(imported_name, "~"))
+		to_chat(user, span_warning("Names cannot contain ~. Change the name in the file and import it again."))
 		return
 	if(tgui_alert(user, "Replace [read_preference(/datum/preference/text/real_name)] in this slot with the imported character?", "Import Character", list("Replace", "Cancel")) != "Replace")
+		return
+	if(character_creator_import_blocked(user))
 		return
 	// A failed import must not leave a half-built character that the next Save would write.
 	var/import_failed = FALSE
@@ -866,19 +1102,20 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 	var/list/pref_values = payload["prefs"]
 	if(islist(pref_values))
 		var/list/skip_keys = character_creator_import_skip_keys()
-		var/list/list_keys = character_creator_import_list_keys()
 		for(var/datum/preference/entry as anything in GLOB.preferences_in_priority_order)
 			if(entry.savefile_identifier != PREF_CHARACTER || (entry.savefile_key in skip_keys))
 				continue
 			if(!(entry.savefile_key in pref_values))
 				continue
-			if(istype(entry, /datum/preference/list_type) && !(entry.savefile_key in list_keys))
-				continue
 			if(istype(entry, /datum/preference/text))
 				var/datum/preference/text/text_entry = entry
 				if(!text_entry.should_strip_html)
 					continue
-			var/raw = character_creator_unstring_path(pref_values[entry.savefile_key])
+			var/raw = pref_values[entry.savefile_key]
+			if(istype(entry, /datum/preference/list_type))
+				raw = character_creator_clean_list_pref(entry, raw)
+			else
+				raw = character_creator_unstring_path(raw)
 			if(isnull(raw))
 				continue
 			var/value = entry.deserialize(raw, src)
@@ -902,6 +1139,33 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 
 	var/cached_name = reject_bad_name(read_preference(/datum/preference/text/real_name))
 	write_preference(/datum/preference/text/real_name, cached_name || random_unique_name(read_preference(/datum/preference/choiced/gender)))
+
+	// Build ids are checked against the species and sex now in place.
+	if(istext(payload["body_build"]))
+		features["body_build"] = payload["body_build"]
+	sanitize_body_build()
+
+	var/list/imported_names = payload["custom_names"]
+	if(islist(imported_names))
+		var/tilde_refused = FALSE
+		for(var/custom_name_id in GLOB.preferences_custom_names)
+			var/list/namedata = GLOB.preferences_custom_names[custom_name_id]
+			var/raw_name = imported_names[custom_name_id]
+			if(istext(raw_name) && findtext(raw_name, "~"))
+				tilde_refused = TRUE
+				raw_name = null
+			var/clean_name = istext(raw_name) ? reject_bad_name(raw_name, namedata["allow_numbers"]) : null
+			custom_names[custom_name_id] = clean_name || get_default_name(custom_name_id)
+		if(tilde_refused && user)
+			to_chat(user, span_warning("Names cannot contain ~. A backup name with one was replaced by the default."))
+
+	var/list/imported_randomise = payload["randomise"]
+	if(islist(imported_randomise))
+		randomise = list()
+		for(var/random_key in character_creator_randomise_keys())
+			var/switch_value = imported_randomise[random_key]
+			if(isnum(switch_value))
+				randomise[random_key] = switch_value ? TRUE : FALSE
 
 	// Rendered text is rebuilt from the plain fields, never imported.
 	var/flavor = read_preference(/datum/preference/text/flavortext)
@@ -974,6 +1238,15 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 
 	validate_culinary_preferences()
 	validate_smallclothes_preferences()
+	// ERP preferences follow the same edit lock as the Intimacy tab; a locked slot keeps its own.
+	var/list/imported_erp = payload["erp"]
+	if(islist(imported_erp))
+		var/erp_lock_reason = get_erp_preference_edit_lock_reason(user)
+		if(erp_lock_reason)
+			if(user)
+				to_chat(user, span_warning("ERP preferences and kinks were not imported. [erp_lock_reason]"))
+		else
+			character_creator_import_erp(imported_erp)
 	ensure_erp_preferences()
 
 /// Job priorities from an export. Same rules as the role menu: the job must be open to this
@@ -1131,6 +1404,7 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 
 /// A quirk customization from an export: one of the options the quirk offers this character,
 /// or plain text for text quirks. Anything else is dropped, never trusted as a path to spawn.
+/// Multi-pick quirks take a list or, from older files, a single value.
 /datum/preferences/proc/character_creator_quirk_value(quirk_type, raw)
 	var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
 	if(!singleton || isnull(raw))
@@ -1140,8 +1414,19 @@ GLOBAL_LIST_INIT(character_creator_view_actions, list(
 			return istext(raw) ? STRIP_HTML_SIMPLE(raw, CC_TEXT_CAP) : null
 		if(QUIRK_NUMBER)
 			return isnum(raw) ? raw : null
-	var/value = character_creator_unstring_path(raw)
 	var/list/options = singleton.return_customization(src)
+	if(singleton.max_picks > 1)
+		var/list/picks = list()
+		for(var/raw_pick in (islist(raw) ? raw : list(raw)))
+			var/pick = character_creator_unstring_path(raw_pick)
+			if((pick in options) && !(pick in picks))
+				picks += list(pick)
+			if(length(picks) >= singleton.max_picks)
+				break
+		return length(picks) ? picks : null
+	if(islist(raw))
+		return null
+	var/value = character_creator_unstring_path(raw)
 	return (value in options) ? value : null
 
 /datum/preferences/proc/character_creator_import_loadout(mob/user, list/imported)
@@ -1633,3 +1918,8 @@ GLOBAL_LIST_EMPTY(character_creator_loadout_catalog)
 #undef CC_EXPORT_VERSION
 #undef CC_IMPORT_MAX_LENGTH
 #undef CC_TEXT_CAP
+#undef CC_EXPORT_FILE_LIFETIME
+#undef CC_SAVE_COOLDOWN
+#undef CC_READY_COOLDOWN
+#undef CC_LANG_COOLDOWN
+#undef CC_FILE_COOLDOWN

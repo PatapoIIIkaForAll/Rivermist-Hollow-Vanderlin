@@ -51,7 +51,7 @@
 			pain_amt = 4.8
 			orgasm_amt = 0.5
 
-	playsound(user, sound, 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, sound, get_sound_volume(user, 45), TRUE, -2, ignore_walls = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [action_text] [user.p_their()] [pussy_text]."))
 
@@ -117,7 +117,7 @@
 			pain_amt = 4.8
 			orgasm_amt = 0.5
 
-	playsound(target, sound, 45, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, sound, get_sound_volume(user, 45), TRUE, -2, ignore_walls = FALSE)
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [action_text] [target]'s [pussy_text]."))
 

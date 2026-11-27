@@ -60,12 +60,91 @@
 	return TRUE
 
 
-/datum/preferences/proc/set_quirk_customization(quirk_type, value)
-	if(quirk_type in quirks)
+/datum/preferences/proc/set_quirk_customization(quirk_type, value, pick_index = 1)
+	if(!(quirk_type in quirks))
+		return FALSE
+	var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
+	if(singleton?.max_picks > 1)
+		if(!(value in singleton.return_customization(src)))
+			return FALSE
+		var/list/picks = singleton.get_picks(quirk_customizations[quirk_type])
+		pick_index = clamp(round(text2num("[pick_index]") || 1), 1, max(length(picks), 1))
+		if(!length(picks))
+			picks += list(value)
+		else if(value in picks)
+			return FALSE
+		else
+			picks[pick_index] = value
+		quirk_customizations[quirk_type] = picks
+	else
 		quirk_customizations[quirk_type] = value
-		save_character()
-		return TRUE
-	return FALSE
+	save_character()
+	return TRUE
+
+/// Adds one more pick to a multi-pick quirk, using the first option not picked yet.
+/datum/preferences/proc/add_quirk_pick(quirk_type)
+	var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
+	if(!(quirk_type in quirks) || !singleton || singleton.max_picks <= 1)
+		return FALSE
+	var/list/picks = singleton.get_picks(quirk_customizations[quirk_type])
+	if(!length(picks) || length(picks) >= singleton.max_picks)
+		return FALSE
+	var/list/free_options = singleton.return_customization(src) - picks
+	if(!length(free_options))
+		return FALSE
+	picks += list(free_options[1])
+	quirk_customizations[quirk_type] = picks
+	save_character()
+	return TRUE
+
+/// Drops one pick from a multi-pick quirk; the first pick always stays.
+/datum/preferences/proc/remove_quirk_pick(quirk_type, pick_index)
+	var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
+	if(!(quirk_type in quirks) || !singleton || singleton.max_picks <= 1)
+		return FALSE
+	var/list/picks = singleton.get_picks(quirk_customizations[quirk_type])
+	pick_index = round(text2num("[pick_index]"))
+	if(!pick_index || pick_index < 2 || pick_index > length(picks))
+		return FALSE
+	picks.Cut(pick_index, pick_index + 1)
+	quirk_customizations[quirk_type] = picks
+	trim_unaffordable_boons()
+	save_character()
+	return TRUE
+
+/// Valid picks for a multi-pick quirk: offered options only, no repeats, at most max_picks.
+/datum/preferences/proc/clean_quirk_picks(datum/quirk/singleton, value)
+	var/list/options = singleton.return_customization(src)
+	var/list/picks = list()
+	for(var/pick in singleton.get_picks(value))
+		if(istext(pick) && !(pick in options))
+			pick = text2path(pick) || pick
+		if(!(pick in options) || (pick in picks))
+			continue
+		picks += list(pick)
+		if(length(picks) >= singleton.max_picks)
+			break
+	return picks
+
+/// Quirk points the extra picks of a multi-pick negative quirk give.
+/datum/preferences/proc/quirk_extra_pick_points(quirk_type)
+	var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
+	if(!singleton || singleton.max_picks <= 1 || singleton.quirk_category != QUIRK_NEGATIVE)
+		return 0
+	var/list/picks = singleton.get_picks(quirk_customizations[quirk_type])
+	return max(length(picks) - 1, 0) * QUIRK_EXTRA_PICK_POINTS
+
+/// Removes the most expensive positive quirks until the balance is no longer negative.
+/datum/preferences/proc/trim_unaffordable_boons()
+	var/balance = calculate_quirk_balance()
+	while(balance < 0 && length(quirks))
+		var/datum/quirk/most_expensive = find_most_expensive_boon()
+		if(!most_expensive)
+			break
+		quirks -= most_expensive
+		quirk_customizations -= most_expensive
+		quirk_extra_customizations -= most_expensive
+		balance = calculate_quirk_balance()
 
 /datum/preferences/proc/get_quirk_customization(quirk_type)
 	return quirk_customizations[quirk_type]
@@ -169,19 +248,27 @@
 	var/list/valid_customizations = list()
 	var/list/valid_extra_customizations = list()
 	for(var/quirk_type in quirks)
-		if(quirk_customizations[quirk_type])
-			valid_customizations[quirk_type] = quirk_customizations[quirk_type]
+		var/custom_value = quirk_customizations[quirk_type]
+		var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
+		if(singleton?.max_picks > 1)
+			custom_value = clean_quirk_picks(singleton, custom_value)
+		else if(islist(custom_value))
+			var/list/old_picks = custom_value
+			custom_value = length(old_picks) ? old_picks[1] : null
+		if(islist(custom_value) ? length(custom_value) : custom_value)
+			valid_customizations[quirk_type] = custom_value
 		var/list/extra_values = quirk_extra_customizations[quirk_type]
 		if(islist(extra_values) && length(extra_values))
 			valid_extra_customizations[quirk_type] = extra_values.Copy()
 	quirk_customizations = valid_customizations
 	quirk_extra_customizations = valid_extra_customizations
+	trim_unaffordable_boons()
 	trim_unaffordable_prosthetics() // RMH EDIT
 
 /datum/preferences/proc/calculate_quirk_balance()
 	var/balance = STARTING_QUIRK_POINTS
 	for(var/datum/quirk/quirk as anything in quirks)
-		balance += initial(quirk.point_value)
+		balance += initial(quirk.point_value) + quirk_extra_pick_points(quirk)
 	balance += prosthetic_point_value() // RMH EDIT - Prosthetics window choices share the quirk balance
 	return balance
 
@@ -261,19 +348,8 @@
 		quirk_customizations -= quirk_type
 		quirk_extra_customizations -= quirk_type
 
-		// After removing a quirk, validate that the remaining quirks are still affordable
-		var/balance = calculate_quirk_balance()
-
-		// If balance is now negative, we need to remove some boons
-		while(balance < 0 && length(quirks))
-			var/datum/quirk/most_expensive = find_most_expensive_boon()
-			if(most_expensive)
-				quirks -= most_expensive
-				quirk_customizations -= most_expensive
-				quirk_extra_customizations -= most_expensive
-				balance = calculate_quirk_balance()
-			else
-				break
+		// The remaining positive quirks must still be affordable.
+		trim_unaffordable_boons()
 
 		validate_customizer_entries()
 		save_character()
@@ -345,6 +421,12 @@
 	// Apply valid quirks to character
 	for(var/quirk_type in quirks)
 		var/custom_val = quirk_customizations[quirk_type]
+		if(islist(custom_val))
+			var/list/picks = custom_val
+			custom_val = picks.Copy()
+		var/datum/quirk/singleton = GLOB.quirk_singletons[quirk_type]
+		if(singleton)
+			custom_val = singleton.resolve_customization(src, custom_val)
 		var/list/extra_val = quirk_extra_customizations[quirk_type]
 		H.add_quirk(quirk_type, custom_val, extra_val)
 
@@ -484,7 +566,7 @@
 		dat += "<div class='quirk-card [category_class] selected' data-quirk='\ref[quirk_type]'>"
 		dat += "<div class='quirk-card-header'>"
 		dat += "<span class='quirk-name'>[quirk.name]</span>"
-		dat += "<span class='quirk-points'>[quirk.point_value] pts</span>"
+		dat += "<span class='quirk-points'>[quirk.point_value + quirk_extra_pick_points(quirk_type)] pts</span>"
 		dat += "</div>"
 		dat += "<div class='quirk-desc'>[quirk.get_desc(src)]</div>"
 		dat += "<div class='quirk-desc_hint'>[quirk.get_desc_hint(src)]</div>"
@@ -504,6 +586,33 @@
 			dat += "placeholder='[placeholder]' value='[current_value ? current_value : ""]' "
 			dat += "onclick='event.stopPropagation()' />"
 			dat += "</div>"
+
+		else if(length(options) && quirk.max_picks > 1)
+			// One dropdown per pick, plus buttons to add or drop picks
+			var/list/picks = quirk.get_picks(quirk_customizations[quirk_type])
+			if(!length(picks))
+				picks += list(null)
+			for(var/pick_index in 1 to length(picks))
+				var/current_pick = picks[pick_index]
+				dat += "<div class='quirk-customization'>"
+				dat += "<label>[quirk.customization_label][length(picks) > 1 ? " [pick_index]" : ""]:</label>"
+				dat += "<select class='quirk-select' data-quirk='\ref[quirk_type]' data-pick='[pick_index]'>"
+				if(!current_pick)
+					dat += "<option value='' selected>-- Select --</option>"
+				for(var/option in options)
+					if(option != current_pick && (option in picks))
+						continue
+					var/selected = (current_pick == option) ? "selected" : ""
+					dat += "<option value='\ref[option]' [selected]>[quirk.get_option_name(option)]</option>"
+				dat += "</select>"
+				if(pick_index > 1)
+					dat += "<button type='button' class='quirk-color-button quirk-pick-button' data-quirk='\ref[quirk_type]' data-pick='[pick_index]' onclick='event.stopPropagation(); removeQuirkPick(this);'>Remove</button>"
+				dat += "</div>"
+			if(length(picks) < quirk.max_picks && picks[1])
+				var/pick_bonus = quirk.quirk_category == QUIRK_NEGATIVE ? " (+[QUIRK_EXTRA_PICK_POINTS] pt)" : ""
+				dat += "<div class='quirk-customization'>"
+				dat += "<button type='button' class='quirk-color-button quirk-pick-button' data-quirk='\ref[quirk_type]' onclick='event.stopPropagation(); addQuirkPick(this);'>Add another[pick_bonus]</button>"
+				dat += "</div>"
 
 		else if(length(options))
 			// Dropdown customization
@@ -619,7 +728,19 @@
 				// If locate fails, it's plain text (for text inputs)
 				actual_value = value_ref
 
-			prefs.set_quirk_customization(quirk_ref, actual_value)
+			prefs.set_quirk_customization(quirk_ref, actual_value, href_list["pick"] || 1)
+			prefs.open_quirk_menu(usr)
+		return TRUE
+
+	if(href_list["quirk_add_pick"])
+		var/quirk_ref = locate(href_list["quirk_add_pick"])
+		if(quirk_ref && prefs.add_quirk_pick(quirk_ref))
+			prefs.open_quirk_menu(usr)
+		return TRUE
+
+	if(href_list["quirk_remove_pick"])
+		var/quirk_ref = locate(href_list["quirk_remove_pick"])
+		if(quirk_ref && prefs.remove_quirk_pick(quirk_ref, href_list["pick"]))
 			prefs.open_quirk_menu(usr)
 		return TRUE
 

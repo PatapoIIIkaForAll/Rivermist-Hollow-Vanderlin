@@ -613,6 +613,12 @@
 	duration = 1 MINUTES
 	tick_interval = -1
 	effectedstats = list(STAT_SPEED = -2)
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/bola_slow
+
+/atom/movable/screen/alert/status_effect/debuff/bola_slow
+	name = "Entangled"
+	desc = "A bola wraps my legs and slows me down."
+	icon_state = "restrained"
 
 /obj/item/rope/net/bola/mantrap
 	name = "throwing mantrap"

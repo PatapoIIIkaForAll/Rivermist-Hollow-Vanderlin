@@ -108,3 +108,93 @@
 	victim.remove_status_effect(/datum/status_effect/defeat_knockout)
 	TEST_ASSERT(!(marker in victim.vis_contents), "Waking up should take the yield marker away")
 	TEST_ASSERT_NULL(knockout.yield_indicator, "The knockout should drop its yield marker")
+
+/// The surrender procs set and clear the yield with no dialog; a pacifist keeps pacifism afterwards.
+/datum/unit_test/yield_surrender_procs
+
+/datum/unit_test/yield_surrender_procs/Run()
+	var/mob/living/carbon/human/yielder = allocate(/mob/living/carbon/human)
+	TEST_ASSERT(yielder.surrender(), "The surrender proc did not start a yield")
+	TEST_ASSERT(yielder.surrendering, "Surrender did not set surrendering")
+	TEST_ASSERT(HAS_TRAIT(yielder, TRAIT_PACIFISM), "Surrender did not add pacifism")
+	TEST_ASSERT(yielder.IsKnockdown(), "Surrender did not knock the yielder down")
+	TEST_ASSERT(!yielder.surrender(), "A second surrender started another yield")
+
+	TEST_ASSERT(yielder.rescind_surrender(), "The rescind proc did not end the yield")
+	TEST_ASSERT(!yielder.surrendering, "Rescinding left surrendering set")
+	TEST_ASSERT(!HAS_TRAIT(yielder, TRAIT_PACIFISM), "Rescinding left pacifism on")
+	TEST_ASSERT(!yielder.rescind_surrender(), "Rescinding with no yield reported success")
+
+	ADD_TRAIT(yielder, TRAIT_PACIFISM, TRAIT_SOURCE_UNIT_TESTS)
+	yielder.surrender()
+	yielder.rescind_surrender()
+	TEST_ASSERT(HAS_TRAIT(yielder, TRAIT_PACIFISM), "Rescinding took pacifism from a pacifist")
+	REMOVE_TRAIT(yielder, TRAIT_PACIFISM, TRAIT_SOURCE_UNIT_TESTS)
+
+/// Being told to yield in a fight gives a "Yield?" alert; a click yields, and the alert ends with the prompt.
+/datum/unit_test/yield_prompt
+
+/datum/unit_test/yield_prompt/Run()
+	var/mob/living/carbon/human/speaker = allocate(/mob/living/carbon/human)
+	var/mob/living/carbon/human/target = allocate(/mob/living/carbon/human)
+	var/mob/living/carbon/human/dead = allocate(/mob/living/carbon/human)
+	var/mob/living/carbon/human/yielding = allocate(/mob/living/carbon/human)
+	var/mob/living/carbon/human/stranger = allocate(/mob/living/carbon/human)
+	speaker.fully_replace_character_name(null, "Yield Asker")
+
+	TEST_ASSERT_NULL(target.prompt_yield_to(speaker, 7), "A mob that is not fighting the speaker got the prompt")
+	for(var/mob/living/carbon/human/fighter as anything in list(target, dead, yielding))
+		fighter.set_last_attacker(speaker)
+	TEST_ASSERT_NULL(target.prompt_yield_to(speaker, 7), "A past hit with nobody in combat mode counted as a fight")
+	speaker.cmode = TRUE
+
+	TEST_ASSERT_NULL(speaker.prompt_yield_to(speaker, 7), "The speaker prompted themselves")
+	TEST_ASSERT_NULL(stranger.prompt_yield_to(speaker, 7), "A bystander got the prompt")
+	dead.set_stat(DEAD)
+	TEST_ASSERT_NULL(dead.prompt_yield_to(speaker, 7), "A dead mob got the prompt")
+	yielding.surrendering = TRUE
+	TEST_ASSERT_NULL(yielding.prompt_yield_to(speaker, 7), "A yielding mob got the prompt")
+	yielding.surrendering = FALSE
+
+	speaker.offer_yield_prompts(list(target), 7)
+	TEST_ASSERT_NULL(target.has_status_effect(/datum/status_effect/yield_prompt), "A hearer with no client got the prompt")
+
+	var/datum/status_effect/yield_prompt/prompt = target.prompt_yield_to(speaker, 7)
+	TEST_ASSERT_NOTNULL(prompt, "The mob fighting the speaker did not get the prompt")
+	TEST_ASSERT_EQUAL(prompt.asker_name, "Yield Asker", "The prompt does not name the asker")
+	var/atom/movable/screen/alert/status_effect/yield_prompt/alert = target.alerts[prompt.id]
+	TEST_ASSERT_NOTNULL(alert, "The prompt threw no alert")
+	TEST_ASSERT_EQUAL(alert.attached_effect, prompt, "The alert is not tied to the prompt")
+	TEST_ASSERT_EQUAL(alert.desc, "Click to yield to Yield Asker.", "Wrong alert description")
+
+	prompt.duration = world.time + 1
+	target.prompt_yield_to(speaker, 7)
+	TEST_ASSERT_EQUAL(target.has_status_effect(/datum/status_effect/yield_prompt), prompt, "A second call made a second prompt")
+	TEST_ASSERT(prompt.duration > world.time + 10 SECONDS, "A second call did not refresh the timer")
+
+	TEST_ASSERT(prompt.accept(), "Accepting the prompt did not yield")
+	TEST_ASSERT(target.surrendering, "Accepting the prompt left the mob fighting")
+	TEST_ASSERT(QDELETED(prompt), "Accepting did not end the prompt")
+	TEST_ASSERT_NULL(target.alerts["yield_prompt"], "Accepting left the alert up")
+	TEST_ASSERT_NULL(target.prompt_yield_to(speaker, 7), "A yielded mob got another prompt")
+
+	stranger.set_last_attacker(speaker)
+	prompt = stranger.prompt_yield_to(speaker, 7)
+	TEST_ASSERT_NOTNULL(prompt, "Test setup: the stranger should now get the prompt")
+	prompt.duration = world.time - 1
+	prompt.process()
+	TEST_ASSERT(QDELETED(prompt), "The prompt outlived its timer")
+	TEST_ASSERT_NULL(stranger.alerts["yield_prompt"], "The timed-out prompt left its alert")
+
+	prompt = stranger.prompt_yield_to(speaker, 7)
+	TEST_ASSERT_NOTNULL(prompt, "Test setup: the stranger should get a new prompt")
+	stranger.set_stat(UNCONSCIOUS)
+	TEST_ASSERT(QDELETED(prompt), "The prompt stayed on an unconscious mob")
+	TEST_ASSERT_NULL(stranger.alerts["yield_prompt"], "An unconscious mob kept the alert")
+	stranger.set_stat(CONSCIOUS)
+
+	prompt = stranger.prompt_yield_to(speaker, 7)
+	TEST_ASSERT_NOTNULL(prompt, "Test setup: the stranger should get a third prompt")
+	stranger.surrender()
+	TEST_ASSERT(QDELETED(prompt), "Yielding by other means left the prompt up")
+	speaker.cmode = FALSE

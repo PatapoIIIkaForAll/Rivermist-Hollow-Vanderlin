@@ -125,16 +125,36 @@
 	name = "artificer's lens"
 	desc = "An artificial eye that sees."
 
-/obj/item/organ/eyes/prosthetic/gem
+//native see_in_dark is too buggy so just use night vision eyes i guess.
+/obj/item/organ/eyes/night_vision/prosthetic
+	abstract_type = /obj/item/organ/eyes/night_vision/prosthetic
+	implant_socket_kind = PROSTHETIC_KIND_EYE
+	organ_flags = ORGAN_ROBOTIC
+	blood_req = 0
+	oxygen_req = 0
+	nutriment_req = 0
+	hydration_req = 0
+	healing_factor = 0
+
+/obj/item/organ/eyes/night_vision/prosthetic/gem
 	name = "gem eye"
 	desc = "A gem eye. It glows and sees in the dark."
 	glows = TRUE
-	see_in_dark = 12
-/obj/item/organ/eyes/left/prosthetic/gem
+
+/obj/item/organ/eyes/night_vision/left/prosthetic
+	abstract_type = /obj/item/organ/eyes/night_vision/left/prosthetic
+	implant_socket_kind = PROSTHETIC_KIND_EYE
+	organ_flags = ORGAN_ROBOTIC
+	blood_req = 0
+	oxygen_req = 0
+	nutriment_req = 0
+	hydration_req = 0
+	healing_factor = 0
+
+/obj/item/organ/eyes/night_vision/left/prosthetic/gem
 	name = "gem eye"
 	desc = "A gem eye. It glows and sees in the dark."
 	glows = TRUE
-	see_in_dark = 12
 
 /// The blind-spot trait for the side a glass eye sits on.
 /obj/item/organ/eyes/proc/glass_eye_trait()

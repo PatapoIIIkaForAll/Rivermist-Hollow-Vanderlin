@@ -87,16 +87,21 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set desc = ""
 
+	if(!holder || QDELETED(M))
+		return
+
 	src.release_direct_controle()
 	src.saved_ai_by_direct_control = M.ai_controller
 	src.saved_ai_mob_ref = M
 
 	if(M.ckey)
-		if(alert("This mob is being controlled by [M.key]. Are you sure you wish to assume control of it? [M.key] will be made a ghost.",,"Yes","No") != "Yes")
+		var/previous_ckey = M.ckey
+		if(alert(src, "This mob is being controlled by [M.key]. Are you sure you wish to assume control of it? [M.key] will be made a ghost.", null, "Yes", "No") != "Yes")
 			return
-		else
-			var/mob/dead/observer/ghost = new/mob/dead/observer(M,1)
-			ghost.ckey = M.ckey
+		if(!holder || QDELETED(M) || M.ckey != previous_ckey)
+			return
+		var/mob/dead/observer/ghost = new/mob/dead/observer(M,1)
+		ghost.ckey = M.ckey
 	message_admins("<span class='adminnotice'>[key_name_admin(usr)] assumed direct control of [M].</span>")
 	log_admin("[key_name(usr)] assumed direct control of [M].")
 	var/mob/adminmob = src.mob
@@ -106,6 +111,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	if(isobserver(adminmob))
 		qdel(adminmob)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Assume Direct Control") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	prompt_controlled_body_rune(M, src)
 
 /client/proc/cmd_give_control_to_player(mob/M in GLOB.mob_list, client/player in GLOB.clients)
 	set category = "Admin.Admin"
@@ -113,12 +119,17 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	set popup_menu = FALSE // reached through the Admin.../GM.../Debug... right-click entries
 	set desc = ""
 
+	if(!holder || QDELETED(M) || QDELETED(player))
+		return
+
 	if(M.ckey)
-		if(alert("This mob is being controlled by [key_name(M)]. Are you sure you wish to give [key_name(player)] control of it? [key_name(M)] will be made a ghost.",,"Yes","No") != "Yes")
+		var/previous_ckey = M.ckey
+		if(alert(src, "This mob is being controlled by [key_name(M)]. Are you sure you wish to give [key_name(player)] control of it? [key_name(M)] will be made a ghost.", null, "Yes", "No") != "Yes")
 			return
-		else
-			var/mob/dead/observer/ghost = new/mob/dead/observer(M,1)
-			ghost.ckey = M.ckey
+		if(!holder || QDELETED(M) || QDELETED(player) || M.ckey != previous_ckey)
+			return
+		var/mob/dead/observer/ghost = new/mob/dead/observer(M,1)
+		ghost.ckey = M.ckey
 	message_admins(span_adminnotice("[key_name_admin(usr)] gave control of [M] to [key_name(player)]."))
 	log_admin("[key_name(usr)] gave control of [M] to [key_name(player)].")
 	var/mob/playermob = player.mob
@@ -126,6 +137,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	if(isobserver(playermob))
 		qdel(playermob)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Control To Player") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	prompt_controlled_body_rune(M, player)
 
 /client/proc/cmd_admin_areatest(on_station)
 	set category = "Debug.Mapping"
@@ -408,6 +420,8 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 			dellog += "<li>Highest Time Spent Hard Deleting: [I.hard_delete_max]ms</li>"
 			if (I.hard_deletes_over_threshold)
 				dellog += "<li>Hard Deletes Over Threshold: [I.hard_deletes_over_threshold]</li>"
+		if(I.hard_deletes_skipped)
+			dellog += "<li>Hard Deletes Skipped (left in memory): [I.hard_deletes_skipped]</li>"
 		if(I.slept_destroy)
 			dellog += "<li>Sleeps: [I.slept_destroy]</li>"
 		if(I.no_respect_force)

@@ -16,8 +16,9 @@
  * * pressure_affected - Whether or not difference in pressure affects the sound (E.g. if you can hear in space).
  * * ignore_walls - Whether or not the sound can pass through walls.
  * * falloff_distance - Distance at which falloff_exponent begins. Sound is at peak volume (in regards to falloff_exponent) aslong as it is in this range.
+ * * excluded_listeners - Mobs that do not hear this sound.
  */
-/proc/playsound(atom/source, soundin, vol as num, vary, extrarange as num, falloff_exponent = SOUND_FALLOFF_EXPONENT, frequency = null, channel, pressure_affected = FALSE, ignore_walls = TRUE, falloff_distance = SOUND_DEFAULT_FALLOFF_DISTANCE, soundping = FALSE, repeat)
+/proc/playsound(atom/source, soundin, vol as num, vary, extrarange as num, falloff_exponent = SOUND_FALLOFF_EXPONENT, frequency = null, channel, pressure_affected = FALSE, ignore_walls = TRUE, falloff_distance = SOUND_DEFAULT_FALLOFF_DISTANCE, soundping = FALSE, repeat, list/excluded_listeners)
 	if(isarea(source))
 		CRASH("playsound(): source is an area")
 	if(length(GLOB.sense_relay_mobs) && (source in GLOB.sense_relay_mobs))
@@ -96,6 +97,8 @@
 			filter_pocket_sound_listeners(source_pocket, listeners)
 
 	for(var/mob/listening_mob in listeners)//had nulls sneak in here, hence the typecheck
+		if(excluded_listeners && (listening_mob in excluded_listeners))
+			continue
 		listening_mob.playsound_local(turf_source, soundin, vol, vary, frequency, falloff_exponent, channel, pressure_affected, S, max_distance = maxdistance, falloff_distance = falloff_distance, repeat = repeat)
 
 	return listeners

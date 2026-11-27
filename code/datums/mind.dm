@@ -572,23 +572,16 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	if(ishuman(current))
 		var/mob/living/carbon/human/human_current = current
 		if(length(human_current.culinary_preferences))
-			var/favourite_food = human_current.culinary_preferences[CULINARY_FAVOURITE_FOOD]
-			var/favourite_drink = human_current.culinary_preferences[CULINARY_FAVOURITE_DRINK]
-			var/hated_food = human_current.culinary_preferences[CULINARY_HATED_FOOD]
-			var/hated_drink = human_current.culinary_preferences[CULINARY_HATED_DRINK]
-
-			if(favourite_food)
-				var/obj/item/food_instance = favourite_food
-				output += "<br><b>Favourite Food:</b> [capitalize(initial(food_instance.name))]<br>"
-			if(favourite_drink)
-				var/datum/reagent/consumable/drink_instance = favourite_drink
-				output += "<b>Favourite Drink:</b> [capitalize(initial(drink_instance.name))]<br>"
-			if(hated_food)
-				var/obj/item/hated_food_instance = hated_food
-				output += "<b>Hated Food:</b> [capitalize(initial(hated_food_instance.name))]<br>"
-			if(hated_drink)
-				var/datum/reagent/consumable/hated_drink_instance = hated_drink
-				output += "<b>Hated Drink:</b> [capitalize(initial(hated_drink_instance.name))]<br>"
+			var/list/culinary_lines = list(
+				"Favourite Food" = culinary_group_name(GLOB.culinary_dish_groups, human_current.culinary_preferences[CULINARY_FAVOURITE_FOOD]),
+				"Favourite Drink" = culinary_group_name(GLOB.culinary_drink_groups, human_current.culinary_preferences[CULINARY_FAVOURITE_DRINK]),
+				"Hated Food" = culinary_group_name(GLOB.culinary_dish_groups, human_current.culinary_preferences[CULINARY_HATED_FOOD]),
+				"Hated Drink" = culinary_group_name(GLOB.culinary_drink_groups, human_current.culinary_preferences[CULINARY_HATED_DRINK]),
+			)
+			output += "<br>"
+			for(var/culinary_label in culinary_lines)
+				if(culinary_lines[culinary_label] != "None")
+					output += "<b>[culinary_label]:</b> [culinary_lines[culinary_label]]<br>"
 
 	var/has_personal_objectives = FALSE
 	var/personal_output = ""

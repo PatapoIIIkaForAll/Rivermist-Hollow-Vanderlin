@@ -156,7 +156,7 @@ GLOBAL_DATUM_INIT(anti_magic_field_manager, /datum/anti_magic_field_manager, new
 /datum/anti_magic_field_manager/proc/is_globally_whitelisted(action_id)
 	if(!istext(action_id) || !length(action_id))
 		return FALSE
-	for(var/allowed_action_id as anything in global_whitelist)
+	for(var/allowed_action_id in global_whitelist)
 		if(action_id == allowed_action_id || findtext(action_id, "[allowed_action_id]/") == 1)
 			return TRUE
 	return FALSE

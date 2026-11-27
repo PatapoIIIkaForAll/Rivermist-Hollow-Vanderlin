@@ -76,6 +76,8 @@
 /atom/movable/screen/alert/status_effect/knot_tied
 	name = "Knotted"
 	desc = "A knot is swollen tight inside me. Pulling away would tear."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "knot_tied"
 
 /datum/status_effect/knot_fucked_stupid
 	id = "knot_fucked_stupid"
@@ -87,6 +89,8 @@
 /atom/movable/screen/alert/status_effect/knot_fucked_stupid
 	name = "Fucked Stupid"
 	desc = "Mmmph I can't think straight..."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "knotted_stupid"
 
 /datum/status_effect/knotted
 	id = "knotted"
@@ -96,3 +100,5 @@
 /atom/movable/screen/alert/status_effect/knotted
 	name = "Knotted"
 	desc = "I have to be careful where I step..."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "knotted"

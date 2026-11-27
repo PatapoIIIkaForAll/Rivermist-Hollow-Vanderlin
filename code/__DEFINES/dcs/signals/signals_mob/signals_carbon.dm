@@ -7,3 +7,5 @@
 #define COMSIG_CARBON_REGENERATE_LIMBS "living_regen_limbs"
 ///from base of /mob/living/carbon/regenerate_limb(), before the new limb attaches: (obj/item/bodypart/new_limb)
 #define COMSIG_CARBON_LIMB_REGENERATED "carbon_limb_regenerated"
+///from base of /datum/species/proc/on_gender_update(): (old_gender)
+#define COMSIG_HUMAN_GENDER_UPDATED "human_gender_updated"

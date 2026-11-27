@@ -10,7 +10,8 @@
 	return "Unknown"
 
 /datum/preference/text/real_name/deserialize(input, datum/preferences/prefs)
-	var/cleaned = reject_bad_name(..())
+	// Saved names lose a ~ instead of being refused, so an old slot keeps its name.
+	var/cleaned = reject_bad_name(replacetext("[..()]", "~", ""))
 	return cleaned || "Unknown"
 
 /datum/preference/text/real_name/apply_to_human(mob/living/carbon/human/H, value, datum/preferences/prefs)
@@ -20,10 +21,13 @@
 /datum/preference/text/real_name/handle_link(datum/preferences/prefs, mob/user)
 	var/new_name = browser_input_text(user, "DECIDE YOUR HERO'S IDENTITY", "THE SELF", prefs.read_preference(/datum/preference/text/real_name), MAX_NAME_LEN, encode = FALSE)
 	if(new_name)
+		if(findtext(new_name, "~"))
+			to_chat(user, "<font color='red'>Names cannot contain ~.</font>")
+			return
 		new_name = reject_bad_name(new_name)
 		if(new_name)
 			prefs.write_preference(/datum/preference/text/real_name, new_name)
 		else
-			to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>")
+			to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain letters, spaces and the characters - ' . ,</font>")
 	GLOB.name_adjustments |= "[user] changed their characters name to [new_name]."
 	log_character("[user] changed their characters name to [new_name].")

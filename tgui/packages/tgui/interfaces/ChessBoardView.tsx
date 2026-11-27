@@ -91,6 +91,7 @@ type ChessBoardData = {
   black_player_seated?: boolean;
   my_side: string;
   my_side_key: string | null;
+  active_side_key?: string | null;
   turn: string;
   turn_key: string;
   paused: boolean;
@@ -465,11 +466,13 @@ export const ChessBoardView = ({ locale }: ChessBoardViewProps) => {
     return lookup;
   }, [board]);
 
+  // The side this viewer moves for; a lone seated player moves for whichever side is to play.
+  const activeSide = data.active_side_key ?? data.my_side_key;
   const interactive =
-    !!data.my_side_key &&
+    !!activeSide &&
     !data.paused &&
     !data.result_text &&
-    data.turn_key === data.my_side_key;
+    data.turn_key === activeSide;
 
   const nardsInteractive = interactive && data.game_mode === 'nards';
 
@@ -607,8 +610,7 @@ export const ChessBoardView = ({ locale }: ChessBoardViewProps) => {
 
     const selected = data.selected_square;
     const piece = square.piece;
-    const ownPiece =
-      !!piece && !!data.my_side_key && piece.startsWith(data.my_side_key);
+    const ownPiece = !!piece && !!activeSide && piece.startsWith(activeSide);
 
     if (!selected || ownPiece || square.index === selected || !interactive) {
       act('select_square', { square: square.index });

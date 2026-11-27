@@ -246,7 +246,7 @@
 /atom/movable/screen/alert/status_effect/stasis
 	name = "Stasis"
 	desc = "Your biological functions have halted. You could live forever this way, but it's pretty boring."
-	icon_state = "stasis"
+	icon_state = "effectcd"
 
 //GOLEM GANG
 
@@ -268,7 +268,7 @@
 /atom/movable/screen/alert/status_effect/strandling
 	name = "Choking strand"
 	desc = ""
-	icon_state = "his_grace"
+	icon_state = "restrained"
 	alerttooltipstyle = "hisgrace"
 
 /atom/movable/screen/alert/status_effect/strandling/Click(location, control, params)
@@ -323,7 +323,7 @@
 /atom/movable/screen/alert/status_effect/trance
 	name = "Trance"
 	desc = ""
-	icon_state = "high"
+	icon_state = "fentanyl"
 
 /datum/status_effect/trance/get_examine_text()
 	return span_warning("They seem slow and unfocused.")
@@ -444,7 +444,7 @@
 /atom/movable/screen/alert/status_effect/go_away
 	name = "TO THE STARS AND BEYOND!"
 	desc = ""
-	icon_state = "high"
+	icon_state = "astrata_gaze"
 
 /datum/status_effect/fake_virus
 	id = "fake_virus"

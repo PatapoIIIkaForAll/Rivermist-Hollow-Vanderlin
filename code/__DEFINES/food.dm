@@ -55,3 +55,33 @@
 #define CULINARY_RANDOM_PREFERENCES "Random Preferences"
 #define FAVOURITE_FOOD_TRIUMPH "Favourite Food Triumph"
 #define FAVOURITE_DRINK_TRIUMPH "Favourite Drink Triumph"
+
+/// Lowest fare a food needs to count as a favourite. Hated food counts at any fare.
+#define FAVOURITE_FOOD_MINFARE FARE_NEUTRAL
+/// Lowest quality a drink needs to count as a favourite. Hated drinks count at any quality.
+#define FAVOURITE_DRINK_MINQUALITY 0
+/// Drink types that count as a favourite at any quality.
+#define FAVOURITE_DRINK_ANY_QUALITY DRINKTYPE_MILK
+
+// Dish groups (snacks dish_type). Bits run from ingredient to finished dish; old saves map to the highest bit.
+#define DISH_VEGETABLE	(1<<0)
+#define DISH_FRUIT		(1<<1)
+#define DISH_MEAT		(1<<2)
+#define DISH_POULTRY	(1<<3)
+#define DISH_SEAFOOD	(1<<4)
+#define DISH_EGG		(1<<5)
+#define DISH_DAIRY		(1<<6)
+#define DISH_BREAD		(1<<7)
+#define DISH_PASTRY		(1<<8)
+#define DISH_PIE		(1<<9)
+#define DISH_SWEET		(1<<10)
+#define DISH_SOUP		(1<<11)
+
+// Drink types (consumable reagent drink_type).
+#define DRINKTYPE_MILK		(1<<0)
+#define DRINKTYPE_TEA		(1<<1)
+#define DRINKTYPE_ALE		(1<<2)
+#define DRINKTYPE_CIDER		(1<<3)
+#define DRINKTYPE_MEAD		(1<<4)
+#define DRINKTYPE_WINE		(1<<5)
+#define DRINKTYPE_SPIRIT	(1<<6)

@@ -376,6 +376,46 @@
 	item_path = /obj/item/clothing/wrists/bracers/zizo/bloodraider
 	point_cost = 1
 
+/datum/loadout_item/ta_wrists_leather_bracers
+	name = "leather bracers"
+	item_path = /obj/item/clothing/wrists/bracers/leather
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_hardened_leather_bracers
+	name = "hardened leather bracers"
+	item_path = /obj/item/clothing/wrists/bracers/leather/advanced
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_chain_sleeves
+	name = "chain sleeves"
+	item_path = /obj/item/clothing/wrists/bracers/chain
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_chain_sleeves_iron
+	name = "iron chain sleeves"
+	item_path = /obj/item/clothing/wrists/bracers/iron/chain
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_iron_bracers
+	name = "iron plate vambraces"
+	item_path = /obj/item/clothing/wrists/bracers/iron
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_steel_bracers
+	name = "steel plate vambraces"
+	item_path = /obj/item/clothing/wrists/bracers
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_steel_jackchain
+	name = "steel jack chain"
+	item_path = /obj/item/clothing/wrists/bracers/jackchain
+	point_cost = 5
+
+/datum/loadout_item/ta_wrists_iron_jackchain
+	name = "iron jack chain"
+	item_path = /obj/item/clothing/wrists/bracers/ironjackchain
+	point_cost = 5
+
 // CLOAKS
 
 /datum/loadout_item/ta_cloak_bishop

@@ -1,0 +1,152 @@
+// Vanderlin house style shared by the gradient and the flat window themes.
+// Palette lifted from the old "Extra Preferences" browser window:
+// page #1a1a1a, panel #2a2723, border #5b4b40, text #d8cf9f, headers #eee69c,
+// buttons #705d4f with dark ink text.
+
+@mixin vanderlin-flat {
+  // Base
+  --color-base: #1a1a1a;
+  --color-primary: #5b4b40;
+  --color-text: #d8cf9f;
+
+  --titlebar-text: #eee69c;
+
+  --font-size: 13px;
+  --font-family: Verdana, Geneva, sans-serif;
+  --line-height: 150%;
+
+  --color-good: #6a8a35;
+  --color-average: #bcae82;
+  --color-bad: #8b2020;
+
+  --color-border-primary: #5b4b40;
+
+  // Title
+  .TitleBar {
+    &__title {
+      color: #eee69c;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+
+  // Components
+  --section-separator-color: #5b4b40;
+
+  .Section {
+    background-color: #2a2723;
+    border: 1px solid #5b4b40;
+    box-shadow: inset 0 0 0 1px #141211;
+
+    &__title {
+      border-bottom: 1px solid #5b4b40;
+    }
+
+    &__titleText {
+      color: #eee69c;
+      text-transform: uppercase;
+    }
+  }
+
+  --button-color-transparent: rgba(216, 207, 159, 0.8);
+  // Kept for var-driven button implementations; the real work below overrides
+  // the statically compiled colors from components/Button.scss.
+  --button-background-default: #66492a;
+  --button-background-selected: #cfc08a;
+
+  .Button {
+    border: 1px solid #171515;
+  }
+
+  // Dark bronze replaces the stock blue for plain buttons.
+  .Button--color--default {
+    background-color: #66492a;
+    color: #f2e7c9;
+
+    &:hover {
+      background-color: #7d5c35;
+      color: #fff3d1;
+    }
+  }
+
+  // Silver-gold marks the picked entry of a group: tabs, slots, intensity steps.
+  .Button--selected {
+    background-color: #cfc08a;
+    color: #161418;
+
+    &:hover {
+      background-color: #ded1a0;
+      color: #161418;
+    }
+  }
+
+  // Moss green marks a switch that is on. Listed after --selected so it wins when both apply.
+  .Button--color--green,
+  .Button--color--good {
+    background-color: #9fb861;
+    color: #1d2110;
+
+    &:hover {
+      background-color: #b0c873;
+      color: #1d2110;
+    }
+  }
+
+  // Oxblood marks a switch that is off. Light ink, the stock mixin forces black.
+  .Button--color--red,
+  .Button--color--bad {
+    background-color: #5c2e25;
+    color: #e6c3b4;
+
+    &:hover {
+      background-color: #6d382d;
+      color: #f4d6c8;
+    }
+  }
+
+  .Button--color--transparent {
+    background-color: transparent;
+    color: #eee69c;
+    border: none;
+
+    &:hover {
+      background-color: #2f2924;
+      color: #eee69c;
+    }
+  }
+
+  // Flat sub-tabs still mark their picked entry in gold; the transparent rule above would hide it.
+  .Button--color--transparent.Button--selected {
+    background-color: #cfc08a;
+    color: #161418;
+
+    &:hover {
+      background-color: #ded1a0;
+      color: #161418;
+    }
+  }
+
+  .Button--color--transparent.Button--disabled {
+    color: #6b6353;
+  }
+
+  .Button--disabled {
+    background-color: #4a423a !important;
+    color: #8d8574;
+  }
+
+  .Tabs__Tab {
+    color: #bcae82;
+
+    &--selected {
+      color: #eee69c;
+    }
+  }
+
+  .Input,
+  .TextArea {
+    background-color: #171515;
+    border: 1px solid #5b4b40;
+    color: #d8cf9f;
+  }
+}

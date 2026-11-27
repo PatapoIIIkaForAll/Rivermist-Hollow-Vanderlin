@@ -22,7 +22,7 @@
 /atom/movable/screen/alert/status_effect/wish_granters_gift
 	name = "Wish Granter's Immortality"
 	desc = ""
-	icon_state = "wish_granter"
+	icon_state = "revived"
 
 /datum/status_effect/sword_spin
 	id = "Bastard Sword Spin"
@@ -77,7 +77,7 @@
 /atom/movable/screen/alert/status_effect/fleshmend
 	name = "Fleshmend"
 	desc = ""
-	icon_state = "fleshmend"
+	icon_state = "bloodheal"
 
 /datum/status_effect/exercised
 	id = "Exercised"
@@ -110,7 +110,7 @@
 /atom/movable/screen/alert/status_effect/regenerative_core
 	name = "Regenerative Core Tendrils"
 	desc = ""
-	icon_state = "regenerative_core"
+	icon_state = "bloodheal"
 
 /datum/status_effect/regenerative_core
 	id = "Regenerative Core"
@@ -134,9 +134,15 @@
 
 /datum/status_effect/antimagic
 	id = "antimagic"
+	alert_type = /atom/movable/screen/alert/status_effect/antimagic
 	duration = 10 SECONDS
 	tick_interval = STATUS_EFFECT_NO_TICK
 	examine_text = span_notice("SUBJECTPRONOUN seem to be covered in a dull, grey aura.")
+
+/atom/movable/screen/alert/status_effect/antimagic
+	name = "Antimagic"
+	desc = "A dull grey aura turns magic away from me."
+	icon_state = "spellblock"
 
 /datum/status_effect/antimagic/on_apply()
 	owner.visible_message("<span class='notice'>[owner] is coated with a dull aura!</span>")

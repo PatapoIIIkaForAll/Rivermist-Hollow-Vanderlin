@@ -57,6 +57,8 @@
 #define LIPSTICK_SPOT_CHEST "chest"
 #define LIPSTICK_SPOT_NIPPLES "nipples"
 #define LIPSTICK_SPOT_ARMPIT "armpit"
+/// Only impact marks land here; it has no lipstick art.
+#define LIPSTICK_SPOT_BACK "back"
 #define LIPSTICK_SPOT_BELLY "belly"
 #define LIPSTICK_SPOT_CROTCH "crotch"
 #define LIPSTICK_SPOT_COCK "cock"

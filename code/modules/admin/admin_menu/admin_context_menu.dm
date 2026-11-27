@@ -162,6 +162,9 @@ CLASSIC_ADMIN_CONTEXT_VERB(callproc_datum, "Atom ProcCall", atom/target as mob|o
 /datum/preference/toggle/admin_classic_context_menu
 	savefile_key = "admin_classic_context_menu"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Admin"
+	toggles_menu_name = "Classic right-click menu"
+	toggles_menu_desc = "List admin right-click actions one by one instead of under Admin..., GM... and Debug..."
 	category = "ui"
 	can_randomize = FALSE
 	should_update_preview = FALSE

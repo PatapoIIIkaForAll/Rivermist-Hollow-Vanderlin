@@ -165,15 +165,13 @@
 
 	var/mob/living/catcher
 	var/catch_index
-	grabbedby = SANITIZE_LIST(grabbedby)
 	for(var/obj/item/grabbing/grab in grabbedby)
 		if(grab.grab_state < GRAB_AGGRESSIVE || !grab.grabbee)
 			continue
 		catcher = grab.grabbee
 		catch_index = catcher.get_held_index_of_item(grab)
 		break
-	if(length(grabbedby))
-		QDEL_LIST(grabbedby)
+	QDEL_LAZYLIST(grabbedby)
 
 	playsound(H, pick(dismemsound), 50, FALSE, -1)
 	H.visible_message(span_danger("<B>[H]'s head comes clean off!</B>"), span_userdanger("My head comes off!"))

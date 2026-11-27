@@ -97,25 +97,19 @@
 
 	if(!self_inspect)
 		if(family_datum == SSfamilytree.ruling_family && length(culinary_preferences) && HAS_CHARACTER_TRAIT(user, TRAIT_ROYALSERVANT))
-			var/obj/item/reagent_containers/food/snacks/fav_food = culinary_preferences[CULINARY_FAVOURITE_FOOD]
-			var/datum/reagent/consumable/fav_drink = culinary_preferences[CULINARY_FAVOURITE_DRINK]
-			if(fav_food)
-				if(fav_drink)
-					. += span_tinynotice("[capitalize(P[THEIR])] favourites are [fav_food.name] and [fav_drink.name].")
-				else
-					. += span_tinynotice("[capitalize(P[THEIR])] favourite is [fav_food.name].")
-			else if(fav_drink)
-				. += span_tinynotice("[capitalize(P[THEIR])] favourite is [fav_drink.name].")
+			var/fav_food = culinary_preferences[CULINARY_FAVOURITE_FOOD] ? LOWER_TEXT(culinary_group_name(GLOB.culinary_dish_groups, culinary_preferences[CULINARY_FAVOURITE_FOOD])) : null
+			var/fav_drink = culinary_preferences[CULINARY_FAVOURITE_DRINK] ? LOWER_TEXT(culinary_group_name(GLOB.culinary_drink_groups, culinary_preferences[CULINARY_FAVOURITE_DRINK])) : null
+			if(fav_food && fav_drink)
+				. += span_tinynotice("[capitalize(P[THEIR])] favourites are [fav_food] and [fav_drink].")
+			else if(fav_food || fav_drink)
+				. += span_tinynotice("[capitalize(P[THEIR])] favourite is [fav_food || fav_drink].")
 
-			var/obj/item/reagent_containers/food/snacks/hated_food = culinary_preferences[CULINARY_HATED_FOOD]
-			var/datum/reagent/consumable/hated_drink = culinary_preferences[CULINARY_HATED_DRINK]
-			if(hated_food)
-				if(hated_drink)
-					. += span_tinynotice("[P[THEY]] hate [hated_food.name] and [hated_drink.name].")
-				else
-					. += span_tinynotice("[P[THEY]] hate [hated_food.name].")
-			else if(hated_drink)
-				. += span_tinynotice("[P[THEY]] hate [hated_drink.name].")
+			var/hated_food = culinary_preferences[CULINARY_HATED_FOOD] ? LOWER_TEXT(culinary_group_name(GLOB.culinary_dish_groups, culinary_preferences[CULINARY_HATED_FOOD])) : null
+			var/hated_drink = culinary_preferences[CULINARY_HATED_DRINK] ? LOWER_TEXT(culinary_group_name(GLOB.culinary_drink_groups, culinary_preferences[CULINARY_HATED_DRINK])) : null
+			if(hated_food && hated_drink)
+				. += span_tinynotice("[P[THEY]] hate [hated_food] and [hated_drink].")
+			else if(hated_food || hated_drink)
+				. += span_tinynotice("[P[THEY]] hate [hated_food || hated_drink].")
 
 	if(!HAS_TRAIT(src, TRAIT_FACELESS))
 		if(headshot_link)

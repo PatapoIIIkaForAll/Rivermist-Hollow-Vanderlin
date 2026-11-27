@@ -121,6 +121,14 @@
 	TEST_ASSERT_EQUAL(speaker.speech_bark, "Chirp", "The bark choice did not reach the mob")
 	TEST_ASSERT(speaker.can_speech_bark(list()), "A speaker with a bark does not bark")
 	TEST_ASSERT(!speaker.can_speech_bark(list(WHISPER_MODE = MODE_WHISPER)), "A whisper barks")
+	TEST_ASSERT(!speaker.can_speech_bark(list(MODE_SING = TRUE)), "A song barks over its hum")
+
+	var/datum/component/arousal/arousal = speaker.GetComponent(/datum/component/arousal) || speaker.AddComponent(/datum/component/arousal)
+	speaker.speech_moans = TRUE
+	arousal.arousal = 60
+	TEST_ASSERT(!speaker.can_speech_bark(list()), "A moaning speaker barks over the moan")
+	arousal.arousal = 0
+	speaker.speech_moans = FALSE
 
 	speaker.mouth_blocked = TRUE
 	TEST_ASSERT(!speaker.can_speech_bark(list()), "A muffled speaker barks and reveals the voice")

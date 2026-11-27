@@ -105,10 +105,13 @@
 			else
 				smell_string = "The unmistakable [dominant_pollutant.descriptor] of [dominant_pollutant.scent] bombards your nostrils."
 
-	if(dominant_pollutant.descriptor == SCENT_DESC_ODOR)
-		to_chat(sniffer, span_warning(smell_string))
-	else
-		to_chat(sniffer, span_info(smell_string))
+	//RMH EDITED START - a scent noticed recently is not announced again
+	if(!sniffer.smelled_recently(dominant_pollutant.type))
+		if(dominant_pollutant.descriptor == SCENT_DESC_ODOR)
+			to_chat(sniffer, span_warning(smell_string))
+		else
+			to_chat(sniffer, span_info(smell_string))
+	//RMH EDITED END
 
 	dominant_pollutant.on_smell(sniffer)
 

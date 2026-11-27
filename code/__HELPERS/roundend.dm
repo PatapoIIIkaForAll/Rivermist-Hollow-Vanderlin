@@ -112,6 +112,7 @@
 	set waitfor = FALSE
 
 	log_game("The round has ended.")
+	ccg_sync_all_player_collections() //RMH EDITED - gwynt cards still carried go into their owners' collections
 
 	INVOKE_ASYNC(Tracy, TYPE_PROC_REF(/datum/tracy, flush))
 

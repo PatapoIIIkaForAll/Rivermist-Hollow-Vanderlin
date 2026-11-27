@@ -11,6 +11,7 @@
 	var/tmp/datum/browser/rmh_scom/rmh_scom_reader
 
 /datum/browser/rmh_scom
+	watch_holders = TRUE
 	var/tmp/client/viewer
 	var/tmp/datum/rmh_law_documents/documents
 	var/tmp/datum/weakref/scom_ref

@@ -47,7 +47,7 @@
 	user.visible_message(span_warning("[user] stops jerking off."))
 
 /datum/sex_action/masturbate/penis/handle_climax_message(mob/living/user, mob/living/target, must_flip)
-	user.visible_message(span_love("[user] blows their load!"))
+	user.visible_message(span_love_climax("[user] blows their load!"))
 	return ORGASM_LOCATION_SELF
 
 /datum/sex_action/masturbate/penis/lock_sex_object(mob/living/user, mob/living/target)

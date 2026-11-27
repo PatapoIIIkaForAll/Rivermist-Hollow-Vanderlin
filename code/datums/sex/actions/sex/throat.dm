@@ -58,11 +58,11 @@
 
 /datum/sex_action/sex/throat/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		user.visible_message(span_love("[user] shudders in orgasm from being throatfucked!"))
+		user.visible_message(span_love_climax("[user] shudders in orgasm from being throatfucked!"))
 		user.lose_virginity()
 		return ORGASM_LOCATION_SELF
 	else
-		user.visible_message(span_love("[user] cums into [target]'s throat!"))
+		user.visible_message(span_love_climax("[user] cums into [target]'s throat!"))
 		user.lose_virginity()
 		return ORGASM_LOCATION_ORAL
 

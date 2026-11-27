@@ -29,28 +29,9 @@
 	if ((method & INGEST) && ishuman(M))
 		var/mob/living/carbon/human/HM = M
 
-		if(HM.culinary_preferences && !HAS_TRAIT(HM, TRAIT_AGEUSIA))
-			var/favorite_drink_type = HM.culinary_preferences[CULINARY_FAVOURITE_DRINK]
-			if(favorite_drink_type == type)
-				if(HM.add_stress(/datum/stress_event/favourite_drink))
-					to_chat(HM, span_green("Yum! My favorite drink!"))
-			else if(ispath(type, favorite_drink_type))
-				var/datum/reagent/consumable/favorite_drink_instance = favorite_drink_type
-				var/favorite_drink_name = initial(favorite_drink_instance.name)
-				if(favorite_drink_name == name)
-					if(HM.add_stress(/datum/stress_event/favourite_drink))
-						to_chat(HM, span_green("Yum! My favorite drink!"))
-
-			var/hated_drink_type = HM.culinary_preferences[CULINARY_HATED_DRINK]
-			if(hated_drink_type == type)
-				if(HM.add_stress(/datum/stress_event/hated_drink))
-					to_chat(HM, span_red("Yuck! My hated drink!"))
-			else if(ispath(type, hated_drink_type))
-				var/datum/reagent/consumable/hated_drink_instance = hated_drink_type
-				var/hated_drink_name = initial(hated_drink_instance.name)
-				if(hated_drink_name == name)
-					if(HM.add_stress(/datum/stress_event/hated_drink))
-						to_chat(HM, span_red("Yuck! My hated drink!"))
+		if(!HAS_TRAIT(HM, TRAIT_AGEUSIA))
+			HM.culinary_react_to_drink(drink_type, quality)
+			HM.culinary_react_to_food(dish_type, dish_fare)
 
 		if (quality && !HAS_TRAIT(HM, TRAIT_AGEUSIA))
 			switch (quality)

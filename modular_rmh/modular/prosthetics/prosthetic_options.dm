@@ -186,8 +186,8 @@ GLOBAL_LIST_INIT(prosthetic_options, build_prosthetic_options())
 	tint = "#b46bff"
 	stats = list("Sight" = 3, "Darkness" = 4)
 	part_types = list(
-		PROSTHETIC_SLOT_L_EYE = /obj/item/organ/eyes/left/prosthetic/gem,
-		PROSTHETIC_SLOT_R_EYE = /obj/item/organ/eyes/prosthetic/gem,
+		PROSTHETIC_SLOT_L_EYE = /obj/item/organ/eyes/night_vision/left/prosthetic/gem,
+		PROSTHETIC_SLOT_R_EYE = /obj/item/organ/eyes/night_vision/prosthetic/gem,
 	)
 
 // ---- Organs ----

@@ -10,14 +10,14 @@
 	if(orifice_pressing)
 		return .
 	user.visible_message(span_warning("[user] forces [target] down onto [user.p_their()] cock!"))
-	playsound(user, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), sex_volume, TRUE, ignore_walls = FALSE)
+	playsound(user, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), get_sound_volume(user), TRUE, ignore_walls = FALSE)
 
 /datum/sex_action/held_mob_fuck/anal/on_perform(mob/living/user, mob/living/target)
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] pumps [target] along [user.p_their()] cock."))
 
-	playsound(user, get_force_sound(), sex_volume, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, get_force_sound(), get_sound_volume(user), TRUE, -2, ignore_walls = FALSE)
 
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
@@ -27,9 +27,9 @@
 
 /datum/sex_action/held_mob_fuck/anal/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		target.visible_message(span_love("[target] spills over [user]'s fingers!"))
+		target.visible_message(span_love_climax("[target] spills over [user]'s fingers!"))
 		return ORGASM_LOCATION_ONTO
-	user.visible_message(span_love("[user] empties themselves into [target]!"))
+	user.visible_message(span_love_climax("[user] empties themselves into [target]!"))
 	user.lose_virginity()
 	return ORGASM_LOCATION_INTO
 

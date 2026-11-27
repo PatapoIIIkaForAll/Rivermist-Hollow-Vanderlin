@@ -40,7 +40,7 @@
 	perform_sex_action(user, user, 2, 0, 2)
 
 /datum/sex_action/masturbate/penis_over/handle_climax_message(mob/living/user, mob/living/target, must_flip)
-	user.visible_message(span_love("[user] cums over [target]'s body!"))
+	user.visible_message(span_love_climax("[user] cums over [target]'s body!"))
 	return ORGASM_LOCATION_ONTO
 
 /datum/sex_action/masturbate/penis_over/on_finish(mob/living/user, mob/living/target)

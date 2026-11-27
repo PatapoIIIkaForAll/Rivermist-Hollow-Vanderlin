@@ -79,6 +79,8 @@
 	/// mob -> the personal image that mob sees. One each, so a Marked highlight shown to the
 	/// hunter who owns the Mark does not change what everyone else is looking at.
 	var/list/knower_images = list()
+	/// mob -> weakref to the client their image was added to; the mob may lose that client before the image is taken back.
+	var/list/knower_image_clients = list()
 	var/list/knower_timers = list()
 
 /obj/effect/skill_tracker/footprint/Initialize(mapload, atom/parent)
@@ -97,7 +99,10 @@
 		parent_turf.footprint_marking = null
 	// knower_images is deliberately left intact: ..() walks known_by and calls remove_knower(),
 	// which needs it to pull each personal image back off its client.
-	return ..()
+	. = ..()
+	// An image still held by a client keeps this track alive through its loc.
+	for(var/mob/living/tracker as anything in knower_images)
+		hide_personal_image(tracker)
 
 /// Deliberately does nothing. The base version reveals a trait holder to a trackable the moment it
 /// is created, with no distance check at all - fine for a handful of thieves' cant markings, wrong
@@ -153,8 +158,7 @@
 	if(tracker.client)
 		var/image/personal = image(icon, src, get_state_for(tracker), BULLET_HOLE_LAYER, original_dir || dir)
 		personal.mouse_opacity = MOUSE_OPACITY_ICON
-		knower_images[tracker] = personal
-		tracker.client.images += personal
+		show_personal_image(tracker, personal)
 	RegisterSignal(tracker, COMSIG_PARENT_QDELETING, PROC_REF(remove_knower), override = TRUE)
 	var/old_timer = knower_timers[tracker]
 	if(old_timer)
@@ -172,14 +176,27 @@
 	if(reveal_timer)
 		deltimer(reveal_timer)
 		knower_timers -= tracker
-	var/image/personal = knower_images?[tracker]
-	if(personal)
-		if(tracker.client)
-			tracker.client.images -= personal
-		knower_images -= tracker
+	hide_personal_image(tracker)
 	known_by -= tracker
 	if(creator == tracker)
 		creator = null
+
+/// Shows a knower their own image of this track and remembers which client got it.
+/obj/effect/skill_tracker/footprint/proc/show_personal_image(mob/living/tracker, image/personal)
+	knower_images[tracker] = personal
+	knower_image_clients[tracker] = WEAKREF(tracker.client)
+	tracker.client.images += personal
+
+/// Takes a knower's image back from the client it was shown to, even after they changed bodies.
+/obj/effect/skill_tracker/footprint/proc/hide_personal_image(mob/living/tracker)
+	var/image/personal = knower_images?[tracker]
+	if(personal)
+		var/datum/weakref/client_ref = knower_image_clients?[tracker]
+		var/client/shown_to = client_ref?.resolve()
+		shown_to?.images -= personal
+		tracker.client?.images -= personal
+	knower_images?.Remove(tracker)
+	knower_image_clients?.Remove(tracker)
 
 /obj/effect/skill_tracker/footprint/proc/reveal_expired(mob/living/tracker)
 	knower_timers -= tracker
@@ -219,13 +236,10 @@
 		return
 	// Drop whatever was cached first, or a client that still holds the old image
 	// (a rebuild that was not caused by a reconnect) ends up with two.
-	var/image/stale = knower_images?[tracker]
-	if(stale)
-		tracker.client.images -= stale
+	hide_personal_image(tracker)
 	var/image/personal = image(icon, src, get_state_for(tracker), BULLET_HOLE_LAYER, original_dir || dir)
 	personal.mouse_opacity = MOUSE_OPACITY_ICON
-	knower_images[tracker] = personal
-	tracker.client.images += personal
+	show_personal_image(tracker, personal)
 
 /// Swaps this mob's image over to the Marked sprite, once they realize whose track this is.
 /obj/effect/skill_tracker/footprint/proc/refresh_image_for(mob/living/tracker)
@@ -235,12 +249,10 @@
 	var/wanted_state = get_state_for(tracker)
 	if(old_image?.icon_state == wanted_state)
 		return
-	if(old_image)
-		tracker.client.images -= old_image
+	hide_personal_image(tracker)
 	var/image/personal = image(icon, src, wanted_state, BULLET_HOLE_LAYER, original_dir || dir)
 	personal.mouse_opacity = MOUSE_OPACITY_ICON
-	knower_images[tracker] = personal
-	tracker.client.images += personal
+	show_personal_image(tracker, personal)
 
 /obj/effect/skill_tracker/footprint/examine(mob/user)
 	. = ..()

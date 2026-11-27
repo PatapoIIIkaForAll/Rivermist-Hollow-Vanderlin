@@ -925,6 +925,8 @@
 	if (!frommob.ckey)
 		return 0
 
+	var/client/admin = usr.client
+	var/ghost_ckey = frommob.ckey
 	var/question = ""
 	if (tomob.ckey)
 		question = "This mob already has a user ([tomob.key]) in control of it! "
@@ -934,9 +936,12 @@
 	if (ask != "Yes")
 		return 1
 
-	if (!frommob || !tomob) //make sure the mobs don't go away while we waited for a response
+	if(QDELETED(frommob) || QDELETED(tomob) || frommob.ckey != ghost_ckey)
+		return 1
+	if(!check_rights_for(admin, R_VAREDIT) || !check_rights_for(admin, R_SPAWN|R_DEBUG))
 		return 1
 
+	var/client/occupant = frommob.client
 	tomob.ghostize(0)
 
 	message_admins("<span class='adminnotice'>[key_name_admin(usr)] has put [frommob.key] in control of [tomob.name].</span>")
@@ -946,6 +951,7 @@
 		REMOVE_TRAIT(frommob, TRAIT_NOSLEEP, "aghost")
 	tomob.ckey = frommob.ckey
 	qdel(frommob)
+	admin.prompt_controlled_body_rune(tomob, occupant)
 
 	return 1
 

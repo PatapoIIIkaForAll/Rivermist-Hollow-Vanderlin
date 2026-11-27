@@ -23,7 +23,6 @@
 #define ITEM_SLOT_SHOES			(1<<3)
 #define ITEM_SLOT_GLOVES		(1<<4)
 #define ITEM_SLOT_RING			(1<<5)
-#define RING_SLOTS 4
 #define ITEM_SLOT_MASK			(1<<6)
 #define ITEM_SLOT_MOUTH			(1<<7)
 #define ITEM_SLOT_HEAD			(1<<8)
@@ -54,6 +53,9 @@
 /// Inside of a character's backpack
 
 #define SLOTS_AMT			29 // Keep this up to date! //This is for UI slots, extra ones not needed.
+
+/// Rings a human can wear at once, all under ITEM_SLOT_RING.
+#define RING_SLOTS 4
 
 #define ITEM_SLOT_BACK			(ITEM_SLOT_BACK_L | ITEM_SLOT_BACK_R)
 #define ITEM_SLOT_HIP			(ITEM_SLOT_BELT_L | ITEM_SLOT_BELT_R)

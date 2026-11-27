@@ -233,38 +233,42 @@
 		return
 	duration = max(duration, world.time + (isnum(duration_override) ? duration_override : initial(duration)))
 
-// Alerts borrow the spent loins icon until they get their own art.
 /atom/movable/screen/alert/status_effect/buff/orifice_potion
 	name = "Draught"
 	desc = "A draught is working on my holes."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "spent_loins"
+	icon_state = "orifice_draught"
 
 /atom/movable/screen/alert/status_effect/buff/orifice_potion/yielding
 	name = "Yielding"
 	desc = "My holes rest a step looser than usual for a while."
+	icon_state = "orifice_yielding"
 
 /atom/movable/screen/alert/status_effect/buff/orifice_potion/wanton
 	name = "Wanton"
 	desc = "My holes rest a step looser than usual, and they will stay that way."
+	icon_state = "orifice_wanton"
 
 /atom/movable/screen/alert/status_effect/buff/orifice_potion/maidens_knot
 	name = "Maiden's Knot"
 	desc = "My holes rest a step tighter for a while and spring back twice as fast after a stretch."
+	icon_state = "orifice_maidens_knot"
 
 /atom/movable/screen/alert/status_effect/buff/orifice_potion/maiden
 	name = "Maidenly"
 	desc = "My holes rest a step tighter and spring back twice as fast, and they will stay that way."
+	icon_state = "orifice_maiden"
 
 /atom/movable/screen/alert/status_effect/buff/orifice_potion/limber
 	name = "Limber"
 	desc = "My holes stretch further and more easily for a while."
+	icon_state = "orifice_limber"
 
 /atom/movable/screen/alert/status_effect/debuff/orifice_gape_lock
 	name = "Held Open"
 	desc = "Something keeps me gaping open. It will not close for a while."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "spent_loins"
+	icon_state = "orifice_gape_lock"
 
 #undef ORIFICE_POTION_DOSE
 #undef GAPERS_GALL_LOCK_TIME

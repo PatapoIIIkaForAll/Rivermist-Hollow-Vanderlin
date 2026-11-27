@@ -39,6 +39,8 @@
 
 /obj/projectile/magic/frostbolt/on_hit(atom/target, blocked = FALSE, pierce_hit)
 	. = ..()
+	var/turf/impact_turf = get_turf(target)
+	impact_turf?.extinguish_turf()
 	if(isliving(target))
 		var/mob/living/L = target
 		L.apply_status_effect(/datum/status_effect/debuff/frostbite)

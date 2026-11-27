@@ -357,8 +357,9 @@
 				var/obj/item/ring = wear_rings[ring_index]
 				if(ring && !(ring.item_flags & ABSTRACT))
 					dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_RING];ring_index=[ring_index]'>[ring]</A></td></tr>"
-			if(get_free_ring_index())
-				dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_RING]'><font color=grey>Ring</font></A></td></tr>"
+			var/free_ring_index = get_free_ring_index()
+			if(free_ring_index)
+				dat += "<tr><td><A href='byond://?src=[REF(src)];item=[ITEM_SLOT_RING];ring_index=[free_ring_index]'><font color=grey>Ring</font></A></td></tr>"
 
 		if(obscured[SLOT_CHECK_REGULAR] & ITEM_SLOT_WRISTS)
 			dat += "<tr><td><font color=grey>Obscured</font></td></tr>"
@@ -1208,15 +1209,6 @@
 		. = TRUE
 	// RMH EDITED END
 
-	// Wash equipped stuff that cannot be covered
-	if(wear_armor?.wash(clean_types))
-		update_inv_armor()
-		. = TRUE
-
-	if(belt?.wash(clean_types))
-		update_inv_belt()
-		. = TRUE
-
 	// Check and wash stuff that can be covered
 	var/list/obscured = check_obscured_slots()
 
@@ -1225,10 +1217,6 @@
 		. = TRUE
 
 	if(wash_lipstick_marks())
-		. = TRUE
-
-	if(!(obscured[SLOT_CHECK_REGULAR] & ITEM_SLOT_SHIRT) && wear_shirt?.wash(clean_types))
-		update_inv_shirt()
 		. = TRUE
 
 	// Wash hands if exposed

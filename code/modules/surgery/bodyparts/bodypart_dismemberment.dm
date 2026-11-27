@@ -89,8 +89,7 @@
 						CA.add_stress(/datum/stress_event/fviewdismember)
 						continue
 				CA.add_stress(stress2give)
-	if(grabbedby)
-		QDEL_LIST(grabbedby)
+	QDEL_LAZYLIST(grabbedby)
 	drop_limb()
 
 	if(dam_type == BURN)

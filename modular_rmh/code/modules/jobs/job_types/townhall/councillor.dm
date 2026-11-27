@@ -284,9 +284,10 @@
 		/datum/attribute/skill/misc/lockpicking = 30,
 		/datum/attribute/skill/misc/athletics = 20,
 		/datum/attribute/skill/misc/medicine = 20,
+		/datum/attribute/skill/misc/climbing = 20,
 		/datum/attribute/skill/labor/mathematics = 20,
 		/datum/attribute/skill/combat/unarmed = 20,
-		/datum/attribute/skill/combat/knives = 20
+		/datum/attribute/skill/combat/knives = 30
 	)
 
 /datum/job/advclass/councilor/spymaster

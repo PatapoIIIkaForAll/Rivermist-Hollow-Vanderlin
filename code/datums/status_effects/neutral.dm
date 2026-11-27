@@ -70,6 +70,7 @@
 
 /datum/status_effect/bounty
 	id = "bounty"
+	alert_type = /atom/movable/screen/alert/status_effect/bounty
 	status_type = STATUS_EFFECT_UNIQUE
 	var/mob/living/rewarded
 
@@ -77,6 +78,11 @@
 	. = ..()
 	if(.)
 		rewarded = caster
+
+/atom/movable/screen/alert/status_effect/bounty
+	name = "Bounty"
+	desc = "Someone gets a reward if I die."
+	icon_state = "dream_mark"
 
 /datum/status_effect/bounty/on_apply()
 	to_chat(owner, span_boldnotice("You hear something behind you talking... \"You have been marked for death by [rewarded]. If you die, they will be rewarded.\""))
@@ -136,6 +142,7 @@
 /atom/movable/screen/alert/bugged
 	name = "BUGGED"
 	desc = "AN AUDIO-PARASITE ON ME."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
 	icon_state = "blackeye"
 
 /atom/movable/screen/alert/bugged/Click()
@@ -150,3 +157,72 @@
 	L.remove_status_effect(/datum/status_effect/bugged)
 
 	return TRUE
+
+/// A clickable "Yield?" alert for someone told to yield in a fight; a click makes them yield.
+/datum/status_effect/yield_prompt
+	id = "yield_prompt"
+	duration = 20 SECONDS
+	tick_interval = STATUS_EFFECT_NO_TICK
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/yield_prompt
+	/// Name of who asked, kept as text so the asker is never referenced.
+	var/asker_name = "someone"
+
+/datum/status_effect/yield_prompt/on_creation(mob/living/new_owner, duration_override, mob/living/asker)
+	if(asker)
+		asker_name = asker.name
+	. = ..()
+	update_alert_text()
+
+/datum/status_effect/yield_prompt/refresh(mob/living/new_owner, duration_override, mob/living/asker)
+	. = ..()
+	if(asker)
+		asker_name = asker.name
+	update_alert_text()
+
+/datum/status_effect/yield_prompt/on_apply()
+	. = ..()
+	RegisterSignal(owner, COMSIG_MOB_STATCHANGE, PROC_REF(on_stat_change))
+	RegisterSignal(owner, COMSIG_LIVING_YIELDED, PROC_REF(on_yielded))
+
+/datum/status_effect/yield_prompt/on_remove()
+	UnregisterSignal(owner, list(COMSIG_MOB_STATCHANGE, COMSIG_LIVING_YIELDED))
+	return ..()
+
+/datum/status_effect/yield_prompt/proc/update_alert_text()
+	linked_alert?.desc = "Click to yield to [asker_name]."
+
+/datum/status_effect/yield_prompt/proc/on_stat_change(datum/source, new_stat)
+	SIGNAL_HANDLER
+	if(new_stat >= UNCONSCIOUS)
+		qdel(src)
+
+/datum/status_effect/yield_prompt/proc/on_yielded(datum/source)
+	SIGNAL_HANDLER
+	qdel(src)
+
+/// Yields the owner with no confirm dialog and ends the prompt; returns TRUE when the yield starts.
+/datum/status_effect/yield_prompt/proc/accept()
+	var/mob/living/yielder = owner
+	if(!yielder)
+		return FALSE
+	. = yielder.surrender()
+	if(!QDELETED(src))
+		qdel(src)
+
+/atom/movable/screen/alert/status_effect/yield_prompt
+	name = "Yield?"
+	desc = "Click to yield."
+	icon = 'modular_rmh/icons/mob/yield.dmi'
+	icon_state = "yield"
+	alert_group = ALERT_DEBUFF
+
+/atom/movable/screen/alert/status_effect/yield_prompt/Click(location, control, params)
+	if(!usr?.client || usr != mob_viewer)
+		return FALSE
+	var/list/modifiers = params2list(params)
+	if(LAZYACCESS(modifiers, SHIFT_CLICKED))
+		examine_ui(usr)
+		return FALSE
+	var/datum/status_effect/yield_prompt/prompt = attached_effect
+	prompt?.accept()

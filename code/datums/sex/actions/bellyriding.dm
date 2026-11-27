@@ -51,7 +51,7 @@
 
 /datum/sex_action/bellyriding/groin_rub/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(user && target)
-		user.visible_message(span_love("[user] cums across [target]'s body from the harness!"))
+		user.visible_message(span_love_climax("[user] cums across [target]'s body from the harness!"))
 	return ORGASM_LOCATION_ONTO
 
 /datum/sex_action/bellyriding/frot
@@ -86,7 +86,7 @@
 
 /datum/sex_action/bellyriding/frot/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(user && target)
-		user.visible_message(span_love("[user] cums while grinding against [target] in the harness!"))
+		user.visible_message(span_love_climax("[user] cums while grinding against [target] in the harness!"))
 	return ORGASM_LOCATION_ONTO
 
 /datum/sex_action/bellyriding/anal
@@ -123,13 +123,13 @@
 /datum/sex_action/bellyriding/anal/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
 		if(user && target)
-			user.visible_message(span_love("[user] cums from [target]'s cock while hanging in the harness!"))
+			user.visible_message(span_love_climax("[user] cums from [target]'s cock while hanging in the harness!"))
 			user.lose_virginity()
 			target.lose_virginity()
 		return ORGASM_LOCATION_SELF
 
 	if(user && target)
-		user.visible_message(span_love("[user] cums into [target]'s ass while the harness holds them still!"))
+		user.visible_message(span_love_climax("[user] cums into [target]'s ass while the harness holds them still!"))
 		user.lose_virginity()
 		target.lose_virginity()
 	return ORGASM_LOCATION_INTO
@@ -168,13 +168,13 @@
 /datum/sex_action/bellyriding/vaginal/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
 		if(user && target)
-			user.visible_message(span_love("[user] creams themselves around [target]'s cock while hanging in the harness!"))
+			user.visible_message(span_love_climax("[user] creams themselves around [target]'s cock while hanging in the harness!"))
 			user.lose_virginity()
 			target.lose_virginity()
 		return ORGASM_LOCATION_ONTO
 
 	if(user && target)
-		user.visible_message(span_love("[user] cums into [target]'s pussy while the harness holds them tight!"))
+		user.visible_message(span_love_climax("[user] cums into [target]'s pussy while the harness holds them tight!"))
 		user.lose_virginity()
 		target.lose_virginity()
 	return ORGASM_LOCATION_INTO

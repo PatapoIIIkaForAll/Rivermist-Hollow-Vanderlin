@@ -7,6 +7,36 @@
 	verbage = "assemble"
 	verbage_tp = "assembles"
 
+/datum/blueprint_recipe/engineering/bronze_handcart
+	name = "bronze handcart"
+	desc = "A spacious handcart crafted from bronze, offering ample storage but leaving no room for further upgrades."
+	result_type = /obj/structure/handcart/bronze
+	required_materials = list(
+		/obj/item/natural/wood/plank = 3,
+		/obj/item/ingot/bronze = 2
+	)
+	craftdiff = 2
+
+/datum/blueprint_recipe/engineering/iron_handcart
+	name = "iron handcart"
+	desc = "A sturdy handcart forged from durable iron, providing slightly more storage space than its wooden counterpart."
+	result_type = /obj/structure/handcart/iron
+	required_materials = list(
+		/obj/item/natural/wood/plank = 3,
+		/obj/item/ingot/iron = 2
+	)
+	craftdiff = 2
+
+/datum/blueprint_recipe/engineering/steel_handcart
+	name = "steel handcart"
+	desc = "An exceptionally durable handcart crafted from steel, boasting greater storage capacity than the iron model."
+	result_type = /obj/structure/handcart/steel
+	required_materials = list(
+		/obj/item/natural/wood/plank = 3,
+		/obj/item/ingot/steel = 2
+	)
+	craftdiff = 2
+
 /datum/blueprint_recipe/engineering/artificer_table
 	name = "artificer table"
 	desc = "A specialized table for artificing work."

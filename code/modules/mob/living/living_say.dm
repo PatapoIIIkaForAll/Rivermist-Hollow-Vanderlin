@@ -377,6 +377,7 @@
 
 	if(length(yield_viewers))
 		play_gesture(yield_viewers, "yield", gesture_icon = 'modular_rmh/icons/mob/yield.dmi')
+		offer_yield_prompts(listening, message_range)
 
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_LIVING_SAY_SPECIAL, src, message)
 

@@ -211,6 +211,7 @@
 	tastes = list("dough" = 1)
 
 /obj/item/reagent_containers/food/snacks/hardtack
+	dish_type = DISH_BREAD
 	item_weight = 100 GRAMS
 	name = "hardtack"
 	desc = "Very, very hard and dry. Keeps well."
@@ -247,6 +248,7 @@
 
 /*	.................   Bread   ................... */
 /obj/item/reagent_containers/food/snacks/bread
+	dish_type = DISH_BREAD
 	item_weight = 500 GRAMS
 	name = "bread loaf"
 	desc = "One of the staple foods of commoners. A simple meal, yet a luxury men will die for."
@@ -285,6 +287,7 @@
 
 /*	.................   Breadslice & Toast   ................... */
 /obj/item/reagent_containers/food/snacks/breadslice
+	dish_type = DISH_BREAD
 	item_weight = 80 GRAMS
 	name = "sliced bread"
 	desc = "A bit of comfort to start your dae."
@@ -359,6 +362,7 @@
 	tastes = list("bread" = 1)
 
 /obj/item/reagent_containers/food/snacks/stale_bread
+	dish_type = DISH_BREAD
 	item_weight = 500 GRAMS
 	name = "stale bread"
 	desc = "Old. Is that mold? Not fit for slicing, just eating in sullen silence."
@@ -451,6 +455,7 @@
 	item_weight = 450 GRAMS
 
 /obj/item/reagent_containers/food/snacks/bookbreadslice
+	dish_type = DISH_BREAD
 	name = "sliced bookbread"
 	desc = "About the same size and taste as an encyclopedia."
 	icon_state = "bookbread_slice"
@@ -813,6 +818,7 @@
 	item_weight = 40 GRAMS
 
 /obj/item/reagent_containers/food/snacks/choccy_cookie
+	dish_type = DISH_PASTRY
 	name = "chocolate chip cookie"
 	desc = "Salty cookie and sweet chocolate meet in this treat."
 	icon_state = "cookie"
@@ -854,6 +860,7 @@
 	item_weight = 120 GRAMS
 
 /obj/item/reagent_containers/food/snacks/choco_bun
+	dish_type = DISH_PASTRY
 	name = "chocolate bun"
 	desc = "A rich chocolate bun, buttery and sweet."
 	icon_state = "bunchoc"
@@ -866,6 +873,7 @@
 	item_weight = 120 GRAMS
 
 /obj/item/reagent_containers/food/snacks/choco_pastry
+	dish_type = DISH_PASTRY
 	name = "chocolate pastry"
 	desc = "A flaky pastry filled with rich chocolate."
 	icon_state = "pastrychoc"
@@ -1005,6 +1013,7 @@
 /*	.................   Sunreed Dough   ................... */
 
 /obj/item/reagent_containers/food/snacks/sunreed_bread
+	dish_type = DISH_BREAD
 	name = "sunbread"
 	desc = "Preserves very well over long travels."
 	icon_state = "maizebread"
@@ -1024,6 +1033,7 @@
 	item_weight = 450 GRAMS
 
 /obj/item/reagent_containers/food/snacks/sunreed_bread_slice
+	dish_type = DISH_BREAD
 	name = "sunbread cube"
 	desc = "Cut into an exact fourth."
 	icon_state = "maizebread_slice"
@@ -1065,6 +1075,7 @@
 /*	.................   Estrellas   ................... */
 
 /obj/item/reagent_containers/food/snacks/estrella
+	dish_type = DISH_PASTRY
 	name = "estrella"
 	desc = "A sunreed pastry moulded into a star shape, delightful to children everywhere."
 	icon_state = "estrella"
@@ -1158,6 +1169,7 @@
 	tastes = list("crumbly sunreed dough" = 1, "gooey cheese" = 1)
 
 /obj/item/reagent_containers/food/snacks/huskbun
+	dish_type = DISH_BREAD
 	name = "huskbun"
 	desc = "Sunreed cooked in its own skin, a deliciously ironic fate."
 	icon_state = "huskbun"
@@ -1242,6 +1254,7 @@
 	tastes = list("semi-sweet bread" = 1, "scrambled egg" = 1)
 
 /obj/item/reagent_containers/food/snacks/saigaita_cooked
+	dish_type = DISH_BREAD
 	name = "grilled saigaita"
 	desc = "This saigaita has been heated to perfection."
 	icon_state = "lilsaiga"
@@ -1317,6 +1330,7 @@
 	nutrition = CAKEBASE_NUTRITION + FRUIT_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/eighthscake
+	dish_type = DISH_SWEET
 	name = "eighthscake"
 	desc = "Moulded to count out eight exactly rationed slices, because even the desperate want desert."
 	icon_state = "eighthscake"
@@ -1355,6 +1369,7 @@
 	nutrition = (CAKEBASE_NUTRITION + FRUIT_NUTRITION) * COOK_MOD
 
 /obj/item/reagent_containers/food/snacks/eighthscake_slice
+	dish_type = DISH_SWEET
 	name = "eighthscake slice"
 	desc = "A perfectly rationed eighth of an eighthscake."
 	icon_state = "eighthscake_slice"
@@ -1389,6 +1404,7 @@
 /*	.................   Platos   ................... */
 
 /obj/item/reagent_containers/food/snacks/tostada
+	dish_type = DISH_BREAD
 	name = "sunreed plato"
 	desc = "Fried sunreed which makes a delicious plate."
 	icon_state = "tostada"
@@ -1420,6 +1436,7 @@
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/reagent_containers/food/snacks/tostada_meat
+	dish_type = DISH_BREAD|DISH_MEAT
 	name = "steak plato"
 	desc = "Succulent frysteak on an edible plate."
 	icon_state = "tostada_steak"
@@ -1471,6 +1488,7 @@
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/reagent_containers/food/snacks/tostada_meat/chicken
+	dish_type = DISH_BREAD|DISH_POULTRY
 	name = "frybird plato"
 	desc = "Fried bird on an edible plate."
 	icon_state = "tostada_steak"
@@ -1478,6 +1496,7 @@
 	tastes = list("crunchy sunreed dough" = 1, "frybird" = 1)
 
 /obj/item/reagent_containers/food/snacks/tostada_meat/fish
+	dish_type = DISH_BREAD|DISH_SEAFOOD
 	name = "fish plato"
 	desc = "Crispy fish on an edible plate."
 	icon_state = "tostada_fish"
@@ -1485,6 +1504,7 @@
 	tastes = list("crunchy sunreed dough" = 1, "crispy fish" = 1)
 
 /obj/item/reagent_containers/food/snacks/tostada_meat/egg
+	dish_type = DISH_BREAD|DISH_EGG
 	name = "egg plato"
 	desc = "Sunny-side egg on an edible plate."
 	icon_state = "tostada_egg"
@@ -1494,6 +1514,7 @@
 /*	.................   Sun Crackers   ................... */
 
 /obj/item/reagent_containers/food/snacks/chippile
+	dish_type = DISH_BREAD
 	name = "sun-crackers"
 	desc = "A pile of crunchy sun-crackers."
 	icon_state = "chippile"
@@ -1567,6 +1588,7 @@
 	list_reagents = list(/datum/reagent/drowsbane = 10)
 
 /obj/item/reagent_containers/food/snacks/chip
+	dish_type = DISH_BREAD
 	name = "sun-crackers"
 	desc = "A single sun-cracker. Great for dipping."
 	icon_state = "chip"
@@ -1578,6 +1600,7 @@
 	item_weight = 30 GRAMS
 
 /obj/item/reagent_containers/food/snacks/chip_cocaumole
+	dish_type = DISH_BREAD
 	name = "cocaumole dipped sun-cracker"
 	desc = "A single sun-cracker. Dipped in savory cocaumole."
 	icon_state = "chip_cocaumole"
@@ -1589,6 +1612,7 @@
 	item_weight = 30 GRAMS
 
 /obj/item/reagent_containers/food/snacks/chip_drowsbane
+	dish_type = DISH_BREAD
 	name = "drowsbane dipped sun-cracker"
 	desc = "A single sun-cracker. Dipped in spicy drowsbane."
 	icon_state = "chip_salsa"
@@ -1606,6 +1630,7 @@
 
 /*	.................   Bread bun   ................... */
 /obj/item/reagent_containers/food/snacks/bun
+	dish_type = DISH_BREAD
 	item_weight = 100 GRAMS
 	name = "bun"
 	desc = "Portable, quaint and entirely consumable"
@@ -1621,6 +1646,7 @@
 	tastes = list("bread" = 1)
 
 /obj/item/reagent_containers/food/snacks/grenzelbun
+	dish_type = DISH_BREAD|DISH_MEAT
 	item_weight = 180 GRAMS
 	name = "wienerbun"
 	desc = "The classic wiener in a bun, a staple food of Darkhold cuisine."
@@ -1651,6 +1677,7 @@
 
 
 /obj/item/reagent_containers/food/snacks/cheesebun
+	dish_type = DISH_BREAD|DISH_DAIRY
 	item_weight = 130 GRAMS
 	name = "cheese bun"
 	desc = "A treat from the Darkhold kitchen."
@@ -1670,6 +1697,7 @@
 \---------*/
 
 /obj/item/reagent_containers/food/snacks/frybread
+	dish_type = DISH_BREAD
 	item_weight = 100 GRAMS
 	name = "frybread"
 	desc = "Flatbread fried at high heat with butter to give it a crispy outside. Staple of the elven kitchen."
@@ -1685,6 +1713,7 @@
 
 /*	.................   Pastry   ................... */
 /obj/item/reagent_containers/food/snacks/pastry
+	dish_type = DISH_PASTRY
 	item_weight = 80 GRAMS
 	name = "pastry"
 	desc = "Favored among children and sweetlovers."
@@ -1712,6 +1741,7 @@
 /obj/item/reagent_containers/food/snacks/foodbase/biscuit_raw/good
 
 /obj/item/reagent_containers/food/snacks/biscuit
+	dish_type = DISH_PASTRY
 	item_weight = 60 GRAMS
 	name = "biscuit"
 	desc = "A treat made for a wretched dog like you."
@@ -1749,6 +1779,7 @@
 /obj/item/reagent_containers/food/snacks/foodbase/prezzel_raw/good
 
 /obj/item/reagent_containers/food/snacks/prezzel
+	dish_type = DISH_BREAD
 	item_weight = 80 GRAMS
 	name = "lacklustre prezzel"
 	desc = "The next best thing since sliced bread, originally a dwarven pastry, now seeing mass appeal."
@@ -1787,6 +1818,7 @@
 /obj/item/reagent_containers/food/snacks/foodbase/fritter_raw/good
 
 /obj/item/reagent_containers/food/snacks/fritter
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	item_weight = 100 GRAMS
 	name = "apple fritter"
 	desc = "Having deep origins in the culture of Rivermist Hollow, the humble fritter is perhaps the most patriotic pastry out there, long may it reign!"
@@ -1866,6 +1898,7 @@
 	nutrition = CAKEBASE_NUTRITION + FRUIT_NUTRITION + HONEY_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/zybcake_cooked
+	dish_type = DISH_SWEET
 	item_weight = 600 GRAMS
 	name = "zakhra cake"
 	desc = "Cake glazed with honey, in the famous Zakharani fashion, a delicious sweet treat. Said to be very hard to poison, perhaps the honey counteracting such malicious concotions."
@@ -1885,6 +1918,7 @@
 	nutrition = (CAKEBASE_NUTRITION + FRUIT_NUTRITION + HONEY_NUTRITION) * COOK_MOD
 
 /obj/item/reagent_containers/food/snacks/zybcake_slice
+	dish_type = DISH_SWEET
 	item_weight = 100 GRAMS
 	name = "zakhra cake slice"
 	desc = "A slice of honey cake, sweet and dense."
@@ -1922,6 +1956,7 @@
 	list_reagents = list(/datum/reagent/berrypoison = 6)
 
 /obj/item/reagent_containers/food/snacks/cheesecake_cooked
+	dish_type = DISH_SWEET|DISH_DAIRY
 	item_weight = 600 GRAMS
 	name = "cheesecake"
 	desc = "Humanity's favored creation."
@@ -1943,6 +1978,7 @@
 	list_reagents = list(/datum/reagent/berrypoison = 10)
 
 /obj/item/reagent_containers/food/snacks/cheesecake_slice
+	dish_type = DISH_SWEET|DISH_DAIRY
 	item_weight = 100 GRAMS
 	name = "cheesecake slice"
 	desc = "A slice of baked cheesecake, dense and rich."
@@ -1993,6 +2029,7 @@
 	nutrition = CAKEBASE_NUTRITION + FRUIT_NUTRITION + SUGAR_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/strawbycake_cooked
+	dish_type = DISH_SWEET
 	item_weight = 600 GRAMS
 	name = "strawberry cake"
 	desc = "Traditionally made with sugarbeet frosting, an elvish treat as old as time. Commonly served at elf weddings."
@@ -2011,6 +2048,7 @@
 	nutrition = (CAKEBASE_NUTRITION + FRUIT_NUTRITION + SUGAR_NUTRITION) * COOK_MOD
 
 /obj/item/reagent_containers/food/snacks/strawbycake_slice
+	dish_type = DISH_SWEET
 	item_weight = 100 GRAMS
 	name = "strawberry cake slice"
 	desc = "A slice of baked strawberry cake."
@@ -2055,6 +2093,7 @@
 	nutrition = CAKEBASE_NUTRITION + FRUIT_NUTRITION + CHOCCY_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/crimsoncake_cooked
+	dish_type = DISH_SWEET
 	item_weight = 600 GRAMS
 	name = "crimson pine cake"
 	desc = "A fusion of the nothern, the cake originates from Luskan. Rumor has it that one of the major conflicts in the city was based upon a disagreement on the cakes exact recipe."
@@ -2072,6 +2111,7 @@
 	nutrition = (CAKEBASE_NUTRITION + FRUIT_NUTRITION + CHOCCY_NUTRITION) * COOK_MOD
 
 /obj/item/reagent_containers/food/snacks/crimsoncake_slice
+	dish_type = DISH_SWEET
 	item_weight = 100 GRAMS
 	name = "crimson pine cake slice"
 	desc = "A slice of dark, chocolate-laced cake."
@@ -2117,6 +2157,7 @@
 	nutrition = CAKEBASE_NUTRITION + FRUIT_NUTRITION + SUGAR_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/tangerinecake_cooked
+	dish_type = DISH_SWEET
 	item_weight = 600 GRAMS
 	name = "scarletharp cake"
 	desc = "The Scarletharp cake, named not so aptly for its town of origin, is a twist on the traditional lunch cake substituting the dried fruit bits for a center filling of tangerine jam."
@@ -2135,6 +2176,7 @@
 	nutrition = (CAKEBASE_NUTRITION + FRUIT_NUTRITION + SUGAR_NUTRITION) * COOK_MOD
 
 /obj/item/reagent_containers/food/snacks/tangerinecake_slice
+	dish_type = DISH_SWEET
 	item_weight = 100 GRAMS
 	name = "scarletharp cake slice"
 	desc = "A slice of baked tangerine cake."
@@ -2168,6 +2210,7 @@
 	nutrition = BUTTERDOUGHSLICE_NUTRITION + SUGAR_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/scone
+	dish_type = DISH_PASTRY
 	item_weight = 70 GRAMS
 	name = "plain scone"
 	desc = "A delightfully fancy treat adored by the upper echelons of Neverwinter."
@@ -2193,6 +2236,7 @@
 	nutrition = BUTTERDOUGHSLICE_NUTRITION + SUGAR_NUTRITION + FRUIT_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/scone_tangerine
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	item_weight = 70 GRAMS
 	name = "tangerine scone"
 	desc = "A delightfully fancy treat adored by the upper echelons of Neverwinter, complete with tangerine frosting."
@@ -2217,6 +2261,7 @@
 	nutrition = BUTTERDOUGHSLICE_NUTRITION + SUGAR_NUTRITION + FRUIT_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/scone_plum
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	item_weight = 70 GRAMS
 	name = "plum scone"
 	desc = "A delightfully fancy treat adored by the upper echelons of Neverwinter, complete with plum filling."
@@ -2245,6 +2290,7 @@
 	nutrition = BUTTERDOUGHSLICE_NUTRITION + EGG_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/griddlecake
+	dish_type = DISH_PASTRY
 	item_weight = 120 GRAMS
 	name = "griddlecake"
 	desc = "Enjoyed by mercenaries throughout Faerun, though despite its prevalence no one quite knows its origin." //RMH
@@ -2443,6 +2489,7 @@
 /*	.................   Finished Dot Tarts   ................... */
 
 /obj/item/reagent_containers/food/snacks/dottart_strawberry
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "strawberry dot tart"
 	desc = "A small strawberry jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2455,6 +2502,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_tangerine
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "tangerine dot tart"
 	desc = "A small tangerine jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2467,6 +2515,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_plum
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "plum dot tart"
 	desc = "A small plum jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2479,6 +2528,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_blackberry
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "blackberry dot tart"
 	desc = "A small blackberry jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2491,6 +2541,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_raspberry
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "raspberry dot tart"
 	desc = "A small raspberry jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2503,6 +2554,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_lemon
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "lemon dot tart"
 	desc = "A small lemon jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2515,6 +2567,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_lime
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "lime dot tart"
 	desc = "A small lime jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2527,6 +2580,7 @@
 	item_weight = 60 GRAMS
 
 /obj/item/reagent_containers/food/snacks/dottart_pear
+	dish_type = DISH_PASTRY|DISH_FRUIT
 	name = "pear dot tart"
 	desc = "A small pear jam-filled pastry, for when a whole pie would be inapropriate for canapes."
 	bitesize = 2
@@ -2607,6 +2661,7 @@
 /*	.................   Finished Tamto Plates   ................... */
 
 /obj/item/reagent_containers/food/snacks/tamtoplate
+	dish_type = DISH_BREAD|DISH_DAIRY
 	name = "cheese tamto plate"
 	desc = "A deliciously greasy cheese half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	bitesize = 6
@@ -2625,6 +2680,7 @@
 	item_weight = 450 GRAMS
 
 /obj/item/reagent_containers/food/snacks/tamtoplate/meat
+	dish_type = DISH_BREAD|DISH_DAIRY|DISH_MEAT
 	name = "sausage tamto plate"
 	desc = "A deliciously greasy sausage half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	slice_path = /obj/item/reagent_containers/food/snacks/tamtoplate_slice/meat
@@ -2636,6 +2692,7 @@
 	item_weight = 450 GRAMS
 
 /obj/item/reagent_containers/food/snacks/tamtoplate/fish
+	dish_type = DISH_BREAD|DISH_DAIRY|DISH_SEAFOOD
 	name = "fish tamto plate"
 	desc = "A deliciously greasy fish half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	slice_path = /obj/item/reagent_containers/food/snacks/tamtoplate_slice/fish
@@ -2647,6 +2704,7 @@
 	item_weight = 450 GRAMS
 
 /obj/item/reagent_containers/food/snacks/tamtoplate/onion
+	dish_type = DISH_BREAD|DISH_DAIRY|DISH_VEGETABLE
 	name = "onion tamto plate"
 	desc = "A deliciously greasy onion half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	slice_path = /obj/item/reagent_containers/food/snacks/tamtoplate_slice/onion
@@ -2660,6 +2718,7 @@
 /*	.................  Tamto Plate Slices   ................... */
 
 /obj/item/reagent_containers/food/snacks/tamtoplate_slice
+	dish_type = DISH_BREAD|DISH_DAIRY
 	name = "cheese tamto plate slice"
 	desc = "A deliciously greasy cheese half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	bitesize = 3
@@ -2674,6 +2733,7 @@
 	item_weight = 75 GRAMS
 
 /obj/item/reagent_containers/food/snacks/tamtoplate_slice/meat
+	dish_type = DISH_BREAD|DISH_DAIRY|DISH_MEAT
 	name = "sausage tamto plate slice"
 	desc = "A deliciously greasy sausage half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	icon_state = "meat_pizza_slice"
@@ -2684,6 +2744,7 @@
 	item_weight = 75 GRAMS
 
 /obj/item/reagent_containers/food/snacks/tamtoplate_slice/fish
+	dish_type = DISH_BREAD|DISH_DAIRY|DISH_SEAFOOD
 	name = "sausage tamto plate"
 	desc = "A deliciously greasy fish half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	icon_state = "fish_pizza_slice"
@@ -2694,6 +2755,7 @@
 	item_weight = 75 GRAMS
 
 /obj/item/reagent_containers/food/snacks/tamtoplate_slice/onion
+	dish_type = DISH_BREAD|DISH_DAIRY|DISH_VEGETABLE
 	name = "onion tamto plate slice"
 	desc = "A deliciously greasy onion half-pie originating from the trade-capital of Vanderlin, long may it reign!"
 	icon_state = "onion_pizza_slice"

@@ -113,8 +113,8 @@
 /datum/component/chapel_birth/proc/deliver(mob/living/carbon/mother)
 	var/obj/item/organ/genitals/filling_organ/womb = parent
 	mother.visible_message(
-		span_notice("[mother] gives birth before the altar. A soft light gathers around the newborn, and when it fades, the child is gone."),
-		span_love("My child is born. Warm light gathers around the little one, and when it fades, the Divines have taken my child into their keeping."),
+		span_love_climax("[mother] gives birth before the altar. A soft light gathers around the newborn, and when it fades, the child is gone."),
+		span_love_climax("My child is born. Warm light gathers around the little one, and when it fades, the Divines have taken my child into their keeping."),
 	)
 	mother.adjust_stamina(CHAPEL_BIRTH_CONTRACTION_STAMINA * 2)
 	mother.record_labour()

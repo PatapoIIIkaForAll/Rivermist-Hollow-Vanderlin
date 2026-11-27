@@ -197,7 +197,7 @@
 	var/list/lines = fed ? behaviour.lines_fed : (behaviour.lines_hungry || behaviour.lines_fed)
 	if(length(lines) && prob(35))
 		var/line = format_inside_message(pick(lines))
-		to_chat(carrier, fed ? span_love(line) : span_warning(line))
+		to_chat(carrier, fed ? span_ovi(line) : span_warning(line))
 	carrier.hole_shake_hook("hatchling", 1)
 
 /// Drinks up to [units] of the fluid around it; returns what it got.
@@ -246,7 +246,7 @@
 	struggle_credit += 20 SECONDS
 	to_chat(user, span_notice("You squirm against the warm, slick walls around you."))
 	if(carrier)
-		to_chat(carrier, span_love("Something squirms hard inside my [location_name]."))
+		to_chat(carrier, span_ovi("Something squirms hard inside my [location_name]."))
 	pulse()
 
 #undef HATCHLING_NUTRITION_PER_UNIT

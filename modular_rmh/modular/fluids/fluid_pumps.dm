@@ -15,6 +15,8 @@
 	icon = 'modular_rmh/icons/obj/lewd/fluid_pumps.dmi'
 	w_class = WEIGHT_CLASS_SMALL
 	volume = FLUID_PUMP_VOLUME
+	spillable = TRUE
+	reagent_flags = TRANSPARENT
 	possible_transfer_amounts = list(5, 10, 20, 30, 60)
 	sellprice = 20
 	has_body_storage_overlay = TRUE
@@ -40,6 +42,10 @@
 	/// The organ the pump sits over, while fitted.
 	var/obj/item/organ/genitals/attached_organ
 	/// TRUE once the wearer was told the reservoir is full.
+	var/closed = TRUE
+	/// Do not change desc when opened or closed
+	var/fancy = FALSE
+	/// Name to slap on a label, replaces current name
 	var/announced_full = FALSE
 	COOLDOWN_DECLARE(next_message)
 
@@ -156,6 +162,36 @@
 /datum/sex_action_effect/fluid_pump/intercept_climax(datum/sex_action_effect_context/context, datum/reagents/source_reagents, amount)
 	var/obj/item/reagent_containers/glass/fluid_pump/pump = source_item
 	return pump?.catch_climax(context, source_reagents, amount) || 0
+
+/obj/item/reagent_containers/glass/fluid_pump/attack_self_secondary(mob/user, list/modifiers)
+	. = ..()
+	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
+		return
+	toggle_cork(user)
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+/obj/item/reagent_containers/glass/fluid_pump/proc/toggle_cork(mob/user, modify_nextmove = TRUE)
+	closed = !closed
+	if(modify_nextmove)
+		user.changeNext_move(CLICK_CD_RAPID)
+	if(closed)
+		reagent_flags &= ~TRANSFERABLE
+		reagents.flags = reagent_flags
+		balloon_alert(user, "i close the lid.")
+		spillable = FALSE
+		GLOB.weather_act_upon_list -= src
+		if(!fancy)
+			desc = "A pump with closed lid."
+	else
+		reagent_flags |= TRANSFERABLE
+		reagents.flags = reagent_flags
+		playsound(user,'sound/items/uncork.ogg', 100, TRUE)
+		balloon_alert(user, "i open the lid.")
+		spillable = TRUE
+		GLOB.weather_act_upon_list |= src
+		if(!fancy)
+			desc = "An open pump,the lid is kept open."
+	update_appearance(UPDATE_OVERLAYS)
 
 /obj/item/reagent_containers/glass/fluid_pump/breast
 	name = "brass breast pump"

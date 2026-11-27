@@ -40,6 +40,9 @@ GLOBAL_LIST_INIT(sex_motion_pumps, list(1, 1, 2, 3))
 /datum/preference/toggle/sex_motion
 	savefile_key = "sex_motion"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Interaction motion"
+	toggles_menu_desc = "Let your character shift a few pixels while interactions play."
 	category = "gameplay"
 	can_randomize = FALSE
 	should_update_preview = FALSE

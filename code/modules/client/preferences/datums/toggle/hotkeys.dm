@@ -1,6 +1,9 @@
 /datum/preference/toggle/hotkeys
 	savefile_key = "hotkeys"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Interface"
+	toggles_menu_name = "Hotkeys"
+	toggles_menu_desc = "Keys work as game shortcuts. Off: typing goes straight into the chat bar."
 	category = "chat"
 	can_randomize = FALSE
 	should_update_preview = FALSE

@@ -138,7 +138,8 @@
 	var/current_arousal = arousal_data["arousal"] || 0
 	var/orgasm_progress = arousal_data["orgasm_progress"] || 0
 	return list(
-		"arousal_pct" = min(100, (current_arousal / MAX_AROUSAL) * 100),
+		"arousal_pct" = arousal_display_percent(current_arousal),
+		"highly_aroused" = is_highly_aroused(current_arousal),
 		"orgasm_pct" = min(100, (orgasm_progress / PASSIVE_EJAC_THRESHOLD) * 100),
 		"pain_pct" = 0,
 	)

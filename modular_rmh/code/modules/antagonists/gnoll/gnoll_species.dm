@@ -172,11 +172,11 @@
 		champion.icon_state = initial(champion.icon_state)
 	return ..()
 
-/datum/species/gnoll_champion/send_voice(mob/living/carbon/human/champion)
+/datum/species/gnoll_champion/send_voice(mob/living/carbon/human/champion, message, list/message_mods, list/bark_listeners)
 	if(champion.m_intent != MOVE_INTENT_SNEAK)
-		playsound(champion, pick('sound/vo/mobs/wwolf/wolftalk1.ogg', 'sound/vo/mobs/wwolf/wolftalk2.ogg'), 100, TRUE, -1)
+		playsound(champion, pick('sound/vo/mobs/wwolf/wolftalk1.ogg', 'sound/vo/mobs/wwolf/wolftalk2.ogg'), 100, TRUE, -1, excluded_listeners = bark_listeners)
 	else
-		playsound(champion, 'sound/misc/talk.ogg', 100, TRUE, -1)
+		playsound(champion, 'sound/misc/talk.ogg', 100, TRUE, -1, excluded_listeners = bark_listeners)
 
 /datum/voicepack/gnoll_champion
 	parent_type = /datum/voicepack/werewolf

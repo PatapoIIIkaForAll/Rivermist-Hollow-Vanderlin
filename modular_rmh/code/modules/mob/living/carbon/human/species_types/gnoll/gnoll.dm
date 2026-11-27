@@ -34,8 +34,8 @@
 	)
 
 	order_num = 36
-	soundpack_m = /datum/voicepack/werewolf
-	soundpack_f = /datum/voicepack/werewolf
+	soundpack_m = /datum/voicepack/gnoll_champion
+	soundpack_f = /datum/voicepack/gnoll_champion
 
 	offset_features_m = list(
 		OFFSET_RING = list(0,1),\

@@ -87,15 +87,17 @@
 
 /mob/living/carbon/human/send_speech(message, message_range = 6, obj/source = src, bubble_type = bubble_icon, list/spans, datum/language/message_language=null, list/message_mods = list(), original_message)
 	. = ..()
-	send_voice(message, message_mods)
-	queue_speech_barks(message, message_range, message_mods)
+	var/list/bark_listeners = get_speech_bark_listeners(message, message_range, message_mods)
+	send_voice(message, message_mods, bark_listeners)
+	queue_speech_barks(message, message_range, bark_listeners)
 
-/mob/living/carbon/human/proc/send_voice(message, list/message_mods)
+/// Plays the speech sound to everyone in range except bark_listeners, who hear the barks instead.
+/mob/living/carbon/human/proc/send_voice(message, list/message_mods, list/bark_listeners)
 	if(!length(message))
 		return
-	dna?.species?.send_voice(src, message, message_mods)
+	dna?.species?.send_voice(src, message, message_mods, bark_listeners)
 
-/datum/species/proc/send_voice(mob/living/carbon/human/H, message, list/message_mods)
+/datum/species/proc/send_voice(mob/living/carbon/human/H, message, list/message_mods, list/bark_listeners)
 	if(!H)
 		return
 
@@ -114,43 +116,17 @@
 	if(message_mods[MODE_SING])
 		H.emote("hum", intentional = FALSE)
 		return
-	// Speech
+	// Speech: the plain talk sound, or sometimes a voiced one that fits the line.
+	var/speech_sound = 'sound/misc/talk.ogg'
+	var/masc = H.voice_type == VOICE_TYPE_MASC
 	switch(say_test(message))
+		if("0") // plain line
+			if(prob(30))
+				speech_sound = masc ? 'modular_rmh/sound/vo/speech/mtalk.ogg' : 'modular_rmh/sound/vo/speech/ftalk.ogg'
 		if("1") // ?
 			if(prob(30))
-				switch(H.voice_type)
-					if(VOICE_TYPE_MASC)
-						playsound(H, pick(list('sound/vo/male/gen/huh (1).ogg','sound/vo/male/gen/huh (2).ogg','sound/vo/male/gen/huh (3).ogg')), 100, FALSE, -1, ignore_walls = FALSE)
-						return
-					else
-						playsound(H, pick(list('sound/vo/female/gen/huh (1).ogg','sound/vo/female/gen/huh (2).ogg','sound/vo/female/gen/huh (3).ogg')), 100, FALSE, -1, ignore_walls = FALSE)
-						return
-			else
-				playsound(H, 'sound/misc/talk.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-				return
+				speech_sound = masc ? pick('sound/vo/male/gen/huh (1).ogg', 'sound/vo/male/gen/huh (2).ogg', 'sound/vo/male/gen/huh (3).ogg') : pick('sound/vo/female/gen/huh (1).ogg', 'sound/vo/female/gen/huh (2).ogg', 'sound/vo/female/gen/huh (3).ogg')
 		if("2") // !
 			if(prob(30))
-				switch(H.voice_type)
-					if(VOICE_TYPE_MASC)
-						playsound(H, 'modular_rmh/sound/vo/speech/mexclaim.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-						return
-					else
-						playsound(H, 'modular_rmh/sound/vo/speech/fexclaim.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-						return
-			else
-				playsound(H, 'sound/misc/talk.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-				return
-		if("3") // !!
-			playsound(H, 'sound/misc/talk.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-		else
-			if(prob(30))
-				switch(H.voice_type)
-					if(VOICE_TYPE_MASC)
-						playsound(H, 'modular_rmh/sound/vo/speech/mtalk.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-						return
-					else
-						playsound(H, 'modular_rmh/sound/vo/speech/ftalk.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-						return
-			else
-				playsound(H, 'sound/misc/talk.ogg', 100, FALSE, -1, ignore_walls = FALSE)
-				return
+				speech_sound = masc ? 'modular_rmh/sound/vo/speech/mexclaim.ogg' : 'modular_rmh/sound/vo/speech/fexclaim.ogg'
+	playsound(H, speech_sound, 100, FALSE, -1, ignore_walls = FALSE, excluded_listeners = bark_listeners)
