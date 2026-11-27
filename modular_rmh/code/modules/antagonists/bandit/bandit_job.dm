@@ -214,3 +214,65 @@ GLOBAL_LIST_EMPTY(bandit_player_insertions)
 		/obj/item/lockpick = 1,
 		/obj/item/rope = 1,
 	)
+
+//iconoclast bandit paladin
+/datum/job/advclass/bandit/iconoclast
+	title = "Bandit Iconoclast"
+	tutorial = "You are the group’s moral compass. Do not let them forget who their patron is, and guide your group along the path of thievery."
+	outfit = /datum/outfit/bandit/iconoclast
+	attribute_sheet = /datum/attribute_holder/sheet/job/advclass/bandit/iconoclast
+	traits = list(TRAIT_HEAVYARMOR,
+					TRAIT_STEELHEARTED,
+					TRAIT_HOLY,
+					TRAIT_IGNORESLOWDOWN,
+					TRAIT_NOPAINSTUN,
+					TRAIT_HOLY,
+					TRAIT_STRONG_GRABBER,
+					TRAIT_COMBAT_AWARE,
+					TRAIT_MATTHIOS_EYES,
+					TRAIT_SHOCKIMMUNE,
+	)
+
+/datum/outfit/bandit/iconoclast
+	name = "Bandit Iconoclast"
+	head = /obj/item/clothing/head/helmet/heavy/matthios
+	mask = /obj/item/clothing/face/facemask/steel
+	neck = /obj/item/clothing/neck/highcollier
+	cloak = /obj/item/clothing/cloak/matthios
+	armor = /obj/item/clothing/armor/plate/full/matthios
+	shirt = /obj/item/clothing/armor/chainmail
+	wrists = /obj/item/clothing/wrists/bracers
+	gloves = /obj/item/clothing/gloves/plate/matthios
+	pants = /obj/item/clothing/pants/platelegs/matthios
+	shoes = /obj/item/clothing/shoes/boots/armor/matthios
+	backr = /obj/item/storage/backpack/satchel
+	backl = /obj/item/weapon/sword/long/greatsword/zizo
+	belt = /obj/item/storage/belt/leather/steel/adventurers_subclasses
+	beltl = /obj/item/storage/belt/pouch/cloth/coins/mid
+	r_hand = /obj/item/weapon/flail/peasantwarflail/matthios
+
+/datum/attribute_holder/sheet/job/advclass/bandit/iconoclast
+	raw_attribute_list = list(
+		/datum/attribute/skill/combat/axesmaces = 30,
+		/datum/attribute/skill/combat/whipsflails = 45,
+		/datum/attribute/skill/combat/wrestling = 50,
+		/datum/attribute/skill/combat/unarmed = 40,
+		/datum/attribute/skill/misc/climbing = 30,
+		/datum/attribute/skill/misc/athletics = 30,
+		/datum/attribute/skill/misc/reading = 30,
+		/datum/attribute/skill/magic/holy = 40,
+		/datum/attribute/skill/craft/cooking = 10,
+		/datum/attribute/skill/labor/mathematics = 30
+	)
+		spells = list(
+		/datum/action/cooldown/spell/undirected/touch/orison,
+		/datum/action/cooldown/spell/status/guidance,
+		/datum/action/cooldown/spell/pointed/silence,
+		/datum/action/cooldown/spell/healing,
+		/datum/action/cooldown/spell/diagnose/holy,
+		/datum/action/cooldown/spell/essence/neutralize/class_granted,
+	)
+
+/datum/outfit/bandit/bandit/iconoclast/pre_equip(mob/living/carbon/human/equipped_human, visuals_only)
+	. = ..()
+	equipped_human.mana_pool?.set_intrinsic_recharge(MANA_ALL_LEYLINES)
