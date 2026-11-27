@@ -15,7 +15,7 @@
 
 /obj/item/natural/hide/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
 	if(!istype(tool, /obj/item/paper/scroll))
-		return NONE
+		return ..()
 	if(!isturf(loc) || !locate(/obj/structure/table) in loc)
 		to_chat(user, span_warning("You need to put [src] on a table to work on it."))
 		return ITEM_INTERACT_BLOCKING

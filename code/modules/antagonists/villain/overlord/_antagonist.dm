@@ -138,6 +138,8 @@
 
 /datum/antagonist/overlord/proc/attempt_resurrection(timer = 10 SECONDS)
 	var/mob/overlord_mob = overlord_body_ref.resolve()
+	if(overlord_mob && HAS_TRAIT(overlord_mob, TRAIT_RUNE_SEVERED))
+		return FALSE
 	overlord_mob?.visible_message(span_warning("[overlord_mob]'s body begins to shake violently!"))
 
 	if(!length(built_phylacteries))
@@ -152,6 +154,8 @@
 
 		sleep(timer)
 
+		if(!QDELETED(overlord_mob) && HAS_TRAIT(overlord_mob, TRAIT_RUNE_SEVERED))
+			return FALSE
 		if(!QDELETED(built_phylactery))
 			if(rise_anew())
 				owner.current.forceMove(get_turf(built_phylactery))

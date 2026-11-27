@@ -26,6 +26,9 @@
 
 	// Special case for dead targets
 	if(H.stat >= DEAD)
+		if(HAS_TRAIT(H, TRAIT_RUNE_SEVERED))
+			to_chat(user, span_warning("[H]'s soul cannot return."))
+			return FALSE
 		// Check if the target has a head, brain, and heart
 		var/obj/item/bodypart/head = H.get_bodypart("head")
 		var/obj/item/organ/brain/brain = H.getorganslot(ORGAN_SLOT_BRAIN)
@@ -41,6 +44,8 @@
 			user.visible_message(span_danger("[user] grabs [H] by the wrists, attempting to ABSOLVE them!"))
 			if(alert(H, "They want to ABSOLVE you. Will you let them?", "ABSOLUTION", "I'll allow it", "I refuse") != "I'll allow it")
 				H.visible_message(span_notice("Nothing happens."))
+				return FALSE
+			if(QDELETED(user) || QDELETED(H) || HAS_TRAIT(H, TRAIT_RUNE_SEVERED))
 				return FALSE
 			// Create visual effects
 			H.apply_status_effect(/datum/status_effect/buff/psyvived)

@@ -2,6 +2,11 @@
 #define SKY_VISIBLE 1
 #define SKY_VISIBLE_BORDER 2
 
+/// Layer of a shared outdoor look on z-level z, so that a level above draws over the level below.
+#define OUTDOOR_LOOK_LAYER(z) (OBJ_LAYER + (z) * 0.001)
+/// Turfs that may show one shared outdoor look before a new one is made for the same picture.
+#define OUTDOOR_LOOK_MAX_USERS 256
+
 #define PARTICLEWEATHER_RAIN "weather_rain"
 #define PARTICLEWEATHER_SNOW "weather_snow"
 

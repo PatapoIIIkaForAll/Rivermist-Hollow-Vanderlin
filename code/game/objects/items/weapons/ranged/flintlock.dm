@@ -16,6 +16,8 @@
 	experimental_onback = FALSE
 	var/click_delay = 0.5
 	var/damage_mult = 1.625
+	/// Spread of a shot fired with no aiming; shrinks to 0 at full aim.
+	var/max_aim_spread = 150
 	var/obj/item/ramrod/rod
 	cartridge_wording = "ball"
 	var/rammed = FALSE
@@ -44,6 +46,23 @@
 	. = ..()
 	icon_state = "puffer_[cocked ? "cocked" : "uncocked"][ramrod_inserted ? "_ramrod" : ""]"
 
+/// Updates the icon state and redraws it on the holder's hands or worn slot.
+/obj/item/gun/ballistic/revolver/grenadelauncher/pistol/proc/update_held_appearance()
+	update_appearance(UPDATE_ICON_STATE)
+	if(!ismob(loc))
+		return
+	var/mob/holder = loc
+	if(holder.is_holding(src))
+		holder.update_inv_hands()
+		return
+	update_slot_icon()
+	if(slot_flags & ITEM_SLOT_HIP)
+		holder.update_inv_belt()
+
+/// Extra spread added to every shot, on top of the aiming spread.
+/obj/item/gun/ballistic/revolver/grenadelauncher/pistol/proc/get_spread_penalty()
+	return 0
+
 /obj/item/gun/ballistic/revolver/grenadelauncher/pistol/shoot_live_shot(mob/living/user, pointblank, mob/pbtarget, message)
 	..()
 	user.playsound_local(get_turf(user), 'sound/foley/tinnitus.ogg', 60, FALSE) // muh realism or something
@@ -65,7 +84,7 @@
 	playsound(src, 'sound/combat/Ranged/muskclick.ogg', 100, FALSE)
 	cocked = FALSE
 	wound = FALSE
-	update_appearance(UPDATE_ICON_STATE)
+	update_held_appearance()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/pistol/attack_hand_secondary(mob/user, list/modifiers)
 	. = ..()
@@ -82,7 +101,7 @@
 		playsound(src, 'sound/combat/Ranged/muskclick.ogg', 100, FALSE)
 		to_chat(user, "<span class='info'>I cock \the [src].</span>")
 		cocked = TRUE
-	update_appearance(UPDATE_ICON_STATE)
+	update_held_appearance()
 
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
@@ -123,7 +142,7 @@
 			ramrod_inserted = TRUE
 			to_chat(user, "<span class='info'>I put \the [rrod] into \the [src].</span>")
 			playsound(src, 'sound/foley/struggle.ogg', 100, FALSE, -1)
-		update_appearance(UPDATE_ICON_STATE)
+		update_held_appearance()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/pistol/process_fire(atom/target, mob/living/user, message = TRUE, list/modifiers, zone_override, bonus_spread = 0)
 	if(!cocked)
@@ -138,9 +157,10 @@
 		if(user.client.chargedprog >= 100)
 			spread = 0
 		else
-			spread = 150 - (150 * (user.client.chargedprog / 100))
+			spread = max_aim_spread - (max_aim_spread * (user.client.chargedprog / 100))
 	else
 		spread = 0
+	spread += get_spread_penalty()
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 		var/obj/projectile/BB = CB.BB
 		if(user.client)
@@ -274,8 +294,9 @@
 	experimental_inhand = TRUE
 	experimental_onback = TRUE
 	damage_mult = 3.5
+	max_aim_spread = 40
 	dropshrink = 0.7
-	possible_item_intents = list(INTENT_GENERIC)
+	possible_item_intents = list(POLEARM_BASH, INTENT_GENERIC)
 	gripped_intents = list(/datum/intent/shoot/musket, /datum/intent/shoot/musket/arc, POLEARM_BASH)
 	associated_skill = /datum/attribute/skill/combat/polearms
 	slot_flags = ITEM_SLOT_BACK
@@ -305,6 +326,9 @@
 /obj/item/gun/ballistic/revolver/grenadelauncher/pistol/musket/update_icon_state()
 	. = ..()
 	icon_state = "musket_[cocked ? "cocked" : "uncocked"][ramrod_inserted ? "_ramrod" : ""][bayonet_affixed ? "_bayonet" : ""]"
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/pistol/musket/get_spread_penalty()
+	return bayonet ? bayonet.spread : 0
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/pistol/musket/getonmobprop(tag)
 	. = ..()
@@ -387,18 +411,17 @@
 			bayonet_affixed = FALSE
 			possible_item_intents -= SPEAR_THRUST
 			gripped_intents -= POLEARM_THRUST
-			sharpness = IS_SHARP
+			sharpness = IS_BLUNT
 			bayonet.max_blade_int = max_blade_int
 			bayonet.blade_int = blade_int
 			max_blade_int = 0
 			blade_int = 0
 			armor_penetration = 0
-			spread -= bayonet.spread
 			force -= bayonet.force
 			bayonet = null
 			to_chat(user, span_info("I remove the bayonet from \the [src]."))
 			playsound(src, 'sound/foley/struggle.ogg', 100, FALSE, -1)
-		update_appearance(UPDATE_ICON_STATE)
+		update_held_appearance()
 	..()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/pistol/musket/attackby(obj/item/I, mob/user, list/modifiers)
@@ -410,8 +433,11 @@
 			if(!H.is_holding(src))
 				to_chat(user, span_warning("I need to hold \the [src] to affix a bayonet to it!"))
 				return
-			if(do_after(user, ramtime SECONDS, src))
-				var/obj/item/weapon/knife/dagger/bayonet/attached_bayonet = H.get_active_held_item()
+			if(bayonet)
+				to_chat(user, span_warning("\The [src] already has a bayonet."))
+				return
+			if(do_after(user, ramtime SECONDS, src) && !bayonet && H.get_active_held_item() == I)
+				var/obj/item/weapon/knife/dagger/bayonet/attached_bayonet = I
 				attached_bayonet.forceMove(src)
 				bayonet = attached_bayonet
 				bayonet_affixed = TRUE
@@ -421,11 +447,10 @@
 				max_blade_int = attached_bayonet.max_blade_int
 				blade_int = attached_bayonet.blade_int
 				armor_penetration = 5
-				spread += bayonet.spread
 				force += bayonet.force
 				to_chat(user, span_info("I affix the bayonet to \the [src]."))
 				playsound(src, 'sound/foley/struggle.ogg', 100, FALSE, -1)
-			update_appearance(UPDATE_ICON_STATE)
+			update_held_appearance()
 	..()
 
 /obj/item/weapon/knife/dagger/bayonet

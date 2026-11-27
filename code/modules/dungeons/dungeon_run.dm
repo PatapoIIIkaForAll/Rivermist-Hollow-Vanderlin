@@ -505,7 +505,7 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 		gate.source_room = room
 		room.gates += gate
 		// Created after layout caching - mark native so collapse never ejects it.
-		room.native_movables[gate] = TRUE
+		room.track_native_movable(gate)
 		if(gate.gate_role == DUNGEON_GATE_FORWARD)
 			gate.sealed = !room.cleared
 			gate.pre_rolled_template = roll_path_room_template(room, gate.path_type, rolled_sibling_ids)
@@ -544,7 +544,7 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 			continue
 		var/obj/structure/dungeon_shrine/shrine = new(shrine_turf)
 		shrine.owning_run = src
-		room.native_movables[shrine] = TRUE
+		room.track_native_movable(shrine)
 	room.shrine_turfs.Cut()
 
 /// Grows a dark bargain altar on an open turf. Returns the altar (tests force it).
@@ -555,7 +555,7 @@ GLOBAL_LIST_EMPTY(active_dungeon_runs)
 	var/obj/structure/dungeon_bargain_altar/altar = new(pick(open))
 	altar.owning_run = src
 	altar.build_offers()
-	room.native_movables[altar] = TRUE
+	room.track_native_movable(altar)
 	return altar
 
 /// Picks a forward room template biased by the gate's path type. Falls back to

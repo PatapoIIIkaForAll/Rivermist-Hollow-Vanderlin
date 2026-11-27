@@ -8,7 +8,7 @@
 	#ifdef ALL_MAPS // I cry
 		#include "map_files/debug/roguetest.dmm"
 		#include "map_files/hsector/underdark.dmm"
-		#include "map_files/hsector/hsector.dmm"
+		#include "map_files/hsector/hsector_new.dmm"
 		#include "map_files/hsector/frozen_mountains.dmm"
 		#include "map_files/hsector/desert.dmm"
 		#include "map_files/hsector/bogforest.dmm"

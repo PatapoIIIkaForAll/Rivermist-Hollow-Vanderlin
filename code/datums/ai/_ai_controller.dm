@@ -5,6 +5,8 @@ have ways of interacting with a specific atom and control it. They posses a blac
 /datum/ai_controller
 	///The atom this controller is controlling
 	var/atom/pawn
+	/// The z-level whose GLOB.ai_controllers_by_zlevel entry holds this controller, or null.
+	var/registered_zlevel
 	/**
 	* This is a list of variables the AI uses and can be mutated by actions.
 	*
@@ -196,8 +198,7 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	pawn.ai_controller = src
 
 	var/turf/pawn_turf = get_turf(pawn)
-	if(pawn_turf)
-		GLOB.ai_controllers_by_zlevel[pawn_turf.z] += src
+	set_registered_zlevel(pawn_turf?.z)
 
 	if(!continue_processing_when_client && istype(new_pawn, /mob))
 		var/mob/possible_client_holder = new_pawn
@@ -362,19 +363,28 @@ have ways of interacting with a specific atom and control it. They posses a blac
 /datum/ai_controller/proc/on_changed_z_level(atom/source, turf/old_turf, turf/new_turf)
 	SIGNAL_HANDLER
 
+	// The z-level list is kept right even while a player drives the pawn, or the old level keeps this controller.
+	set_registered_zlevel(new_turf?.z)
+
 	if(ismob(pawn))
 		var/mob/mob_pawn = pawn
 		if((mob_pawn?.client && !continue_processing_when_client))
 			return
 
-	if(old_turf)
-		GLOB.ai_controllers_by_zlevel[old_turf.z] -= src
-
 	if(new_turf)
-		GLOB.ai_controllers_by_zlevel[new_turf.z] += src
 		var/new_level_clients = length(SSmobs.clients_by_zlevel[new_turf.z])
 		if(new_level_clients)
 			set_ai_status(AI_STATUS_IDLE)
+
+/// Moves this controller to the given z-level's entry in GLOB.ai_controllers_by_zlevel; null takes it off every level.
+/datum/ai_controller/proc/set_registered_zlevel(new_zlevel)
+	if(registered_zlevel == new_zlevel)
+		return
+	if(registered_zlevel)
+		GLOB.ai_controllers_by_zlevel[registered_zlevel] -= src
+	registered_zlevel = new_zlevel
+	if(new_zlevel)
+		GLOB.ai_controllers_by_zlevel[new_zlevel] += src
 
 ///Abstract proc for initializing the pawn to the new controller
 /datum/ai_controller/proc/TryPossessPawn(atom/new_pawn)
@@ -397,9 +407,7 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	if(ai_movement.moving_controllers[src])
 		ai_movement.stop_moving_towards(src)
 	able_to_run = FALSE
-	var/turf/pawn_turf = get_turf(pawn)
-	if(pawn_turf)
-		GLOB.ai_controllers_by_zlevel[pawn_turf.z] -= src
+	set_registered_zlevel(null)
 	if(ai_status)
 		GLOB.ai_controllers_by_status[ai_status] -= src
 	stop_previous_processing()

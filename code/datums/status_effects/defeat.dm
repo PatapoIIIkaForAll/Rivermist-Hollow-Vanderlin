@@ -47,9 +47,8 @@
 	// can still tell the near-death sub-causes apart.
 	var/list/collapse_texts = defeat_collapse_texts(reason)
 	if(horny_defeat)
-		// A horny defeat reads differently: the dark vignette stays, but the pink arousal wash (the
-		// existing "lovehud" overlay) floods over it, so it never looks like a plain beatdown.
-		owner.overlay_fullscreen("defeat_horny", /atom/movable/screen/fullscreen/love, 10)
+		// A horny defeat reads differently: the soft pink edge at full strength sits over the dark vignette.
+		owner.set_lewd_edge(FULLSCREEN_DEFEAT_HORNY, /atom/movable/screen/fullscreen/lewd/climax_edge, 1, LEWD_HAZE_FADE_TIME)
 		// The light case: a horny knockout wears off on its own after a short while (unless kidnapped).
 		self_recover_at = world.time + DEFEAT_HORNY_SELF_RECOVER_TIME
 		self_recover_timer = addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob/living, defeat_horny_self_recover)), DEFEAT_HORNY_SELF_RECOVER_TIME, TIMER_STOPPABLE)
@@ -154,7 +153,7 @@
 		return
 	owner.reset_horny_defeat_progress()
 	owner.clear_fullscreen("defeat", FALSE)
-	owner.clear_fullscreen("defeat_horny")
+	owner.clear_fullscreen(FULLSCREEN_DEFEAT_HORNY)
 	to_chat(owner, span_notice("You can move again, but the defeat still clings to you."))
 	REMOVE_TRAIT(owner, TRAIT_NODEATH, TRAIT_STATUS_EFFECT(id))
 	REMOVE_TRAIT(owner, TRAIT_NOSOFTCRIT, TRAIT_STATUS_EFFECT(id))
@@ -189,6 +188,7 @@
 /// while players remain. Deliberately does NOT add TRAIT_NODEATH: a downed mob can still be finished off.
 /datum/status_effect/mob_horny_knockout
 	id = "mob_horny_knockout"
+	alert_type = null
 	duration = STATUS_EFFECT_PERMANENT
 	remove_on_fullheal = FALSE
 	var/cleanup_timer

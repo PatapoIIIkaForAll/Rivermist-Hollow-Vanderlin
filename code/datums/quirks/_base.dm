@@ -83,6 +83,8 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 	var/customization_value = null
 	/// Label for the customization dropdown
 	var/customization_label = "Select Option"
+	/// How many options the player may pick from customization_options; above 1 the value is a list.
+	var/max_picks = 1
 
 	/// Type of customization: "select" for dropdown, "text" for text input, "number" for numeric
 	var/customization_type = QUIRK_SELECT
@@ -184,6 +186,17 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 /datum/quirk/proc/return_customization(datum/preferences/prefs)
 	return customization_options.Copy()
 
+/// The picked options as a list, for single values and multi-pick lists alike.
+/datum/quirk/proc/get_picks(value = customization_value)
+	if(islist(value))
+		var/list/picks = value
+		return picks.Copy()
+	return isnull(value) ? list() : list(value)
+
+/// Lets a quirk adjust the saved value with the character's preferences right before it is applied.
+/datum/quirk/proc/resolve_customization(datum/preferences/prefs, value)
+	return value
+
 /datum/quirk/proc/get_extra_value(key, default_value = null)
 	if(!key)
 		return default_value
@@ -198,6 +211,10 @@ GLOBAL_LIST_EMPTY(quirk_points_by_type)
 /datum/quirk/proc/set_extra_value(key, value)
 	LAZYINITLIST(extra_customization_values)
 	extra_customization_values[key] = value
+
+/// FALSE keeps this quirk out of the quirk menu unless it is already taken.
+/datum/quirk/proc/is_listed(datum/preferences/prefs)
+	return TRUE
 
 /// Check if this quirk is available for the given preferences
 /datum/quirk/proc/is_available(datum/preferences/prefs)

@@ -62,6 +62,8 @@ GLOBAL_DATUM_INIT(openspace_reflection_dimmer_one_for_all, /atom/movable/openspa
 
 /// Mark ordinary Move() traversal so the fall starts only after the move finishes.
 /turf/open/openspace/Enter(atom/movable/movable, atom/oldloc)
+	if(isliving(movable) && try_auto_climb_down(movable, oldloc))
+		return FALSE
 	. = ..()
 	if(.)
 		movable.set_currently_z_moving(CURRENTLY_Z_FALLING_FROM_MOVE)
@@ -162,27 +164,51 @@ GLOBAL_DATUM_INIT(openspace_reflection_dimmer_one_for_all, /atom/movable/openspa
 
 /turf/open/openspace/attack_hand(mob/user)
 	if(isliving(user))
-		var/mob/living/L = user
-		if(L.stat != CONSCIOUS)
+		try_climb_down(user)
+
+/// Flags for climbing down into this hole; lying climbers may climb too.
+#define OPENSPACE_CLIMB_DOWN_FLAGS (Z_MOVE_CLIMBING_FLAGS & ~ZMOVE_LYING_CHECKS)
+
+/// Climbs down through this hole to the turf below.
+/turf/open/openspace/proc/try_climb_down(mob/living/climber)
+	if(climber.stat != CONSCIOUS)
+		return
+	var/turf/target = GET_TURF_BELOW(src)
+	if(!target)
+		to_chat(climber, "<span class='warning'>I can't climb there.</span>")
+		return
+	var/z_move_flags = OPENSPACE_CLIMB_DOWN_FLAGS | ZMOVE_FEEDBACK
+	if(!climber.can_z_move(DOWN, src, target, z_move_flags))
+		to_chat(climber, "<span class='warning'>I can't climb here.</span>")
+		return
+	if(climber.m_intent != MOVE_INTENT_SNEAK)
+		playsound(climber, 'sound/foley/climb.ogg', 100, TRUE)
+	climber.visible_message("<span class='warning'>[climber] starts to climb down.</span>", "<span class='warning'>I start to climb down.</span>")
+	if(do_after(climber, 3 SECONDS, src))
+		if(!climber.can_z_move(DOWN, src, target, z_move_flags))
 			return
-		var/turf/target = GET_TURF_BELOW(src)
-		if(!target)
-			to_chat(user, "<span class='warning'>I can't climb there.</span>")
-			return
-		var/z_move_flags = (Z_MOVE_CLIMBING_FLAGS & ~ZMOVE_LYING_CHECKS) | ZMOVE_FEEDBACK
-		if(!L.can_z_move(DOWN, src, target, z_move_flags))
-			to_chat(user, "<span class='warning'>I can't climb here.</span>")
-			return
-		if(user.m_intent != MOVE_INTENT_SNEAK)
-			playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
-		user.visible_message("<span class='warning'>[user] starts to climb down.</span>", "<span class='warning'>I start to climb down.</span>")
-		if(do_after(L, 3 SECONDS, src))
-			if(!L.can_z_move(DOWN, src, target, z_move_flags))
-				return
-			if(user.m_intent != MOVE_INTENT_SNEAK)
-				playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
-			L.set_currently_z_moving(CURRENTLY_Z_CLIMBING_DOWN)
-			L.zMove(DOWN, target, z_move_flags & ~ZMOVE_FEEDBACK)
+		if(climber.m_intent != MOVE_INTENT_SNEAK)
+			playsound(climber, 'sound/foley/climb.ogg', 100, TRUE)
+		climber.set_currently_z_moving(CURRENTLY_Z_CLIMBING_DOWN)
+		climber.zMove(DOWN, target, z_move_flags & ~ZMOVE_FEEDBACK)
+
+/// Walking off this edge with auto-climb on climbs down instead of falling. TRUE blocks the step.
+/turf/open/openspace/proc/try_auto_climb_down(mob/living/climber, atom/oldloc)
+	if(DOING_INTERACTION_WITH_TARGET(climber, src))
+		return TRUE
+	if(!isturf(oldloc) || climber.loc != oldloc)
+		return FALSE
+	if(!climber.should_auto_climb(get_dir(oldloc, src)))
+		return FALSE
+	if(!climber.can_z_move(DOWN, src, null, ZMOVE_FALL_FLAGS))
+		return FALSE
+	var/turf/below = GET_TURF_BELOW(src)
+	if(!below || !climber.can_z_move(DOWN, src, below, OPENSPACE_CLIMB_DOWN_FLAGS))
+		return FALSE
+	INVOKE_ASYNC(src, PROC_REF(try_climb_down), climber)
+	return TRUE
+
+#undef OPENSPACE_CLIMB_DOWN_FLAGS
 
 /turf/open/openspace/attack_ghost(mob/dead/observer/user)
 	var/turf/target = GET_TURF_BELOW(src)

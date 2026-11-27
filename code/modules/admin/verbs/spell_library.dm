@@ -56,6 +56,33 @@
 		spell_types[spell_type] = TRUE
 	return spell_types
 
+/// Resolves a saved or requested path against the grantable spell catalogue.
+/proc/resolve_admin_spell_type(path_text)
+	if(!istext(path_text))
+		return null
+	var/spell_type = text2path(path_text)
+	if(!ispath(spell_type, /datum/action/cooldown/spell) || !admin_spell_types()[spell_type])
+		return null
+	return spell_type
+
+/datum/preference/list_type/admin_spell_favorites
+	savefile_key = "admin_spell_favorites"
+	savefile_identifier = PREF_PLAYER
+	should_apply = FALSE
+
+/datum/preference/list_type/admin_spell_favorites/is_accessible(datum/preferences/prefs)
+	..()
+	return FALSE
+
+/datum/preference/list_type/admin_spell_favorites/deserialize(list/input, datum/preferences/prefs)
+	var/list/loaded = ..()
+	var/list/favorites = list()
+	for(var/path_text in loaded)
+		var/spell_type = resolve_admin_spell_type(path_text)
+		if(spell_type)
+			favorites |= "[spell_type]"
+	return favorites
+
 /proc/admin_spell_icon(datum/action/cooldown/spell/spell_type)
 	var/static/list/states_by_file = list()
 	var/icon_file = initial(spell_type.button_icon)
@@ -181,6 +208,7 @@
 		"target_valid" = !!target,
 		"mindless" = target && !target.mind,
 		"known_spells" = known_spells(target),
+		"favorites" = user.client.prefs?.read_preference(/datum/preference/list_type/admin_spell_favorites),
 		"status_message" = status_message,
 		"status_type" = status_type,
 	)
@@ -203,23 +231,46 @@
 			return revoke_spell(user, params["path"])
 		if("revoke_all")
 			return revoke_all(user)
+		if("set_favorite")
+			return set_spell_favorite(user, params["path"], params["enabled"])
 	return FALSE
 
-/// Validates a typepath sent by the window. Returns the spell type or null.
-/datum/admin_spell_library/proc/resolve_spell_type(path_text)
-	if(!istext(path_text))
-		return null
-	var/spell_type = text2path(path_text)
-	if(!ispath(spell_type, /datum/action/cooldown/spell) || !admin_spell_types()[spell_type])
-		return null
-	return spell_type
+/datum/admin_spell_library/proc/set_spell_favorite(mob/user, path_text, enabled)
+	var/spell_type = resolve_admin_spell_type(path_text)
+	var/datum/preferences/prefs = user.client?.prefs
+	if(!spell_type || !prefs || !isnum(enabled) || !(enabled in list(TRUE, FALSE)))
+		return FALSE
+
+	var/list/previous = prefs.read_preference(/datum/preference/list_type/admin_spell_favorites)
+	var/path = "[spell_type]"
+	if(enabled == (path in previous))
+		return TRUE
+
+	var/list/favorites = previous.Copy()
+	if(enabled)
+		favorites += path
+	else
+		favorites -= path
+	if(!prefs.write_preference(/datum/preference/list_type/admin_spell_favorites, favorites))
+		return FALSE
+	if(!prefs.save_preferences())
+		prefs.write_preference(/datum/preference/list_type/admin_spell_favorites, previous)
+		set_status("Could not save favorite spells.", "bad")
+		return TRUE
+
+	set_status(null)
+	for(var/datum/tgui/other_ui as anything in user.tgui_open_uis)
+		var/datum/admin_spell_library/library = other_ui.src_object
+		if(istype(library) && library != src)
+			SStgui.update_uis(library)
+	return TRUE
 
 /datum/admin_spell_library/proc/grant_spell(mob/user, path_text)
 	var/mob/target = get_target()
 	if(!target)
 		set_status("The recipient is gone. Open the library again.", "bad")
 		return TRUE
-	var/datum/action/cooldown/spell/spell_type = resolve_spell_type(path_text)
+	var/datum/action/cooldown/spell/spell_type = resolve_admin_spell_type(path_text)
 	if(!spell_type)
 		return FALSE
 	if(known_spells(target)["[spell_type]"])
@@ -231,6 +282,9 @@
 		if(!QDELETED(new_spell))
 			qdel(new_spell)
 		return TRUE
+	// Essence spells cast through a gauntlet; a granted one has none, so make it free like class-granted ones.
+	if(new_spell.spell_type == SPELL_ESSENCE)
+		new_spell.spell_type = NONE
 	new_spell.Grant(target)
 	log_admin("[key_name(user)] gave [key_name(target)] the spell [spell_type].")
 	message_admins("[key_name_admin(user)] gave [key_name_admin(target)] the spell [initial(spell_type.name)] ([spell_type]).")
@@ -243,7 +297,7 @@
 	if(!target)
 		set_status("The recipient is gone. Open the library again.", "bad")
 		return TRUE
-	var/datum/action/cooldown/spell/spell_type = resolve_spell_type(path_text)
+	var/datum/action/cooldown/spell/spell_type = resolve_admin_spell_type(path_text)
 	if(!spell_type)
 		return FALSE
 	// A card stands for one exact type: subtypes are left alone.

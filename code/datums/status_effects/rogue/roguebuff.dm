@@ -1,5 +1,6 @@
 /datum/status_effect/buff
 	status_type = STATUS_EFFECT_REFRESH
+	alert_type = null
 
 #define DRUNK_STUMBLE_MIN_DRUNKENNESS 21
 #define DRUNK_STUMBLE_FULL_DRUNKENNESS 81

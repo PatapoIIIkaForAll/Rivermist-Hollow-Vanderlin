@@ -17,6 +17,7 @@
 	static_debris = list(/obj/item/natural/feather=1)
 
 /obj/item/reagent_containers/food/snacks/friedcrow
+	dish_type = DISH_POULTRY
 	name = "fried crow"
 	desc = "A pesky, fried bird. The Darkholdians say one 'eats crow' if they are mistaken or outdone."
 	icon_state = "fcrow"

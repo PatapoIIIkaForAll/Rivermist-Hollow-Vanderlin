@@ -11,6 +11,7 @@ GLOBAL_LIST_EMPTY(halloween_hunt_candies)
 // Candy ----------------------------------------------------------------------
 
 /obj/item/reagent_containers/food/snacks/hunt_candy
+	dish_type = DISH_SWEET
 	name = "wrapped sweet"
 	desc = "A twist of spooky candy. Stuff it into a pumpkin basket to count it for the Candy Hunt."
 	icon = HUNT_ICON

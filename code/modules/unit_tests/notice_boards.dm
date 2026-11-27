@@ -71,6 +71,12 @@
 	user.real_name = "Tester [key]"
 	return user
 
+/// A window in the interactive state, as tgui hands to ui_act for an open UI.
+/datum/unit_test/rosewall/proc/open_window(mob/user, obj/structure/board)
+	var/datum/tgui/window = allocate(/datum/tgui, user, board, "Rosewall")
+	window.status = UI_INTERACTIVE
+	return window
+
 /// Posting a note through the board and reading it back.
 /datum/unit_test/rosewall/post_and_read
 
@@ -80,7 +86,7 @@
 	board.test_keys[REF(user)] = "alpha"
 	board.next_action_at.Cut()
 	usr = user
-	board.ui_act("save_post", list("seeking" = "A quiet evening", "text" = "I sing at the tavern."))
+	board.ui_act("save_post", list("seeking" = "A quiet evening", "text" = "I sing at the tavern."), open_window(user, board))
 	usr = null
 	TEST_ASSERT_EQUAL(length(store.posts), 1, "Saving a note should pin one note.")
 	var/datum/rosewall_post/post = store.posts[1]
@@ -110,7 +116,7 @@
 
 	board.next_action_at.Cut()
 	usr = user
-	board.ui_act("save_post", list("seeking" = "", "text" = "Edited text."))
+	board.ui_act("save_post", list("seeking" = "", "text" = "Edited text."), open_window(user, board))
 	usr = null
 	TEST_ASSERT_EQUAL(length(store.posts), 1, "Saving again should edit the note, not add a second one.")
 	TEST_ASSERT_EQUAL(post.text, "Edited text.", "Saving again should replace the text.")
@@ -129,13 +135,13 @@
 
 	board.next_action_at.Cut()
 	usr = other
-	board.ui_act("remove_post", list("id" = post.id))
+	board.ui_act("remove_post", list("id" = post.id), open_window(other, board))
 	usr = null
 	TEST_ASSERT(post in store.posts, "Another player must not take down someone else's note.")
 
 	board.next_action_at.Cut()
 	usr = author
-	board.ui_act("remove_post", list("id" = post.id))
+	board.ui_act("remove_post", list("id" = post.id), open_window(author, board))
 	usr = null
 	TEST_ASSERT(!(post in store.posts), "The writer should take their own note down.")
 	TEST_ASSERT_EQUAL(board.icon_state, "noticeboardbh0", "The board sprite should show no notes.")

@@ -64,6 +64,7 @@
 	playsound(cast_on, 'sound/combat/wooshes/blunt/wooshhuge (2).ogg', 50, TRUE)
 
 /datum/action/cooldown/spell/cone/staggered/cone_of_cold/do_turf_cone_effect(turf/target_turf, atom/caster, level)
+	target_turf.extinguish_turf()
 	if(!turf_freeze_type || unfreeze_turf_duration <= 0 SECONDS) // 0 duration = don't apply the slip
 		return
 	if(!isopenturf(target_turf))

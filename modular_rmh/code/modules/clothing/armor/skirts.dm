@@ -16,14 +16,20 @@
 	item_state = "hlskirt"
 	genital_access = TRUE
 
-/obj/item/clothing/pants/chainlegs/iron/studdedskirt
+/obj/item/clothing/pants/trou/leather/skirt/studded
 	name = "studded leather skirt"
 	icon = 'modular_rmh/icons/clothing/armor/pants.dmi'
 	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/pants.dmi'
-	armor_type = /datum/armor/rmh/pants/studded_skirt
+	armor_type = /datum/armor/rmh/leather/studded
 	desc = "Short studded skirt made of fine leather and iron."
 	icon_state = "studdedskirt"
-	genital_access = TRUE
+	max_integrity = INTEGRITY_STRONG
+	prevent_crits = ALL_EXCEPT_STAB
+	smeltresult = /obj/item/ingot/iron
+	melting_material = /datum/material/iron
+	melt_amount = 100
+	sellprice = 25
+	armor_class = AC_LIGHT
 	sewrepair = /datum/attribute/skill/craft/tanning/patching
 
 /obj/item/clothing/pants/chainlegs/iron/skirt
@@ -77,7 +83,7 @@
 	name = "Studded Skirt (+1 Leather Skirt)"
 	recipe_name = "studded leather skirt"
 	additional_items = list(/obj/item/clothing/pants/trou/leather/skirt)
-	created_item = /obj/item/clothing/pants/chainlegs/iron/studdedskirt
+	created_item = /obj/item/clothing/pants/trou/leather/skirt/studded
 
 /datum/anvil_recipe/armor/steel/chainskirt
 	name = "Chain Skirt"

@@ -48,6 +48,8 @@
 	var/processes = TRUE
 	///the blend type we use for particles
 	var/particle_blending = BLEND_DEFAULT
+	///plane given to spawned particles; null keeps the particle's own plane
+	var/particle_plane
 	/// our animate_holder
 	var/datum/animate_holder/animate_holder
 
@@ -124,6 +126,8 @@
 		spawned.icon = icon_file
 		spawned.icon_state = particle_state
 		spawned.blend_mode = particle_blending
+		if(particle_plane)
+			spawned.plane = particle_plane
 
 		living_particles |= spawned
 

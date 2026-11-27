@@ -441,6 +441,7 @@
 	on = FALSE
 	cookonme = TRUE
 	soundloop = /datum/looping_sound/fireloop
+	rain_douse_chance = 0.75
 	// temperature_change = 40
 	var/heat_time = 100
 	var/obj/item/attachment = null
@@ -582,6 +583,7 @@
 	cookonme = TRUE
 	max_integrity = 30
 	soundloop = /datum/looping_sound/fireloop
+	rain_douse_chance = 1.5
 
 	temperature_change = 25
 	/// Only fires deliberately made by a player may provide Defeat recovery.

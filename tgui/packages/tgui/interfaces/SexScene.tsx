@@ -57,6 +57,7 @@ type ControlsData = {
 
 type ArousalData = {
   arousal_pct: number;
+  highly_aroused?: Booleanish;
   orgasm_pct: number;
   pain_pct: number;
 };
@@ -540,10 +541,20 @@ export const SexScene = () => {
     </Stack.Item>
   );
 
-  const renderBar = (label: string, pct: number, color: string) => (
+  const renderBar = (
+    label: string,
+    pct: number,
+    color: string,
+    tag?: string,
+  ) => (
     <ProgressBar value={(pct || 0) / 100} color={color} height="15px" mb={0.25}>
       <Box fontSize="10px" style={{ lineHeight: '13px' }}>
         {label} {Math.round(pct || 0)}%
+        {tag ? (
+          <Box as="span" bold ml={1}>
+            {tag}
+          </Box>
+        ) : null}
       </Box>
     </ProgressBar>
   );
@@ -597,7 +608,12 @@ export const SexScene = () => {
             ) : null}
           </Stack.Item>
           <Stack.Item basis="32%" shrink={0}>
-            {renderBar('Arousal', arousal.arousal_pct, 'red')}
+            {renderBar(
+              'Arousal',
+              arousal.arousal_pct,
+              'red',
+              asBool(arousal.highly_aroused) ? 'Highly aroused' : undefined,
+            )}
             {renderBar('Orgasm', arousal.orgasm_pct, 'pink')}
             {renderBar('Pain', arousal.pain_pct, 'grey')}
           </Stack.Item>

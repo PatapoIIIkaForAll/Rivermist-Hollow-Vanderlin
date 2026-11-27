@@ -240,6 +240,25 @@ type MarkingZone = {
   can_add: Booleanish;
 };
 
+type CulinaryKey =
+  | 'favourite_food'
+  | 'favourite_drink'
+  | 'hated_food'
+  | 'hated_drink';
+type CulinaryPicks = Record<CulinaryKey, number> & { random: Booleanish };
+type CulinaryGroup = {
+  value: number;
+  name: string;
+  favourite: Booleanish;
+  icon?: string | null;
+  icon_state?: string | null;
+};
+type CulinaryOptions = {
+  dishes: CulinaryGroup[];
+  drinks: CulinaryGroup[];
+  cup: { icon: string; icon_state: string };
+};
+
 type CreatorData = {
   real_name: string;
   initial_tab: string;
@@ -312,7 +331,6 @@ type CreatorData = {
   loadout_slots: LoadoutSlotData[];
   loadout_points: { total: number; spent: number; remaining: number };
   loadout_presets: { slot: number; summary: string }[];
-  triumphs: number;
   body_build?: string | null;
   body_build_name?: string;
   body_build_options?: { id: string; name: string }[];
@@ -348,6 +366,8 @@ type CreatorData = {
     entries?: { name: string; desc: string }[];
     balance: number;
   };
+  cc_culinary?: CulinaryPicks;
+  cc_culinary_options?: CulinaryOptions;
   cc_species_groups?: { id: string; name: string; species: string[] }[];
   cc_species_desc?: Record<string, string>;
   cc_texts?: Record<string, string>;
@@ -949,7 +969,7 @@ export const setTipAvoidRect = (getter: () => DOMRect | null) => {
   avoidRectGetter = getter;
 };
 
-export type SelectOption = { value: string; label: string };
+export type SelectOption = { value: string; label: string; thumb?: ReactNode };
 
 /** Dropdown drawn in the page. Native selects misbehave in the BYOND browser. */
 export const Select = (props: {
@@ -1006,6 +1026,7 @@ export const Select = (props: {
         className="cc-dd-head"
         onClick={() => !props.disabled && setOpen(!open)}
       >
+        {current?.thumb}
         <span className="cc-dd-label">
           {current?.label ?? props.placeholder ?? ''}
         </span>
@@ -1020,6 +1041,11 @@ export const Select = (props: {
             <div
               key={option.value}
               className={`cc-dd-item ${option.value === props.value ? 'selected' : ''}`}
+              style={
+                option.thumb
+                  ? { display: 'flex', alignItems: 'center', gap: '6px' }
+                  : undefined
+              }
               onClick={() => {
                 setOpen(false);
                 if (option.value !== props.value) {
@@ -1027,6 +1053,7 @@ export const Select = (props: {
                 }
               }}
             >
+              {option.thumb}
               {option.label}
             </div>
           ))}
@@ -1035,6 +1062,28 @@ export const Select = (props: {
     </div>
   );
 };
+
+/** A 24px item picture for dropdown rows. */
+const FoodThumb = (props: { icon?: string | null; state?: string | null }) => (
+  <span
+    style={{
+      display: 'inline-block',
+      flex: '0 0 24px',
+      width: '24px',
+      height: '24px',
+    }}
+  >
+    {props.icon && props.state ? (
+      <DmIcon
+        icon={props.icon}
+        icon_state={props.state}
+        width="24px"
+        height="24px"
+        fallback={<span />}
+      />
+    ) : null}
+  </span>
+);
 
 export const Swatch = (props: { color?: string | null; width?: number }) => (
   <span
@@ -4169,6 +4218,93 @@ export const CharacterCreator = () => {
     <Btn className="square" icon="play" title={title} onClick={onClick} />
   );
 
+  const renderFoodPreferences = () => {
+    const picks = data.cc_culinary;
+    const options = data.cc_culinary_options;
+    if (!picks || !options) {
+      return null;
+    }
+    const random = asBool(picks.random);
+    const groupName = (name: string) => L.culinaryGroups[name] || name;
+    const cup = (
+      <FoodThumb icon={options.cup.icon} state={options.cup.icon_state} />
+    );
+    const toOptions = (groups: CulinaryGroup[], drinks: boolean) => [
+      { value: '0', label: L.none },
+      ...groups.map((group) => ({
+        value: `${group.value}`,
+        label: groupName(group.name),
+        thumb: drinks ? (
+          cup
+        ) : (
+          <FoodThumb icon={group.icon} state={group.icon_state} />
+        ),
+      })),
+    ];
+    const rows: { key: CulinaryKey; label: string; choices: SelectOption[] }[] =
+      [
+        {
+          key: 'favourite_food',
+          label: L.favouriteFood,
+          choices: toOptions(
+            options.dishes.filter((group) => asBool(group.favourite)),
+            false,
+          ),
+        },
+        {
+          key: 'favourite_drink',
+          label: L.favouriteDrink,
+          choices: toOptions(
+            options.drinks.filter((group) => asBool(group.favourite)),
+            true,
+          ),
+        },
+        {
+          key: 'hated_food',
+          label: L.hatedFood,
+          choices: toOptions(options.dishes, false),
+        },
+        {
+          key: 'hated_drink',
+          label: L.hatedDrink,
+          choices: toOptions(options.drinks, true),
+        },
+      ];
+    return (
+      <>
+        <Ornament>{L.foodPreferences}</Ornament>
+        <div className="cc-kv">
+          <div className="cc-kv-label" title={L.randomFoodHint}>
+            {L.randomFood}
+          </div>
+          <Btn
+            className={random ? 'on' : 'off'}
+            title={L.randomFoodHint}
+            onClick={() => act('cc_culinary_random')}
+          >
+            {random ? L.on : L.off}
+          </Btn>
+          {rows.map((row) => (
+            <Fragment key={row.key}>
+              <div className="cc-kv-label" title={row.label}>
+                {row.label}
+              </div>
+              <Select
+                value={`${picks[row.key] || 0}`}
+                options={row.choices}
+                disabled={random}
+                title={L.foodHint}
+                onChange={(value) =>
+                  act('cc_culinary', { key: row.key, value: Number(value) })
+                }
+              />
+            </Fragment>
+          ))}
+        </div>
+      </>
+    );
+  };
+
   const renderInfo = () => {
     const descriptors = data.cc_descriptors || { entries: [], custom: [] };
     const texts = data.cc_texts || {};
@@ -4244,9 +4380,6 @@ export const CharacterCreator = () => {
                   data.domhand === 'Left' ? L.left : L.right,
                   () => doPref('domhand'),
                 )}
-                {kvButton(L.foodPreferences, L.edit, () =>
-                  doPref('culinary', 'menu'),
-                )}
                 {kvButton(
                   L.songLink,
                   asBool(data.song_set) ? L.urlSet : L.noUrl,
@@ -4267,6 +4400,7 @@ export const CharacterCreator = () => {
                 <div className="cc-kv-label">{L.nsfwOocMedia}</div>
                 <Placeholder>{L.soon}</Placeholder>
               </div>
+              {renderFoodPreferences()}
               <Ornament>{L.portraits}</Ornament>
               <div className="cc-kv">
                 {kvButton(
@@ -4454,31 +4588,7 @@ export const CharacterCreator = () => {
           {infoBlock(
             L.classAndRoles,
             <div className="cc-kv">
-              {kvButton(L.role, text(data.high_job, L.none), () => {
-                openCharacter('fate');
-                setFateCat('role');
-              })}
               {kvButton(L.readyOrder, L.edit, () => doPref('multi', 'menu'))}
-            </div>,
-          )}
-          {infoBlock(
-            L.triumphs,
-            <div className="cc-kv">
-              <div className="cc-kv-label">{L.triumphBalance}</div>
-              <div className="cc-stat-value" style={{ padding: '0 4px' }}>
-                {data.triumphs ?? 0}
-              </div>
-              {kvButton(L.triumphList, L.open, () => doPref('triumphs'))}
-              <div className="cc-kv-label" title={L.triumphShop}>
-                {L.triumphShop}
-              </div>
-              <Btn
-                className="fluid"
-                disabled
-                style={{ justifyContent: 'flex-start' }}
-              >
-                {L.notInUse}
-              </Btn>
             </div>,
           )}
           {infoBlock(
@@ -4501,17 +4611,6 @@ export const CharacterCreator = () => {
               )}
               {kvButton(L.defeatGuide, L.read, () =>
                 doPref('defeat_guide', 'input'),
-              )}
-            </div>,
-          )}
-          {infoBlock(
-            L.playerRecord,
-            <div className="cc-kv">
-              {kvButton(
-                L.playerQuality,
-                L.open,
-                () => doPref('playerquality'),
-                L.playerQualityHint,
               )}
             </div>,
           )}
@@ -4862,6 +4961,38 @@ export const CharacterCreator = () => {
     return windowShell(
       L.tabs.settings,
       <>
+        <div className="cc-info-grid" style={{ marginBottom: 8 }}>
+          {infoBlock(
+            L.menus,
+            <div className="cc-row">
+              <Btn
+                className="fluid"
+                icon="toggle-on"
+                title={L.togglesHint}
+                onClick={() => act('cc_open_toggles')}
+              >
+                {L.toggles}
+              </Btn>
+              <Btn
+                className="fluid"
+                icon="keyboard"
+                onClick={() => doPref('keybinds', 'menu')}
+              >
+                {L.keybinds}
+              </Btn>
+              <Btn
+                className="fluid"
+                icon="certificate"
+                onClick={() => {
+                  setTab('intimacy');
+                  setErpTab('badges');
+                }}
+              >
+                {L.erpTabs.badges}
+              </Btn>
+            </div>,
+          )}
+        </div>
         <div className="cc-info-grid cc-settings-grid">
           {SETTINGS_GROUPS.map((settingsGroup) =>
             infoBlock(
@@ -5161,10 +5292,6 @@ export const CharacterCreator = () => {
             ))}
           </div>
           <div className="cc-badges">
-            <Tip className="cc-badge" title={L.triumphs} body={L.triumphsHint}>
-              <Icon name="trophy" />
-              <span>{data.triumphs ?? 0}</span>
-            </Tip>
             <Tip
               className="cc-badge"
               title={L.quirkBalance}
@@ -5689,6 +5816,43 @@ export const CharacterCreator = () => {
       path: L.mirror.attire,
       run: () => setTab('loadout'),
     });
+    for (const id of ['general', 'kinks', 'badges'] as const) {
+      hits.push({
+        label: id === 'general' ? L.erpPreferencesText : L.erpTabs[id],
+        path: `${L.tabs.intimacy} › ${L.erpTabs[id]}`,
+        run: () => {
+          setTab('intimacy');
+          setErpTab(id);
+        },
+      });
+    }
+    for (const label of [L.quirks, L.abilityScores]) {
+      hits.push({
+        label,
+        path: L.rail.ability,
+        run: () => {
+          openCharacter('fate');
+          setFateCat('ability');
+        },
+      });
+    }
+    hits.push(
+      {
+        label: L.keybinds,
+        path: L.tabs.settings,
+        run: () => doPref('keybinds', 'menu'),
+      },
+      {
+        label: L.toggles,
+        path: L.tabs.settings,
+        run: () => act('cc_open_toggles'),
+      },
+      {
+        label: L.savePreferences,
+        path: L.tabs.settings,
+        run: () => doPref('save'),
+      },
+    );
     return hits;
   };
 

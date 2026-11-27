@@ -1,5 +1,6 @@
 
 /obj/item/reagent_containers/food/snacks/egg
+	dish_type = DISH_EGG
 	name = "egg"
 	desc = "Also known as cackleberries amongst the peasants."
 	icon_state = "egg"

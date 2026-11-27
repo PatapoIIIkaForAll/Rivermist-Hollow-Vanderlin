@@ -89,8 +89,13 @@
 	var/mob/living/protected_parent = protected_parent_ref?.resolve()
 	if(protected_parent)
 		protected_parent.remove_ally(temporary_family_faction)
-		protected_parent.ai_controller?.remove_thing_from_blackboard_key(BB_FRIENDS_LIST, growing_mob)
+		//The friends list may already be cleared; removing a missing entry crashes
+		var/list/parent_friends = protected_parent.ai_controller?.blackboard[BB_FRIENDS_LIST]
+		if(growing_mob && islist(parent_friends) && (growing_mob in parent_friends))
+			protected_parent.ai_controller.remove_thing_from_blackboard_key(BB_FRIENDS_LIST, growing_mob)
 
 	if(protected_parent)
-		growing_mob?.ai_controller?.remove_thing_from_blackboard_key(BB_FRIENDS_LIST, protected_parent)
+		var/list/growing_friends = growing_mob?.ai_controller?.blackboard[BB_FRIENDS_LIST]
+		if(islist(growing_friends) && (protected_parent in growing_friends))
+			growing_mob.ai_controller.remove_thing_from_blackboard_key(BB_FRIENDS_LIST, protected_parent)
 	temporary_family_faction = null

@@ -98,8 +98,9 @@
 	var/bleed_suppressing = 0.75 //multiplier for how much we suppress bleeding, can accumulate so two grabs means 25% bleeding
 	var/chokehold = FALSE
 
-/atom/movable //reference to all obj/item/grabbing
-	var/list/grabbedby = list()
+/atom/movable
+	/// Lazy list of every /obj/item/grabbing that holds this atom. Null while nothing holds it.
+	var/list/grabbedby
 
 /obj/item/grabbing/Initialize()
 	. = ..()
@@ -159,10 +160,10 @@
 	STOP_PROCESSING(SSfastprocess, src)
 	if(isobj(grabbed))
 		var/obj/I = grabbed
-		I.grabbedby -= src
+		LAZYREMOVE(I.grabbedby, src)
 	if(ismob(grabbed))
 		var/mob/M = grabbed
-		M.grabbedby -= src
+		LAZYREMOVE(M.grabbedby, src)
 		if(iscarbon(M) && sublimb_grabbed)
 			var/mob/living/carbon/carbonmob = M
 			var/obj/item/bodypart/part = carbonmob.get_bodypart(sublimb_grabbed)
@@ -171,12 +172,12 @@
 			// In this case, grabbed will be the mob, and sublimb_grabbed will be the weapon, rather than a bodypart
 			// This means we should skip any further processing for the bodypart
 			if(part)
-				part.grabbedby -= src
+				LAZYREMOVE(part.grabbedby, src)
 				part = null
 				sublimb_grabbed = null
 	// The zone lookup above misses detached limbs and precise zones, so drop the direct ref too.
 	if(limb_grabbed)
-		limb_grabbed.grabbedby -= src
+		LAZYREMOVE(limb_grabbed.grabbedby, src)
 		limb_grabbed = null
 
 	. = ..()

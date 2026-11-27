@@ -27,8 +27,8 @@
 	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
 	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
 	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
-	icon_state = "studleatherkini"
-	item_state = "studleatherkini"
+	icon_state = "studmailkini"
+	item_state = "studmailkini"
 	allowed_sex = list(FEMALE)
 	misc_flags = CRAFTING_TEST_EXCLUDE
 	allow_erp_equipped = TRUE
@@ -36,8 +36,8 @@
 
 /obj/item/clothing/armor/leather/studded/mail/bikini/bra
 	name = "studded mail Leather bra"
-	icon_state = "studleatherbra"
-	item_state = "studleatherbra"
+	icon_state = "studmailbra"
+	item_state = "studmailbra"
 	desc = "Studded leather is the most durable of all hides and leathers and about as light. Although the bottom half is literally covered by nothing, it somehow still protects the full torso and.. legs?!"
 	flags_inv = HIDEBOOB
 	is_bra = TRUE
@@ -234,6 +234,32 @@
 	desc = "Try not to get your nipples caught between the chains."
 	flags_inv = HIDEBOOB
 	is_bra = TRUE
+
+/obj/item/clothing/armor/chainmail/besilked/bikini
+	name = "besilked haubergeon bikini"
+	desc = "A maille shirt fashioned from hundreds of interlinked steel rings; lighter than its compatriots, yet reinforced with the presence of a besilked underjacket. Though fragile, it is a coveted article of nobility. When worn beneath a silk blouse, it can thwart an unsuspecting assassin's blow."
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon_state = "chainkini"
+	item_state = "chainkini"
+	allowed_sex = list(FEMALE)
+	misc_flags = CRAFTING_TEST_EXCLUDE
+	allow_erp_equipped = TRUE
+	flags_inv = HIDEBOOB|HIDECROTCH
+
+/obj/item/clothing/armor/chainmail/besilked/bra
+	name = "besilked haubergeon bra"
+	desc = "A maille shirt fashioned from hundreds of interlinked steel rings; lighter than its compatriots, yet reinforced with the presence of a besilked underjacket. Though fragile, it is a coveted article of nobility. When worn beneath a silk blouse, it can thwart an unsuspecting assassin's blow."
+	icon = 'modular_rmh/icons/clothing/armor/armor.dmi'
+	mob_overlay_icon = 'modular_rmh/icons/clothing/armor/onmob/armor.dmi'
+	sleeved = 'modular_rmh/icons/clothing/armor/onmob/helpers/sleeves_armor.dmi'
+	icon_state = "chainbra"
+	item_state = "chainbra"
+	allowed_sex = list(FEMALE)
+	misc_flags = CRAFTING_TEST_EXCLUDE
+	allow_erp_equipped = TRUE
+	flags_inv = HIDEBOOB
 
 /obj/item/clothing/armor/chainmail/iron/bikini
 	name = "iron haubergeon bikini"
@@ -479,12 +505,12 @@
 /datum/anvil_recipe/armor/iron/studdedbramail
 	name = "Studded Mail Bra (+Leather Armor, +1 cured leather)"
 	additional_items = list(/obj/item/clothing/armor/leather, /obj/item/natural/hide/cured)
-	created_item = /obj/item/clothing/armor/leather/studded/bikini/bra
+	created_item = /obj/item/clothing/armor/leather/studded/mail/bikini/bra
 
 /datum/anvil_recipe/armor/iron/studdedbikinimail
 	name = "Studded Mail bikini (+Leather Armor, +1 cured leather)"
 	additional_items = list(/obj/item/clothing/armor/leather, /obj/item/natural/hide/cured)
-	created_item = /obj/item/clothing/armor/leather/studded/bikini
+	created_item = /obj/item/clothing/armor/leather/studded/mail/bikini
 
 /datum/anvil_recipe/armor/iron/ironchainbikini
 	name = "Haubergeon Bikini"
@@ -507,6 +533,14 @@
 	name = "Haubergeon bra"
 	recipe_name = "chain bra"
 	created_item = /obj/item/clothing/armor/chainmail/bikini/bra
+
+/datum/repeatable_crafting_recipe/sewing/weaving/besilked_haubergeon/bikini
+	name = "besilked haubergeon bikini"
+	output = /obj/item/clothing/armor/chainmail/besilked/bikini
+
+/datum/repeatable_crafting_recipe/sewing/weaving/besilked_haubergeon/bra
+	name = "besilked haubergeon bra"
+	output = /obj/item/clothing/armor/chainmail/besilked/bra
 
 /datum/anvil_recipe/armor/steel/platebikini
 	name = "Half-Plate bikini (+1 Steel, +1 Cured Leather)"
@@ -742,6 +776,18 @@
 	output = /obj/item/clothing/armor/leather/studded/bikini/bra
 	requirements = list(/obj/item/clothing/armor/leather/studded/bikini = 1)
 	attacked_atom = /obj/item/clothing/armor/leather/studded/bikini
+
+/datum/repeatable_crafting_recipe/conversion/studdedmailconvone
+	name = "studded mail bikini"
+	output = /obj/item/clothing/armor/leather/studded/mail/bikini
+	requirements = list(/obj/item/clothing/armor/leather/studded/mail = 1)
+	attacked_atom = /obj/item/clothing/armor/leather/studded/mail
+
+/datum/repeatable_crafting_recipe/conversion/studdedmailconvtwo
+	name = "studded mail bra"
+	output = /obj/item/clothing/armor/leather/studded/mail/bikini/bra
+	requirements = list(/obj/item/clothing/armor/leather/studded/mail/bikini = 1)
+	attacked_atom = /obj/item/clothing/armor/leather/studded/mail/bikini
 
 /datum/repeatable_crafting_recipe/conversion/lharmorconvone
 	name = "hardened leather armor bikini"

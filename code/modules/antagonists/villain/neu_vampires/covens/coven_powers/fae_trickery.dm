@@ -424,7 +424,7 @@
 /atom/movable/screen/alert/riddle
 	name = "Riddle"
 	desc = "You have a riddle to solve!"
-	icon_state = "riddle"
+	icon_state = "pom_anxiety"
 
 	var/datum/riddle/riddle
 	var/bad_answers = 0

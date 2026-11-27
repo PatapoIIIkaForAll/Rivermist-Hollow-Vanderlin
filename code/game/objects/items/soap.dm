@@ -131,18 +131,11 @@
 
 		return ITEM_INTERACT_SUCCESS
 
-	var/turf/T = get_turf(target)
-	if(!istype(T, /turf/open/water))
-		if(istype(T, /turf/open/lava) && user == target) //shits and giggles
-			to_chat(user, span_warning("Why am I doing this..."))
-		else
-			to_chat(user, span_warning("They must be in water!"))
+	//RMH EDITED START - baths: find_bathing_spot() is in modular_rmh baths.dm
+	var/turf/T = find_bathing_spot(target, user)
+	if(!T)
 		return ITEM_INTERACT_BLOCKING
-	else
-		var/turf/open/water/bathspot = T
-		if(!bathspot.wash_in)
-			to_chat(user, span_warning("I can't bathe in this..."))
-			return ITEM_INTERACT_BLOCKING
+	//RMH EDITED END
 
 	if(istype(target.head, /obj/item/clothing) || istype(target.wear_armor, /obj/item/clothing) || istype(target.wear_shirt, /obj/item/clothing) || istype(target.cloak, /obj/item/clothing))
 		to_chat(user, span_warning("Can't get a proper bath with clothing on."))
@@ -165,6 +158,12 @@
 
 	if(!do_after(user, 5 SECONDS, target))
 		return ITEM_INTERACT_BLOCKING
+
+	//RMH EDITED START - baths: the target or the bath may have changed during the scrub
+	T = find_bathing_spot(target, user)
+	if(!T)
+		return ITEM_INTERACT_BLOCKING
+	//RMH EDITED END
 
 	playsound(T, pick('sound/foley/waterwash (1).ogg','sound/foley/waterwash (2).ogg'), 100, FALSE)
 	scrub_scrub(target, user)

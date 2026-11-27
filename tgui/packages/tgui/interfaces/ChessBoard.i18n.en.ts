@@ -68,7 +68,7 @@ const locale: ChessBoardLocale = {
   messages: {
     noModeSelected: 'No mode selected yet. Use the change mode button.',
     controlHint:
-      'During an active game, seats can be changed only while paused. Changing mode after the game has started requires both players to agree.',
+      'During an active game, seats can be changed only while paused. Changing mode after the game has started requires both players to agree. A player sitting alone moves for both sides.',
     promotionPrompt: 'Choose the piece for pawn promotion.',
     noMoves: 'No moves yet.',
     dash: '-',

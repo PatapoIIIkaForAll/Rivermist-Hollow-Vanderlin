@@ -130,3 +130,53 @@
 		if(expected != "Hidden Stranger")
 			TEST_ASSERT(!findtext(heard, "Hidden Stranger"), "Listener [expected_names[i]] heard the real name")
 	REMOVE_TRAIT(stranger, TRAIT_DISFIGURED, TRAIT_SOURCE_UNIT_TESTS)
+
+/// A gag or a stopped mouth blocks spells with spoken words; emote, silent and voice-free spells still pass.
+/datum/unit_test/muffled_speech_spell_gate
+
+/datum/unit_test/muffled_speech_spell_gate/Run()
+	var/mob/living/carbon/human/caster = allocate(/mob/living/carbon/human)
+	caster.mind_initialize()
+	var/datum/action/cooldown/spell/aoe/repulse/spell = new(caster.mind)
+	spell.Grant(caster)
+	TEST_ASSERT_EQUAL(spell.owner, caster, "Test setup: the spell has no owner")
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "A free caster cannot say a shouted spell")
+	TEST_ASSERT_NULL(spell.spoken_invocation_refusal(), "A free caster got a refusal")
+
+	var/obj/item/clothing/face/bdsm_gag/ball/black/gag = allocate(/obj/item/clothing/face/bdsm_gag/ball/black)
+	gag.drool_chance = 0
+	caster.equip_to_slot_if_possible(gag, ITEM_SLOT_MASK)
+	TEST_ASSERT_EQUAL(caster.wear_mask, gag, "The gag did not go on the face")
+
+	for(var/spoken_type in list(INVOCATION_SHOUT, INVOCATION_WHISPER))
+		spell.invocation_type = spoken_type
+		TEST_ASSERT(!spell.can_invoke(feedback = FALSE), "A gagged caster can say a [spoken_type] spell")
+		TEST_ASSERT_EQUAL(spell.spoken_invocation_refusal(), "I cannot speak the words with my mouth stopped.", "Wrong refusal for a gagged [spoken_type] spell")
+	TEST_ASSERT(!spell.Activate(caster), "A direct cast, as AI controllers make, went past the gag")
+
+	spell.invocation_type = INVOCATION_EMOTE
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "A gagged caster cannot cast an emote spell")
+	spell.invocation_type = INVOCATION_NONE
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "A gagged caster cannot cast a silent spell")
+
+	spell.invocation_type = INVOCATION_SHOUT
+	spell.spell_requirements |= SPELL_CASTABLE_WITHOUT_INVOCATION
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "A spell castable without invocation was blocked by the gag")
+	spell.spell_requirements &= ~SPELL_CASTABLE_WITHOUT_INVOCATION
+
+	spell.ignore_can_speak = TRUE
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "A spell that ignores speech was blocked by the gag")
+	spell.ignore_can_speak = FALSE
+
+	var/old_words = spell.invocation
+	spell.invocation = ""
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "A wordless spoken spell, like a song, was blocked by the gag")
+	spell.invocation = old_words
+
+	caster.dropItemToGround(gag, force = TRUE)
+	TEST_ASSERT(spell.can_invoke(feedback = FALSE), "Removing the gag did not restore casting")
+
+	caster.mouth_blocked = TRUE
+	TEST_ASSERT(!spell.can_invoke(feedback = FALSE), "A blocked mouth can say a shouted spell")
+	caster.mouth_blocked = FALSE
+	qdel(spell)

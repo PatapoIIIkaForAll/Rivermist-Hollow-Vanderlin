@@ -339,22 +339,22 @@
 /datum/sex_action/grind/partner/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	var/obj/item/clothing/cover = get_grind_crotch_cover(user)
 	if(cover)
-		user.visible_message(span_love(get_covered_climax_line(user, cover)))
+		user.visible_message(span_love_climax(get_covered_climax_line(user, cover)))
 		return ORGASM_LOCATION_CONTAINER
 	if(user != action_user)
 		// The one ground against climaxes; only a crotch pressed to theirs catches it.
 		if((spot == GRIND_SPOT_CROTCH && !from_behind) || spot == GRIND_SPOT_LAP)
-			user.visible_message(span_love("[user] shudders against [target]'s grinding hips!"))
+			user.visible_message(span_love_climax("[user] shudders against [target]'s grinding hips!"))
 			return ORGASM_LOCATION_ONTO
-		user.visible_message(span_love("[user] climaxes under [target]'s grinding!"))
+		user.visible_message(span_love_climax("[user] climaxes under [target]'s grinding!"))
 		return ORGASM_LOCATION_SELF
 	if(is_denied(user))
 		return null
 	var/spot_name = get_grind_spot_name(spot, target, from_behind)
 	if(get_real_organ(user, ORGAN_SLOT_PENIS) && !user.is_organ_slot_blocked(ORGAN_SLOT_PENIS))
-		user.visible_message(span_love("[user] shudders and spurts over [target]'s [spot_name]!"))
+		user.visible_message(span_love_climax("[user] shudders and spurts over [target]'s [spot_name]!"))
 	else
-		user.visible_message(span_love("[user] quivers against [target]'s [spot_name] and soaks it!"))
+		user.visible_message(span_love_climax("[user] quivers against [target]'s [spot_name] and soaks it!"))
 	return ORGASM_LOCATION_ONTO
 
 /// Horny NPCs grind on their target; the spot is picked among those in reach, mostly the crotch.
@@ -491,15 +491,15 @@
 /datum/sex_action/grind/thing/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	var/obj/item/clothing/cover = get_grind_crotch_cover(user)
 	if(cover)
-		user.visible_message(span_love(get_covered_climax_line(user, cover)))
+		user.visible_message(span_love_climax(get_covered_climax_line(user, cover)))
 		return ORGASM_LOCATION_CONTAINER
 	if(is_denied(user) || !grind_thing)
 		return null
 	var/spot = user.get_grind_thing_spot(grind_thing)
 	if(get_real_organ(user, ORGAN_SLOT_PENIS) && !user.is_organ_slot_blocked(ORGAN_SLOT_PENIS))
-		user.visible_message(span_love("[user] shudders and makes a mess of [spot]!"))
+		user.visible_message(span_love_climax("[user] shudders and makes a mess of [spot]!"))
 	else
-		user.visible_message(span_love("[user] shudders against [spot] and soaks it!"))
+		user.visible_message(span_love_climax("[user] shudders against [spot] and soaks it!"))
 	return (is_aim_garment(grind_thing) || is_aim_container(grind_thing)) ? ORGASM_LOCATION_CONTAINER : ORGASM_LOCATION_SELF
 
 // ---- Pillows ----
@@ -579,17 +579,17 @@
 /datum/sex_action/grind/pillow/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	var/obj/item/clothing/cover = get_grind_crotch_cover(user)
 	if(cover)
-		user.visible_message(span_love(get_covered_climax_line(user, cover)))
+		user.visible_message(span_love_climax(get_covered_climax_line(user, cover)))
 		return ORGASM_LOCATION_CONTAINER
 	if(is_denied(user) || !grind_thing)
 		return null
 	if(get_pillow_room(grind_thing) >= GRIND_PILLOW_MIN_ROOM)
 		if(user.body_position == LYING_DOWN)
-			user.visible_message(span_love("[user] squeezes \the [grind_thing] tight between [user.p_their()] thighs and shudders through [user.p_their()] climax!"))
+			user.visible_message(span_love_climax("[user] squeezes \the [grind_thing] tight between [user.p_their()] thighs and shudders through [user.p_their()] climax!"))
 		else
-			user.visible_message(span_love("[user] grinds down hard into \the [grind_thing] and shudders through [user.p_their()] climax!"))
+			user.visible_message(span_love_climax("[user] grinds down hard into \the [grind_thing] and shudders through [user.p_their()] climax!"))
 		return ORGASM_LOCATION_CONTAINER
-	user.visible_message(span_love("[user] shudders against \the [grind_thing], already soaked through!"))
+	user.visible_message(span_love_climax("[user] shudders against \the [grind_thing], already soaked through!"))
 	return ORGASM_LOCATION_SELF
 
 /// Pillows held in hand, else pillows on this mob's tile; null when there are none.
@@ -668,11 +668,11 @@
 /datum/sex_action/grind/seat/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	var/obj/item/clothing/cover = get_grind_crotch_cover(user)
 	if(cover)
-		user.visible_message(span_love(get_covered_climax_line(user, cover)))
+		user.visible_message(span_love_climax(get_covered_climax_line(user, cover)))
 		return ORGASM_LOCATION_CONTAINER
 	if(is_denied(user))
 		return null
-	user.visible_message(span_love("[user] shudders in [user.p_their()] seat, biting back a moan!"))
+	user.visible_message(span_love_climax("[user] shudders in [user.p_their()] seat, biting back a moan!"))
 	return ORGASM_LOCATION_SELF
 
 #undef GRIND_BARE_MULT

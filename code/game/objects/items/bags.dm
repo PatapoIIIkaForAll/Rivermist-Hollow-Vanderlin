@@ -7,6 +7,8 @@
 	icon = 'icons/roguetown/items/misc.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head_items.dmi'
 	slot_flags = ITEM_SLOT_HEAD
+	grid_width = 64
+	grid_height = 32
 	w_class = WEIGHT_CLASS_NORMAL
 	resistance_flags = NONE
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR
@@ -65,9 +67,13 @@
 	if(length(things))
 		icon_state = "fbag"
 		w_class = WEIGHT_CLASS_BULKY
+		grid_width = WEIGHT_CLASS_NORMAL * world.icon_size
+		grid_height = WEIGHT_CLASS_NORMAL * world.icon_size
 	else
 		icon_state = "cbag"
 		w_class = WEIGHT_CLASS_NORMAL
+		grid_width = 2 * world.icon_size
+		grid_height = world.icon_size
 
 /obj/item/storage/sack/getonmobprop(tag)
 	. = ..()

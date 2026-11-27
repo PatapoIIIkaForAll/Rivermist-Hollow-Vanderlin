@@ -2,6 +2,9 @@
 /datum/preference/toggle/speech_moans
 	savefile_key = "speech_moans"
 	savefile_identifier = PREF_CHARACTER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Moan while speaking"
+	toggles_menu_desc = "At high arousal your character moans instead of making speech sounds. Saved to the current character."
 	category = "character"
 	can_randomize = FALSE
 	should_update_preview = FALSE

@@ -2,6 +2,9 @@
 /datum/preference/toggle/descriptor_color
 	savefile_key = "descriptor_color"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Display"
+	toggles_menu_name = "Coloured body text"
+	toggles_menu_desc = "Genital examine text in pink that turns red with arousal; body hair text in the hair colour."
 	category = "chat"
 	can_randomize = FALSE
 	should_update_preview = FALSE

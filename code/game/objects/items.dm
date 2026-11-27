@@ -247,7 +247,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	var/mailer = null
 	var/mailedto = null
 
-	var/list/examine_effects = list()
+	var/list/examine_effects
 
 	var/list/blocksound //played when an item that is equipped blocks a hit
 
@@ -428,7 +428,8 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	recipe_quality = clamp(quality, 0, 4)
 	update_appearance(UPDATE_OVERLAYS)
 	if(recipe_quality >= 3) // gold tier and above
-		AddComponent(/datum/component/particle_spewer/sparkle)
+		var/datum/component/particle_spewer/sparkle/glint = AddComponent(/datum/component/particle_spewer/sparkle)
+		glint?.particle_plane = QUALITY_GLINT_PLANE
 	else
 		var/datum/component/particle_spewer = GetComponent(/datum/component/particle_spewer/sparkle)
 		qdel(particle_spewer)
@@ -573,6 +574,8 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 /obj/item/Initialize(mapload)
 	if (attack_verb)
 		attack_verb = typelist("attack_verb", attack_verb)
+	if(islist(swingsound))
+		swingsound = typelist("swingsound", swingsound)
 
 	if(experimental_inhand)
 		var/props2gen = list("gen")
@@ -622,6 +625,8 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 			hitsound = list('sound/blank.ogg')
 		if(damtype == "brute")
 			hitsound = list("swing_hit")
+	if(islist(hitsound))
+		hitsound = typelist("hitsound", hitsound)
 
 	if (!embedding)
 		embedding = getEmbeddingBehavior()
@@ -909,6 +914,9 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 		else
 			if(!do_after(user, 3 DECISECONDS, src))
 				return
+		// The item can be destroyed during the pickup delay.
+		if(QDELETED(src))
+			return
 
 	//If the item is in a storage item, take it out
 	var/outside_storage = !(item_flags & IN_STORAGE)

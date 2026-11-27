@@ -274,8 +274,8 @@ TEST_FOCUS(/datum/unit_test/pocket_dimension_sound_isolation)
 	fire_stump.update(FALSE)
 	SSlighting.fire(FALSE, TRUE)
 
-	TEST_ASSERT_NOTNULL(lit_turf.lighting_object, "Pocket lighting refresh should leave nearby turfs with lighting overlays.")
-	TEST_ASSERT(lit_turf.lighting_object.luminosity, "Static fixtures loaded from a pocket template should illuminate adjacent turfs.")
+	TEST_ASSERT_NOTNULL(lit_turf.lighting_look, "Pocket lighting refresh should leave nearby turfs with lighting overlays.")
+	TEST_ASSERT(lit_turf.lighting_look.luminosity, "Static fixtures loaded from a pocket template should illuminate adjacent turfs.")
 
 	TEST_ASSERT(SSpocket_dimensions.delete_instance(instance), "Static lighting test pocket should be deletable.")
 

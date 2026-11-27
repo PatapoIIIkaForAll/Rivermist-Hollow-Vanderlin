@@ -622,7 +622,7 @@
 /obj/item/oviposition_egg/examine(mob/user)
 	. = ..()
 	if(laced && !istype(loc, /obj/item/organ))
-		. += span_love("A heady, sweet scent clings to it.")
+		. += span_ovi("A heady, sweet scent clings to it.")
 
 /obj/item/oviposition_egg/proc/requires_fertilization()
 	var/datum/oviposition_egg_profile/profile = get_egg_profile()

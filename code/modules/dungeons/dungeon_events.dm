@@ -71,7 +71,7 @@
 		return
 	var/obj/structure/dungeon_trader/trader = new(spot)
 	trader.owning_run = owning_run
-	native_movables[trader] = TRUE
+	track_native_movable(trader)
 
 // -- Mystery events -----------------------------------------------------------
 
@@ -88,7 +88,7 @@
 		qdel(built)
 		return null
 	built.forceMove(spot)
-	room.native_movables[built] = TRUE
+	room.track_native_movable(built)
 	return built
 
 /datum/dungeon_mystery_event/fountain

@@ -35,6 +35,8 @@
 #define CHESS_OBSERVER_RESET_TIME (20 SECONDS)
 #define CHESS_PACK_BOARD_TIME (15 SECONDS)
 #define CHESS_FLIP_BOARD_TIME (7 SECONDS)
+/// Half-moves without a capture or pawn move before the game is drawn (the fifty-move rule).
+#define CHESS_FIFTY_MOVE_HALFMOVES 100
 
 /proc/chess_square_index(file, rank)
 	return (((rank - 1) << 3) + file)
@@ -59,7 +61,7 @@
 /proc/chess_localized_text(language, english_text, russian_text)
 	return sanitize_preferred_ui_language(language) == "ru" ? russian_text : english_text
 
-/proc/chess_side_name(color, language = "ru")
+/proc/chess_side_name(color, language = "en")
 	if(color == CHESS_WHITE)
 		return chess_localized_text(language, "White", "Белые")
 	if(color == CHESS_BLACK)
@@ -95,7 +97,7 @@
 			return ""
 	return "?"
 
-/proc/chess_display_name(mob/user, language = "ru")
+/proc/chess_display_name(mob/user, language = "en")
 	if(!user)
 		return chess_localized_text(language, "Unknown", "Неизвестно")
 	if(user.real_name)
@@ -117,10 +119,10 @@
 
 /obj/item/chessboard_folded
 	name = "folded chessboard"
-	desc = "Деревянная доска в клеточку, которая сложена пополам. Предназначена для игр по типу шахмат, шашек и нард. \
-	На внешней стороне играют в шахматы, шашки; на внутренней нарды. Неизвестно кем и когда были придуманы данные игры, однако точно можно сказать, что они имеют политическое и религиозное основание. \
-	Шахматы основаны на бесконечной битве света и тьмы, по альтернативной трактовке - Астрата против Нок. Шашки основаны на сражениях между Псайдоном и Зизо. \
-	Нарды основаны на разделениях королевских земель между дворянами."
+	desc = "A wooden checkered board, folded in half. The outer side is for chess and checkers, the inner side for backgammon. \
+	Nobody knows who invented these games or when, but every court on the Sword Coast tells its own story. \
+	Chess is the endless war of dawn against night, Lathander's light against the dark. Checkers is the old feud of Moradin's dwarves and the drow of Lolth. \
+	Backgammon is the scheming nobles dividing the lands among themselves."
 	w_class = WEIGHT_CLASS_NORMAL
 	icon = 'modular_rmh/icons/chess/chess.dmi'
 	icon_state = "chessboard_folded"
@@ -134,15 +136,15 @@
 	if(!target_turf)
 		return
 	new /obj/structure/chessboard(target_turf)
-	user.visible_message(span_notice("[user] раскладывает шахматную доску."), span_notice("Вы раскладываете шахматную доску."))
+	user.visible_message(span_notice("[user] unfolds the chessboard."), span_notice("I unfold the chessboard."))
 	qdel(src)
 
 /obj/structure/chessboard
 	name = "chessboard"
-	desc = "Деревянная доска в клеточку, которая разложена. Предназначена для игр по типу шахмат, шашек и нард. \
-	На внешней стороне играют в шахматы, шашки; на внутренней нарды. Неизвестно кем и когда были придуманы данные игры, однако точно можно сказать, что они имеют политическое и религиозное основание. \
-	Шахматы основаны на бесконечной битве света и тьмы, по альтернативной трактовке - Астрата против Нок. Шашки основаны на сражениях между Псайдоном и Зизо. \
-	Нарды основаны на разделениях королевских земель между дворянами."
+	desc = "A wooden checkered board, laid open for play. The outer side is for chess and checkers, the inner side for backgammon. \
+	Nobody knows who invented these games or when, but every court on the Sword Coast tells its own story. \
+	Chess is the endless war of dawn against night, Lathander's light against the dark. Checkers is the old feud of Moradin's dwarves and the drow of Lolth. \
+	Backgammon is the scheming nobles dividing the lands among themselves."
 	anchored = TRUE
 	density = FALSE
 	layer = OBJ_LAYER
@@ -206,8 +208,9 @@
 	var/ui_language = get_preferred_ui_language(user)
 	var/list/data = list()
 	var/my_side = match.side_for_user(user)
+	var/active_side = match.acting_side_for_user(user)
 	var/selected = get_selection(user)
-	if(!selected && my_side && my_side == match.turn && match.game_mode == BOARD_MODE_CHECKERS && match.forced_capture_from)
+	if(!selected && active_side && active_side == match.turn && match.game_mode == BOARD_MODE_CHECKERS && match.forced_capture_from)
 		selected = match.forced_capture_from
 
 	data["board_title"] = chess_localized_text(ui_language, "Game board", "Игровая доска")
@@ -217,6 +220,7 @@
 	data["black_player_seated"] = !!match.black_player_name
 	data["my_side"] = my_side ? chess_side_name(my_side, ui_language) : chess_localized_text(ui_language, "Observer", "Наблюдатель")
 	data["my_side_key"] = my_side
+	data["active_side_key"] = active_side
 	data["turn"] = chess_side_name(match.turn, ui_language)
 	data["turn_key"] = match.turn
 	data["paused"] = match.paused
@@ -265,7 +269,7 @@
 			var/color = params["color"]
 			if(match.claim_side(color, user))
 				clear_all_selections()
-				set_last_ui_message("[chess_display_name_en(user)] takes the [chess_side_name_en(color)] seat.", "[chess_display_name(user)] занимает место [chess_side_name(color)].")
+				set_last_ui_message("[chess_display_name_en(user)] takes the [chess_side_name_en(color)] seat.", "[chess_display_name(user, "ru")] занимает место [chess_side_name(color, "ru")].")
 				queue_ui_update()
 				return TRUE
 			return FALSE
@@ -275,7 +279,7 @@
 			var/release_color = params["color"]
 			if(match.release_side(release_color, user))
 				clear_all_selections()
-				set_last_ui_message("[chess_display_name_en(user)] releases the [chess_side_name_en(release_color)] seat.", "[chess_display_name(user)] освобождает место [chess_side_name(release_color)].")
+				set_last_ui_message("[chess_display_name_en(user)] releases the [chess_side_name_en(release_color)] seat.", "[chess_display_name(user, "ru")] освобождает место [chess_side_name(release_color, "ru")].")
 				queue_ui_update()
 				return TRUE
 			return FALSE
@@ -329,7 +333,7 @@
 					set_last_ui_message(match.get_mode_switch_text("en"), match.get_mode_switch_text("ru"))
 				else
 					var/switch_mode_label_en = match.get_game_mode_label("en")
-					set_last_ui_message("Mode switched to [switch_mode_label_en].", "Режим переключён на [match.get_game_mode_label()].")
+					set_last_ui_message("Mode switched to [switch_mode_label_en].", "Режим переключён на [match.get_game_mode_label("ru")].")
 				queue_ui_update()
 				return TRUE
 			return FALSE
@@ -339,7 +343,7 @@
 			if(match.confirm_mode_switch(user))
 				clear_all_selections()
 				var/confirmed_mode_label_en = match.get_game_mode_label("en")
-				set_last_ui_message("Mode switched to [confirmed_mode_label_en].", "Режим переключён на [match.get_game_mode_label()].")
+				set_last_ui_message("Mode switched to [confirmed_mode_label_en].", "Режим переключён на [match.get_game_mode_label("ru")].")
 				queue_ui_update()
 				return TRUE
 			return FALSE
@@ -355,18 +359,18 @@
 		if("pack_board")
 			play_notify_sound()
 			if(!match.can_pack_up())
-				to_chat(user, span_warning("Собрать доску можно только когда активная партия не идёт."))
+				to_chat(user, span_warning("I can only pack up the board when no game is in progress."))
 				return FALSE
-			notify_seated_players("[chess_display_name(user)] собирает доску.", user.ckey)
-			user.visible_message(span_notice("[user] начинает собирать доску."), span_notice("Вы начинаете собирать доску."))
+			notify_seated_players("[chess_display_name(user)] is packing up the board.", user.ckey)
+			user.visible_message(span_notice("[user] starts packing up the board."), span_notice("I start packing up the board."))
 			if(!do_after(user, CHESS_PACK_BOARD_TIME, target = src))
-				to_chat(user, span_warning("Вы перестали собирать доску."))
+				to_chat(user, span_warning("I stop packing up the board."))
 				return FALSE
 			if(QDELETED(src) || !match || !match.can_pack_up())
 				return FALSE
 			playsound(src, CHESS_SOUND_PICKUP, 70, FALSE)
 			new /obj/item/chessboard_folded(get_turf(src))
-			user.visible_message(span_notice("[user] собирает доску в походное положение."), span_notice("Вы собираете доску в походное положение."))
+			user.visible_message(span_notice("[user] folds the board up for carrying."), span_notice("I fold the board up for carrying."))
 			qdel(src)
 			return TRUE
 
@@ -446,7 +450,7 @@
 	rotation_degrees = (rotation_degrees + 90) % 360
 	update_board_art()
 	if(user)
-		to_chat(user, span_notice("Вы поворачиваете доску."))
+		to_chat(user, span_notice("I turn the board."))
 
 /obj/structure/chessboard/proc/update_board_transform()
 	transform = turn(matrix(), rotation_degrees)
@@ -492,10 +496,8 @@
 /obj/structure/chessboard/proc/find_mob_by_ckey(ckey)
 	if(!ckey)
 		return null
-	for(var/client/C)
-		if(C.ckey == ckey)
-			return C.mob
-	return null
+	var/client/target_client = GLOB.directory[ckey]
+	return target_client?.mob
 
 /obj/structure/chessboard/proc/notify_seated_players(message, exclude_ckey = null)
 	if(!message || !match)
@@ -516,7 +518,7 @@
 	if(user_side)
 		if(match.should_require_player_reset_confirmation(src, user))
 			if(match.request_reset_confirmation(user))
-				notify_seated_players("[chess_display_name(user)] просит сбросить доску. Нужна вторая подтверждающая сторона.", user.ckey)
+				notify_seated_players("[chess_display_name(user)] asks to reset the board. The other player has to confirm it.", user.ckey)
 				set_last_ui_message(match.get_reset_request_text("en"), match.get_reset_request_text("ru"))
 				return TRUE
 			return FALSE
@@ -528,7 +530,7 @@
 		return FALSE
 
 	if(match.begin_observer_reset(user))
-		notify_seated_players("[chess_display_name(user)] запрашивает сброс доски. Через 20 секунд партия и места игроков будут сброшены, если запрос не отменят.", user.ckey)
+		notify_seated_players("[chess_display_name(user)] wants the board reset. In [CHESS_OBSERVER_RESET_TIME / (1 SECONDS)] seconds the game and both seats will be cleared unless someone cancels.", user.ckey)
 		set_last_ui_message(match.get_reset_request_text("en"), match.get_reset_request_text("ru"))
 		return TRUE
 	return FALSE
@@ -549,12 +551,12 @@
 
 /obj/structure/chessboard/proc/handle_flip_board(mob/user)
 	if(!match.can_flip_board())
-		to_chat(user, span_warning("Сейчас доску нельзя опрокинуть."))
+		to_chat(user, span_warning("I can't flip the board right now."))
 		return FALSE
-	notify_seated_players("[chess_display_name(user)] собирается опрокинуть доску.", user.ckey)
-	user.visible_message(span_warning("[user] хватается за доску, собираясь её опрокинуть."), span_warning("Вы хватаетесь за доску."))
+	notify_seated_players("[chess_display_name(user)] is about to flip the board!", user.ckey)
+	user.visible_message(span_warning("[user] grabs the edge of the board, ready to flip it."), span_warning("I grab the edge of the board."))
 	if(!do_after(user, CHESS_FLIP_BOARD_TIME, target = src))
-		to_chat(user, span_warning("Вы передумали опрокидывать доску."))
+		to_chat(user, span_warning("I decide not to flip the board."))
 		return FALSE
 	if(QDELETED(src) || !match || !match.can_flip_board())
 		return FALSE
@@ -595,7 +597,7 @@
 		selected = get_selection(user)
 
 	var/list/legal_targets = list()
-	var/my_side = match.side_for_user(user)
+	var/my_side = match.acting_side_for_user(user)
 	if(selected && my_side && my_side == match.turn && !match.paused && !match.result_text)
 		legal_targets = match.get_legal_targets(selected)
 
@@ -656,7 +658,7 @@
 		"selected_point" = match.nards_selected_point,
 		"selected_bar" = match.nards_selected_from_bar,
 		"legal_targets" = match.get_nards_legal_targets_for_user(user),
-		"can_select_bar" = match.nards_bar_count(match.side_for_user(user)) > 0,
+		"can_select_bar" = match.nards_bar_count(match.acting_side_for_user(user)) > 0,
 		"available_rolls" = match.nards_available_rolls ? match.nards_available_rolls.Copy() : list(),
 		"is_long_rules" = match.nards_long_rules,
 		"overturned" = match.overturned,
@@ -668,21 +670,21 @@
 	if(square < 1 || square > 64)
 		return FALSE
 	if(match.paused)
-		to_chat(user, span_warning("Партия стоит на паузе."))
+		to_chat(user, span_warning("The game is paused."))
 		return FALSE
 	if(match.overturned)
-		to_chat(user, span_warning("Доска опрокинута. Сначала сбросьте её."))
+		to_chat(user, span_warning("The board is overturned. It has to be reset first."))
 		return FALSE
 	if(match.result_text)
-		to_chat(user, span_warning("Партия уже завершена."))
+		to_chat(user, span_warning("The game is already over."))
 		return FALSE
 
-	var/color = match.side_for_user(user)
+	var/color = match.acting_side_for_user(user)
 	if(!color)
-		to_chat(user, span_warning("Вы не сидите за этой доской."))
+		to_chat(user, span_warning("I'm not seated at this board."))
 		return FALSE
 	if(color != match.turn)
-		to_chat(user, span_warning("Сейчас не ваш ход."))
+		to_chat(user, span_warning("It's not my turn."))
 		return FALSE
 
 	var/selected = get_selection(user)
@@ -693,7 +695,7 @@
 			if(match.can_select_piece(square, color))
 				set_selection(user, square)
 			else
-				to_chat(user, span_warning("Сейчас можно ходить только другой фигурой."))
+				to_chat(user, span_warning("I have to keep capturing with the same checker."))
 			return TRUE
 		return FALSE
 
@@ -705,7 +707,7 @@
 		if(match.can_select_piece(square, color))
 			set_selection(user, square)
 		else
-			to_chat(user, span_warning("Сейчас можно ходить только другой фигурой."))
+			to_chat(user, span_warning("I have to keep capturing with the same checker."))
 		return TRUE
 
 	return FALSE
@@ -713,10 +715,12 @@
 /obj/structure/chessboard/proc/handle_piece_move(mob/user, from_idx, to_idx, promotion_choice)
 	if(from_idx < 1 || from_idx > 64 || to_idx < 1 || to_idx > 64)
 		return FALSE
+	if(match.acting_side_for_user(user) != match.turn)
+		return FALSE
 
 	if(match.try_move(from_idx, to_idx, user, promotion_choice))
 		clear_all_selections()
-		if(match.game_mode == BOARD_MODE_CHECKERS && match.forced_capture_from && match.turn == match.side_for_user(user))
+		if(match.game_mode == BOARD_MODE_CHECKERS && match.forced_capture_from && match.turn == match.acting_side_for_user(user))
 			set_selection(user, match.forced_capture_from)
 		set_last_ui_message_from_match()
 		return TRUE
@@ -726,8 +730,7 @@
 	if(!ckey || !sound_file)
 		return
 	var/mob/target_mob = find_mob_by_ckey(ckey)
-	if(target_mob)
-		playsound(target_mob, sound_file, volume, FALSE)
+	target_mob?.playsound_local(get_turf(target_mob), sound_file, volume, FALSE)
 
 /obj/structure/chessboard/proc/play_sound_for_active_viewers(sound_file, volume = 60, list/exclude_ckeys = null)
 	if(!sound_file || !active_ui_ckeys)
@@ -752,6 +755,7 @@
 		exclude += loser_ckey
 	if(winner_ckey)
 		play_sound_for_ckey(winner_ckey, CHESS_SOUND_WIN, 65)
+		exclude += winner_ckey
 	play_sound_for_active_viewers(CHESS_SOUND_WIN, 65, exclude)
 
 /obj/structure/chessboard/proc/play_check_alert()
@@ -804,6 +808,8 @@
 	var/pending_observer_reset_ckey = null
 	var/pending_observer_reset_name = null
 	var/pending_observer_reset_at = 0
+	/// Timer that resets the board when an observer's reset request is not cancelled.
+	var/observer_reset_timer
 	var/overturned = FALSE
 	var/list/overturn_poses = list()
 	var/list/overturn_offset_x = list()
@@ -832,11 +838,16 @@
 	reset_position()
 	return ..()
 
+/datum/chess_match/Destroy(force)
+	clear_reset_requests()
+	owner = null
+	return ..()
+
 /datum/chess_match/proc/set_result_text(english_text, russian_text)
 	result_text_en = english_text
 	result_text = russian_text
 
-/datum/chess_match/proc/get_result_text(language = "ru")
+/datum/chess_match/proc/get_result_text(language = "en")
 	if(language == "ru")
 		return result_text
 	return result_text_en ? result_text_en : result_text
@@ -845,7 +856,7 @@
 	last_action_message_en = english_text
 	last_action_message = russian_text
 
-/datum/chess_match/proc/get_mode_label(mode, language = "ru")
+/datum/chess_match/proc/get_mode_label(mode, language = "en")
 	if(mode == BOARD_MODE_NONE)
 		return chess_localized_text(language, "Not selected", "Не выбран")
 	if(mode == BOARD_MODE_CHESS)
@@ -856,7 +867,7 @@
 		return chess_localized_text(language, "Backgammon", "Нарды")
 	return chess_localized_text(language, "Unknown", "Неизвестно")
 
-/datum/chess_match/proc/get_mode_label_with_rules(mode, use_checkers_flying_kings = checkers_flying_kings, use_nards_long_rules = nards_long_rules, language = "ru")
+/datum/chess_match/proc/get_mode_label_with_rules(mode, use_checkers_flying_kings = checkers_flying_kings, use_nards_long_rules = nards_long_rules, language = "en")
 	if(mode == BOARD_MODE_CHECKERS)
 		if(language == "ru")
 			return use_checkers_flying_kings ? "Шашки (дальняя дамка)" : "Шашки (обычная дамка)"
@@ -867,10 +878,10 @@
 		return use_nards_long_rules ? "Backgammon (long)" : "Backgammon (short)"
 	return get_mode_label(mode, language)
 
-/datum/chess_match/proc/get_game_mode_label(language = "ru")
+/datum/chess_match/proc/get_game_mode_label(language = "en")
 	return get_mode_label_with_rules(game_mode, checkers_flying_kings, nards_long_rules, language)
 
-/datum/chess_match/proc/get_current_rules_text(language = "ru")
+/datum/chess_match/proc/get_current_rules_text(language = "en")
 	if(game_mode == BOARD_MODE_CHECKERS)
 		if(language == "ru")
 			return checkers_flying_kings ? "Дамка ходит по всей диагонали." : "Дамка ходит только на одну клетку."
@@ -890,7 +901,7 @@
 		return BOARD_MODE_NARDS
 	return BOARD_MODE_CHESS
 
-/datum/chess_match/proc/get_mode_options(language = "ru")
+/datum/chess_match/proc/get_mode_options(language = "en")
 	return list(
 		list("key" = BOARD_MODE_CHESS, "label" = get_mode_label(BOARD_MODE_CHESS, language)),
 		list("key" = BOARD_MODE_CHECKERS, "label" = get_mode_label(BOARD_MODE_CHECKERS, language)),
@@ -910,8 +921,11 @@
 	pending_observer_reset_ckey = null
 	pending_observer_reset_name = null
 	pending_observer_reset_at = 0
+	if(observer_reset_timer)
+		deltimer(observer_reset_timer)
+		observer_reset_timer = null
 
-/datum/chess_match/proc/get_reset_request_text(language = "ru")
+/datum/chess_match/proc/get_reset_request_text(language = "en")
 	if(pending_reset_requester_ckey)
 		var/requester = pending_reset_requester_name ? pending_reset_requester_name : chess_localized_text(language, "One of the players", "Один из игроков")
 		if(language == "ru")
@@ -957,7 +971,7 @@
 		return FALSE
 	if(pending_reset_requester_ckey)
 		if(pending_reset_requester_ckey == user.ckey)
-			to_chat(user, span_warning("Запрос на сброс уже отправлен."))
+			to_chat(user, span_warning("I already asked for a reset."))
 		return FALSE
 	clear_reset_requests()
 	pending_reset_requester_ckey = user.ckey
@@ -984,27 +998,25 @@
 	if(side_for_user(user))
 		return FALSE
 	if(pending_reset_requester_ckey || (pending_observer_reset_ckey && pending_observer_reset_at > world.time))
-		to_chat(user, span_warning("Сброс уже запрошен."))
+		to_chat(user, span_warning("Someone has already asked for a reset."))
 		return FALSE
 	pending_observer_reset_ckey = user.ckey
 	pending_observer_reset_name = chess_display_name(user)
 	pending_observer_reset_at = world.time + CHESS_OBSERVER_RESET_TIME
 	set_last_action_message(get_reset_request_text("en"), get_reset_request_text("ru"))
-	spawn(CHESS_OBSERVER_RESET_TIME)
-		if(QDELETED(src) || !owner)
-			return
-		if(!pending_observer_reset_ckey || pending_observer_reset_ckey != user.ckey)
-			return
-		if(world.time < pending_observer_reset_at)
-			return
-		var/requester_name = pending_observer_reset_name
-		reset_game(null)
-		owner.clear_all_selections()
-		owner.set_last_ui_message("Observer [requester_name] resets the board. The game and both seats are cleared.", "Наблюдатель [requester_name] сбрасывает доску. Партия и места игроков очищены.")
-		playsound(owner, CHESS_SOUND_RESET, 70, FALSE)
-		clear_reset_requests()
-		owner.queue_ui_update()
+	observer_reset_timer = addtimer(CALLBACK(src, PROC_REF(finish_observer_reset), user.ckey), CHESS_OBSERVER_RESET_TIME, TIMER_STOPPABLE)
 	return TRUE
+
+/datum/chess_match/proc/finish_observer_reset(requester_ckey)
+	observer_reset_timer = null
+	if(!owner || pending_observer_reset_ckey != requester_ckey)
+		return
+	var/requester_name = pending_observer_reset_name
+	reset_game(null)
+	owner.clear_all_selections()
+	owner.set_last_ui_message("Observer [requester_name] resets the board. The game and both seats are cleared.", "Наблюдатель [requester_name] сбрасывает доску. Партия и места игроков очищены.")
+	playsound(owner, CHESS_SOUND_RESET, 70, FALSE)
+	owner.queue_ui_update()
 
 /datum/chess_match/proc/get_display_pose(index)
 	if(!overturned || !overturn_poses)
@@ -1056,7 +1068,7 @@
 
 /datum/chess_match/proc/overturn_board(mob/user)
 	if(overturned)
-		to_chat(user, span_warning("Доска уже опрокинута."))
+		to_chat(user, span_warning("The board is already overturned."))
 		return FALSE
 
 	if(game_mode == BOARD_MODE_NARDS)
@@ -1103,9 +1115,9 @@
 	clear_reset_requests()
 	last_from = 0
 	last_to = 0
-	set_last_action_message("[chess_display_name_en(user)] flips the board. Pieces scatter across it.", "[chess_display_name(user)] опрокидывает доску. Фигуры разлетаются по всей доске.")
+	set_last_action_message("[chess_display_name_en(user)] flips the board. Pieces scatter across it.", "[chess_display_name(user, "ru")] опрокидывает доску. Фигуры разлетаются по всей доске.")
 	if(owner)
-		owner.visible_message(span_warning("[user] опрокидывает доску! Фигуры разлетаются по всей доске."), span_warning("Вы опрокидываете доску! Фигуры разлетаются по всей доске."))
+		owner.visible_message(span_warning("[user] flips the board! The pieces scatter everywhere."), span_warning("I flip the board! The pieces scatter everywhere."))
 	return TRUE
 
 /datum/chess_match/proc/build_nards_scatter()
@@ -1163,7 +1175,7 @@
 		return list()
 	return nards_scatter_dice.Copy()
 
-/datum/chess_match/proc/get_mode_switch_text(language = "ru")
+/datum/chess_match/proc/get_mode_switch_text(language = "en")
 	if(!pending_mode)
 		return null
 	var/requester = pending_mode_requester_name ? pending_mode_requester_name : chess_localized_text(language, "One of the players", "Один из игроков")
@@ -1199,29 +1211,33 @@
 
 /datum/chess_match/proc/request_mode_switch(target_mode, mob/user, requested_checkers_flying_kings = checkers_flying_kings, requested_nards_long_rules = nards_long_rules)
 	if(overturned)
-		to_chat(user, span_warning("Сначала сбросьте доску после опрокидывания."))
+		to_chat(user, span_warning("The overturned board has to be reset first."))
 		return FALSE
 	if(target_mode != BOARD_MODE_CHESS && target_mode != BOARD_MODE_CHECKERS && target_mode != BOARD_MODE_NARDS)
 		return FALSE
 	requested_checkers_flying_kings = !!requested_checkers_flying_kings
 	requested_nards_long_rules = !!requested_nards_long_rules
 	if(target_mode == game_mode && requested_checkers_flying_kings == checkers_flying_kings && requested_nards_long_rules == nards_long_rules)
-		to_chat(user, span_warning("Этот режим и эти правила уже выбраны."))
+		to_chat(user, span_warning("That game and those rules are already set."))
 		return FALSE
 
 	if(active_game_in_progress())
 		if(!paused)
-			to_chat(user, span_warning("Сначала поставьте текущую партию на паузу."))
+			to_chat(user, span_warning("The current game has to be paused first."))
 			return FALSE
+		if(is_solo_game() && side_for_user(user))
+			switch_game_mode(target_mode, requested_checkers_flying_kings, requested_nards_long_rules)
+			set_last_action_message("Mode switched to [get_game_mode_label("en")].", "Режим переключён на [get_game_mode_label("ru")].")
+			return TRUE
 		if(!white_player_ckey || !black_player_ckey)
-			to_chat(user, span_warning("Для смены режима во время партии оба места должны быть заняты."))
+			to_chat(user, span_warning("Both seats have to be taken to change the game mid-match."))
 			return FALSE
 		if(!side_for_user(user))
-			to_chat(user, span_warning("Только игроки за доской могут согласовать смену режима."))
+			to_chat(user, span_warning("Only the seated players can agree to change the game."))
 			return FALSE
 		if(pending_mode == target_mode && pending_checkers_flying_kings == requested_checkers_flying_kings && pending_nards_long_rules == requested_nards_long_rules)
 			if(pending_mode_requester_ckey == user.ckey)
-				to_chat(user, span_warning("Запрос на смену режима уже отправлен."))
+				to_chat(user, span_warning("I already proposed changing the game."))
 				return FALSE
 			return confirm_mode_switch(user)
 
@@ -1235,7 +1251,7 @@
 
 	switch_game_mode(target_mode, requested_checkers_flying_kings, requested_nards_long_rules)
 	var/mode_label_en = get_game_mode_label("en")
-	set_last_action_message("Mode switched to [mode_label_en].", "Режим переключён на [get_game_mode_label()].")
+	set_last_action_message("Mode switched to [mode_label_en].", "Режим переключён на [get_game_mode_label("ru")].")
 	return TRUE
 
 /datum/chess_match/proc/confirm_mode_switch(mob/user)
@@ -1243,7 +1259,7 @@
 		return FALSE
 	switch_game_mode(pending_mode, pending_checkers_flying_kings, pending_nards_long_rules)
 	var/confirmed_label_en = get_game_mode_label("en")
-	set_last_action_message("Mode switched to [confirmed_label_en].", "Режим переключён на [get_game_mode_label()].")
+	set_last_action_message("Mode switched to [confirmed_label_en].", "Режим переключён на [get_game_mode_label("ru")].")
 	return TRUE
 
 /datum/chess_match/proc/cancel_mode_switch(mob/user)
@@ -1416,6 +1432,17 @@
 		return CHESS_BLACK
 	return CHESS_WHITE
 
+/// TRUE when exactly one seat is taken; that player then moves for both sides.
+/datum/chess_match/proc/is_solo_game()
+	return !!white_player_ckey != !!black_player_ckey
+
+/// The side a user moves for: their own seat, or the side to move when they sit alone at the board.
+/datum/chess_match/proc/acting_side_for_user(mob/user)
+	var/side = side_for_user(user)
+	if(side && is_solo_game())
+		return turn
+	return side
+
 /datum/chess_match/proc/side_for_user(mob/user)
 	if(!user || !user.ckey)
 		return null
@@ -1431,13 +1458,17 @@
 	if(color != CHESS_WHITE && color != CHESS_BLACK)
 		return FALSE
 	if(!paused && move_history.len)
-		to_chat(user, span_warning("Сначала поставьте партию на паузу, чтобы поменяться местами."))
+		to_chat(user, span_warning("The game has to be paused before anyone changes seats."))
 		return FALSE
 	if(color == CHESS_WHITE && black_player_ckey == user.ckey)
-		to_chat(user, span_warning("Нельзя занять сразу оба места за доской."))
+		to_chat(user, span_warning("I can't take both seats at once."))
 		return FALSE
 	if(color == CHESS_BLACK && white_player_ckey == user.ckey)
-		to_chat(user, span_warning("Нельзя занять сразу оба места за доской."))
+		to_chat(user, span_warning("I can't take both seats at once."))
+		return FALSE
+	var/seated_ckey = (color == CHESS_WHITE) ? white_player_ckey : black_player_ckey
+	if(seated_ckey && seated_ckey != user.ckey)
+		to_chat(user, span_warning("That seat is already taken."))
 		return FALSE
 
 	var/display_name = chess_display_name(user)
@@ -1457,7 +1488,7 @@
 	if(color != CHESS_WHITE && color != CHESS_BLACK)
 		return FALSE
 	if(!paused && move_history.len)
-		to_chat(user, span_warning("Сначала поставьте партию на паузу, чтобы сменить игроков."))
+		to_chat(user, span_warning("The game has to be paused before anyone leaves a seat."))
 		return FALSE
 
 	if(color == CHESS_WHITE)
@@ -1478,10 +1509,10 @@
 
 /datum/chess_match/proc/resume_game(mob/user)
 	if(result_text)
-		to_chat(user, span_warning("Партия уже завершена. Сначала сбросьте доску."))
+		to_chat(user, span_warning("The game is over. The board has to be reset first."))
 		return FALSE
-	if(!white_player_ckey || !black_player_ckey)
-		to_chat(user, span_warning("Перед продолжением оба места должны быть заняты."))
+	if(!white_player_ckey && !black_player_ckey)
+		to_chat(user, span_warning("Someone has to sit at the board first."))
 		return FALSE
 	paused = FALSE
 	return TRUE
@@ -1503,7 +1534,7 @@
 		return FALSE
 	if(result_text || overturned)
 		return FALSE
-	if(!white_player_ckey || !black_player_ckey)
+	if(!white_player_ckey && !black_player_ckey)
 		return FALSE
 	return paused
 
@@ -1517,9 +1548,9 @@
 		return FALSE
 	return TRUE
 
-/datum/chess_match/proc/get_status_text(language = "ru")
+/datum/chess_match/proc/get_status_text(language = "en")
 	var/list/parts = list()
-	parts += chess_localized_text(language, "Mode: [get_game_mode_label(language)].", "Режим: [get_game_mode_label()].")
+	parts += chess_localized_text(language, "Mode: [get_game_mode_label(language)].", "Режим: [get_game_mode_label("ru")].")
 	var/current_rules_text = get_current_rules_text(language)
 	if(current_rules_text)
 		parts += "[current_rules_text]"
@@ -1539,14 +1570,16 @@
 	if(paused)
 		parts += chess_localized_text(language, "The game is paused.", "Партия на паузе.")
 	else
-		parts += chess_localized_text(language, "[chess_side_name_en(turn)] to move.", "Ходят [chess_side_name(turn)].")
+		parts += chess_localized_text(language, "[chess_side_name_en(turn)] to move.", "Ходят [chess_side_name(turn, "ru")].")
+		if(is_solo_game())
+			parts += chess_localized_text(language, "One player moves for both sides.", "Один игрок ходит за обе стороны.")
 
 	if(game_mode == BOARD_MODE_CHESS)
 		if(!result_text && !paused && is_in_check(turn))
 			parts += chess_localized_text(language, "Check.", "Шах.")
 	else if(game_mode == BOARD_MODE_CHECKERS)
 		if(!result_text && !paused && forced_capture_from)
-			parts += chess_localized_text(language, "[chess_side_name_en(turn)] must continue capturing from [chess_square_name(forced_capture_from)].", "[chess_side_name(turn)] продолжают рубку с [chess_square_name(forced_capture_from)].")
+			parts += chess_localized_text(language, "[chess_side_name_en(turn)] must continue capturing from [chess_square_name(forced_capture_from)].", "[chess_side_name(turn, "ru")] продолжают рубку с [chess_square_name(forced_capture_from)].")
 	else if(game_mode == BOARD_MODE_NARDS)
 		if(nards_available_rolls && nards_available_rolls.len)
 			var/available_rolls_text = jointext(nards_available_rolls, ", ")
@@ -1598,12 +1631,12 @@
 
 /datum/chess_match/proc/try_chess_move(from_idx, to_idx, mob/user, promotion_choice)
 	if(overturned)
-		to_chat(user, span_warning("Доска опрокинута. Сначала сбросьте её."))
+		to_chat(user, span_warning("The board is overturned. It has to be reset first."))
 		return FALSE
 	if(paused || result_text)
 		return FALSE
 	if(!is_chess_legal_move(from_idx, to_idx, promotion_choice))
-		to_chat(user, span_warning("Этот ход недопустим."))
+		to_chat(user, span_warning("That move isn't allowed."))
 		return FALSE
 
 	var/list/move_info = apply_chess_move(from_idx, to_idx, promotion_choice)
@@ -1626,36 +1659,62 @@
 	var/enemy = turn
 	var/gives_check = is_in_check(enemy)
 	var/no_moves = !has_any_chess_legal_move(enemy)
+	var/checkmate = no_moves && gives_check
 
-	if(no_moves)
-		if(gives_check)
-			set_result_text("Checkmate. [chess_side_name_en(opposite(enemy))] win.", "Мат. Побеждают [chess_side_name(opposite(enemy))].")
-		else
-			set_result_text("Draw by stalemate.", "Ничья патом.")
-			paused = TRUE
-
+	if(checkmate)
+		set_result_text("Checkmate. [chess_side_name_en(opposite(enemy))] wins.", "Мат. Побеждают [chess_side_name(opposite(enemy), "ru")].")
+	else if(no_moves)
+		set_result_text("Draw by stalemate.", "Ничья патом.")
 
 	if(!result_text)
 		var/key = position_key()
 		var/current_count = chess_assoc_get(repetition_counts, key, 0)
 		if(current_count >= 3)
 			set_result_text("Draw by threefold repetition.", "Ничья по троекратному повторению.")
-			paused = TRUE
+
+	if(!result_text && halfmove_clock >= CHESS_FIFTY_MOVE_HALFMOVES)
+		set_result_text("Draw by the fifty-move rule.", "Ничья по правилу пятидесяти ходов.")
+
+	if(!result_text && has_insufficient_material())
+		set_result_text("Draw. Neither side has enough pieces left to checkmate.", "Ничья. Ни у одной стороны не хватает фигур для мата.")
 
 	var/notation = move_info["notation"]
-	if(gives_check)
-		if(result_text && findtext(result_text, "Мат"))
-			notation += "#"
-		else
-			notation += "+"
+	if(checkmate)
+		notation += "#"
+	else if(gives_check)
+		notation += "+"
 	move_history += notation
 
 	if(result_text)
 		paused = TRUE
-		if(findtext(result_text, "Мат"))
+		if(checkmate)
 			owner.play_win_loss_sounds(opposite(enemy))
 	else if(gives_check)
 		owner.play_check_alert()
+
+/// TRUE when no sequence of legal moves can end in checkmate: king against king, a lone minor piece, or bishops all on one square colour.
+/datum/chess_match/proc/has_insufficient_material()
+	var/minor_pieces = 0
+	var/has_knight = FALSE
+	var/list/bishop_square_colors = list()
+	for(var/i = 1, i <= 64, i++)
+		var/piece = board[i]
+		if(!piece)
+			continue
+		switch(chess_piece_type(piece))
+			if(CHESS_KING)
+				continue
+			if(CHESS_KNIGHT)
+				has_knight = TRUE
+				minor_pieces++
+			if(CHESS_BISHOP)
+				bishop_square_colors |= ((chess_square_file(i) + chess_square_rank(i)) % 2)
+				minor_pieces++
+			else
+				return FALSE
+	if(minor_pieces <= 1)
+		return TRUE
+	return !has_knight && length(bishop_square_colors) == 1
 
 /datum/chess_match/proc/register_position()
 	if(game_mode != BOARD_MODE_CHESS)
@@ -1949,6 +2008,8 @@
 	var/from_rank = chess_square_rank(from_idx)
 	var/to_file = chess_square_file(to_idx)
 	var/to_rank = chess_square_rank(to_idx)
+	// Read before the board changes; dry runs only test legality and need no notation.
+	var/disambiguation = dry_run ? "" : get_move_disambiguation(from_idx, to_idx)
 
 	var/old_en_passant = en_passant_square
 	en_passant_square = 0
@@ -2018,7 +2079,7 @@
 	else
 		halfmove_clock++
 
-	var/notation = build_move_notation(piece, from_idx, to_idx, was_capture, was_castle, was_kingside_castle, promoted_to)
+	var/notation = dry_run ? null : build_move_notation(piece, from_idx, to_idx, was_capture, was_castle, was_kingside_castle, promoted_to, disambiguation)
 	return list(
 		"piece" = piece,
 		"captured" = captured_piece,
@@ -2039,14 +2100,41 @@
 			return CHESS_KNIGHT
 	return CHESS_QUEEN
 
-/datum/chess_match/proc/build_move_notation(piece, from_idx, to_idx, was_capture, was_castle, was_kingside_castle, promoted_to)
+/// File, rank or square of the moving piece when another piece of the same kind could also legally reach to_idx ("Nbd2", "R1e2").
+/datum/chess_match/proc/get_move_disambiguation(from_idx, to_idx)
+	var/piece = board[from_idx]
+	var/piece_type = chess_piece_type(piece)
+	if(piece_type == CHESS_PAWN || piece_type == CHESS_KING)
+		return ""
+	var/ambiguous = FALSE
+	var/shares_file = FALSE
+	var/shares_rank = FALSE
+	for(var/other_idx = 1, other_idx <= 64, other_idx++)
+		if(other_idx == from_idx || board[other_idx] != piece)
+			continue
+		if(!is_chess_legal_move(other_idx, to_idx, null))
+			continue
+		ambiguous = TRUE
+		if(chess_square_file(other_idx) == chess_square_file(from_idx))
+			shares_file = TRUE
+		if(chess_square_rank(other_idx) == chess_square_rank(from_idx))
+			shares_rank = TRUE
+	if(!ambiguous)
+		return ""
+	if(!shares_file)
+		return ascii2text(96 + chess_square_file(from_idx))
+	if(!shares_rank)
+		return "[chess_square_rank(from_idx)]"
+	return chess_square_name(from_idx)
+
+/datum/chess_match/proc/build_move_notation(piece, from_idx, to_idx, was_capture, was_castle, was_kingside_castle, promoted_to, disambiguation = "")
 	if(was_castle)
 		if(was_kingside_castle)
 			return "O-O"
 		return "O-O-O"
 
 	var/piece_type = chess_piece_type(piece)
-	var/text = chess_piece_letter(piece_type)
+	var/text = chess_piece_letter(piece_type) + disambiguation
 	if(piece_type == CHESS_PAWN && was_capture)
 		text = ascii2text(96 + chess_square_file(from_idx))
 	if(was_capture)
@@ -2248,12 +2336,12 @@
 
 /datum/chess_match/proc/try_checkers_move(from_idx, to_idx, mob/user)
 	if(overturned)
-		to_chat(user, span_warning("Доска опрокинута. Сначала сбросьте её."))
+		to_chat(user, span_warning("The board is overturned. It has to be reset first."))
 		return FALSE
 	if(paused || result_text)
 		return FALSE
 	if(!is_checkers_legal_move(from_idx, to_idx))
-		to_chat(user, span_warning("Этот ход недопустим."))
+		to_chat(user, span_warning("That move isn't allowed."))
 		return FALSE
 
 	var/list/move_info = apply_checkers_move(from_idx, to_idx)
@@ -2316,8 +2404,9 @@
 			board[to_idx] = "[color][CHECKERS_KING]"
 			promoted = TRUE
 
+	// With flying kings (Russian draughts) a man crowned mid-capture keeps capturing as a king.
 	var/continue_capture = FALSE
-	if(was_capture && !promoted && checkers_piece_has_capture(to_idx))
+	if(was_capture && (!promoted || checkers_flying_kings) && checkers_piece_has_capture(to_idx))
 		continue_capture = TRUE
 
 	var/separator = was_capture ? "x" : "-"
@@ -2339,9 +2428,9 @@
 /datum/chess_match/proc/resolve_checkers_end_state()
 	var/enemy = turn
 	if(count_pieces(enemy) <= 0)
-		set_result_text("Game over. [chess_side_name_en(opposite(enemy))] win.", "Партия окончена. Побеждают [chess_side_name(opposite(enemy))].")
+		set_result_text("Game over. [chess_side_name_en(opposite(enemy))] wins.", "Партия окончена. Побеждают [chess_side_name(opposite(enemy), "ru")].")
 	else if(!has_any_checkers_legal_move(enemy))
-		set_result_text("[chess_side_name_en(enemy)] have no legal moves. [chess_side_name_en(opposite(enemy))] win.", "У [chess_side_name(enemy)] не осталось ходов. Побеждают [chess_side_name(opposite(enemy))].")
+		set_result_text("[chess_side_name_en(enemy)] has no legal moves. [chess_side_name_en(opposite(enemy))] wins.", "У [chess_side_name(enemy, "ru")] не осталось ходов. Побеждают [chess_side_name(opposite(enemy), "ru")].")
 
 	if(result_text)
 		paused = TRUE
@@ -2352,7 +2441,7 @@
 		return FALSE
 	if(!user)
 		return FALSE
-	var/side = side_for_user(user)
+	var/side = acting_side_for_user(user)
 	if(!side || side != turn)
 		return FALSE
 	if(nards_available_rolls && nards_available_rolls.len)
@@ -2362,7 +2451,7 @@
 /datum/chess_match/proc/roll_nards_dice(mob/user)
 	if(!can_roll_nards_dice(user))
 		if(user)
-			to_chat(user, span_warning("Сейчас бросать кости нельзя."))
+			to_chat(user, span_warning("I can't roll the dice right now."))
 		return FALSE
 	nards_die_one = rand(1, 6)
 	nards_die_two = rand(1, 6)
@@ -2377,7 +2466,7 @@
 		nards_available_rolls += nards_die_two
 	nards_selected_point = 0
 	nards_selected_from_bar = FALSE
-	set_last_action_message("[chess_display_name_en(user)] rolls [nards_die_one] and [nards_die_two].", "[chess_display_name(user)] бросает кости: [nards_die_one] и [nards_die_two].")
+	set_last_action_message("[chess_display_name_en(user)] rolls [nards_die_one] and [nards_die_two].", "[chess_display_name(user, "ru")] бросает кости: [nards_die_one] и [nards_die_two].")
 	if(!nards_has_any_legal_move(turn))
 		last_action_message_en += " No moves are available; the turn passes to the opponent."
 		last_action_message += " Ходов нет, ход переходит сопернику."
@@ -2424,7 +2513,7 @@
 		return targets
 	if(!user)
 		return targets
-	var/side = side_for_user(user)
+	var/side = acting_side_for_user(user)
 	if(!side || side != turn)
 		return targets
 	if(nards_selected_from_bar)
@@ -2601,16 +2690,16 @@
 /datum/chess_match/proc/select_nards_point(mob/user, point)
 	if(game_mode != BOARD_MODE_NARDS || paused || result_text || overturned)
 		return FALSE
-	var/color = side_for_user(user)
+	var/color = acting_side_for_user(user)
 	if(!color || color != turn)
 		return FALSE
 	if(point < 1 || point > 24)
 		return FALSE
 	if(!nards_long_rules && nards_bar_count(color) > 0)
-		to_chat(user, span_warning("Сначала введите шашку из таверны."))
+		to_chat(user, span_warning("I have to bring a checker in from the bar first."))
 		return FALSE
 	if(nards_long_rules && point == nards_head_point(color) && nards_head_moves_this_turn >= 1)
-		to_chat(user, span_warning("В длинных нардах за ход можно снять с головы только одну шашку."))
+		to_chat(user, span_warning("In long backgammon only one checker may leave the head point each turn."))
 		return FALSE
 	if(nards_point_color(point) != color || nards_point_count(point) <= 0)
 		return FALSE
@@ -2624,7 +2713,7 @@
 		return FALSE
 	if(nards_long_rules)
 		return FALSE
-	var/color = side_for_user(user)
+	var/color = acting_side_for_user(user)
 	if(!color || color != turn)
 		return FALSE
 	if(nards_bar_count(color) <= 0)
@@ -2637,7 +2726,7 @@
 /datum/chess_match/proc/move_nards_checker(mob/user, to_point, to_off = FALSE)
 	if(game_mode != BOARD_MODE_NARDS || paused || result_text || overturned)
 		return FALSE
-	var/color = side_for_user(user)
+	var/color = acting_side_for_user(user)
 	if(!color || color != turn)
 		return FALSE
 	var/from_bar = nards_selected_from_bar
@@ -2647,16 +2736,19 @@
 			return FALSE
 		from_point = 0
 	else if(from_point < 1 || from_point > 24)
-		to_chat(user, span_warning("Сначала выберите шашку."))
+		to_chat(user, span_warning("I have to pick a checker first."))
+		return FALSE
+	// Bearing off is only reached through to_off; point 0 in the legal list stands for it.
+	if(!to_off && (to_point < 1 || to_point > 24))
 		return FALSE
 	var/list/legal = get_nards_legal_targets(color, from_point, from_bar)
 	var/desired = to_off ? 0 : to_point
 	if(!(desired in legal))
-		to_chat(user, span_warning("Этот ход недопустим."))
+		to_chat(user, span_warning("That move isn't allowed."))
 		return FALSE
 	var/die = nards_find_die_for_move(color, from_point, to_point, from_bar, to_off)
 	if(die <= 0)
-		to_chat(user, span_warning("Не удалось определить кость для этого хода."))
+		to_chat(user, span_warning("No die matches that move."))
 		return FALSE
 	if(from_bar)
 		nards_set_bar_count(color, nards_bar_count(color) - 1)
@@ -2679,16 +2771,16 @@
 	var/source_name_en = from_bar ? "the bar" : "point [from_point]"
 	var/dest_name = to_off ? "дом" : "пункт [to_point]"
 	var/dest_name_en = to_off ? "home" : "point [to_point]"
-	set_last_action_message("[chess_display_name_en(user)] moves a checker from [source_name_en] to [dest_name_en].", "[chess_display_name(user)] перемещает шашку с [source_name] на [dest_name].")
+	set_last_action_message("[chess_display_name_en(user)] moves a checker from [source_name_en] to [dest_name_en].", "[chess_display_name(user, "ru")] перемещает шашку с [source_name] на [dest_name].")
 	nards_consume_die(die)
 	if(nards_off_white >= 15)
-		set_result_text("Game over. White win.", "Партия окончена. Побеждают Белые.")
+		set_result_text("Game over. White wins.", "Партия окончена. Побеждают Белые.")
 		paused = TRUE
 		nards_clear_selection()
 		owner.play_win_loss_sounds(CHESS_WHITE)
 		return TRUE
 	if(nards_off_black >= 15)
-		set_result_text("Game over. Black win.", "Партия окончена. Побеждают Чёрные.")
+		set_result_text("Game over. Black wins.", "Партия окончена. Побеждают Чёрные.")
 		paused = TRUE
 		nards_clear_selection()
 		owner.play_win_loss_sounds(CHESS_BLACK)
@@ -2724,3 +2816,4 @@
 #undef CHESS_OBSERVER_RESET_TIME
 #undef CHESS_PACK_BOARD_TIME
 #undef CHESS_FLIP_BOARD_TIME
+#undef CHESS_FIFTY_MOVE_HALFMOVES

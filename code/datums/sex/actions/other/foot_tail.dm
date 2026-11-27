@@ -41,11 +41,17 @@
 		return FALSE
 	if(!get_real_organ(user, ORGAN_SLOT_TAIL))
 		return FALSE
+	if(check_sex_lock(user, ORGAN_SLOT_TAIL))
+		return FALSE
 	if(!target.getorganslot(target_organ_slot))
 		return FALSE
 	if(!check_location_accessible(user, target, BODY_ZONE_PRECISE_GROIN, TRUE))
 		return FALSE
 	return TRUE
+
+/datum/sex_action/tailjob/lock_sex_object(mob/living/user, mob/living/target)
+	add_sex_lock(user, ORGAN_SLOT_TAIL)
+	add_sex_lock(target, target_organ_slot, null, FALSE)
 
 /datum/sex_action/tailjob/on_start(mob/living/user, mob/living/target)
 	. = ..()
@@ -55,7 +61,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] teases [target]'s [genital_name] with [user.p_their()] tail..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 
 	perform_sex_action(target, user, 2, 0, 2)
 	handle_passive_ejaculation(target)
@@ -117,7 +123,7 @@
 	var/mult = covering["mult"]
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] rubs [target]'s [genital_name] with [user.p_their()] [covering["desc"]] feet..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 
 	perform_sex_action(target, user, 2 * mult, 0, 2 * mult)
 	handle_passive_ejaculation(target)
@@ -175,7 +181,7 @@
 	var/mult = covering["mult"]
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] grinds [user.p_their()] [covering["desc"]] foot against [target]'s pussy..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 
 	perform_sex_action(target, user, 2.5 * mult, 1, 2.5 * mult)
 	handle_passive_ejaculation(target)
@@ -226,7 +232,7 @@
 	var/mult = covering["mult"]
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] rubs [user.p_their()] [genital_name] against [target]'s [covering["desc"]] feet..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 
 	perform_sex_action(user, target, 2 * mult, 0, 2 * mult)
 	handle_passive_ejaculation(user)

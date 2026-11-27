@@ -13,6 +13,7 @@
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_CARPET
 
 	spread_chance = 1.8
+	burn_power = 50
 
 /turf/open/floor/carpet/Initialize()
 	. = ..()

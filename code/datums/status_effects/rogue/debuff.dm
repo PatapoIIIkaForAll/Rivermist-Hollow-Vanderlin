@@ -1,5 +1,6 @@
 /datum/status_effect/debuff
 	status_type = STATUS_EFFECT_REFRESH
+	alert_type = null
 
 ///////////////////////////
 
@@ -205,6 +206,7 @@
 /datum/status_effect/debuff/uncookedfood
 	tick_interval = STATUS_EFFECT_NO_TICK
 	id = "uncookedfood"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/uncookedfood
 	effectedstats = null
 	duration = 4 SECONDS
 	status_type = STATUS_EFFECT_UNIQUE
@@ -460,6 +462,7 @@
 /atom/movable/screen/alert/status_effect/debuff/chilled
 	name = "Chilled"
 	desc = "I can barely feel my limbs!"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
 	icon_state = "chilled"
 
 /datum/status_effect/debuff/vamp_dreams

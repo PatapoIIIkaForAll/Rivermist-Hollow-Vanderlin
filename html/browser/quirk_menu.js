@@ -33,8 +33,31 @@ function updateQuirkCustomization(selectElement) {
 	// Save state before navigation
 	saveState();
 
-	// Navigate to update customization
-	window.location.href = 'byond://?quirk_customize=' + quirkRef + '&value=' + encodeURIComponent(selectedValue);
+	// Navigate to update customization; multi-pick quirks also send which pick changed
+	var pickIndex = selectElement.getAttribute('data-pick');
+	var pickPart = pickIndex ? '&pick=' + encodeURIComponent(pickIndex) : '';
+	window.location.href = 'byond://?quirk_customize=' + quirkRef + '&value=' + encodeURIComponent(selectedValue) + pickPart;
+}
+
+// Adds another pick to a multi-pick quirk
+function addQuirkPick(buttonElement) {
+	var quirkRef = buttonElement.getAttribute('data-quirk');
+	if (!quirkRef) {
+		return;
+	}
+	saveState();
+	window.location.href = 'byond://?quirk_add_pick=' + quirkRef;
+}
+
+// Removes one pick from a multi-pick quirk
+function removeQuirkPick(buttonElement) {
+	var quirkRef = buttonElement.getAttribute('data-quirk');
+	var pickIndex = buttonElement.getAttribute('data-pick');
+	if (!quirkRef || !pickIndex) {
+		return;
+	}
+	saveState();
+	window.location.href = 'byond://?quirk_remove_pick=' + quirkRef + '&pick=' + encodeURIComponent(pickIndex);
 }
 
 // Handle text input changes

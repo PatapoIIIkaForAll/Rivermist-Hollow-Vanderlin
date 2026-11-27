@@ -268,7 +268,7 @@
 	// Knockout Only opted out of the rune: the job's automatic bond must respect that, or the
 	// player still gets the rune's Call offer over their chosen self-rescue. They can always walk
 	// up to a rune and link by hand later - only the auto-link honors the preference.
-	if(human_spawned.defeat_mode == DEFEAT_MODE_KO_ONLY)
+	if(human_spawned.defeat_mode == DEFEAT_MODE_KO_ONLY || HAS_TRAIT(human_spawned, TRAIT_RUNE_SEVERED))
 		return FALSE
 	var/obj/structure/resurrection_rune/current_rune = find_resurrection_rune_by_mind(human_spawned.mind)
 	if(current_rune?.rune_tag == rune_linked)
@@ -478,17 +478,12 @@
 	if(length(advclass_cat_rolls))
 		spawned.hugboxify_for_class_selection()
 
-	if(spawned.culinary_preferences[CULINARY_RANDOM_PREFERENCES])
-		var/obj/item/food_instance = spawned.culinary_preferences[CULINARY_FAVOURITE_FOOD]
-		var/datum/reagent/consumable/drink_instance = spawned.culinary_preferences[CULINARY_FAVOURITE_DRINK]
-		var/obj/item/hated_food_instance = spawned.culinary_preferences[CULINARY_HATED_FOOD]
-		var/datum/reagent/consumable/hated_drink_instance = spawned.culinary_preferences[CULINARY_HATED_DRINK]
-
+	if(length(spawned.culinary_preferences) && spawned.culinary_preferences[CULINARY_RANDOM_PREFERENCES])
 		bordered_message(spawned, list(
-			"Your favourite food is <span style='color: green;'>[capitalize(initial(food_instance.name))]</span>",
-			"Your favourite drink is <span style='color: green;'>[capitalize(initial(drink_instance.name))]</span>",
-			"Your most hated food is <span style='color: red;'>[capitalize(initial(hated_food_instance.name))]</span>",
-			"Your most hated drink is <span style='color: red;'>[capitalize(initial(hated_drink_instance.name))]</span>",
+			"Your favourite food is <span style='color: green;'>[culinary_group_name(GLOB.culinary_dish_groups, spawned.culinary_preferences[CULINARY_FAVOURITE_FOOD])]</span>",
+			"Your favourite drink is <span style='color: green;'>[culinary_group_name(GLOB.culinary_drink_groups, spawned.culinary_preferences[CULINARY_FAVOURITE_DRINK])]</span>",
+			"Your most hated food is <span style='color: red;'>[culinary_group_name(GLOB.culinary_dish_groups, spawned.culinary_preferences[CULINARY_HATED_FOOD])]</span>",
+			"Your most hated drink is <span style='color: red;'>[culinary_group_name(GLOB.culinary_drink_groups, spawned.culinary_preferences[CULINARY_HATED_DRINK])]</span>",
 		))
 
 	if((job_flags & JOB_SHOW_IN_CREDITS) && player_client)

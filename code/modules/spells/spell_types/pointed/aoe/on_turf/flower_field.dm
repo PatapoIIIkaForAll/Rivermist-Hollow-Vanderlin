@@ -235,6 +235,7 @@
 \-----------------*/
 
 /datum/status_effect/debuff/flower_base
+	alert_type = null
 	var/overlay_state = null
 	var/field_path = null
 	var/image/flower_overlay
@@ -347,6 +348,8 @@
 	var/mob/living/L = owner
 	if (!L) return
 	check_field_presence()
+	if(QDELETED(src))
+		return
 	if(prob(20))
 		L.adjustBruteLoss(5, damage_type = BCLASS_CUT)
 
@@ -355,6 +358,8 @@
 
 	if (prob(20) && ishuman(L))
 		var/mob/living/carbon/human/H = L
+		if(!length(H.bodyparts))
+			return
 		var/obj/item/bodypart/BP = pick(H.bodyparts)
 		var/obj/item/natural/thorn/TH = new(get_turf(H))
 		BP.add_embedded_object(TH, silent = TRUE)

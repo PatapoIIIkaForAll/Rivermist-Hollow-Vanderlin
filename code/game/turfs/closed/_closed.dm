@@ -138,6 +138,9 @@
 
 /turf/closed/Initialize()
 	. = ..()
+	// One shared list for each wall type, in place of one copy for each wall.
+	if(islist(attacked_sound))
+		attacked_sound = typelist("attacked_sound", attacked_sound)
 	if(above_floor)
 		var/turf/open/openspace/target = GET_TURF_ABOVE(src)
 		if(istype(target))
@@ -165,71 +168,82 @@
 	return attack_hand(user)
 
 /turf/closed/attack_hand(mob/user)
-	if(wallclimb)
-		if(isliving(user))
-			var/turf/user_turf = get_turf(user)
-			var/mob/living/L = user
-			var/climbsound = 'sound/foley/climb.ogg'
-			if(L.stat != CONSCIOUS)
-				return
-			var/turf/target = GET_TURF_ABOVE(user_turf)
-			if(!istype(target, /turf/open/openspace))
-				to_chat(user, "<span class='warning'>I can't climb here.</span>")
-				return
-			if(!L.can_z_move(UP, user_turf, target, Z_MOVE_CLIMBING_FLAGS | ZMOVE_FEEDBACK))
-				to_chat(user, "<span class='warning'>I can't climb there.</span>")
-				return
-			target = GET_TURF_ABOVE(src)
-			if(!target || istype(target, /turf/closed) || istype(target, /turf/open/openspace))
-				target = GET_TURF_ABOVE(user_turf)
-				if(!target || !istype(target, /turf/open/openspace))
-					to_chat(user, "<span class='warning'>I can't climb here.</span>")
-					return
-			for(var/obj/structure/F in target)
-				if(F && (F.density && !F.climbable))
-					to_chat(user, "<span class='warning'>I can't climb here.</span>")
-					return
-			var/used_time = 0
-			var/amt2raise = 0
-			var/boon = 0
-			if(L.mind)
-				var/myskill = GET_MOB_SKILL_VALUE_OLD(L, /datum/attribute/skill/misc/climbing)
-				amt2raise = floor(GET_MOB_ATTRIBUTE_VALUE(L, STAT_INTELLIGENCE)/2)
-				boon = L.get_learning_boon(/datum/attribute/skill/misc/climbing)
-				var/obj/structure/table/TA = locate() in L.loc
-				if(TA)
-					myskill += 1
-				else
-					var/obj/structure/chair/CH = locate() in L.loc
-					if(CH)
-						myskill += 1
-					var/obj/structure/wallladder/WL = locate() in L.loc
-					if(WL)
-						if(get_dir(WL.loc,src) == WL.dir)
-							myskill += 8
-							climbsound = 'sound/foley/ladder.ogg'
+	if(!wallclimb)
+		return ..()
+	if(isliving(user))
+		try_wallclimb(user)
 
-				if(myskill < climbdiff)
-					to_chat(user, "<span class='warning'>I'm not capable of climbing this.</span>")
-					return
-				used_time = max(70 - (myskill * 10) - (GET_MOB_ATTRIBUTE_VALUE(L, STAT_SPEED) * 3), 30)
-			if(user.m_intent != MOVE_INTENT_SNEAK)
-				playsound(user, climbsound, 100, TRUE)
-			user.visible_message("<span class='warning'>[user] starts to climb [src].</span>", "<span class='warning'>I start to climb [src]...</span>")
-			if(do_after(L, used_time, src))
-				// The passage is above the climber; target is the landing turf above the wall.
-				var/turf/current_turf = get_turf(L)
-				if(!L.can_z_move(UP, current_turf, GET_TURF_ABOVE(current_turf), Z_MOVE_CLIMBING_FLAGS | ZMOVE_FEEDBACK))
-					return
-				L.set_currently_z_moving(CURRENTLY_Z_ASCENDING)
-				if(!L.zMove(UP, target, Z_MOVE_CLIMBING_FLAGS))
-					return
-				if(user.m_intent != MOVE_INTENT_SNEAK)
-					playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
-				if(L.mind)
-					L.adjust_experience(/datum/attribute/skill/misc/climbing, floor(amt2raise * boon), FALSE)
-	else
-		..()
+/// Whether walking into this wall may start a climb.
+/turf/closed/proc/can_bump_climb(mob/living/climber)
+	return wallclimb
+
+/// Climbs this wall up a z-level; feedback FALSE hides the failure messages.
+/turf/closed/proc/try_wallclimb(mob/living/climber, feedback = TRUE)
+	var/turf/user_turf = get_turf(climber)
+	var/climbsound = 'sound/foley/climb.ogg'
+	if(climber.stat != CONSCIOUS)
+		return
+	var/turf/target = GET_TURF_ABOVE(user_turf)
+	if(!istype(target, /turf/open/openspace))
+		if(feedback)
+			to_chat(climber, "<span class='warning'>I can't climb here.</span>")
+		return
+	if(!climber.can_z_move(UP, user_turf, target, feedback ? (Z_MOVE_CLIMBING_FLAGS | ZMOVE_FEEDBACK) : Z_MOVE_CLIMBING_FLAGS))
+		if(feedback)
+			to_chat(climber, "<span class='warning'>I can't climb there.</span>")
+		return
+	target = GET_TURF_ABOVE(src)
+	if(!target || istype(target, /turf/closed) || istype(target, /turf/open/openspace))
+		target = GET_TURF_ABOVE(user_turf)
+		if(!target || !istype(target, /turf/open/openspace))
+			if(feedback)
+				to_chat(climber, "<span class='warning'>I can't climb here.</span>")
+			return
+	for(var/obj/structure/F in target)
+		if(F && (F.density && !F.climbable))
+			if(feedback)
+				to_chat(climber, "<span class='warning'>I can't climb here.</span>")
+			return
+	var/used_time = 0
+	var/amt2raise = 0
+	var/boon = 0
+	if(climber.mind)
+		var/myskill = GET_MOB_SKILL_VALUE_OLD(climber, /datum/attribute/skill/misc/climbing)
+		amt2raise = floor(GET_MOB_ATTRIBUTE_VALUE(climber, STAT_INTELLIGENCE)/2)
+		boon = climber.get_learning_boon(/datum/attribute/skill/misc/climbing)
+		var/obj/structure/table/TA = locate() in climber.loc
+		if(TA)
+			myskill += 1
+		else
+			var/obj/structure/chair/CH = locate() in climber.loc
+			if(CH)
+				myskill += 1
+			var/obj/structure/wallladder/WL = locate() in climber.loc
+			if(WL)
+				if(get_dir(WL.loc,src) == WL.dir)
+					myskill += 8
+					climbsound = 'sound/foley/ladder.ogg'
+
+		if(myskill < climbdiff)
+			if(feedback)
+				to_chat(climber, "<span class='warning'>I'm not capable of climbing this.</span>")
+			return
+		used_time = max(70 - (myskill * 10) - (GET_MOB_ATTRIBUTE_VALUE(climber, STAT_SPEED) * 3), 30)
+	if(climber.m_intent != MOVE_INTENT_SNEAK)
+		playsound(climber, climbsound, 100, TRUE)
+	climber.visible_message("<span class='warning'>[climber] starts to climb [src].</span>", "<span class='warning'>I start to climb [src]...</span>")
+	if(do_after(climber, used_time, src))
+		// The passage is above the climber; target is the landing turf above the wall.
+		var/turf/current_turf = get_turf(climber)
+		if(!climber.can_z_move(UP, current_turf, GET_TURF_ABOVE(current_turf), Z_MOVE_CLIMBING_FLAGS | ZMOVE_FEEDBACK))
+			return
+		climber.set_currently_z_moving(CURRENTLY_Z_ASCENDING)
+		if(!climber.zMove(UP, target, Z_MOVE_CLIMBING_FLAGS))
+			return
+		if(climber.m_intent != MOVE_INTENT_SNEAK)
+			playsound(climber, 'sound/foley/climb.ogg', 100, TRUE)
+		if(climber.mind)
+			climber.adjust_experience(/datum/attribute/skill/misc/climbing, floor(amt2raise * boon), FALSE)
 
 /turf/closed/attack_hand_secondary(mob/user, list/modifiers)
 	. = ..()

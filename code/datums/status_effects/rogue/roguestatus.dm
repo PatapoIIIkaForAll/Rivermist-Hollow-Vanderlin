@@ -1,5 +1,6 @@
 /datum/status_effect/stress
 	status_type = STATUS_EFFECT_REFRESH
+	alert_type = null
 
 /datum/status_effect/stress/stressinsane
 	id = "insane"

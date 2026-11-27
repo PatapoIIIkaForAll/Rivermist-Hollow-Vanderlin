@@ -68,18 +68,6 @@
 		mob.update_music_volume(CHANNEL_AMBIENCE, prefs.read_preference(/datum/preference/numeric/musicvol))
 
 
-/client/verb/show_rolls()
-	set category = "Preferences.Options"
-	set name = "ShowRolls"
-
-	if(prefs)
-		prefs.write_preference(/datum/preference/toggle/showrolls, !prefs.read_preference(/datum/preference/toggle/showrolls))
-		prefs.save_preferences()
-		if(prefs.read_preference(/datum/preference/toggle/showrolls))
-			to_chat(src, "ShowRolls Enabled")
-		else
-			to_chat(src, "ShowRolls Disabled")
-
 /client/verb/change_master_vol()
 	set category = "Preferences.Sound"
 	set name = "ChangeVolPower"

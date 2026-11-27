@@ -14,12 +14,14 @@
 	var/datum/plant_genetics/source_genetics
 
 /obj/item/reagent_containers/food/snacks/produce/fruit
+	dish_type = DISH_FRUIT
 	name = "fruit"
 	naturalist = TRUE
 	nutrition = FRUIT_NUTRITION
 	foodtype = FRUIT
 
 /obj/item/reagent_containers/food/snacks/produce/vegetable
+	dish_type = DISH_VEGETABLE
 	name = "vegetable"
 	naturalist = TRUE
 	nutrition = VEGGIE_NUTRITION
@@ -32,6 +34,7 @@
 	foodtype = GRAIN
 
 /obj/item/reagent_containers/food/snacks/produce/mushroom
+	dish_type = DISH_VEGETABLE
 	name = "mushroom"
 	naturalist = TRUE
 	nutrition = VEGGIE_NUTRITION
@@ -765,11 +768,13 @@
 	rotprocess = SHELFLIFE_DECENT
 
 /obj/item/reagent_containers/food/snacks/produce/garlic
+	dish_type = DISH_VEGETABLE
 	name = "garlic"
 	desc = "Your last line of defense against the vampiric horde."
 //	seed = /obj/item/neuFarm/seed/garlic
 
 /obj/item/reagent_containers/food/snacks/produce/amanita
+	dish_type = DISH_VEGETABLE
 //	seed = /obj/item/neuFarm/seed/mycelium/amanita
 	name = "strange red mushroom"
 	icon_state = "amanita"

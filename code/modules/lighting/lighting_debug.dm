@@ -24,7 +24,7 @@
 		QDEL_NULL(current)
 
 /datum/proximity_monitor/advanced/debug_lights/proc/get_color_matrix(turf/target)
-	return target.lighting_object?.color
+	return target.lighting_look?.color
 
 /datum/proximity_monitor/advanced/debug_lights
 	var/list/managed = list()
@@ -55,4 +55,4 @@
 	field_type = /datum/proximity_monitor/advanced/debug_lights/sunlight
 
 /datum/proximity_monitor/advanced/debug_lights/sunlight/get_color_matrix(turf/target)
-	return target.outdoor_effect?.sunlight_overlay?.color
+	return target.outdoor_look?.look_sunlight?.color

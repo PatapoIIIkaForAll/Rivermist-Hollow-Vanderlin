@@ -8,7 +8,12 @@
 	var/beauty = 0
 	///The type of cleaning required to clean the decal. See __DEFINES/cleaning.dm for the options
 	var/clean_type = CLEAN_TYPE_LIGHT_DECAL
+	/// How much of the decal rain has washed away, 0 to 100.
 	var/wash_precent = 0
+	/// Alpha the decal had when rain began washing it; the fade scales down from it.
+	var/rain_base_alpha
+	/// Whether rain washes this decal away. Ritual marks and other deliberate markings turn it off.
+	var/rain_washable = TRUE
 	COOLDOWN_DECLARE(wash_cooldown)
 
 /obj/effect/decal/cleanable/Initialize(mapload)
@@ -28,8 +33,12 @@
 	var/turf/T = get_turf(src)
 	if(T && is_station_level(T.z))
 		SSblackbox.record_feedback("tally", "station_mess_created", 1, name)
+	// Map-placed decals are deliberate decoration and indoor ones never see rain, so only messes made outdoors are tracked.
+	if(!mapload && rain_washable && T?.is_weather_exposed())
+		GLOB.weather_act_upon_list += src
 
 /obj/effect/decal/cleanable/Destroy()
+	GLOB.weather_act_upon_list -= src
 	var/turf/T = get_turf(src)
 	if(T && is_station_level(T.z))
 		SSblackbox.record_feedback("tally", "station_mess_destroyed", 1, name)
@@ -117,11 +126,25 @@
 		return TRUE
 	return .
 
+/// Time between two rain washing steps on one decal.
+#define RAIN_WASH_INTERVAL (7.5 SECONDS)
+/// Washing progress per step that even the lightest rain makes.
+#define RAIN_WASH_BASE_STEP 5
+/// Largest washing progress per step, reached in heavy storms.
+#define RAIN_WASH_MAX_STEP 25
+
 /obj/effect/decal/cleanable/weather_act_on(weather_trait, severity)
-	if(weather_trait != PARTICLEWEATHER_RAIN || !COOLDOWN_FINISHED(src, wash_cooldown))
+	if(weather_trait != PARTICLEWEATHER_RAIN || !rain_washable || !COOLDOWN_FINISHED(src, wash_cooldown))
 		return
-	COOLDOWN_START(src, wash_cooldown, 7.5 SECONDS)
-	wash_precent += min(25, severity / 2)
-	alpha = 255 *((100 - wash_precent) * 0.01)
+	COOLDOWN_START(src, wash_cooldown, RAIN_WASH_INTERVAL)
+	if(isnull(rain_base_alpha))
+		rain_base_alpha = alpha
+	wash_precent += min(RAIN_WASH_MAX_STEP, RAIN_WASH_BASE_STEP + severity / 2)
 	if(wash_precent >= 100)
-		wash(CLEAN_WASH)
+		qdel(src)
+		return
+	alpha = round(rain_base_alpha * (100 - wash_precent) / 100)
+
+#undef RAIN_WASH_INTERVAL
+#undef RAIN_WASH_BASE_STEP
+#undef RAIN_WASH_MAX_STEP

@@ -18,7 +18,7 @@
 /obj/structure/fluff/millstone/Initialize(mapload, ...)
 	. = ..()
 	START_PROCESSING(SSobj, src)
-	AddComponent(/datum/component/simple_rotation, ROTATION_REQUIRE_WRENCH|ROTATION_IGNORE_ANCHORED)
+	AddComponent(/datum/component/simple_rotation, ROTATION_IGNORE_ANCHORED)
 
 /obj/structure/fluff/millstone/Destroy()
 	STOP_PROCESSING(SSobj, src)

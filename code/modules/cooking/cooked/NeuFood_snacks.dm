@@ -23,6 +23,7 @@
 	faretype = FARE_NEUTRAL
 
 /obj/item/reagent_containers/food/snacks/cooked/frysteak_tatos
+	dish_type = DISH_MEAT|DISH_VEGETABLE
 	item_weight = 450 GRAMS
 	name = "frysteak and potato"
 	desc = "A slab of beastflesh, fried to a perfect medium-rare. Served with potatos, this will nourish even a starving wolf."
@@ -42,6 +43,7 @@
 	foodtype = MEAT | VEGETABLES
 
 /obj/item/reagent_containers/food/snacks/cooked/frysteak_onion
+	dish_type = DISH_MEAT|DISH_VEGETABLE
 	item_weight = 400 GRAMS
 	name = "frysteak and onions"
 	desc = "A slab of beastflesh, fried to a perfect medium-rare. Garnished with tender fried onion, juices made into a simple sauce."
@@ -98,6 +100,7 @@
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/reagent_containers/food/snacks/cooked/herbsteak
+	dish_type = DISH_MEAT|DISH_VEGETABLE
 	item_weight = 300 GRAMS
 	name = "herbsteak"
 	desc = "A slab of beastflesh, fried to a perfect medium-rare. It has been seasoned with herbs."
@@ -122,6 +125,7 @@
 
 /*	.............   Fried egg   ................ */
 /obj/item/reagent_containers/food/snacks/cooked/egg
+	dish_type = DISH_EGG
 	item_weight = 50 GRAMS
 	tastes = list("fried egg" = 1)
 	name = "fried egg"
@@ -133,6 +137,7 @@
 	foodtype = EGG
 
 /obj/item/reagent_containers/food/snacks/cooked/twin_egg
+	dish_type = DISH_EGG
 	item_weight = 100 GRAMS
 	tastes = list("fried egg" = 1)
 	name = "fried egg twins"
@@ -144,6 +149,7 @@
 	foodtype = EGG
 
 /obj/item/reagent_containers/food/snacks/cooked/valorian_omlette
+	dish_type = DISH_EGG
 	item_weight = 200 GRAMS
 	name = "Luskanian omelette"
 	desc = "Fried cackleberries on a bed of half-melted cheese, a dish from distant lands."
@@ -161,6 +167,7 @@
 
 /*	.............   Frybird   ................ */
 /obj/item/reagent_containers/food/snacks/cooked/frybird
+	dish_type = DISH_POULTRY
 	item_weight = 250 GRAMS
 	name = "frybird"
 	desc = "Poultry scorched to a perfect delicious crisp."
@@ -172,6 +179,7 @@
 	foodtype = MEAT
 
 /obj/item/reagent_containers/food/snacks/cooked/frybird_tatos
+	dish_type = DISH_POULTRY|DISH_VEGETABLE
 	item_weight = 400 GRAMS
 	name = "frybird and tatos"
 	desc = "Poultry scorched to a perfect delicious crisp. Some warm tatos accompany it."
@@ -188,6 +196,7 @@
 
 
 /obj/item/reagent_containers/food/snacks/cooked/herbbird
+	dish_type = DISH_POULTRY|DISH_VEGETABLE
 	item_weight = 254 GRAMS
 	name = "herbird"//yes it's meant to be herb-ird, because herbbird is a bit weird
 	desc = "Poultry scorched to a perfect delicious crisp. It has been seasoned with herbs."
@@ -226,6 +235,7 @@
 	nutrition = COOKED_FATTYMEAT_NUTRITION
 
 /obj/item/reagent_containers/food/snacks/cooked/royal_truffle
+	dish_type = DISH_VEGETABLE
 	item_weight = 500 GRAMS
 	name = "royal truffles"
 	desc = "The height of decadence, a precious truffle pig, turned into an amusing meal, served on a bed of its beloved golden truffles."
@@ -270,6 +280,7 @@
 	faretype = FARE_NEUTRAL
 
 /obj/item/reagent_containers/food/snacks/cooked/sausage_cabbage
+	dish_type = DISH_MEAT|DISH_VEGETABLE
 	item_weight = 200 GRAMS
 	name = "wiener on cabbage"
 	desc = "A rich and heavy meal, perfect ration for a soldier on the march."
@@ -284,6 +295,7 @@
 	bitesize = 5
 
 /obj/item/reagent_containers/food/snacks/cooked/sausage_potato
+	dish_type = DISH_MEAT|DISH_VEGETABLE
 	item_weight = 200 GRAMS
 	name = "wiener on tato"
 	desc = "Stout and nourishing."
@@ -298,6 +310,7 @@
 	bitesize = 5
 
 /obj/item/reagent_containers/food/snacks/cooked/sausage_onion
+	dish_type = DISH_MEAT|DISH_VEGETABLE
 	item_weight = 180 GRAMS
 	name = "wiener and onions"
 	desc = "Stout and flavourful."
@@ -356,6 +369,7 @@
 	foodtype = GRAIN | MEAT | RAW
 
 /obj/item/reagent_containers/food/snacks/cooked/griddledog
+	dish_type = DISH_MEAT|DISH_BREAD
 	item_weight = 150 GRAMS
 	name = "griddledog"
 	desc = "A classic piece of Darkholdian street food, the fried butterdough is a Rivermistian adulteration."
@@ -374,6 +388,7 @@
 
 /*	.............   Cooked cabbage   ................ */
 /obj/item/reagent_containers/food/snacks/cabbage_fried
+	dish_type = DISH_VEGETABLE
 	item_weight = 200 GRAMS
 	name = "cooked cabbage"
 	desc = "A peasant's delight."
@@ -405,6 +420,7 @@
 
 /*	.............   Fried onions   ................ */
 /obj/item/reagent_containers/food/snacks/onion_fried
+	dish_type = DISH_VEGETABLE
 	item_weight = 100 GRAMS
 	name = "fried onion"
 	desc = "Seared onions roasted to a delicious set of rings."
@@ -477,6 +493,7 @@
 /*	.............   Cocaumole   ................ */
 
 /obj/item/reagent_containers/food/snacks/cocaumole
+	dish_type = DISH_VEGETABLE
 	name = "cocaumole"
 	icon_state = "cocaumole"
 	desc = "The delicious gooey inside of a cocaudo. Makes for great topping."
@@ -506,6 +523,7 @@
 /*	.............   Drowsbane Jam   ................ */
 
 /obj/item/reagent_containers/food/snacks/drowsbanejam
+	dish_type = DISH_VEGETABLE
 	name = "drowsbane jam"
 	icon_state = "salsa"
 	desc = "A tantalizingly spicy jam. Incredibly toxic to dark-elves."
@@ -552,6 +570,7 @@
 \-------*/
 
 /obj/item/reagent_containers/food/snacks/salad
+	dish_type = DISH_VEGETABLE
 	name = "salad"
 	desc = "Cut fresh vegetables, loved by peasants and health-conscious nobles alike."
 	icon = 'icons/roguetown/items/cooking.dmi' //This is so it can grab bowl sprites. Salad sprites are stored there also. Check bowl code in NeuFood.dm for details.
@@ -618,6 +637,7 @@
 
 /*	.................   Chicken roast   ................... */
 /obj/item/reagent_containers/food/snacks/cooked/roastchicken
+	dish_type = DISH_POULTRY
 	item_weight = 600 GRAMS
 	name = "roast bird"
 	desc = "A plump bird, roasted to a perfect temperature and bears a crispy skin."

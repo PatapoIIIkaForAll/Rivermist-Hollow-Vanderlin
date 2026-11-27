@@ -75,7 +75,7 @@
 
 /datum/sex_action/penis_head_worship/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		target.visible_message(span_love("[target] spills over [user]'s worshipping tongue!"))
+		target.visible_message(span_love_climax("[target] spills over [user]'s worshipping tongue!"))
 		return ORGASM_LOCATION_ORAL
-	user.visible_message(span_love("[user] climaxes from worshipping [target]'s cock!"))
+	user.visible_message(span_love_climax("[user] climaxes from worshipping [target]'s cock!"))
 	return ORGASM_LOCATION_SELF

@@ -20,6 +20,8 @@
 /atom/movable/screen/alert/status_effect/leash_owner
 	name = "Leash Master"
 	desc = "You've got a leash, and a cute pet on the other end!"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "leash_owner"
 
 /datum/status_effect/leash_pet
 	id = "leashed"
@@ -29,6 +31,8 @@
 /atom/movable/screen/alert/status_effect/leash_pet
 	name = "Leashed Pet"
 	desc = "You're on the leash now! Be good for your master now.."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "leash_pet"
 
 /datum/status_effect/leash_pet/on_apply()
 	if(!owner.stat)

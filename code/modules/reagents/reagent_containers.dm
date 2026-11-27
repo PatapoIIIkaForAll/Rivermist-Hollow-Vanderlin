@@ -372,6 +372,9 @@
 	addtimer(CALLBACK(src, PROC_REF(transfer_feed_reagents), target, user), 5)
 	playsound(target, pick(drinksounds), 100, TRUE)
 
+	if(target == user)
+		start_auto_drinking(user)
+
 	return TRUE
 
 /obj/item/reagent_containers/proc/transfer_feed_reagents(mob/living/target, mob/living/feeder)

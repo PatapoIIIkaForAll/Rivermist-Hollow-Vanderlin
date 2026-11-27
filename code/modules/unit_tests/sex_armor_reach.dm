@@ -227,3 +227,53 @@
 	TEST_ASSERT(!ringed.mouth_is_free(actor, cloth_blocks = TRUE), "Callers that need a bare mouth still see the ring gag")
 	TEST_ASSERT(!balled.mouth_is_free(actor), "A ball gag fills the mouth")
 	TEST_ASSERT(!action.check_location_accessible(actor, balled, BODY_ZONE_PRECISE_MOUTH), "The panel mouth check must fail on a ball gag")
+
+/datum/unit_test/sex_armor_reach/ring_gag_lets_climax_into_mouth
+
+/datum/unit_test/sex_armor_reach/ring_gag_lets_climax_into_mouth/Run()
+	var/mob/living/carbon/human/ringed = make_receiver(FALSE)
+	var/mob/living/carbon/human/balled = make_receiver(FALSE)
+	var/mob/living/carbon/human/veiled = make_receiver(FALSE)
+	var/obj/item/clothing/face/ring = allocate(/obj/item/clothing/face/bdsm_gag/ring/black)
+	var/obj/item/clothing/face/ball = allocate(/obj/item/clothing/face/bdsm_gag/ball/black)
+	ringed.equip_to_slot_or_del(ring, ITEM_SLOT_MASK)
+	balled.equip_to_slot_or_del(ball, ITEM_SLOT_MASK)
+	var/obj/item/clothing/face/veil = wear_mouth_cover(veiled)
+	TEST_ASSERT_EQUAL(ringed.wear_mask, ring, "Test setup: the ring gag should be worn")
+	TEST_ASSERT_EQUAL(balled.wear_mask, ball, "Test setup: the ball gag should be worn")
+	TEST_ASSERT_EQUAL(veiled.wear_mask, veil, "Test setup: the veil should be worn")
+
+	TEST_ASSERT(ringed.mouth_is_free(cloth_blocks = TRUE, open_gags_pass = TRUE), "A climax aimed at a ring-gagged mouth should go in")
+	TEST_ASSERT(!balled.mouth_is_free(cloth_blocks = TRUE, open_gags_pass = TRUE), "A ball gag should send the climax to the face")
+	TEST_ASSERT(!veiled.mouth_is_free(cloth_blocks = TRUE, open_gags_pass = TRUE), "A cloth veil should send the climax to the face")
+
+	// The aimed spurt itself: into the ring-gagged mouth, onto the ball-gagged face.
+	var/mob/living/carbon/human/climaxer = allocate(/mob/living/carbon/human)
+	climaxer.gender = MALE
+	climaxer.give_genitals()
+	var/obj/item/organ/genitals/penis/penis = climaxer.getorganslot(ORGAN_SLOT_PENIS)
+	var/obj/item/organ/genitals/filling_organ/testicles/testes = climaxer.getorganslot(ORGAN_SLOT_TESTICLES)
+	var/datum/component/arousal/arousal = climaxer.GetComponent(/datum/component/arousal)
+	TEST_ASSERT_NOTNULL(penis, "Test setup: the climaxer needs a penis")
+	TEST_ASSERT_NOTNULL(testes?.reagents, "Test setup: the climaxer needs testicles that hold fluid")
+	TEST_ASSERT_NOTNULL(arousal, "Test setup: the climaxer needs the arousal component")
+	for(var/mob/living/carbon/human/receiver as anything in list(ringed, balled))
+		testes.reagents.add_reagent(/datum/reagent/water, 10)
+		var/datum/climax_aim/aim = new(penis)
+		aim.target = receiver
+		aim.zone = PENIS_AIM_MOUTH
+		aim.aimer = climaxer
+		var/into_mouth = arousal.deliver_spurt(aim, 5, 0, TRUE, FALSE, null, null, null, null)
+		TEST_ASSERT_EQUAL(!!into_mouth, receiver == ringed, "The aimed spurt should go into the mouth only past a ring gag ([receiver == ringed ? "ring" : "ball"] gag)")
+
+	// Spit for lube and fluid licking still need a mouth with no gag at all.
+	var/mob/living/carbon/human/bare = make_receiver(FALSE)
+	var/datum/sex_action/lube_up/lube = allocate(/datum/sex_action/lube_up)
+	TEST_ASSERT(lube.has_lube_source(bare), "Test setup: a bare mouth can spit for lube")
+	TEST_ASSERT(!lube.has_lube_source(ringed), "A ring gag should still stop spit for lube")
+	bare.mmb_intent = new INTENT_BITE(bare)
+	ringed.mmb_intent = new INTENT_BITE(ringed)
+	TEST_ASSERT(can_lick_fluids(bare), "Test setup: a bare mouth can lick fluids")
+	TEST_ASSERT(!can_lick_fluids(ringed), "A ring gag should still stop fluid licking")
+	QDEL_NULL(bare.mmb_intent)
+	QDEL_NULL(ringed.mmb_intent)

@@ -11,21 +11,21 @@
 	icon = 'modular_rmh/icons/mob/sprite_accessory/nipple_clamps.dmi'
 	icon_state = "clamps"
 	color_key_name = "Clamps"
-	layer = BODY_ADJ_TOP_TOP_LAYER
+	// Just above a piercing's layer, so the clamps draw over the ring.
+	layer = BODY_ADJ_TOP_TOP_LAYER - 0.01
+	// Above breasts and a piercing drawn over clothes.
+	draw_above_clothes_layer = UNDER_CLOAK_LAYER + 0.02
+	/// State prefix of the animated clamps in the same sheet.
+	var/anim_shape = "clamps"
 
 /datum/sprite_accessory/nipple_clamps/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	var/obj/item/organ/genitals/filling_organ/breasts/breasts = owner?.getorganslot(ORGAN_SLOT_BREASTS)
-	return "[icon_state]-[clamp(breasts?.organ_size || 1, 1, 5)]"
+	return get_nipple_jewelry_state(owner)
 
 /datum/sprite_accessory/nipple_clamps/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_BREASTS)
+	adjust_nipple_jewelry(appearance_list, organ, bodypart, owner)
 
 /datum/sprite_accessory/nipple_clamps/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	var/obj/item/organ/genitals/filling_organ/breasts/breasts = owner.getorganslot(ORGAN_SLOT_BREASTS)
-	if(breasts?.visible_through_clothes)
-		return TRUE
-	var/obj/item/clothing/undies/worn_underwear = owner.underwear
-	return is_human_part_visible(owner, HIDEBOOB) && !worn_underwear?.covers_breasts
+	return is_nipple_jewelry_visible(owner, bodypart)
 
 /datum/bodypart_feature/nipple_clamps
 	name = "Nipple clamps"

@@ -120,10 +120,17 @@ GLOBAL_LIST_EMPTY(mana_fountains)
 	return /datum/mana_pool/mana_fountain
 
 /obj/structure/well/fountain/mana/onbite(mob/living/user)
-	if(mana_pool.amount < 50)
+	if(!has_drink())
 		to_chat(user, span_warning("[src] is dry."))
 		return TRUE
 	. = ..()
+
+/obj/structure/well/fountain/mana/has_drink()
+	return mana_pool.amount >= 50
+
+// Mana is shared and quenches nothing, so non-stop drinking never loops here.
+/obj/structure/well/fountain/mana
+	auto_drink = FALSE
 
 /obj/structure/well/fountain/mana/drink_from(mob/living/user)
 	mana_pool.adjust_mana(-50)

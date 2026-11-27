@@ -51,9 +51,10 @@
 	attribute_sheet = /datum/attribute_holder/sheet/job/moon_priest
 
 
+	grants_holy_urine = TRUE
+
 	traits = list(
 		TRAIT_HOLY,
-		TRAIT_HOLY_URINE,
 		TRAIT_NIGHT_OWL,
 		TRAIT_ANTISCRYING
 	)

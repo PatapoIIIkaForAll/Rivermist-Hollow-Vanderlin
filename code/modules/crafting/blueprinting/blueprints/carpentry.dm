@@ -482,7 +482,7 @@
 
 /datum/blueprint_recipe/carpentry/handcart
 	name = "wooden handcart"
-	desc = "A wooden handcart."
+	desc = "A simple, reliable cart crafted from robust timber, offering modest storage space and serving as a practical means of transporting goods."
 	result_type = /obj/structure/handcart
 	required_materials = list(
 		/obj/item/grown/log/tree/small = 3,

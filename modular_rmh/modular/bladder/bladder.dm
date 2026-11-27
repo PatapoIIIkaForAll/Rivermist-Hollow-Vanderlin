@@ -20,12 +20,14 @@
 	category = "General"
 
 /mob/living/carbon/human/adjust_hydration(change)
+	var/hydration_before = hydration
 	. = ..()
-	if(change > 0 && !HAS_TRAIT(src, TRAIT_NOHUNGER))
-		SEND_SIGNAL(src, COMSIG_HUMAN_HYDRATION_GAINED, change)
+	var/gained = hydration - hydration_before
+	if(gained > 0 && !HAS_TRAIT(src, TRAIT_NOHUNGER))
+		SEND_SIGNAL(src, COMSIG_HUMAN_HYDRATION_GAINED, gained)
 
 /mob/living/proc/watersports_allowed()
-	return get_erp_pref(/datum/erp_preference/boolean/watersports) == TRUE
+	return sees_watersports() && get_erp_pref(/datum/erp_preference/boolean/watersports) == TRUE
 
 /mob/living/proc/get_bladder()
 	RETURN_TYPE(/datum/component/bladder)
@@ -40,6 +42,9 @@
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 	var/datum/reagents/contents
 	var/urge = BLADDER_URGE_NONE
+	/// Units already drunk that have yet to reach the bladder.
+	var/pending = 0
+	var/flow_timer
 
 /datum/component/bladder/Initialize()
 	if(!ishuman(parent))
@@ -50,6 +55,7 @@
 	var/mob/living/carbon/human/owner = parent
 	if(!QDELETED(owner))
 		owner.remove_status_effect(/datum/status_effect/bladder_urge)
+	deltimer(flow_timer)
 	QDEL_NULL(contents)
 	return ..()
 
@@ -64,8 +70,22 @@
 /datum/component/bladder/proc/on_hydration_gained(datum/source, amount)
 	SIGNAL_HANDLER
 	var/mob/living/carbon/human/owner = parent
+	if(owner.is_bladder_at_rest())
+		return
+	pending = min(pending + amount * CONFIG_GET(number/bladder_fill_rate), max(BLADDER_MAX_FILL - contents.total_volume, 0))
+	if(pending > 0 && !flow_timer)
+		flow_timer = addtimer(CALLBACK(src, PROC_REF(flow)), BLADDER_FLOW_INTERVAL, TIMER_STOPPABLE)
+
+/// Moves a little of what was drunk into the bladder, paused while the owner rests.
+/datum/component/bladder/proc/flow()
+	flow_timer = null
+	var/mob/living/carbon/human/owner = parent
 	if(!owner.is_bladder_at_rest())
-		fill(amount * BLADDER_UNITS_PER_HYDRATION)
+		var/amount = min(pending, BLADDER_FLOW_UNITS)
+		pending -= amount
+		fill(amount)
+	if(pending > 0)
+		flow_timer = addtimer(CALLBACK(src, PROC_REF(flow)), BLADDER_FLOW_INTERVAL, TIMER_STOPPABLE)
 
 /datum/component/bladder/proc/fill(amount)
 	amount = min(amount, BLADDER_MAX_FILL - contents.total_volume)
@@ -185,7 +205,7 @@
 		remind()
 
 /datum/status_effect/bladder_urge/get_examine_text(mob/user, list/P)
-	if(owner.is_bladder_at_rest())
+	if(owner.is_bladder_at_rest() || !user?.sees_watersports())
 		return null
 	switch(level)
 		if(BLADDER_URGE_URGENT)
@@ -221,7 +241,7 @@
 		"%NAME fidgets, glancing about for somewhere private.",
 	)
 	var/fidget = replacetext(replacetext(pick(fidgets), "%NAME", "[owner]"), "%THEIR", owner.p_their())
-	owner.visible_message(span_notice(fidget), vision_distance = 3, ignored_mobs = list(owner))
+	owner.watersports_message(span_notice(fidget), vision_distance = 3, ignored_mobs = list(owner))
 
 /datum/status_effect/bladder_urge/proc/get_stresses()
 	var/static/list/stresses = list(/datum/stress_event/bladder_need, /datum/stress_event/bladder_urgent, /datum/stress_event/bladder_bursting)
@@ -314,7 +334,7 @@
 		to_chat(src, span_warning(bladder_localized(src, "I'm busy with something else.", "Сейчас мне не до этого.")))
 		return FALSE
 	var/obj/target = get_relief_target()
-	visible_message(span_notice("[src] starts to relieve [p_them()]self[target ? " into [target]" : ""]."), span_notice(bladder_localized(src, "I start to relieve myself.", "Я начинаю справлять нужду.")), vision_distance = 3)
+	watersports_message(span_notice("[src] starts to relieve [p_them()]self[target ? " into [target]" : ""]."), span_notice(bladder_localized(src, "I start to relieve myself.", "Я начинаю справлять нужду.")), vision_distance = 3)
 	var/amount = bladder.get_volume()
 	if(!do_after(src, BLADDER_RELIEVE_BASE_TIME + amount * BLADDER_RELIEVE_TIME_PER_UNIT, src))
 		return FALSE

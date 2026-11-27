@@ -169,7 +169,7 @@
 
 /datum/species/ooze/proc/on_ooze_death(mob/living/carbon/human/source, gibbed)
 	SIGNAL_HANDLER
-	if(gibbed || !source?.mind || source.defeat_final_death || source.defeat_mode == DEFEAT_MODE_NO_RETURN)
+	if(gibbed || !source?.mind || source.defeat_final_death || source.get_effective_defeat_mode() == DEFEAT_MODE_NO_RETURN)
 		return
 	var/mob/living/simple_animal/hostile/retaliate/ooze_blob/suffering/blob = new(get_turf(source))
 	blob.link_body(source)

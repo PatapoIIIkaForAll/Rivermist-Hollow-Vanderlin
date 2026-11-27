@@ -258,9 +258,13 @@
 /datum/action/cooldown/keen_nose/proc/get_smell_message(mob/living/target)
 	if(ishuman(target))
 		var/mob/living/carbon/human/target_human = target
-		var/mob/living/carbon/human/sniffer = owner
+		var/mob/living/sniffer = owner
 		var/datum/species/target_species = target_human.dna?.species
-		var/datum/species/sniffer_species = sniffer?.dna?.species
+		var/datum/species/sniffer_species
+		//Shapeshifted forms have no dna
+		if(ishuman(sniffer))
+			var/mob/living/carbon/human/human_sniffer = sniffer
+			sniffer_species = human_sniffer.dna?.species
 
 		if(IS_WEREWOLF(target_human) && IS_WEREWOLF(sniffer))
 			return "You smell [target_human.name], a fellow werewolf"

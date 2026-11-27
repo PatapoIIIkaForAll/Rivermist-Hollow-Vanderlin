@@ -199,6 +199,8 @@
 		/datum/supply_pack/jewelry/silverring,
 		// Luxury goods
 		/datum/supply_pack/luxury/chess,
+		/datum/supply_pack/luxury/card_boosters, //RMH EDITED - card games
+		/datum/supply_pack/luxury/playing_cards, //RMH EDITED - card games
 		/datum/supply_pack/luxury/spectacles_golden,
 		/datum/supply_pack/luxury/spectacles_monocle,
 		/datum/supply_pack/luxury/heel_elixir,

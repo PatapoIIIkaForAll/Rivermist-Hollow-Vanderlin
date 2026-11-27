@@ -302,6 +302,10 @@ SUBSYSTEM_DEF(garbage)
 	if(!D)
 		return
 	if(!enable_hard_deletes && !override)
+		// QDEL_HINT_HARDDEL sends mobs here after GC_DEL_QUEUE; most of their refs clear within the full check, so give them it first.
+		if(D.gc_destroyed > 0 && world.time - D.gc_destroyed < collection_timeout[GC_QUEUE_CHECK])
+			Queue(D, GC_QUEUE_CHECK)
+			return
 		// Keeping every failure pinned it, and all it referenced, for the round; the image table filled on long rounds.
 		failed_hard_delete_count++
 		var/datum/qdel_item/skipped_info = items[D.type] || (items[D.type] = new /datum/qdel_item(D.type))

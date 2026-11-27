@@ -6,18 +6,8 @@
 	..()
 	eyes_dna.eye_glowing = glows
 
-/obj/item/organ/eyes/Insert(mob/living/carbon/M, special = FALSE, drop_if_replaced = FALSE, new_zone = null)
-	. = ..()
-	if(glows)
-		add_verb(M, /mob/living/carbon/proc/set_eyes_glowing)
-
-/obj/item/organ/eyes/Remove(mob/living/carbon/M, special = 0)
-	. = ..()
-	remove_verb(M, /mob/living/carbon/proc/set_eyes_glowing)
-
+/// Flips the glow of glowing eyes. Set from the Toggles window.
 /mob/living/carbon/proc/set_eyes_glowing()
-	set name = "Switch eyes glowing"
-	set category = "IC"
 	for(var/obj/item/organ/eyes/eyes in internal_organs)
 		eyes.user_glowing_pref = !eyes.user_glowing_pref
 	update_body_parts(TRUE)

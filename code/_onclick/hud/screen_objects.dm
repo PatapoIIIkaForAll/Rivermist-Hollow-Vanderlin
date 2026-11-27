@@ -566,7 +566,7 @@
 		else
 			icon_state = "take[giving]"
 
-/// The heart medallion at the foot of the HUD; invisible over the background art, lit red on hover.
+/// The heart medallion at the foot of the HUD; lit red on hover, filled pink by arousal.
 /atom/movable/screen/interact_heart
 	name = "interact"
 	desc = "Open the interaction panel."
@@ -574,6 +574,44 @@
 	icon_state = "interact"
 	screen_loc = rogueui_interact
 	mouse_opacity = MOUSE_OPACITY_OPAQUE
+	/// Filled steps of the arousal overlay, 0 to AROUSAL_HEART_STEPS.
+	var/fill_step = 0
+	/// Arousal is above the full display scale; the full heart glows.
+	var/glowing = FALSE
+
+/atom/movable/screen/interact_heart/Initialize(mapload, datum/hud/hud_owner)
+	. = ..()
+	var/mob/owner = hud?.mymob
+	if(owner)
+		RegisterSignal(owner, COMSIG_SEX_AROUSAL_CHANGED, PROC_REF(on_arousal_changed))
+	update_arousal_fill(TRUE)
+
+/atom/movable/screen/interact_heart/Destroy()
+	if(hud?.interact_heart == src)
+		hud.interact_heart = null
+	return ..()
+
+/atom/movable/screen/interact_heart/proc/on_arousal_changed(datum/source)
+	SIGNAL_HANDLER
+	update_arousal_fill()
+
+/// Redraws the fill overlay when the arousal step or the glow changes.
+/atom/movable/screen/interact_heart/proc/update_arousal_fill(force = FALSE)
+	var/datum/component/arousal/arousal_comp = hud?.mymob?.GetComponent(/datum/component/arousal)
+	var/arousal = arousal_comp?.arousal || 0
+	var/new_step = arousal_heart_step(arousal)
+	var/new_glow = is_highly_aroused(arousal)
+	if(!force && new_step == fill_step && new_glow == glowing)
+		return
+	fill_step = new_step
+	glowing = new_glow
+	update_appearance(UPDATE_OVERLAYS)
+
+/atom/movable/screen/interact_heart/update_overlays()
+	. = ..()
+	if(glowing)
+		. += mutable_appearance('modular_rmh/icons/hud/arousal_heart.dmi', "glow")
+	. += mutable_appearance('modular_rmh/icons/hud/arousal_heart.dmi', "fill[fill_step]")
 
 /atom/movable/screen/interact_heart/Click(location, control, params)
 	var/mob/living/carbon/human/user = hud?.mymob

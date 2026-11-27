@@ -2,6 +2,9 @@
 /datum/preference/toggle/role_calls
 	savefile_key = "role_calls"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Gameplay"
+	toggles_menu_name = "Ghost role calls"
+	toggles_menu_desc = "Get asked to take ghost roles while you wait in the lobby or spectate."
 	category = "ghost"
 	can_randomize = FALSE
 	should_update_preview = FALSE

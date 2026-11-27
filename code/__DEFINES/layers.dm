@@ -108,6 +108,8 @@
 #define GAME_PLANE_FOV_HIDDEN -8
 #define GAME_PLANE_OBJECT_PERMANENCE -7
 #define GAME_PLANE_UPPER -6
+/// Sparkle of gold-quality items; its own plane so each player can hide it. Relayed onto GAME_PLANE.
+#define QUALITY_GLINT_PLANE -17
 
 #define SEETHROUGH_PLANE -5
 
@@ -150,7 +152,7 @@
 #define SUNLIGHTING_PLANE 140
 #define SUNLIGHTING_RENDER_TARGET "*SUNLIGHT_RENDER_TARGET"
 
-///Normal 1 per turf dynamic lighting objects
+///The shared lighting looks that turfs show
 #define LIGHTING_PLANE 150
 #define LIGHTING_RENDER_TARGET "LIGHT_RENDER_TARGET"
 

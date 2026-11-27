@@ -16,11 +16,16 @@
 	var/temperature_weight = 1
 	var/temperature_falloff = 0.9
 
+	/// Percent chance per weather tick that the heaviest rain puts this fire out; lighter rain scales it down. 0 means rain never does.
+	var/rain_douse_chance = 0
+
 /obj/machinery/light/fueled/Initialize()
 	if(soundloop)
 		soundloop = new soundloop(src, FALSE)
 		soundloop.start()
 	GLOB.fires_list += src
+	if(rain_douse_chance)
+		GLOB.weather_act_upon_list += src
 	if(fueluse > 0)
 		fueluse = fueluse - (rand(fueluse*0.1,fueluse*0.3))
 	update_appearance(UPDATE_ICON_STATE)
@@ -88,7 +93,16 @@
 	QDEL_NULL(soundloop)
 	remove_temp_effect()
 	GLOB.fires_list -= src
+	GLOB.weather_act_upon_list -= src
 	. = ..()
+
+/obj/machinery/light/fueled/weather_act_on(weather_trait, severity)
+	if(weather_trait != PARTICLEWEATHER_RAIN || !on || !rain_douse_chance)
+		return
+	if(!prob(rain_douse_chance * severity / 100))
+		return
+	visible_message(span_warning("The rain puts out [src]."))
+	extinguish()
 
 /obj/machinery/light/fueled/fire_act(added, maxstacks)
 	if(!on && ((fueluse > 0) || (initial(fueluse) == 0)))

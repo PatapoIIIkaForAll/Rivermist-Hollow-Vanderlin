@@ -154,7 +154,9 @@
 
 /datum/outfit/skeleton/pre_equip(mob/living/carbon/human/equipped_human)
 	. = ..()
-	equipped_human.underwear = "Nude"
+	// Skeletons wear no smallclothes. underwear is the worn item slot, so clear the item, never set a style name.
+	if(equipped_human.underwear)
+		qdel(equipped_human.underwear)
 
 /* RAIDER SKELETON OUTFIT */
 /datum/outfit/skeleton/raider

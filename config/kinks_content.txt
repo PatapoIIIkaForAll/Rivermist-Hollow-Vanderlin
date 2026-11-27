@@ -1,0 +1,10 @@
+## Kink content that a server can turn off as a whole, and its settings.
+## Players can also hide some of it for themselves in the Toggles window.
+
+## Watersports: the Bladder quirk, the Watersports ERP preference and its actions,
+## squirting, and the Holy Urine of priests. 1 keeps it, 0 removes all of it.
+WATERSPORTS_ENABLED 1
+
+## Bladder units added per point of hydration a drink gives. A unit of water gives 12 hydration.
+## At 0.03 a 25-unit cup of water adds 9 units. The urge starts at 25 units and peaks at 50.
+BLADDER_FILL_RATE 0.03

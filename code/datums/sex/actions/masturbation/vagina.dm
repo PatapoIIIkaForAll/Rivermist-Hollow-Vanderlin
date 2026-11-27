@@ -39,5 +39,5 @@
 	user.visible_message(span_warning("[user] stops stroking."))
 
 /datum/sex_action/masturbate/vagina/handle_climax_message(mob/living/user, mob/living/target, must_flip)
-	user.visible_message(span_love("[user] creams themself!"))
+	user.visible_message(span_love_climax("[user] creams themself!"))
 	return ORGASM_LOCATION_SELF

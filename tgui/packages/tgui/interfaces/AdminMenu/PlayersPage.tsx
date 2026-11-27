@@ -11,7 +11,15 @@ import { Button, Icon, Input, Tooltip } from 'tgui-core/components';
 import { useBackend } from '../../backend';
 import type { AdminMenuData, PlayerDetail, PlayerEntry } from './types';
 
-type Filter = 'all' | 'living' | 'ghost' | 'lobby' | 'antag' | 'offline' | 'staff';
+type Filter =
+  | 'all'
+  | 'living'
+  | 'ghost'
+  | 'lobby'
+  | 'antag'
+  | 'online'
+  | 'offline'
+  | 'staff';
 
 const FILTERS: [Filter, string, string][] = [
   ['all', 'All', 'Everyone with a key'],
@@ -19,6 +27,7 @@ const FILTERS: [Filter, string, string][] = [
   ['ghost', 'Ghosts', 'Observers and ghosts'],
   ['lobby', 'Lobby', 'Players who have not entered the round'],
   ['antag', 'Antags', 'Players with a special role'],
+  ['online', 'Online', 'Players connected to the server'],
   ['offline', 'Offline', 'Bodies whose player disconnected'],
   ['staff', 'Staff', 'Admins'],
 ];
@@ -35,6 +44,8 @@ function matchesFilter(player: PlayerEntry, filter: Filter): boolean {
       return player.kind === 'lobby';
     case 'antag':
       return player.antag;
+    case 'online':
+      return player.connected;
     case 'offline':
       return !player.connected;
     case 'staff':

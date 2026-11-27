@@ -30,6 +30,8 @@
 #define FLUID_LETDOWN_AMOUNT 3
 #define FLUID_LETDOWN_MIN_INTERVAL (3 MINUTES)
 #define FLUID_LETDOWN_MAX_INTERVAL (6 MINUTES)
+/// How long an organ stays full before its first let-down.
+#define FLUID_LETDOWN_FIRST_DELAY (10 MINUTES)
 
 //container organ that can refill self through nutrients etc.
 /obj/item/organ/genitals/filling_organ
@@ -879,9 +881,16 @@
 	var/pressure = clamp((fullness - DRIP_PRESSURE_THRESHOLD) / (1 - DRIP_PRESSURE_THRESHOLD), 0, 1)
 	return driprate * (1 + (pressure * (DRIP_PRESSURE_MAX_MULT - 1))) * get_leak_multiplier() * get_retention_multiplier()
 
-/// A completely full leaky organ lets down a small burst now and then, so clothes get damp but dry off between.
+/// A leaky organ that stays full a while lets down a small burst now and then, so clothes get damp but dry off between.
 /obj/item/organ/genitals/filling_organ/proc/try_letdown()
-	if(!leaks_when_full || reagents.total_volume < reagents.maximum_volume * FLUID_LETDOWN_FULL_RATIO)
+	if(!leaks_when_full)
+		return 0
+	if(reagents.total_volume < reagents.maximum_volume * FLUID_LETDOWN_FULL_RATIO)
+		COOLDOWN_RESET(src, letdown_cooldown)
+		return 0
+	// Just filled up: the first let-down waits.
+	if(!letdown_cooldown)
+		COOLDOWN_START(src, letdown_cooldown, FLUID_LETDOWN_FIRST_DELAY)
 		return 0
 	if(!COOLDOWN_FINISHED(src, letdown_cooldown))
 		return 0
@@ -1399,3 +1408,4 @@
 #undef FLUID_LETDOWN_AMOUNT
 #undef FLUID_LETDOWN_MIN_INTERVAL
 #undef FLUID_LETDOWN_MAX_INTERVAL
+#undef FLUID_LETDOWN_FIRST_DELAY

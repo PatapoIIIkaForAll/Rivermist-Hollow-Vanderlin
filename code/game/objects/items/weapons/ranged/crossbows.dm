@@ -98,14 +98,14 @@
 
 /datum/intent/shoot/musket
 	chargedrain = 0 //no drain to aim a gun
-	charging_slowdown = 4
+	charging_slowdown = 3
 	warnoffset = 20
 	chargetime = 10
 
 /datum/intent/shoot/musket/arc
 	name = "arc"
 	icon_state = "inarc"
-	charging_slowdown = 3
+	charging_slowdown = 2
 	warnoffset = 20
 
 /datum/intent/shoot/musket/arc/arc_check()

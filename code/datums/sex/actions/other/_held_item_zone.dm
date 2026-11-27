@@ -71,6 +71,15 @@
 		return FALSE
 	return TRUE
 
+/// Dropping the item or moving it to the other hand ends the action.
+/datum/sex_action/held_item_zone/can_continue(mob/living/user, mob/living/target)
+	. = ..()
+	if(!.)
+		return FALSE
+	if(!is_action_item_usable(action_item))
+		return FALSE
+	return find_action_item_hand(user, action_item) == action_item_hand
+
 /datum/sex_action/held_item_zone/lock_sex_object(mob/living/user, mob/living/target)
 	add_sex_lock(user, action_item_hand)
 	add_sex_lock(user, null, action_item)

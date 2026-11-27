@@ -209,7 +209,7 @@
 				loot_caches += cache
 				// Created after layout caching, so mark it native by hand or it
 				// would be ejected outside as a "foreign movable" on collapse.
-				native_movables[cache] = TRUE
+				track_native_movable(cache)
 			qdel(loot_marker)
 
 		for(var/obj/effect/landmark/dungeon/gate/gate_marker in current_turf)
@@ -316,7 +316,7 @@
 	if(!sealed)
 		cache.unseal()
 	loot_caches += cache
-	native_movables[cache] = TRUE
+	track_native_movable(cache)
 	return cache
 
 /// Resolves the run that owns a larder tag (see /datum/dungeon_run/get_larder_tag).
@@ -356,7 +356,7 @@
 	lair_entrance.lair_tag = run_tag
 	LAZYADDASSOCLIST(GLOB.kidnap_entrance_markers, run_tag, lair_entrance)
 	LAZYREMOVEASSOC(GLOB.kidnap_entrance_markers, "default", lair_entrance)
-	native_movables[lair_entrance] = TRUE
+	track_native_movable(lair_entrance)
 	// Escape tile beside it, so a released captive can crawl out.
 	for(var/turf/adjacent as anything in RANGE_TURFS(1, larder_turf))
 		if(adjacent == larder_turf || !is_valid_drop_turf(adjacent, null))
@@ -365,7 +365,7 @@
 		lair_escape.lair_tag = run_tag
 		LAZYADDASSOCLIST(GLOB.kidnap_escape_markers, run_tag, lair_escape)
 		LAZYREMOVEASSOC(GLOB.kidnap_escape_markers, "default", lair_escape)
-		native_movables[lair_escape] = TRUE
+		track_native_movable(lair_escape)
 		break
 
 /datum/pocket_dimension/dungeon/proc/get_open_dungeon_turfs()
@@ -498,7 +498,7 @@
 		if(drop_turf)
 			var/obj/item/dungeon_key/key = new(drop_turf)
 			key.key_id = keyholder_drops[source_ref]
-			native_movables[key] = TRUE
+			track_native_movable(key)
 		keyholder_drops -= source_ref
 	if(owning_run)
 		var/floor_for_drops = owning_run.floor

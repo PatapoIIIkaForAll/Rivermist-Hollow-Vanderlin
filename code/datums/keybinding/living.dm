@@ -383,6 +383,34 @@
 	. = ..()
 	SEND_SIGNAL(user.mob, COMSIG_KB_LIVING_ITEM_PIXEL_SHIFT_UP)
 
+/datum/keybinding/living/layer_shift_up
+	hotkey_keys = list("CtrlShiftNortheast") // Ctrl+Shift+PageUp
+	name = "layer_shift_up"
+	full_name = "Layer up"
+	description = "Draw your character one step above others on the same tile, up to 5 steps. Resets when you move, stand up or lie down."
+
+/datum/keybinding/living/layer_shift_up/down(client/user, turf/target, mousepos_x, mousepos_y)
+	. = ..()
+	var/mob/living/shifter = user.mob
+	if(shifter.stat >= UNCONSCIOUS)
+		return FALSE
+	shifter.shift_layer(1)
+	return TRUE
+
+/datum/keybinding/living/layer_shift_down
+	hotkey_keys = list("CtrlShiftSoutheast") // Ctrl+Shift+PageDown
+	name = "layer_shift_down"
+	full_name = "Layer down"
+	description = "Draw your character one step below others on the same tile, down to 5 steps. Resets when you move, stand up or lie down."
+
+/datum/keybinding/living/layer_shift_down/down(client/user, turf/target, mousepos_x, mousepos_y)
+	. = ..()
+	var/mob/living/shifter = user.mob
+	if(shifter.stat >= UNCONSCIOUS)
+		return FALSE
+	shifter.shift_layer(-1)
+	return TRUE
+
 /datum/keybinding/living/view_pet_data
 	hotkey_keys = list("Shift")
 	name = "view_pet_commands"

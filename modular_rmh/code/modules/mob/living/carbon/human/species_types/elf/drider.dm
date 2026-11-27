@@ -24,3 +24,11 @@
 
 /datum/species/elf/dark/drider/check_roundstart_eligible()
 	return TRUE
+
+/datum/species/elf/dark/drider/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+	. = ..()
+	C.add_silk_weaving(SPECIES_TRAIT)
+
+/datum/species/elf/dark/drider/on_species_loss(mob/living/carbon/human/C)
+	C.remove_silk_weaving(SPECIES_TRAIT)
+	return ..()

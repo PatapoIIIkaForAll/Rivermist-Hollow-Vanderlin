@@ -79,7 +79,15 @@
 			action_text = "mercilessly tickles"
 			arousal_amt = 0.8
 			orgasm_amt = 0.2
-		if(BODY_ZONE_HEAD, BODY_ZONE_PRECISE_EARS, BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_PRECISE_NECK)
+		if(BODY_ZONE_PRECISE_EARS)
+			action_text = "delicately brushes"
+			if(target.has_sensitive_ears())
+				arousal_amt = 2
+				orgasm_amt = 0.6
+			else
+				arousal_amt = 0.7
+				orgasm_amt = 0.2
+		if(BODY_ZONE_HEAD, BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_PRECISE_NECK)
 			action_text = "delicately brushes"
 			arousal_amt = 0.7
 			orgasm_amt = 0.2

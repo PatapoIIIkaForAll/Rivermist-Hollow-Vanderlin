@@ -42,8 +42,7 @@
 
 /datum/sex_action/npc/npc_vaginal_sex/show_penetration_start(mob/living/user, mob/living/target)
 	show_act_lines(get_start_lines(user, target), user, target, "warning")
-	var/used_sex_volume = sex_volume
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
+	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), get_sound_volume(user), TRUE, ignore_walls = FALSE)
 
 /datum/sex_action/npc/npc_vaginal_sex/compose_start_lines(mob/living/user, mob/living/target)
 	var/list/words = get_act_words(user, target)
@@ -64,8 +63,7 @@
 	act_cycles++
 	if(can_show_action_message(user, target))
 		show_perform_lines(user, target)
-	var/used_sex_volume = sex_volume
-	playsound(target, get_force_sound(), used_sex_volume, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, get_force_sound(), get_sound_volume(user), TRUE, -2, ignore_walls = FALSE)
 	do_thrust_animate(user, target)
 
 	//if(user.has_kink(KINK_ONOMATOPOEIA))

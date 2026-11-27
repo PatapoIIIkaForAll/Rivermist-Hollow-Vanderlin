@@ -954,6 +954,12 @@
 	icon_state = "lake"
 	first_time_text = "HIDDEN LAKE"
 
+/area/indoors/cave/rmh_cave/wet/underrmh
+	name = "Under Rivermist Hollow"
+	icon_state = "lake"
+	first_time_text = "UNDER SIDE"
+	map_generator = /datum/map_generator/caves/warren
+
 /area/indoors/cave/rmh_cave/west
 	name = "Western Caves"
 	first_time_text = "Western Caves"
@@ -973,6 +979,7 @@
 /area/indoors/cave/rmh_cave/southern
 	name = "Southern Caves"
 	first_time_text = "Southern Caves"
+
 
 /area/indoors/cave/rmh_cave/west/wild
 	map_generator = /datum/map_generator/caves/mixed
@@ -1094,6 +1101,13 @@
 /area/indoors/cave/rmh_cave/cave_leshiy
 	name = "Warrior's Caves"
 	first_time_text = "Hidden Cave"
+	ambush_times = null
+	ambush_types = null
+	ambush_mobs = null
+
+/area/indoors/cave/rmh_cave/cave_town
+	name = "West Rivermist Cave"
+	first_time_text = "West Canal"
 	ambush_times = null
 	ambush_types = null
 	ambush_mobs = null

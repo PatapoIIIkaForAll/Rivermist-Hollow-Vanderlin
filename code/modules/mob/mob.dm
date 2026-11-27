@@ -225,6 +225,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	hearers -= ignored_mobs
 	if(length(GLOB.sense_relay_mobs))
 		add_sense_relay_hearers(hearers)
+		hearers -= ignored_mobs
 	if(self_message)
 		hearers -= src
 	for(var/mob/M in hearers)

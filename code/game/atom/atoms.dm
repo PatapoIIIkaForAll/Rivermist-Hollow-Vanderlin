@@ -516,6 +516,8 @@
 			else if(istype(src, /obj/item/reagent_containers/glass/alchemical))
 				var/obj/item/reagent_containers/glass/alchemical/A = src
 				is_not_closed = !A.closed
+			else if(istype(src, /obj/structure/fermentation_keg))
+				is_not_closed = TRUE
 			if(is_not_closed && reagents.total_volume) // if the container is open, and there's liquids in there
 				user.visible_message(span_info("[user] takes a whiff of [src]."))
 				. += span_notice("I smell [src.reagents.generate_scent_message()].")

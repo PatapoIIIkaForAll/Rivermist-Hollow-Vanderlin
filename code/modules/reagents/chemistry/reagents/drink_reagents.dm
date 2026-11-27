@@ -1,4 +1,5 @@
 /datum/reagent/consumable/milk
+	drink_type = DRINKTYPE_MILK
 	name = "Milk"
 	description = "An opaque white liquid produced by the mammary glands of mammals."
 	color = "#DFDFDF" // rgb: 223, 223, 223
@@ -19,6 +20,7 @@
 
 
 /datum/reagent/consumable/coffee
+	drink_type = DRINKTYPE_TEA
 	name = "Coffee"
 	description = "Coffee is a brewed drink prepared from roasted seeds, commonly called coffee beans, of the coffee plant."
 	color = "#482000" // rgb: 72, 32, 0
@@ -56,6 +58,7 @@
 	..()
 
 /datum/reagent/consumable/golden_calendula_tea
+	drink_type = DRINKTYPE_TEA
 	name = "Golden Calendula Tea"
 	description = "A refreshing tea, great to soothe wounds and relieve fatigue."
 	color = "#b38e17"
@@ -83,6 +86,7 @@
 	..()
 
 /datum/reagent/consumable/soothing_valerian_tea
+	drink_type = DRINKTYPE_TEA
 	name = "Soothing Valerin Tea"
 	description = "A refreshing tea, great to ease fatigue and relieve stress."
 	color = "#3b9146"
@@ -94,6 +98,7 @@
 	..()
 
 /datum/reagent/consumable/caffeine
+	drink_type = DRINKTYPE_TEA
 	name = "Caffeine"
 	description = "Why are you seeing this?"
 	hydration_factor = 5

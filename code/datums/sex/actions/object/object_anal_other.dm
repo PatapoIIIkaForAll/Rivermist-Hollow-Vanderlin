@@ -45,8 +45,7 @@
 	if(orifice_pressing)
 		return .
 	user.visible_message(span_warning("[user] stuffs \the [dildo] in [target]'s ass..."))
-	var/used_sex_volume = sex_volume
-	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), used_sex_volume, TRUE, ignore_walls = FALSE)
+	playsound(target, list('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), get_sound_volume(user), TRUE, ignore_walls = FALSE)
 
 /datum/sex_action/object_fuck/object_anal_other/on_perform(mob/living/user, mob/living/target)
 	var/pain_amt = 3 //base pain amt to use
@@ -54,10 +53,7 @@
 
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] fucks [target]'s ass with \the [dildo]."))
-	if(user.rogue_sneaking || user.m_intent == MOVE_INTENT_SNEAK || user.alpha <= 100)
-		action_volume *= 0.5
-	var/used_sex_volume = sex_volume
-	playsound(target, get_force_sound(), used_sex_volume, TRUE, -2, ignore_walls = FALSE)
+	playsound(target, get_force_sound(), get_sound_volume(user), TRUE, -2, ignore_walls = FALSE)
 
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
@@ -77,7 +73,7 @@
 			else
 				target.visible_message(span_notice(pick("[english_list(contdildo.reagents.reagent_list)] from \the [contdildo] fill [target]'s ass.", "[user] feeds [target]'s ass with [english_list(contdildo.reagents.reagent_list)] from \The [contdildo]", "[english_list(contdildo.reagents.reagent_list)] from \the [contdildo] splash into [target]'s ass.", "[english_list(contdildo.reagents.reagent_list)] from \the [contdildo] flood into [target]'s ass.")), span_notice(pick("[english_list(contdildo.reagents.reagent_list)] from \the [contdildo] fill my ass.", "I feed my ass with [english_list(contdildo.reagents.reagent_list)] from \The [contdildo]", "[english_list(contdildo.reagents.reagent_list)] from \the [contdildo] splash into my ass.", "[english_list(contdildo.reagents.reagent_list)] from \the [contdildo] flood into me.")))
 				contdildo.reagents.trans_to(targetass, speed, 1, TRUE, FALSE, targetass, FALSE, INJECT, FALSE, TRUE)
-			playsound(user.loc, 'sound/misc/mat/endin.ogg', 20, TRUE)
+			playsound(user.loc, 'sound/misc/mat/endin.ogg', get_sound_volume(user, 20), TRUE)
 			pain_amt = max(pain_amt - 8, 0) //liquid ease pain i guess
 			target.heal_bodypart_damage(0,1,0,TRUE) //water on burn i guess.
 
@@ -86,7 +82,7 @@
 
 /datum/sex_action/object_fuck/object_anal_other/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		target.visible_message(span_love("[user] cums with their ass due to [target]'s thrusting dildo!"))
+		target.visible_message(span_love_climax("[user] cums with their ass due to [target]'s thrusting dildo!"))
 		user.lose_virginity()
 		return ORGASM_LOCATION_SELF
 

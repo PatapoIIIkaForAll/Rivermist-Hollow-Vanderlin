@@ -262,16 +262,16 @@
 			var/third_person_action = plants_maneater_seed ? "plants a seed in" : "lays an egg into"
 			var/first_person_action = plants_maneater_seed ? "plant a seed in" : "lay an egg into"
 			carrier.visible_message(
-				span_love("[carrier] [third_person_action] [receiver.owner]'s [host.get_oviposition_location_name()]!"),
-				span_love("I [first_person_action] [receiver.owner]'s [host.get_oviposition_location_name()]!")
+				span_ovi("[carrier] [third_person_action] [receiver.owner]'s [host.get_oviposition_location_name()]!"),
+				span_ovi("I [first_person_action] [receiver.owner]'s [host.get_oviposition_location_name()]!")
 			)
 			if(receiver.owner != carrier)
-				to_chat(receiver.owner, span_love("[carrier] [third_person_action] my [host.get_oviposition_location_name()]!"))
+				to_chat(receiver.owner, span_ovi("[carrier] [third_person_action] my [host.get_oviposition_location_name()]!"))
 			if(started_growing == OVI_EGG_GROWTH_STARTED)
 				if(plants_maneater_seed)
-					to_chat(receiver.owner, span_love("The planted seed in my [host.get_oviposition_location_name()] immediately begins to grow."))
+					to_chat(receiver.owner, span_ovi("The planted seed in my [host.get_oviposition_location_name()] immediately begins to grow."))
 				else
-					to_chat(receiver.owner, span_love("One of the eggs in my [host.get_oviposition_location_name()] immediately begins to grow."))
+					to_chat(receiver.owner, span_ovi("One of the eggs in my [host.get_oviposition_location_name()] immediately begins to grow."))
 			return TRUE
 
 	return FALSE
@@ -401,7 +401,7 @@
 		carrier.visible_message(span_love_flash("[carrier] shudders and [what] slide[count == 1 ? "s" : ""] deep into [carrier.p_their()] own [location]!"), span_love_flash("I clench and [what] rush[count == 1 ? "es" : ""] deep into my own [location]!"))
 	else
 		carrier.visible_message(span_love_flash("[carrier] goes rigid and [what] burst[count == 1 ? "s" : ""] into [host_owner]'s [location]!"), span_love_flash("I clench hard and [what] burst[count == 1 ? "s" : ""] out of me into [host_owner]'s [location]!"))
-		to_chat(host_owner, share >= 0.66 ? span_love_flash("[what] rush[count == 1 ? "es" : ""] into my [location] in one hot, shuddering wave!") : span_love("[what] force[count == 1 ? "s" : ""] into my [location] in one hard rush!"))
+		to_chat(host_owner, share >= 0.66 ? span_love_flash("[what] rush[count == 1 ? "es" : ""] into my [location] in one hot, shuddering wave!") : span_ovi("[what] force[count == 1 ? "s" : ""] into my [location] in one hard rush!"))
 	playsound(carrier, 'sound/effects/wounds/splatter.ogg', 60, TRUE)
 	return count
 

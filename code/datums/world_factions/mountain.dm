@@ -178,6 +178,8 @@
 		/datum/supply_pack/food/drinks/voddena,
 		/datum/supply_pack/jewelry/circlet,
 		/datum/supply_pack/luxury/chess,
+		/datum/supply_pack/luxury/card_boosters, //RMH EDITED - card games
+		/datum/supply_pack/luxury/playing_cards, //RMH EDITED - card games
 		/datum/supply_pack/luxury/silver_plaque_belt,
 		/datum/supply_pack/narcotics/perfume/random,
 		/datum/supply_pack/narcotics/perfume/lavender,

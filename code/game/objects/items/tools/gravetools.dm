@@ -49,6 +49,66 @@
 	. = ..()
 	icon_state = "[heldclod ? "[heldclod.clod_type]" : ""][initial(icon_state)]"
 
+/obj/item/weapon/shovel/proc/start_autodig(mob/living/L, turf/target)
+	if(!isliving(L) || !istype(target, /turf/open/floor/dirt))
+		return FALSE
+	if(L.stat != CONSCIOUS || !L.TurfAdjacent(target) || L.get_active_held_item() != src)
+		return FALSE
+	if(!istype(L.used_intent, /datum/intent/shovelscoop) || heldclod)
+		return FALSE
+
+	var/turf/open/floor/dirt/dirt = target
+	if(locate(/obj/structure/closet/dirthole) in dirt)
+		return FALSE
+
+	L.visible_message(span_notice("[L] begins digging on [target]..."))
+	if(istype(dirt, /turf/open/floor/dirt/road))
+		new /obj/structure/closet/dirthole(dirt)
+	else
+		dirt = dirt.ChangeTurf(/turf/open/floor/dirt/road, flags = CHANGETURF_INHERIT_AIR)
+	heldclod = new /obj/item/natural/clod/dirt(src)
+	playsound(dirt, 'sound/items/dig_shovel.ogg', 100, TRUE)
+	update_appearance(UPDATE_ICON_STATE)
+
+	var/target_x = dirt.x
+	var/target_y = dirt.y
+	var/target_z = dirt.z
+	while(do_after(L, 1 SECONDS * time_multiplier, dirt))
+		if(L.stat != CONSCIOUS || !(L.mobility_flags & MOBILITY_STAND))
+			to_chat(L, span_warning("You are knocked down and stop digging."))
+			break
+		if(L.get_active_held_item() != src || !istype(L.used_intent, /datum/intent/shovelscoop))
+			break
+
+		L.changeNext_move(L.used_intent.clickcd)
+		if(max_blade_int)
+			remove_bintegrity(2)
+
+		dirt = locate(target_x, target_y, target_z)
+		if(!istype(dirt, /turf/open/floor/dirt))
+			break
+		var/obj/structure/closet/dirthole/hole = locate(/obj/structure/closet/dirthole) in dirt
+		if(heldclod && hole)
+			if(hole.item_interaction(L, src, list()) != ITEM_INTERACT_SUCCESS)
+				break
+
+		dirt = locate(target_x, target_y, target_z)
+		if(!istype(dirt, /turf/open/floor/dirt))
+			break
+		if(locate(/obj/structure/closet/dirthole) in dirt)
+			break
+
+		if(istype(dirt, /turf/open/floor/dirt/road))
+			new /obj/structure/closet/dirthole(dirt)
+		else
+			dirt = dirt.ChangeTurf(/turf/open/floor/dirt/road, flags = CHANGETURF_INHERIT_AIR)
+		if(!heldclod)
+			heldclod = new /obj/item/natural/clod/dirt(src)
+		playsound(dirt, 'sound/items/dig_shovel.ogg', 100, TRUE)
+		update_appearance(UPDATE_ICON_STATE)
+
+	return TRUE
+
 /datum/intent/shovelscoop
 	name = "scoop"
 	icon_state = "inscoop"

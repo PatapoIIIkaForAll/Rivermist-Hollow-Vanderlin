@@ -125,6 +125,11 @@
 /datum/reagent/consumable/aphrodisiac/on_mob_end_metabolize(mob/living/carbon/human/C)
 	.=..()
 	SEND_SIGNAL(C, COMSIG_SEX_ADJUST_AROUSAL, -10)
+	C.set_lewd_haze(FULLSCREEN_HAZE_APHRODISIAC, /atom/movable/screen/fullscreen/lewd/haze_violet, FALSE)
+
+/datum/reagent/consumable/aphrodisiac/on_mob_delete(mob/living/L)
+	L.set_lewd_haze(FULLSCREEN_HAZE_APHRODISIAC, /atom/movable/screen/fullscreen/lewd/haze_violet, FALSE)
+	return ..()
 
 /datum/reagent/consumable/aphrodisiac/on_mob_life(mob/living/carbon/human/C)
 	var/high_message = pick(
@@ -179,6 +184,7 @@
 	return ..()
 
 /datum/reagent/consumable/aphrodisiac/overdose_start(mob/living/carbon/human/C)
+	C.set_lewd_haze(FULLSCREEN_HAZE_APHRODISIAC, /atom/movable/screen/fullscreen/lewd/haze_violet, TRUE)
 	if(current_cycle < 20)
 		current_cycle = 20
 		to_chat(C, "<span class='aphrodisiac'>A wave of heat crashes over you, making it hard to focus.</span>")
@@ -194,6 +200,7 @@
 		C.emote("sexmoanlight", forced = TRUE)
 
 /datum/reagent/consumable/aphrodisiac/overdose_process(mob/living/carbon/human/C)
+	C.set_lewd_haze(FULLSCREEN_HAZE_APHRODISIAC, /atom/movable/screen/fullscreen/lewd/haze_violet, TRUE)
 	if(prob(5))
 		if(C.silent || !C.can_speak())
 			C.emote("sexmoangag", forced = TRUE)

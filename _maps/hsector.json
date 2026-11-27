@@ -2,7 +2,7 @@
 	"map_name": "Rivermist Hollow",
 	"map_path": "map_files/hsector",
 	"map_file": [
-			"hsector.dmm",
+			"hsector_new.dmm",
 			"frozen_mountains.dmm",
 			"underdark.dmm",
 			"bogforest.dmm"

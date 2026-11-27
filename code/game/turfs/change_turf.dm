@@ -5,7 +5,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 /turf/proc/empty(turf_type=/turf/open/floor/naturalstone, baseturf_type, list/ignore_typecache, flags)
 	// Remove all atoms except observers, landmarks, docking ports
-	var/static/list/ignored_atoms = typecacheof(list(/mob/dead, /obj/effect/landmark, /atom/movable/lighting_object))
+	var/static/list/ignored_atoms = typecacheof(list(/mob/dead, /obj/effect/landmark))
 	var/list/allowed_contents = typecache_filter_list_reverse(GetAllContentsIgnoring(ignore_typecache), ignored_atoms)
 	allowed_contents -= src
 	for(var/i in 1 to allowed_contents.len)
@@ -14,6 +14,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 		if(QDELETED(thing))
 			continue
 		qdel(thing, force=TRUE)
+	clear_outdoor_effect()
 
 	if(turf_type)
 		var/turf/newT = ChangeTurf(turf_type, baseturf_type, flags)
@@ -70,11 +71,14 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	if(flags & CHANGETURF_SKIP)
 		return new path(src)
 
+	var/old_type = type
 	var/old_opacity = opacity
 	var/old_dynamic_lighting = dynamic_lighting
 	var/old_affecting_lights = affecting_lights
-	var/old_lighting_object = lighting_object
-	var/old_outdoor_effect = outdoor_effect
+	var/atom/movable/lighting_look/old_lighting_look = lighting_look
+	var/datum/outdoor_state/old_outdoor_effect = outdoor_effect
+	var/atom/movable/outdoor_look/old_outdoor_look = outdoor_look
+	var/list/old_sunlight_corners = sunlight_corners
 	var/old_corners = corners
 
 	var/old_exl = explosion_level
@@ -126,12 +130,21 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	W.blueprint_data = old_bp
 
 	if(SSlighting.initialized)
+		// The new turf starts with an empty vis_contents and its own luminosity.
 		if(SSoutdoor_effects.initialized)
 			outdoor_effect = old_outdoor_effect
+			sunlight_corners = old_sunlight_corners
+			// The look still counts this turf as a user, so it goes back without set_outdoor_look().
+			if(old_outdoor_look)
+				outdoor_look = old_outdoor_look
+				vis_contents += old_outdoor_look
 			update_sky_and_weather_states()
 
 		recalc_atom_opacity()
-		lighting_object = old_lighting_object
+		if(old_lighting_look)
+			lighting_look = old_lighting_look
+			vis_contents += old_lighting_look
+		refresh_luminosity()
 		affecting_lights = old_affecting_lights
 		corners = old_corners
 		if (old_opacity != opacity || dynamic_lighting != old_dynamic_lighting)
@@ -142,6 +155,9 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 				lighting_build_overlay()
 			else
 				lighting_clear_overlay()
+		// A filler turf has no lighting look. Give it one when it becomes a real turf.
+		else if(!lighting_look && old_type == world.turf && IS_DYNAMIC_LIGHTING(src) && !IS_FILLER_TURF(src))
+			lighting_build_overlay()
 
 	// only queue for smoothing if SSatom initialized us, and we'd be changing smoothing state
 	if(flags_1 & INITIALIZED_1)

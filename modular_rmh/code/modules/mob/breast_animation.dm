@@ -1,15 +1,16 @@
 /datum/preference/toggle/breast_animation
 	savefile_key = "breast_animation"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Breast animation"
+	toggles_menu_desc = "Animate your character's breasts when moving and on some emotes."
 	category = "gameplay"
 	can_randomize = FALSE
 	should_update_preview = FALSE
 	default_value = TRUE
 
-/client/verb/toggle_breast_animation()
-	set name = "Toggle Breast Animation"
-	set desc = "Animate your character's breasts when moving and on some emotes."
-	set category = "Preferences"
+/// Flips breast animation and refreshes the body. Set from the Toggles window.
+/client/proc/toggle_breast_animation()
 	prefs.write_preference(/datum/preference/toggle/breast_animation, !prefs.read_preference(/datum/preference/toggle/breast_animation))
 	prefs.save_preferences()
 	to_chat(usr, span_notice("Breast animation [prefs.read_preference(/datum/preference/toggle/breast_animation) ? "enabled" : "disabled"] for your character."))

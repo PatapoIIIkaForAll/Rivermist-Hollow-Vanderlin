@@ -49,15 +49,8 @@
 /obj/item/organ/genitals
 	var/visible_through_clothes = FALSE
 
-/mob/living/carbon/verb/toggle_genitals()
-	set category = "IC"
-	set name = "Expose/Hide genitals"
-	set desc = "Allows you to toggle which genitals should show through clothes or not."
-
-	if(stat != CONSCIOUS)
-		to_chat(usr, span_warning("You can toggle genitals visibility right now..."))
-		return
-
+/// Visible organs the Toggles window lets the player show or hide.
+/mob/living/carbon/proc/get_exposable_genitals()
 	var/list/genital_list = list()
 	for(var/obj/item/organ/G in internal_organs)
 		if(G.visible_organ \
@@ -65,34 +58,7 @@
 			&& !istype(G, /obj/item/organ/ears) \
 			&& !istype(G, /obj/item/organ/genitals/filling_organ/anus))
 			genital_list += G
-
-	if(!genital_list.len)
-		return
-
-	//Full list of exposable genitals created
-	var/obj/item/organ/picked_organ
-	picked_organ = input(src, "Choose which genitalia to expose/hide", "Expose/Hide genitals") \
-		as null|anything in genital_list
-
-	if(!picked_organ \
-		|| QDELETED(picked_organ) \
-		|| stat != CONSCIOUS \
-		|| picked_organ.owner != src \
-		|| !(picked_organ in internal_organs))
-		return
-
-	var/vis_type = input(src, "How will it be shown?", "Expose/Hide genitals") \
-		in list("Hidden", "Show Under clothes", "Show Above clothes")
-
-	// Re-validate again after yield
-	if(!picked_organ \
-		|| QDELETED(picked_organ) \
-		|| stat != CONSCIOUS \
-		|| picked_organ.owner != src \
-		|| !(picked_organ in internal_organs))
-		return
-
-	picked_organ.toggle_visibility(vis_type)
+	return genital_list
 
 /obj/item/organ/genitals/toggle_visibility(vis_type)
 	switch(vis_type)

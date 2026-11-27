@@ -113,13 +113,13 @@
 
 	handle_knot_force_effects(user, target, force_level)
 	// The receiver gets its own line, so the room line skips it.
-	user.visible_message(span_notice("[user] shoves deep and [user.p_their()] knot swells, locking [user.p_them()] inside [target]!"),
-		span_notice("I shove deep and my knot swells, locking me inside [target]."),
+	user.visible_message(span_love_climax("[user] shoves deep and [user.p_their()] knot swells, locking [user.p_them()] inside [target]!"),
+		span_love_climax("I shove deep and my knot swells, locking me inside [target]."),
 		span_hear("I hear a yelp and a wet, final push."),
 		ignored_mobs = list(target))
 
 	if(target.stat != DEAD)
-		to_chat(target, span_userdanger("[user]'s knot swells inside me and locks us together!"))
+		to_chat(target, span_love_climax("[user]'s knot swells inside me and locks us together!"))
 
 	apply_knot_status_effects(user, target)
 	if(originating_action?.hole_id in list(ORGAN_SLOT_VAGINA, ORGAN_SLOT_ANUS))

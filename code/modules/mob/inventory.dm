@@ -260,6 +260,9 @@
 		return FALSE
 	if(!temporarilyRemoveItemFromInventory(I, force_removal))
 		return FALSE
+	//Unequipping can delete the item or send it to nullspace (a hood stowed by its cloak)
+	if(QDELETED(I) || !I.loc)
+		return FALSE
 	I.remove_item_from_storage(src)
 	if(!put_in_hand(I, hand_index))
 		qdel(I)

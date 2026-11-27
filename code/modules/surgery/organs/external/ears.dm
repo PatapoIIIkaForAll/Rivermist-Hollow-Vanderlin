@@ -38,6 +38,8 @@
 	var/damage_multiplier = 1
 	/// Currently mid ear-flick animation. Swaps the accessory to its `_flick` state while TRUE.
 	var/is_flicking = FALSE
+	/// Pointed or animal ears that react strongly to touch. See has_sensitive_ears().
+	var/sensitive = FALSE
 	var/static/sound/ringing = sound('sound/flash_ring.ogg', FALSE, 0, CHANNEL_EAR_RING, 75)
 
 /obj/item/organ/ears/Insert(mob/living/carbon/M, special, drop_if_replaced, new_zone = null)
@@ -121,41 +123,63 @@
 	if(dna?.species?.can_flick_ears(src))
 		dna.species.perform_flick_ears(src)
 
+/// TRUE when touching this mob's ears is strongly arousing: sensitive ear organs or the Sensitive Ears quirk.
+/mob/living/proc/has_sensitive_ears()
+	if(HAS_TRAIT(src, TRAIT_SENSITIVE_EARS))
+		return TRUE
+	var/obj/item/organ/ears/ears = getorganslot(ORGAN_SLOT_EARS)
+	return ears?.sensitive
+
 /obj/item/organ/ears/cat
 	name = "cat ears"
 	icon = 'icons/obj/clothing/hats.dmi'
 	icon_state = "kitty"
 	damage_multiplier = 2
+	sensitive = TRUE
 
 /obj/item/organ/ears/elf
 	name = "elf ears"
 	icon_state = "ear_pointed"
 	use_mob_sprite_as_obj_sprite = FALSE
 	accessory_type = /datum/sprite_accessory/ears/elf
+	sensitive = TRUE
 
 /obj/item/organ/ears/elfw
 	name = "wood elf ears"
 	icon_state = "ear_pointed"
 	use_mob_sprite_as_obj_sprite = FALSE
 	accessory_type = /datum/sprite_accessory/ears/elfw
+	sensitive = TRUE
 
 /obj/item/organ/ears/halforc
 	name = "halforc ears"
 	icon_state = "ear_pointed"
 	use_mob_sprite_as_obj_sprite = FALSE
 	accessory_type = /datum/sprite_accessory/ears/elf
+	sensitive = TRUE
 
 /obj/item/organ/ears/tiefling
 	name = "tiefling ears"
 	icon_state = "ear_pointed"
 	use_mob_sprite_as_obj_sprite = FALSE
 	accessory_type = /datum/sprite_accessory/ears/elfw
+	sensitive = TRUE
 
 /obj/item/organ/ears/anthro
 	name = "wild-kin ears"
+	sensitive = TRUE
+
+/obj/item/organ/ears/anthro/hood
+	name = "hood"
+	sensitive = FALSE
+
+/obj/item/organ/ears/hollowkin
+	name = "hollow-kin ears"
+	sensitive = TRUE
 
 /obj/item/organ/ears/rakshari
 	name = "rakshari ears"
+	sensitive = TRUE
 
 /obj/item/organ/ears/triton
 	name = "triton ears"

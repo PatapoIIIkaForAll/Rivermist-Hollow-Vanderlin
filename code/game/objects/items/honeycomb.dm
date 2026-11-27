@@ -1,5 +1,6 @@
 
 /obj/item/reagent_containers/food/snacks/spiderhoney
+	dish_type = DISH_SWEET
 	item_weight = 30 GRAMS
 	name = "honeycomb"
 	desc = ""

@@ -1,0 +1,175 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/wall/mineral/decowood,
+/area/indoors/town/rmh/living)
+"c" = (
+/turf/open/floor/tile,
+/area/indoors/town/rmh/living)
+"h" = (
+/obj/structure/fluff/railing/wood,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/living)
+"i" = (
+/turf/open/openspace,
+/area/indoors/town/rmh/living)
+"q" = (
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh/living)
+"r" = (
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/living)
+"u" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/living)
+"y" = (
+/obj/structure/stairs{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/living)
+"D" = (
+/obj/structure/window/solid,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"E" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 4
+	},
+/area/indoors/town/rmh/living)
+"F" = (
+/obj/structure/sign/property_sign/claim,
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh/living)
+"I" = (
+/turf/closed/wall/mineral/wooddark/horizontal,
+/area/indoors/town/rmh/living)
+"J" = (
+/obj/structure/door{
+	lockid = "outskirt_house5";
+	name = "Outskirt House V"
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"L" = (
+/turf/closed/wall/mineral/stone,
+/area/indoors/town/rmh/living)
+"M" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 8
+	},
+/area/indoors/town/rmh/living)
+"N" = (
+/obj/structure/door/weak/bolt{
+	dir = 8
+	},
+/obj/effect/mapping_helpers/access/locker,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"R" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/tile,
+/area/indoors/town/rmh/living)
+"S" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 2
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+
+(1,1,1) = {"
+u
+a
+a
+a
+L
+L
+"}
+(2,1,1) = {"
+E
+r
+r
+r
+L
+L
+"}
+(3,1,1) = {"
+S
+r
+r
+r
+r
+a
+"}
+(4,1,1) = {"
+D
+r
+r
+r
+y
+a
+"}
+(5,1,1) = {"
+M
+r
+r
+r
+r
+a
+"}
+(6,1,1) = {"
+u
+a
+q
+J
+F
+u
+"}
+
+(1,1,2) = {"
+u
+a
+I
+I
+L
+L
+"}
+(2,1,2) = {"
+a
+r
+r
+c
+c
+L
+"}
+(3,1,2) = {"
+q
+r
+r
+c
+R
+q
+"}
+(4,1,2) = {"
+q
+r
+r
+h
+i
+q
+"}
+(5,1,2) = {"
+a
+r
+r
+r
+y
+a
+"}
+(6,1,2) = {"
+u
+a
+N
+I
+a
+u
+"}

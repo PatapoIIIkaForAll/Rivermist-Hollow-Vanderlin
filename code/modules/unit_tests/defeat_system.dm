@@ -415,6 +415,43 @@
 	rune_user.mind.current = null
 	rune_user.mind = null
 
+/datum/unit_test/defeat_rune_severed_makes_death_final
+
+/datum/unit_test/defeat_rune_severed_makes_death_final/Run()
+	var/obj/structure/resurrection_rune/test_rune = allocate(/obj/structure/resurrection_rune, get_step(run_loc_floor_bottom_left, EAST))
+	var/datum/resurrection_rune_controller/controller = test_rune.resrunecontroler
+	var/mob/living/carbon/human/body = allocate(/mob/living/carbon/human)
+	var/datum/mind/occupant = allocate(/datum/mind, "defeat-rune-severed-user")
+	body.mind = occupant
+	occupant.current = body
+	body.defeat_system_ai_opt_in = TRUE
+	body.defeat_mode = DEFEAT_MODE_KO_RUNE
+	TEST_ASSERT(controller.add_user(body), "Setup should bind the controlled body to its rune.")
+	body.apply_status_effect(/datum/status_effect/defeat_knockout)
+	TEST_ASSERT(HAS_TRAIT(body, TRAIT_NODEATH), "Setup should grant the KO's protection from death.")
+	controller.queue_revival(body)
+	TEST_ASSERT(body in controller.resurrecting, "Setup should queue a rune return before severing the link.")
+
+	ADD_TRAIT(body, TRAIT_RUNE_SEVERED, ADMIN_TRAIT)
+	TEST_ASSERT_EQUAL(body.get_effective_defeat_mode(), DEFEAT_MODE_NO_RETURN, "Rune Severed should give the body lethal defeat rules.")
+	TEST_ASSERT_NULL(body.has_status_effect(/datum/status_effect/defeat_knockout), "Severing the rune should end the existing knockout.")
+	TEST_ASSERT(!HAS_TRAIT(body, TRAIT_NODEATH), "The knockout must release its death protection.")
+	TEST_ASSERT_NULL(find_resurrection_rune_by_mind(occupant), "Severing the rune should unregister the mind.")
+	TEST_ASSERT_EQUAL(body.rune_linked, RUNE_LINK_NONE, "Severing the rune should clear the body's tag.")
+	TEST_ASSERT(!(body in controller.resurrecting), "Severing the rune should cancel the queued return.")
+	TEST_ASSERT(!body.defeat_intercept_lethal(), "Ordinary lethal damage must bypass Defeat.")
+	TEST_ASSERT(!body.defeat_ensure_emergency_rune_link(), "Emergency linking must honor Rune Severed.")
+	TEST_ASSERT(!controller.add_linked_mind(occupant), "Manual binding must honor Rune Severed.")
+	TEST_ASSERT(!body.can_be_revived(), "Gameplay revival must honor Rune Severed.")
+	TEST_ASSERT(body.can_be_revived(ADMIN_HEAL_ALL), "An explicit admin revival can still recover the body.")
+
+	REMOVE_TRAIT(body, TRAIT_RUNE_SEVERED, ADMIN_TRAIT)
+	TEST_ASSERT_EQUAL(body.get_effective_defeat_mode(), DEFEAT_MODE_KO_RUNE, "Removing Rune Severed should reveal the original mode.")
+	TEST_ASSERT(controller.add_user(body), "The body can link again after the admin lifts Rune Severed.")
+	body.unlink_resurrection_rune()
+	occupant.current = null
+	body.mind = null
+
 /datum/unit_test/defeat_knockout_traits_are_custom
 
 /datum/unit_test/defeat_knockout_traits_are_custom/Run()

@@ -30,3 +30,18 @@
 
 /obj/item/storage/keyring/tavern_keeper
 	keys = list(/obj/item/key/tavern, /obj/item/key/roomi, /obj/item/key/roomii, /obj/item/key/roomiii, /obj/item/key/roomiv, /obj/item/key/roomv, /obj/item/key/roomvi, /obj/item/key/roomvii, /obj/item/key/roomviii, /obj/item/key/roomix)
+
+/obj/item/storage/keyring/tavern_room1
+	keys = list(/obj/item/key/roomi, /obj/item/key/roomi)
+
+/obj/item/storage/keyring/tavern_room2
+	keys = list(/obj/item/key/roomii, /obj/item/key/roomii, /obj/item/key/roomii)
+
+/obj/item/storage/keyring/tavern_room3
+	keys = list(/obj/item/key/roomiii, /obj/item/key/roomiii)
+
+/obj/item/storage/keyring/tavern_room8
+	keys = list(/obj/item/key/roomviii, /obj/item/key/roomviii)
+
+/obj/item/storage/keyring/tavern_room9
+	keys = list(/obj/item/key/roomix, /obj/item/key/roomix)

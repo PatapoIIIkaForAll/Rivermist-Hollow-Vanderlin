@@ -33,6 +33,8 @@
 /obj/structure/ice_zone/Initialize()
 	. = ..()
 	propagate_temp_change(-30, 8, 0.9, 2) // Cooling effect
+	var/turf/frozen_turf = get_turf(src)
+	frozen_turf?.extinguish_turf()
 
 /obj/structure/ice_zone/Crossed(atom/movable/AM)
 	. = ..()

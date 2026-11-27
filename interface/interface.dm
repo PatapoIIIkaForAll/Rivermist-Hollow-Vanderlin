@@ -9,7 +9,7 @@
 		to_chat(src, "<span class='danger'>The wiki URL is not set in the server configuration.</span>")
 		return
 
-	if(browser_alert(src, "This will open the wiki in your browsaer. Are you sure?", null, DEFAULT_INPUT_CHOICES) != CHOICE_YES)
+	if(browser_alert(src, "This will open the wiki in your browser. Are you sure?", null, DEFAULT_INPUT_CHOICES) != CHOICE_YES)
 		return
 
 	src << link(wikiurl)
@@ -66,12 +66,12 @@
 
 	var/githuburl = CONFIG_GET(string/githuburl)
 	if(!githuburl)
-		to_chat(src, span_danger("The Github URL is not set in the server configuration."))
+		to_chat(src, span_danger("The link to the issue page is not set on this server."))
 		return
 
 	var/issue_key = CONFIG_GET(string/issue_key)
 	if(!issue_key)
-		to_chat(src, span_danger("Issue Reporting is not properly configured."))
+		open_issue_page(githuburl)
 		return
 
 	var/testmerge_data = GLOB.revdata.testmerge
@@ -163,6 +163,49 @@
 	//SEND_SOUND(src, 'sound/misc/compiler-stage2.ogg')
 	to_chat(src, span_notice("Bug submitted successfully."))
 
+/// Opens the repository's new issue page in the player's browser, with round details filled in.
+/client/proc/open_issue_page(github_url)
+	var/body = build_issue_report_body(GLOB.round_id, SSmapping.config?.map_name, time2text(world.realtime, "YYYY-MM-DD hh:mm:ss"), "[byond_version].[byond_build]")
+	var/issue_url = build_issue_report_url(github_url, body)
+	if(!issue_url)
+		to_chat(src, span_danger("The link to the issue page is not set on this server."))
+		return
+
+	if(browser_alert(src, "This will open the GitHub page for a new issue in your browser. Are you sure?", "Report Issue", DEFAULT_INPUT_CHOICES) != CHOICE_YES)
+		return
+
+	src << link(issue_url)
+
+/// Issue text with round details and empty sections for the player to fill in.
+/proc/build_issue_report_body(round_id, map_name, server_time, byond_version)
+	var/list/lines = list(
+		"**Round ID:** [round_id || "unknown"]",
+		"**Map:** [map_name || "unknown"]",
+		"**Server time:** [server_time || "unknown"]",
+		"**BYOND version:** [byond_version || "unknown"]",
+		"",
+		"### What happened",
+		"",
+		"### What you expected",
+		"",
+		"### Steps to reproduce",
+		"",
+	)
+	return lines.Join("\n")
+
+/// New issue page URL with an optional prefilled body; null when the repository URL is empty.
+/proc/build_issue_report_url(github_url, body)
+	if(!istext(github_url))
+		return null
+	github_url = trim(github_url)
+	while(copytext(github_url, -1) == "/")
+		github_url = copytext(github_url, 1, -1)
+	if(!github_url)
+		return null
+	. = "[github_url]/issues/new"
+	if(body)
+		. += "?body=[url_encode(body)]"
+
 /client/verb/mentorhelp()
 	set name = "Mentorhelp"
 	set desc = ""
@@ -237,9 +280,8 @@
 		to_chat(src, "Anti-aliased... OK")
 		winset(src, "mapwindow.map", "zoom-mode=normal")
 
-/client/verb/crtmode()
-	set category = "Preferences.Options"
-	set name = "ToggleCRT"
+/// Flips the CRT effect. Set from the Toggles window.
+/client/proc/crtmode()
 	if(!prefs)
 		return
 	if(prefs.read_preference(/datum/preference/toggle/crt))
@@ -319,6 +361,8 @@
 	if(!GLOB.changelog_browser)
 		GLOB.changelog_browser = new /datum/changelog()
 
+	var/datum/asset/changelog_assets = get_asset_datum(/datum/asset/simple/changelog)
+	changelog_assets.send(src)
 	var/datum/browser/log = new(usr, "changelog", "CHANGES OF THE WORLD", 680, 650)
 	log.set_content(GLOB.changelog_browser.built_html)
 	log.open()

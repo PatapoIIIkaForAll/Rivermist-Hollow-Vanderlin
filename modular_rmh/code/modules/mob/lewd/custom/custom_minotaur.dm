@@ -88,8 +88,8 @@
 	bleed_mod = 0.3
 	pain_mod = 0.2
 
-/datum/species/minotaur/send_voice(mob/living/carbon/human/H)
-	playsound(get_turf(H), pick('sound/vo/mobs/minotaur/minoidle.ogg', 'sound/vo/mobs/minotaur/minoidle2.ogg'), 100, TRUE, -1)
+/datum/species/minotaur/send_voice(mob/living/carbon/human/H, message, list/message_mods, list/bark_listeners)
+	playsound(get_turf(H), pick('sound/vo/mobs/minotaur/minoidle.ogg', 'sound/vo/mobs/minotaur/minoidle2.ogg'), 100, TRUE, -1, excluded_listeners = bark_listeners)
 
 /datum/species/minotaur/regenerate_icons(mob/living/carbon/human/H)
 	H.icon = 'icons/mob/newminotaur.dmi'

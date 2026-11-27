@@ -19,24 +19,33 @@
 	var/list/anim_color_matrix
 
 /datum/sprite_accessory/piercing/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	return "[icon_state]-[get_piercing_art_size(owner?.getorganslot(ORGAN_SLOT_BREASTS))]"
+	return get_nipple_jewelry_state(owner)
 
 /datum/sprite_accessory/piercing/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
+	adjust_nipple_jewelry(appearance_list, organ, bodypart, owner)
+
+/// Still state of nipple jewellery: "<icon_state>-<art size>" for the owner's breasts.
+/datum/sprite_accessory/proc/get_nipple_jewelry_state(mob/living/carbon/owner)
+	var/obj/item/organ/genitals/filling_organ/breasts/breasts = owner?.getorganslot(ORGAN_SLOT_BREASTS)
+	return "[icon_state]-[get_piercing_art_size(breasts)]"
+
+/// Places nipple jewellery with the breasts' own offset table.
+/datum/sprite_accessory/proc/adjust_nipple_jewelry(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	gender_genitals_adjust(appearance_list, organ, bodypart, owner, OFFSET_BREASTS)
 
 /datum/sprite_accessory/piercing/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
+	return is_nipple_jewelry_visible(owner, bodypart)
+
+/// Nipple jewellery visibility: the breasts' own clothing rule, and their above-clothes layer copied onto this accessory.
+/datum/sprite_accessory/proc/is_nipple_jewelry_visible(mob/living/carbon/owner, obj/item/bodypart/bodypart)
 	draw_above_clothes = FALSE
 	if(!owner)
 		return FALSE
-	// The animated breasts child carries its own piercing child, so the body overlay steps aside.
+	// The animated breasts child carries its own jewellery children, so the body overlay steps aside.
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human_owner = owner
 		if(human_owner.breast_animation_active())
 			return FALSE
-	return is_shown_on(owner, bodypart)
-
-/// Whether the piercing shows on this body: the breasts' own clothing rule, or the chest rule without breasts.
-/datum/sprite_accessory/piercing/proc/is_shown_on(mob/living/carbon/owner, obj/item/bodypart/bodypart)
 	var/obj/item/organ/genitals/filling_organ/breasts/breasts = owner.getorganslot(ORGAN_SLOT_BREASTS)
 	var/datum/sprite_accessory/genitals/breasts/breast_accessory = istype(breasts) ? SPRITE_ACCESSORY(breasts.accessory_type) : null
 	if(istype(breast_accessory))

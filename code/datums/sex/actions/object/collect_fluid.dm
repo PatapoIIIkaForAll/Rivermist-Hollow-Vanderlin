@@ -70,7 +70,7 @@
 	if(can_show_action_message(user, target))
 		var/chosen_verb = pick("strokes themselves over \the [container]", "works themselves over \the [container]", "pleasures themselves into \the [container]")
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] [chosen_verb]..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
@@ -83,7 +83,7 @@
 	user.visible_message(span_warning("[user] stops."))
 
 /datum/sex_action/collect_fluid/self/handle_climax_message(mob/living/user, mob/living/target, must_flip)
-	user.visible_message(span_love("[user] spills their release into \the [get_held_container(user)]!"))
+	user.visible_message(span_love_climax("[user] spills their release into \the [get_held_container(user)]!"))
 	return ORGASM_LOCATION_CONTAINER
 
 /datum/sex_action/collect_fluid/self/lock_sex_object(mob/living/user, mob/living/target)
@@ -135,7 +135,7 @@
 	. = ..()
 	if(can_show_action_message(user, target))
 		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] works [target]'s release toward \the [get_held_container(user)]..."))
-	playsound(user, 'sound/misc/mat/fingering.ogg', 30, TRUE, -2, ignore_walls = FALSE)
+	playsound(user, 'sound/misc/mat/fingering.ogg', get_sound_volume(user, 30), TRUE, -2, ignore_walls = FALSE)
 
 	if(user.has_kink(KINK_ONOMATOPOEIA))
 		do_onomatopoeia(user)
@@ -154,7 +154,7 @@
 
 /datum/sex_action/collect_fluid/other/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	// `user` is the climaxing partner; `target` is the one holding the container.
-	user.visible_message(span_love("[user] spills their release into the waiting container!"))
+	user.visible_message(span_love_climax("[user] spills their release into the waiting container!"))
 	return ORGASM_LOCATION_CONTAINER
 
 /datum/sex_action/collect_fluid/other/lock_sex_object(mob/living/user, mob/living/target)

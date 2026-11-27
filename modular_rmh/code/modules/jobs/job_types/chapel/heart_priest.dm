@@ -48,9 +48,10 @@
 	attribute_sheet = /datum/attribute_holder/sheet/job/heart_priest
 
 
+	grants_holy_urine = TRUE
+
 	traits = list(
 		TRAIT_HOLY,
-		TRAIT_HOLY_URINE,
 		TRAIT_GOODLOVER,
 		TRAIT_SECRET_OFFICIANT,
 		TRAIT_EMPATH

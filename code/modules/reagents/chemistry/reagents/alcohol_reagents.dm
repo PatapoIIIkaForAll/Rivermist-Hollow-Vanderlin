@@ -112,6 +112,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	return ..()
 
 /datum/reagent/consumable/ethanol/beer
+	drink_type = DRINKTYPE_ALE
 	name = "Beer"
 	description = ""
 	color = "#a17c10" // rgb: 102, 67, 0
@@ -123,6 +124,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.05
 
 /datum/reagent/consumable/ethanol/rum
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Rum"
 	description = ""
 	color = "#5f3b23" // rgb: 102, 67, 0
@@ -130,6 +132,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	taste_description = "rum"
 
 /datum/reagent/consumable/ethanol/cider
+	drink_type = DRINKTYPE_CIDER
 	name = "Apple Cider"
 	boozepwr = 40
 	taste_description = "cider"
@@ -147,6 +150,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	taste_description = "strawberry cider"
 
 /datum/reagent/consumable/ethanol/aqua_vitae
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Aqua Vitae"
 	boozepwr = 150
 	taste_description = "death"
@@ -154,6 +158,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_NICE
 
 /datum/reagent/consumable/ethanol/brandy
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Apple Brandy"
 	boozepwr = 60
 	taste_description = "brandy"
@@ -177,6 +182,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	color = "#5c0449"
 
 /datum/reagent/consumable/ethanol/wine
+	drink_type = DRINKTYPE_WINE
 	name = "Wine"
 	boozepwr = 30
 	taste_description = "wine"
@@ -184,6 +190,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	color = "#8a0b0b"
 
 /datum/reagent/consumable/ethanol/ale
+	drink_type = DRINKTYPE_ALE
 	name = "Ale"
 	description = "A dark alcoholic beverage made with malted barley and yeast."
 	color = "#664300" // rgb: 102, 67, 0
@@ -199,6 +206,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 // Human Production - Underwhelming, but cheap.
 
 /datum/reagent/consumable/ethanol/gin
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Gin"
 	boozepwr = 12
 	taste_description = "fruity"
@@ -206,6 +214,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_NICE
 
 /datum/reagent/consumable/ethanol/spottedhen
+	drink_type = DRINKTYPE_ALE
 	name = "Spotted Hen"
 	boozepwr = 15
 	taste_description = "cheap pisswater"
@@ -214,6 +223,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.055
 
 /datum/reagent/consumable/ethanol/hagwoodbitter
+	drink_type = DRINKTYPE_ALE
 	name = "Hagwood Bitter"
 	boozepwr = 25
 	taste_description = "dull crispness"
@@ -222,6 +232,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.0525
 
 /datum/reagent/consumable/ethanol/blackgoat
+	drink_type = DRINKTYPE_ALE
 	name = "Black Gote Kriek"
 	boozepwr = 25
 	taste_description = "overwhelming sourness"
@@ -230,6 +241,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.1
 
 /datum/reagent/consumable/ethanol/onion
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Royal Onion Cognac"
 	boozepwr = 10
 	taste_description = "spicy sweet malty overtones"
@@ -240,6 +252,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 // Elf Production - LEAF-LOVERS MOTHERFUCKER
 
 /datum/reagent/consumable/ethanol/aurorian
+	drink_type = DRINKTYPE_WINE
 	name = "Aurorian"
 	boozepwr = 5
 	taste_description = "subtle herbaceous undertones"
@@ -248,6 +261,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.2
 
 /datum/reagent/consumable/ethanol/fireleaf // cabbbage
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Fireleaf"
 	boozepwr = 2
 	taste_description = "bland liquor"
@@ -258,6 +272,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 // Dwarven Production - Best in the Realms
 
 /datum/reagent/consumable/ethanol/butterhairs
+	drink_type = DRINKTYPE_ALE
 	name = "Butterhairs"
 	boozepwr = 30
 	taste_description = "buttery richness"
@@ -266,6 +281,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/stonebeards
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Stonebeard Reserve"
 	boozepwr = 40
 	taste_description = "potent oatlike liquor"
@@ -274,6 +290,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/voddena // Not vodka. Trust me.
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Voddena"
 	boozepwr = 55  // holy shit
 	taste_description = "burning starchy wet dirt"
@@ -282,6 +299,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/limoncello
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Limoncello"
 	boozepwr = 45  // holy shit
 	taste_description = "burning and lemony"
@@ -293,6 +311,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 // Human Production - Grape Based
 
 /datum/reagent/consumable/ethanol/sourwine // Peasant grade shit.
+	drink_type = DRINKTYPE_WINE
 	name = "Sour Wine"
 	boozepwr = 20
 	taste_description = "sour wine"
@@ -300,6 +319,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.2
 
 /datum/reagent/consumable/ethanol/whitewine
+	drink_type = DRINKTYPE_WINE
 	name = "White Wine"
 	boozepwr = 30
 	taste_description = "sweet white wine"
@@ -308,6 +328,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.2
 
 /datum/reagent/consumable/ethanol/redwine
+	drink_type = DRINKTYPE_WINE
 	name = "Red Wine"
 	boozepwr = 30
 	taste_description = "tannin-stricken wine"
@@ -316,6 +337,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.2
 
 /datum/reagent/consumable/ethanol/jackberrywine
+	drink_type = DRINKTYPE_WINE
 	name = "Jacksberry Wine"
 	boozepwr = 15
 	taste_description = "sickly sweet young wine"
@@ -342,6 +364,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	age_path = null
 
 /datum/reagent/consumable/ethanol/plum_wine
+	drink_type = DRINKTYPE_WINE
 	name = "Umeshu"
 	boozepwr = 15
 	taste_description = "sickly sweet young wine"
@@ -367,6 +390,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	age_path = null
 
 /datum/reagent/consumable/ethanol/tangerine
+	drink_type = DRINKTYPE_WINE
 	name = "Tangerine Wine"
 	boozepwr = 15
 	taste_description = "bittersweet young wine"
@@ -391,6 +415,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	age_path = null
 
 /datum/reagent/consumable/ethanol/raspberry
+	drink_type = DRINKTYPE_WINE
 	name = "Raspberry Wine"
 	boozepwr = 15
 	taste_description = "bittersweet young wine"
@@ -415,6 +440,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	age_path = null
 
 /datum/reagent/consumable/ethanol/blackberry
+	drink_type = DRINKTYPE_WINE
 	name = "Blackberry Wine"
 	boozepwr = 15
 	taste_description = "bitter tart young wine"
@@ -439,6 +465,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	age_path = null
 
 /datum/reagent/consumable/ethanol/tiefling
+	drink_type = DRINKTYPE_WINE
 	name = "Tiefling Blood Wine"
 	boozepwr = 15
 	taste_description = "bitter young wine"
@@ -466,6 +493,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 // Elf Production - Berries & Herbal
 
 /datum/reagent/consumable/ethanol/elfred
+	drink_type = DRINKTYPE_WINE
 	name = "Elven Red"
 	boozepwr = 15
 	taste_description = "delectable fruity notes"
@@ -474,6 +502,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 1.75
 
 /datum/reagent/consumable/ethanol/elfblue
+	drink_type = DRINKTYPE_WINE
 	name = "Valmora Blue"
 	boozepwr = 50
 	taste_description = "saintly sweetness"
@@ -482,6 +511,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 3
 
 /datum/reagent/consumable/ethanol/jagdtrunk // JÄGERMEISTER!!!!
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Jagdtrunk"
 	boozepwr = 55  // gotta be stronk
 	taste_description = "spicy herbal remedy"
@@ -489,6 +519,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_NICE
 
 /datum/reagent/consumable/ethanol/apfelweinheim
+	drink_type = DRINKTYPE_CIDER
 	name = "Appelheimer"
 	boozepwr = 45
 	taste_description = "tart crispness and mellow sweetness"
@@ -496,6 +527,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_NICE
 
 /datum/reagent/consumable/ethanol/rtoper
+	drink_type = DRINKTYPE_ALE
 	name = "Waterdeep Toper"
 	boozepwr = 40
 	taste_description = "overwhelming tartness"
@@ -503,6 +535,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_NICE
 
 /datum/reagent/consumable/ethanol/nred
+	drink_type = DRINKTYPE_WINE
 	name = "Norwardine Red"
 	boozepwr = 30
 	taste_description = "heavy caramel note and slight bitterness"
@@ -510,6 +543,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/gronnmead
+	drink_type = DRINKTYPE_MEAD
 	name = "Ragnar's Brew"
 	boozepwr = 35
 	taste_description = "notes of honey and red berries" //I love red mead ok...
@@ -519,6 +553,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 //Avar boozes
 
 /datum/reagent/consumable/ethanol/avarmead
+	drink_type = DRINKTYPE_MEAD
 	name = "Zögiin bal"
 	boozepwr = 30
 	taste_description = "spicy honey"
@@ -526,6 +561,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/avarrice
+	drink_type = DRINKTYPE_WINE
 	name = "Makkolir"
 	boozepwr = 30
 	taste_description = "tangy sweetness"
@@ -533,6 +569,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/saigamilk //No way, kumys from avar!!!
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Bökhiin Arkhi"
 	boozepwr = 15
 	taste_description = "bubbly, sour salt"
@@ -541,12 +578,14 @@ All effects don't start immediately, but rather get worse over time; the rate is
 //Kazengun boozes
 
 /datum/reagent/consumable/ethanol/kgunlager
+	drink_type = DRINKTYPE_ALE
 	name = "Yamaguchi Pale"
 	boozepwr = 10 //A PALE imitation actual beer...
 	taste_description = "mellow bitterness and a hint of green tea"
 	color = "#d7dbbc"
 
 /datum/reagent/consumable/ethanol/kgunsake
+	drink_type = DRINKTYPE_WINE
 	name = "Junmai-ginjo"
 	boozepwr = 50
 	taste_description = "dry sweetness"
@@ -554,6 +593,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/kgunplum
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Umeshu"
 	boozepwr = 30
 	taste_description = "a mix of sweet and sour"
@@ -561,6 +601,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	quality = DRINK_VERYGOOD
 
 /datum/reagent/consumable/ethanol/mead
+	drink_type = DRINKTYPE_MEAD
 	name = "Mead"
 	description = "A warriors drink, though a cheap one."
 	color = "#664300" // rgb: 102, 67, 0
@@ -600,6 +641,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	icon_state = "drunk"
 
 /datum/reagent/consumable/ethanol/murkwine // not Toilet wine
+	drink_type = DRINKTYPE_WINE
 	name = "Mürkwine"
 	boozepwr = 50  // bubba's best
 	taste_description = "hints of questionable choices--a bouquet of murkwater and pure ethanol"
@@ -615,6 +657,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	M.remove_status_effect(/datum/status_effect/buff/murkwine)
 
 /datum/reagent/consumable/ethanol/nocshine // wait, no, NOCSHINE
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Mystra's Shine"
 	boozepwr = 70  // YEEEEEHAAAWWWWWW
 	taste_description = "what might be my throat melting and nose hair burning"
@@ -635,6 +678,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	M.remove_status_effect(/datum/status_effect/buff/nocshine)
 
 /datum/reagent/consumable/ethanol/luxwine // oh no.
+	drink_type = DRINKTYPE_WINE
 	name = "Luxintenebre" // lux left w/ sugar in a darkened place for quite some time... U could say... Light in Darkness.....
 	description = "A fermented form of vitae, highly alcoholic, and with a particularly grim taste. Often sought out by the daring, foolhardy, and heretical..."
 	boozepwr = 80 // THE END OF THE FUCKING WORLD.
@@ -686,6 +730,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	..()
 
 /datum/reagent/consumable/ethanol/whipwine // dont ask
+	drink_type = DRINKTYPE_WINE
 	name = "Magickal Whip Wine"
 	description = "A recipe recently floated into the Peaks. Magickal Whip Wine is said to increase one's potence and stamina sevenfold."
 	boozepwr = 10 // it's a whip. it's an actual whip.
@@ -693,6 +738,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	color = "#3a1d18"
 
 /datum/reagent/consumable/ethanol/komuchisake // if you put this outside the lich dungeon i'll kill you
+	drink_type = DRINKTYPE_WINE
 	name = "Divine Snake Wine"
 	description = "The True Form of the Whipwine. The Magickal Snake Wine was an exclusively produced medicinal wine from over three centuries ago in the Kazengun Shogunate..."
 	boozepwr = 60 // ancient lichebrau...
@@ -701,6 +747,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.45
 
 /datum/reagent/consumable/ethanol/huangjiu
+	drink_type = DRINKTYPE_WINE
 	name = "Huangjiu"
 	boozepwr = 30
 	taste_description = "a mix of sweet and sour"
@@ -708,6 +755,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/baijiu
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Baijiu"
 	boozepwr = 60
 	taste_description = "fiery and pungent alcohol with a hint of sweetness"
@@ -716,6 +764,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/yaojiu
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Yaojiu"
 	boozepwr = 50
 	taste_description = "bittersweet alcohol with deep herbal notes"
@@ -724,6 +773,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/shejiu
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Shejiu"
 	boozepwr = 50
 	taste_description = "musky and strong alcohol with a hint of gaminess"
@@ -732,6 +782,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	price_per_unit = 0.3
 
 /datum/reagent/consumable/ethanol/kgunshochu
+	drink_type = DRINKTYPE_SPIRIT
 	name = "Shochu"
 	boozepwr = 60
 	taste_description = "dry, clean finish"

@@ -12,23 +12,22 @@
 		/datum/mapGeneratorModule/rmh_field/grass,
 		/datum/mapGeneratorModule/rmh_fieldgrass,
 		/datum/mapGeneratorModule/rmh_field,
-		/datum/mapGeneratorModule/rmh_field/road,
-		/datum/mapGeneratorModule/rmh_field/tree_leafs
+		/datum/mapGeneratorModule/rmh_field/road
 		)
 
 /datum/mapGeneratorModule/rmh_field
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS
-	allowed_turfs = list(/turf/open/floor/dirt)
+	allowed_turfs = list(/turf/open/floor/dirt, /turf/open/floor/dirt/snowy)
 	excluded_turfs = list(/turf/open/floor/dirt/road)
 	spawnableAtoms = list(
-		/obj/structure/flora/newtree = 15,
+		/obj/structure/flora/newtree/snow = 15,
 		/obj/structure/flora/grass = 40,
 		/obj/effect/spawner/map_spawner/treeorbush = 20,
 		/obj/effect/spawner/map_spawner/treeorstump = 20,
-		/obj/structure/flora/grass/fullgrass_autumn = 50,
-		/obj/structure/flora/grass/sparegrass = 60,
+		/obj/structure/flora/grass/both = 50,
+		/obj/structure/flora/grass/brown = 60,
 		/obj/structure/flora/grass = 13,
-		/obj/structure/flora/grass/bush_meagre = 30,
+		/obj/structure/flora/grass/bush_meagre/tundra = 30,
 		/obj/item/natural/stone = 18,
 		/obj/item/natural/rock = 2,
 		/obj/item/grown/log/tree/stick = 3,
@@ -40,7 +39,7 @@
 
 /datum/mapGeneratorModule/rmh_field/road
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS
-	allowed_turfs = list(/turf/open/floor/dirt/road)
+	allowed_turfs = list(/turf/open/floor/dirt/road, /turf/open/floor/dirt/road/snowy)
 	excluded_turfs = list()
 	spawnableAtoms = list(
 		/obj/item/natural/stone = 18,
@@ -50,7 +49,7 @@
 
 /datum/mapGeneratorModule/rmh_field/grass
 	clusterCheckFlags = CLUSTER_CHECK_NONE
-	allowed_turfs = list(/turf/open/floor/dirt)
+	allowed_turfs = list(/turf/open/floor/dirt, /turf/open/floor/dirt/snowy)
 	excluded_turfs = list(/turf/open/floor/dirt/road)
 	spawnableTurfs = list(/turf/open/floor/grass = 15)
 	spawnableAtoms = list()
@@ -60,17 +59,19 @@
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS
 	allowed_turfs = list(
 		/turf/open/floor/dirt,
+		/turf/open/floor/dirt/snowy,
 		/turf/open/floor/grass,
 		/turf/open/floor/grass/red,
 		/turf/open/floor/grass/yel,
 		/turf/open/floor/grass/cold,
+		/turf/open/floor/grass/cold/winter,
 		/turf/open/floor/grass/healthy
 		)
 	excluded_turfs = list(/turf/open/floor/dirt/road)
 	spawnableAtoms = list(
-		/obj/structure/flora/grass = 60,
-		/obj/structure/flora/grass/fullgrass_autumn = 80,
-		/obj/structure/flora/grass = 70,
+		/obj/structure/flora/grass/brown = 60,
+		/obj/structure/flora/grass/both = 80,
+		/obj/structure/flora/grass/green = 70,
 		/obj/item/natural/stone = 18,
 		/obj/structure/flora/grass/herb/random = 20,
 		/obj/structure/flora/grass/pumpkin = 3,
@@ -107,3 +108,4 @@
 	if(!tree_nearby)
 		return
 	return ..()
+//

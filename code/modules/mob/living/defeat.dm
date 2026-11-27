@@ -80,6 +80,10 @@
 	defeat_enforce_ko_only_rune_optout()
 	ensure_defeat_monitor()
 
+/// A severed body uses lethal play without changing the player's saved defeat preference.
+/mob/living/proc/get_effective_defeat_mode()
+	return HAS_TRAIT(src, TRAIT_RUNE_SEVERED) ? DEFEAT_MODE_NO_RETURN : defeat_mode
+
 /// Knockout Only means no rune: sever any bond that roundstart auto-linking (a separate path from
 /// prefs, so ordering between the two is unreliable) may have forged, so the player never gets the
 /// rune's Call offer layered over their chosen self-rescue. Enforced whenever prefs land on a body;
@@ -89,22 +93,24 @@
 		return FALSE
 	if(!ishuman(src))
 		return FALSE
-	// Strip the mind from every rune controller (clears linked body, rescue offers, ghost return).
-	if(mind)
-		unlink_mind_from_other_resurrection_runes(mind, null)
-	// And clear a dangling tag left by any tag-only or mindless edge, so the controller lookup
-	// (which resolves through rune_linked) can never surface a rescue for this body.
-	var/mob/living/carbon/human/human_owner = src
-	if(human_owner.rune_linked != RUNE_LINK_NONE)
-		human_owner.rune_linked = RUNE_LINK_NONE
+	unlink_resurrection_rune()
 	return TRUE
 
+/mob/living/proc/on_rune_severed_trait_gain()
+	SIGNAL_HANDLER
+	unlink_resurrection_rune()
+	remove_status_effect(/datum/status_effect/defeat_knockout)
+
+/mob/living/proc/on_rune_severed_trait_loss()
+	SIGNAL_HANDLER
+	ensure_defeat_monitor()
+
 /mob/living/proc/ensure_defeat_monitor()
+	if(HAS_TRAIT(src, TRAIT_RUNE_SEVERED))
+		return
 	// Clientless mobs opted into horny-KO get the monitor regardless of carbon defeat eligibility.
 	if(mob_horny_defeat_enabled && !client)
 		AddComponent(/datum/component/defeat_monitor)
-		return
-	if(defeat_mode == DEFEAT_MODE_NO_RETURN)
 		return
 	if(!defeat_system_is_eligible())
 		return
@@ -113,7 +119,7 @@
 /mob/living/proc/defeat_system_is_eligible()
 	if(defeat_lethal_bypass || defeat_final_death || suiciding)
 		return FALSE
-	if(defeat_mode == DEFEAT_MODE_NO_RETURN)
+	if(get_effective_defeat_mode() == DEFEAT_MODE_NO_RETURN)
 		return FALSE
 	if(!iscarbon(src))
 		return FALSE
@@ -133,6 +139,8 @@
 /// their own; everyone else falls back to the full carbon defeat eligibility. Kept separate so the mob
 /// path never drags a mob into the player damage/pain/hazard defeat flow.
 /mob/living/proc/horny_defeat_is_eligible()
+	if(HAS_TRAIT(src, TRAIT_RUNE_SEVERED))
+		return FALSE
 	if(mob_horny_defeat_enabled && !client)
 		return TRUE
 	return defeat_system_is_eligible()
@@ -174,7 +182,7 @@
 /// The clientless-mob counterpart of enter_defeat's horny branch. No snapshot, no trauma, no carbon
 /// injury stabilization - just the long mob KO. Guarded so it only ever touches an enabled clientless mob.
 /mob/living/proc/enter_mob_horny_defeat(mob/living/source)
-	if(!mob_horny_defeat_enabled || client)
+	if(!mob_horny_defeat_enabled || client || HAS_TRAIT(src, TRAIT_RUNE_SEVERED))
 		return FALSE
 	if(stat == DEAD)
 		return FALSE
@@ -281,7 +289,7 @@
 /// TRUE when a linked rune can actually pull this KO+Rune victim back right now (a spendable charge).
 /// A depleted or uncallable rune returns FALSE, so the victim is treated like KO Only for self-rescue.
 /mob/living/proc/defeat_has_rune_safety_net()
-	if(defeat_mode != DEFEAT_MODE_KO_RUNE)
+	if(get_effective_defeat_mode() != DEFEAT_MODE_KO_RUNE)
 		return FALSE
 	var/datum/resurrection_rune_controller/controller = get_resurrection_rune_controller_for_user(src)
 	if(controller && (src in controller.resurrecting) && !controller.resurrections_disabled())
@@ -292,7 +300,7 @@
 /// destroyed): forge an emergency bond to the public city rune on the spot, so the rune-return path
 /// can still reach them instead of leaving them stranded as if they were KO Only. No-op for other modes.
 /mob/living/proc/defeat_ensure_emergency_rune_link()
-	if(defeat_mode != DEFEAT_MODE_KO_RUNE)
+	if(get_effective_defeat_mode() != DEFEAT_MODE_KO_RUNE)
 		return FALSE
 	if(!ishuman(src) || !mind)
 		return FALSE

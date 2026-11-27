@@ -52,10 +52,10 @@
 
 /datum/sex_action/cunnilingus/handle_climax_message(mob/living/user, mob/living/target, must_flip)
 	if(must_flip)
-		target.visible_message(span_love("[user] squirts girlcum into [target]'s mouth!"))
+		target.visible_message(span_love_climax("[user] squirts girlcum into [target]'s mouth!"))
 		return ORGASM_LOCATION_ORAL
 	else //I mean it's never gonna happen but ok
-		target.visible_message(span_love("[user] cums from sucking [target]'s pussy somehow!"))
+		target.visible_message(span_love_climax("[user] cums from sucking [target]'s pussy somehow!"))
 		return ORGASM_LOCATION_SELF
 
 

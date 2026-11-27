@@ -119,9 +119,9 @@
 	text += "<p>Current readings at opening time. Reopen this guide to refresh them.</p>"
 	if(isliving(src))
 		var/mob/living/player = src
-		text += "<p><b>Current body:</b> [defeat_mode_display_name(player.defeat_mode)]. Injury threshold: [player.get_effective_defeat_threshold()] (selected: [player.defeat_damage_threshold]).</p>"
+		text += "<p><b>Current body:</b> [defeat_mode_display_name(player.get_effective_defeat_mode())]. Injury threshold: [player.get_effective_defeat_threshold()] (selected: [player.defeat_damage_threshold]).</p>"
 		if(player.has_status_effect(/datum/status_effect/defeat_knockout))
-			if(player.defeat_mode == DEFEAT_MODE_KO_RUNE)
+			if(player.get_effective_defeat_mode() == DEFEAT_MODE_KO_RUNE)
 				var/datum/resurrection_rune_controller/controller = get_resurrection_rune_controller_for_user(player)
 				var/rune_status = "No working rune bond."
 				if(controller)
@@ -161,7 +161,7 @@
 			if(player.has_status_effect(/datum/status_effect/defeat_knockout))
 				var/datum/status_effect/debuff/defeat/aftermath_type = player.last_defeat_snapshot.defeat_debuff_type()
 				text += "<p><b>Expected aftermath:</b> [initial(aftermath_type.trauma_label)]. Severity depends on rescue method and existing untreated trauma. Rune return and unaided physical recovery add their own consequences.</p>"
-		if(player.mind && player.defeat_mode == DEFEAT_MODE_KO_RUNE)
+		if(player.mind && player.get_effective_defeat_mode() == DEFEAT_MODE_KO_RUNE)
 			text += "<p><b>Rune charges:</b> [player.mind.get_defeat_rune_charges()]/[DEFEAT_RUNE_MAX_CHARGES]. First free return: [player.mind.defeat_rune_first_free_used ? "used" : "unused"]. A working bond and an available rescue route are also required.</p>"
 		for(var/datum/status_effect/debuff/defeat/trauma as anything in player.status_effects)
 			if(!istype(trauma))

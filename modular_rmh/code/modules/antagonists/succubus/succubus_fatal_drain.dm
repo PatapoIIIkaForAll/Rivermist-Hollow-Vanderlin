@@ -127,7 +127,7 @@
 		outcome_committed = target.stat == DEAD
 	else
 		outcome_committed = target.enter_defeat(DEFEAT_REASON_HORNY, DEFEAT_SEVERITY_SEVERE, caster)
-		if(!outcome_committed && target.defeat_mode == DEFEAT_MODE_NO_RETURN)
+		if(!outcome_committed && target.get_effective_defeat_mode() == DEFEAT_MODE_NO_RETURN)
 			target.death()
 			outcome_committed = target.stat == DEAD
 	if(!outcome_committed)

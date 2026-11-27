@@ -44,6 +44,32 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
 
+/// Gives the "Yield?" prompt to each hearer with a client who is fighting this speaker.
+/mob/living/proc/offer_yield_prompts(list/hearers, range)
+	for(var/mob/living/listener in hearers)
+		if(listener.client)
+			listener.prompt_yield_to(src, range)
+
+/// Puts the "Yield?" prompt on this mob when it is awake, not yielding and fighting the speaker.
+/mob/living/proc/prompt_yield_to(mob/living/speaker, range)
+	if(src == speaker || stat != CONSCIOUS || surrendering || !can_hear())
+		return null
+	if(range && get_dist(src, speaker) > range)
+		return null
+	if(!is_fighting_with(speaker))
+		return null
+	return apply_status_effect(/datum/status_effect/yield_prompt, null, speaker)
+
+/// TRUE when either mob grabs the other, or one last hit the other while either is in combat mode.
+/mob/living/proc/is_fighting_with(mob/living/other)
+	if(!istype(other) || other == src)
+		return FALSE
+	if(pulledby == other || other.pulledby == src)
+		return TRUE
+	if(!cmode && !other.cmode)
+		return FALSE
+	return lastattacker_weakref?.resolve() == other || other.lastattacker_weakref?.resolve() == src
+
 /// Patrons whose followers answer a taunt with the middle finger.
 GLOBAL_LIST_INIT(rude_taunt_patrons, typecacheof(list(
 	/datum/patron/faerun/evil_gods/Gorellik,

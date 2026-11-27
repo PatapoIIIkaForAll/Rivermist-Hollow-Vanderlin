@@ -1203,15 +1203,6 @@
 		. = TRUE
 	// RMH EDITED END
 
-	// Wash equipped stuff that cannot be covered
-	if(wear_armor?.wash(clean_types))
-		update_inv_armor()
-		. = TRUE
-
-	if(belt?.wash(clean_types))
-		update_inv_belt()
-		. = TRUE
-
 	// Check and wash stuff that can be covered
 	var/list/obscured = check_obscured_slots()
 
@@ -1220,10 +1211,6 @@
 		. = TRUE
 
 	if(wash_lipstick_marks())
-		. = TRUE
-
-	if(!(obscured[SLOT_CHECK_REGULAR] & ITEM_SLOT_SHIRT) && wear_shirt?.wash(clean_types))
-		update_inv_shirt()
 		. = TRUE
 
 	// Wash hands if exposed

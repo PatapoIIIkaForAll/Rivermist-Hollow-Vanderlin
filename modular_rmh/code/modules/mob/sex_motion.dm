@@ -40,18 +40,13 @@ GLOBAL_LIST_INIT(sex_motion_pumps, list(1, 1, 2, 3))
 /datum/preference/toggle/sex_motion
 	savefile_key = "sex_motion"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Interaction motion"
+	toggles_menu_desc = "Let your character shift a few pixels while interactions play."
 	category = "gameplay"
 	can_randomize = FALSE
 	should_update_preview = FALSE
 	default_value = TRUE
-
-/client/verb/toggle_sex_motion()
-	set name = "Toggle Interaction Motion"
-	set desc = "Let your character shift a few pixels while interactions play."
-	set category = "Preferences"
-	prefs.write_preference(/datum/preference/toggle/sex_motion, !prefs.read_preference(/datum/preference/toggle/sex_motion))
-	prefs.save_preferences()
-	to_chat(usr, span_notice("Interaction motion [prefs.read_preference(/datum/preference/toggle/sex_motion) ? "enabled" : "disabled"] for your character."))
 
 /// Whether mover may be shifted by interaction motion. Mobs without a player move.
 /proc/sex_motion_enabled(atom/movable/mover)

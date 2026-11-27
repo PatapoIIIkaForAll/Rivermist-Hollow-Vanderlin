@@ -795,6 +795,10 @@
 		if(ismob(parent.loc))
 			var/mob/carrying_mob = parent.loc
 			removed_item.dropped(carrying_mob, TRUE)
+			//dropped() can delete the item; stop before moving it
+			if(QDELETED(removed_item))
+				refresh_mob_views()
+				return FALSE
 	if(new_location)
 		//Reset the items values
 		_removal_reset(removed)

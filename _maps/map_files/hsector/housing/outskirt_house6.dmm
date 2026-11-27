@@ -1,0 +1,257 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/living)
+"b" = (
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh/living)
+"f" = (
+/obj/structure/fluff/railing/wood/north{
+	pixel_y = 7
+	},
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/living)
+"i" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 4
+	},
+/area/indoors/town/rmh/living)
+"j" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"l" = (
+/turf/closed/wall/mineral/wooddark/horizontal,
+/area/indoors/town/rmh/living)
+"o" = (
+/turf/closed/wall/mineral/decowood,
+/area/indoors/town/rmh/living)
+"s" = (
+/obj/structure/fluff/railing/wood,
+/turf/open/floor/wood,
+/area/outdoors/town/rmh/livingquart)
+"t" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 1
+	},
+/area/indoors/town/rmh/living)
+"u" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/living)
+"v" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 2
+	},
+/area/indoors/town/rmh/living)
+"z" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/obj/effect/decal/alizeria/decals/wooddecal2,
+/turf/open/floor/rooftop,
+/area/outdoors/town/rmh/roofs)
+"B" = (
+/turf/open/floor/concrete,
+/area/indoors/town/rmh/living)
+"D" = (
+/obj/structure/window/solid,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"E" = (
+/obj/structure/stairs{
+	dir = 4
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/living)
+"G" = (
+/obj/structure/window/openclose/reinforced{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"J" = (
+/turf/closed/wall/mineral/wooddark/end{
+	dir = 8
+	},
+/area/indoors/town/rmh/living)
+"L" = (
+/obj/effect/decal/alizeria/decals/wooddecal3,
+/obj/effect/decal/alizeria/decals/wooddecal4,
+/turf/open/floor/rooftop,
+/area/outdoors/town/rmh/roofs)
+"M" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/turf/open/floor/ruinedwood,
+/area/outdoors/town/rmh/livingquart)
+"N" = (
+/turf/closed/wall/mineral/stone,
+/area/indoors/town/rmh/living)
+"T" = (
+/obj/structure/sign/property_sign/claim,
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/living)
+"U" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/turf/open/floor/ruinedwood,
+/area/indoors/town/rmh/living)
+"W" = (
+/obj/structure/door{
+	lockid = "outskirt_house6";
+	name = "Outskirt House VI"
+	},
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"Y" = (
+/turf/open/openspace,
+/area/indoors/town/rmh/living)
+
+(1,1,1) = {"
+u
+l
+o
+o
+o
+l
+T
+"}
+(2,1,1) = {"
+o
+E
+a
+a
+a
+W
+M
+"}
+(3,1,1) = {"
+u
+N
+a
+a
+a
+G
+s
+"}
+(4,1,1) = {"
+D
+B
+a
+a
+a
+b
+u
+"}
+(5,1,1) = {"
+D
+B
+a
+a
+a
+a
+G
+"}
+(6,1,1) = {"
+u
+N
+a
+a
+a
+a
+u
+"}
+(7,1,1) = {"
+o
+U
+a
+a
+a
+a
+G
+"}
+(8,1,1) = {"
+u
+l
+o
+o
+o
+l
+u
+"}
+
+(1,1,2) = {"
+u
+t
+j
+v
+u
+z
+L
+"}
+(2,1,2) = {"
+b
+Y
+f
+a
+G
+z
+L
+"}
+(3,1,2) = {"
+o
+E
+f
+a
+D
+z
+L
+"}
+(4,1,2) = {"
+N
+a
+a
+a
+u
+b
+u
+"}
+(5,1,2) = {"
+N
+a
+a
+a
+a
+a
+i
+"}
+(6,1,2) = {"
+o
+U
+f
+a
+a
+a
+b
+"}
+(7,1,2) = {"
+b
+Y
+f
+a
+a
+a
+J
+"}
+(8,1,2) = {"
+u
+l
+l
+l
+l
+l
+u
+"}

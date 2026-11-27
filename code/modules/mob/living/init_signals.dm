@@ -6,6 +6,8 @@
 
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_DEATHCOMA), PROC_REF(on_deathcoma_trait_gain))
 	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_DEATHCOMA), PROC_REF(on_deathcoma_trait_loss))
+	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_RUNE_SEVERED), PROC_REF(on_rune_severed_trait_gain))
+	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_RUNE_SEVERED), PROC_REF(on_rune_severed_trait_loss))
 
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_IMMOBILIZED), PROC_REF(on_immobilized_trait_gain))
 	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_IMMOBILIZED), PROC_REF(on_immobilized_trait_loss))

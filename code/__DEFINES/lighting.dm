@@ -16,9 +16,18 @@
 /// icon used for lighting shading effects
 #define LIGHTING_ICON 'icons/effects/lighting_object.dmi'
 
-/// If the max of the lighting lumcounts of each spectrum drops below this, disable luminosity on the lighting objects.
+/// If the max of the lighting lumcounts of each spectrum drops below this, disable luminosity on the lit turfs.
 /// Set to zero to disable soft lighting. Luminosity changes then work if it's lit at all.
 #define LIGHTING_SOFT_THRESHOLD 0
+
+/// How many turfs may show one lighting look before a new look is made for the same appearance.
+#define LIGHTING_LOOK_MAX_USERS 256
+/// Unused lighting looks kept for reuse before the subsystem starts deleting them.
+#define LIGHTING_LOOK_IDLE_MAX 4000
+/// Corner id of a corner at full white.
+#define LIGHTING_LOOK_FULL_ID 274624
+/// Layer of the lighting looks of a z-level, so a higher level draws over a lower one.
+#define LIGHTING_LOOK_LAYER(z) (OBJ_LAYER + (z) * 0.001)
 
 /// If I were you I'd leave this alone.
 #define LIGHTING_BASE_MATRIX \
@@ -104,6 +113,9 @@
 /// dynamic lighting enabled only if starlight is.
 #define DYNAMIC_LIGHTING_IFSTARLIGHT 3
 #define IS_DYNAMIC_LIGHTING(A) A.dynamic_lighting
+/// The default turf in the default area: a cell outside every loaded map, or unused reserved space.
+/// It has no lighting look until it becomes a real turf.
+#define IS_FILLER_TURF(T) (T.type == world.turf && T.loc.type == world.area)
 
 
 //code assumes higher numbers override lower numbers.

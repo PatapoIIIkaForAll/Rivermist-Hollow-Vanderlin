@@ -46,11 +46,6 @@
 /mob/living/brain/flash_act(intensity = 1, override_blindness_check = 0, affect_silicon = 0)
 	return // no eyes, no flashing
 
-/mob/living/brain/can_be_revived()
-	. = 1
-	if(health <= HEALTH_THRESHOLD_DEAD)
-		return 0
-
 /mob/living/brain/fully_replace_character_name(oldname,newname)
 	..()
 	if(stored_dna)

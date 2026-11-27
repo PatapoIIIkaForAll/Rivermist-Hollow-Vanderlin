@@ -3,6 +3,21 @@
 #define SPOT_BUTT "butt"
 #define SPOT_CHEST "chest"
 #define SPOT_L_THIGH "l_thigh"
+#define SPOT_BACK "back"
+#define SPOT_BELLY "belly"
+#define SPOT_L_ARM "l_arm"
+#define SPOT_R_ARM "r_arm"
+#define SPOT_L_HAND "l_hand"
+#define SPOT_R_HAND "r_hand"
+#define SPOT_R_THIGH "r_thigh"
+#define SPOT_L_FOOT "l_foot"
+#define SPOT_R_FOOT "r_foot"
+#define SPOT_CHEEK "cheek"
+#define SPOT_FOREHEAD "forehead"
+#define SPOT_NOSE "nose"
+#define SPOT_LIPS "lips"
+#define SPOT_EAR "ear"
+#define SPOT_NECK "neck"
 
 /// Mark level rises with the act's force, the striker's strength and the tool tier.
 /datum/unit_test/impact_mark_level_scales/Run()
@@ -168,6 +183,116 @@
 	body.get_impact_mark_line(watcher, pronouns)
 	TEST_ASSERT(!sadist.sated, "A sadist should not sate twice inside the examine cooldown")
 
+/// Every zone marks its spot, the chest from behind marks the back, unknown zones mark nothing.
+/datum/unit_test/impact_mark_zone_table/Run()
+	var/list/expected = list(
+		BODY_ZONE_CHEST = SPOT_CHEST,
+		BODY_ZONE_PRECISE_STOMACH = SPOT_BELLY,
+		BODY_ZONE_PRECISE_GROIN = SPOT_BUTT,
+		BODY_ZONE_L_ARM = SPOT_L_ARM,
+		BODY_ZONE_R_ARM = SPOT_R_ARM,
+		BODY_ZONE_PRECISE_L_HAND = SPOT_L_HAND,
+		BODY_ZONE_PRECISE_R_HAND = SPOT_R_HAND,
+		BODY_ZONE_L_LEG = SPOT_L_THIGH,
+		BODY_ZONE_R_LEG = SPOT_R_THIGH,
+		BODY_ZONE_PRECISE_L_FOOT = SPOT_L_FOOT,
+		BODY_ZONE_PRECISE_R_FOOT = SPOT_R_FOOT,
+		BODY_ZONE_HEAD = SPOT_CHEEK,
+		BODY_ZONE_PRECISE_SKULL = SPOT_FOREHEAD,
+		BODY_ZONE_PRECISE_R_EYE = SPOT_FOREHEAD,
+		BODY_ZONE_PRECISE_L_EYE = SPOT_FOREHEAD,
+		BODY_ZONE_PRECISE_NOSE = SPOT_NOSE,
+		BODY_ZONE_PRECISE_MOUTH = SPOT_LIPS,
+		BODY_ZONE_PRECISE_EARS = SPOT_EAR,
+		BODY_ZONE_PRECISE_NECK = SPOT_NECK,
+	)
+	for(var/zone in expected)
+		TEST_ASSERT_EQUAL(get_impact_mark_spot(zone), expected[zone], "A strike to [zone] should mark [expected[zone]]")
+	TEST_ASSERT_EQUAL(get_impact_mark_spot(BODY_ZONE_CHEST, TRUE), SPOT_BACK, "A chest strike from behind should mark the back")
+	TEST_ASSERT_EQUAL(get_impact_mark_spot(BODY_ZONE_PRECISE_GROIN, TRUE), SPOT_BUTT, "A groin strike from behind should still mark the butt")
+	for(var/zone in list(BODY_ZONE_TAUR, "not a zone", null))
+		TEST_ASSERT_NULL(get_impact_mark_spot(zone), "A strike to [zone || "null"] should mark nothing")
+
+	var/mob/living/carbon/human/body = allocate(/mob/living/carbon/human/species/human/northern)
+	var/mob/living/carbon/human/striker = allocate(/mob/living/carbon/human/species/human/northern)
+	var/obj/item/weapon/whip/whip = allocate(/obj/item/weapon/whip)
+	for(var/zone in list(BODY_ZONE_L_ARM, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_PRECISE_L_FOOT, BODY_ZONE_HEAD, BODY_ZONE_PRECISE_NECK))
+		TEST_ASSERT(body.take_impact_mark(striker, zone, SEX_FORCE_EXTREME, whip) > IMPACT_MARK_NONE, "A whip strike to [zone] should leave a mark")
+		TEST_ASSERT_NOTNULL(LAZYACCESS(body.impact_marks, expected[zone]), "A whip strike to [zone] should be recorded on [expected[zone]]")
+	TEST_ASSERT_EQUAL(body.take_impact_mark(striker, "not a zone", SEX_FORCE_UNRELENTING, whip), IMPACT_MARK_NONE, "A strike to an unknown zone should leave no mark")
+	TEST_ASSERT_EQUAL(length(body.impact_marks), 5, "A strike to an unknown zone should record nothing")
+
+/// A strike from the three tiles behind the body marks the back; from the front it marks the chest.
+/datum/unit_test/impact_mark_back_from_behind/Run()
+	var/mob/living/carbon/human/body = allocate(/mob/living/carbon/human/species/human/northern)
+	var/mob/living/carbon/human/striker = allocate(/mob/living/carbon/human/species/human/northern)
+	var/obj/item/weapon/whip/whip = allocate(/obj/item/weapon/whip)
+	TEST_ASSERT(!is_struck_from_behind(body, striker), "A striker on the same tile is not behind")
+	striker.forceMove(get_step(body, NORTH))
+	body.setDir(SOUTH)
+	TEST_ASSERT(is_struck_from_behind(body, striker), "A striker north of a body facing south is behind it")
+	body.take_impact_mark(striker, BODY_ZONE_CHEST, SEX_FORCE_EXTREME, whip)
+	TEST_ASSERT_NOTNULL(LAZYACCESS(body.impact_marks, SPOT_BACK), "A chest strike from behind should mark the back")
+	TEST_ASSERT_NULL(LAZYACCESS(body.impact_marks, SPOT_CHEST), "A chest strike from behind should not mark the chest")
+	var/list/pronouns = list(THEIR = body.p_their(), THEYVE = "[body.p_they(TRUE)] [body.p_have()]")
+	var/line = body.get_impact_mark_line(body, pronouns)
+	TEST_ASSERT_NOTNULL(line, "A bare back mark should add an examine line")
+	TEST_ASSERT(findtext(line, "back"), "The examine line should name the back: [line]")
+
+	body.setDir(NORTH)
+	TEST_ASSERT(!is_struck_from_behind(body, striker), "A striker the body faces is not behind it")
+	body.take_impact_mark(striker, BODY_ZONE_CHEST, SEX_FORCE_EXTREME, whip)
+	TEST_ASSERT_NOTNULL(LAZYACCESS(body.impact_marks, SPOT_CHEST), "A chest strike from the front should mark the chest")
+
+/// A spank uses a held impact tool, from either hand, and never an ordinary item.
+/datum/unit_test/impact_mark_spank_uses_held_tool/Run()
+	var/mob/living/carbon/human/user = allocate(/mob/living/carbon/human/species/human/northern)
+	var/mob/living/carbon/human/bare_body = allocate(/mob/living/carbon/human/species/human/northern)
+	var/mob/living/carbon/human/tool_body = allocate(/mob/living/carbon/human/species/human/northern)
+	var/datum/sex_action/spanking/spank = allocate(/datum/sex_action/spanking)
+	spank.force = SEX_FORCE_HIGH
+
+	TEST_ASSERT(is_impact_tool(allocate(/obj/item/weapon/whip)), "A whip is an impact tool")
+	TEST_ASSERT(is_impact_tool(allocate(/obj/item/weapon/whip/cane)), "A cane is an impact tool")
+	TEST_ASSERT(is_impact_tool(allocate(/obj/item/storage/belt/leather)), "A belt is an impact tool")
+	for(var/toy_type in subtypesof(/obj/item/impact_toy))
+		TEST_ASSERT(is_impact_tool(allocate(toy_type)), "[toy_type] is an impact tool")
+
+	TEST_ASSERT_NULL(spank.get_spank_tool(user, bare_body), "Empty hands spank bare")
+	var/obj/item/weapon/knife/hunting/knife = allocate(/obj/item/weapon/knife/hunting)
+	TEST_ASSERT(!is_impact_tool(knife), "A knife is no impact tool")
+	TEST_ASSERT(user.put_in_active_hand(knife), "Test setup: the knife should be held")
+	TEST_ASSERT_NULL(spank.get_spank_tool(user, bare_body), "A held knife should not count as a spanking tool")
+	spank.on_perform(user, bare_body)
+	var/list/bare_mark = LAZYACCESS(bare_body.impact_marks, SPOT_BUTT)
+	TEST_ASSERT_NOTNULL(bare_mark, "A rough bare spank should mark the butt")
+	TEST_ASSERT(!bare_mark[IMPACT_MARK_BY_TOOL], "A spank with a knife in hand is a bare-hand mark")
+
+	var/obj/item/impact_toy/riding_crop/crop = allocate(/obj/item/impact_toy/riding_crop)
+	TEST_ASSERT(user.put_in_inactive_hand(crop), "Test setup: the crop should be held")
+	TEST_ASSERT_EQUAL(spank.find_spank_hand(user), user.get_inactive_precise_hand(), "The hand holding the crop should spank")
+	TEST_ASSERT_EQUAL(spank.get_spank_tool(user, tool_body), crop, "The held crop should be the spanking tool")
+	spank.on_perform(user, tool_body)
+	var/list/tool_mark = LAZYACCESS(tool_body.impact_marks, SPOT_BUTT)
+	TEST_ASSERT_NOTNULL(tool_mark, "A spank with the crop should mark the butt")
+	TEST_ASSERT(tool_mark[IMPACT_MARK_BY_TOOL], "A spank with the crop should read as a tool mark")
+	TEST_ASSERT(tool_mark[IMPACT_MARK_LEVEL] > bare_mark[IMPACT_MARK_LEVEL], "A spank with the crop should mark harder than a bare spank")
+
 #undef SPOT_BUTT
 #undef SPOT_CHEST
 #undef SPOT_L_THIGH
+#undef SPOT_BACK
+#undef SPOT_BELLY
+#undef SPOT_L_ARM
+#undef SPOT_R_ARM
+#undef SPOT_L_HAND
+#undef SPOT_R_HAND
+#undef SPOT_R_THIGH
+#undef SPOT_L_FOOT
+#undef SPOT_R_FOOT
+#undef SPOT_CHEEK
+#undef SPOT_FOREHEAD
+#undef SPOT_NOSE
+#undef SPOT_LIPS
+#undef SPOT_EAR
+#undef SPOT_NECK

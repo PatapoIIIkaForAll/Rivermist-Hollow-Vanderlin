@@ -1,0 +1,7 @@
+// Flat Vanderlin look, picked in the player's window style setting.
+
+@use 'vanderlin_base' as vb;
+
+.theme-vanderlin-classic:root {
+  @include vb.vanderlin-flat;
+}

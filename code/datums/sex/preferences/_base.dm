@@ -44,6 +44,10 @@
 		return content
 	return "<span[tooltip_attr]>[content]</span>"
 
+/// FALSE keeps this preference out of the ERP preference lists.
+/datum/erp_preference/proc/is_listed(datum/preferences/prefs)
+	return TRUE
+
 /// Why this preference cannot change right now, or null when it can.
 /datum/erp_preference/proc/get_edit_lock_reason(mob/user, datum/preferences/prefs)
 	if(locked_after_spawn && prefs?.is_erp_spawn_locked(user))

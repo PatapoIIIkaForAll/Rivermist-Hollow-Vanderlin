@@ -33,26 +33,26 @@
 	// the deep ore pass needs, and halls already supply the open space.
 	birth_limit = 6
 	min_pocket_size = 10
-	deep_vein_spacing = 14
+	deep_vein_spacing = 24
 	deep_vein_clearance = 4
-	deep_spread_iterations = 3
-	deep_max_veins = 9
+	deep_spread_iterations = 2
+	deep_max_veins = 3
 
 /datum/map_generator/caves/mixed/New()
 	. = ..()
 	if(isnull(deep_ore_table))
 		deep_ore_table = default_deep_ore_table()
 
-/// Deliberately richer than the surface seams: this is the payoff for digging blind.
+/// Deep deposits are hidden, but valuable ores should stay rare.
 /datum/map_generator/caves/mixed/proc/default_deep_ore_table()
 	return list(
-		/turf/closed/mineral/iron = list("weight" = 14, "spread_chance" = 55, "spread_range" = 2, "amount_min" = 4, "amount_max" = 7),
-		/turf/closed/mineral/coal = list("weight" = 12, "spread_chance" = 55, "spread_range" = 2, "amount_min" = 4, "amount_max" = 8),
-		/turf/closed/mineral/silver = list("weight" = 14, "spread_chance" = 50, "spread_range" = 2, "amount_min" = 3, "amount_max" = 6),
-		/turf/closed/mineral/gold = list("weight" = 12, "spread_chance" = 50, "spread_range" = 2, "amount_min" = 3, "amount_max" = 6),
-		/turf/closed/mineral/gemeralds = list("weight" = 8, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 2, "amount_max" = 4),
-		/turf/closed/mineral/cinnabar = list("weight" = 6, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 2, "amount_max" = 4),
-		/turf/closed/mineral/mana_crystal = list("weight" = 5, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 2, "amount_max" = 3),
+		/turf/closed/mineral/iron = list("weight" = 28, "spread_chance" = 55, "spread_range" = 1, "amount_min" = 4, "amount_max" = 7),
+		/turf/closed/mineral/coal = list("weight" = 24, "spread_chance" = 55, "spread_range" = 1, "amount_min" = 4, "amount_max" = 8),
+		/turf/closed/mineral/silver = list("weight" = 5, "spread_chance" = 50, "spread_range" = 1, "amount_min" = 3, "amount_max" = 6),
+		/turf/closed/mineral/gold = list("weight" = 3, "spread_chance" = 50, "spread_range" = 1, "amount_min" = 3, "amount_max" = 6),
+		/turf/closed/mineral/gemeralds = list("weight" = 2, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 2, "amount_max" = 4),
+		/turf/closed/mineral/cinnabar = list("weight" = 2, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 2, "amount_max" = 4),
+		/turf/closed/mineral/mana_crystal = list("weight" = 1, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 2, "amount_max" = 3),
 	)
 
 /// Long snaking corridors, small chambers. Feels like a worked-out mine.
@@ -112,23 +112,23 @@
 			entry["cluster_max"] = 3
 	return table
 
-/// Deep seams: fewer, larger, richer veins.
+/// Deep caves: sparse small deposits with fewer valuable ores.
 /datum/map_generator/caves/deep
 	name = "Deep Vein Generator"
 	chamber_spacing = 15
-	ore_vein_spacing = 9
-	ore_spread_iterations = 4
-	ore_max_veins = 60
+	ore_vein_spacing = 20
+	ore_spread_iterations = 2
+	ore_max_veins = 15
 
 /datum/map_generator/caves/deep/default_ore_table()
 	return list(
-		/turf/closed/mineral/iron = list("weight" = 18, "spread_chance" = 65, "spread_range" = 3, "amount_min" = 3, "amount_max" = 6),
-		/turf/closed/mineral/coal = list("weight" = 14, "spread_chance" = 65, "spread_range" = 3, "amount_min" = 3, "amount_max" = 7),
-		/turf/closed/mineral/silver = list("weight" = 12, "spread_chance" = 50, "spread_range" = 2, "amount_min" = 2, "amount_max" = 4),
-		/turf/closed/mineral/gold = list("weight" = 10, "spread_chance" = 50, "spread_range" = 2, "amount_min" = 2, "amount_max" = 4),
-		/turf/closed/mineral/gemeralds = list("weight" = 6, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 1, "amount_max" = 3),
-		/turf/closed/mineral/cinnabar = list("weight" = 4, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 1, "amount_max" = 3),
-		/turf/closed/mineral/mana_crystal = list("weight" = 3, "spread_chance" = 40, "spread_range" = 2, "amount_min" = 1, "amount_max" = 2),
+		/turf/closed/mineral/iron = list("weight" = 28, "spread_chance" = 65, "spread_range" = 1, "amount_min" = 3, "amount_max" = 6),
+		/turf/closed/mineral/coal = list("weight" = 24, "spread_chance" = 65, "spread_range" = 1, "amount_min" = 3, "amount_max" = 7),
+		/turf/closed/mineral/silver = list("weight" = 5, "spread_chance" = 50, "spread_range" = 1, "amount_min" = 2, "amount_max" = 4),
+		/turf/closed/mineral/gold = list("weight" = 3, "spread_chance" = 50, "spread_range" = 1, "amount_min" = 2, "amount_max" = 4),
+		/turf/closed/mineral/gemeralds = list("weight" = 2, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 1, "amount_max" = 3),
+		/turf/closed/mineral/cinnabar = list("weight" = 2, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 1, "amount_max" = 3),
+		/turf/closed/mineral/mana_crystal = list("weight" = 1, "spread_chance" = 40, "spread_range" = 1, "amount_min" = 1, "amount_max" = 2),
 	)
 
 /*

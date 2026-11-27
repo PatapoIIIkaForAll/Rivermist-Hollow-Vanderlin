@@ -12,6 +12,8 @@
 #define RUNE_THRESHOLD_FULLCRIT 30
 #define RUNE_THRESHOLD_SOFTCRIT 45
 #define RUNE_MOB_ERP_ESCAPE_ACTION_DURATION (1 MINUTES)
+/// Button on the rune call prompt that prints the full terms to chat.
+#define RUNE_CALL_CHOICE_TERMS "Full terms"
 
 /proc/find_resurrection_rune_by_tag(rune_tag)
 	if(!rune_tag || rune_tag == RUNE_LINK_NONE)
@@ -59,7 +61,7 @@
 	return main_fallback
 
 /proc/get_resurrection_rune_controller_for_user(mob/living/carbon/user)
-	if(!ishuman(user))
+	if(!ishuman(user) || HAS_TRAIT(user, TRAIT_RUNE_SEVERED))
 		return null
 
 	var/mob/living/carbon/human/human_user = user
@@ -116,6 +118,13 @@
 			continue
 		rune.resrunecontroler.remove_linked_mind(linked_mind)
 
+/// Remove controller registrations, pending rescues and any remaining body tag.
+/mob/living/proc/unlink_resurrection_rune()
+	unlink_mind_from_other_resurrection_runes(mind, null)
+	if(ishuman(src))
+		var/mob/living/carbon/human/body = src
+		body.rune_linked = RUNE_LINK_NONE
+
 
 /datum/action/innate/resurrection_rune_call
 	name = "Call the Rune"
@@ -162,15 +171,24 @@
 		if(captivity)
 			captivity.offer_release_choice(rune_controller)
 			return
-		var/list/choices = list(KIDNAP_CHOICE_CALL_RUNE, "Not yet")
-		// Spell out the price before they spend a charge - the return is powerful but far from free.
-		var/confirm = tgui_alert(carbon_owner, "Calling the rune will haul you to safety and mend your wounds - but it is not free:\n\n\
-			- You are torn from where you fell and wake beside the rune, far away (a compass points back to where you were taken).\n\
-			- The violent pull may rip away your worn clothing and armor - your underwear and bags are spared.\n\
-			- A mana backlash burns away half your mana and leaves you with lingering rune-weariness on top of the injuries of your defeat.\n\
-			- The rune takes its due: a tithe of coin and a tax of your blood, both growing heavier as your charges run low.\n\
-			- This spends one of your limited rune charges. They return slowly over time; spend your last and no rune will answer until they recharge.",
-			"Answer the rune's call?", choices)
+		var/list/choices = list(KIDNAP_CHOICE_CALL_RUNE, RUNE_CALL_CHOICE_TERMS, "Not yet")
+		var/first_return = !carbon_owner.mind?.defeat_rune_first_free_used
+		var/price_line = first_return ? "It takes coin and half your mana." : "It takes coin, blood and half your mana."
+		var/charge_line = first_return ? "The rune answers freely this once and spends no charge." : "It spends one of your [carbon_owner.mind?.get_defeat_rune_charges()] rune charges."
+		var/confirm
+		// The terms button prints the long version to chat and brings the prompt back.
+		do
+			confirm = tgui_alert(carbon_owner, "The rune pulls you to safety and mends your wounds. In return:\n\n\
+				- You wake beside the rune, far from here.\n\
+				- Your worn clothing and armor may be torn away.\n\
+				- [price_line]\n\
+				- [charge_line]",
+				"Answer the rune's call?", choices)
+			if(QDELETED(src) || QDELETED(carbon_owner) || !rune_controller)
+				return
+			if(confirm == RUNE_CALL_CHOICE_TERMS)
+				show_call_terms(carbon_owner)
+		while(confirm == RUNE_CALL_CHOICE_TERMS)
 		if(confirm != KIDNAP_CHOICE_CALL_RUNE)
 			return
 		rune_controller.trigger_defeat_rune_return(carbon_owner)
@@ -182,6 +200,19 @@
 		return
 	if(rune_controller.can_offer_mob_erp_rescue(carbon_owner))
 		rune_controller.trigger_mob_erp_escape(carbon_owner)
+
+/// Prints what a rune return costs, in full, to the caller's chat.
+/datum/action/innate/resurrection_rune_call/proc/show_call_terms(mob/living/carbon/rescued)
+	var/list/terms = list(
+		span_blue("<b>What the rune's return costs</b>"),
+		"<b>Where you wake.</b> The rune pulls you from where you fell and you wake beside it, far away. It leaves a compass in your hand that points back to that place for a short while.",
+		"<b>Clothing and armor.</b> The pull may tear away what you wear. Underwear and bags stay on you, with everything inside the bags.",
+		"<b>Insured belongings.</b> Anything you insured with the Guild that lies within [RUNE_INSURANCE_PULL_RADIUS] paces of you goes to the Guild's vault. Claim it at an insurance machine.",
+		"<b>Mana and weariness.</b> A backlash burns away half your mana and leaves rune-weariness on top of the injuries of your defeat. A town healer or a shrine can mend both.",
+		"<b>Coin and blood.</b> Every return costs a tithe of coin from your account. Every return after your first also costs more coin and a tax of your blood, both heavier as your charges run low.",
+		"<b>Charges.</b> The rune answers your first call freely and spends no charge. Each one after it spends one of your [DEFEAT_RUNE_MAX_CHARGES] rune charges, and one charge comes back every [DisplayTimeText(DEFEAT_RUNE_RECHARGE_TIME)]. With none left, no rune answers until one returns.",
+	)
+	to_chat(rescued, boxed_message(terms.Join("<br>")))
 
 /datum/action/innate/resurrection_rune_return
 	name = "Return to the Rune"
@@ -314,12 +345,11 @@
 	if(!linked_mind)
 		return FALSE
 
-	// Client handoffs can briefly still point at a lobby mob during spawn. Only
-	// sever a link if the mind itself is explicitly sitting in a new-player body.
+	// Inspect the mind's body directly because a client can still be in the lobby during a handoff.
 	var/mob/current_mob = linked_mind.current
 	if(!current_mob)
 		return FALSE
-	return isnewplayer(current_mob)
+	return isnewplayer(current_mob) || HAS_TRAIT(current_mob, TRAIT_RUNE_SEVERED)
 
 /datum/resurrection_rune_controller/proc/get_current_linkable_body(datum/mind/linked_mind)
 	if(!linked_mind)
@@ -491,21 +521,21 @@
 	apply_resurrection_trauma(new_body)
 
 /datum/resurrection_rune_controller/proc/add_user(mob/living/carbon/user)
-	if(!user)
-		return FALSE
-	if(!user.mind)
+	if(!user?.mind || HAS_TRAIT(user, TRAIT_RUNE_SEVERED))
 		return FALSE
 
 	return add_linked_mind(user.mind)
 
 /datum/resurrection_rune_controller/proc/add_linked_mind(datum/mind/linked_mind)
-	if(!linked_mind)
+	if(QDELETED(linked_mind))
+		return FALSE
+	var/mob/living/carbon/current_body = get_current_linkable_body(linked_mind)
+	if(current_body && HAS_TRAIT(current_body, TRAIT_RUNE_SEVERED))
 		return FALSE
 	if(linked_mind in linked_users_minds)
-		var/mob/living/carbon/existing_body = get_current_linkable_body(linked_mind)
-		if(existing_body)
+		if(current_body)
 			clear_ghost_return_action(linked_mind)
-			replace_linked_body(linked_mind, existing_body)
+			replace_linked_body(linked_mind, current_body)
 		else
 			ensure_ghost_return_action(linked_mind)
 		return TRUE
@@ -514,7 +544,6 @@
 	if(!(linked_mind in linked_users_minds))
 		linked_users_minds += linked_mind
 		RegisterSignal(linked_mind, COMSIG_PARENT_QDELETING, PROC_REF(handle_linked_mind_deletion), override = TRUE)
-	var/mob/living/carbon/current_body = get_current_linkable_body(linked_mind)
 	if(current_body)
 		clear_ghost_return_action(linked_mind)
 		replace_linked_body(linked_mind, current_body)
@@ -628,7 +657,7 @@
 		resurrecting -= target
 		clear_linked_user_rescue_state(target)
 		return
-	if(target.defeat_mode == DEFEAT_MODE_NO_RETURN)
+	if(target.get_effective_defeat_mode() == DEFEAT_MODE_NO_RETURN)
 		clear_linked_user_rescue_state(target)
 		return
 	if(target in resurrecting)
@@ -661,6 +690,8 @@
 	if(linked_mind && (linked_mind?.current == target || QDELETED(linked_mind?.current)))
 		linked_mind.current = null
 	if(can_auto_remake_deleted_body(linked_mind))
+		// The body is going, so insured items still on it are saved too.
+		linked_mind.rune_insurance?.pull_to_vault(get_turf(target), target, include_body = TRUE)
 		queue_body_remake(linked_mind)
 
 /// A linked mind being deleted must be dropped from our lists, or we pin it (a hard-del leak).
@@ -876,7 +907,7 @@
 /datum/resurrection_rune_controller/proc/can_queue_rescue_for(mob/living/carbon/user)
 	if(!user)
 		return FALSE
-	if(user.defeat_lethal_bypass || user.defeat_final_death || user.suiciding || user.defeat_mode == DEFEAT_MODE_NO_RETURN)
+	if(user.defeat_lethal_bypass || user.defeat_final_death || user.suiciding || user.get_effective_defeat_mode() == DEFEAT_MODE_NO_RETURN)
 		return FALSE
 	if(resurrections_disabled())
 		return FALSE
@@ -919,7 +950,7 @@
 /datum/resurrection_rune_controller/proc/can_offer_defeat_rune_return(mob/living/carbon/user)
 	if(!can_queue_rescue_for(user))
 		return FALSE
-	if(user.defeat_mode != DEFEAT_MODE_KO_RUNE)
+	if(user.get_effective_defeat_mode() != DEFEAT_MODE_KO_RUNE)
 		return FALSE
 	var/datum/component/kidnap_captivity/captivity = user.GetComponent(/datum/component/kidnap_captivity)
 	if(captivity)
@@ -958,7 +989,7 @@
 	return TRUE
 
 /datum/resurrection_rune_controller/proc/queue_revival(mob/living/carbon/user, is_linked = TRUE, voluntary = FALSE, allow_outlaw_redirect = TRUE, list/rune_charge_result = null)
-	if(!user)
+	if(!user || HAS_TRAIT(user, TRAIT_RUNE_SEVERED))
 		return
 	if(user in resurrecting)
 		return
@@ -976,11 +1007,13 @@
 	addtimer(CALLBACK(src, PROC_REF(complete_revival), user, voluntary, allow_outlaw_redirect, rune_charge_result), RUNE_REVIVE_DELAY)
 
 /datum/resurrection_rune_controller/proc/complete_revival(mob/living/carbon/user, voluntary = FALSE, allow_outlaw_redirect = TRUE, list/rune_charge_result = null)
+	if(!(user in resurrecting))
+		return
 	var/mob/living/carbon/body = user
 	if(resurrections_disabled())
 		resurrecting -= user
 		return
-	if(body?.defeat_final_death || body?.suiciding)
+	if(body?.defeat_final_death || body?.suiciding || body?.get_effective_defeat_mode() == DEFEAT_MODE_NO_RETURN)
 		resurrecting -= user
 		return
 	if(QDELETED(body))
@@ -1008,6 +1041,9 @@
 	playsound(get_turf(body), 'sound/magic/repulse.ogg', 100, FALSE, -1)
 	body.ExtinguishMob()
 	maybe_strip_revival_clothes(body, voluntary)
+	// After the strip, so what it tore loose is on the ground for the vault to take.
+	var/datum/mind/insured_mind = get_linked_mind_for_body(body) || body.mind
+	insured_mind?.rune_insurance?.pull_to_vault(get_turf(body), body)
 	var/outlaw_redirected = sub_rune.uses_outlaw_redirect(body, null, allow_outlaw_redirect)
 	body.forceMove(destination_turf)
 	if(outlaw_redirected)
@@ -1753,21 +1789,65 @@
 
 	show_player_panel_next(target)
 
-/proc/admin_link_mind_to_resurrection_rune(datum/mind/linked_mind, obj/structure/resurrection_rune/rune)
+/// Called after an admin has put a client into a body that can use a resurrection rune.
+/client/proc/prompt_controlled_body_rune(mob/living/carbon/body, client/occupant)
+	set waitfor = FALSE
+	if(holder?.owner != src || !istype(body) || QDELETED(body) || QDELETED(occupant) || body.client != occupant)
+		return
+
+	var/datum/admins/acting_holder = holder
+	var/datum/mind/occupied_mind = body.mind
+	var/answer = tgui_alert(
+		mob,
+		"Bind to a rune?\n\nSever completely removes the link and enables No Return.",
+		"Resurrection Rune — [body]",
+		list("Yes", "No", "Sever completely"),
+		timeout = 30 SECONDS,
+	)
+	if(answer != "Yes" && answer != "Sever completely")
+		return
+	if(QDELETED(src) || holder != acting_holder || holder?.owner != src || QDELETED(body) || QDELETED(occupant) || body.client != occupant)
+		return
+	var/datum/mind/target_mind = body.mind
+	if(QDELETED(target_mind) || target_mind.current != body || (occupied_mind && target_mind != occupied_mind))
+		return
+
+	if(answer == "Sever completely")
+		ADD_TRAIT(body, TRAIT_RUNE_SEVERED, ADMIN_TRAIT)
+		log_admin("[key_name(src)] severed [key_name(body)] from resurrection runes and set them to No Return.")
+		message_admins("[key_name_admin(src)] severed [key_name(body)] from resurrection runes and set them to No Return.")
+		to_chat(src, span_notice("[body]'s rune link is severed. Death is final."))
+		return
+
+	var/obj/structure/resurrection_rune/rune = find_resurrection_rune_by_mind(target_mind)
+	if(!rune)
+		rune = find_resurrection_rune_by_tag(target_mind.assigned_role?.rune_linked)
+	if(!rune?.resrunecontroler)
+		rune = get_emergency_resurrection_rune()
+	if(!rune?.resrunecontroler)
+		to_chat(src, span_warning("No resurrection rune is available for [body]."))
+		return
+
+	var/was_severed_by_admin = HAS_TRAIT_FROM(body, TRAIT_RUNE_SEVERED, ADMIN_TRAIT)
+	REMOVE_TRAIT(body, TRAIT_RUNE_SEVERED, ADMIN_TRAIT)
+	if(!admin_link_mind_to_resurrection_rune(target_mind, rune, mob) && was_severed_by_admin)
+		ADD_TRAIT(body, TRAIT_RUNE_SEVERED, ADMIN_TRAIT)
+
+/proc/admin_link_mind_to_resurrection_rune(datum/mind/linked_mind, obj/structure/resurrection_rune/rune, mob/admin = usr)
 	if(!linked_mind)
-		to_chat(usr, span_warning("No mind selected."))
+		to_chat(admin, span_warning("No mind selected."))
 		return FALSE
 	if(!rune?.resrunecontroler)
-		to_chat(usr, span_warning("That rune has no controller."))
+		to_chat(admin, span_warning("That rune has no controller."))
 		return FALSE
 	if(!rune.resrunecontroler.add_linked_mind(linked_mind))
-		to_chat(usr, span_warning("Failed to link [get_resurrection_rune_admin_mind_label(linked_mind)] to [rune.get_management_name()]."))
+		to_chat(admin, span_warning("Failed to link [get_resurrection_rune_admin_mind_label(linked_mind)] to [rune.get_management_name()]."))
 		return FALSE
 
 	var/target_label = get_resurrection_rune_admin_mind_label(linked_mind)
-	log_admin("[key_name(usr)] linked [target_label] to resurrection rune [rune.get_management_name()].")
-	message_admins("[key_name_admin(usr)] linked [target_label] to resurrection rune [rune.get_management_name()].")
-	to_chat(usr, span_notice("Linked [target_label] to [rune.get_management_name()]."))
+	log_admin("[key_name(admin)] linked [target_label] to resurrection rune [rune.get_management_name()].")
+	message_admins("[key_name_admin(admin)] linked [target_label] to resurrection rune [rune.get_management_name()].")
+	to_chat(admin, span_notice("Linked [target_label] to [rune.get_management_name()]."))
 	return TRUE
 
 /proc/admin_unlink_mind_from_resurrection_runes(datum/mind/linked_mind)
@@ -1891,3 +1971,4 @@
 #undef RUNE_STAGE_HARD_CRIT
 #undef RUNE_STAGE_IMMEDIATE
 #undef RUNE_MOB_ERP_ESCAPE_ACTION_DURATION
+#undef RUNE_CALL_CHOICE_TERMS

@@ -96,6 +96,9 @@ GLOBAL_LIST_INIT(preference_badge_categories, list(
 /datum/preference/toggle/show_preference_badges
 	savefile_key = "show_preference_badges"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Content"
+	toggles_menu_name = "Show preference badges"
+	toggles_menu_desc = "Show players' badges above their characters and when examining them."
 	category = "chat"
 	can_randomize = FALSE
 	should_update_preview = FALSE
@@ -194,17 +197,6 @@ GLOBAL_LIST_INIT(preference_badge_categories, list(
 		return FALSE
 	save_preferences()
 	return TRUE
-
-/mob/verb/toggle_preference_badges()
-	set name = "Toggle Preference Badges"
-	set category = "IC"
-	set desc = "Show or hide other players' preference badges."
-	var/datum/preferences/prefs = client?.prefs
-	if(!prefs?.toggle_preference_badge_visibility(src))
-		return
-	var/visible = prefs.read_preference(/datum/preference/toggle/show_preference_badges)
-	to_chat(src, span_notice("Preference badges are now [visible ? "visible" : "hidden"]."))
-	SStgui.update_uis(prefs)
 
 /mob/proc/update_preference_badge_visibility()
 	if(!client?.prefs || isnewplayer(src))

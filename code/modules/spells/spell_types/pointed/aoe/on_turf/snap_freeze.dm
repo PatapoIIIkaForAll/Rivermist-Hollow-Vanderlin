@@ -28,6 +28,7 @@
 /datum/action/cooldown/spell/aoe/on_turf/snap_freeze/proc/do_freeze(turf/victim)
 	new /obj/effect/temp_visual/snap_freeze(victim)
 	playsound(victim, 'sound/combat/newstuck.ogg', 80, TRUE)
+	victim.extinguish_turf()
 	for(var/mob/living/L in victim)
 		if(owner?.spares_ally(L))
 			continue

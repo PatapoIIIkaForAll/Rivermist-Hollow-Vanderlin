@@ -11,6 +11,8 @@
 	neighborlay = "dirtedge"
 	damage_deflection = 8
 	max_integrity = 600
+	spread_chance = 1.35
+	burn_power = 50
 
 /turf/open/floor/ruinedwood/Initialize()
 	dir = pick(GLOB.cardinals)
@@ -95,6 +97,8 @@
 	slowdown = 0
 	damage_deflection = 6
 	max_integrity = 300
+	spread_chance = 1.35
+	burn_power = 50
 
 /turf/open/floor/twig/Initialize()
 	dir = pick(GLOB.cardinals)
@@ -121,6 +125,8 @@
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_WOOD
 	damage_deflection = 8
 	max_integrity = 600
+	spread_chance = 1.35
+	burn_power = 50
 //these are here so we can put wood floors next to each other but not have them smooth
 /turf/open/floor/wood/nosmooth
 
@@ -144,6 +150,8 @@
 	smoothing_groups = SMOOTH_GROUP_OPEN_FLOOR + SMOOTH_GROUP_FLOOR_WOOD
 	damage_deflection = 8
 	max_integrity = 600
+	spread_chance = 1.35
+	burn_power = 50
 
 /turf/open/floor/woodturned/atom_destruction(damage_flag)
 	. = ..()
@@ -166,6 +174,8 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	damage_deflection = 8
 	max_integrity = 800
+	spread_chance = 1.35
+	burn_power = 50
 
 /turf/open/floor/rooftop/atom_destruction(damage_flag)
 	. = ..()
@@ -306,6 +316,21 @@
 	var/muddy = FALSE
 	var/bloodiness = 20
 	var/dirt_amt = 3
+
+/turf/open/floor/dirt/MiddleClick(mob/user, list/modifiers)
+	. = ..()
+	if(!isliving(user))
+		return
+
+	var/mob/living/L = user
+	if(L.stat != CONSCIOUS || !L.TurfAdjacent(src))
+		return
+
+	var/obj/item/weapon/shovel/S = L.get_active_held_item()
+	if(!istype(S) || !istype(L.used_intent, /datum/intent/shovelscoop))
+		return
+
+	return S.start_autodig(L, src)
 
 /turf/open/floor/dirt/attack_hand_secondary(mob/user, list/modifiers)
 	. = ..()
@@ -502,6 +527,8 @@
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	landsound = 'sound/foley/jumpland/grassland.ogg'
 	slowdown = 0
+	spread_chance = 1.35
+	burn_power = 50
 
 /*	..................   Stone Block Floors   ................... */
 /turf/open/floor/blocks
@@ -1109,6 +1136,8 @@
 	landsound = 'sound/foley/jumpland/woodland.ogg'
 	damage_deflection = 8
 	max_integrity = 1000
+	spread_chance = 1.35
+	burn_power = 50
 
 /turf/open/floor/plank/atom_destruction(damage_flag)
 	. = ..()

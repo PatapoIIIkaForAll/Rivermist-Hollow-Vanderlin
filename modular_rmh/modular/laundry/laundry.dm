@@ -1,9 +1,3 @@
-/mob/living/carbon/human/wash(clean_types)
-	. = ..()
-	for(var/obj/item/clothing/garment in list(cloak, wear_pants, wear_wrists, underwear, bra, undershirt, legwear_socks, armsleeves, garter, choker))
-		if(garment.wash(clean_types))
-			. = TRUE
-
 /obj/item/clothing/proc/get_washed_wet(dirty, mob/living/washer)
 	wet?.add_water(LAUNDRY_WATER, dirty, TRUE)
 	if(washer)

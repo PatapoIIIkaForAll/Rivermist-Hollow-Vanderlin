@@ -29,7 +29,9 @@
 		return
 	var/mob/living/carbon/human/old_owner = socket_owner
 	socket_owner = null
-	on_remove(old_owner)
+	//A deleting owner has already torn down what on_remove would undo
+	if(!QDELING(old_owner))
+		on_remove(old_owner)
 	parent = null
 
 /// Short summary of what an implant changes, for the creator and examine.

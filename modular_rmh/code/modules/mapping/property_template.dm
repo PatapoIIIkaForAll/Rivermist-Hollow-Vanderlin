@@ -1,53 +1,47 @@
-/datum/map_template/rmh_housing1
-	name = "Rivermist Hollow House One"
-	mappath = "_maps/map_files/hsector/housing/house1.dmm"
-	width = 7
-	height = 7
-
-/datum/map_template/rmh_housing2
-	name = "Rivermist Hollow House Two"
-	mappath = "_maps/map_files/hsector/housing/house2.dmm"
-	width = 7
-	height = 6
-
-/datum/map_template/rmh_housing3
-	name = "Rivermist Hollow House Three"
-	mappath = "_maps/map_files/hsector/housing/house3.dmm"
-	width = 7
-	height = 7
-
-/datum/map_template/rmh_housing4
-	name = "Rivermist Hollow House Four"
-	mappath = "_maps/map_files/hsector/housing/house4.dmm"
+/datum/map_template/outskirt_house1
+	name = "Outskirt House I"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house1.dmm"
 	width = 7
 	height = 8
 
-/datum/map_template/rmh_housing5
-	name = "Rivermist Hollow House Five"
-	mappath = "_maps/map_files/hsector/housing/house5.dmm"
-	width = 7
-	height = 7
-
-/datum/map_template/rmh_housing6
-	name = "Rivermist Hollow House Six"
-	mappath = "_maps/map_files/hsector/housing/house6.dmm"
+/datum/map_template/outskirt_house2
+	name = "Outskirt House II"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house2.dmm"
 	width = 6
-	height = 7
+	height = 8
 
-/datum/map_template/rmh_housing7
-	name = "Rivermist Hollow House Seven"
-	mappath = "_maps/map_files/hsector/housing/house7.dmm"
-	width = 7
-	height = 7
-
-/datum/map_template/rmh_lab1
-	name = "Rivermist Hollow Artificer Private Lab"
-	mappath = "_maps/map_files/hsector/housing/lab.dmm"
+/datum/map_template/outskirt_house3
+	name = "Outskirt House III"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house3.dmm"
 	width = 8
 	height = 8
 
-/datum/map_template/rmh_outskirt1
-	name = "Rivermist Hollow Outskirt House"
-	mappath = "_maps/map_files/hsector/housing/outskirt1.dmm"
-	width = 9
-	height = 9
+/datum/map_template/outskirt_house4
+	name = "Outskirt House IV"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house4.dmm"
+	width = 6
+	height = 7
+
+/datum/map_template/outskirt_house5
+	name = "Outskirt House V"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house5.dmm"
+	width = 6
+	height = 6
+
+/datum/map_template/outskirt_house6
+	name = "Outskirt House VI"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house6.dmm"
+	width = 8
+	height = 7
+
+/datum/map_template/outskirt_house7
+	name = "Outskirt House VII"
+	mappath = "_maps/map_files/hsector/housing/outskirt_house7.dmm"
+	width = 6
+	height = 6
+
+/datum/map_template/intown_house1
+	name = "Intown House I"
+	mappath = "_maps/map_files/hsector/housing/intown_house1.dmm"
+	width = 7
+	height = 5

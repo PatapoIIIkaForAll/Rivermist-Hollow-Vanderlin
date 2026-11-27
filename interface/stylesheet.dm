@@ -61,6 +61,8 @@ h1.alert, h2.alert	{color: #c9c1ba;font-family: Mookmania, TrueType;}
 .greenannounce			{color: #059223;	font-weight: bold;}
 .rose					{color: #e7bed8;}
 .love					{color: #e7bed8;	font-size: 75%;}
+.love_climax			{color: #ff5fcf;	font-size: 130%;	font-weight: bold;}
+.ovi					{color: #b6e07a;	font-style: italic;}
 .info					{color: #a9a5b6;						font-size: 75%;}
 .biginfo				{color: #a9a5b6;}
 .noticesmall			{color: #f1d669;						font-size: 85%;}

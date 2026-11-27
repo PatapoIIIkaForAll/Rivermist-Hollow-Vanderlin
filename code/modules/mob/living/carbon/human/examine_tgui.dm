@@ -477,14 +477,14 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 		var/mob/living/carbon/human/holder_human = holder
 		if(!(holder.wear_armor && holder.wear_armor.flags_inv) && !(holder.wear_shirt && holder.wear_shirt.flags_inv) && !(holder_human.underwear) || holder_human.get_erp_pref(/datum/erp_preference/boolean/always_show_nsfw_flavor))
 			is_naked = TRUE
-		obscured = ((!isobserver(user))) && ((holder_human.wear_mask && (holder_human.wear_mask.flags_inv & HIDEFACE)) || (holder_human.head && (holder_human.head.flags_inv & HIDEFACE))) // ((!isobserver(user)) && !holder_human.client?.prefs?.masked_examine)
+		obscured = holder_human.conceals_examine_panel_from(user)
 		flavor_text = obscured ? "Obscured" : (holder.flavortext || "")
 		flavor_text_nsfw = obscured ? "Obscured" : (holder.nsfwflavortext || "")
 		ooc_notes = holder.ooc_notes || ""
 		ooc_notes_nsfw = holder.erpprefs_flavor || ""
 		char_name = holder.name || ""
-		song_url = holder.song_link || ""
 		if(!obscured)
+			song_url = holder.song_link || ""
 			headshot = holder.headshot_link || ""
 			nsfw_headshot = holder.nsfw_headshot_link || ""
 			img_gallery = holder.img_gallery ? holder.img_gallery.Copy() : list()
@@ -586,6 +586,9 @@ GLOBAL_LIST_INIT(examine_panel_slot_layout, list(
 	C = viewing.client
 
 	if(ishuman(holder))
+		// A concealed character's song would give them away.
+		if(!is_playing && holder.conceals_examine_panel_from(viewing))
+			return
 		web_sound_url = holder.song_link
 		if(holder.song_artist)
 			artist_name = holder.song_artist

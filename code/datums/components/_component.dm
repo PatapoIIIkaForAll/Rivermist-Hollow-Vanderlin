@@ -297,12 +297,17 @@
 		var/proctype = C.signal_procs[src][sigtype]
 		return CallAsync(C, proctype, arguments)
 	. = NONE
+	// Look up every handler before calling any: a handler may unregister another listener mid-send.
+	var/list/queued_calls = list()
 	for(var/datum/C as anything in target)
 		if(!C.signal_enabled)
 			continue
-		var/proctype = C.signal_procs[src][sigtype]
-		arguments |= sigtype
-		. |= CallAsync(C, proctype, arguments)
+		queued_calls.Add(C, C.signal_procs[src][sigtype])
+	if(!length(queued_calls))
+		return
+	arguments |= sigtype
+	for(var/i in 1 to length(queued_calls) step 2)
+		. |= CallAsync(queued_calls[i], queued_calls[i + 1], arguments)
 
 // The type arg is casted so initial works, you shouldn't be passing a real instance into this
 /**

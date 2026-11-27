@@ -168,7 +168,7 @@
 		if(IS_ABSTRACT(pref_type))
 			continue
 		var/datum/erp_preference/pref = new pref_type()
-		if(pref.abstract_type == pref_type)
+		if(pref.abstract_type == pref_type || !pref.is_listed(src))
 			continue
 		if(!categories[pref.category])
 			categories[pref.category] = list()

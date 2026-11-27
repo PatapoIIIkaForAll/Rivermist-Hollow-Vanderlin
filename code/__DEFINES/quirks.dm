@@ -16,3 +16,10 @@
 #define QUIRK_TEXT "text"
 #define QUIRK_NUMBER "number"
 #define QUIRK_COLOR "color"
+
+/// Most picks a multi-pick quirk option list allows.
+#define QUIRK_MAX_PICKS 3
+/// Quirk points each pick past the first gives on a negative multi-pick quirk.
+#define QUIRK_EXTRA_PICK_POINTS 1
+/// Poor Vision option for players who bring their own eyewear.
+#define QUIRK_EYEWEAR_OWN "None, I bring my own"

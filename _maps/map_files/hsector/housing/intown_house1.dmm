@@ -1,0 +1,122 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"b" = (
+/turf/closed/wall/mineral/wooddark,
+/area/indoors/town/rmh/living)
+"c" = (
+/turf/closed/wall/mineral/decowood,
+/area/indoors/town/rmh/living)
+"d" = (
+/turf/closed/wall/mineral/stone,
+/area/indoors/town/rmh/living)
+"e" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/living)
+"f" = (
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/living)
+"g" = (
+/obj/structure/spider/stickyweb,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"h" = (
+/obj/structure/flora/grass/crawlvines,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"i" = (
+/obj/structure/sign/property_sign/claim,
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh/living)
+"j" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/living)
+"k" = (
+/obj/structure/flora/grass/crawlvines,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/cobblerock,
+/area/indoors/town/rmh/living)
+"l" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"m" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"n" = (
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"o" = (
+/obj/structure/door{
+	lockid = "intown_house1";
+	name = "Old House"
+	},
+/obj/structure/barricade/wooden/crude,
+/turf/open/floor/woodturned,
+/area/indoors/town/rmh/living)
+"p" = (
+/obj/structure/flora/grass/crawlvines,
+/turf/open/floor/wood,
+/area/indoors/town/rmh/living)
+"q" = (
+/turf/closed/wall/mineral/wooddark/vertical,
+/area/indoors/town/rmh/living)
+"r" = (
+/turf/open/floor/cobblerock,
+/area/outdoors/town/rmh)
+"s" = (
+/turf/open/floor/dirt/road,
+/area/outdoors/town/rmh)
+
+(1,1,1) = {"
+r
+b
+d
+d
+b
+"}
+(2,1,1) = {"
+s
+d
+j
+e
+c
+"}
+(3,1,1) = {"
+b
+d
+k
+f
+c
+"}
+(4,1,1) = {"
+c
+p
+l
+g
+c
+"}
+(5,1,1) = {"
+c
+m
+m
+h
+c
+"}
+(6,1,1) = {"
+c
+g
+n
+h
+c
+"}
+(7,1,1) = {"
+b
+q
+o
+i
+b
+"}

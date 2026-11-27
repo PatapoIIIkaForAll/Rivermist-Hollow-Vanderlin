@@ -203,6 +203,8 @@
 	var/stain_level = 0
 	/// Name of the main fluid, kept as a dried stain until washed.
 	var/residue_name
+	/// Reagent type behind residue_name.
+	var/residue_type
 	/// Smell given off until washed.
 	var/datum/pollutant/residue_scent
 	/// Semen globs drawn now: 0 none, 1 light or dried, 2 heavy.
@@ -254,6 +256,7 @@
 	if(!main_fluid || istype(main_fluid, /datum/reagent/water))
 		return
 	residue_name = LOWER_TEXT(main_fluid.name)
+	residue_type = main_fluid.type
 	residue_scent = get_fluid_scent(main_fluid.type)
 
 /datum/component/fluid_soaked/proc/evaporate(amount)
@@ -343,7 +346,7 @@
 	var/obj/item/clothing/garment = parent
 	var/datum/reagent/main_fluid = garment.reagents?.get_master_reagent()
 	if(main_fluid)
-		var/fluid_name = LOWER_TEXT(main_fluid.name)
+		var/fluid_name = is_fluid_hidden_from(main_fluid.type, user) ? "something" : LOWER_TEXT(main_fluid.name)
 		switch(stain_level)
 			if(2)
 				examine_list += span_warning("It is soaked through with [fluid_name].")
@@ -352,7 +355,7 @@
 			else
 				examine_list += span_notice("It is faintly moist with [fluid_name].")
 	else if(residue_name)
-		examine_list += span_notice("It has dried stains of [residue_name].")
+		examine_list += span_notice(is_fluid_hidden_from(residue_type, user) ? "It has dried stains." : "It has dried stains of [residue_name].")
 
 /// Washing or scrubbing removes the fluid, the stain and the smell.
 /datum/component/fluid_soaked/proc/on_clean(datum/source, clean_types)

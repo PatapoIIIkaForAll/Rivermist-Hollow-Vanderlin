@@ -200,17 +200,17 @@
 /atom/movable/screen/alert/gross
 	name = "Grossed out."
 	desc = ""
-	icon_state = "gross"
+	icon_state = "badmeal"
 
 /atom/movable/screen/alert/verygross
 	name = "Very grossed out."
 	desc = ""
-	icon_state = "gross2"
+	icon_state = "rotted_body"
 
 /atom/movable/screen/alert/disgusted
 	name = "DISGUSTED"
 	desc = ""
-	icon_state = "gross3"
+	icon_state = "poison"
 
 /atom/movable/screen/alert/status_effect/debuff/hot
 	name = "Too Hot"
@@ -235,7 +235,7 @@
 /atom/movable/screen/alert/hypnosis
 	name = "Hypnosis"
 	desc = ""
-	icon_state = "hypnosis"
+	icon_state = "acid"
 	var/phrase
 
 /atom/movable/screen/alert/mind_control

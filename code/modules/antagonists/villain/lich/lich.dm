@@ -188,6 +188,8 @@
 /// Checks if the lich has a phylactery to resurrect to and returns TRUE if successfully resurrected, else returns FALSE.
 /datum/antagonist/lich/proc/attempt_resurrection(timer = 10 SECONDS)
 	var/mob/lich_mob = lich_body_ref.resolve()
+	if(lich_mob && HAS_TRAIT(lich_mob, TRAIT_RUNE_SEVERED))
+		return FALSE
 	lich_mob?.visible_message(span_warning("[lich_mob]'s body begins to shake violently!"))
 
 	if(!length(phylacteries)) // it's over.
@@ -204,6 +206,8 @@
 
 		sleep(timer) // we sleep so we can later check the other phylacteries in the loop
 
+		if(!QDELETED(lich_mob) && HAS_TRAIT(lich_mob, TRAIT_RUNE_SEVERED))
+			return FALSE
 		if(!QDELETED(to_be_consumed)) // check if the phylactery got destroyed while we were resurrecting.
 			if(!to_be_consumed.possessor.rise_anew()) // it's over.
 				on_fail()

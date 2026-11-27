@@ -305,8 +305,11 @@
 	if(!target.dropItemToGround(stripped_item, force = FALSE, silent = FALSE))
 		return TRUE
 
-	if(damage_chance && prob(damage_chance) && !istype(stripped_item, /obj/item/storage) && !istype(stripped_item, /obj/item/clothing/ring))
+	if(!QDELETED(stripped_item) && damage_chance && prob(damage_chance) && !istype(stripped_item, /obj/item/storage) && !istype(stripped_item, /obj/item/clothing/ring))
 		stripped_item.take_damage(damage_amount = stripped_item.max_integrity * damage_ratio, sound_effect = FALSE)
+	// Dropping or damage can delete the piece; it still counts as stripped
+	if(QDELETED(stripped_item))
+		return stripped_item
 
 	if(target == hunter)
 		hunter.visible_message(span_danger("[hunter] tears off [hunter.p_their()] [stripped_item.name]!"))

@@ -68,7 +68,7 @@
 
 	give_bank_account = 40
 
-	traits = list(TRAIT_HOLY_URINE)
+	grants_holy_urine = TRUE
 
 	job_subclasses = list(
 		/datum/job/advclass/acolyte/base,

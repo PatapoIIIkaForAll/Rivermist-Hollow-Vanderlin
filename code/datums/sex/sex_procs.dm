@@ -170,8 +170,8 @@
 	RETURN_TYPE(/obj/item/organ/genitals/filling_organ/breasts)
 	return getorganslot(ORGAN_SLOT_BREASTS)
 
-/// Gags over the mouth, grabs and mouth items stop it; cloth only with cloth_blocks; armor unless [actor] may reach under.
-/mob/living/proc/mouth_is_free(mob/living/actor, cloth_blocks = FALSE, ignore_armor = FALSE)
+/// Mouth gags, grabs, mouth items block; cloth, any gag with cloth_blocks, ring gags excepted by open_gags_pass; armor unless [actor] reaches.
+/mob/living/proc/mouth_is_free(mob/living/actor, cloth_blocks = FALSE, ignore_armor = FALSE, open_gags_pass = FALSE)
 	if(!has_mouth() || mouth_blocked)
 		return FALSE
 	if(iscarbon(src))
@@ -180,7 +180,7 @@
 			return FALSE
 	for(var/obj/item/clothing/worn in get_equipped_items())
 		// A gag that leaves the mouth open, like a ring gag, only muffles speech.
-		if((worn.clothing_flags & BLOCKS_SPEECH) && (cloth_blocks || (worn.flags_cover & (HEADCOVERSMOUTH|MASKCOVERSMOUTH))))
+		if((worn.clothing_flags & BLOCKS_SPEECH) && ((cloth_blocks && !open_gags_pass) || (worn.flags_cover & (HEADCOVERSMOUTH|MASKCOVERSMOUTH))))
 			return FALSE
 	var/obj/item/clothing/cover = is_mouth_covered()
 	if(!cover)

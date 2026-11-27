@@ -167,6 +167,9 @@ GLOBAL_PROTECT(admin_menu_verbs_checked)
 /datum/preference/toggle/admin_new_menu
 	savefile_key = "admin_new_menu"
 	savefile_identifier = PREF_PLAYER
+	toggles_menu_category = "Admin"
+	toggles_menu_name = "New-Adm. menu"
+	toggles_menu_desc = "Admin commands live in the Admin Menu window. Off: the classic admin tabs on the right panel."
 	category = "ui"
 	can_randomize = FALSE
 	should_update_preview = FALSE

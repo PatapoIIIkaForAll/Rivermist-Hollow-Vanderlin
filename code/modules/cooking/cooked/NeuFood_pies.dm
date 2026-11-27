@@ -93,6 +93,7 @@
 \--------------*/
 
 /obj/item/reagent_containers/food/snacks/pie
+	dish_type = DISH_PIE
 	name = "pie"
 	desc = ""
 	color = "#e7e2df"
@@ -146,6 +147,7 @@
 		qdel(M)
 
 /obj/item/reagent_containers/food/snacks/pieslice
+	dish_type = DISH_PIE
 	item_weight = 80 GRAMS
 	nutrition = PIEDOUGH_NUTRITION*COOK_MOD*SLICED_MOD
 	tastes = list("pie" = 1)
@@ -165,18 +167,22 @@
 	eat_effect = /datum/status_effect/buff/foodbuff
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/pot
+	dish_type = DISH_PIE|DISH_MEAT
 	nutrition = POTPIE_NUTRITION * COOK_MOD * SLICED_MOD
 	filling_color = "#9d8c3b"
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/fish
+	dish_type = DISH_PIE|DISH_SEAFOOD
 	filling_color = "#bb5a93"
 	nutrition = MEATPIE_NUTRITION * COOK_MOD * SLICED_MOD
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/meat
+	dish_type = DISH_PIE|DISH_MEAT
 	filling_color = "#b44f44"
 	nutrition = MEATPIE_NUTRITION * COOK_MOD * SLICED_MOD
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/berry
+	dish_type = DISH_PIE|DISH_FRUIT
 	filling_color = "#394da5"
 	nutrition = BERRYPIE_NUTRITION * COOK_MOD * SLICED_MOD
 
@@ -184,19 +190,23 @@
 	list_reagents = list(/datum/reagent/berrypoison = 3)
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/apple
+	dish_type = DISH_PIE|DISH_FRUIT
 	filling_color = "#eca48c"
 	nutrition = FRUITPIE_NUTRITION * COOK_MOD * SLICED_MOD
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/pear
+	dish_type = DISH_PIE|DISH_FRUIT
 	filling_color = "#edd28c"
 	nutrition = FRUITPIE_NUTRITION * COOK_MOD * SLICED_MOD
 
 /obj/item/reagent_containers/food/snacks/pieslice/good/borowiki
+	dish_type = DISH_PIE|DISH_VEGETABLE
 	filling_color = "#7c6b75"
 	nutrition = VEGGIEPIE_NUTRITION * COOK_MOD * SLICED_MOD
 
 // -------------- MEAT PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/meat // bae item
+	dish_type = DISH_PIE|DISH_MEAT
 	name = "meat pie"
 	desc = "A pie that is fit for meat lovers. It contains meat, meat, and nothing but meat."
 	foodtype = GRAIN | DAIRY | MEAT
@@ -218,6 +228,7 @@
 
 // -------------- FISH PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/meat/fish
+	dish_type = DISH_PIE|DISH_SEAFOOD
 	name = "fish pie"
 	icon_state = "fishpie"
 	tastes = list("baked fish and butterdough" = 1)
@@ -234,6 +245,7 @@
 
 // -------------- POT PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/pot
+	dish_type = DISH_PIE|DISH_MEAT
 	name = "pot pie"
 	desc = "A pie made with a host of different ingredients. May or may not contain meat."
 	slices_num = 6
@@ -253,6 +265,7 @@
 
 // -------------- BERRY PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/berry
+	dish_type = DISH_PIE|DISH_FRUIT
 	name = "berry pie"
 	desc = "A sweet pie made from jacksberries. A popular choice for banquets among peasants, and enjoyed by all."
 	slices_num = 6
@@ -274,6 +287,7 @@
 
 // -------------- APPLE PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/apple
+	dish_type = DISH_PIE|DISH_FRUIT
 	name = "apple pie"
 	desc = "A sweet pie made from apples. Some claim it to taste even better with cheese."
 	nutrition = FRUITPIE_NUTRITION * COOK_MOD
@@ -290,6 +304,7 @@
 
 // -------------- PEAR PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/pear
+	dish_type = DISH_PIE|DISH_FRUIT
 	name = "pear pie"
 	desc = "A sweet pie made from pears. Not as famous as it's other fruit cousins."
 	nutrition = FRUITPIE_NUTRITION * COOK_MOD
@@ -306,6 +321,7 @@
 
 // -------------- BOROWIKI PIE -----------------
 /obj/item/reagent_containers/food/snacks/pie/cooked/borowiki
+	dish_type = DISH_PIE|DISH_VEGETABLE
 	name = "borowiki pie"
 	desc = "A savory pie filled with hearty borowiki mushrooms."
 	nutrition = VEGGIEPIE_NUTRITION * COOK_MOD
@@ -366,6 +382,7 @@
 	tastes = list("sweet berry" = 1)
 
 /obj/item/reagent_containers/food/snacks/handpie
+	dish_type = DISH_PIE
 	item_weight = 150 GRAMS
 	name = "handpie"
 	desc = "The dwarven take on pies, called pierogi in their dialect. A fistful of food to stand the test of time. This is pretty dry."
@@ -462,6 +479,7 @@
 
 /*	........   Tart Cooked   ................ */
 /obj/item/reagent_containers/food/snacks/tart
+	dish_type = DISH_PIE|DISH_FRUIT
 	name = "tart"
 	desc = "A sweet and delicate pastry."
 
@@ -514,6 +532,7 @@
 	slice_path = /obj/item/reagent_containers/food/snacks/tartslice/dragonfruit
 
 /obj/item/reagent_containers/food/snacks/tartslice
+	dish_type = DISH_PIE|DISH_FRUIT
 	item_weight = 90 GRAMS
 	name = "tart slice"
 	desc = "A small slice of tart."

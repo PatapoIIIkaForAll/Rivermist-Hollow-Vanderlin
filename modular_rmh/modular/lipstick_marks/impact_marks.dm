@@ -39,12 +39,38 @@
 	var/strength = GET_MOB_ATTRIBUTE_VALUE(striker, STAT_STRENGTH)
 	return isnum(strength) ? strength : IMPACT_MARK_STRENGTH_BASE
 
-/// The spot a strike on a targeting-doll zone lands on; a strike to the groin lands on the butt.
-/proc/get_impact_mark_spot(zone)
-	if(zone == BODY_ZONE_PRECISE_GROIN)
-		return LIPSTICK_SPOT_BUTT
+/// Items that strike for marks: whips and canes, belts, and the impact toys.
+/proc/is_impact_tool(obj/item/item)
+	return istype(item, /obj/item/weapon/whip) || istype(item, /obj/item/storage/belt) || istype(item, /obj/item/impact_toy)
+
+/// The spot a strike on a targeting-doll zone lands on; other zones use the lipstick zone's main spot.
+/proc/get_impact_mark_spot(zone, from_behind = FALSE)
+	var/static/list/zone_spots = list(
+		BODY_ZONE_CHEST = LIPSTICK_SPOT_CHEST,
+		BODY_ZONE_PRECISE_STOMACH = LIPSTICK_SPOT_BELLY,
+		BODY_ZONE_PRECISE_GROIN = LIPSTICK_SPOT_BUTT,
+		BODY_ZONE_L_ARM = LIPSTICK_SPOT_L_ARM,
+		BODY_ZONE_R_ARM = LIPSTICK_SPOT_R_ARM,
+		BODY_ZONE_PRECISE_L_HAND = LIPSTICK_SPOT_L_HAND,
+		BODY_ZONE_PRECISE_R_HAND = LIPSTICK_SPOT_R_HAND,
+		BODY_ZONE_L_LEG = LIPSTICK_SPOT_L_THIGH,
+		BODY_ZONE_R_LEG = LIPSTICK_SPOT_R_THIGH,
+		BODY_ZONE_PRECISE_L_FOOT = LIPSTICK_SPOT_L_FOOT,
+		BODY_ZONE_PRECISE_R_FOOT = LIPSTICK_SPOT_R_FOOT,
+	)
+	if(zone == BODY_ZONE_CHEST && from_behind)
+		return LIPSTICK_SPOT_BACK
+	if(zone_spots[zone])
+		return zone_spots[zone]
 	var/list/spots = get_lipstick_spots_for_zone(zone)
 	return length(spots) ? spots[1] : null
+
+/// TRUE when the striker stands in the three tiles behind the struck body, as for backstab positioning.
+/proc/is_struck_from_behind(mob/living/struck, mob/living/striker)
+	if(!struck || !striker || get_turf(struck) == get_turf(striker))
+		return FALSE
+	var/approach_dir = get_dir(striker, struck)
+	return approach_dir == struck.dir || approach_dir == turn(struck.dir, 45) || approach_dir == turn(struck.dir, -45)
 
 /proc/get_impact_mark_fade_time(level)
 	switch(level)
@@ -73,7 +99,7 @@
 
 /// A strike by striker on zone leaves a mark; returns the mark level, or IMPACT_MARK_NONE when it leaves none.
 /mob/living/carbon/human/proc/take_impact_mark(mob/living/striker, zone, force, obj/item/tool)
-	var/spot = get_impact_mark_spot(zone)
+	var/spot = get_impact_mark_spot(zone, is_struck_from_behind(src, striker))
 	if(!spot || !has_lipstick_spot(spot))
 		return IMPACT_MARK_NONE
 	var/level = get_impact_mark_level(force, get_impact_strength(striker), get_impact_tool_tier(tool))

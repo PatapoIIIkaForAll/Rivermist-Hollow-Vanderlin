@@ -411,17 +411,24 @@ em {
   font-weight: bold;
 }
 
+// Strength tiers grow with the force of the act.
 .love_low	{
-  color: hsl(321, 45%, 85%);	font-size: 75%;
+  color: hsl(321, 45%, 85%);	font-size: 85%;
 }
 .love_mid	{
-  color: hsl(322, 60%, 79%);	font-size: 75%;
+  color: hsl(322, 60%, 79%);	font-size: 95%;
 }
 .love_high {
-  color:hsl(306, 83%, 65%);	font-size: 75%;
+  color:hsl(306, 83%, 65%);	font-size: 105%;
 }
 .love_extreme	{
-  color: hsl(288, 90%, 62%);	font-size: 75%;
+  color: hsl(288, 90%, 62%);	font-size: 115%;
+  font-weight: bold;
+}
+// Egg laying, carrying and hatching.
+.ovi {
+  color: #b6e07a;
+  font-style: italic;
 }
 .love {
   color: hsl(322, 46%, 83%);
@@ -848,6 +855,22 @@ em {
   100% {
     color: #f07ad8;
     text-shadow: 0 0 4px #e85bc8;
+  }
+}
+
+// Climaxes, knots locking and births; three pulses, then it rests.
+.love_climax {
+  color: #ff5fcf;
+  font-weight: bold;
+  font-size: 130%;
+  text-shadow: 0 0 8px #ff3fb8, 0 0 2px #fff;
+  animation: love_climax 900ms 3;
+}
+
+@keyframes love_climax {
+  50% {
+    color: #ff3fd0;
+    text-shadow: 0 0 10px #ff6ad9, 0 0 2px #fff;
   }
 }
 

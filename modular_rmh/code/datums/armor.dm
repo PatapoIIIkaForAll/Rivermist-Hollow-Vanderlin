@@ -94,15 +94,6 @@
 	fire = DR_NONE
 	acid = DR_NONE
 
-/datum/armor/rmh/pants/studded_skirt
-	armor_class = AC_MEDIUM
-	blunt = DR_ULTRA
-	slash = DBLOCK_HEAVY
-	stab = DBLOCK_HEAVY
-	piercing = DBLOCK_HEAVY
-	fire = DR_NONE
-	acid = DR_NONE
-
 /datum/armor/rmh/armor/guild_guard
 	armor_class = AC_MEDIUM
 	blunt = 80

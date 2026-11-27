@@ -6,6 +6,7 @@
  * * * * * * * * * * * **/
 
 /obj/item/reagent_containers/food/snacks/fruit
+	dish_type = DISH_FRUIT
 	faretype = FARE_NEUTRAL
 	bitesize = 2
 	nutrition = FRUIT_NUTRITION

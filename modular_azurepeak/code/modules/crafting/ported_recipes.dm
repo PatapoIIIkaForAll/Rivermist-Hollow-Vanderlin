@@ -3188,3 +3188,13 @@
 	attacked_atom = /obj/machinery/loom
 	category = "Shirt"
 	craftdiff = 4
+
+//not really ported but the besilked thing is ported i think idk
+/datum/repeatable_crafting_recipe/sewing/weaving/besilked_haubergeon
+	name = "besilked haubergeon"
+	output = /obj/item/clothing/armor/chainmail/besilked
+	requirements = list(/obj/item/clothing/armor/chainmail = 1, /obj/item/natural/cloth = 1, /obj/item/natural/silk = 2)
+	attacked_atom = /obj/machinery/loom
+	category = "Armor"
+	craftdiff = 4
+	subtypes_allowed = FALSE // only the steel haubergeon, not iron mail, hauberks or bikinis

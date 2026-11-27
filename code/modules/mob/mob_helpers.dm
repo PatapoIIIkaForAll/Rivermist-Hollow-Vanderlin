@@ -950,6 +950,7 @@
  * Automatic logging and uses pollCandidatesForMob, how convenient
  */
 /proc/offer_control(mob/M)
+	var/client/admin = usr?.client
 	to_chat(M, "Control of your mob has been offered to dead players.")
 	if(usr)
 		log_admin("[key_name(usr)] has offered control of ([key_name(M)]) to ghosts.")
@@ -964,14 +965,20 @@
 		if(A)
 			poll_message = "[poll_message] Status:[A.name]."
 	var/list/mob/candidates = pollCandidatesForMob(poll_message, ROLE_ASPIRANT, null, FALSE, 100, M)
+	if(QDELETED(M) || (admin && !admin.holder))
+		return FALSE
 
 	if(LAZYLEN(candidates))
 		var/mob/C = pick(candidates)
+		var/client/occupant = C.client
+		if(!occupant)
+			return FALSE
 		C.leave_lobby_for_role()
 		to_chat(M, "Your mob has been taken over by a ghost!")
 		message_admins("[key_name_admin(C)] has taken control of ([ADMIN_LOOKUPFLW(M)])")
 		M.ghostize(0,drawskip=TRUE)
 		M.key = C.key
+		admin?.prompt_controlled_body_rune(M, occupant)
 		return TRUE
 	else
 		to_chat(M, "There were no ghosts willing to take control.")

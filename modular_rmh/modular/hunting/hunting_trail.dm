@@ -23,6 +23,8 @@
 #define HUNT_PARTY_GATHER_RANGE 5
 /// How far a hunter may drift from the current sign before dropping out of the party.
 #define HUNT_PARTY_KEEP_RANGE 9
+/// How far away a fresh trail head can be highlighted by active perception.
+#define HUNT_TRACK_SEARCH_RANGE 7
 /// How long an unread personal link waits for its party before giving up. Only links
 /// handed to a party get this - a fresh trail head is meant to sit there until worked.
 #define HUNT_LINK_ABANDON_TIMEOUT (15 MINUTES)
@@ -100,8 +102,10 @@ GLOBAL_LIST_EMPTY(hunting_area_lookup)
 	layer = HIGH_LANDMARK_LAYER
 	pixel_x = rand(-8, 8)
 	pixel_y = rand(-8, 8)
+	RegisterSignal(SSdcs, COMSIG_MOB_ACTIVE_PERCEPTION, PROC_REF(on_active_perception))
 
 /obj/effect/hunting_track/Destroy()
+	UnregisterSignal(SSdcs, COMSIG_MOB_ACTIVE_PERCEPTION)
 	if(abandon_timer)
 		deltimer(abandon_timer)
 		abandon_timer = null
@@ -110,6 +114,24 @@ GLOBAL_LIST_EMPTY(hunting_area_lookup)
 	hunter_ref = null
 	hunt_category = null
 	return ..()
+
+/obj/effect/hunting_track/proc/on_active_perception(datum/source, mob/living/percepter)
+	SIGNAL_HANDLER
+	if(QDELETED(percepter))
+		return
+	if(length(party_refs) && !(WEAKREF(percepter) in party_refs))
+		return
+	if(get_dist(percepter, src) > HUNT_TRACK_SEARCH_RANGE || !can_see(percepter, src, HUNT_TRACK_SEARCH_RANGE + 3))
+		return
+
+	var/difficulty = 11 + rand(0, 5)
+	var/competence = GET_MOB_ATTRIBUTE_VALUE(percepter, STAT_PERCEPTION)
+	if(percepter.mind)
+		competence += 2 * GET_MOB_SKILL_VALUE_OLD(percepter, /datum/attribute/skill/misc/tracking)
+	if(competence < difficulty && (difficulty - competence >= 5 || !prob(100 - ((difficulty - competence) * 20))))
+		return
+
+	found_ping(get_turf(src), percepter.client, "hidden")
 
 /obj/effect/hunting_track/proc/clear_party_images()
 	for(var/mob/living/member as anything in party_images)
@@ -188,12 +210,15 @@ GLOBAL_LIST_EMPTY(hunting_area_lookup)
 /obj/effect/hunting_track/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("A fresh mound starts a hunt - click it to read the signs. Stand back a tile first.")
+	. += span_info("Looking around can highlight nearby disturbed earth and tracks. Your Tracking skill and Perception affect your chances.")
 	. += span_info("Each sign points at the next one, which only you can see. Follow enough of them to run down the quarry.")
 	. += span_info("Higher Hunting skill reads signs faster, wanders less, needs fewer of them, and turns up rarer game.")
 	. += span_info("Trail heads come back on their own after a while, where they first appeared.")
 
 /obj/effect/hunting_track/examine(mob/user)
 	. = ..()
+	if(user?.client)
+		found_ping(get_turf(src), user.client, "hidden")
 	if(trail_depth > 0)
 		. += span_notice("You are working this trail.")
 	if(track_dir)
@@ -513,6 +538,7 @@ GLOBAL_LIST_EMPTY(hunting_area_lookup)
 #undef HUNT_SIGN_FADE
 #undef HUNT_PARTY_GATHER_RANGE
 #undef HUNT_PARTY_KEEP_RANGE
+#undef HUNT_TRACK_SEARCH_RANGE
 #undef HUNT_LINK_ABANDON_TIMEOUT
 #undef HUNT_PARTY_FOLLOWER_EXP
 #undef HUNT_STEP_EXP

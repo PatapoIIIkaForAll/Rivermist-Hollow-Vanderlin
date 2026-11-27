@@ -12,6 +12,7 @@
 
 // Template
 /obj/item/reagent_containers/food/snacks/meat
+	dish_type = DISH_MEAT
 	item_weight = 200 GRAMS
 	eat_effect = /datum/status_effect/debuff/uncookedfood
 	name = "bugged meat"
@@ -76,6 +77,7 @@
 	slices_num = 0
 
 /obj/item/reagent_containers/food/snacks/meat/poultry
+	dish_type = DISH_POULTRY
 	item_weight = 800 GRAMS
 	name = "plucked bird"
 	desc = "A plucked and gutted bird, whole and raw."
@@ -101,6 +103,7 @@
 
 /*	........   Fish sounds   ................ */
 /obj/item/reagent_containers/food/snacks/fish
+	dish_type = DISH_SEAFOOD
 	item_weight = 300 GRAMS
 	chopping_sound = TRUE
 	slices_num = 2
@@ -236,6 +239,7 @@
 
 /*	........   Cooked food template   ................ */ // No choppping double cooking etc prefixed
 /obj/item/reagent_containers/food/snacks/cooked
+	dish_type = DISH_MEAT
 	item_weight = 200 GRAMS
 	name = "cooked meat"
 	desc = ""
@@ -285,6 +289,7 @@
 	color = "#a0655f"
 
 /obj/item/reagent_containers/food/snacks/meat/mince/fish
+	dish_type = DISH_SEAFOOD
 	name = "minced fish"
 	desc = "Raw fish chopped fine, ready for the pan."
 	icon_state = "fishmince"
@@ -299,6 +304,7 @@
 	color = "#a0655f"
 
 /obj/item/reagent_containers/food/snacks/meat/mince/poultry
+	dish_type = DISH_POULTRY
 	name = "minced poultry"
 	desc = "Raw poultry chopped fine, ready for the pan."
 	icon_state = "birdmince"

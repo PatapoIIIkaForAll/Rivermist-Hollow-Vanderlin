@@ -49,7 +49,7 @@
 
 /datum/sex_action/bladder/stream/onto/on_start(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] aims [user.p_their()] [bladder_stream_source(user)] at [target]'s [place_name] and lets go!"))
+	user.watersports_message(span_warning("[user] aims [user.p_their()] [bladder_stream_source(user)] at [target]'s [place_name] and lets go!"))
 
 /datum/sex_action/bladder/stream/onto/on_perform(mob/living/user, mob/living/target)
 	. = ..()
@@ -60,14 +60,14 @@
 	bladder.release_onto_body(soaked, coat_zone, BLADDER_STREAM_UNITS)
 	soaked.adjust_hygiene(-BLADDER_PEE_HYGIENE_LOSS)
 	if(can_show_action_message(user, target))
-		user.visible_message(span_love("[user] pisses a hot, steady stream over [target]'s [place_name]..."))
+		user.watersports_message(span_love("[user] pisses a hot, steady stream over [target]'s [place_name]..."))
 	play_stream_sound(target)
 	perform_sex_action(user, target, 0.5, 0, 0.2)
 	perform_sex_action(target, user, 0.5, 0, 0.2)
 
 /datum/sex_action/bladder/stream/onto/on_finish(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] shakes the last drops over [target]'s [place_name]."))
+	user.watersports_message(span_warning("[user] shakes the last drops over [target]'s [place_name]."))
 
 /datum/sex_action/bladder/stream/onto/face
 	name = "Piss on face"
@@ -120,7 +120,7 @@
 
 /datum/sex_action/bladder/stream/mouth/on_start(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] presses [user.p_their()] [bladder_stream_source(user)] to [target]'s lips and lets go!"))
+	user.watersports_message(span_warning("[user] presses [user.p_their()] [bladder_stream_source(user)] to [target]'s lips and lets go!"))
 
 /datum/sex_action/bladder/stream/mouth/on_perform(mob/living/user, mob/living/target)
 	. = ..()
@@ -132,7 +132,7 @@
 	if(swallowed < stream)
 		bladder.release_onto_body(target, FLUID_COAT_FACE, stream - swallowed)
 	if(can_show_action_message(user, target))
-		user.visible_message(span_love("[target] gulps down [user]'s piss..."))
+		user.watersports_message(span_love("[target] gulps down [user]'s piss..."))
 		to_chat(target, span_love(bladder_drink_text(target)))
 	target.make_mouth_noise("gluck")
 	perform_sex_action(user, target, 0.5, 0, 0.2)
@@ -140,7 +140,7 @@
 
 /datum/sex_action/bladder/stream/mouth/on_finish(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] pulls away from [target]'s mouth."))
+	user.watersports_message(span_warning("[user] pulls away from [target]'s mouth."))
 
 /datum/sex_action/bladder/stream/inside
 	name = "Piss inside"
@@ -188,7 +188,7 @@
 /datum/sex_action/bladder/stream/inside/on_start(mob/living/user, mob/living/target)
 	. = ..()
 	var/datum/sex_action/penetration = find_penetration(user, target)
-	user.visible_message(span_warning("[user] holds still deep in [target]'s [bladder_hole_name(get_place_slot(penetration))] and lets go!"))
+	user.watersports_message(span_warning("[user] holds still deep in [target]'s [bladder_hole_name(get_place_slot(penetration))] and lets go!"))
 
 /datum/sex_action/bladder/stream/inside/proc/get_place_slot(datum/sex_action/penetration)
 	if(istype(penetration, /datum/sex_action/docking/urethra))
@@ -228,7 +228,7 @@
 	if(moved < stream)
 		bladder.release_onto_body(target, get_spill_zone(hole_slot), stream - moved)
 	if(can_show_action_message(user, target))
-		user.visible_message(span_love("[user] pumps hot piss deep into [target]'s [bladder_hole_name(hole_slot)]..."))
+		user.watersports_message(span_love("[user] pumps hot piss deep into [target]'s [bladder_hole_name(hole_slot)]..."))
 		if(hole_slot == DOCKING_KIND_URETHRA && moved <= 0)
 			to_chat(target, span_love(bladder_urethra_backflow_text(target)))
 		else
@@ -238,7 +238,7 @@
 
 /datum/sex_action/bladder/stream/inside/on_finish(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] finishes emptying [user.p_them()]self into [target]."))
+	user.watersports_message(span_warning("[user] finishes emptying [user.p_them()]self into [target]."))
 
 /datum/sex_action/bladder/press
 	name = "Press on bladder"
@@ -271,7 +271,7 @@
 
 /datum/sex_action/bladder/press/on_start(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] presses a palm low on [target]'s belly, right over [target.p_their()] bladder."))
+	user.watersports_message(span_warning("[user] presses a palm low on [target]'s belly, right over [target.p_their()] bladder."))
 
 /datum/sex_action/bladder/press/on_perform(mob/living/user, mob/living/target)
 	. = ..()
@@ -280,14 +280,14 @@
 		return
 	var/urge = bladder.urge
 	if(can_show_action_message(user, target))
-		user.visible_message(spanify_force("[user] [get_generic_force_adjective()] presses on [target]'s bladder..."))
+		user.watersports_message(spanify_force("[user] [get_generic_force_adjective()] presses on [target]'s bladder..."))
 		to_chat(target, span_love(bladder_press_text(target, urge)))
 	perform_sex_action(target, user, 0.4 + 0.3 * urge, urge >= BLADDER_URGE_URGENT ? 1 : 0, 0.2)
 	try_leak(user, target, bladder)
 
 /datum/sex_action/bladder/press/on_finish(mob/living/user, mob/living/target)
 	. = ..()
-	user.visible_message(span_warning("[user] takes [user.p_their()] hand off [target]'s belly."))
+	user.watersports_message(span_warning("[user] takes [user.p_their()] hand off [target]'s belly."))
 
 /datum/sex_action/bladder/press/proc/try_leak(mob/living/user, mob/living/target, datum/component/bladder/bladder)
 	var/chance = 0
@@ -303,8 +303,8 @@
 		var/half = bladder.get_volume() / 2
 		bladder.release_onto_body(leaker, FLUID_COAT_GROIN, half)
 		bladder.release_onto_body(leaker, FLUID_COAT_THIGHS, bladder.get_volume())
-		leaker.visible_message(span_love("[leaker] loses control under [user]'s hand; piss gushes out of [leaker.p_them()], soaking [leaker.p_their()] crotch and running down [leaker.p_their()] legs!"), span_love(bladder_flood_text(leaker)))
+		leaker.watersports_message(span_love("[leaker] loses control under [user]'s hand; piss gushes out of [leaker.p_them()], soaking [leaker.p_their()] crotch and running down [leaker.p_their()] legs!"), span_love(bladder_flood_text(leaker)))
 		play_stream_sound(leaker)
 		return
 	bladder.release_onto_body(leaker, FLUID_COAT_GROIN, BLADDER_PRESS_LEAK_UNITS)
-	leaker.visible_message(span_love("A warm spurt escapes [leaker] under [user]'s pressing hand."), span_love(bladder_leak_text(leaker)))
+	leaker.watersports_message(span_love("A warm spurt escapes [leaker] under [user]'s pressing hand."), span_love(bladder_leak_text(leaker)))

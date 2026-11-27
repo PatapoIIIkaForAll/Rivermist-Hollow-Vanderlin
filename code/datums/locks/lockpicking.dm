@@ -205,6 +205,24 @@
 	linked_pick.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	vis_contents += linked_pick
 
+/atom/movable/screen/movable/snap/lockpicking/Destroy()
+	STOP_PROCESSING(SSfastprocess, src)
+	// The client's screen list would otherwise keep this and everything it points at.
+	clicker?.screen -= src
+	if(picking_object)
+		picking_object.being_picked = FALSE
+	vis_contents.Cut()
+	QDEL_NULL(linked_lock)
+	QDEL_NULL(linked_pick)
+	QDEL_NULL(linked_wedge)
+	linked_background = null
+	clicker = null
+	picker = null
+	picking_object = null
+	the_lockpick = null
+	the_wedge = null
+	return ..()
+
 /atom/movable/screen/movable/snap/lockpicking/MouseMove(location, control, params)
 	. = ..()
 
@@ -275,10 +293,10 @@
 
 /atom/movable/screen/movable/snap/lockpicking/proc/close_lockpick(client/source, atom/_target, turf/location, control, params)
 	SIGNAL_HANDLER
-	qdel(src)
-	picking_object.being_picked = FALSE
-
+	if(QDELETED(src))
+		return
 	to_chat(picker, span_notice("I stop picking the lock of \the [picking_object]."))
+	qdel(src)
 
 /atom/movable/screen/movable/snap/lockpicking/proc/on_mouse_up(datum/source, atom/object, turf/location, control, params)
 	SIGNAL_HANDLER

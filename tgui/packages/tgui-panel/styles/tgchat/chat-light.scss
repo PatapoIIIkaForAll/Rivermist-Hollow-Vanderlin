@@ -408,17 +408,24 @@ h2.alert {
   color: hsl(32, 90%, 47%);
 }
 
+// Strength tiers grow with the force of the act; darker shades read on the light chat.
 .love_low	{
-  color: hsl(321, 45%, 85%);	font-size: 75%;
+  color: hsl(321, 45%, 45%);	font-size: 85%;
 }
 .love_mid	{
-  color: hsl(322, 60%, 79%);	font-size: 75%;
+  color: hsl(322, 55%, 42%);	font-size: 95%;
 }
 .love_high {
-  color:hsl(306, 83%, 65%);	font-size: 75%;
+  color: hsl(306, 70%, 38%);	font-size: 105%;
 }
 .love_extreme	{
-  color: hsl(288, 90%, 62%);	font-size: 75%;
+  color: hsl(288, 75%, 38%);	font-size: 115%;
+  font-weight: bold;
+}
+// Egg laying, carrying and hatching.
+.ovi {
+  color: #3d7a14;
+  font-style: italic;
 }
 .love {
   color: hsl(322, 46%, 83%);
@@ -842,6 +849,22 @@ h2.alert {
   100% {
     color: #f07ad8;
     text-shadow: 0 0 4px #e85bc8;
+  }
+}
+
+// Climaxes, knots locking and births; three pulses, then it rests. Own keyframes so the dark chat keeps its colours.
+.love_climax {
+  color: #c2188f;
+  font-weight: bold;
+  font-size: 130%;
+  text-shadow: 0 0 6px rgba(255, 95, 207, 0.6);
+  animation: love_climax_light 900ms 3;
+}
+
+@keyframes love_climax_light {
+  50% {
+    color: #e0109f;
+    text-shadow: 0 0 10px rgba(255, 63, 184, 0.8);
   }
 }
 

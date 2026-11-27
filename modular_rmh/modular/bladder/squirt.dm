@@ -49,7 +49,7 @@
 		return FALSE
 	var/atom/catcher = get_squirt_catcher(partner, action)
 	var/zone = catcher ? null : get_squirt_zone(partner, action)
-	visible_message(span_love(squirt_room_text(src, partner, zone, catcher)), span_love(squirt_own_text(src)))
+	watersports_message(span_love(squirt_room_text(src, partner, zone, catcher)), span_love(squirt_own_text(src)))
 	if(bladder && bladder.urge < urge_before)
 		to_chat(src, span_notice(squirt_eased_text(src)))
 	if(zone)

@@ -55,16 +55,21 @@
 /datum/status_effect/debuff/booming_blade/proc/boom(datum/source, atom/OldLoc, Dir, Forced)
 	if(Forced)
 		return
+	//The explosion can delete this effect or the victim, so keep a local ref
+	var/mob/living/victim = owner
+	if(!victim)
+		return
+	boomed = TRUE
+	UnregisterSignal(victim, COMSIG_MOVABLE_MOVED)
 	var/exp_heavy = 0
 	var/exp_light = round(1 * strength_multiplier)  // Scale explosion
 	var/exp_flash = round(2 * strength_multiplier)
 	var/exp_fire = 0
 	var/damage = round(10 * strength_multiplier)  // Scale damage
 
-	explosion(owner, -1, exp_heavy, exp_light, exp_flash, 0, flame_range = exp_fire)
-	owner.adjustBruteLoss(damage, damage_type = BCLASS_BLUNT)
-	owner.visible_message(span_warning("A thunderous boom emanates from [owner]!"), span_danger("A thunderous boom emanates from me!"))
-
-	boomed = TRUE
+	explosion(victim, -1, exp_heavy, exp_light, exp_flash, 0, flame_range = exp_fire)
+	if(!QDELETED(victim))
+		victim.adjustBruteLoss(damage, damage_type = BCLASS_BLUNT)
+		victim.visible_message(span_warning("A thunderous boom emanates from [victim]!"), span_danger("A thunderous boom emanates from me!"))
 
 	qdel(src)

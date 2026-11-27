@@ -19,6 +19,12 @@ GLOBAL_LIST_EMPTY(respawncounts)
 #define CURRENT_MINUTE	3
 #define MINUTE_COUNT	4
 #define ADMINSWARNED_AT	5
+
+#define TOPIC_LIMIT_COUNTED 0
+#define TOPIC_LIMIT_FREE 1
+#define TOPIC_LIMIT_FREE_PING 2
+/// Shortest gap between two chat pings that skip the topic limiter.
+#define TOPIC_FREE_PING_INTERVAL (1 SECONDS)
 	/*
 	When somebody clicks a link in game, this Topic is called first.
 	It does the stuff in this proc and  then is redirected to the Topic() proc for the src=[0xWhatever]
@@ -40,6 +46,36 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	var/atom/movable/movingmob
 	var/whitelisted = 2
 	var/list/job_priority_boosts = list()
+	COOLDOWN_DECLARE(free_topic_ping_cooldown)
+
+/// How a topic call counts toward the topic limiter. pending_payloads: the named tgui window's chunked payloads.
+/proc/topic_limiter_cost(list/href_list, list/pending_payloads, ping_allowed)
+	if(!href_list["tgui"])
+		return TOPIC_LIMIT_COUNTED
+	switch(href_list["type"])
+		if("ping")
+			return ping_allowed ? TOPIC_LIMIT_FREE_PING : TOPIC_LIMIT_COUNTED
+		if("payloadChunk")
+			// Only chunks of a payload the window already accepted are free; its opening request counted.
+			if(!length(pending_payloads))
+				return TOPIC_LIMIT_COUNTED
+			var/list/payload = safe_json_decode(href_list["payload"])
+			var/payload_id = islist(payload) ? payload["id"] : null
+			if(istext(payload_id) && pending_payloads[payload_id])
+				return TOPIC_LIMIT_FREE
+	return TOPIC_LIMIT_COUNTED
+
+/// FALSE for chat pings and tgui payload chunks, which the topic limiter lets through.
+/client/proc/topic_counts_toward_limit(list/href_list)
+	var/window_id = href_list["window_id"]
+	var/datum/tgui_window/window = (href_list["tgui"] && istext(window_id)) ? tgui_windows[window_id] : null
+	switch(topic_limiter_cost(href_list, window?.oversized_payloads, COOLDOWN_FINISHED(src, free_topic_ping_cooldown)))
+		if(TOPIC_LIMIT_FREE)
+			return FALSE
+		if(TOPIC_LIMIT_FREE_PING)
+			COOLDOWN_START(src, free_topic_ping_cooldown, TOPIC_FREE_PING_INTERVAL)
+			return FALSE
+	return TRUE
 
 /client/Topic(href, href_list, hsrc, hsrc_command)
 	if(!usr || usr != mob)	//stops us calling Topic for somebody else's client. Also helps prevent usr=null
@@ -58,7 +94,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			return
 
 	var/atom/ref = locate(href_list["src"])
-	if(!holder && (href_list["window_id"] != "statbrowser") && !istype(ref, /datum/native_say))
+	if(!holder && (href_list["window_id"] != "statbrowser") && !istype(ref, /datum/native_say) && topic_counts_toward_limit(href_list))
 		var/mtl = CONFIG_GET(number/minute_topic_limit)
 		if (mtl)
 			var/minute = round(world.time, 1 MINUTES)

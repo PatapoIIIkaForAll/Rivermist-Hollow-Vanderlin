@@ -93,7 +93,7 @@
 	name = "Close"
 	desc = "<span class='love_low'>I feel the pleasure building, I am really close...</span>"
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "emberwine"
+	icon_state = "cum_brained_unused2"
 
 /datum/status_effect/edging_overstimulation
 	id = "edging_overstimulation"
@@ -117,6 +117,8 @@
 /atom/movable/screen/alert/status_effect/edging_overstimulation
 	name = "Overstimulated"
 	desc = "I have been going at it for too long without release, I need relief..."
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "quivering"
 
 /datum/status_effect/debuff/orgasmbroken
 	id = "orgasmbroken"
@@ -167,7 +169,8 @@
 /atom/movable/screen/alert/status_effect/debuff/nympho_addiction
 	name = "Addicted to Sex"
 	desc = "I want to do it again. And again. And again."
-	icon_state = "debuff"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "nymphomaniac"
 
 /datum/status_effect/debuff/cumbrained
 	id = "cumbrained"
@@ -184,9 +187,11 @@
 	. = ..()
 	owner.add_stress(/datum/stress_event/cumbrained)
 	owner.aroused_slurring = max(owner.aroused_slurring, 4)
+	owner.set_lewd_haze(FULLSCREEN_HAZE_CUMBRAINED, /atom/movable/screen/fullscreen/lewd/haze_cream, TRUE)
 
 /datum/status_effect/debuff/cumbrained/on_remove()
 	owner.remove_stress(/datum/stress_event/cumbrained)
+	owner.set_lewd_haze(FULLSCREEN_HAZE_CUMBRAINED, /atom/movable/screen/fullscreen/lewd/haze_cream, FALSE)
 	. = ..()
 
 /atom/movable/screen/alert/status_effect/debuff/cumbrained
@@ -201,6 +206,7 @@
 		return
 
 	owner.aroused_slurring = max(owner.aroused_slurring, 3)
+	owner.set_lewd_haze(FULLSCREEN_HAZE_CUMBRAINED, /atom/movable/screen/fullscreen/lewd/haze_cream, TRUE)
 
 	if(!MOBTIMER_FINISHED(owner, "cumbrained_ticker", rand(30,90)SECONDS))
 		return
@@ -320,6 +326,7 @@
 
 /datum/status_effect/debuff/flatboobs
 	id = "flatboobs"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/flatboobs
 	examine_text = span_notice("They have magical flat goodies!")
 	effectedstats = list("speed" = 2)
 	duration = 10 MINUTES
@@ -327,6 +334,7 @@
 
 /datum/status_effect/debuff/vsmallboobs
 	id = "vsmallboobs"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/vsmallboobs
 	examine_text = span_notice("They have magical very small goodies!")
 	effectedstats = list("speed" = 2)
 	duration = 10 MINUTES
@@ -334,6 +342,7 @@
 
 /datum/status_effect/debuff/smallboobs
 	id = "smallboobs"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/smallboobs
 	examine_text = span_notice("They have magical small goodies!")
 	effectedstats = list("speed" = 1)
 	duration = 10 MINUTES
@@ -341,7 +350,7 @@
 
 /datum/status_effect/debuff/largeboobs
 	id = "largeboobs"
-	//alert_type = /atom/movable/screen/alert/status_effect/debuff/largeboobs
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/largeboobs
 	examine_text = span_notice("They have large MAGICAL GOODS!")
 	effectedstats = list("constitution" = 1, "speed" = -1)
 	duration = 10 MINUTES
@@ -404,26 +413,26 @@
 /atom/movable/screen/alert/status_effect/debuff/flatboobs
 	name = "Flat Chest!" //was gonna name it a curse but it isn't a technically one.
 	desc = "They feel as light as feather! But they are gone..."
-	//icon = 'modular_stonehedge/licensed-eaglephntm/icons/mob/screen_alert.dmi'
-	icon_state = "status"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "bigboobs"
 
 /atom/movable/screen/alert/status_effect/debuff/vsmallboobs
 	name = "Small Breasts" //was gonna name it a curse but it isn't a technically one.
 	desc = "They feel as light as an apple! But they are very small!."
-	//icon = 'modular_stonehedge/licensed-eaglephntm/icons/mob/screen_alert.dmi'
-	icon_state = "status"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "bigboobs"
 
 /atom/movable/screen/alert/status_effect/debuff/smallboobs
 	name = "Moderate breasts" //was gonna name it a curse but it isn't a technically one.
 	desc = "They feel as heavy as dagger! But they are small!"
-	//icon = 'modular_stonehedge/licensed-eaglephntm/icons/mob/screen_alert.dmi'
-	icon_state = "status"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "bigboobs"
 
 /atom/movable/screen/alert/status_effect/debuff/largeboobs
 	name = "Big breasts" //was gonna name it a curse but it isn't a technically one.
 	desc = "They feel as heavy as iron and are massive... My back hurts a little."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "bigboobslite"
+	icon_state = "bigboobs"
 
 /atom/movable/screen/alert/status_effect/debuff/bigboobs
 	name = "Huge Breasts" //was gonna name it a curse but it isn't a technically one.
@@ -640,7 +649,7 @@
 	name = "Aphrodisiac"
 	desc = "A dull heat coils low in my abdomen..."
 	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
-	icon_state = "emberwine"
+	icon_state = "aphrodisiac"
 
 /datum/status_effect/debuff/aphrodisiac
 	id = "aphrodisiac"

@@ -100,7 +100,8 @@
 /atom/movable/screen/alert/status_effect/holding_fluids_in
 	name = "Holding It In"
 	desc = "I'm clenching to keep everything inside. Click to relax."
-	icon_state = "buff"
+	icon = 'modular_rmh/icons/mob/screen_alert.dmi'
+	icon_state = "holding_in"
 	alert_group = ALERT_BUFF
 
 /atom/movable/screen/alert/status_effect/holding_fluids_in/Click(location, control, params)

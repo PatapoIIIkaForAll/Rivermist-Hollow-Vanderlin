@@ -280,13 +280,17 @@
 
 // ---- Printing ----
 
-/// Wraps a line in the beat's colour: "warning", "force" or "love".
+/// Wraps a line in the beat's colour: "warning", "force", "love", "climax" or "ovi".
 /datum/sex_action/proc/colour_act_line(line, colour)
 	switch(colour)
 		if("force")
 			return spanify_force(line)
 		if("love")
 			return span_love(line)
+		if("climax")
+			return span_love_climax(line)
+		if("ovi")
+			return span_ovi(line)
 	return span_warning(line)
 
 /// Prints a beat from the victim: room line to onlookers, me line to the victim, hear line to the blind.
@@ -317,7 +321,7 @@
 /datum/sex_action/proc/show_climax_lines(mob/living/climaxer, mob/living/partner, flipped)
 	var/mob/living/hunter = flipped ? partner : climaxer
 	var/mob/living/victim = flipped ? climaxer : partner
-	show_act_lines(get_climax_lines(climaxer, partner, flipped), hunter, victim, "love")
+	show_act_lines(get_climax_lines(climaxer, partner, flipped), hunter, victim, "climax")
 
 #undef NPC_ACT_OPENING_CYCLES
 #undef NPC_ACT_LATE_PROGRESS

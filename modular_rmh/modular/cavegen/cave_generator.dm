@@ -72,10 +72,10 @@
 	/// Assoc: ore turf typepath -> list("weight", "spread_chance", "spread_range", "amount_min", "amount_max")
 	var/list/ore_table
 	/// Poisson-disk radius between vein seed points.
-	var/ore_vein_spacing = 11
+	var/ore_vein_spacing = 20
 	/// BFS growth rounds per vein.
-	var/ore_spread_iterations = 3
-	var/ore_max_veins = 40
+	var/ore_spread_iterations = 2
+	var/ore_max_veins = 15
 	/// A vein may only start this far from open cave.
 	var/ore_near_cave_range = 3
 	/// A vein may only grow into rock this far from open cave.
@@ -90,13 +90,13 @@
 	 */
 	var/list/deep_ore_table
 	/// Poisson-disk radius between deep pocket seeds.
-	var/deep_vein_spacing = 15
+	var/deep_vein_spacing = 24
 	/// A pocket may only seed where no open floor exists within this radius.
 	var/deep_vein_clearance = 5
 	/// Pocket tiles must keep at least this much rock between them and open floor.
 	var/deep_cluster_clearance = 2
-	var/deep_spread_iterations = 4
-	var/deep_max_veins = 8
+	var/deep_spread_iterations = 2
+	var/deep_max_veins = 3
 
 	// --- floor patches ---
 	/*
@@ -170,14 +170,14 @@
 
 /datum/map_generator/caves/proc/default_ore_table()
 	return list(
-		/turf/closed/mineral/iron = list("weight" = 22, "spread_chance" = 60, "spread_range" = 3, "amount_min" = 2, "amount_max" = 5),
-		/turf/closed/mineral/copper = list("weight" = 20, "spread_chance" = 60, "spread_range" = 3, "amount_min" = 2, "amount_max" = 5),
-		/turf/closed/mineral/tin = list("weight" = 16, "spread_chance" = 60, "spread_range" = 3, "amount_min" = 2, "amount_max" = 5),
-		/turf/closed/mineral/coal = list("weight" = 16, "spread_chance" = 65, "spread_range" = 2, "amount_min" = 2, "amount_max" = 6),
-		/turf/closed/mineral/salt = list("weight" = 12, "spread_chance" = 65, "spread_range" = 2, "amount_min" = 2, "amount_max" = 5),
-		/turf/closed/mineral/silver = list("weight" = 6, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 1, "amount_max" = 3),
-		/turf/closed/mineral/gold = list("weight" = 4, "spread_chance" = 45, "spread_range" = 2, "amount_min" = 1, "amount_max" = 3),
-		/turf/closed/mineral/gemeralds = list("weight" = 2, "spread_chance" = 40, "spread_range" = 2, "amount_min" = 1, "amount_max" = 2),
+		/turf/closed/mineral/iron = list("weight" = 22, "spread_chance" = 60, "spread_range" = 1, "amount_min" = 2, "amount_max" = 5),
+		/turf/closed/mineral/copper = list("weight" = 20, "spread_chance" = 60, "spread_range" = 1, "amount_min" = 2, "amount_max" = 5),
+		/turf/closed/mineral/tin = list("weight" = 16, "spread_chance" = 60, "spread_range" = 1, "amount_min" = 2, "amount_max" = 5),
+		/turf/closed/mineral/coal = list("weight" = 16, "spread_chance" = 65, "spread_range" = 1, "amount_min" = 2, "amount_max" = 6),
+		/turf/closed/mineral/salt = list("weight" = 12, "spread_chance" = 65, "spread_range" = 1, "amount_min" = 2, "amount_max" = 5),
+		/turf/closed/mineral/silver = list("weight" = 6, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 1, "amount_max" = 3),
+		/turf/closed/mineral/gold = list("weight" = 4, "spread_chance" = 45, "spread_range" = 1, "amount_min" = 1, "amount_max" = 3),
+		/turf/closed/mineral/gemeralds = list("weight" = 2, "spread_chance" = 40, "spread_range" = 1, "amount_min" = 1, "amount_max" = 2),
 	)
 
 /datum/map_generator/caves/proc/default_decor_spawns()
@@ -269,10 +269,12 @@
 			CHECK_TICK
 
 	var/generated = FALSE
+	// Share occupied ore across regions and both ore passes.
+	var/list/placed_ore = list()
 	for(var/list/region as anything in split_regions(mask))
 		if(length(region) < min_region_size)
 			continue
-		if(generate_region(region))
+		if(generate_region(region, placed_ore))
 			generated = TRUE
 		CHECK_TICK
 
@@ -319,7 +321,7 @@
 
 	return regions
 
-/datum/map_generator/caves/proc/generate_region(list/region)
+/datum/map_generator/caves/proc/generate_region(list/region, list/placed_ore)
 	var/min_x = INFINITY
 	var/max_x = -INFINITY
 	var/min_y = INFINITY
@@ -348,8 +350,8 @@
 	smooth_region(carveable, floor_map, protected)
 	prune_pockets(floor_map)
 	apply_turfs(region, floor_map)
-	place_ore_veins(region, floor_map, min_x, max_x, min_y, max_y)
-	place_deep_ore_pockets(region, floor_map, min_x, max_x, min_y, max_y)
+	place_ore_veins(region, floor_map, min_x, max_x, min_y, max_y, placed_ore)
+	place_deep_ore_pockets(region, floor_map, min_x, max_x, min_y, max_y, placed_ore)
 	populate(region, floor_map)
 	return TRUE
 
@@ -632,14 +634,31 @@
 			return patch_turf_b
 	return open_turf
 
+/// 70% isolated tiles, 20% small groups, 10% groups of at most five.
+/datum/map_generator/caves/proc/roll_ore_cluster_size()
+	var/roll = rand(1, 100)
+	if(roll <= 70)
+		return 1
+	if(roll <= 90)
+		return rand(2, 3)
+	return rand(4, 5)
+
+/// Check the tile and all eight neighbours to keep deposits apart.
+/datum/map_generator/caves/proc/ore_touches_existing(tile_x, tile_y, list/placed_ore)
+	for(var/offset_x = -1 to 1)
+		for(var/offset_y = -1 to 1)
+			if(placed_ore["[tile_x + offset_x],[tile_y + offset_y]"])
+				return TRUE
+	return FALSE
+
 /// Poisson-seeded veins that grow by BFS with distance decay, only into rock that borders a cave.
-/datum/map_generator/caves/proc/place_ore_veins(list/region, list/floor_map, min_x, max_x, min_y, max_y)
+/datum/map_generator/caves/proc/place_ore_veins(list/region, list/floor_map, min_x, max_x, min_y, max_y, list/placed_ore)
 	if(!length(ore_table))
 		return
 
 	var/list/wall_keys = list()
 	for(var/key in region)
-		if(!floor_map[key])
+		if(!floor_map[key] && !placed_ore[key])
 			wall_keys[key] = TRUE
 	if(!length(wall_keys))
 		return
@@ -662,28 +681,38 @@
 		var/seed_y = round(sample[2])
 		if(!wall_keys["[seed_x],[seed_y]"])
 			continue
+		if(ore_touches_existing(seed_x, seed_y, placed_ore))
+			continue
 		if(!is_near_floor(seed_x, seed_y, floor_map, ore_near_cave_range))
 			continue
 
 		var/ore_path = pickweight(weights)
 		var/list/ore_config = ore_table[ore_path]
-		var/list/cluster = grow_ore_cluster(seed_x, seed_y, wall_keys, floor_map, ore_config["spread_chance"], ore_config["spread_range"])
+		var/list/cluster = grow_ore_cluster(seed_x, seed_y, wall_keys, floor_map, ore_config["spread_chance"], ore_config["spread_range"], placed_ore, roll_ore_cluster_size())
 
+		var/seed_key = "[seed_x],[seed_y]"
 		for(var/cluster_key in cluster)
 			var/turf/target = region[cluster_key]
 			if(!target)
 				continue
-			var/turf/closed/mineral/vein = target.ChangeTurf(ore_path, wall_baseturfs)
-			if(ismineralturf(vein))
-				vein.mineralAmt = rand(ore_config["amount_min"], ore_config["amount_max"])
+			// Neighboring walls may contain different ores, weighted by rarity.
+			var/tile_ore_path = (cluster_key == seed_key) ? ore_path : pickweight(weights)
+			var/list/tile_ore_config = ore_table[tile_ore_path]
+			var/turf/closed/mineral/vein = target.ChangeTurf(tile_ore_path, wall_baseturfs)
+			if(!ismineralturf(vein))
+				continue
+			vein.mineralAmt = rand(tile_ore_config["amount_min"], tile_ore_config["amount_max"])
+			placed_ore[cluster_key] = TRUE
 			wall_keys -= cluster_key
 
 		veins_placed++
 		CHECK_TICK
 
-/datum/map_generator/caves/proc/grow_ore_cluster(seed_x, seed_y, list/wall_keys, list/floor_map, spread_chance, spread_range)
+/datum/map_generator/caves/proc/grow_ore_cluster(seed_x, seed_y, list/wall_keys, list/floor_map, spread_chance, spread_range, list/placed_ore, max_tiles)
 	var/list/cluster = list("[seed_x],[seed_y]" = TRUE)
 	var/list/active = list("[seed_x],[seed_y]")
+	if(max_tiles <= 1 || spread_range < 1)
+		return cluster
 
 	for(var/iteration = 1 to ore_spread_iterations)
 		var/list/next_active = list()
@@ -693,19 +722,20 @@
 			var/current_x = text2num(parts[1])
 			var/current_y = text2num(parts[2])
 
-			for(var/offset_x = -spread_range to spread_range)
-				for(var/offset_y = -spread_range to spread_range)
-					if(!offset_x && !offset_y)
+			// Only adjacent walls can grow; every deposit has a hard size cap.
+			for(var/offset_x = -1 to 1)
+				for(var/offset_y = -1 to 1)
+					if(length(cluster) >= max_tiles)
+						return cluster
+					if(abs(offset_x) + abs(offset_y) != 1)
 						continue
-
-					var/distance = sqrt(offset_x * offset_x + offset_y * offset_y)
-					if(distance > spread_range)
-						continue
-					if(!prob(spread_chance * (1 - (distance / (spread_range + 1)))))
+					if(!prob(spread_chance * (1 - (1 / (spread_range + 1)))))
 						continue
 
 					var/neighbor = "[current_x + offset_x],[current_y + offset_y]"
 					if(cluster[neighbor] || !wall_keys[neighbor])
+						continue
+					if(ore_touches_existing(current_x + offset_x, current_y + offset_y, placed_ore))
 						continue
 					if(!is_near_floor(current_x + offset_x, current_y + offset_y, floor_map, ore_cluster_range))
 						continue
@@ -735,13 +765,13 @@
  * a pocket never shows itself on a tunnel wall. Players find these by digging on
  * a guess, not by walking past them.
  */
-/datum/map_generator/caves/proc/place_deep_ore_pockets(list/region, list/floor_map, min_x, max_x, min_y, max_y)
+/datum/map_generator/caves/proc/place_deep_ore_pockets(list/region, list/floor_map, min_x, max_x, min_y, max_y, list/placed_ore)
 	if(!length(deep_ore_table))
 		return
 
 	var/list/wall_keys = list()
 	for(var/key in region)
-		if(!floor_map[key])
+		if(!floor_map[key] && !placed_ore[key])
 			wall_keys[key] = TRUE
 	if(!length(wall_keys))
 		return
@@ -764,29 +794,38 @@
 		var/seed_y = round(sample[2])
 		if(!wall_keys["[seed_x],[seed_y]"])
 			continue
+		if(ore_touches_existing(seed_x, seed_y, placed_ore))
+			continue
 		// The whole point: reject anything a player could stumble onto.
 		if(is_near_floor(seed_x, seed_y, floor_map, deep_vein_clearance))
 			continue
 
 		var/ore_path = pickweight(weights)
 		var/list/ore_config = deep_ore_table[ore_path]
-		var/list/pocket = grow_deep_pocket(seed_x, seed_y, wall_keys, floor_map, ore_config["spread_chance"], ore_config["spread_range"])
+		var/list/pocket = grow_deep_pocket(seed_x, seed_y, wall_keys, floor_map, ore_config["spread_chance"], ore_config["spread_range"], placed_ore, roll_ore_cluster_size())
 
+		var/seed_key = "[seed_x],[seed_y]"
 		for(var/pocket_key in pocket)
 			var/turf/target = region[pocket_key]
 			if(!target)
 				continue
-			var/turf/closed/mineral/vein = target.ChangeTurf(ore_path, wall_baseturfs)
-			if(ismineralturf(vein))
-				vein.mineralAmt = rand(ore_config["amount_min"], ore_config["amount_max"])
+			var/tile_ore_path = (pocket_key == seed_key) ? ore_path : pickweight(weights)
+			var/list/tile_ore_config = deep_ore_table[tile_ore_path]
+			var/turf/closed/mineral/vein = target.ChangeTurf(tile_ore_path, wall_baseturfs)
+			if(!ismineralturf(vein))
+				continue
+			vein.mineralAmt = rand(tile_ore_config["amount_min"], tile_ore_config["amount_max"])
+			placed_ore[pocket_key] = TRUE
 			wall_keys -= pocket_key
 
 		pockets_placed++
 		CHECK_TICK
 
-/datum/map_generator/caves/proc/grow_deep_pocket(seed_x, seed_y, list/wall_keys, list/floor_map, spread_chance, spread_range)
+/datum/map_generator/caves/proc/grow_deep_pocket(seed_x, seed_y, list/wall_keys, list/floor_map, spread_chance, spread_range, list/placed_ore, max_tiles)
 	var/list/pocket = list("[seed_x],[seed_y]" = TRUE)
 	var/list/active = list("[seed_x],[seed_y]")
+	if(max_tiles <= 1 || spread_range < 1)
+		return pocket
 
 	for(var/iteration = 1 to deep_spread_iterations)
 		var/list/next_active = list()
@@ -796,21 +835,22 @@
 			var/current_x = text2num(parts[1])
 			var/current_y = text2num(parts[2])
 
-			for(var/offset_x = -spread_range to spread_range)
-				for(var/offset_y = -spread_range to spread_range)
-					if(!offset_x && !offset_y)
+			// Only adjacent walls can grow; every deposit has a hard size cap.
+			for(var/offset_x = -1 to 1)
+				for(var/offset_y = -1 to 1)
+					if(length(pocket) >= max_tiles)
+						return pocket
+					if(abs(offset_x) + abs(offset_y) != 1)
 						continue
-
-					var/distance = sqrt(offset_x * offset_x + offset_y * offset_y)
-					if(distance > spread_range)
-						continue
-					if(!prob(spread_chance * (1 - (distance / (spread_range + 1)))))
+					if(!prob(spread_chance * (1 - (1 / (spread_range + 1)))))
 						continue
 
 					var/next_x = current_x + offset_x
 					var/next_y = current_y + offset_y
 					var/neighbor = "[next_x],[next_y]"
 					if(pocket[neighbor] || !wall_keys[neighbor])
+						continue
+					if(ore_touches_existing(next_x, next_y, placed_ore))
 						continue
 					// Stop the pocket before it breaks the surface of a tunnel wall.
 					if(is_near_floor(next_x, next_y, floor_map, deep_cluster_clearance))

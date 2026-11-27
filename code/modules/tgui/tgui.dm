@@ -263,7 +263,7 @@
 			"size" = window_size,
 			"fancy" = prefs ? prefs.read_preference(/datum/preference/toggle/tgui_fancy) : FALSE,
 			"locked" = prefs ? prefs.read_preference(/datum/preference/toggle/tgui_lock) : FALSE,
-			"theme" = "grim",
+			"theme" = get_tgui_window_theme(prefs),
 			"scale" = TRUE,
 		),
 		"client" = list(

@@ -6,6 +6,7 @@
  * * * * * * * * * * * **/
 
 /obj/item/reagent_containers/food/snacks/veg
+	dish_type = DISH_VEGETABLE
 	faretype = FARE_POOR
 	nutrition = VEGGIE_NUTRITION
 
@@ -45,6 +46,7 @@
 
 /*	..................		Roasted seeds		................... */
 /obj/item/reagent_containers/food/snacks/roastseeds
+	dish_type = DISH_VEGETABLE
 	item_weight = 5 GRAMS
 	nutrition = BERRY_NUTRITION * COOK_MOD
 	tastes = list("roasted seeds" = 1)
@@ -59,6 +61,7 @@
 
 /*	..................		Salted seeds		................... */
 /obj/item/reagent_containers/food/snacks/saltseeds
+	dish_type = DISH_VEGETABLE
 	item_weight = 5 GRAMS
 	nutrition =  (BERRY_NUTRITION+1) * COOK_MOD
 	tastes = list("salted roasted seeds" = 1)

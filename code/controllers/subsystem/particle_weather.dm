@@ -17,16 +17,38 @@ SUBSYSTEM_DEF(ParticleWeather)
 
 	var/datum/forecast/selected_forecast
 
-/datum/controller/subsystem/ParticleWeather/fire()
+	/// Mobs left to process this fire; carried over when the subsystem pauses.
+	var/list/currentrun_mobs = list()
+	/// Objects from weather_act_upon_list left to process this fire; carried over when the subsystem pauses.
+	var/list/currentrun_objs = list()
+
+/datum/controller/subsystem/ParticleWeather/fire(resumed = FALSE)
 	// process active weather
 	if(runningWeather)
 		if(runningWeather.running)
-			update_weather_viewers()
-			runningWeather.tick()
-			for(var/mob/act_on as anything in GLOB.mob_living_list) //yikes. this should probably be a client scan not all mobs. it already checks for minds
-				runningWeather.try_weather_act(act_on)
-			for(var/obj/act_on as anything in GLOB.weather_act_upon_list)
-				runningWeather.weather_obj_act(act_on)
+			if(!resumed)
+				update_weather_viewers()
+				runningWeather.tick()
+				currentrun_mobs = GLOB.mob_living_list.Copy() //yikes. this should probably be a client scan not all mobs. it already checks for minds
+				currentrun_objs = GLOB.weather_act_upon_list.Copy()
+
+			var/list/mobs_left = currentrun_mobs
+			while(length(mobs_left))
+				var/mob/living/act_on = mobs_left[length(mobs_left)]
+				mobs_left.len--
+				if(!QDELETED(act_on))
+					runningWeather.try_weather_act(act_on)
+				if(MC_TICK_CHECK)
+					return
+
+			var/list/objs_left = currentrun_objs
+			while(length(objs_left))
+				var/obj/act_on = objs_left[length(objs_left)]
+				objs_left.len--
+				if(!QDELETED(act_on))
+					runningWeather.weather_obj_act(act_on)
+				if(MC_TICK_CHECK)
+					return
 
 			if(weather_special_effect)
 				if(!length(turfs_to_process))

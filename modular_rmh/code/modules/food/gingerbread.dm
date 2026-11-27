@@ -6,6 +6,7 @@
 	isolation_craft = TRUE
 
 /obj/item/reagent_containers/food/snacks/gingerbread
+	dish_type = DISH_PASTRY
 	name = "gingerbread pastry"
 	desc = "Beautiful and tasty festive cookies."
 	icon = 'modular_rmh/icons/obj/food/cookides.dmi'

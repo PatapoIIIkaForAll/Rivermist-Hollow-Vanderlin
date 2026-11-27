@@ -43,6 +43,7 @@
 
 /datum/status_effect/inspiration
 	status_type = STATUS_EFFECT_REFRESH
+	alert_type = null
 
 /datum/status_effect/stacking/playing_inspiration
 	id = "play_inspiration" // subtypes must share the same id to block stacking multiple melodies

@@ -42,6 +42,7 @@
 
 //	........   Truffles   ................
 /obj/item/reagent_containers/food/snacks/truffles
+	dish_type = DISH_VEGETABLE
 	name = "truffles"
 	icon = 'icons/roguetown/items/produce.dmi'
 	icon_state = "mushroom1_full"
@@ -70,6 +71,7 @@
 	poisonous = TRUE
 
 /obj/item/reagent_containers/food/snacks/cooked/truffle
+	dish_type = DISH_VEGETABLE
 	name = "cooked truffles"
 	icon = 'icons/roguetown/items/produce.dmi'
 	icon_state = "mushroom1_full"

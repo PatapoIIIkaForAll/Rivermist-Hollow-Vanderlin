@@ -153,6 +153,8 @@
 	var/finish_outside = FALSE
 	/// TRUE when this actor, lying down, locks their legs around whoever is inside them.
 	var/leg_lock = FALSE
+	/// Throttles panel refreshes pushed by arousal and orgasm changes.
+	COOLDOWN_DECLARE(panel_refresh_cooldown)
 
 	var/static/list/action_zone_filter_options = list(
 		"Any" = SEX_UI_ZONE_ANY,
@@ -173,14 +175,14 @@
 	if(!shared_scene || !shared_scene.add_controller(src))
 		scene = null
 		return
-	RegisterSignal(user, COMSIG_SEX_AROUSAL_CHANGED, PROC_REF(on_arousal_changed))
+	RegisterSignal(user, list(COMSIG_SEX_AROUSAL_CHANGED, COMSIG_SEX_ORGASM_PROG_CHANGED), PROC_REF(on_arousal_changed))
 	RegisterSignal(user, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(on_participant_invalidated))
 
 	addtimer(CALLBACK(src, PROC_REF(check_inactivity)), 30 SECONDS)
 
 /datum/sex_scene_controller/Destroy(force, ...)
 	if(user)
-		UnregisterSignal(user, list(COMSIG_SEX_AROUSAL_CHANGED, COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+		UnregisterSignal(user, list(COMSIG_SEX_AROUSAL_CHANGED, COMSIG_SEX_ORGASM_PROG_CHANGED, COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
 	if(scene && !QDELETED(scene))
 		scene.remove_controller(src)
 	scene = null
@@ -240,6 +242,16 @@
 
 /datum/sex_scene_controller/proc/on_arousal_changed()
 	SIGNAL_HANDLER
+	if(!length(open_uis))
+		return
+	if(COOLDOWN_FINISHED(src, panel_refresh_cooldown))
+		refresh_panel()
+		return
+	addtimer(CALLBACK(src, PROC_REF(refresh_panel)), COOLDOWN_TIMELEFT(src, panel_refresh_cooldown), TIMER_UNIQUE)
+
+/// Pushes fresh panel data and starts the refresh throttle.
+/datum/sex_scene_controller/proc/refresh_panel()
+	COOLDOWN_START(src, panel_refresh_cooldown, SEX_PANEL_REFRESH_COOLDOWN)
 	SStgui.update_uis(src)
 
 /datum/sex_scene_controller/proc/get_active_action(action_ref)

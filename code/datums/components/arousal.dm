@@ -37,6 +37,8 @@
 	var/is_edged = FALSE
 	/// Last time high arousal auto-flicked the mob's ears
 	var/last_ear_flick_time = 0
+	/// Strength step of the near-climax screen edge last shown
+	var/near_climax_edge_level = 0
 
 /datum/component/arousal/Initialize(...)
 	. = ..()
@@ -44,6 +46,9 @@
 
 /datum/component/arousal/Destroy(force)
 	QDEL_NULL(active_spurts)
+	var/mob/living/user = parent
+	if(near_climax_edge_level && istype(user))
+		user.clear_fullscreen(FULLSCREEN_NEAR_CLIMAX)
 	. = ..()
 	STOP_PROCESSING(SSobj, src)
 
@@ -220,9 +225,24 @@
 /datum/component/arousal/proc/set_orgasm_prog(datum/source, amount)
 	if(amount > orgasm_progress)
 		last_orgasm_prog_increase_time = world.time
+	var/old_progress = orgasm_progress
 	orgasm_progress = clamp(amount, 0, MAX_ORGASM_PROG)
 	update_arousal_effects()
+	if(orgasm_progress != old_progress)
+		update_near_climax_edge()
+		SEND_SIGNAL(parent, COMSIG_SEX_ORGASM_PROG_CHANGED, orgasm_progress)
 	return orgasm_progress
+
+/// Fades the near-climax screen edge to match orgasm progress.
+/datum/component/arousal/proc/update_near_climax_edge(force = FALSE)
+	var/mob/living/user = parent
+	if(!istype(user))
+		return
+	var/level = round(near_climax_edge_strength(orgasm_progress) * NEAR_CLIMAX_EDGE_LEVELS, 1)
+	if(level == near_climax_edge_level && !force)
+		return
+	near_climax_edge_level = level
+	user.set_lewd_edge(FULLSCREEN_NEAR_CLIMAX, /atom/movable/screen/fullscreen/lewd/climax_edge, level / NEAR_CLIMAX_EDGE_LEVELS, level ? NEAR_CLIMAX_EDGE_STEP_TIME : NEAR_CLIMAX_EDGE_FADE_OUT)
 
 /datum/component/arousal/proc/adjust_orgasm_prog(datum/source, amount)
 	if(orgasm_progress > 0)
@@ -472,7 +492,6 @@
 	is_edged = FALSE
 
 /datum/component/arousal/proc/update_arousal_effects()
-	update_pink_screen()
 	handle_statuses()
 	//update_erect_state()
 
@@ -508,12 +527,12 @@
 	playsound(parent, 'sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
 	// Special cases for when the user has a penis but no testicles & for eunuchs
 	if(mob.climaxes_dry())
-		mob.visible_message(span_love(mob.get_dry_climax_message()))
+		mob.visible_message(span_love_climax(mob.get_dry_climax_message()))
 		after_ejaculation(FALSE, parent, null, action, action_initiator, action_target, action_performer)
 		return
 	// The act's own climax lines would spill from the strapon, so only the wearer's vagina climaxes.
 	if(target && mob.climaxes_behind_strapon(action))
-		mob.visible_message(span_love("[mob] shudders and climaxes, [mob.p_their()] hips bucking behind [mob.p_their()] strapon!"), span_love("I shudder and climax, my hips bucking behind my strapon!"))
+		mob.visible_message(span_love_climax("[mob] shudders and climaxes, [mob.p_their()] hips bucking behind [mob.p_their()] strapon!"), span_love_climax("I shudder and climax, my hips bucking behind my strapon!"))
 		var/obj/item/organ/genitals/filling_organ/vagina/strapon_vag = mob.getorganslot(ORGAN_SLOT_VAGINA)
 		if(strapon_vag?.reagents)
 			strapon_vag.produce_climax_fluid()
@@ -523,14 +542,14 @@
 		return
 	var/obj/item/organ/genitals/filling_organ/testicles/climax_testes = mob.getorganslot(ORGAN_SLOT_TESTICLES)
 	if(climax_testes?.is_pent_up() && mob.getorganslot(ORGAN_SLOT_PENIS))
-		to_chat(mob, span_love("A pent-up load surges out of me!"))
+		to_chat(mob, span_love_climax("A pent-up load surges out of me!"))
 		mob.add_stress(/datum/stress_event/pent_up_release)
 	// An aim on the cock, from a hand or an NPC, decides where a hand-driven climax lands.
 	var/datum/climax_aim/steering_aim = get_steering_aim(action)
 	if(steering_aim && climax_at_aim(steering_aim, action, action_initiator, action_target, action_performer))
 		return
 	if(!action || !target)
-		mob.visible_message(span_love("[mob] orgasms!"))
+		mob.visible_message(span_love_climax("[mob] orgasms!"))
 		var/turf/turf = get_turf(mob)
 		if(mob.getorganslot(ORGAN_SLOT_TESTICLES) && mob.getorganslot(ORGAN_SLOT_PENIS))
 			var/obj/item/organ/genitals/filling_organ/testicles/testes = mob.getorganslot(ORGAN_SLOT_TESTICLES)
@@ -552,7 +571,7 @@
 		// A knot force bonus means the climax always knots, so it cannot pull out.
 		if(wants_out && knot_force_bonus > 0)
 			wants_out = FALSE
-			to_chat(mob, span_love("I can't make myself pull out!"))
+			to_chat(mob, span_love_climax("I can't make myself pull out!"))
 		var/pulled_out = action.orifice_pressing || (wants_out && try_pull_out(mob, target))
 		var/return_type = pulled_out ? pull_out_for_climax(action, mob, target) : action.handle_climax_message(mob, target, must_flip)
 		if(!return_type)
@@ -923,35 +942,6 @@
 	if(user.has_status_effect(/datum/status_effect/edged_penis_cooldown))
 		return TRUE
 	return FALSE
-
-/datum/component/arousal/proc/update_pink_screen()
-	var/mob/living/user = parent
-	var/severity = 0
-	switch(arousal)
-		if(1 to 20)
-			severity = 1
-		if(20 to 40)
-			severity = 2
-		if(40 to 60)
-			severity = 3
-		if(60 to 80)
-			severity = 4
-		if(80 to 100)
-			severity = 5
-		if(100 to 120)
-			severity = 6
-		if(120 to 140)
-			severity = 7
-		if(140 to 160)
-			severity = 8
-		if(160 to 180)
-			severity = 9
-		if(180 to INFINITY)
-			severity = 10
-	if(severity > 0)
-		user.overlay_fullscreen("horny", /atom/movable/screen/fullscreen/love, severity)
-	else
-		user.clear_fullscreen("horny")
 
 /*/datum/component/arousal/proc/update_blueballs()
 	var/mob/living/user = parent

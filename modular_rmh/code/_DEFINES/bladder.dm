@@ -3,7 +3,9 @@
 #define BLADDER_CAPACITY 50
 #define BLADDER_MAX_FILL 75
 #define BLADDER_OVERFILL_LIMIT (BLADDER_MAX_FILL * 2)
-#define BLADDER_UNITS_PER_HYDRATION 0.1
+/// What was drunk reaches the bladder this many units at a time.
+#define BLADDER_FLOW_UNITS 1
+#define BLADDER_FLOW_INTERVAL (15 SECONDS)
 
 #define BLADDER_URGE_NONE 0
 #define BLADDER_URGE_NEED 1

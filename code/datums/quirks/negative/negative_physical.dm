@@ -7,20 +7,66 @@
 /datum/quirk/negative/bad_sight
 	name = "Poor Vision"
 	desc = "I need spectacles to see normally from my years spent reading books."
+	desc_hint = "Choose the eyewear you start with. Corrective eyewear in your loadout replaces it."
 	point_value = 2
+	customization_label = "Eyewear"
+	customization_options = list(
+		/obj/item/clothing/face/spectacles,
+		/obj/item/clothing/face/spectacles/golden,
+		/obj/item/clothing/face/spectacles/monocle,
+		/obj/item/clothing/face/spectacles/fancy,
+		/obj/item/clothing/face/spectacles/fancy_dark,
+		QUIRK_EYEWEAR_OWN,
+	)
+
+/datum/quirk/negative/bad_sight/get_option_name(option)
+	if(option == /obj/item/clothing/face/spectacles/fancy_dark)
+		return "dark fancy spectacles"
+	return ..()
+
+/// Corrective eyewear in the loadout means the character brings their own.
+/datum/quirk/negative/bad_sight/resolve_customization(datum/preferences/prefs, value)
+	if(!prefs)
+		return value
+	for(var/slot in 1 to 10)
+		var/datum/loadout_item/item = prefs.vars["loadout[slot]"]
+		if(item && is_corrective_eyewear_type(item.item_path))
+			return QUIRK_EYEWEAR_OWN
+	return value
+
+/// The eyewear type to equip, or null when the player brings their own.
+/datum/quirk/negative/bad_sight/proc/get_eyewear_type()
+	var/chosen = customization_value
+	if(chosen == QUIRK_EYEWEAR_OWN)
+		return null
+	if(istext(chosen))
+		chosen = text2path(chosen)
+	if(chosen in customization_options)
+		return chosen
+	return /obj/item/clothing/face/spectacles
 
 /datum/quirk/negative/bad_sight/on_spawn()
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/H = owner
 	owner.adjust_skill_level(/datum/attribute/skill/misc/reading, 10)
-
-	if(H.wear_mask)
-		var/type = H.wear_mask.type
-		qdel(H.wear_mask)
-		H.put_in_hands(new type())
-	H.equip_to_slot_or_del(new /obj/item/clothing/face/spectacles(H), ITEM_SLOT_MASK)
 	H.become_nearsighted(type)
+
+	var/eyewear_type = get_eyewear_type()
+	if(!eyewear_type)
+		return
+	var/obj/item/clothing/worn_mask = H.wear_mask
+	if(istype(worn_mask) && (TRAIT_NEARSIGHTED_CORRECTED in worn_mask.clothing_traits))
+		return
+	if(worn_mask)
+		var/mask_type = worn_mask.type
+		qdel(worn_mask)
+		H.put_in_hands(new mask_type())
+	H.equip_to_slot_or_del(new eyewear_type(H), ITEM_SLOT_MASK)
+
+/// TRUE for clothing types that correct nearsightedness when worn.
+/proc/is_corrective_eyewear_type(item_type)
+	return ispath(item_type, /obj/item/clothing/face/spectacles)
 
 /datum/quirk/negative/bad_sight/on_remove()
 	if(owner)

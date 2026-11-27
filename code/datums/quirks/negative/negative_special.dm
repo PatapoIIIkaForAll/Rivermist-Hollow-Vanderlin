@@ -127,8 +127,10 @@
 /datum/quirk/negative/traumatized
 	name = "Traumatized"
 	desc = "You were an adventurer once, till you took something to the knee. Choose something to be afraid of."
+	desc_hint = "Pick up to three fears. Each fear past the first gives one more quirk point."
 	point_value = 3
 	customization_label = "Choose Fear"
+	max_picks = QUIRK_MAX_PICKS
 	customization_options = list(
 		/datum/species/goblin,
 		/datum/species/werewolf,
@@ -145,7 +147,8 @@
 		"Nobles",
 	)
 
-	var/fear_type
+	/// Species typepaths and "Nobles" this character freezes at the sight of.
+	var/list/fear_types
 	var/next_scream_time = 0
 
 /datum/quirk/negative/traumatized/on_examined(mob/user, list/P, list/examine_contents)
@@ -155,49 +158,38 @@
 /datum/quirk/negative/traumatized/on_spawn()
 	if(!ishuman(owner))
 		return
-	if(!customization_value)
-		customization_value = /datum/species/goblin
-	fear_type = customization_value
+	fear_types = list()
+	for(var/fear in get_picks())
+		if(istext(fear) && fear != "Nobles")
+			fear = text2path(fear)
+		if((fear == "Nobles" || ispath(fear, /datum/species)) && !(fear in fear_types))
+			fear_types += fear
+	if(!length(fear_types))
+		fear_types += /datum/species/goblin
 
 /datum/quirk/negative/traumatized/on_life(mob/living/user)
-	if(world.time < next_scream_time)
+	if(world.time < next_scream_time || !ishuman(user))
 		return
-	if(ispath(fear_type, /datum/species))
-		for(var/mob/living/carbon/human/human in view(5, user))
-			if(human == user)
-				continue
-			if(is_species(human, fear_type))
-				var/mob/living/carbon/human/H = user
-				H.emote("scream")
-				H.Immobilize(1.5 SECONDS)
-				H.add_stress(/datum/stress_event/traumatized)
-				to_chat(H, span_userdanger("You see [human] and freeze in terror!"))
-				next_scream_time = world.time + 25 SECONDS
-				return
-	else if(fear_type == "Nobles")
-		for(var/mob/living/carbon/human/human in view(5, user))
-			if(human == user)
-				continue
+	for(var/mob/living/carbon/human/human in view(5, user))
+		if(human == user || !is_feared(human))
+			continue
+		var/mob/living/carbon/human/H = user
+		H.emote("scream")
+		H.Immobilize(1.5 SECONDS)
+		H.add_stress(/datum/stress_event/traumatized)
+		to_chat(H, span_userdanger("You see [human] and freeze in terror!"))
+		next_scream_time = world.time + 25 SECONDS
+		return
+
+/// TRUE when [human] matches any picked fear.
+/datum/quirk/negative/traumatized/proc/is_feared(mob/living/carbon/human/human)
+	for(var/fear in fear_types)
+		if(fear == "Nobles")
 			if(human.is_noble())
-				var/mob/living/carbon/human/H = user
-				H.emote("scream")
-				H.Immobilize(1.5 SECONDS)
-				H.add_stress(/datum/stress_event/traumatized)
-				to_chat(H, span_userdanger("You see [human] and freeze in terror!"))
-				next_scream_time = world.time + 25 SECONDS
-				return
-	else
-		for(var/mob/living/carbon/human/human in view(5, user))
-			if(human == user)
-				continue
-			if(HAS_TRAIT(human, TRAIT_INQUISITION))
-				var/mob/living/carbon/human/H = user
-				H.emote("scream")
-				H.Immobilize(1.5 SECONDS)
-				H.add_stress(/datum/stress_event/traumatized)
-				to_chat(H, span_userdanger("You see [human] and freeze in terror!"))
-				next_scream_time = world.time + 25 SECONDS
-				return
+				return TRUE
+		else if(is_species(human, fear))
+			return TRUE
+	return FALSE
 
 
 /datum/stress_event/traumatized
