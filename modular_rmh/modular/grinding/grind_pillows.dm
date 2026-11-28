@@ -5,8 +5,6 @@
 #define PILLOW_SOAKED_RATIO 0.5
 #define PILLOW_DRY_PER_SECOND (1 / 30)
 #define PILLOW_SCENT_INTERVAL (1 MINUTES)
-#define PILLOW_SCENT_AMOUNT 10
-#define PILLOW_SCENT_CAP 20
 #define PILLOW_GATHER_TIME (1 SECONDS)
 
 /obj/structure/fluff/pillow
@@ -113,10 +111,7 @@
 	if(!COOLDOWN_FINISHED(src, scent_cooldown))
 		return
 	COOLDOWN_START(src, scent_cooldown, PILLOW_SCENT_INTERVAL)
-	var/datum/reagent/main = pillow.reagents.get_master_reagent()
-	var/turf/where = get_turf(pillow)
-	if(main && where)
-		where.pollute_turf(get_fluid_scent(main.type), PILLOW_SCENT_AMOUNT, PILLOW_SCENT_CAP)
+	waft_fluid_scent(pillow, get_fluid_scent_kind(pillow.reagents.get_master_reagent()))
 
 /datum/component/damp_pillow/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
@@ -143,6 +138,4 @@
 #undef PILLOW_SOAKED_RATIO
 #undef PILLOW_DRY_PER_SECOND
 #undef PILLOW_SCENT_INTERVAL
-#undef PILLOW_SCENT_AMOUNT
-#undef PILLOW_SCENT_CAP
 #undef PILLOW_GATHER_TIME

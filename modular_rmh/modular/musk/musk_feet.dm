@@ -188,7 +188,7 @@
 	if(stacks <= 0)
 		qdel(src)
 		return
-	spread_musk_scent(get_turf(owner), stacks, source_ref?.resolve())
+	waft_musk(owner, stacks, source_ref?.resolve())
 
 /datum/status_effect/musk_smear/get_examine_text(mob/user, list/P)
 	return span_love("SUBJECTPRONOUN is smeared across the face with the sweat of somebody's feet.")

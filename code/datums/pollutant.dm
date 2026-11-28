@@ -33,9 +33,6 @@
 /datum/pollutant/proc/on_smell(mob/living/carbon/victim, amount)
 	return
 
-/datum/pollutant/proc/can_be_smelled_by(mob/living/sniffer)
-	return TRUE
-
 
 /datum/pollutant/fragrance/on_smell(parent)
 	. = ..()

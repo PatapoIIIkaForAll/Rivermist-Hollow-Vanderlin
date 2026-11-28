@@ -81,8 +81,6 @@
 		var/smelly_power = pollutant.smell_intensity * pollutants[type]
 		if(smelly_power < POLLUTANT_SMELL_THRESHOLD)
 			continue
-		if(!pollutant.can_be_smelled_by(sniffer))
-			continue
 		if(!dominant_pollutant || smelly_power > dominiant_smell_power)
 			dominant_pollutant = pollutant
 			dominiant_smell_power = smelly_power
@@ -175,7 +173,6 @@
 	LAZYSET(sharing_turfs, my_turf, TRUE)
 	//Now we've gotten all the turfs that should share pollution. Gather their total pollutions and split evenly
 	var/list/total_share_pollutants = list()
-	var/list/kept_pollutants
 	var/total_share_amount = 0
 	for(var/turf/open/open_turf as anything in sharing_turfs)
 		if(!isopenturf(open_turf) || QDELING(open_turf) || QDELETED(open_turf.pollution))
@@ -183,10 +180,6 @@
 		var/datum/pollution/cached_pollution = open_turf.pollution
 		for(var/datum/pollutant/type as anything in cached_pollution.pollutants)
 			if(initial(type.pollutant_flags) & POLLUTION_DO_NOT_SPREAD)
-				LAZYINITLIST(kept_pollutants)
-				if(!kept_pollutants[open_turf])
-					kept_pollutants[open_turf] = list()
-				kept_pollutants[open_turf][type] = cached_pollution.pollutants[type]
 				continue
 			if(!total_share_pollutants[type])
 				total_share_pollutants[type] = 0
@@ -215,12 +208,6 @@
 		cached_pollution.pollutants = total_share_pollutants.Copy()
 		cached_pollution.total_amount = total_share_amount
 		cached_pollution.height = new_heights
-		var/list/kept = kept_pollutants?[open_turf]
-		if(kept)
-			for(var/kept_type in kept)
-				cached_pollution.pollutants[kept_type] = kept[kept_type]
-				cached_pollution.total_amount += kept[kept_type]
-			cached_pollution.update_height()
 		SET_ACTIVE_POLLUTION(cached_pollution)
 
 	for(var/turf/open/open_turf as anything in potential_activers)

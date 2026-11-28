@@ -23,6 +23,12 @@
 		return musk_localized(reader, "A heavy smell of sweat hangs in the air.", "В воздухе висит тяжёлый запах пота.")
 	return musk_localized(reader, "I catch a plain smell of sweat nearby.", "Я улавливаю рядом обычный запах пота.")
 
+/proc/musk_air_text(mob/reader, level)
+	var/static/list/english = list("fresh sweat", "warm sweat and musk", "heavy musk", "rank, heady musk")
+	var/static/list/russian = list("свежего пота", "тёплого пота и мускуса", "тяжёлого мускуса", "резкого, дурманящего мускуса")
+	var/index = clamp(level, 1, MUSK_LEVEL_MAX)
+	return musk_localized(reader, "The odour of [english[index]] fills the air.", "В воздухе стоит запах [russian[index]].")
+
 /proc/musk_notes_text(mob/reader, list/notes)
 	if(!length(notes))
 		return null

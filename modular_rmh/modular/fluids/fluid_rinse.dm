@@ -68,7 +68,7 @@
 	if(garment.reagents?.total_volume)
 		evaporate(units)
 		return TRUE
-	if((stain_level || coat_level || residue_scent) && prob(FLUID_RINSE_CRUST_CHANCE))
+	if((stain_level || coat_level || residue_kind) && prob(FLUID_RINSE_CRUST_CHANCE))
 		garment.wash(CLEAN_WASH)
 		return TRUE
 	return FALSE

@@ -33,6 +33,26 @@ GLOBAL_LIST_EMPTY(fluid_scent_marks)
 	var/static/list/colors = list("seed" = "#eceaf4", "nectar" = "#f2a6c8", "milk" = "#f5ecd0", "musk" = "#d9a05b")
 	return colors[kind] || "#cfcfcf"
 
+/proc/waft_fluid_scent(atom/source, kind)
+	var/turf/where = get_turf(source)
+	if(!where || !kind)
+		return
+	for(var/mob/living/carbon/human/sniffer in where)
+		sniffer.smell_fluid_waft(kind)
+
+/mob/living/carbon/human/proc/smell_fluid_waft(kind)
+	if(stat != CONSCIOUS || !can_smell() || smelled_recently("fluid_waft_[kind]"))
+		return FALSE
+	to_chat(src, span_info(fluid_waft_text(src, kind)))
+	return TRUE
+
+/proc/fluid_waft_text(mob/reader, kind)
+	var/static/list/english = list("seed" = "musky seed", "nectar" = "sweet musk", "milk" = "stale milk")
+	var/static/list/russian = list("seed" = "мускусного семени", "nectar" = "сладкого мускуса", "milk" = "прокисшего молока")
+	if(get_preferred_ui_language(reader) == "ru")
+		return "В носу щекочет слабый запах [russian[kind] || "застарелых телесных жидкостей"]..."
+	return "The subtle smell of [english[kind] || "stale bodily fluids"] tickles your nose..."
+
 /// Marks a tile with a source's scent, unless it marked the same tile a moment ago.
 /proc/leave_fluid_scent(turf/where, mob/living/source, kind)
 	if(!isturf(where) || !isliving(source) || !kind)

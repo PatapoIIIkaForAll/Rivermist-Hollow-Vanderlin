@@ -21,6 +21,7 @@
 	var/level = 1
 	var/fade_at = 0
 	var/hidden = FALSE
+	var/datum/musk_trail/trail
 
 /datum/status_effect/musk/on_creation(mob/living/new_owner, new_level = 1)
 	level = clamp(new_level, 1, MUSK_LEVEL_MAX)
@@ -34,10 +35,12 @@
 /datum/status_effect/musk/on_apply()
 	. = ..()
 	fade_at = world.time + MUSK_LEVEL_FADE_TIME
+	trail = new
 	RegisterSignal(owner, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 
 /datum/status_effect/musk/on_remove()
 	UnregisterSignal(owner, COMSIG_LIVING_DEATH)
+	QDEL_NULL(trail)
 	return ..()
 
 /datum/status_effect/musk/tick()
@@ -46,7 +49,7 @@
 	update_hiding()
 	if(hidden)
 		return
-	spread_musk_scent(get_turf(owner), level, owner)
+	waft_musk(owner, level, owner, trail)
 	reach_for_thralls()
 
 /datum/status_effect/musk/get_examine_text(mob/user, list/P)
@@ -239,117 +242,58 @@
 	alpha = 0
 	color = MUSK_SCREEN_COLOR
 
-/datum/pollution
-	var/datum/weakref/musk_source_ref
+/datum/musk_trail
+	var/list/turfs = list()
 
-/proc/spread_musk_scent(turf/center, level, mob/living/carbon/human/source)
-	if(!center)
+/datum/musk_trail/Destroy(force)
+	turfs.Cut()
+	return ..()
+
+/datum/musk_trail/proc/mark(turf/where)
+	turfs -= where
+	turfs[where] = world.time + MUSK_TRAIL_TIME
+	if(length(turfs) > MUSK_TRAIL_LENGTH)
+		turfs.Cut(1, 2)
+
+/datum/musk_trail/proc/get_fresh_turfs()
+	for(var/turf/where as anything in turfs.Copy())
+		if(turfs[where] < world.time)
+			turfs -= where
+	return turfs
+
+/proc/waft_musk(mob/living/carbon/human/carrier, level, mob/living/carbon/human/source, datum/musk_trail/trail)
+	var/turf/center = get_turf(carrier)
+	if(!center || !source)
 		return
-	var/static/list/scent_types = list(
-		/datum/pollutant/musk_scent/level_1,
-		/datum/pollutant/musk_scent/level_2,
-		/datum/pollutant/musk_scent/level_3,
-		/datum/pollutant/musk_scent/level_4,
-	)
-	var/scent_type = scent_types[clamp(level, 1, MUSK_LEVEL_MAX)]
-	for(var/turf/open/scent_turf in RANGE_TURFS(MUSK_SCENT_RANGE, center))
-		if(get_musk_amount(scent_turf) >= MUSK_SCENT_CAP)
+	level = clamp(level, 1, MUSK_LEVEL_MAX)
+	var/list/reached = list()
+	for(var/mob/living/carbon/human/smeller in range(MUSK_SCENT_RANGE, center))
+		if(smeller == source)
 			continue
-		scent_turf.pollute_turf(scent_type, MUSK_SCENT_AMOUNT)
-		scent_turf.pollution?.musk_source_ref = WEAKREF(source)
-
-/proc/get_musk_amount(turf/open/scent_turf)
-	. = 0
-	var/datum/pollution/present = scent_turf.pollution
-	if(QDELETED(present))
+		reached[smeller] = TRUE
+		smeller.breathe_musk(level, source)
+	if(!trail)
 		return
-	for(var/pollutant_type in present.pollutants)
-		if(ispath(pollutant_type, /datum/pollutant/musk_scent))
-			. += present.pollutants[pollutant_type]
+	if(level > 1)
+		for(var/turf/trail_turf as anything in trail.get_fresh_turfs())
+			for(var/mob/living/carbon/human/smeller in trail_turf)
+				if(smeller == source || reached[smeller])
+					continue
+				reached[smeller] = TRUE
+				smeller.breathe_musk(level - 1, source)
+	trail.mark(center)
 
-/datum/pollutant/musk_scent
-	pollutant_flags = POLLUTANT_SMELL | POLLUTANT_BREATHE_ACT | POLLUTION_DO_NOT_SPREAD
-	descriptor = SCENT_DESC_ODOR
-	color = MUSK_SCREEN_COLOR
-	var/level = 1
-
-/datum/pollutant/musk_scent/breathe_act(mob/living/carbon/victim, amount, total_amount)
-	. = ..()
-	if(amount <= 0 || !ishuman(victim))
-		return
-	var/mob/living/carbon/human/smeller = victim
-	if(reaches(smeller))
-		smeller.smell_musk(level, find_source(smeller))
-	else if(smeller.has_quirk(/datum/quirk/neutral/scent_sensitivity))
-		smeller.notice_sweat(level, find_source(smeller))
-
-/datum/pollutant/musk_scent/can_be_smelled_by(mob/living/sniffer)
-	if(!reaches(sniffer))
+/mob/living/carbon/human/proc/breathe_musk(level, mob/living/carbon/human/source)
+	if(!can_smell_musk())
 		return FALSE
-	var/mob/living/carbon/human/smeller = sniffer
-	if(!smeller.can_smell_musk())
-		return FALSE
-	var/datum/status_effect/musk_contact/contact = smeller.has_status_effect(/datum/status_effect/musk_contact)
-	return !contact || contact.allows_line(MUSK_LINE_SMELL)
-
-/datum/pollutant/musk_scent/on_smell(mob/living/carbon/victim, amount)
-	. = ..()
-	var/mob/living/carbon/human/smeller = victim
-	smeller.get_musk_contact()?.claim_line(MUSK_LINE_SMELL)
-	var/datum/component/musk/musk = find_source(smeller)?.get_musk()
-	var/notes = musk_notes_text(smeller, musk?.scent_notes)
-	if(notes)
-		to_chat(smeller, span_love(notes))
-
-/datum/pollutant/musk_scent/proc/reaches(mob/living/sniffer)
-	if(!ishuman(sniffer))
-		return FALSE
-	var/mob/living/carbon/human/smeller = sniffer
-	if(!smeller.is_musk_susceptible())
-		return FALSE
-	return !smeller.get_musk_sweat() || !!find_source(smeller)
-
-/datum/pollutant/musk_scent/proc/find_source(mob/living/carbon/human/smeller)
-	RETURN_TYPE(/mob/living/carbon/human)
-	for(var/mob/living/carbon/human/candidate in range(MUSK_SCENT_RANGE, smeller))
-		if(candidate == smeller)
-			continue
-		var/datum/status_effect/musk/musk = candidate.has_status_effect(/datum/status_effect/musk)
-		if(musk?.level == level && !musk.hidden)
-			return candidate
-	return get_lingering_source(smeller)
-
-/datum/pollutant/musk_scent/proc/get_lingering_source(mob/living/carbon/human/smeller)
-	RETURN_TYPE(/mob/living/carbon/human)
-	var/turf/open/scented_turf = get_turf(smeller)
-	if(!isopenturf(scented_turf))
-		return null
-	var/mob/living/carbon/human/source = scented_turf.pollution?.musk_source_ref?.resolve()
-	return source == smeller ? null : source
-
-/datum/pollutant/musk_scent/level_1
-	name = "Fresh Sweat"
-	scent = "fresh sweat"
-	smell_intensity = 0.75
-	level = 1
-
-/datum/pollutant/musk_scent/level_2
-	name = "Warm Musk"
-	scent = "warm sweat and musk"
-	smell_intensity = 1
-	level = 2
-
-/datum/pollutant/musk_scent/level_3
-	name = "Heavy Musk"
-	scent = "heavy musk"
-	smell_intensity = 1.5
-	level = 3
-
-/datum/pollutant/musk_scent/level_4
-	name = "Heady Musk"
-	scent = "rank, heady musk"
-	smell_intensity = 2
-	level = 4
+	if(!is_musk_susceptible())
+		return has_quirk(/datum/quirk/neutral/scent_sensitivity) && notice_sweat(level, source)
+	if(get_musk_contact()?.claim_line(MUSK_LINE_SMELL))
+		to_chat(src, span_warning(musk_air_text(src, level)))
+		var/notes = musk_notes_text(src, source.get_musk()?.scent_notes)
+		if(notes)
+			to_chat(src, span_love(notes))
+	return smell_musk(level, source)
 
 #undef MUSK_SCREEN_CATEGORY
 #undef MUSK_SCREEN_FILTER

@@ -16,8 +16,6 @@
 #define FLUID_EVAPORATION_PER_SECOND (1 / 60)
 /// How often a fluid-dirty garment adds its smell to the air, and how much.
 #define FLUID_SCENT_INTERVAL (1 MINUTES)
-#define FLUID_SCENT_AMOUNT 15
-#define FLUID_SCENT_CAP 20
 #define FLUID_WRING_TIME (2 SECONDS)
 #define FLUID_DIP_TIME (1 SECONDS)
 /// Time to lick a held garment; pressing it to someone else's mouth takes twice as long.
@@ -206,7 +204,7 @@
 	/// Reagent type behind residue_name.
 	var/residue_type
 	/// Smell given off until washed.
-	var/datum/pollutant/residue_scent
+	var/residue_kind
 	/// Semen globs drawn now: 0 none, 1 light or dried, 2 heavy.
 	var/coat_level = 0
 	/// Which glob pattern this garment uses, so it keeps its look between redraws.
@@ -257,7 +255,7 @@
 		return
 	residue_name = LOWER_TEXT(main_fluid.name)
 	residue_type = main_fluid.type
-	residue_scent = get_fluid_scent(main_fluid.type)
+	residue_kind = get_fluid_scent_kind(main_fluid)
 
 /datum/component/fluid_soaked/proc/evaporate(amount)
 	var/obj/item/clothing/garment = parent
@@ -275,11 +273,10 @@
 		note_main_fluid()
 	evaporate(FLUID_EVAPORATION_PER_SECOND * delta_time)
 	update_stain()
-	if(residue_scent && COOLDOWN_FINISHED(src, scent_cooldown))
+	if(residue_kind && COOLDOWN_FINISHED(src, scent_cooldown))
 		COOLDOWN_START(src, scent_cooldown, FLUID_SCENT_INTERVAL)
-		var/turf/garment_turf = get_turf(garment)
-		garment_turf?.pollute_turf(residue_scent, FLUID_SCENT_AMOUNT, FLUID_SCENT_CAP)
-	if(!garment.reagents.total_volume && !residue_scent)
+		waft_fluid_scent(garment, residue_kind)
+	if(!garment.reagents.total_volume && !residue_kind)
 		qdel(src)
 
 /// Redraws the garment when its wet spot or semen coat changes.
@@ -390,37 +387,6 @@
 	. = fcopy_rsc(clipped)
 	pattern_cache[cache_key] = .
 
-/proc/get_fluid_scent(datum/reagent/reagent_type)
-	if(ispath(reagent_type, /datum/reagent/consumable/milk))
-		return /datum/pollutant/body_fluid/milk
-	if(ispath(reagent_type, /datum/reagent/consumable/cum))
-		return /datum/pollutant/body_fluid/seed
-	if(ispath(reagent_type, /datum/reagent/consumable/femcum))
-		return /datum/pollutant/body_fluid/nectar
-	return /datum/pollutant/body_fluid/stale
-
-/// Smells left by body fluid on unwashed clothes; plain smells, so nobody's mood changes.
-/datum/pollutant/body_fluid
-	pollutant_flags = POLLUTANT_SMELL
-	smell_intensity = 1
-	descriptor = SCENT_DESC_SMELL
-
-/datum/pollutant/body_fluid/milk
-	name = "stale milk"
-	scent = "stale milk"
-
-/datum/pollutant/body_fluid/seed
-	name = "musky seed"
-	scent = "musky seed"
-
-/datum/pollutant/body_fluid/nectar
-	name = "sweet musk"
-	scent = "sweet musk"
-
-/datum/pollutant/body_fluid/stale
-	name = "stale fluids"
-	scent = "stale bodily fluids"
-
 #undef FLUID_STAIN_ICON
 #undef SEMEN_COAT_ICON
 #undef SEMEN_COAT_VARIANTS
@@ -431,8 +397,6 @@
 #undef FLUID_STAIN_ALPHA
 #undef FLUID_EVAPORATION_PER_SECOND
 #undef FLUID_SCENT_INTERVAL
-#undef FLUID_SCENT_AMOUNT
-#undef FLUID_SCENT_CAP
 #undef FLUID_WRING_TIME
 #undef FLUID_DIP_TIME
 #undef FLUID_LICK_TIME
